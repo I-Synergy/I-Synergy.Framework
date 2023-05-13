@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
-using System.Collections.ObjectModel;
+using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 
 namespace ISynergy.Framework.Core.Abstractions
@@ -10,20 +10,15 @@ namespace ISynergy.Framework.Core.Abstractions
     public interface IContext
     {
         /// <summary>
-        /// Gets or sets the profiles.
-        /// </summary>
-        /// <value>The profiles.</value>
-        ObservableCollection<IProfile> Profiles { get; set; }
-        /// <summary>
         /// Gets or sets the current profile.
         /// </summary>
         /// <value>The current profile.</value>
-        IProfile CurrentProfile { get; set; }
+        IProfile Profile { get; set; }
         /// <summary>
         /// Gets the current time zone.
         /// </summary>
         /// <value>The current time zone.</value>
-        TimeZoneInfo CurrentTimeZone { get; }
+        TimeZoneInfo TimeZone { get; }
         /// <summary>
         /// Gets or sets the number format.
         /// </summary>
@@ -64,9 +59,11 @@ namespace ISynergy.Framework.Core.Abstractions
         /// </summary>
         /// <value><c>true</c> if this instance is offline; otherwise, <c>false</c>.</value>
         bool IsOffline { get; set; }
+
         /// <summary>
-        /// Gets the title of the application.
+        /// Collection of service scopes.
+        /// Key is determined by the user id.
         /// </summary>
-        string Title { get; }
+        Dictionary<Guid, IServiceScope> ServiceScopes { get; }
     }
 }

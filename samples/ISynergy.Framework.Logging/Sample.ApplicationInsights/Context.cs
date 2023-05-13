@@ -38,7 +38,7 @@ namespace Sample
             _infoService = infoService;
 
             Profiles = new ObservableCollection<IProfile>() { new Profile() };
-            CurrentProfile = Profiles.FirstOrDefault();
+            Profile = Profiles.FirstOrDefault();
             ViewModels = new List<Type>();
 
             CurrencyCode = "EURO";
@@ -77,7 +77,7 @@ namespace Sample
         /// Gets or sets the current profile.
         /// </summary>
         /// <value>The current profile.</value>
-        public IProfile CurrentProfile
+        public IProfile Profile
         {
             get { return GetValue<IProfile>(); }
             set
@@ -92,13 +92,13 @@ namespace Sample
         /// Gets the current time zone.
         /// </summary>
         /// <value>The current time zone.</value>
-        public TimeZoneInfo CurrentTimeZone
+        public TimeZoneInfo TimeZone
         {
             get
             {
-                if (CurrentProfile != null)
+                if (Profile != null)
                 {
-                    return TimeZoneInfo.FindSystemTimeZoneById(CurrentProfile.TimeZoneId);
+                    return TimeZoneInfo.FindSystemTimeZoneById(Profile.TimeZoneId);
                 }
 
                 return TimeZoneInfo.Local;
@@ -191,9 +191,9 @@ namespace Sample
         {
             get
             {
-                if (CurrentProfile != null)
+                if (Profile != null)
                 {
-                    return CurrentProfile.IsAuthenticated();
+                    return Profile.IsAuthenticated();
                 }
 
                 return false;
@@ -208,9 +208,9 @@ namespace Sample
         {
             get
             {
-                if (CurrentProfile != null)
+                if (Profile != null)
                 {
-                    return CurrentProfile.IsInRole(nameof(RoleNames.Administrator));
+                    return Profile.IsInRole(nameof(RoleNames.Administrator));
                 }
 
                 return false;

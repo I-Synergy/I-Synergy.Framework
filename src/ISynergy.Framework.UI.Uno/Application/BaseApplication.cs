@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -127,7 +128,7 @@ namespace ISynergy.Framework.UI
         public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
         /// <summary>
-        /// Initialize the application.
+        /// LoadAssembly the application.
         /// </summary>
         /// <example>
         /// <code>
@@ -211,7 +212,7 @@ namespace ISynergy.Framework.UI
             _logger.LogInformation("Loading theme");
             _themeService.SetStyle();
 
-            MainWindow.Title = context.Title;
+            MainWindow.Title = InfoService.Default.Title ?? string.Empty;
             MainWindow.Activate();
         }
 

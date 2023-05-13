@@ -69,7 +69,7 @@ namespace ISynergy.Framework.UI.ViewModels
             {
                 await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
 
-                if (Context.CurrentProfile is not null && Context.IsAuthenticated)
+                if (Context.Profile is not null && Context.IsAuthenticated)
                 {
                     // Save Username in preferences if authentication is successfull.
                     if (Preferences.ContainsKey(nameof(Profile.Username)))

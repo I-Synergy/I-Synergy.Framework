@@ -95,8 +95,8 @@ namespace ISynergy.Framework.UI.Services.Base
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_context.IsAuthenticated && _context.CurrentProfile is not null)
-                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.CurrentProfile.Token.RefreshToken, cancellationToken);
+            if (!_context.IsAuthenticated && _context.Profile is not null)
+                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.Profile.Token.RefreshToken, cancellationToken);
 
             if (anonymous || _context.IsAuthenticated)
             {
@@ -106,7 +106,7 @@ namespace ISynergy.Framework.UI.Services.Base
                     client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                     if (!anonymous)
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.CurrentProfile.Token.AccessToken);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
 
                     var request = new HttpRequestMessage(HttpMethod.Get, url);
                     var response = await client.SendAsync(request);
@@ -142,8 +142,8 @@ namespace ISynergy.Framework.UI.Services.Base
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_context.IsAuthenticated && _context.CurrentProfile is not null)
-                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.CurrentProfile.Token.RefreshToken, cancellationToken);
+            if (!_context.IsAuthenticated && _context.Profile is not null)
+                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.Profile.Token.RefreshToken, cancellationToken);
 
             if (anonymous || _context.IsAuthenticated)
             {
@@ -153,7 +153,7 @@ namespace ISynergy.Framework.UI.Services.Base
                     client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                     if (!anonymous)
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.CurrentProfile.Token.AccessToken);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
 
                     var request = new HttpRequestMessage(HttpMethod.Get, url);
                     var response = await client.SendAsync(request);
@@ -188,8 +188,8 @@ namespace ISynergy.Framework.UI.Services.Base
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_context.IsAuthenticated && _context.CurrentProfile is not null)
-                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.CurrentProfile.Token.RefreshToken, cancellationToken);
+            if (!_context.IsAuthenticated && _context.Profile is not null)
+                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.Profile.Token.RefreshToken, cancellationToken);
 
             if (anonymous || _context.IsAuthenticated)
             {
@@ -199,7 +199,7 @@ namespace ISynergy.Framework.UI.Services.Base
                     client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                     if (!anonymous)
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.CurrentProfile.Token.AccessToken);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
 
                     var request = new HttpRequestMessage(HttpMethod.Get, url);
                     var response = await client.SendAsync(request);
@@ -236,8 +236,8 @@ namespace ISynergy.Framework.UI.Services.Base
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_context.IsAuthenticated && _context.CurrentProfile is not null)
-                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.CurrentProfile.Token.RefreshToken, cancellationToken);
+            if (!_context.IsAuthenticated && _context.Profile is not null)
+                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.Profile.Token.RefreshToken, cancellationToken);
 
             if (anonymous || _context.IsAuthenticated)
             {
@@ -247,7 +247,7 @@ namespace ISynergy.Framework.UI.Services.Base
                     client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                     if (!anonymous)
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.CurrentProfile.Token.AccessToken);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
 
                     var request = new HttpRequestMessage(HttpMethod.Post, url)
                     {
@@ -287,8 +287,8 @@ namespace ISynergy.Framework.UI.Services.Base
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_context.IsAuthenticated && _context.CurrentProfile is not null)
-                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.CurrentProfile.Token.RefreshToken, cancellationToken);
+            if (!_context.IsAuthenticated && _context.Profile is not null)
+                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.Profile.Token.RefreshToken, cancellationToken);
 
             if (anonymous || _context.IsAuthenticated)
             {
@@ -298,7 +298,7 @@ namespace ISynergy.Framework.UI.Services.Base
                     client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                     if (!anonymous)
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.CurrentProfile.Token.AccessToken);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
 
                     var request = new HttpRequestMessage(HttpMethod.Post, url)
                     {
@@ -339,8 +339,8 @@ namespace ISynergy.Framework.UI.Services.Base
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_context.IsAuthenticated && _context.CurrentProfile is not null)
-                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.CurrentProfile.Token.RefreshToken, cancellationToken);
+            if (!_context.IsAuthenticated && _context.Profile is not null)
+                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.Profile.Token.RefreshToken, cancellationToken);
 
             if (anonymous || _context.IsAuthenticated)
             {
@@ -350,7 +350,7 @@ namespace ISynergy.Framework.UI.Services.Base
                     client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                     if (!anonymous)
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.CurrentProfile.Token.AccessToken);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
 
                     var request = new HttpRequestMessage(HttpMethod.Put, url)
                     {
@@ -389,8 +389,8 @@ namespace ISynergy.Framework.UI.Services.Base
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_context.IsAuthenticated && _context.CurrentProfile is not null)
-                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.CurrentProfile.Token.RefreshToken, cancellationToken);
+            if (!_context.IsAuthenticated && _context.Profile is not null)
+                await _authenticationService.AuthenticateWithRefreshTokenAsync(_context.Profile.Token.RefreshToken, cancellationToken);
 
             if (anonymous || _context.IsAuthenticated)
             {
@@ -400,7 +400,7 @@ namespace ISynergy.Framework.UI.Services.Base
                     client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                     if (!anonymous)
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.CurrentProfile.Token.AccessToken);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
 
                     var request = new HttpRequestMessage(HttpMethod.Delete, url);
                     var response = await client.SendAsync(request);

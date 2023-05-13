@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -16,35 +17,46 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The busy service.</value>
         public IBusyService BusyService { get; }
+
         /// <summary>
         /// Gets the language service.
         /// </summary>
         /// <value>The language service.</value>
         public ILanguageService LanguageService { get; }
+
         /// <summary>
         /// Gets the dialog service.
         /// </summary>
         /// <value>The dialog service.</value>
         public IDialogService DialogService { get; }
+
         /// <summary>
         /// Gets the navigation service.
         /// </summary>
         /// <value>The navigation service.</value>
         public IBaseNavigationService NavigationService { get; }
+
         /// <summary>
         /// Gets the information service.
         /// </summary>
         /// <value>The information service.</value>
         public IInfoService InfoService { get; }
+
         /// <summary>
         /// Gets the converter service.
         /// </summary>
         /// <value>The converter service.</value>
         public IConverterService ConverterService { get; }
+
         /// <summary>
         /// Dispatcher service.
         /// </summary>
         public IDispatcherService DispatcherService { get; }
+
+        /// <summary>
+        /// Gets the service scope factory.
+        /// </summary>
+        public IServiceScopeFactory ServiceScopeFactory { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseCommonService"/> class.
@@ -56,6 +68,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="infoService">The information.</param>
         /// <param name="converterService">The converter.</param>
         /// <param name="dispatcherService"></param>
+        /// <param name="serviceScopeFactory"></param>
         protected BaseCommonService(
             IBusyService busyService,
             ILanguageService languageService,
@@ -63,7 +76,8 @@ namespace ISynergy.Framework.UI.Services
             IBaseNavigationService navigationService,
             IInfoService infoService,
             IConverterService converterService,
-            IDispatcherService dispatcherService)
+            IDispatcherService dispatcherService,
+            IServiceScopeFactory serviceScopeFactory)
         {
             BusyService = busyService;
             LanguageService = languageService;
@@ -72,6 +86,7 @@ namespace ISynergy.Framework.UI.Services
             InfoService = infoService;
             ConverterService = converterService;
             DispatcherService = dispatcherService;
+            ServiceScopeFactory = serviceScopeFactory;
         }
     }
 }

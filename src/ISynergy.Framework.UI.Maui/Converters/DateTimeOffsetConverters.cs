@@ -277,7 +277,7 @@ namespace ISynergy.Framework.UI.Converters
             if (value is DateTimeOffset datetime)
             {
                 var context = ServiceLocator.Default.GetInstance<IContext>();
-                var timeZone = context.CurrentTimeZone;
+                var timeZone = context.TimeZone;
                 var dt = TimeZoneInfo.ConvertTimeFromUtc(datetime.DateTime, timeZone);
 
                 if (parameter is not null)
