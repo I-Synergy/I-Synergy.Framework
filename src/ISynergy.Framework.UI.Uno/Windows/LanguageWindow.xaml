@@ -8,16 +8,16 @@
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
     mc:Ignorable="d"
     Title="{Binding Title}"
-    PrimaryButtonCommand="{Binding Submit_Command}"
+    PrimaryButtonCommand="{Binding SubmitCommand}"
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
-    SecondaryButtonCommand="{Binding Close_Command}"
+    SecondaryButtonCommand="{Binding CloseCommand}"
     PrimaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
     SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
 
     <StackPanel Orientation="Vertical">
-        <RadioButton x:Name="Button_Language_nl" Content="{m:LanguageResource Key=Language_Dutch}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="nl" />
-        <RadioButton x:Name="Button_Language_en" Content="{m:LanguageResource Key=Language_English}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="en" />
-        <RadioButton x:Name="Button_Language_de" Content="{m:LanguageResource Key=Language_German}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="de" IsEnabled="False" />
-        <RadioButton x:Name="Button_Language_fr" Content="{m:LanguageResource Key=Language_French}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="fr" IsEnabled="False" />
+        <RadioButton x:Name="Button_Language_nl" Content="{m:LanguageResource Key=Language_Dutch}" GroupName="Language" Command="{Binding SetLanguageCommand}" CommandParameter="nl" />
+        <RadioButton x:Name="Button_Language_en" Content="{m:LanguageResource Key=Language_English}" GroupName="Language" Command="{Binding SetLanguageCommand}" CommandParameter="en" />
+        <RadioButton x:Name="Button_Language_de" Content="{m:LanguageResource Key=Language_German}" GroupName="Language" Command="{Binding SetLanguageCommand}" CommandParameter="de" IsEnabled="False" />
+        <RadioButton x:Name="Button_Language_fr" Content="{m:LanguageResource Key=Language_French}" GroupName="Language" Command="{Binding SetLanguageCommand}" CommandParameter="fr" IsEnabled="False" />
     </StackPanel>
 </c:Window>

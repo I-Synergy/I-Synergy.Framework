@@ -172,10 +172,10 @@ namespace Sample.ViewModels
             }
         }
 
-        public RelayCommand ShowSignIn_Command { get; set; }
-        public AsyncRelayCommand SignIn_Command { get; set; }
-        public AsyncRelayCommand SignUp_Command { get; set; }
-        public AsyncRelayCommand ForgotPassword_Command { get; set; }
+        public RelayCommand ShowSignInCommand { get; set; }
+        public AsyncRelayCommand SignInCommand { get; set; }
+        public AsyncRelayCommand SignUpCommand { get; set; }
+        public AsyncRelayCommand ForgotPasswordCommand { get; set; }
 
         public AuthenticationViewModel(
             IContext context,
@@ -193,10 +193,10 @@ namespace Sample.ViewModels
             _applicationSettingsService = applicationSettingsService;
             _applicationSettingsService.LoadSettings();
 
-            ShowSignIn_Command = new RelayCommand(SetLoginVisibility);
-            SignIn_Command = new AsyncRelayCommand(SignInAsync);
-            SignUp_Command = new AsyncRelayCommand(SignUpAsync);
-            ForgotPassword_Command = new AsyncRelayCommand(ForgotPasswordAsync);
+            ShowSignInCommand = new RelayCommand(SetLoginVisibility);
+            SignInCommand = new AsyncRelayCommand(SignInAsync);
+            SignUpCommand = new AsyncRelayCommand(SignUpAsync);
+            ForgotPasswordCommand = new AsyncRelayCommand(ForgotPasswordAsync);
 
             Validator = new Action<IObservableClass>(_ =>
             {
@@ -293,7 +293,7 @@ namespace Sample.ViewModels
         {
             ForgotPasswordViewModel forgotPasswordVM = new(Context, BaseCommonServices, _authenticationService, Logger);
             forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
-            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
+            return BaseCommonServices.NavigationService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
         }
 
         /// <summary>

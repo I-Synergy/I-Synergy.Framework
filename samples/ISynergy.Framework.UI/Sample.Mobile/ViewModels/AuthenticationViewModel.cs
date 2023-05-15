@@ -34,8 +34,8 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        public AsyncRelayCommand Login_Command { get; set; }
-        public AsyncRelayCommand Register_Command { get; set; }
+        public AsyncRelayCommand LoginCommand { get; set; }
+        public AsyncRelayCommand RegisterCommand { get; set; }
 
         public AuthenticationViewModel(
             IContext context,
@@ -47,8 +47,8 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             _authenticationService = authenticationService;
 
-            Login_Command = new AsyncRelayCommand(SignInAsync);
-            Register_Command = new AsyncRelayCommand(SignUpAsync);
+            LoginCommand = new AsyncRelayCommand(SignInAsync);
+            RegisterCommand = new AsyncRelayCommand(SignUpAsync);
 
             Validator = new Action<IObservableClass>(_ =>
             {

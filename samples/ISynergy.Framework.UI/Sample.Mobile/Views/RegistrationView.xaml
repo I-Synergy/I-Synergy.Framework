@@ -48,7 +48,7 @@
                 <Entry Text="{Binding Mail}" Placeholder="{m:GetString EmailAddress}" Keyboard="Email" MinimumWidthRequest="250" HorizontalOptions="Center" >
                     <Entry.Behaviors>
                         <behaviors:UserStoppedTypingBehavior 
-                            Command="{Binding ValidateMail_Command}" 
+                            Command="{Binding ValidateMailCommand}" 
                             StoppedTypingTimeThreshold="2500"
                             MinimumLengthThreshold="3"
                             ShouldDismissKeyboardAutomatically="True"/>
@@ -63,7 +63,7 @@
                     <HorizontalStackLayout HorizontalOptions="Center">
                         <Label Text="{Binding SelectedModules, Converter={StaticResource ListToStringConverter}, ConverterParameter=';', Mode=OneWay}" VerticalOptions="Center" MinimumWidthRequest="200"/>
                         <ImageButton
-                            Command="{Binding SelectModules_Command}"
+                            Command="{Binding SelectModulesCommand}"
                             Style="{StaticResource SearchToolButtonStyle}"
                             IsEnabled="{Binding ArePickersAvailable}"/>
                     </HorizontalStackLayout>
@@ -80,7 +80,7 @@
                     <Picker ItemsSource="{Binding TimeZones}" SelectedItem="{Binding SelectedTimeZone}" IsEnabled="{Binding ArePickersAvailable}" MinimumWidthRequest="250" />
                 </VerticalStackLayout>
 
-                <Button Text="{m:GetString Register}" Command="{Binding Register_Command}" HorizontalOptions="Center" IsEnabled="{Binding ArePickersAvailable}"/>
+                <Button Text="{m:GetString Register}" Command="{Binding RegisterCommand}" HorizontalOptions="Center" IsEnabled="{Binding ArePickersAvailable}"/>
             </VerticalStackLayout>
         </ScrollView>
 
@@ -94,7 +94,7 @@
             <Label Text="{m:GetString LoginAccount}" TextColor="{DynamicResource Gray600}"/>
             <Label Text="{m:GetString SignInHere}" TextColor="{DynamicResource AccentColor}">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding Login_Command}" />
+                    <TapGestureRecognizer Command="{Binding LoginCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </StackLayout>

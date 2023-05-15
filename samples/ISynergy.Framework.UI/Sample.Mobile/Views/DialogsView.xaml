@@ -7,13 +7,13 @@
     Title="{Binding Title}">
 
     <VerticalStackLayout Spacing="10">
-        <Button Command="{Binding SelectSingle_Command}" 
+        <Button Command="{Binding SelectSingleCommand}" 
             Text="Select single item..." 
             WidthRequest="200"
             HeightRequest="35"
             Margin="1"/>
 
-        <Button Command="{Binding SelectMultiple_Command}" 
+        <Button Command="{Binding SelectMultipleCommand}" 
             Text="Select multiple items..."
             WidthRequest="200"
             HeightRequest="35"

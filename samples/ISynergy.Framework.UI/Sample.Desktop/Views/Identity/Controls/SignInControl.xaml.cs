@@ -86,9 +86,9 @@ namespace Sample.Views.Identity.Controls
         /// <param name="e">The <see cref="KeyRoutedEventArgs"/> instance containing the event data.</param>
         private void TextBox_Password_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.Enter && ViewModel.SignIn_Command.CanExecute(null))
+            if (e.Key == VirtualKey.Enter && ViewModel.SignInCommand.CanExecute(null))
             {
-                ViewModel.SignIn_Command.Execute(null);
+                ViewModel.SignInCommand.Execute(null);
             }
         }
 

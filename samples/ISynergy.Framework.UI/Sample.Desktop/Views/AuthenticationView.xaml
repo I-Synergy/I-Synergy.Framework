@@ -37,7 +37,7 @@
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="{m:LanguageResource Key= Register_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
                     <TextBlock Text="{m:LanguageResource Key= Register_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignIn_Command}" Content="{m:LanguageResource Key=Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" Style="{StaticResource DefaultDialogButtonStyle}"/>
+                    <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" Style="{StaticResource DefaultDialogButtonStyle}"/>
                 </StackPanel>
             </Grid>
 
@@ -45,7 +45,7 @@
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="{m:LanguageResource Key= Login_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
                     <TextBlock Text="{m:LanguageResource Key= Login_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignIn_Command}" Content="{m:LanguageResource Key=Login}" Margin ="5,20,5,5" HorizontalAlignment="Right" Style="{StaticResource DefaultDialogButtonStyle}"/>
+                    <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=Login}" Margin ="5,20,5,5" HorizontalAlignment="Right" Style="{StaticResource DefaultDialogButtonStyle}"/>
                 </StackPanel>
             </Grid>
 

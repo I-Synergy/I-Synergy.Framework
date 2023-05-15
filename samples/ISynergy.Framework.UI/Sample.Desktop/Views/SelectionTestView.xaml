@@ -18,13 +18,13 @@
                         IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical">
-                    <Button Command="{Binding SelectSingle_Command}" 
+                    <Button Command="{Binding SelectSingleCommand}" 
                             Content="Select single item..." 
                             Width="200"
                             Height="35"
                             Margin="1"/>
                 
-                    <Button Command="{Binding SelectMultiple_Command}" 
+                    <Button Command="{Binding SelectMultipleCommand}" 
                             Content="Select multiple items..."
                             Width="200"
                             Height="35"

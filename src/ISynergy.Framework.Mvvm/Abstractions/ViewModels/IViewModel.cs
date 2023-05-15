@@ -43,7 +43,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets the close _command.
         /// </summary>
         /// <value>The close _command.</value>
-        RelayCommand Close_Command { get; }
+        RelayCommand CloseCommand { get; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance can close.
         /// </summary>

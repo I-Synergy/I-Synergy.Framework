@@ -1,4 +1,4 @@
-﻿<c:Window 
+<c:Window 
     x:Class="ISynergy.Framework.UI.Windows.SelectionWindow"
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -43,14 +43,18 @@
             SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverters}}">
             <behaviors:Interaction.Triggers>
                 <behaviors:EventTrigger EventName="PreviewMouseDoubleClick">
-                    <behaviors:InvokeCommandAction Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}"/>
+                    <behaviors:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}"/>
                 </behaviors:EventTrigger>
             </behaviors:Interaction.Triggers>
         </ListView>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8">
-            <Button Content="Ok" Command="{Binding Submit_Command}" />
-            <Button Content="Annuleren" Command="{Binding Close_Command}"/>
+        <StackPanel 
+            Grid.Row="1" 
+            Orientation="Horizontal" 
+            HorizontalAlignment="Right" 
+            Margin="0,4">
+            <Button Content="Ok" Command="{Binding SubmitCommand}" />
+            <Button Content="Annuleren" Command="{Binding CloseCommand}"/>
         </StackPanel>
     </Grid>
 </c:Window>

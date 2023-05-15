@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -40,27 +40,29 @@ namespace Sample.ViewModels
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public AsyncRelayCommand Info_Command { get; set; }
+        public AsyncRelayCommand InfoCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public AsyncRelayCommand Browse_Command { get; set; }
+        public AsyncRelayCommand BrowseCommand { get; set; }
 
-        public AsyncRelayCommand EditableCombo_Command { get; set; }
+        public AsyncRelayCommand EditableComboCommand { get; set; }
 
         /// <summary>
         /// gets or sets the Unit Conversion command.
         /// </summary>
-        public AsyncRelayCommand UnitConversion_Command { get; set; }
+        public AsyncRelayCommand UnitConversionCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public AsyncRelayCommand ValidationTest_Command { get; set; }
+        public AsyncRelayCommand ValidationTestCommand { get; set; }
 
-        public AsyncRelayCommand NugetUnlister_Command { get; set; } 
+        public AsyncRelayCommand NugetUnlisterCommand { get; set; } 
+        public AsyncRelayCommand SelectSingleCommand { get; set; }
+        public AsyncRelayCommand SelectMultipleCommand { get; set; }
 
 
         /// <summary>
