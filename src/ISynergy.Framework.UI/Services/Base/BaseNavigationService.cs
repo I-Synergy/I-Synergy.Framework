@@ -10,20 +10,15 @@ namespace ISynergy.Framework.UI.Services.Base
 {
     public abstract class BaseNavigationService : IBaseNavigationService
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IContext _context;
+        protected readonly IContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseNavigationService"/> class.
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="serviceScopeFactory"></param>
-        protected BaseNavigationService(
-            IContext context, 
-            IServiceScopeFactory serviceScopeFactory)
+        protected BaseNavigationService(IContext context)
         {
             _context = context;
-            _serviceScopeFactory = serviceScopeFactory;
         }
 
         /// <summary>
@@ -37,33 +32,8 @@ namespace ISynergy.Framework.UI.Services.Base
             where TWindow : IWindow
             where TViewModel : IViewModelDialog<TEntity>
         {
-            var serviceProvider = ServiceLocator.Default.GetServiceProvider();
-
-            if (_context.Profile is Profile profile && profile.UserId != Guid.Empty)
-            {
-                if (_context.ServiceScopes.ContainsKey(profile.UserId))
-                {
-                    serviceProvider = _context.ServiceScopes[profile.UserId].ServiceProvider;
-                }
-                else
-                {
-                    var scope = _serviceScopeFactory.CreateScope();
-                    _context.ServiceScopes.Add(profile.UserId, scope);
-                    serviceProvider = scope.ServiceProvider;
-                }
-
-
-                using (var scope = _serviceScopeFactory.CreateScope(profile.UserId))
-                {
-
-                }
-            }
-            else
-            {
-
-            }
-            var viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Default.GetInstance(typeof(TViewModel));
-            return CreateDialogAsync((IWindow)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel);
+            var viewmodel = (IViewModelDialog<TEntity>)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel));
+            return CreateDialogAsync((IWindow)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)), viewmodel);
         }
 
         /// <summary>
@@ -78,9 +48,9 @@ namespace ISynergy.Framework.UI.Services.Base
             where TWindow : IWindow
             where TViewModel : IViewModelDialog<TEntity>
         {
-            var viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Default.GetInstance(typeof(TViewModel));
+            var viewmodel = (IViewModelDialog<TEntity>)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel));
             await viewmodel.SetSelectedItemAsync(e);
-            await CreateDialogAsync((IWindow)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel);
+            await CreateDialogAsync((IWindow)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)), viewmodel);
         }
 
         /// <summary>
@@ -91,7 +61,7 @@ namespace ISynergy.Framework.UI.Services.Base
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel) =>
-            CreateDialogAsync((IWindow)ServiceLocator.Default.GetInstance(window.GetType()), viewmodel);
+            CreateDialogAsync((IWindow)_context.ScopedServices.ServiceProvider.GetRequiredService(window.GetType()), viewmodel);
 
         /// <summary>
         /// Shows the dialog asynchronous.
@@ -101,7 +71,7 @@ namespace ISynergy.Framework.UI.Services.Base
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel) =>
-            CreateDialogAsync((IWindow)ServiceLocator.Default.GetInstance(type), viewmodel);
+            CreateDialogAsync((IWindow)_context.ScopedServices.ServiceProvider.GetRequiredService(type), viewmodel);
 
         /// <summary>
         /// Shows dialog as an asynchronous operation.

@@ -39,5 +39,10 @@ namespace Sample.Models
                     AddValidationError(nameof(Description), "Description should be a string with a minimum length of 3 characters!");
             });
         }
+
+        public override string ToString()
+        {
+            return Description;
+        }
     }
 }

@@ -1,12 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Services.Base;
 using System.Windows;
 using MessageBoxButton = ISynergy.Framework.Mvvm.Enumerations.MessageBoxButton;
 using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
-using Window = ISynergy.Framework.UI.Controls.Window;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -16,71 +12,13 @@ namespace ISynergy.Framework.UI.Services
     /// </summary>
     public class DialogService : BaseDialogService
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        /// <summary>
-        /// The is shown
-        /// </summary>
-        private bool _isShown = false;
-
-        /// <summary>
-        /// Gets the registered windows.
-        /// </summary>
-        /// <value>The registered windows.</value>
-        public List<Window> RegisteredWindows { get; internal set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
-        /// <param name="serviceProvider"></param>
         /// <param name="languageService">The language service.</param>
-        /// <param name="dispatcherService"></param>
-        public DialogService(IServiceProvider serviceProvider, ILanguageService languageService, IDispatcherService dispatcherService)
-            : base(languageService, dispatcherService)
+        public DialogService(ILanguageService languageService)
+            : base(languageService)
         {
-            _serviceProvider = serviceProvider;
-
-            RegisteredWindows = new List<Window>();
-        }
-
-        public override Task CloseDialogAsync(IWindow dialog)
-        {
-            if (dialog is Window window)
-                window.Close();
-
-            return Task.CompletedTask;
-        }
-
-        public override async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
-        {
-            if (dialog is Window window)
-            {
-                window.ViewModel = viewmodel;
-                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                window.WindowStyle = WindowStyle.None;
-
-                viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
-                viewmodel.Submitted += async (sender, e) => await CloseDialogAsync(window);
-
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
-
-                RegisteredWindows.Add(window);
-
-                if (_isShown)
-                    return;
-
-                _isShown = true;
-
-                for (var i = 0; i < RegisteredWindows.Count(q => q.Equals(window)); i++)
-                {
-                    await RegisteredWindows[i].ShowAsync<TEntity>();
-                    RegisteredWindows.Remove(RegisteredWindows[i]);
-                    i--;
-                }
-
-                _isShown = false;
-            }
         }
 
         /// <summary>

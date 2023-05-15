@@ -1,4 +1,4 @@
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -8,15 +8,16 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class ViewModelDialogSelection.
-    /// Implements the <see name="ViewModelDialog{List{object}}" />
+    /// Implements the <see name="ViewModelDialog{List{TEntity}}" />
     /// </summary>
-    /// <seealso name="ViewModelDialog{List{object}}" />
-    public class ViewModelSelectionBlade : ViewModelBlade<List<object>>, ISelectionViewModel
+    /// <seealso name="ViewModelDialog{List{TEntity}}" />
+    public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, ISelectionViewModel
     {
         /// <summary>
         /// Gets the title.
@@ -28,7 +29,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the raw items.
         /// </summary>
         /// <value>The raw items.</value>
-        private IEnumerable<object> RawItems { get; set; }
+        private IEnumerable<TEntity> RawItems { get; set; }
 
         /// <summary>
         /// Gets or sets the SelectionMode property value.
@@ -44,9 +45,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Item property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableCollection<object> Items
+        public ObservableCollection<TEntity> Items
         {
-            get { return GetValue<ObservableCollection<object>>(); }
+            get { return GetValue<ObservableCollection<TEntity>>(); }
             set { SetValue(value); }
         }
 
@@ -79,8 +80,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             IContext context,
             IBaseCommonServices commonServices,
             ILogger logger,
-            IEnumerable<object> items,
-            IEnumerable<object> selectedItems,
+            IEnumerable<TEntity> items,
+            IEnumerable<TEntity> selectedItems,
             SelectionModes selectionMode = SelectionModes.Single,
             bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation)
@@ -104,8 +105,17 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
             RawItems = items;
-            Items = new ObservableCollection<object>(items);
-            SelectedItems = new List<object>(selectedItems);
+            Items = new ObservableCollection<TEntity>(items);
+            
+            SelectedItems = new List<object>();
+
+            foreach (var item in selectedItems.EnsureNotNull())
+            {
+                SelectedItems.Add(item);
+            }
+
+            OnPropertyChanged(nameof(SelectedItems));
+
             IsInitialized = true;
         }
 
@@ -117,35 +127,39 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         {
             if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
             {
-                Items = new ObservableCollection<object>(RawItems);
+                Items = new ObservableCollection<TEntity>(RawItems);
             }
             else
             {
-                var filteredList = new List<object>();
+                var filteredList = new List<TEntity>();
 
                 foreach (var item in RawItems)
                 {
-                    foreach (var prop in item.GetType().GetProperties().Select(s => s.GetValue(item)).ToList())
+                    if (item.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
                     {
-                        if (prop is string value && !string.IsNullOrEmpty(value) && value.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
-                        {
-                            filteredList.Add(item);
-                            break;
-                        }
+                        filteredList.Add(item);
                     }
                 }
 
-                Items = new ObservableCollection<object>(filteredList);
+                Items = new ObservableCollection<TEntity>(filteredList);
             }
 
             return Task.CompletedTask;
         }
 
-        public override Task SubmitAsync(List<object> e)
+        public override Task SubmitAsync(List<TEntity> e)
         {
             if (Validate())
             {
-                OnSubmitted(new SubmitEventArgs<List<object>>(SelectedItems));
+                var result = new List<TEntity>();
+                
+                foreach (var item in SelectedItems.EnsureNotNull())
+                {
+                    if (item is TEntity entity)
+                        result.Add(entity);
+                }
+
+                OnSubmitted(new SubmitEventArgs<List<TEntity>>(result));
                 Close();
             }
 

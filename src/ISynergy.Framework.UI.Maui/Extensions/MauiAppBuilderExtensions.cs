@@ -8,7 +8,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
@@ -244,21 +243,6 @@ namespace ISynergy.Framework.UI.Extensions
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
             {
                 appBuilder.Services.AddSingleton(bootstrapper);
-            }
-        }
-
-        public static void ConfigureNavigationService(INavigationService navigationService)
-        {
-            foreach (var view in ViewTypes.Distinct())
-            {
-                var viewmodel = ViewModelTypes.Find(q =>
-                {
-                    var name = view.Name.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
-                    return q.GetViewModelName().Equals(name) || q.Name.Equals(name);
-                });
-
-                if (viewmodel is not null)
-                    Routing.RegisterRoute(viewmodel.GetViewModelFullName(), view);
             }
         }
 

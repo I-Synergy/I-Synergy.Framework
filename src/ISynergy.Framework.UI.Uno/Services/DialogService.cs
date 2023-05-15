@@ -16,9 +16,8 @@ namespace ISynergy.Framework.UI.Services
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
         /// <param name="languageService">The language service.</param>
-        /// <param name="dispatcherService"></param>
-        public DialogService(ILanguageService languageService, IDispatcherService dispatcherService)
-            : base(languageService, dispatcherService)
+        public DialogService(ILanguageService languageService)
+            : base(languageService)
         {
         }
 
@@ -106,51 +105,17 @@ namespace ISynergy.Framework.UI.Services
             return MessageBoxResult.Cancel;
         }
 
-        /// <summary>
-        /// Shows dialog as an asynchronous operation.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-        /// <param name="dialog">The dialog.</param>
-        /// <param name="viewmodel">The viewmodel.</param>
-        public override async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
-        {
-            if (dialog is Window window)
-            {
-                if (Application.Current is BaseApplication baseApplication)
-                    window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
-
-                window.ViewModel = viewmodel;
-
-                window.PrimaryButtonCommand = viewmodel.Submit_Command;
-                window.SecondaryButtonCommand = viewmodel.Close_Command;
-                window.CloseButtonCommand = viewmodel.Close_Command;
-
-                window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-                window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-                window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
-
-                await OpenDialogAsync(window);
-            }
-        }
-
         private async Task<ContentDialogResult> OpenDialogAsync(Window dialog)
         {
             if (_activeDialog is not null)
-                await CloseDialogAsync(_activeDialog);
+            {
+                _activeDialog?.Close();
+                _activeDialog = null;
+            }
 
             _activeDialog = dialog;
 
             return await _activeDialog.ShowAsync().AsTask();
-        }
-
-        public override Task CloseDialogAsync(IWindow dialog)
-        {
-            _activeDialog?.Close();
-            _activeDialog = null;
-            return Task.CompletedTask;
         }
     }
 }

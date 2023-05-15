@@ -2,9 +2,6 @@
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
-    /// <summary>
-    /// Interface ISelectionViewModel
-    /// </summary>
     public interface ISelectionViewModel
     {
         /// <summary>
@@ -12,6 +9,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// </summary>
         /// <value>The selection mode.</value>
         SelectionModes SelectionMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected items.    
+        /// </summary>
         List<object> SelectedItems { get; set; }
     }
 }

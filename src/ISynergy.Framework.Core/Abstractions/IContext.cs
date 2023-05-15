@@ -61,9 +61,8 @@ namespace ISynergy.Framework.Core.Abstractions
         bool IsOffline { get; set; }
 
         /// <summary>
-        /// Collection of service scopes.
-        /// Key is determined by the user id.
+        /// Gets the service scopes.
         /// </summary>
-        Dictionary<Guid, IServiceScope> ServiceScopes { get; }
+        IServiceScope ScopedServices { get; set; }
     }
 }
