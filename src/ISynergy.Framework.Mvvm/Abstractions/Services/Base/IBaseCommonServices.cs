@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services.Base
 {
@@ -42,9 +41,5 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services.Base
         /// Dispatcher service.
         /// </summary>
         IDispatcherService DispatcherService { get; }
-        /// <summary>
-        /// Service scope factory.
-        /// </summary>
-        IServiceScopeFactory ServiceScopeFactory { get; }
     }
 }

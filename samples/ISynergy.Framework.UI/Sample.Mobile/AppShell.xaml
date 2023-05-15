@@ -27,22 +27,22 @@
         <ShellContent Title="Validation" ContentTemplate="{DataTemplate views:ValidationView}" />
     </FlyoutItem>
 
-    <MenuFlyoutItem Text="{m:GetString Help}" Command="{Binding Help_Command}">
+    <MenuFlyoutItem Text="{m:GetString Help}" Command="{Binding HelpCommand}">
         <MenuFlyoutItem.IconImageSource>
             <FontImageSource Glyph="{StaticResource help}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
-    <MenuFlyoutItem Text="{m:GetString Language}" Command="{Binding Language_Command}">
+    <MenuFlyoutItem Text="{m:GetString Language}" Command="{Binding LanguageCommand}">
         <MenuFlyoutItem.IconImageSource>
             <FontImageSource Glyph="{StaticResource language}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
-    <MenuFlyoutItem Text="{m:GetString Theme}" Command="{Binding Color_Command}">
+    <MenuFlyoutItem Text="{m:GetString Theme}" Command="{Binding ColorCommand}">
         <MenuFlyoutItem.IconImageSource>
             <FontImageSource Glyph="{StaticResource theme}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
-    <MenuFlyoutItem Text="{m:GetString Settings}" Command="{Binding Settings_Command}">
+    <MenuFlyoutItem Text="{m:GetString Settings}" Command="{Binding SettingsCommand}">
         <MenuFlyoutItem.IconImageSource>
             <FontImageSource Glyph="{StaticResource settings}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
@@ -50,7 +50,7 @@
 
     <Shell.FlyoutFooter>
         <StackLayout Padding="20" HorizontalOptions="Center">
-            <Button Text="{m:GetString SignOut}" Command="{Binding Login_Command}">
+            <Button Text="{m:GetString SignOut}" Command="{Binding LoginCommand}">
                 <Button.ImageSource>
                     <FontImageSource Glyph="{StaticResource signin}" Size="16" FontFamily="FontAwesome" Color="{StaticResource White}" />
                 </Button.ImageSource>

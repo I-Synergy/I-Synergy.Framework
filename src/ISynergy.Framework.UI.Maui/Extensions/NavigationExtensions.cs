@@ -1,4 +1,8 @@
-﻿using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.Mvvm.Extensions;
 
 namespace ISynergy.Framework.UI.Extensions
 {
@@ -12,9 +16,23 @@ namespace ISynergy.Framework.UI.Extensions
         /// <returns></returns>
         public static async Task<T> PushAsync<T>(this INavigation navigation) where T : Page, IView
         {
-            var resolvedPage = ServiceLocator.Default.GetInstance<T>();
-            await navigation.PushAsync(resolvedPage);
+            var context = ServiceLocator.Default.GetInstance<IContext>();
+            var resolvedPage = context.ScopedServices.ServiceProvider.GetRequiredService<T>();
+            await navigation.PushAsync(resolvedPage, true);
             return resolvedPage;
+        }
+
+        public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel
+        {
+            var context = ServiceLocator.Default.GetInstance<IContext>();
+            var viewmodel = parameter is IViewModel instance ? instance : context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+            var page = MauiAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewmodel.GetViewFullName()));
+
+            if (page is null)
+                throw new Exception($"Page not found: {viewmodel.GetViewFullName()}.");
+
+            if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is Page resolvedPage)
+                await navigation.PushAsync(resolvedPage, true);
         }
 
         /// <summary>
@@ -26,8 +44,9 @@ namespace ISynergy.Framework.UI.Extensions
         /// <returns></returns>
         public static async Task<T> PushAsync<T>(this INavigation navigation, params object[] parameters) where T : Page, IView
         {
-            var resolvedPage = ActivatorUtilities.CreateInstance<T>(ServiceLocator.Default.GetServiceProvider(), parameters);
-            await navigation.PushAsync(resolvedPage);
+            var context = ServiceLocator.Default.GetInstance<IContext>();
+            var resolvedPage = ActivatorUtilities.CreateInstance<T>(context.ScopedServices.ServiceProvider, parameters);
+            await navigation.PushAsync(resolvedPage, true);
             return resolvedPage;
         }
 
@@ -39,8 +58,9 @@ namespace ISynergy.Framework.UI.Extensions
         /// <returns></returns>
         public static async Task<T> PushModalAsync<T>(this INavigation navigation) where T : Page, IView
         {
-            var resolvedPage = ServiceLocator.Default.GetInstance<T>();
-            await navigation.PushModalAsync(resolvedPage);
+            var context = ServiceLocator.Default.GetInstance<IContext>();
+            var resolvedPage = context.ScopedServices.ServiceProvider.GetRequiredService<T>();
+            await navigation.PushModalAsync(resolvedPage, true);
             return resolvedPage;
         }
 
@@ -53,8 +73,9 @@ namespace ISynergy.Framework.UI.Extensions
         /// <returns></returns>
         public static async Task<T> PushModalAsync<T>(this INavigation navigation, params object[] parameters) where T : Page, IView
         {
-            var resolvedPage = ActivatorUtilities.CreateInstance<T>(ServiceLocator.Default.GetServiceProvider(), parameters);
-            await navigation.PushModalAsync(resolvedPage);
+            var context = ServiceLocator.Default.GetInstance<IContext>();
+            var resolvedPage = ActivatorUtilities.CreateInstance<T>(context.ScopedServices.ServiceProvider, parameters);
+            await navigation.PushModalAsync(resolvedPage, true);
             return resolvedPage;
         }
     }

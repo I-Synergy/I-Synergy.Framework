@@ -55,6 +55,16 @@ namespace ISynergy.Framework.Core.Base
         }
 
         /// <summary>
+        /// Returns true if ... is valid.
+        /// </summary>
+        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+        [JsonIgnore]
+        [DataTableIgnore]
+        [XmlIgnore]
+        [Display(AutoGenerateField = false)]
+        public bool IsValid => !HasErrors;
+
+        /// <summary>
         /// Checks if both objects are the same based on common identity property.
         /// </summary>
         /// <param name="obj">The object to compare with the current object.</param>
@@ -186,9 +196,10 @@ namespace ISynergy.Framework.Core.Base
         {
             Errors.Clear();
 
+            OnPropertyChanged(nameof(IsValid));
             OnErrorsChanged(nameof(Errors));
 
-            return !HasErrors;
+            return IsValid;
         }
 
         /// <summary>
@@ -214,9 +225,10 @@ namespace ISynergy.Framework.Core.Base
             
             Validator?.Invoke(this);
 
+            OnPropertyChanged(nameof(IsValid));
             OnErrorsChanged(nameof(Errors));
 
-            return !HasErrors;
+            return IsValid;
         }
 
         /// <summary>

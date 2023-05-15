@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -54,11 +53,6 @@ namespace ISynergy.Framework.UI.Services
         public IDispatcherService DispatcherService { get; }
 
         /// <summary>
-        /// Gets the service scope factory.
-        /// </summary>
-        public IServiceScopeFactory ServiceScopeFactory { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BaseCommonService"/> class.
         /// </summary>
         /// <param name="busyService">The busy.</param>
@@ -68,7 +62,6 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="infoService">The information.</param>
         /// <param name="converterService">The converter.</param>
         /// <param name="dispatcherService"></param>
-        /// <param name="serviceScopeFactory"></param>
         protected BaseCommonService(
             IBusyService busyService,
             ILanguageService languageService,
@@ -76,8 +69,7 @@ namespace ISynergy.Framework.UI.Services
             IBaseNavigationService navigationService,
             IInfoService infoService,
             IConverterService converterService,
-            IDispatcherService dispatcherService,
-            IServiceScopeFactory serviceScopeFactory)
+            IDispatcherService dispatcherService)
         {
             BusyService = busyService;
             LanguageService = languageService;
@@ -86,7 +78,6 @@ namespace ISynergy.Framework.UI.Services
             InfoService = infoService;
             ConverterService = converterService;
             DispatcherService = dispatcherService;
-            ServiceScopeFactory = serviceScopeFactory;
         }
     }
 }

@@ -1,11 +1,14 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Utilities;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Services.Base;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using System.Reflection;
@@ -17,21 +20,14 @@ namespace ISynergy.Framework.UI.Services
     /// Implements the <see cref="INavigationService" />
     /// </summary>
     /// <seealso cref="INavigationService" />
-    public class NavigationService : INavigationService
+    public class NavigationService : BaseNavigationService, INavigationService
     {
+        private Window _activeDialog = null;
+
         /// <summary>
         /// The frame
         /// </summary>
         private Frame _frame;
-
-        /// <summary>
-        /// The pages
-        /// </summary>
-        private readonly Dictionary<string, Type> _pages = new Dictionary<string, Type>();
-        /// <summary>
-        /// The semaphore
-        /// </summary>
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Gets or sets the frame.
@@ -53,6 +49,15 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
         public bool CanGoForward => _frame.CanGoForward;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NavigationService"/> class.
+        /// </summary>
+        /// <param name="context"></param>
+        public NavigationService(IContext context)
+            : base(context)
+        {
+        }
 
         /// <summary>
         /// Goes the back.
@@ -81,31 +86,31 @@ namespace ISynergy.Framework.UI.Services
         /// <exception cref="ArgumentException">Instance could not be created from {viewModelKey}</exception>
         private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
         {
-            _semaphore.Wait();
+            var page = default(Type);
 
-            try
+            if (viewModel is ISelectionViewModel selectionBlade)
             {
-                var viewModelKey = viewModel.GetViewModelFullName();
-
-                if (!_pages.ContainsKey(viewModelKey))
-                    throw new Exception($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?");
-
-                if (TypeActivator.CreateInstance(_pages[viewModelKey]) is ISynergy.Framework.UI.Controls.View view)
-                {
-                    view.ViewModel = viewModel;
-
-                    if (!viewModel.IsInitialized)
-                        await viewModel.InitializeAsync();
-
-                    return view;
-                }
-
-                throw new Exception($"Instance could not be created from {viewModelKey}");
+                page = typeof(SelectionView);
             }
-            finally
+            else
             {
-                _semaphore.Release();
+                page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
             }
+
+            if (page is null)
+                throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
+
+            if (_context.ScopedServices.ServiceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
+            {
+                view.ViewModel = viewModel;
+
+                if (!viewModel.IsInitialized)
+                    await viewModel.InitializeAsync();
+
+                return view;
+            }
+
+            throw new Exception($"Instance could not be created from {viewModel.GetViewFullName()}");
         }
 
         /// <summary>
@@ -180,58 +185,8 @@ namespace ISynergy.Framework.UI.Services
             }
         }
 
-        /// <summary>
-        /// Configures the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="pageType">Type of the page.</param>
-        /// <exception cref="ArgumentException">The key {key} is already configured in NavigationService</exception>
-        /// <exception cref="ArgumentException">This type is already configured with key {_pages.First(p => p.Value == pageType).Key}</exception>
-        public void Configure(string key, Type pageType)
-        {
-            _semaphore.Wait();
-
-            try
-            {
-                if (_pages.ContainsKey(key))
-                    throw new ArgumentException($"The key {key} is already configured in NavigationService");
-
-                if (_pages.Any(p => p.Value == pageType))
-                    throw new ArgumentException($"This type is already configured with key {_pages.First(p => p.Value == pageType).Key}");
-
-                _pages.Add(key, pageType);
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
-
-        /// <summary>
-        /// Gets the name of registered page.
-        /// </summary>
-        /// <param name="page">The page.</param>
-        /// <returns>System.String.</returns>
-        /// <exception cref="ArgumentException">The page '{page.Name}' is unknown by the NavigationService</exception>
-        public string GetNameOfRegisteredPage(Type page)
-        {
-            _semaphore.Wait();
-
-            try
-            {
-                if (_pages.ContainsValue(page))
-                    return _pages.FirstOrDefault(p => p.Value == page).Key;
-                else
-                    throw new ArgumentException($"The page '{page.Name}' is unknown by the NavigationService");
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
-
-        public Task NavigateAsync<TViewModel>()
-            where TViewModel : class, IViewModel => NavigateAsync<TViewModel>(null);
+        public override Task NavigateAsync<TViewModel>() =>
+            NavigateAsync<TViewModel>(null);
 
 
         /// <summary>
@@ -241,68 +196,50 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="parameter">The parameter.</param>
         /// <returns>Task&lt;IView&gt;.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-        public async Task NavigateAsync<TViewModel>(object parameter)
-            where TViewModel : class, IViewModel
+        public override async Task NavigateAsync<TViewModel>(object parameter)
         {
-            _semaphore.Wait();
+            var viewmodel = parameter is IViewModel instance ? instance : _context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+            var page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewmodel.GetViewFullName()));
 
-            try
+            if (page is null)
+                throw new Exception($"Page not found: {viewmodel.GetViewFullName()}.");
+
+            // Check if actual page is the same as destination page.
+            if (_frame.Content is not null && _frame.Content.GetType().Equals(page))
+                return;
+
+            if (parameter is IViewModel)
             {
-                IViewModel viewmodel = default;
-
-                if (parameter is IViewModel instance)
-                    viewmodel = instance;
-                else
-                    viewmodel = ServiceLocator.Default.GetInstance<TViewModel>();
-
-                var viewModelKey = viewmodel.GetViewModelFullName();
-
-                if (!_pages.ContainsKey(viewModelKey))
-                    throw new Exception($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?");
-
-                var page = _pages[viewModelKey];
-
-                // Check if actual page is the same as destination page.
-                if (_frame.Content is not null && _frame.Content.GetType().Equals(page))
-                    return;
-
-                if (parameter is IViewModel)
+                _frame.Navigate(page, viewmodel);
+            }
+            else
+            {
+                if (page.GetInterfaces(true).Any(q => q == typeof(IView)) && parameter is not null && !string.IsNullOrEmpty(parameter.ToString()))
                 {
-                    _frame.Navigate(page, viewmodel);
-                }
-                else
-                {
-                    if (page.GetInterfaces(true).Any(q => q == typeof(IView)) && parameter is not null && !string.IsNullOrEmpty(parameter.ToString()))
+                    Type genericPropertyType = null;
+
+                    // Has class GenericTypeArguments?
+                    if (viewmodel.GetType().GenericTypeArguments.Any())
+                        genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
+                    // Has BaseType GenericTypeArguments?
+                    else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
+                        genericPropertyType = baseType.GetGenericArguments().First();
+
+                    if (genericPropertyType is not null && parameter.GetType() == genericPropertyType)
                     {
-                        Type genericPropertyType = null;
+                        var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
 
-                        // Has class GenericTypeArguments?
-                        if (viewmodel.GetType().GenericTypeArguments.Any())
-                            genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
-                        // Has BaseType GenericTypeArguments?
-                        else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
-                            genericPropertyType = baseType.GetGenericArguments().First();
-
-                        if (genericPropertyType is not null && parameter.GetType() == genericPropertyType)
-                        {
-                            var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
-
-                            // Check if instance implements genericInterfaceType.
-                            if (genericInterfaceType.IsInstanceOfType(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
-                                method.Invoke(viewmodel, new[] { parameter });
-                        }
+                        // Check if instance implements genericInterfaceType.
+                        if (genericInterfaceType.IsInstanceOfType(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
+                            method.Invoke(viewmodel, new[] { parameter });
                     }
-
-                    _frame.Navigate(page, viewmodel);
                 }
 
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
+                _frame.Navigate(page, viewmodel);
             }
-            finally
-            {
-                _semaphore.Release();
-            }
+
+            if (!viewmodel.IsInitialized)
+                await viewmodel.InitializeAsync();
         }
 
         public Task CleanBackStackAsync()
@@ -311,9 +248,9 @@ namespace ISynergy.Framework.UI.Services
             return Task.CompletedTask;
         }
 
-        public Task ReplaceMainWindowAsync<T>() where T : IView
+        public override Task ReplaceMainWindowAsync<T>()
         {
-            if (ServiceLocator.Default.GetInstance<T>() is Page page && Application.Current is BaseApplication baseApplication)
+            if (_context.ScopedServices.ServiceProvider.GetRequiredService<T>() is Page page && Application.Current is BaseApplication baseApplication)
                 DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, () => baseApplication.MainWindow.Content = page);
             else
                 throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
@@ -321,13 +258,60 @@ namespace ISynergy.Framework.UI.Services
             return Task.CompletedTask;
         }
 
-        public Task ReplaceMainFrameAsync<T>() where T : IView
+        public override Task ReplaceMainFrameAsync<T>()
         {
-            if (ServiceLocator.Default.GetInstance<T>() is Page page && Application.Current is BaseApplication baseApplication)
+            if (_context.ScopedServices.ServiceProvider.GetRequiredService<T>() is Page page && Application.Current is BaseApplication baseApplication)
                 DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, () => _frame.Content = page);
             else
                 throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
 
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Shows dialog as an asynchronous operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="dialog">The dialog.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        public override async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
+        {
+            if (dialog is Window window)
+            {
+                if (Application.Current is BaseApplication baseApplication)
+                    window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+
+                window.ViewModel = viewmodel;
+
+                window.PrimaryButtonCommand = viewmodel.SubmitCommand;
+                window.SecondaryButtonCommand = viewmodel.CloseCommand;
+                window.CloseButtonCommand = viewmodel.CloseCommand;
+
+                window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+
+                if (!viewmodel.IsInitialized)
+                    await viewmodel.InitializeAsync();
+
+                await OpenDialogAsync(window);
+            }
+        }
+
+        private async Task<ContentDialogResult> OpenDialogAsync(Window dialog)
+        {
+            if (_activeDialog is not null)
+                await CloseDialogAsync(_activeDialog);
+
+            _activeDialog = dialog;
+
+            return await _activeDialog.ShowAsync().AsTask();
+        }
+
+        public override Task CloseDialogAsync(IWindow dialog)
+        {
+            _activeDialog?.Close();
+            _activeDialog = null;
             return Task.CompletedTask;
         }
     }

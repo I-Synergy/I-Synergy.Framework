@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services.Base;
 using Mopups.Interfaces;
 using Mopups.Pages;
@@ -16,25 +15,51 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="popupNavigation"></param>
-        public NavigationService(IPopupNavigation popupNavigation)
-            : base()
+        public NavigationService(
+            IContext context,
+            IPopupNavigation popupNavigation)
+            : base(context)
         {
             _popupNavigation = popupNavigation;
         }
 
+        /// <summary>
+        /// Navigates to the viewmodel.
+        /// </summary>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <returns></returns>
         public override Task NavigateAsync<TViewModel>() =>
-            Shell.Current.GoToAsync(typeof(TViewModel).GetViewModelFullName(), true);
-
+            Shell.Current.Navigation.PushViewModelAsync<TViewModel>();
+            
+        /// <summary>
+        /// Navigates to the viewmodel with parameters.
+        /// </summary>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public override Task NavigateAsync<TViewModel>(object parameter) =>
-            Shell.Current.GoToAsync(typeof(TViewModel).GetViewModelFullName(), true, new Dictionary<string, object> { { GenericConstants.Parameter, parameter } });
+            Shell.Current.Navigation.PushViewModelAsync<TViewModel>(parameter);
 
+        /// <summary>
+        /// Replaces the main frame asynchronous.
+        /// </summary>
+        /// <typeparam name="TView"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public override Task ReplaceMainFrameAsync<TView>() => 
             throw new NotImplementedException();
 
+        /// <summary>
+        /// Replaces the main window asynchronous.
+        /// </summary>
+        /// <typeparam name="TView"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="InvalidCastException"></exception>
         public override Task ReplaceMainWindowAsync<TView>()
         {
-            if (ServiceLocator.Default.GetInstance<TView>() is Page page)
+            if (_context.ScopedServices.ServiceProvider.GetRequiredService<TView>() is Page page)
                 Application.Current.MainPage.Dispatcher.Dispatch(() =>
                 {
                     Application.Current.MainPage = new NavigationPage(page);

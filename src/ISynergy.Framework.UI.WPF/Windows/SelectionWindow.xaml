@@ -1,4 +1,4 @@
-<c:Window 
+﻿<c:Window 
     x:Class="ISynergy.Framework.UI.Windows.SelectionWindow"
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,12 +8,12 @@
     xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
     mc:Ignorable="d"
+    x:Name="SelectionWindowControl"
     Title="{Binding Title}"
     Height="600" 
-    Width="400" 
-    WindowStyle="SingleBorderWindow" 
-    WindowStartupLocation="CenterScreen" 
-    ResizeMode="NoResize">
+    Width="400"
+    WindowStartupLocation="CenterOwner"
+    Style="{StaticResource DefaultWindowStyle}">
 
     <c:Window.Resources>
         <ResourceDictionary>
@@ -24,19 +24,15 @@
             <converters:SelectionModeConverters x:Key="SelectionModeConverters"/>
         </ResourceDictionary>
     </c:Window.Resources>
-    
+
     <Grid Margin="4">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}"/>
-
         <ListView
             x:Name="DataSummary"
-            Grid.Row="1"
             Margin="4"
             SelectionChanged="DataSummary_SelectionChanged"
             ItemsSource="{Binding Items}"

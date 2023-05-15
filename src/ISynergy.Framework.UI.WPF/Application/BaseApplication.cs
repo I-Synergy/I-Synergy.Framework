@@ -141,7 +141,7 @@ namespace ISynergy.Framework.UI
         /// Get a new list of additional resource dictionaries which can be merged.
         /// </summary>
         /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
-        protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+        public virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>();
 
         /// <summary>
@@ -182,6 +182,8 @@ namespace ISynergy.Framework.UI
 
             Argument.IsNotNull(context);
             Argument.IsNotNull(shellView);
+
+            rootFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
 
             if (rootFrame.Content is null)
             {

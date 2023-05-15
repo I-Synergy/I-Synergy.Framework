@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.Mvvm.Extensions
 {
@@ -56,5 +58,11 @@ namespace ISynergy.Framework.Mvvm.Extensions
 
             return result;
         }
+
+        public static string GetViewFullName(this Type type) =>
+            type.Name.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.View);
+
+        public static string GetViewFullName(this IViewModel viewModel) =>
+            viewModel.GetType().GetViewFullName();
     }
 }

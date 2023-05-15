@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Sample.ApplicationInsights.Models;
 using Sample.ApplicationInsights.Options;
@@ -24,7 +25,6 @@ namespace Sample
         /// The configuration options
         /// </summary>
         private readonly ConfigurationOptions _configurationOptions;
-        private readonly IInfoService _infoService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Context" /> class.
@@ -32,45 +32,22 @@ namespace Sample
         /// <param name="configurationOptions">The configuration options.</param>
         public Context(
             IOptions<ConfigurationOptions> configurationOptions,
-            IInfoService infoService)
+            IServiceScopeFactory serviceScopeFactory)
         {
             _configurationOptions = configurationOptions.Value;
-            _infoService = infoService;
-
-            Profiles = new ObservableCollection<IProfile>() { new Profile() };
-            Profile = Profiles.FirstOrDefault();
-            ViewModels = new List<Type>();
 
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
-
-            Title = $"{_infoService.ProductName} v{_infoService.ProductVersion}";
-        }
-
-        public string Title
-        {
-            get { return GetValue<string>(); }
-            private set { SetValue(value); }
+            ScopedServices = serviceScopeFactory.CreateScope();
         }
 
         /// <summary>
-        /// Gets or sets the view models.
+        /// Gets the service scopes.
         /// </summary>
-        /// <value>The view models.</value>
-        public List<Type> ViewModels
+        public IServiceScope ScopedServices
         {
-            get { return GetValue<List<Type>>(); }
-            set { SetValue(value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the profiles.
-        /// </summary>
-        /// <value>The profiles.</value>
-        public ObservableCollection<IProfile> Profiles
-        {
-            get { return GetValue<ObservableCollection<IProfile>>(); }
-            set { SetValue(value); }
+            get => GetValue<IServiceScope>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -125,8 +102,6 @@ namespace Sample
         /// <param name="value">The value.</param>
         private void ApplyEnvironment(SoftwareEnvironments value)
         {
-            Title = $"{_infoService.ProductName} v{_infoService.ProductVersion} ({value})";
-
             switch (value)
             {
                 case SoftwareEnvironments.Local:

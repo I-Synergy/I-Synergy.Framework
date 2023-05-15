@@ -27,24 +27,24 @@ namespace Sample
         /// Initializes a new instance of the <see cref="Context" /> class.
         /// </summary>
         /// <param name="configurationOptions">The configuration options.</param>
-        public Context(IOptions<ConfigurationOptions> configurationOptions)
+        public Context(
+            IOptions<ConfigurationOptions> configurationOptions,
+            IServiceScopeFactory serviceScopeFactory)
         {
             _configurationOptions = configurationOptions.Value;
 
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
-
-            ServiceScopes = new Dictionary<Guid, IServiceScope>();
+            ScopedServices = serviceScopeFactory.CreateScope();
         }
 
         /// <summary>
-        /// Collection of service scopes.
-        /// Key is determined by the user id.
+        /// Gets the service scopes.
         /// </summary>
-        public Dictionary<Guid, IServiceScope> ServiceScopes
+        public IServiceScope ScopedServices
         {
-            get => GetValue<Dictionary<Guid, IServiceScope>>();
-            private set => SetValue(value);
+            get => GetValue<IServiceScope>();
+            set => SetValue(value);
         }
 
         /// <summary>

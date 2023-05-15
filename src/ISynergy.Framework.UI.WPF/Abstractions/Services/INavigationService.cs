@@ -18,7 +18,5 @@ namespace ISynergy.Framework.UI.Abstractions.Services
         /// </summary>
         /// <returns>Task.</returns>
         Task CleanBackStackAsync();
-
-        void Configure(string key, Type pageType);
     }
 }
