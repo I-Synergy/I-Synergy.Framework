@@ -38,7 +38,7 @@
                                 IsTabStop="True">
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior EventName="QuerySubmitted">
-                            <ic:InvokeCommandAction Command="{Binding Search_Command}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
+                            <ic:InvokeCommandAction Command="{Binding RefreshCommand}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
                         </ic:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </AutoSuggestBox>
@@ -53,16 +53,9 @@
                           Margin="1,4">
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior EventName="DoubleTapped">
-                            <ic:InvokeCommandAction Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}" />
+                            <ic:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
                         </ic:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock>
-                                <Run Text="{Binding Description}"/>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
                 </ListView>
 
                 <StackPanel Orientation="Horizontal" 
@@ -72,7 +65,7 @@
                     <Button x:Name="Select_Button" 
                             Content="{m:LanguageResource Key=Select}" 
                             HorizontalAlignment="Right" 
-                            Command="{Binding Submit_Command}" 
+                            Command="{Binding SubmitCommand}" 
                             CommandParameter="{Binding SelectedItem}"
                             Margin="{ThemeResource ContentDialogButton1HostMargin}"
                             MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
@@ -81,7 +74,7 @@
                     <Button x:Name="Cancel_Button" 
                             Content="{m:LanguageResource Key=Cancel}" 
                             HorizontalAlignment="Right" 
-                            Command="{Binding Close_Command}"
+                            Command="{Binding CloseCommand}"
                             Margin="{ThemeResource ContentDialogButton2HostMargin}"
                             MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
                             MinHeight="{ThemeResource ContentDialogButtonMinHeight}"

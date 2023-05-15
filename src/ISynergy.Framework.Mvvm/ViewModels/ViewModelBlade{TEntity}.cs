@@ -73,7 +73,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public AsyncRelayCommand Submit_Command { get; }
+        public AsyncRelayCommand SubmitCommand { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBlade{TEntity}"/> class.
@@ -99,7 +99,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             SelectedItem = TypeActivator.CreateInstance<TEntity>();
             IsNew = true;
-            Submit_Command = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
+            SubmitCommand = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
         }
 
         /// <summary>

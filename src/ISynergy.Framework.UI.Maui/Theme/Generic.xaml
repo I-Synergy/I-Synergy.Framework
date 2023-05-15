@@ -581,8 +581,8 @@
 
                 <Grid Grid.Row="2">
                     <HorizontalStackLayout HorizontalOptions="EndAndExpand" Spacing="8">
-                        <Button Text="{m:GetString Cancel}" Command="{Binding Close_Command}"/>
-                        <Button Text="{m:GetString Ok}" Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}"/>
+                        <Button Text="{m:GetString Cancel}" Command="{Binding CloseCommand}"/>
+                        <Button Text="{m:GetString Ok}" Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}"/>
                     </HorizontalStackLayout>
                 </Grid>
             </Grid>

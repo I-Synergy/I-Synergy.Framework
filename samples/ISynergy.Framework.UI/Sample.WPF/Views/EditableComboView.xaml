@@ -51,19 +51,7 @@
             </ComboBox>
             <TextBlock Text="{Binding IsValid}"/>
 
-            <Separator Height="10"/>
-
-            <TextBlock Text="Syncfuxion editable combobox with mask (0000>LL):"/>
-            <controls:MaskedComboBox x:Name="Combo5" 
-                                     IsEditable="True" 
-                                     Text="{Binding RegexSample, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Mask="{Binding RegexExpression, Converter={StaticResource MaskToRegexConverter}}"
-                                     IsMaskEnabled="True">
-                <ComboBoxItem Content="12345" />
-                <ComboBoxItem Content="67890" />
-            </controls:MaskedComboBox>
-
-            <Button Command="{Binding Submit_Command}" Content="Submit" />
+            <Button Command="{Binding SubmitCommand}" Content="Submit" />
         </StackPanel>
 
     </Grid>

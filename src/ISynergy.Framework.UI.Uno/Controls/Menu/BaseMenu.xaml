@@ -18,7 +18,7 @@
     </CommandBar.Content>
     <CommandBar.PrimaryCommands>
         <AppBarButton x:Name="Button_Add" 
-                      Command="{Binding Add_Command}" 
+                      Command="{Binding AddCommand}" 
                       Label="{m:LanguageResource Key=Add}" 
                       ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
             <AppBarButton.Icon>
@@ -26,7 +26,7 @@
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Edit" 
-                      Command="{Binding Edit_Command}" 
+                      Command="{Binding EditCommand}" 
                       CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
                       Label="{m:LanguageResource Key=Edit}" 
                       ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
@@ -35,7 +35,7 @@
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Delete" 
-                      Command="{Binding Delete_Command}" 
+                      Command="{Binding DeleteCommand}" 
                       CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
                       Label="{m:LanguageResource Key=Delete}" 
                       ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
@@ -44,7 +44,7 @@
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Refresh" 
-                      Command="{Binding Refresh_Command}" 
+                      Command="{Binding RefreshCommand}" 
                       Label="{m:LanguageResource Key=Refresh}" 
                       ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}" 
                       Visibility="{Binding Refresh_Enabled, ElementName=BaseMenuInstance}">

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -63,10 +63,10 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the refresh command.
         /// </summary>
         /// <value>The refresh command.</value>
-        public AsyncRelayCommand<string> Refresh_Command { get; set; }
+        public AsyncRelayCommand<string> RefreshCommand { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewModelSelectionDialog"/> class.
+        /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                     AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
             });
 
-            Refresh_Command = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
+            RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
             RawItems = items;
             Items = new ObservableCollection<object>(items);
             SelectedItems = new List<object>(selectedItems);

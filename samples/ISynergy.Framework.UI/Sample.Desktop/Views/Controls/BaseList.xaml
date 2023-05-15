@@ -25,7 +25,7 @@
                             IsTabStop="True">
                 <i:Interaction.Behaviors>
                     <ic:EventTriggerBehavior EventName="QuerySubmitted">
-                        <ic:InvokeCommandAction Command="{Binding Search_Command}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
+                        <ic:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
                     </ic:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </AutoSuggestBox>
@@ -42,7 +42,7 @@
                   Margin="1,4">
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="DoubleTapped">
-                    <ic:InvokeCommandAction Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}" />
+                    <ic:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
                 </ic:EventTriggerBehavior>
             </i:Interaction.Behaviors>
             <ListView.ItemTemplate>

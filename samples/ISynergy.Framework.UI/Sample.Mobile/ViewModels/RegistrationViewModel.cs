@@ -133,10 +133,10 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        public AsyncRelayCommand Register_Command { get; set; }
-        public AsyncRelayCommand ValidateMail_Command { get; set; }
-        public AsyncRelayCommand Login_Command { get; set; }
-        public AsyncRelayCommand SelectModules_Command { get; set; }
+        public AsyncRelayCommand RegisterCommand { get; set; }
+        public AsyncRelayCommand ValidateMailCommand { get; set; }
+        public AsyncRelayCommand LoginCommand { get; set; }
+        public AsyncRelayCommand SelectModulesCommand { get; set; }
 
         public RegistrationViewModel(
             IContext context,
@@ -197,19 +197,19 @@ namespace ISynergy.Framework.UI.ViewModels
                     AddValidationError(nameof(SelectedCountry), commonServices.LanguageService.GetString("WarningNoCountrySelected"));
             });
 
-            Register_Command = new AsyncRelayCommand(RegisterAsync);
-            ValidateMail_Command = new AsyncRelayCommand(ValidateMailAsync);
-            Login_Command = new AsyncRelayCommand(SignInAsync);
-            SelectModules_Command = new AsyncRelayCommand(SelectModulesAsync);
+            RegisterCommand = new AsyncRelayCommand(RegisterAsync);
+            ValidateMailCommand = new AsyncRelayCommand(ValidateMailAsync);
+            LoginCommand = new AsyncRelayCommand(SignInAsync);
+            SelectModulesCommand = new AsyncRelayCommand(SelectModulesAsync);
 
             ArePickersAvailable = false;
         }
 
         private Task SelectModulesAsync()
         {
-            ViewModelSelectionDialog selectionVM = new(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
+            var selectionVM = new ViewModelSelectionDialog<Module>(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
             selectionVM.Submitted += SelectionVM_Submitted;
-            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(SelectionWindow), selectionVM);
+            return BaseCommonServices.NavigationService.ShowDialogAsync(typeof(SelectionWindow), selectionVM);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<object>> e)
+        private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<Module>> e)
         {
             List<Module> selectedItems = new();
 
@@ -229,7 +229,7 @@ namespace ISynergy.Framework.UI.ViewModels
 
             SelectedModules = selectedItems;
 
-            if (sender is ViewModelSelectionDialog vm)
+            if (sender is ViewModelSelectionDialog<Module> vm)
                 vm.Submitted -= SelectionVM_Submitted;
         }
 

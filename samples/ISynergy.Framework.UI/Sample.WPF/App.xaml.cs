@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.UI;
+using System.Windows;
 
 namespace Sample
 {

@@ -43,9 +43,9 @@ namespace Sample.ViewModels
         /// Gets or sets the SelectedItems property value.
         /// </summary>
         /// <value>The selected items.</value>
-        public List<object> SelectedItems
+        public List<TestItem> SelectedItems
         {
-            get { return GetValue<List<object>>(); }
+            get { return GetValue<List<TestItem>>(); }
             set { SetValue(value); }
         }
 
@@ -85,9 +85,9 @@ namespace Sample.ViewModels
         {
             CommonServices = commonService;
 
-            Submit_Command = new AsyncRelayCommand<TestItem>(SubmitAsync);
-            Search_Command = new AsyncRelayCommand<object>(SearchAsync);
-            Clear_Command = new RelayCommand(ClearItems);
+            SubmitCommand = new AsyncRelayCommand<TestItem>(SubmitAsync);
+            SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
+            ClearCommand = new RelayCommand(ClearItems);
 
             Query = string.Empty;
             Items = new ObservableCollection<TestItem>();
@@ -97,7 +97,7 @@ namespace Sample.ViewModels
         /// Gets or sets the clear command.
         /// </summary>
         /// <value>The clear command.</value>
-        public RelayCommand Clear_Command { get; set; }
+        public RelayCommand ClearCommand { get; set; }
 
         /// <summary>
         /// The search cancellationtoken
@@ -176,7 +176,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         public override Task AddAsync()
         {
-            ViewModelSelectionBlade selectionVM = new(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+            var selectionVM = new ViewModelSelectionBlade<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
             selectionVM.Submitted += SelectionVM_Submitted;
             return (CommonServices.NavigationService as INavigationService)?.OpenBladeAsync(this, selectionVM);
         }
@@ -186,7 +186,7 @@ namespace Sample.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<object>> e)
+        private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<TestItem>> e)
         {
             SelectedItems = e.Result;
         }

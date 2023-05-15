@@ -24,14 +24,14 @@
                 Placeholder="{m:GetString Search}"
                 Grid.Column="0"
                 ClearButtonVisibility="WhileEditing"
-                ReturnCommand="{Binding Refresh_Command}"
+                ReturnCommand="{Binding RefreshCommand}"
                 ReturnCommandParameter="{Binding Query}"
                 Margin="2"/>
 
             <Button
                 Text="{m:GetString Search}"
                 Grid.Column="1"
-                Command="{Binding Refresh_Command}"
+                Command="{Binding RefreshCommand}"
                 CommandParameter="{Binding Query}"
                 Margin="2"/>
 
@@ -45,7 +45,7 @@
                 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Description}" Margin="10,0" />
+                        <Label Text="{Binding}" Margin="10,0" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

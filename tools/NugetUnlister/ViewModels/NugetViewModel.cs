@@ -51,7 +51,7 @@ namespace NugetUnlister.ViewModels
             set => SetValue(value);
         }
 
-        public RelayCommand Settings_Command { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public RelayCommand SettingsCommand { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public NugetViewModel(
             IContext context,

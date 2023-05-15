@@ -16,8 +16,8 @@
         <Label Text="Description "/>
         <Entry Text="{Binding SelectedItem.Description, Mode=TwoWay}"/>
 
-        <Button Text="Create new instance" Command="{Binding CreateInstance_Command}"/>
-        <Button Text="Validate Asynchronous" Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}"/>
-        <Button Text="Validate Synchronous" Command="{Binding Validate_Command}" CommandParameter="{Binding SelectedItem}"/>
+        <Button Text="Create new instance" Command="{Binding CreateInstanceCommand}"/>
+        <Button Text="Validate Asynchronous" Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}"/>
+        <Button Text="Validate Synchronous" Command="{Binding ValidateCommand}" CommandParameter="{Binding SelectedItem}"/>
     </VerticalStackLayout>
 </c:View>

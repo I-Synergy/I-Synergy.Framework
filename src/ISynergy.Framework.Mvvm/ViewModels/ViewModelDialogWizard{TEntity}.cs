@@ -72,12 +72,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets the back command.
         /// </summary>
         /// <value>The back command.</value>
-        public RelayCommand Back_Command { get; }
+        public RelayCommand BackCommand { get; }
         /// <summary>
         /// Gets the next command.
         /// </summary>
         /// <value>The next command.</value>
-        public RelayCommand Next_Command { get; }
+        public RelayCommand NextCommand { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelDialogWizard{TEntity}"/> class.
@@ -93,8 +93,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation)
         {
-            Back_Command = new RelayCommand(PerformBackAction);
-            Next_Command = new RelayCommand(PerformNextAction);
+            BackCommand = new RelayCommand(PerformBackAction);
+            NextCommand = new RelayCommand(PerformNextAction);
 
             Page = 1;
         }
