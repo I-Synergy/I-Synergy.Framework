@@ -58,7 +58,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public AsyncRelayCommand<TEntity> Submit_Command { get; set; }
+        public AsyncRelayCommand<TEntity> SubmitCommand { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether [refresh on initialization].
@@ -70,27 +70,27 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the add command.
         /// </summary>
         /// <value>The add command.</value>
-        public AsyncRelayCommand Add_Command { get; set; }
+        public AsyncRelayCommand AddCommand { get; set; }
         /// <summary>
         /// Gets or sets the edit command.
         /// </summary>
         /// <value>The edit command.</value>
-        public AsyncRelayCommand<TEntity> Edit_Command { get; set; }
+        public AsyncRelayCommand<TEntity> EditCommand { get; set; }
         /// <summary>
         /// Gets or sets the delete command.
         /// </summary>
         /// <value>The delete command.</value>
-        public AsyncRelayCommand<TEntity> Delete_Command { get; set; }
+        public AsyncRelayCommand<TEntity> DeleteCommand { get; set; }
         /// <summary>
         /// Gets or sets the refresh command.
         /// </summary>
         /// <value>The refresh command.</value>
-        public AsyncRelayCommand Refresh_Command { get; set; }
+        public AsyncRelayCommand RefreshCommand { get; set; }
         /// <summary>
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public AsyncRelayCommand<object> Search_Command { get; set; }
+        public AsyncRelayCommand<object> SearchCommand { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelSummary{TEntity}"/> class.
@@ -120,12 +120,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             Items = new ObservableCollection<TEntity>();
 
-            Add_Command = new AsyncRelayCommand(async () => await AddAsync());
-            Edit_Command = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));
-            Delete_Command = new AsyncRelayCommand<TEntity>(async (e) => await DeleteAsync(e));
-            Refresh_Command = new AsyncRelayCommand(async () => await RefreshAsync());
-            Search_Command = new AsyncRelayCommand<object>(async (e) => await SearchAsync(e));
-            Submit_Command = new AsyncRelayCommand<TEntity>(async (e) => await SubmitAsync(e));
+            AddCommand = new AsyncRelayCommand(async () => await AddAsync());
+            EditCommand = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));
+            DeleteCommand = new AsyncRelayCommand<TEntity>(async (e) => await DeleteAsync(e));
+            RefreshCommand = new AsyncRelayCommand(async () => await RefreshAsync());
+            SearchCommand = new AsyncRelayCommand<object>(async (e) => await SearchAsync(e));
+            SubmitCommand = new AsyncRelayCommand<TEntity>(async (e) => await SubmitAsync(e));
         }
 
         /// <summary>

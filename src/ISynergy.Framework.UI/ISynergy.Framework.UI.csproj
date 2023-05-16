@@ -14,6 +14,19 @@
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<CodeAnalysisRuleSet>ISynergy.Framework.UI.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
+		
+	<ItemGroup>
+	  <None Remove="Assets\Fonts\ISynergy.ttf" />
+	  <None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <None Remove="Assets\Fonts\SegMDL2.ttf" />
+	  <None Remove="Assets\Fonts\segoesb.ttf" />
+	  <None Remove="Assets\Fonts\segoeui.ttf" />
+	  <None Remove="Assets\Fonts\segoeuib.ttf" />
+	  <None Remove="Assets\Fonts\segoeuil.ttf" />
+	  <None Remove="Assets\Fonts\segoeuisl.ttf" />
+	  <None Remove="Assets\Fonts\seguisb.ttf" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
@@ -36,5 +49,18 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Assets\Fonts\ISynergy.ttf" />
+	  <Resource Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <Resource Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <Resource Include="Assets\Fonts\SegMDL2.ttf" />
+	  <Resource Include="Assets\Fonts\segoesb.ttf" />
+	  <Resource Include="Assets\Fonts\segoeui.ttf" />
+	  <Resource Include="Assets\Fonts\segoeuib.ttf" />
+	  <Resource Include="Assets\Fonts\segoeuil.ttf" />
+	  <Resource Include="Assets\Fonts\segoeuisl.ttf" />
+	  <Resource Include="Assets\Fonts\seguisb.ttf" />
 	</ItemGroup>
 </Project>

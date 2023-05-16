@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 
 namespace Sample

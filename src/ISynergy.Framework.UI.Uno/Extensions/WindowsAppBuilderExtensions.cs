@@ -5,9 +5,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -16,7 +14,6 @@ using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -73,8 +70,10 @@ namespace ISynergy.Framework.UI.Extensions
 
             services.Configure<ConfigurationOptions>(configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
-            var navigationService = new NavigationService();
-            var languageService = new LanguageService();
+            var infoService = InfoService.Default;
+            infoService.LoadAssembly(mainAssembly);
+
+            var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
             languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
 
@@ -85,13 +84,12 @@ namespace ISynergy.Framework.UI.Extensions
                 builder.SetMinimumLevel(LogLevel.Trace);
             }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
 
-            services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
-            services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
-            services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseNavigationService, NavigationService>((s) => navigationService));
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
-            services.AddSingleton<IMessageService, MessageService>();
+            services.AddSingleton<IInfoService>(s => InfoService.Default);
+            services.AddSingleton<ILanguageService>(s => LanguageService.Default);
+            services.AddSingleton<IMessageService>(s => MessageService.Default);
+
             services.AddSingleton<IContext, TContext>();
+            services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
@@ -105,7 +103,7 @@ namespace ISynergy.Framework.UI.Extensions
 
             languageService.AddResourceManager(typeof(TResource));
 
-            services.RegisterAssemblies(mainAssembly, navigationService, assemblyFilter);
+            services.RegisterAssemblies(mainAssembly, assemblyFilter);
 
             return services;
         }
@@ -115,9 +113,8 @@ namespace ISynergy.Framework.UI.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="mainAssembly">The main assembly.</param>
-        /// <param name="navigationService"></param>
         /// <param name="assemblyFilter">The assembly filter.</param>
-        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, INavigationService navigationService, Func<AssemblyName, bool> assemblyFilter)
+        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
         {
             var assemblies = new List<Assembly>();
             assemblies.Add(mainAssembly);
@@ -132,8 +129,6 @@ namespace ISynergy.Framework.UI.Extensions
                 assemblies.Add(Assembly.Load(item));
 
             services.RegisterAssemblies(assemblies);
-
-            ConfigureNavigationService(navigationService);
         }
 
         /// <summary>
@@ -241,21 +236,6 @@ namespace ISynergy.Framework.UI.Extensions
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
             {
                 services.AddSingleton(bootstrapper);
-            }
-        }
-
-        public static void ConfigureNavigationService(INavigationService navigationService)
-        {
-            foreach (var view in ViewTypes.Distinct())
-            {
-                var viewmodel = ViewModelTypes.Find(q =>
-                {
-                    var name = view.Name.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
-                    return q.GetViewModelName().Equals(name) || q.Name.Equals(name);
-                });
-
-                if (viewmodel is not null)
-                    navigationService.Configure(viewmodel.GetViewModelFullName(), view);
             }
         }
     }

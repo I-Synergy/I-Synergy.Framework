@@ -11,8 +11,8 @@ namespace Sample.ViewModels
 {
     public class ValidationViewModel : ViewModelNavigation<TestItem>
     {
-        public RelayCommand CreateInstance_Command { get; set; }
-        public RelayCommand<TestItem> Validate_Command { get; set; }
+        public RelayCommand CreateInstanceCommand { get; set; }
+        public RelayCommand<TestItem> ValidateCommand { get; set; }
 
         public ValidationViewModel(
             IContext context,
@@ -26,8 +26,8 @@ namespace Sample.ViewModels
                     AddValidationError(nameof(SelectedItem), "SelectedItem cannot be null!");
             });
 
-            CreateInstance_Command = new RelayCommand(() => SelectedItem = new TestItem { Id = -1, Description = "Hi" });
-            Validate_Command = new RelayCommand<TestItem>(ValidateTest);
+            CreateInstanceCommand = new RelayCommand(() => SelectedItem = new TestItem { Id = -1, Description = "Hi" });
+            ValidateCommand = new RelayCommand<TestItem>(ValidateTest);
         }
 
         private void ValidateTest(TestItem e)

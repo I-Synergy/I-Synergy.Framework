@@ -45,7 +45,7 @@
             <Entry Text="{Binding Username}" Placeholder="{m:GetString Username}" Keyboard="Email" MinimumWidthRequest="250" HorizontalOptions="Center" />
             <Entry Text="{Binding Password}" Placeholder="{m:GetString Password}" IsPassword="True" MinimumWidthRequest="250" HorizontalOptions="Center" />
 
-            <Button Text="{m:GetString SignIn}" Command="{Binding Login_Command}" HorizontalOptions="Center"/>
+            <Button Text="{m:GetString SignIn}" Command="{Binding LoginCommand}" HorizontalOptions="Center"/>
         </VerticalStackLayout>
 
         <StackLayout
@@ -58,7 +58,7 @@
             <Label Text="{m:GetString LoginNoAccount}" TextColor="{DynamicResource Gray600}"/>
             <Label Text="{m:GetString SignupHere}" TextColor="{DynamicResource AccentColor}">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding Register_Command}" />
+                    <TapGestureRecognizer Command="{Binding RegisterCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </StackLayout>

@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -16,11 +15,18 @@ namespace Sample.Services
     /// <seealso cref="IAuthenticationService" />
     public class AuthenticationService : IAuthenticationService
     {
+        private readonly IContext _context;
         private readonly INavigationService _navigationService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public AuthenticationService(INavigationService navigationService)
+        public AuthenticationService(
+            IContext context,
+            INavigationService navigationService,
+            IServiceScopeFactory serviceScopeFactory)
         {
+            _context = context;
             _navigationService = navigationService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
@@ -40,7 +46,8 @@ namespace Sample.Services
 
         public Task AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default)
         {
-            Application.Current.MainPage = ServiceLocator.Default.GetInstance<IShellView>() as Page;
+            ValidateToken();
+            Application.Current.MainPage = _context.ScopedServices.ServiceProvider.GetRequiredService<IShellView>() as Page;
             return Task.CompletedTask;
         }
 
@@ -79,6 +86,15 @@ namespace Sample.Services
             throw new NotImplementedException();
         }
 
-        public Task SignOutAsync() => _navigationService.ReplaceMainWindowAsync<IAuthenticationView>();
+        public async Task SignOutAsync()
+        {
+            ValidateToken();
+            await _navigationService.ReplaceMainWindowAsync<IAuthenticationView>();
+        }
+
+        private void ValidateToken()
+        {
+            _context.ScopedServices = _serviceScopeFactory.CreateScope();
+        }
     }
 }

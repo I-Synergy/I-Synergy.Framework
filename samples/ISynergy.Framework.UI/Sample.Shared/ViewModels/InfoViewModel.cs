@@ -68,7 +68,7 @@ namespace Sample.ViewModels
             set => SetValue(value);
         }
 
-        public RelayCommand BusyOn_Command { get; set; }
+        public RelayCommand BusyOnCommand { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -88,7 +88,7 @@ namespace Sample.ViewModels
             Copyrights = commonServices.InfoService.Copyrights;
             Startup = ((Context)context).Environment.ToString();
 
-            BusyOn_Command = new RelayCommand(StartTimer);
+            BusyOnCommand = new RelayCommand(StartTimer);
         }
 
         private void StartTimer()

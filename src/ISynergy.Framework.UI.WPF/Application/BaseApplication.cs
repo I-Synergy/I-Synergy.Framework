@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -140,7 +141,7 @@ namespace ISynergy.Framework.UI
         /// Get a new list of additional resource dictionaries which can be merged.
         /// </summary>
         /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
-        protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+        public virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>();
 
         /// <summary>
@@ -182,6 +183,8 @@ namespace ISynergy.Framework.UI
             Argument.IsNotNull(context);
             Argument.IsNotNull(shellView);
 
+            rootFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
+
             if (rootFrame.Content is null)
             {
                 // When the navigation stack isn't restored navigate to the first page,
@@ -193,7 +196,7 @@ namespace ISynergy.Framework.UI
             _logger.LogInformation("Loading theme");
             _themeService.SetStyle();
 
-            MainWindow.Title = context.Title ?? string.Empty;
+            MainWindow.Title = InfoService.Default.Title ?? string.Empty;
             MainWindow.Show();
             MainWindow.Activate();
         }

@@ -20,10 +20,14 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Occurs when [cancelled].
         /// </summary>
         event EventHandler Cancelled;
+        void OnCancelled(EventArgs e);
+
         /// <summary>
         /// Occurs when [closed].
         /// </summary>
         event EventHandler Closed;
+        void OnClosed(EventArgs e);
+
         /// <summary>
         /// Gets the context.
         /// </summary>
@@ -43,7 +47,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets the close _command.
         /// </summary>
         /// <value>The close _command.</value>
-        RelayCommand Close_Command { get; }
+        RelayCommand CloseCommand { get; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance can close.
         /// </summary>

@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Validation;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -54,6 +53,16 @@ namespace ISynergy.Framework.Core.Base
         {
             get { return Properties.Any(x => x.Value.IsDirty); }
         }
+
+        /// <summary>
+        /// Returns true if ... is valid.
+        /// </summary>
+        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+        [JsonIgnore]
+        [DataTableIgnore]
+        [XmlIgnore]
+        [Display(AutoGenerateField = false)]
+        public bool IsValid => !HasErrors;
 
         /// <summary>
         /// Checks if both objects are the same based on common identity property.
@@ -187,9 +196,10 @@ namespace ISynergy.Framework.Core.Base
         {
             Errors.Clear();
 
+            OnPropertyChanged(nameof(IsValid));
             OnErrorsChanged(nameof(Errors));
 
-            return !HasErrors;
+            return IsValid;
         }
 
         /// <summary>
@@ -215,9 +225,10 @@ namespace ISynergy.Framework.Core.Base
             
             Validator?.Invoke(this);
 
+            OnPropertyChanged(nameof(IsValid));
             OnErrorsChanged(nameof(Errors));
 
-            return !HasErrors;
+            return IsValid;
         }
 
         /// <summary>

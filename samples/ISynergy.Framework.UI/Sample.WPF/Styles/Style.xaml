@@ -13,7 +13,9 @@
     <Converters:StringToGeometryConverter x:Key="StringToGeometryConverter"/>
 
     <FontFamily x:Key="FontAwesome">/assets/fonts/#Font Awesome 6 Pro Light</FontFamily>
-    
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF2688C5"/>
+
     <Style x:Key="FocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>

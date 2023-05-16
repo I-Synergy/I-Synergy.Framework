@@ -24,7 +24,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
-        public RelayCommand<string> SetLanguage_Command { get; set; }
+        public RelayCommand<string> SetLanguageCommand { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.UI.ViewModels
             string culture)
             : base(context, commonServices, logger)
         {
-            SetLanguage_Command = new RelayCommand<string>((e) => SelectedItem = e);
+            SetLanguageCommand = new RelayCommand<string>((e) => SelectedItem = e);
             SelectedItem = culture;
         }
     }

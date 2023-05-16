@@ -39,49 +39,49 @@ namespace Sample.ViewModels
         /// Gets or sets the display command.
         /// </summary>
         /// <value>The display command.</value>
-        public AsyncRelayCommand Display_Command { get; set; }
+        public AsyncRelayCommand DisplayCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public AsyncRelayCommand Info_Command { get; set; }
+        public AsyncRelayCommand InfoCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public AsyncRelayCommand Browse_Command { get; set; }
+        public AsyncRelayCommand BrowseCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the converter command.
         /// </summary>
         /// <value>The converter command.</value>
-        public AsyncRelayCommand Converter_Command { get; set; }
+        public AsyncRelayCommand ConverterCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the selection test command.
         /// </summary>
         /// <value>The selection test command.</value>
-        public AsyncRelayCommand SelectionTest_Command { get; set; }
+        public AsyncRelayCommand SelectionTestCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the ListView test command.
         /// </summary>
         /// <value>The ListView test command.</value>
-        public AsyncRelayCommand ListViewTest_Command { get; set; }
+        public AsyncRelayCommand ListViewTestCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public AsyncRelayCommand ValidationTest_Command { get; set; }
+        public AsyncRelayCommand ValidationTestCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the TreeNode test command.
         /// </summary>
-        public AsyncRelayCommand TreeNodeTest_Command { get; set; }
+        public AsyncRelayCommand TreeNodeTestCommand { get; set; }
 
-        public AsyncRelayCommand Chart_Command { get; set; }
+        public AsyncRelayCommand ChartCommand { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -109,16 +109,16 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             DisplayName = "User";
 
-            Display_Command = new AsyncRelayCommand(OpenDisplayAsync);
-            Info_Command = new AsyncRelayCommand(OpenInfoAsync);
-            Browse_Command = new AsyncRelayCommand(BrowseFileAsync);
-            Converter_Command = new AsyncRelayCommand(OpenConvertersAsync);
-            SelectionTest_Command = new AsyncRelayCommand(OpenSelectionTestAsync);
-            ListViewTest_Command = new AsyncRelayCommand(OpenListViewTestAsync);
-            ValidationTest_Command = new AsyncRelayCommand(OpenValidationTestAsync);
-            TreeNodeTest_Command = new AsyncRelayCommand(OpenTreenNodeTestAsync);
-            Chart_Command = new AsyncRelayCommand(OpenChartTestAsync);
-            Login_Command = new AsyncRelayCommand(OpenLoginAsync);
+            DisplayCommand = new AsyncRelayCommand(OpenDisplayAsync);
+            InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
+            BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
+            ConverterCommand = new AsyncRelayCommand(OpenConvertersAsync);
+            SelectionTestCommand = new AsyncRelayCommand(OpenSelectionTestAsync);
+            ListViewTestCommand = new AsyncRelayCommand(OpenListViewTestAsync);
+            ValidationTestCommand = new AsyncRelayCommand(OpenValidationTestAsync);
+            TreeNodeTestCommand = new AsyncRelayCommand(OpenTreenNodeTestAsync);
+            ChartCommand = new AsyncRelayCommand(OpenChartTestAsync);
+            LoginCommand = new AsyncRelayCommand(OpenLoginAsync);
 
             PopulateNavItems();
         }
@@ -192,21 +192,21 @@ namespace Sample.ViewModels
         protected override void PopulateNavItems()
         {
             PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _themeService.Style.Color, Display_Command));
-            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, Info_Command));
-            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _themeService.Style.Color, Browse_Command));
-            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _themeService.Style.Color, Converter_Command));
-            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _themeService.Style.Color, SelectionTest_Command));
-            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _themeService.Style.Color, ListViewTest_Command));
-            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _themeService.Style.Color, ValidationTest_Command));
-            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _themeService.Style.Color, TreeNodeTest_Command));
-            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _themeService.Style.Color, Chart_Command));
+            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _themeService.Style.Color, DisplayCommand));
+            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _themeService.Style.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _themeService.Style.Color, ConverterCommand));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _themeService.Style.Color, SelectionTestCommand));
+            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _themeService.Style.Color, ListViewTestCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _themeService.Style.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _themeService.Style.Color, TreeNodeTestCommand));
+            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _themeService.Style.Color, ChartCommand));
 
             SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, Help_Command));
-            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, Language_Command));
-            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, Color_Command));
-            SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, Login_Command));
+            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
+            SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, LoginCommand));
         }
 
         /// <summary>
