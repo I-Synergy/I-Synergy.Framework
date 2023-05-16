@@ -34,12 +34,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Handles the <see cref="E:Cancelled" /> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        protected virtual void OnCancelled(EventArgs e) => Cancelled?.Invoke(this, e);
+        public virtual void OnCancelled(EventArgs e) => Cancelled?.Invoke(this, e);
         /// <summary>
         /// Handles the <see cref="E:Closed" /> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        protected virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
+        public virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
 
         /// <summary>
         /// Gets the context.
