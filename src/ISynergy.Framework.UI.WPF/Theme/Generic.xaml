@@ -3,10 +3,12 @@
                     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls">
 
     <Style TargetType="c:Window" x:Key="DefaultWindowStyle">
-        <Setter Property="WindowStyle" Value="SingleBorderWindow"/>
+        <Setter Property="WindowStyle" Value="None"/>
         <Setter Property="ResizeMode" Value="NoResize"/>
         <Setter Property="ShowInTaskbar" Value="False"/>
         <Setter Property="Title" Value="{Binding Title}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="Black"/>
     </Style>
     
     <Style TargetType="TextBlock" x:Key="TitleTextBlockStyle">
