@@ -1,12 +1,13 @@
 ﻿<c:Window 
     x:Class="ISynergy.Framework.UI.Windows.SelectionWindow"
-    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
     mc:Ignorable="d"
     x:Name="SelectionWindowControl"
     Title="{Binding Title}"
@@ -27,13 +28,26 @@
 
     <Grid Margin="4">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <TextBlock 
+            Text="{Binding Title}"
+            Style="{StaticResource TitleTextBlockStyle}"/>
+
+        <Thumb
+            Opacity="0"
+            Background="{x:Null}"
+            Foreground="{x:Null}"
+            Cursor="Hand"
+            DragDelta="Thumb_DragDelta"/>
+
         <ListView
             x:Name="DataSummary"
             Margin="4"
+            Grid.Row="1"
             SelectionChanged="DataSummary_SelectionChanged"
             ItemsSource="{Binding Items}"
             SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverters}}">
@@ -45,12 +59,12 @@
         </ListView>
 
         <StackPanel 
-            Grid.Row="1" 
+            Grid.Row="2" 
             Orientation="Horizontal" 
             HorizontalAlignment="Right" 
             Margin="0,4">
-            <Button Content="Ok" Command="{Binding SubmitCommand}" />
-            <Button Content="Annuleren" Command="{Binding CloseCommand}"/>
+            <Button Content="{m:GetString Ok}" Command="{Binding SubmitCommand}" />
+            <Button Content="{m:GetString Cancel}" Command="{Binding CloseCommand}"/>
         </StackPanel>
     </Grid>
 </c:Window>

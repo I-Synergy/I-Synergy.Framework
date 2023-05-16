@@ -50,5 +50,11 @@ namespace ISynergy.Framework.UI.Windows
                 }
             }
         }
+
+        private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            Left = Left + e.HorizontalChange;
+            Top = Top + e.VerticalChange;
+        }
     }
 }
