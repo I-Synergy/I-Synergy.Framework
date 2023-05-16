@@ -3,14 +3,21 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Models;
+using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
 using Sample.Abstractions.Services;
+using Sample.Models;
+using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels
 {
@@ -30,6 +37,22 @@ namespace Sample.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets the Items property value.
+        /// </summary>
+        /// <value>The items.</value>
+        public ObservableCollection<TestItem> Items
+        {
+            get => GetValue<ObservableCollection<TestItem>>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the selected test items.
+        /// </summary>
+        /// <value>The selected test items.</value>
+        public ObservableCollection<TestItem> SelectedTestItems { get; set; }
+
+        /// <summary>
         /// Gets the common services.
         /// </summary>
         /// <value>The common services.</value>
@@ -40,27 +63,29 @@ namespace Sample.ViewModels
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public AsyncRelayCommand Info_Command { get; set; }
+        public AsyncRelayCommand InfoCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public AsyncRelayCommand Browse_Command { get; set; }
+        public AsyncRelayCommand BrowseCommand { get; set; }
 
-        public AsyncRelayCommand EditableCombo_Command { get; set; }
+        public AsyncRelayCommand EditableComboCommand { get; set; }
 
         /// <summary>
         /// gets or sets the Unit Conversion command.
         /// </summary>
-        public AsyncRelayCommand UnitConversion_Command { get; set; }
+        public AsyncRelayCommand UnitConversionCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public AsyncRelayCommand ValidationTest_Command { get; set; }
+        public AsyncRelayCommand ValidationTestCommand { get; set; }
 
-        public AsyncRelayCommand NugetUnlister_Command { get; set; } 
+        public AsyncRelayCommand NugetUnlisterCommand { get; set; } 
+        public AsyncRelayCommand SelectSingleCommand { get; set; }
+        public AsyncRelayCommand SelectMultipleCommand { get; set; }
 
 
         /// <summary>
@@ -89,14 +114,57 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             DisplayName = "User";
 
-            Info_Command = new AsyncRelayCommand(OpenInfoAsync);
-            Browse_Command = new AsyncRelayCommand(BrowseFileAsync);
-            EditableCombo_Command = new AsyncRelayCommand(OpenEditableComboAsync);
-            ValidationTest_Command = new AsyncRelayCommand(OpenValidationTestAsync);
-            UnitConversion_Command = new AsyncRelayCommand(OpenUnitConversionAsync);
-            NugetUnlister_Command = new AsyncRelayCommand(UnlistNugetAsync);
+            InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
+            BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
+            EditableComboCommand = new AsyncRelayCommand(OpenEditableComboAsync);
+            ValidationTestCommand = new AsyncRelayCommand(OpenValidationTestAsync);
+            UnitConversionCommand = new AsyncRelayCommand(OpenUnitConversionAsync);
+            NugetUnlisterCommand = new AsyncRelayCommand(UnlistNugetAsync);
+            SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
+            SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
+
+            Items = new ObservableCollection<TestItem>()
+            {
+                new TestItem { Id = 1, Description = "Test 1"},
+                new TestItem { Id = 2, Description = "Test 2"},
+                new TestItem { Id = 3, Description = "Test 3"},
+                new TestItem { Id = 4, Description = "Test 4"},
+                new TestItem { Id = 5, Description = "Test 5"}
+            };
 
             PopulateNavItems();
+        }
+
+        private Task SelectSingleAsync()
+        {
+            var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
+            selectionVm.Submitted += SelectionVm_SingleSubmitted;
+            return (BaseCommonServices.NavigationService as INavigationService)?.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        }
+
+        private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+        {
+            if (sender is ViewModelSelectionBlade<TestItem> vm)
+                vm.Submitted -= SelectionVm_SingleSubmitted;
+
+            await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
+        }
+
+        private Task SelectMultipleAsync()
+        {
+            var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
+            selectionVm.Submitted += SelectionVm_MultipleSubmitted;
+            return (BaseCommonServices.NavigationService as INavigationService)?.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        }
+
+        private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+        {
+            if (sender is ViewModelSelectionBlade<TestItem> vm)
+                vm.Submitted -= SelectionVm_MultipleSubmitted;
+
+            SelectedTestItems = new ObservableCollection<TestItem>(e.Result);
+
+            await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
         }
 
         private Task UnlistNugetAsync() =>
@@ -149,18 +217,15 @@ namespace Sample.ViewModels
         protected override void PopulateNavItems()
         {
             PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("Info", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, Info_Command));
-            PrimaryItems.Add(new NavigationItem("Browse", (Application.Current.Resources["search"] as string).ToPath(), _themeService.Style.Color, Browse_Command));
-            PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _themeService.Style.Color, EditableCombo_Command));
-            PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _themeService.Style.Color, ValidationTest_Command));
-            PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _themeService.Style.Color, UnitConversion_Command));
-            PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, NugetUnlister_Command));
-
-            SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", (Application.Current.Resources["help"] as string).ToPath(), _themeService.Style.Color, Help_Command));
-            SecondaryItems.Add(new NavigationItem("Language", (Application.Current.Resources["flag"] as string).ToPath(), _themeService.Style.Color, Language_Command));
-            SecondaryItems.Add(new NavigationItem("Theme", (Application.Current.Resources["color"] as string).ToPath(), _themeService.Style.Color, Color_Command));
-            SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _themeService.Style.Color, Login_Command));
+            PrimaryItems.Add(new NavigationItem("Info", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", (Application.Current.Resources["search"] as string).ToPath(), _themeService.Style.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _themeService.Style.Color, EditableComboCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _themeService.Style.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _themeService.Style.Color, UnitConversionCommand));
+            PrimaryItems.Add(new NavigationItem("Select single item", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectSingleCommand));
+            PrimaryItems.Add(new NavigationItem("Select multiple items", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectMultipleCommand));
+            PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, NugetUnlisterCommand));
+            PrimaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _themeService.Style.Color, LoginCommand));
         }
 
         /// <summary>

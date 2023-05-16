@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -25,26 +26,23 @@ namespace ISynergy.Framework.UI.Controls
         /// Initializes a new instance of the view class.
         /// </summary>
         protected View()
-            : this(null)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the view class.
         /// </summary>
-        /// <param name="viewModel"></param>
-        protected View(IViewModel viewModel)
+        /// <param name="context"></param>
+        /// <param name="viewModelType"></param>
+        protected View(IContext context, Type viewModelType)
+            : this()
         {
-            ViewModel = viewModel;
-            Loaded += View_Loaded;
-        }
-
-        private async void View_Loaded(object sender, EventArgs e)
-        {
-            Loaded -= View_Loaded;
-
-            if (ViewModel is not null)
-                await ViewModel.InitializeAsync();
+            ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService(viewModelType) as IViewModel;
+            Loaded += async (sender, e) =>
+            {
+                if (ViewModel is not null)
+                    await ViewModel.InitializeAsync();
+            };
         }
     }
 }

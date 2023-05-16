@@ -17,6 +17,7 @@
 		<AssemblyName>Sample</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Views\Controls\BaseList.xaml" />
@@ -38,10 +39,10 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230331000" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="21.1.41" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="21.1.41" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="21.1.41" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230502000" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="21.2.5" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="21.2.5" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="21.2.5" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 

@@ -42,6 +42,15 @@ namespace Sample.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets the DateValue property value.
+        /// </summary>
+        public DateTimeOffset DateValue
+        {
+            get => GetValue<DateTimeOffset>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -56,6 +65,7 @@ namespace Sample.ViewModels
             DecimalValue = 2910.1975m;
             DoubleValue = 291019.75d;
             IntegerValue = 29101975;
+            DateValue = DateTimeOffset.Now;
         }
     }
 }

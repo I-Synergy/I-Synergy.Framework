@@ -26,12 +26,14 @@ namespace Sample.ApplicationInsights
                 .Build();
 
                 var assembly = Assembly.GetAssembly(typeof(Program));
+                var infoService = InfoService.Default;
+                infoService.LoadAssembly(assembly);
 
                 ServiceProvider serviceProvider = new ServiceCollection()
                     .AddLogging(builder => builder.AddApplicationInsightsLogging(config))
                     .AddOptions()
-                    .AddSingleton<IContext, Context>()
-                    .AddSingleton<IInfoService>(s => new InfoService(assembly))
+                    .AddScoped<IContext, Context>()
+                    .AddSingleton<IInfoService>(s => InfoService.Default)
                     .AddScoped<Startup>()
                     .BuildServiceProvider();
 

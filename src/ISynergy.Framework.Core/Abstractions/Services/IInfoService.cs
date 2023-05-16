@@ -1,9 +1,11 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Services
+﻿using System.Reflection;
+
+namespace ISynergy.Framework.Core.Abstractions.Services
 {
     /// <summary>
     /// Interface IInfoService
     /// </summary>
-    public interface IInfoService : IVersionService
+    public interface IInfoService
     {
         /// <summary>
         /// Gets the application path.
@@ -25,5 +27,20 @@
         /// </summary>
         /// <value>The copy rights detail.</value>
         string Copyrights { get; }
+        /// <summary>
+        /// Gets the application title.
+        /// </summary>
+        string Title { get; }
+        /// <summary>
+        /// Gets the product version.
+        /// </summary>
+        /// <value>The product version.</value>
+        Version ProductVersion { get; }
+
+        /// <summary>
+        /// Loads the assembly into the Version service.
+        /// </summary>
+        /// <param name="assembly"></param>
+        void LoadAssembly(Assembly assembly);
     }
 }

@@ -74,8 +74,10 @@ namespace ISynergy.Framework.UI.Extensions
 
             services.Configure<ConfigurationOptions>(configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
-            var navigationService = new NavigationService();
-            var languageService = new LanguageService();
+            var infoService = InfoService.Default;
+            infoService.LoadAssembly(mainAssembly);
+
+            var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
             languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
 
@@ -86,30 +88,26 @@ namespace ISynergy.Framework.UI.Extensions
                 builder.SetMinimumLevel(LogLevel.Trace);
             }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
 
-            services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
-            services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
-            services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
-            services.AddSingleton<IMessageService, MessageService>();
-
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseNavigationService, NavigationService>((s) => navigationService));
+            services.AddSingleton<IInfoService>(s => InfoService.Default);
+            services.AddSingleton<ILanguageService>(s => LanguageService.Default);
+            services.AddSingleton<IMessageService>(s => MessageService.Default);
 
             services.AddSingleton<IContext, TContext>();
-            services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
+            services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
-            services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IConverterService, ConverterService>();
+            services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
+            services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IDispatcherService, DispatcherService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
-
             services.AddTransient<IThemeService, ThemeService>();
             services.AddTransient<IFileService<FileResult>, FileService>();
 
             languageService.AddResourceManager(typeof(TResource));
 
-            services.RegisterAssemblies(mainAssembly, navigationService, assemblyFilter);
+            services.RegisterAssemblies(mainAssembly, assemblyFilter);
 
             return services;
         }
@@ -119,9 +117,8 @@ namespace ISynergy.Framework.UI.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="mainAssembly">The main assembly.</param>
-        /// <param name="navigationService"></param>
         /// <param name="assemblyFilter">The assembly filter.</param>
-        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, INavigationService navigationService, Func<AssemblyName, bool> assemblyFilter)
+        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
         {
             var assemblies = new List<Assembly>();
             assemblies.Add(mainAssembly);
@@ -136,8 +133,6 @@ namespace ISynergy.Framework.UI.Extensions
                 assemblies.Add(Assembly.Load(item));
 
             services.RegisterAssemblies(assemblies);
-
-            ConfigureNavigationService(navigationService);
         }
 
         /// <summary>
@@ -198,11 +193,11 @@ namespace ISynergy.Framework.UI.Extensions
 
                 if (abstraction is not null && !viewmodel.IsGenericType)
                 {
-                    services.AddSingleton(abstraction, viewmodel);
+                    services.AddScoped(abstraction, viewmodel);
                 }
                 else
                 {
-                    services.AddSingleton(viewmodel);
+                    services.AddScoped(viewmodel);
                 }
             }
 
@@ -216,11 +211,11 @@ namespace ISynergy.Framework.UI.Extensions
 
                 if (abstraction is not null)
                 {
-                    services.AddSingleton(abstraction, view);
+                    services.AddTransient(abstraction, view);
                 }
                 else
                 {
-                    services.AddSingleton(view);
+                    services.AddTransient(view);
                 }
             }
 
@@ -245,21 +240,6 @@ namespace ISynergy.Framework.UI.Extensions
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
             {
                 services.AddSingleton(bootstrapper);
-            }
-        }
-
-        public static void ConfigureNavigationService(INavigationService navigationService)
-        {
-            foreach (var view in ViewTypes.Distinct())
-            {
-                var viewmodel = ViewModelTypes.Find(q =>
-                {
-                    var name = view.Name.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
-                    return q.GetViewModelName().Equals(name) || q.Name.Equals(name);
-                });
-
-                if (viewmodel is not null)
-                    navigationService.Configure(viewmodel.GetViewModelFullName(), view);
             }
         }
     }

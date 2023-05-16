@@ -39,7 +39,7 @@
                     Content="{m:LanguageResource Key=Register}" 
                     Margin ="5,25" 
                     HorizontalAlignment="Left" 
-                    Command="{Binding SignUp_Command}"
+                    Command="{Binding SignUpCommand}"
                     IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}"
                     Style="{StaticResource DefaultDialogButtonStyle}"/>
         </StackPanel>

@@ -21,7 +21,7 @@
 
             <StackPanel Orientation="Vertical">
                 <TextBlock Margin="0,10" Text="{Binding Description}"/>
-                <ToggleButton Content="Automatic Validation Trigger" IsChecked="{Binding AutomaticValidationTrigger, Mode=TwoWay}" />
+                <ToggleButton Content="Automatic Validation Trigger" IsChecked="{Binding AutomaticValidation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <RadioButton Content="Null or Empty" GroupName="Validation" IsChecked="{Binding IsNullCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <RadioButton Content="Length &gt; 3" GroupName="Validation" IsChecked="{Binding IsLengthCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -37,7 +37,7 @@
                 <TextBox Text="{Binding Test, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          behaviors:AutoFocusBehavior.AutoFocusable="True"/>
 
-                <Button Content="Test" Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}" Margin="0,10" Width="150"/>
+                <Button Content="Test" Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" Margin="0,10" Width="150"/>
             </StackPanel>
         </Grid>
     </DockPanel>

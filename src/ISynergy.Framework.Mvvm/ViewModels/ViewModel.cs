@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -33,12 +34,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Handles the <see cref="E:Cancelled" /> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        protected virtual void OnCancelled(EventArgs e) => Cancelled?.Invoke(this, e);
+        public virtual void OnCancelled(EventArgs e) => Cancelled?.Invoke(this, e);
         /// <summary>
         /// Handles the <see cref="E:Closed" /> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        protected virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
+        public virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
 
         /// <summary>
         /// Gets the context.
@@ -60,7 +61,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the close command.
         /// </summary>
         /// <value>The close command.</value>
-        public RelayCommand Close_Command { get; protected set; }
+        public RelayCommand CloseCommand { get; protected set; }
 
         /// <summary>
         /// Gets or sets the Title property value.
@@ -112,7 +113,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             PropertyChanged += OnPropertyChanged;
             IsInitialized = false;
 
-            Close_Command = new RelayCommand(Close);
+            CloseCommand = new RelayCommand(Close);
         }
 
         /// <summary>

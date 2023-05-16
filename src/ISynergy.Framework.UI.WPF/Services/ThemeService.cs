@@ -54,6 +54,20 @@ namespace ISynergy.Framework.UI.Services
             //    Application.Current.Resources.ApplyLightTheme();
             //else
             //    Application.Current.Resources.ApplyDarkTheme();
+
+            // Add custom resourcedictionaries from code.
+
+            //if (Application.Current is BaseApplication application && application.Resources?.MergedDictionaries is ICollection<ResourceDictionary> dictionary)
+            //{
+            //    var additionalResourceDictionaries = application.GetAdditionalResourceDictionaries();
+
+            //    dictionary.Add(new Generic());
+
+            //    foreach (var item in additionalResourceDictionaries)
+            //    {
+            //        dictionary.Add(item);
+            //    }
+            //}
         }
     }
 }

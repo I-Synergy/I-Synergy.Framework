@@ -17,7 +17,7 @@
                                    IconMemberPath="Symbol"
                                    ItemClicked="NavigationView_ItemClicked">
             <syncfusion:SfNavigationDrawer.ContentView>
-                <Frame x:Name="ContentRootFrame" Margin="10"/>
+                <Frame x:Name="ContentRootFrame" NavigationUIVisibility="Hidden" Margin="10"/>
             </syncfusion:SfNavigationDrawer.ContentView>
         </syncfusion:SfNavigationDrawer>
 

@@ -30,14 +30,14 @@
                 PasswordRevealMode="Peek" 
                 KeyDown="TextBox_Password_KeyDown"/>
 
-            <HyperlinkButton x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{m:LanguageResource Key=Password_Forgot}" Command="{Binding ForgotPassword_Command}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
+            <HyperlinkButton x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{m:LanguageResource Key=Password_Forgot}" Command="{Binding ForgotPasswordCommand}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
             <TextBlock x:Name="TextBox_CapsLockOn" Grid.Row="2" Text="{m:LanguageResource Key=Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
 
             <Button x:Name="Button_Submit" 
                     Content="{m:LanguageResource Key=Login}" 
                     Margin ="5,25" 
                     HorizontalAlignment="Right" 
-                    Command="{Binding SignIn_Command}"
+                    Command="{Binding SignInCommand}"
                     IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}"
                     Style="{StaticResource DefaultDialogButtonStyle}"/>
         </StackPanel>

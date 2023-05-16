@@ -8,9 +8,9 @@
     Title="{Binding Title}"
     Width="{ThemeResource ContentDialogMaxWidth}" 
     Template="{StaticResource WindowTemplate}"
-    PrimaryButtonCommand="{Binding Submit_Command}"
+    PrimaryButtonCommand="{Binding SubmitCommand}"
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
-    SecondaryButtonCommand="{Binding Close_Command}"
+    SecondaryButtonCommand="{Binding CloseCommand}"
     PrimaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
     SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
 

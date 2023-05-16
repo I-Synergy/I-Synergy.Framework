@@ -31,6 +31,16 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
+        /// Ensures enumerable is not null
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <returns>IEnumerable.</returns>
+        public static IEnumerable EnsureNotNull(this IEnumerable list)
+        {
+            return list ?? Enumerable.Empty<object>();
+        }
+
+        /// <summary>
         /// Ensures observablecollection is not null
         /// </summary>
         /// <typeparam name="T"></typeparam>

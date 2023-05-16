@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Logging.AppCenter.Services
         {
             var metrics = new Dictionary<string, string>();
 
-            if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
+            if (_context.IsAuthenticated && _context.Profile is IProfile profile)
             {
                 Microsoft.AppCenter.AppCenter.SetUserId(profile.Username);
                 Microsoft.AppCenter.AppCenter.SetCountryCode(profile.CountryCode);
