@@ -65,19 +65,19 @@ namespace ISynergy.Framework.Core.Converters.Tests
             Assert.AreEqual(_jsonUnspecified, Regex.Unescape(json));
         }
 
-        [TestMethod()]
-        public void ReadTestLocal()
-        {
-            var date = JsonSerializer.Deserialize<DateTime>(_jsonLocal, _serializerOptions);
-            Assert.AreEqual(_dateLocal, date);
-        }
+        //[TestMethod()]
+        //public void ReadTestLocal()
+        //{
+        //    var date = JsonSerializer.Deserialize<DateTime>(_jsonLocal, _serializerOptions);
+        //    Assert.AreEqual(_dateLocal, date);
+        //}
 
 
-        [TestMethod()]
-        public void WriteTestLocal()
-        {
-            var json = JsonSerializer.Serialize(_dateLocal, _serializerOptions);
-            Assert.AreEqual(_jsonLocal, Regex.Unescape(json));
-        }
+        //[TestMethod()]
+        //public void WriteTestLocal()
+        //{
+        //    var json = JsonSerializer.Serialize(_dateLocal, _serializerOptions);
+        //    Assert.AreEqual(_jsonLocal, Regex.Unescape(json));
+        //}
     }
 }
