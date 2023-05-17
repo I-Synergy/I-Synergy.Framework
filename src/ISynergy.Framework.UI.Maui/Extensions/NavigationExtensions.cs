@@ -3,80 +3,68 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using Microsoft.Maui.Controls;
+using System.Reflection.Metadata;
 
 namespace ISynergy.Framework.UI.Extensions
 {
     public static class NavigationExtensions
     {
         /// <summary>
-        /// Resolves a page of type T (must inherit from Page) and pushes a new instance onto the navigation stack
+        /// Creates or gets Page from ViewModel.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="navigation"></param>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="parameter"></param>
         /// <returns></returns>
-        public static async Task<T> PushAsync<T>(this INavigation navigation) where T : Page, IView
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="InvalidNavigationException"></exception>
+        public static Page CreatePage<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
         {
             var context = ServiceLocator.Default.GetInstance<IContext>();
-            var resolvedPage = context.ScopedServices.ServiceProvider.GetRequiredService<T>();
-            await navigation.PushAsync(resolvedPage, true);
-            return resolvedPage;
-        }
+            var viewmodel = default(TViewModel);
 
-        public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel
-        {
-            var context = ServiceLocator.Default.GetInstance<IContext>();
-            var viewmodel = parameter is IViewModel instance ? instance : context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+            if (parameter is TViewModel instance)
+            {
+                viewmodel = instance;
+            }
+            else
+            {
+                viewmodel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+                viewmodel.Parameter = parameter;
+            }
+
             var page = MauiAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewmodel.GetViewFullName()));
 
             if (page is null)
                 throw new Exception($"Page not found: {viewmodel.GetViewFullName()}.");
 
-            if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is Page resolvedPage)
-                await navigation.PushAsync(resolvedPage, true);
+            if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is Page resolvedPage && resolvedPage is IView view)
+            {
+                view.ViewModel = viewmodel;
+                return resolvedPage;
+            }
+
+            throw new InvalidNavigationException($"Cannot create or navigate to page: {viewmodel.GetViewFullName()}.");
         }
 
         /// <summary>
-        /// Resolves a page of type T (must inherit from Page) and pushes a new instance onto the navigation stack
+        /// Navigates to the viewmodel.
         /// </summary>
-        /// <typeparam name="T">The type of the page to be resolved</typeparam>
+        /// <typeparam name="TViewModel"></typeparam>
         /// <param name="navigation"></param>
-        /// <param name="parameters">The constructor parameters expected by the page to be resolved</param>
+        /// <param name="parameter"></param>
         /// <returns></returns>
-        public static async Task<T> PushAsync<T>(this INavigation navigation, params object[] parameters) where T : Page, IView
-        {
-            var context = ServiceLocator.Default.GetInstance<IContext>();
-            var resolvedPage = ActivatorUtilities.CreateInstance<T>(context.ScopedServices.ServiceProvider, parameters);
-            await navigation.PushAsync(resolvedPage, true);
-            return resolvedPage;
-        }
+        public static Task PushViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel =>
+            navigation.PushAsync(CreatePage<TViewModel>(parameter), true);
 
         /// <summary>
-        /// Resolves a page of type T (must inherit from Page) and pushes a new modal instance onto the navigation stack
+        /// Navigates to the viewmodel.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TViewModel"></typeparam>
         /// <param name="navigation"></param>
+        /// <param name="parameter"></param>
         /// <returns></returns>
-        public static async Task<T> PushModalAsync<T>(this INavigation navigation) where T : Page, IView
-        {
-            var context = ServiceLocator.Default.GetInstance<IContext>();
-            var resolvedPage = context.ScopedServices.ServiceProvider.GetRequiredService<T>();
-            await navigation.PushModalAsync(resolvedPage, true);
-            return resolvedPage;
-        }
-
-        /// <summary>
-        /// Resolves a page of type T (must inherit from Page) and pushes a new modal instance onto the navigation stack
-        /// </summary>
-        /// <typeparam name="T">The type of the page to be resolved</typeparam>
-        /// <param name="navigation"></param>
-        /// <param name="parameters">The constructor parameters expected by the page to be resolved</param>
-        /// <returns></returns>
-        public static async Task<T> PushModalAsync<T>(this INavigation navigation, params object[] parameters) where T : Page, IView
-        {
-            var context = ServiceLocator.Default.GetInstance<IContext>();
-            var resolvedPage = ActivatorUtilities.CreateInstance<T>(context.ScopedServices.ServiceProvider, parameters);
-            await navigation.PushModalAsync(resolvedPage, true);
-            return resolvedPage;
-        }
+        public static Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel =>
+            navigation.PushAsync(new NavigationPage(CreatePage<TViewModel>(parameter)), true);
     }
 }

@@ -10,6 +10,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -212,13 +213,13 @@ namespace ISynergy.Framework.UI.Extensions
                         q.GetInterfaces().Contains(typeof(IView))
                         && q.Name != nameof(IView));
 
-                if (abstraction is not null)
+                if (abstraction is not null && abstraction != typeof(IShellView))
                 {
-                    appBuilder.Services.AddTransient(abstraction, view);
+                    appBuilder.Services.AddScoped(abstraction, view);
                 }
                 else
                 {
-                    appBuilder.Services.AddTransient(view);
+                    appBuilder.Services.AddScoped(view);
                 }
             }
 
@@ -232,11 +233,11 @@ namespace ISynergy.Framework.UI.Extensions
 
                 if (abstraction is not null)
                 {
-                    appBuilder.Services.AddTransient(abstraction, window);
+                    appBuilder.Services.AddScoped(abstraction, window);
                 }
                 else
                 {
-                    appBuilder.Services.AddTransient(window);
+                    appBuilder.Services.AddScoped(window);
                 }
             }
 
