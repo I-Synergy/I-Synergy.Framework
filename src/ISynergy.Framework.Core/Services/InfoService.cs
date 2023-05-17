@@ -76,12 +76,6 @@ namespace ISynergy.Framework.Core.Services
         /// Gets the application title.
         /// </summary>
         public string Title { get; private set; } 
-        
-        /// <summary>
-        /// Gets or sets the environment.
-        /// </summary>
-        /// <value>The environment.</value>
-        public SoftwareEnvironments Environment{ get; private set; }
 
         /// <summary>
         /// Loads the assembly into the Version service.
@@ -106,10 +100,15 @@ namespace ISynergy.Framework.Core.Services
             {
                 ProductVersion = new Version(assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
             }
+            else
+            {
+                ProductVersion = new Version("0.0.0");
+            }
+        }
 
-            ProductVersion = new Version("0.0.0");
-
-            Title = $"{ProductName} v{ProductVersion} ({Environment})";
+        public void SetTitle(SoftwareEnvironments environment)
+        {
+            Title = $"{ProductName} v{ProductVersion} ({environment})";
         }
     }
 }

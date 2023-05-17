@@ -55,7 +55,7 @@
                     <FontImageSource Glyph="{StaticResource signin}" Size="16" FontFamily="FontAwesome" Color="{StaticResource White}" />
                 </Button.ImageSource>
             </Button>
-            <Label Text="{Binding Title}" Margin="10" />
+            <Label Text="{Binding BaseCommonServices.InfoService.Title}" Margin="10" />
         </StackLayout>
     </Shell.FlyoutFooter>
 </Shell>
