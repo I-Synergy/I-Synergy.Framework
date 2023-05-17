@@ -95,5 +95,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
         void OnPropertyChanged(object sender, PropertyChangedEventArgs e);
+
+        /// <summary>
+        /// Gets or sets an optional parameter.
+        /// </summary>
+        object Parameter { get;  set; }
     }
 }
