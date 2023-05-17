@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Sample.Options;
@@ -35,6 +36,7 @@ namespace Sample
 
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
+            Environment = SoftwareEnvironments.Production;
             ScopedServices = serviceScopeFactory.CreateScope();
         }
 
@@ -99,6 +101,8 @@ namespace Sample
         /// <param name="value">The value.</param>
         private void ApplyEnvironment(SoftwareEnvironments value)
         {
+            InfoService.Default.SetTitle(value);
+
             switch (value)
             {
                 case SoftwareEnvironments.Local:
@@ -142,16 +146,6 @@ namespace Sample
         public string CurrencyCode
         {
             get { return GetValue<string>(); }
-            set { SetValue(value); }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [normal screen].
-        /// </summary>
-        /// <value><c>true</c> if [normal screen]; otherwise, <c>false</c>.</value>
-        public bool NormalScreen
-        {
-            get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
 

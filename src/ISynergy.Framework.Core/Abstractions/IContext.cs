@@ -30,11 +30,6 @@ namespace ISynergy.Framework.Core.Abstractions
         /// <value>The environment.</value>
         SoftwareEnvironments Environment { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating whether [normal screen].
-        /// </summary>
-        /// <value><c>true</c> if [normal screen]; otherwise, <c>false</c>.</value>
-        bool NormalScreen { get; set; }
-        /// <summary>
         /// Gets or sets the currency symbol.
         /// </summary>
         /// <value>The currency symbol.</value>
