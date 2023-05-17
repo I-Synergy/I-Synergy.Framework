@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using ISynergy.Framework.Core.Enumerations;
+using System.Reflection;
 
 namespace ISynergy.Framework.Core.Abstractions.Services
 {
@@ -42,5 +43,11 @@ namespace ISynergy.Framework.Core.Abstractions.Services
         /// </summary>
         /// <param name="assembly"></param>
         void LoadAssembly(Assembly assembly);
+
+        /// <summary>
+        /// Sets the title based on software environment.
+        /// </summary>
+        /// <param name="environment"></param>
+        void SetTitle(SoftwareEnvironments environment);
     }
 }
