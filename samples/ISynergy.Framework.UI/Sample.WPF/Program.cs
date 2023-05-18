@@ -48,9 +48,6 @@ namespace Sample
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
-                    services.AddScoped<IShellViewModel, ShellViewModel>();
-                    services.AddScoped<IShellView, ShellView>();
-
                     services.AddNugetServiceIntegrations(context.Configuration);
                 })
                 .ConfigureLogging((context, logging) =>

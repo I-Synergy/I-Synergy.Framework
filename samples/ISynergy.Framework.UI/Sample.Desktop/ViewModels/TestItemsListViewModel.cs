@@ -3,7 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Enumerations;
@@ -178,7 +177,7 @@ namespace Sample.ViewModels
         {
             var selectionVM = new ViewModelSelectionBlade<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
             selectionVM.Submitted += SelectionVM_Submitted;
-            return (CommonServices.NavigationService as INavigationService)?.OpenBladeAsync(this, selectionVM);
+            return CommonServices.NavigationService.OpenBladeAsync(this, selectionVM);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Abstractions.Views;
+using Sample.ViewModels;
 
 namespace Sample
 {
@@ -16,9 +17,7 @@ namespace Sample
         {
             await base.InitializeApplicationAsync();
             await Task.Delay(5000);
-
-            if (ServiceLocator.Default.GetInstance<IShellView>() is Shell shell)
-                MainPage = shell;
+            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AppShellViewModel>();
         }
 
         public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>

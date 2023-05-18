@@ -9,8 +9,6 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Providers;
-using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -193,16 +191,16 @@ namespace ISynergy.Framework.UI.Extensions
 
             foreach (var viewmodel in ViewModelTypes.Distinct())
             {
-                var abstraction = viewmodel.GetInterfaces(false).FirstOrDefault();
+                var abstraction = viewmodel
+                    .GetInterfaces()
+                    .FirstOrDefault(q =>
+                        q.GetInterfaces().Contains(typeof(IViewModel))
+                        && q.Name != nameof(IViewModel));
 
                 if (abstraction is not null && !viewmodel.IsGenericType && abstraction != typeof(IQueryAttributable))
-                {
                     appBuilder.Services.AddScoped(abstraction, viewmodel);
-                }
-                else
-                {
-                    appBuilder.Services.AddScoped(viewmodel);
-                }
+
+                appBuilder.Services.AddScoped(viewmodel);
             }
 
             foreach (var view in ViewTypes.Distinct())
@@ -213,14 +211,10 @@ namespace ISynergy.Framework.UI.Extensions
                         q.GetInterfaces().Contains(typeof(IView))
                         && q.Name != nameof(IView));
 
-                if (abstraction is not null && abstraction != typeof(IShellView))
-                {
-                    appBuilder.Services.AddScoped(abstraction, view);
-                }
-                else
-                {
-                    appBuilder.Services.AddScoped(view);
-                }
+                if (abstraction is not null)
+                    appBuilder.Services.AddTransient(abstraction, view);
+
+                appBuilder.Services.AddTransient(view);
             }
 
             foreach (var window in WindowTypes.Distinct())
@@ -232,13 +226,9 @@ namespace ISynergy.Framework.UI.Extensions
                         && q.Name != nameof(IWindow));
 
                 if (abstraction is not null)
-                {
-                    appBuilder.Services.AddScoped(abstraction, window);
-                }
-                else
-                {
-                    appBuilder.Services.AddScoped(window);
-                }
+                    appBuilder.Services.AddTransient(abstraction, window);
+
+                appBuilder.Services.AddTransient(window);
             }
 
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
