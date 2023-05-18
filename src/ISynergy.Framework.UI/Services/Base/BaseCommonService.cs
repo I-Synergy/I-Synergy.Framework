@@ -33,7 +33,7 @@ namespace ISynergy.Framework.UI.Services
         /// Gets the navigation service.
         /// </summary>
         /// <value>The navigation service.</value>
-        public IBaseNavigationService NavigationService { get; }
+        public INavigationService NavigationService { get; }
 
         /// <summary>
         /// Gets the information service.
@@ -66,7 +66,7 @@ namespace ISynergy.Framework.UI.Services
             IBusyService busyService,
             ILanguageService languageService,
             IDialogService dialogService,
-            IBaseNavigationService navigationService,
+            INavigationService navigationService,
             IInfoService infoService,
             IConverterService converterService,
             IDispatcherService dispatcherService)

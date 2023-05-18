@@ -9,7 +9,6 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;

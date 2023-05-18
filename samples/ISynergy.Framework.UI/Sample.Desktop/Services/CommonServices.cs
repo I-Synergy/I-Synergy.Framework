@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Services;
 using Sample.Abstractions.Services;
 

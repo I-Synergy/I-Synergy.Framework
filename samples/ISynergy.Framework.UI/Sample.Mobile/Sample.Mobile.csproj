@@ -87,6 +87,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\AppShellView.xaml.cs">
+	    <DependentUpon>AppShellView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Resources\Styles\Style.xaml.cs">
 	    <DependentUpon>Style.xaml</DependentUpon>
 	  </Compile>

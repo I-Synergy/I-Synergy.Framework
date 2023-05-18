@@ -5,18 +5,14 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -152,7 +148,6 @@ namespace ISynergy.Framework.UI.Extensions
                 ViewModelTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
                         q.GetInterface(nameof(IViewModel), false) is not null
-                        && !q.Name.Equals(GenericConstants.ShellViewModel)
                         && (q.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(q.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                         && q.Name != GenericConstants.ViewModel
                         && !q.IsAbstract
@@ -162,7 +157,6 @@ namespace ISynergy.Framework.UI.Extensions
                 ViewTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
                         q.GetInterfaces().Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
-                        && !q.Name.Equals(GenericConstants.ShellView)
                         && (q.Name.EndsWith(GenericConstants.View) || q.Name.EndsWith(GenericConstants.Page))
                         && q.Name != GenericConstants.View
                         && q.Name != GenericConstants.Page
@@ -189,16 +183,16 @@ namespace ISynergy.Framework.UI.Extensions
 
             foreach (var viewmodel in ViewModelTypes.Distinct())
             {
-                var abstraction = viewmodel.GetInterfaces(false).FirstOrDefault();
+                var abstraction = viewmodel
+                    .GetInterfaces()
+                    .FirstOrDefault(q =>
+                        q.GetInterfaces().Contains(typeof(IViewModel))
+                        && q.Name != nameof(IViewModel));
 
                 if (abstraction is not null && !viewmodel.IsGenericType)
-                {
                     services.AddScoped(abstraction, viewmodel);
-                }
-                else
-                {
-                    services.AddScoped(viewmodel);
-                }
+
+                services.AddScoped(viewmodel);
             }
 
             foreach (var view in ViewTypes.Distinct())
@@ -210,13 +204,9 @@ namespace ISynergy.Framework.UI.Extensions
                         && q.Name != nameof(IView));
 
                 if (abstraction is not null)
-                {
                     services.AddTransient(abstraction, view);
-                }
-                else
-                {
-                    services.AddTransient(view);
-                }
+
+                services.AddTransient(view);
             }
 
             foreach (var window in WindowTypes.Distinct())
@@ -228,13 +218,9 @@ namespace ISynergy.Framework.UI.Extensions
                         && q.Name != nameof(IWindow));
 
                 if (abstraction is not null)
-                {
                     services.AddTransient(abstraction, window);
-                }
-                else
-                {
-                    services.AddTransient(window);
-                }
+
+                services.AddTransient(window);
             }
 
             foreach (var bootstrapper in BootstrapperTypes.Distinct())

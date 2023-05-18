@@ -2,9 +2,8 @@
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Views;
-using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.ViewModels;
+using Sample.ViewModels;
 
 namespace Sample.Services
 {
@@ -47,8 +46,7 @@ namespace Sample.Services
         public Task AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default)
         {
             ValidateToken();
-            Application.Current.MainPage = _context.ScopedServices.ServiceProvider.GetRequiredService<IShellView>() as Page;
-            return Task.CompletedTask;
+            return _navigationService.NavigateModalAsync<AppShellViewModel>();
         }
 
         public Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default)
@@ -86,10 +84,10 @@ namespace Sample.Services
             throw new NotImplementedException();
         }
 
-        public async Task SignOutAsync()
+        public Task SignOutAsync()
         {
             ValidateToken();
-            await _navigationService.ReplaceMainWindowAsync<IAuthenticationView>();
+            return _navigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
 
         private void ValidateToken()

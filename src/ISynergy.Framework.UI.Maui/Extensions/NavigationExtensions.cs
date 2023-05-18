@@ -65,6 +65,6 @@ namespace ISynergy.Framework.UI.Extensions
         /// <param name="parameter"></param>
         /// <returns></returns>
         public static Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel =>
-            navigation.PushAsync(new NavigationPage(CreatePage<TViewModel>(parameter)), true);
+            navigation.PushModalAsync(CreatePage<TViewModel>(parameter), true);
     }
 }
