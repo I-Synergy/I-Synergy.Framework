@@ -167,7 +167,7 @@ namespace ISynergy.Framework.UI
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
         /// <param name="e">Event data for the event.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             MainWindow = new Microsoft.UI.Xaml.Window();
 
@@ -194,20 +194,7 @@ namespace ISynergy.Framework.UI
                 MainWindow.Content = rootFrame;
             }
 
-            var shellView = ServiceLocator.Default.GetInstance<IShellView>();
-            var shellViewModel = ServiceLocator.Default.GetInstance<IShellViewModel>();
-            var context = ServiceLocator.Default.GetInstance<IContext>();
-
-            Argument.IsNotNull(context);
-            Argument.IsNotNull(shellView);
-
-            if (rootFrame.Content is null)
-            {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame.Content = shellView;
-            }
+            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<IShellViewModel>();
 
             _logger.LogInformation("Loading theme");
             _themeService.SetStyle();

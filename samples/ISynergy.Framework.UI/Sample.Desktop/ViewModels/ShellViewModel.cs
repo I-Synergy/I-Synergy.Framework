@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Models;
@@ -124,7 +123,7 @@ namespace Sample.ViewModels
         }
 
         private Task OpenLoginAsync() =>
-            CommonServices.NavigationService.ReplaceMainWindowAsync<IAuthenticationView>();
+            CommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
 
         private Task OpenChartTestAsync() =>
             CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();

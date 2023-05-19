@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-    x:Class="Sample.AppShell"
+    x:Class="Sample.Views.AppShellView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:Sample.Views"
@@ -22,10 +22,11 @@
                 <FontImageSource Glyph="{StaticResource info}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"/>
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent Title="Controls" ContentTemplate="{DataTemplate views:ControlsView}" />
-        <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate views:DialogsView}" />
         <ShellContent Title="Validation" ContentTemplate="{DataTemplate views:ValidationView}" />
     </FlyoutItem>
+
+    <MenuFlyoutItem Text="{m:GetString Controls}" Command="{Binding ControlsCommand}"/>
+    <MenuFlyoutItem Text="{m:GetString Dialogs}" Command="{Binding DialogsCommand}"/>
 
     <MenuFlyoutItem Text="{m:GetString Help}" Command="{Binding HelpCommand}">
         <MenuFlyoutItem.IconImageSource>

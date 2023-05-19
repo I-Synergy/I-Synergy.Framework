@@ -5,8 +5,7 @@ namespace Sample.Views;
 
 public partial class ControlsView
 {
-    public ControlsView(IContext context)
-        : base(context, typeof(ControlsViewModel))
+    public ControlsView()
     {
         InitializeComponent();
     }

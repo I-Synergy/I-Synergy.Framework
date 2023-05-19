@@ -5,8 +5,7 @@ namespace Sample.Views;
 
 public partial class DialogsView
 {
-    public DialogsView(IContext context)
-        : base(context, typeof(DialogsViewModel))
+    public DialogsView()
     {
         InitializeComponent();
     }
