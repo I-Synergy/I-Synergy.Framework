@@ -93,6 +93,15 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets the Parameter property value.
+        /// </summary>
+        public object Parameter
+        {
+            get => GetValue<object>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ViewModel"/> class.
         /// </summary>
         /// <param name="context">The context.</param>

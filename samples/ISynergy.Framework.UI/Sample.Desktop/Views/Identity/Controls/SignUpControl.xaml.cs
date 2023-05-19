@@ -37,9 +37,9 @@ namespace Sample.Views.Identity.Controls
 
         private void ComboBox_Modules_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            if (DataContext is AuthenticationViewModel viewModel)
+            if (DataContext is AuthenticationViewModel viewModel && viewModel.Modules.FirstOrDefault() is Module module)
             {
-                ComboBox_Modules.SelectedItems.Add(viewModel.Modules?.First());
+                ComboBox_Modules.SelectedItems.Add(module);
             }
 
         }

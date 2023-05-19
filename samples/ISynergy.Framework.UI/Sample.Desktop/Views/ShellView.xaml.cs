@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 
@@ -13,11 +13,10 @@ namespace Sample.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellView" /> class.
         /// </summary>
-        public ShellView(IShellViewModel viewModel, INavigationService navigationService)
-            : base(viewModel)
+        public ShellView()
         {
             InitializeComponent();
-            navigationService.Frame = ContentRootFrame;
+            ServiceLocator.Default.GetInstance<INavigationService>().Frame = ContentRootFrame;
         }
     }
 }

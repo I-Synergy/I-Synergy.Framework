@@ -19,7 +19,18 @@ namespace ISynergy.Framework.Core.Base
     /// <seealso cref="IObservableClass" />
     public abstract class ObservableClass : IObservableClass
     {
-        private readonly bool _automaticValidationTrigger;
+        /// <summary>
+        /// Automatic validation trigger.
+        /// </summary>
+        [JsonIgnore]
+        [DataTableIgnore]
+        [XmlIgnore]
+        [Display(AutoGenerateField = false)]
+        public bool AutomaticValidationTrigger
+        {
+            get => GetValue<bool>();
+            set => SetValue(value);
+        }
 
         /// <summary>
         /// Gets the properties.
@@ -99,8 +110,7 @@ namespace ISynergy.Framework.Core.Base
         /// <param name="automaticValidationTrigger">The validation.</param>
         protected ObservableClass(bool automaticValidationTrigger = false)
         {
-            _automaticValidationTrigger = automaticValidationTrigger;
-
+            AutomaticValidationTrigger = automaticValidationTrigger;
             ErrorsChanged += ObservableClass_ErrorsChanged;
         }
 
@@ -152,7 +162,7 @@ namespace ISynergy.Framework.Core.Base
 
                     OnPropertyChanged(propertyName);
 
-                    if (_automaticValidationTrigger)
+                    if (AutomaticValidationTrigger)
                         Validate();
                 }
             }
@@ -182,7 +192,7 @@ namespace ISynergy.Framework.Core.Base
 
                     OnPropertyChanged(propertyName);
 
-                    if (_automaticValidationTrigger)
+                    if (AutomaticValidationTrigger)
                         Validate();
                 }
             }
@@ -239,7 +249,7 @@ namespace ISynergy.Framework.Core.Base
             foreach (var property in Properties)
                 property.Value.ResetChanges();
 
-            if (_automaticValidationTrigger)
+            if (AutomaticValidationTrigger)
                 Validate();
         }
 
@@ -251,7 +261,7 @@ namespace ISynergy.Framework.Core.Base
             foreach (var property in Properties)
                 property.Value.MarkAsClean();
 
-            if (_automaticValidationTrigger)
+            if (AutomaticValidationTrigger)
                 Validate();
         }
 

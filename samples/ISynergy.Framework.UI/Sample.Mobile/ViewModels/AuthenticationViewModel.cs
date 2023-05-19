@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -61,7 +60,7 @@ namespace ISynergy.Framework.UI.ViewModels
         }
 
         private Task SignUpAsync() =>
-            BaseCommonServices.NavigationService.ReplaceMainWindowAsync<IRegistrationView>();
+            BaseCommonServices.NavigationService.NavigateModalAsync<RegistrationViewModel>();
 
         private async Task SignInAsync()
         {

@@ -2,13 +2,13 @@
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.UI.Services.Base
 {
-    public abstract class BaseNavigationService : IBaseNavigationService
+    public abstract class BaseNavigationService : INavigationService
     {
         protected readonly IContext _context;
 
@@ -91,30 +91,41 @@ namespace ISynergy.Framework.UI.Services.Base
         /// <summary>
         /// Navigates to a specified viewmodel asynchronous.
         /// </summary>
-        /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
-        /// <returns>Task</returns>
-        public abstract Task NavigateAsync<TViewModel>() where TViewModel : class, IViewModel;
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public abstract Task NavigateAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel;
 
         /// <summary>
-        /// Navigates to a specified viewmodel asynchronous.
+        /// Navigates to the modal viewmodel with parameters.
         /// </summary>
         /// <typeparam name="TViewModel"></typeparam>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public abstract Task NavigateAsync<TViewModel>(object parameter) where TViewModel : class, IViewModel;
+        public abstract Task NavigateModalAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel;
+
+        public virtual object Frame { get; set; }
+        public virtual bool CanGoBack { get; }
+        public virtual bool CanGoForward { get; }
+
+        public virtual void GoBack() { }
+        public virtual void GoForward() { }
+        public virtual Task CleanBackStackAsync() => Task.CompletedTask;
 
         /// <summary>
-        /// Replaces the main window with specified view asynchronous.
+        /// open blade as an asynchronous operation.
         /// </summary>
-        /// <typeparam name="TView"></typeparam>
-        /// <returns></returns>
-        public abstract Task ReplaceMainWindowAsync<TView>() where TView : IView;
+        /// <param name="owner">The owner.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task.</returns>
+        public virtual Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel) => Task.CompletedTask;
 
         /// <summary>
-        /// Replaces the main frame with specified view asynchronous.
+        /// Removes the blade asynchronous.
         /// </summary>
-        /// <typeparam name="TView"></typeparam>
-        /// <returns></returns>
-        public abstract Task ReplaceMainFrameAsync<TView>() where TView : IView;
+        /// <param name="owner">The owner.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task.</returns>
+        public virtual void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) { }
     }
 }

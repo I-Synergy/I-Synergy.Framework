@@ -2,9 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Views;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -12,8 +9,6 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
-using Sample.ViewModels;
-using Sample.Views;
 using System.Reflection;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -51,11 +46,6 @@ namespace Sample
 
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
-
-            builder.Services.AddTransient<IAuthenticationView, AuthenticationView>();
-            builder.Services.AddTransient<IRegistrationView, RegistrationView>();
-            builder.Services.AddTransient<IShellViewModel, AppShellViewModel>();
-            builder.Services.AddTransient<IShellView, AppShell>();
 
 #if DEBUG
             builder.Logging.AddDebug();

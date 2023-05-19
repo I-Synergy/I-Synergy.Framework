@@ -3,7 +3,6 @@ using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
@@ -57,10 +56,6 @@ namespace Sample
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
-
-                    services.AddTransient<IAuthenticationView, AuthenticationView>();
-                    services.AddTransient<IShellViewModel, ShellViewModel>();
-                    services.AddTransient<IShellView, ShellView>();
                 })
                 .ConfigureLogging((context, logging) =>
                 {

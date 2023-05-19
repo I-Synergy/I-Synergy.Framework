@@ -2,16 +2,14 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
-using System.Reflection;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -20,7 +18,7 @@ namespace ISynergy.Framework.UI.Services
     /// Implements the <see cref="INavigationService" />
     /// </summary>
     /// <seealso cref="INavigationService" />
-    public class NavigationService : BaseNavigationService, INavigationService
+    public class NavigationService : BaseNavigationService
     {
         private Window _activeDialog = null;
 
@@ -33,7 +31,7 @@ namespace ISynergy.Framework.UI.Services
         /// Gets or sets the frame.
         /// </summary>
         /// <value>The frame.</value>
-        public object Frame
+        public override object Frame
         {
             get => _frame ??= (Frame)Microsoft.UI.Xaml.Window.Current.Content;
             set => _frame = (Frame)value;
@@ -43,12 +41,12 @@ namespace ISynergy.Framework.UI.Services
         /// Gets a value indicating whether this instance can go back.
         /// </summary>
         /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-        public bool CanGoBack => _frame.CanGoBack;
+        public override bool CanGoBack => _frame.CanGoBack;
         /// <summary>
         /// Gets a value indicating whether this instance can go forward.
         /// </summary>
         /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
-        public bool CanGoForward => _frame.CanGoForward;
+        public override bool CanGoForward => _frame.CanGoForward;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
@@ -62,7 +60,7 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Goes the back.
         /// </summary>
-        public void GoBack()
+        public override void GoBack()
         {
             if (_frame.CanGoBack)
                 _frame.GoBack();
@@ -71,7 +69,7 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Goes the forward.
         /// </summary>
-        public void GoForward()
+        public override void GoForward()
         {
             if (_frame.CanGoForward)
                 _frame.GoForward();
@@ -119,7 +117,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
+        public override async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
         {
             Argument.IsNotNull(owner);
 
@@ -161,7 +159,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
+        public override void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
         {
             Argument.IsNotNull(owner);
 
@@ -185,10 +183,6 @@ namespace ISynergy.Framework.UI.Services
             }
         }
 
-        public override Task NavigateAsync<TViewModel>() =>
-            NavigateAsync<TViewModel>(null);
-
-
         /// <summary>
         /// navigate as an asynchronous operation.
         /// </summary>
@@ -196,75 +190,42 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="parameter">The parameter.</param>
         /// <returns>Task&lt;IView&gt;.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-        public override async Task NavigateAsync<TViewModel>(object parameter)
+        public override async Task NavigateAsync<TViewModel>(object parameter = null)
         {
-            var viewmodel = parameter is IViewModel instance ? instance : _context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
-            var page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewmodel.GetViewFullName()));
-
-            if (page is null)
-                throw new Exception($"Page not found: {viewmodel.GetViewFullName()}.");
-
-            // Check if actual page is the same as destination page.
-            if (_frame.Content is not null && _frame.Content.GetType().Equals(page))
-                return;
-
-            if (parameter is IViewModel)
+            if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page)
             {
-                _frame.Navigate(page, viewmodel);
+                // Check if actual page is the same as destination page.
+                if (_frame.Content is not null && _frame.Content.GetType().Equals(page))
+                    return;
+
+                _frame.Navigate(page.GetType(), page.ViewModel);
+
+                if (!page.ViewModel.IsInitialized)
+                    await page.ViewModel.InitializeAsync();
             }
-            else
-            {
-                if (page.GetInterfaces(true).Any(q => q == typeof(IView)) && parameter is not null && !string.IsNullOrEmpty(parameter.ToString()))
-                {
-                    Type genericPropertyType = null;
-
-                    // Has class GenericTypeArguments?
-                    if (viewmodel.GetType().GenericTypeArguments.Any())
-                        genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
-                    // Has BaseType GenericTypeArguments?
-                    else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
-                        genericPropertyType = baseType.GetGenericArguments().First();
-
-                    if (genericPropertyType is not null && parameter.GetType() == genericPropertyType)
-                    {
-                        var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
-
-                        // Check if instance implements genericInterfaceType.
-                        if (genericInterfaceType.IsInstanceOfType(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
-                            method.Invoke(viewmodel, new[] { parameter });
-                    }
-                }
-
-                _frame.Navigate(page, viewmodel);
-            }
-
-            if (!viewmodel.IsInitialized)
-                await viewmodel.InitializeAsync();
         }
 
-        public Task CleanBackStackAsync()
+        public override Task NavigateModalAsync<TViewModel>(object parameter = null)
+        {
+            if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page && Application.Current is BaseApplication baseApplication)
+            {
+                DispatcherQueue.GetForCurrentThread().TryEnqueue(
+                    DispatcherQueuePriority.Normal, 
+                    async () =>
+                {
+                    baseApplication.MainWindow.Content = page;
+
+                    if (!page.ViewModel.IsInitialized)
+                        await page.ViewModel.InitializeAsync();
+                });
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public override Task CleanBackStackAsync()
         {
             _frame.BackStack.Clear();
-            return Task.CompletedTask;
-        }
-
-        public override Task ReplaceMainWindowAsync<T>()
-        {
-            if (_context.ScopedServices.ServiceProvider.GetRequiredService<T>() is Page page && Application.Current is BaseApplication baseApplication)
-                DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, () => baseApplication.MainWindow.Content = page);
-            else
-                throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
-
-            return Task.CompletedTask;
-        }
-
-        public override Task ReplaceMainFrameAsync<T>()
-        {
-            if (_context.ScopedServices.ServiceProvider.GetRequiredService<T>() is Page page && Application.Current is BaseApplication baseApplication)
-                DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, () => _frame.Content = page);
-            else
-                throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
-
             return Task.CompletedTask;
         }
 

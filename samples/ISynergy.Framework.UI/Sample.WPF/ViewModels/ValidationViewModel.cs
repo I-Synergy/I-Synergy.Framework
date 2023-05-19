@@ -65,15 +65,6 @@ namespace Sample.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the AutomaticValidation property value.
-        /// </summary>
-        public bool AutomaticValidation
-        {
-            get => GetValue<bool>();
-            set => SetValue(value);
-        }
-
-        /// <summary>
         /// Description.
         /// </summary>
         public string Description { get; }

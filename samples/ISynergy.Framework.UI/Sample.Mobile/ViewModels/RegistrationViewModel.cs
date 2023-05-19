@@ -9,7 +9,6 @@ using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
@@ -256,7 +255,7 @@ namespace ISynergy.Framework.UI.ViewModels
         }
 
         private Task SignInAsync() =>
-            BaseCommonServices.NavigationService.ReplaceMainWindowAsync<IAuthenticationView>();
+            BaseCommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
 
         public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

@@ -12,8 +12,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -269,7 +267,8 @@ namespace Sample.ViewModels
 
             Modules = await _authenticationService.GetModulesAsync();
 
-            Registration_Modules.Add(Modules.First());
+            if (Modules.FirstOrDefault() is Module module)
+                Registration_Modules.Add(module);
 
             if (_applicationSettingsService.Settings.Users is List<string> users)
                 Usernames = new ObservableCollection<string>(users);
@@ -311,8 +310,8 @@ namespace Sample.ViewModels
                 await BaseCommonServices.DialogService
                         .ShowInformationAsync(BaseCommonServices.LanguageService.GetString("Warning_Reset_Password"));
 
-                if (BaseCommonServices.NavigationService is INavigationService navigationService && navigationService.CanGoBack)
-                    navigationService.GoBack();
+                if (BaseCommonServices.NavigationService.CanGoBack)
+                    BaseCommonServices.NavigationService.GoBack();
             }
         }
 
@@ -349,7 +348,7 @@ namespace Sample.ViewModels
         {
             if (Validate())
             {
-                return BaseCommonServices.NavigationService.ReplaceMainWindowAsync<IShellView>();
+                return _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
             }
 
             return Task.CompletedTask;
