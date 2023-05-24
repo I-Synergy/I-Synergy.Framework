@@ -2,10 +2,8 @@
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +14,6 @@ using NugetUnlister.Extensions;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
-using Sample.ViewModels;
-using Sample.Views;
 using System.Reflection;
 
 namespace Sample
