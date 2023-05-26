@@ -200,7 +200,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{360CF219
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NugetUnlister", "tools\NugetUnlister\NugetUnlister.csproj", "{74C82CAA-8146-43BD-8273-35DE21550CD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.UI.Maui.Tests", "tests\ISynergy.Framework.UI.Maui.Tests\ISynergy.Framework.UI.Maui.Tests.csproj", "{81A2E412-2D3C-4C1D-8029-D6D69DAD7137}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.Maui.Tests", "tests\ISynergy.Framework.UI.Maui.Tests\ISynergy.Framework.UI.Maui.Tests.csproj", "{81A2E412-2D3C-4C1D-8029-D6D69DAD7137}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
