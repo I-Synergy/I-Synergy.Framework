@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -11,6 +9,14 @@ namespace ISynergy.Framework.UI.Services.Base
     public abstract class BaseNavigationService : INavigationService
     {
         protected readonly IContext _context;
+
+        public event EventHandler BackStackChanged;
+
+        /// <summary>
+        /// Handles the <see cref="E:BackStackChanged" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseNavigationService"/> class.
@@ -92,9 +98,21 @@ namespace ISynergy.Framework.UI.Services.Base
         /// Navigates to a specified viewmodel asynchronous.
         /// </summary>
         /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="viewModel"></param>
         /// <param name="parameter"></param>
+        /// <param name="navigateBack"></param>
         /// <returns></returns>
-        public abstract Task NavigateAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel;
+        public abstract Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel;
+
+        /// <summary>
+        /// Navigates to a specified viewmodel asynchronous.
+        /// </summary>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="parameter"></param>
+        /// <param name="navigateBack"></param>
+        /// <returns></returns>
+        public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel => 
+            NavigateAsync(default(TViewModel), parameter);
 
         /// <summary>
         /// Navigates to the modal viewmodel with parameters.
@@ -108,8 +126,8 @@ namespace ISynergy.Framework.UI.Services.Base
         public virtual bool CanGoBack { get; }
         public virtual bool CanGoForward { get; }
 
-        public virtual void GoBack() { }
-        public virtual void GoForward() { }
+        public virtual Task GoBackAsync() => Task.CompletedTask;
+        public virtual Task GoForwardAsync() => Task.CompletedTask;
         public virtual Task CleanBackStackAsync() => Task.CompletedTask;
 
         /// <summary>
