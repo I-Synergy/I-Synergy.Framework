@@ -17,8 +17,8 @@
 	<c:View.Resources>
 		<Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
 		<Converters:BooleanToStringConverter x:Key="BooleanToStringConverter" True="Logoff" False="Login" />
-		
-		<FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
+
+        <FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
 			<FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
 				<DataTemplate x:DataType="models:NavigationItem">
 					<NavigationViewItem Content="{x:Bind Name}">
@@ -44,21 +44,26 @@
 
 		<StackPanel Orientation="Horizontal" Grid.Row="0" Margin="18,0">
 			<Image Source="ms-appx:///Assets/icon.png" Width="18" Height="18"/>
-			<TextBlock Text="{Binding Title}" VerticalAlignment="Center" Margin="18,0"/>
+            <TextBlock Text="{Binding CommonServices.InfoService.Title}" VerticalAlignment="Center" Margin="18,0"/>
 		</StackPanel>
 
 		<NavigationView x:Name="RootNavigationView"
-							 Grid.Row="1"
-							 IsTitleBarAutoPaddingEnabled="False"            
-							 ExpandedModeThresholdWidth="1920"
-							 MenuItemsSource="{Binding PrimaryItems}"
-							 FooterMenuItemsSource="{Binding SecondaryItems}"
-							 MenuItemTemplateSelector="{StaticResource ItemSelector}"
-							 IsSettingsVisible="False"
-							 PaneDisplayMode="Left"
-							 IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}">
-
-			<Frame x:Name="ContentRootFrame" Margin="10" IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+						Grid.Row="1"
+						IsTitleBarAutoPaddingEnabled="False"            
+						ExpandedModeThresholdWidth="1920"
+						MenuItemsSource="{Binding PrimaryItems}"
+						FooterMenuItemsSource="{Binding SecondaryItems}"
+						MenuItemTemplateSelector="{StaticResource ItemSelector}"
+						IsSettingsVisible="False"
+                        IsBackButtonVisible="Auto"
+						IsBackEnabled="{Binding IsBackEnabled}"
+                        BackRequested="RootNavigationView_BackRequested"
+						PaneDisplayMode="Left"
+						IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}">
+			<Frame 
+                x:Name="ContentRootFrame" 
+                Margin="10" 
+                IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
 				<not_wasm:Frame.ContentTransitions>
 					<not_wasm:TransitionCollection>
 						<not_wasm:NavigationThemeTransition/>

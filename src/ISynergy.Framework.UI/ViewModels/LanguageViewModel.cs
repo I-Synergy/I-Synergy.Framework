@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 
@@ -21,12 +20,6 @@ namespace ISynergy.Framework.UI.ViewModels
         public override string Title => BaseCommonServices.LanguageService.GetString("Language");
 
         /// <summary>
-        /// Gets or sets the color command.
-        /// </summary>
-        /// <value>The color command.</value>
-        public RelayCommand<string> SetLanguageCommand { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -40,7 +33,6 @@ namespace ISynergy.Framework.UI.ViewModels
             string culture)
             : base(context, commonServices, logger)
         {
-            SetLanguageCommand = new RelayCommand<string>((e) => SelectedItem = e);
             SelectedItem = culture;
         }
     }

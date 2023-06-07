@@ -14,10 +14,30 @@
     PrimaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
     SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
 
+    <c:Window.Resources>
+        <Converters:RadioButtonValueConverter x:Key="RadioButtonValueConverter"/>
+    </c:Window.Resources>
+    
     <StackPanel Orientation="Vertical">
-        <RadioButton x:Name="Button_Language_nl" Content="{m:LanguageResource Key=Language_Dutch}" GroupName="Language" Command="{Binding SetLanguageCommand}" CommandParameter="nl" />
-        <RadioButton x:Name="Button_Language_en" Content="{m:LanguageResource Key=Language_English}" GroupName="Language" Command="{Binding SetLanguageCommand}" CommandParameter="en" />
-        <RadioButton x:Name="Button_Language_de" Content="{m:LanguageResource Key=Language_German}" GroupName="Language" Command="{Binding SetLanguageCommand}" CommandParameter="de" IsEnabled="False" />
-        <RadioButton x:Name="Button_Language_fr" Content="{m:LanguageResource Key=Language_French}" GroupName="Language" Command="{Binding SetLanguageCommand}" CommandParameter="fr" IsEnabled="False" />
+        <RadioButton
+            Content="{m:LanguageResource Key=Language_Dutch}"
+            IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=nl}"
+            GroupName="Language"/>
+        <RadioButton
+            Content="{m:LanguageResource Key=Language_English}"
+            IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=en}"
+            GroupName="Language" />
+        <RadioButton 
+            x:Name="Button_Language_de" 
+            Content="{m:LanguageResource Key=Language_German}" 
+            IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=de}"
+            GroupName="Language" 
+            IsEnabled="False" />
+        <RadioButton 
+            x:Name="Button_Language_fr" 
+            Content="{m:LanguageResource Key=Language_French}" 
+            IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=fr}"
+            GroupName="Language" 
+            IsEnabled="False" />
     </StackPanel>
 </c:Window>

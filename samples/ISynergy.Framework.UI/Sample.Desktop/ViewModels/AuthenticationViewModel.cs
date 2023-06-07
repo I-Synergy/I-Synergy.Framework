@@ -311,7 +311,7 @@ namespace Sample.ViewModels
                         .ShowInformationAsync(BaseCommonServices.LanguageService.GetString("Warning_Reset_Password"));
 
                 if (BaseCommonServices.NavigationService.CanGoBack)
-                    BaseCommonServices.NavigationService.GoBack();
+                    await BaseCommonServices.NavigationService.GoBackAsync();
             }
         }
 
