@@ -10,6 +10,8 @@ using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using System;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -20,12 +22,20 @@ namespace ISynergy.Framework.UI.Services
     /// <seealso cref="INavigationService" />
     public class NavigationService : BaseNavigationService
     {
+        /// <summary>
+        /// The active window.
+        /// </summary>
         private Window _activeDialog = null;
 
         /// <summary>
-        /// The frame
+        /// The frame.
         /// </summary>
         private Frame _frame;
+
+        /// <summary>
+        /// Navigation backstack.
+        /// </summary>
+        private Stack<object> _backStack = new Stack<object>();
 
         /// <summary>
         /// Gets or sets the frame.
@@ -41,7 +51,8 @@ namespace ISynergy.Framework.UI.Services
         /// Gets a value indicating whether this instance can go back.
         /// </summary>
         /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-        public override bool CanGoBack => _frame.CanGoBack;
+        public override bool CanGoBack => _backStack.Count > 0 ? true : false;
+
         /// <summary>
         /// Gets a value indicating whether this instance can go forward.
         /// </summary>
@@ -60,19 +71,23 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Goes the back.
         /// </summary>
-        public override void GoBack()
+        public override async Task GoBackAsync()
         {
-            if (_frame.CanGoBack)
-                _frame.GoBack();
+            if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
+            {
+                await NavigateAsync(viewModel, navigateBack: true);
+            }
         }
 
         /// <summary>
         /// Goes the forward.
         /// </summary>
-        public override void GoForward()
+        public override Task GoForwardAsync()
         {
             if (_frame.CanGoForward)
                 _frame.GoForward();
+
+            return base.GoForwardAsync();
         }
 
         /// <summary>
@@ -187,21 +202,31 @@ namespace ISynergy.Framework.UI.Services
         /// navigate as an asynchronous operation.
         /// </summary>
         /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
+        /// <param name="viewModel"></param>
         /// <param name="parameter">The parameter.</param>
+        /// <param name="navigateBack"></param>
         /// <returns>Task&lt;IView&gt;.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-        public override async Task NavigateAsync<TViewModel>(object parameter = null)
+        public override async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
         {
-            if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page)
+            if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View page)
             {
                 // Check if actual page is the same as destination page.
-                if (_frame.Content is not null && _frame.Content.GetType().Equals(page))
-                    return;
+                if (_frame.Content is View originalView)
+                {
+                    if (originalView.GetType().Equals(page.GetType()))
+                        return;
 
-                _frame.Navigate(page.GetType(), page.ViewModel);
+                    if (!navigateBack)
+                        _backStack.Push(originalView.ViewModel);
+                }                   
+
+                _frame.Content = page;
 
                 if (!page.ViewModel.IsInitialized)
                     await page.ViewModel.InitializeAsync();
+
+                OnBackStackChanged(EventArgs.Empty);
             }
         }
 
@@ -225,7 +250,8 @@ namespace ISynergy.Framework.UI.Services
 
         public override Task CleanBackStackAsync()
         {
-            _frame.BackStack.Clear();
+            _backStack.Clear();
+            OnBackStackChanged(EventArgs.Empty);
             return Task.CompletedTask;
         }
 

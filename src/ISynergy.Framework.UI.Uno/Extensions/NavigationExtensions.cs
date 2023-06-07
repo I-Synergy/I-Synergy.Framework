@@ -17,32 +17,38 @@ namespace ISynergy.Framework.UI.Extensions
         /// <exception cref="Exception"></exception>
         /// <exception cref="FileNotFoundException"></exception>
         public static View CreatePage<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
+            => CreatePage<TViewModel>(default(TViewModel), parameter);
+
+        /// <summary>
+        /// Creates or gets Page from ViewModel.
+        /// </summary>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="viewModel"></param>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        public static View CreatePage<TViewModel>(TViewModel viewModel, object parameter = null) where TViewModel : class, IViewModel
         {
             var context = ServiceLocator.Default.GetInstance<IContext>();
-            var viewmodel = default(TViewModel);
+            
+            if (viewModel is null && context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
+                viewModel = resolvedViewModel;
 
-            if (parameter is TViewModel instance)
-            {
-                viewmodel = instance;
-            }
-            else
-            {
-                viewmodel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
-                viewmodel.Parameter = parameter;
-            }
+            viewModel.Parameter = parameter;
 
-            var page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewmodel.GetViewFullName()));
+            var page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
 
             if (page is null)
-                throw new Exception($"Page not found: {viewmodel.GetViewFullName()}.");
+                throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
 
             if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is View resolvedPage)
             {
-                resolvedPage.ViewModel = viewmodel;
+                resolvedPage.ViewModel = viewModel;
                 return resolvedPage;
             }
 
-            throw new FileNotFoundException($"Cannot create or navigate to page: {viewmodel.GetViewFullName()}.");
+            throw new FileNotFoundException($"Cannot create or navigate to page: {viewModel.GetViewFullName()}.");
         }
     }
 }
