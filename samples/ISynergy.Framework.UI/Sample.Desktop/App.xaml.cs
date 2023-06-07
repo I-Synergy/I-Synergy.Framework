@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
@@ -59,8 +60,9 @@ namespace Sample
                 })
                 .ConfigureLogging((context, logging) =>
                 {
+                    logging.AddDebug();
                     //logging.AddAppCenterLogging(context.Configuration);
-                    logging.AddSentryLogging(context.Configuration);
+                    //logging.AddSentryLogging(context.Configuration);
                 });
         }
     }
