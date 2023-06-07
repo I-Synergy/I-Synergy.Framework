@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls
@@ -28,57 +27,6 @@ namespace ISynergy.Framework.UI.Controls
                 _viewModel = value;
                 DataContext = _viewModel;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="View"/> class.
-        /// </summary>
-        protected View()
-            : this(null)
-        {
-        }
-
-        protected View(IViewModel viewModel)
-        {
-            ViewModel = viewModel;
-
-            Loaded += View_Loaded;
-            Unloaded += View_Unloaded;
-        }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            if (e.Parameter is IViewModel viewModel)
-            {
-                ViewModel = viewModel;
-
-                if (!ViewModel.IsInitialized)
-                    await ViewModel.InitializeAsync();
-            }
-        }
-
-        /// <summary>
-        /// Views the unloaded.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The e.</param>
-        public virtual void View_Unloaded(object sender, object e)
-        {
-            //if(e is RoutedEventArgs args)
-            //{
-            //}
-        }
-
-        /// <summary>
-        /// Views the loaded.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The e.</param>
-        public virtual void View_Loaded(object sender, object e)
-        {
-            //if (e is RoutedEventArgs args)
-            //{
-            //}
         }
     }
 }
