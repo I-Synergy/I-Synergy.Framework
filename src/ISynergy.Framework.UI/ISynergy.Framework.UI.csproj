@@ -63,4 +63,8 @@
 	  <Resource Include="Assets\Fonts\segoeuisl.ttf" />
 	  <Resource Include="Assets\Fonts\seguisb.ttf" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Converters\" />
+	</ItemGroup>
 </Project>
