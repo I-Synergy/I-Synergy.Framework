@@ -12,7 +12,7 @@
     <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <Converters:StringToGeometryConverter x:Key="StringToGeometryConverter"/>
 
-    <FontFamily x:Key="FontAwesome">/assets/fonts/#Font Awesome 6 Pro Light</FontFamily>
+    <FontFamily x:Key="fontawesome">/assets/fonts/#Font Awesome 6 Pro Light</FontFamily>
 
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF2688C5"/>
 

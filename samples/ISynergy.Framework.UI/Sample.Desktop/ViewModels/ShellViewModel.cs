@@ -28,6 +28,15 @@ namespace Sample.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets the IsBackEnabled property value.
+        /// </summary>
+        public bool IsBackEnabled
+        {
+            get => GetValue<bool>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
         /// Gets the common services.
         /// </summary>
         /// <value>The common services.</value>
@@ -102,6 +111,7 @@ namespace Sample.ViewModels
             : base(context, commonServices, settingsService, authenticationService, logger, themeService, localizationService)
         {
             CommonServices = commonServices;
+            CommonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
             SettingsService = settingsService;
 
             Title = commonServices.InfoService.ProductName;
@@ -120,6 +130,18 @@ namespace Sample.ViewModels
             LoginCommand = new AsyncRelayCommand(OpenLoginAsync);
 
             PopulateNavItems();
+        }
+
+        private void NavigationService_BackStackChanged(object sender, EventArgs e)
+        {
+            if (CommonServices.NavigationService.CanGoBack)
+            {
+                IsBackEnabled = true;
+            }
+            else
+            {
+                IsBackEnabled = false;
+            }
         }
 
         private Task OpenLoginAsync() =>

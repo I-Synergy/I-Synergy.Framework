@@ -15,7 +15,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Assets\Fonts\FontAwesome.otf" />
+	  <None Remove="Assets\Fonts\fontawesome.otf" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -43,7 +43,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="Assets\Fonts\FontAwesome.otf" />
+	  <Resource Include="Assets\Fonts\fontawesome.otf" />
 	</ItemGroup>
 
 	<ItemGroup>
