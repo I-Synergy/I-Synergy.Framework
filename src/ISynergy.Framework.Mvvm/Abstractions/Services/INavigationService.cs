@@ -5,6 +5,11 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     public interface INavigationService
     {
         /// <summary>
+        /// Event handler when backstack is changed.
+        /// </summary>
+        event EventHandler BackStackChanged;
+
+        /// <summary>
         /// Frame to navigate.
         /// </summary>
         object Frame { get; set; }
@@ -12,17 +17,28 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         bool CanGoBack { get; }
         bool CanGoForward { get; }
 
-        void GoBack();
-        void GoForward();
+        Task GoBackAsync();
+        Task GoForwardAsync();
         Task CleanBackStackAsync();
 
         /// <summary>
         /// Navigates to a specified viewmodel asynchronous.
         /// </summary>
         /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="viewModel"></param>
         /// <param name="parameter"></param>
+        /// <param name="navigateBack"></param>
         /// <returns></returns>
-        Task NavigateAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel;
+        Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel;
+
+        /// <summary>
+        /// Navigates to a specified viewmodel asynchronous.
+        /// </summary>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="parameter"></param>
+        /// <param name="navigateBack"></param>
+        /// <returns></returns>
+        Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel;
 
         /// <summary>
         /// Navigates to the modal viewmodel with parameters.

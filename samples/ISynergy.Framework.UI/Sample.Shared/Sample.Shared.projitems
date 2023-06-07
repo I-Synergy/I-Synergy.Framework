@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ISettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IUpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumerations\Languages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\PublicationItemTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\QueryTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ApplicationSetting.cs" />

@@ -19,7 +19,7 @@
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent Title="Test A" ContentTemplate="{DataTemplate views:InfoView}">
             <ShellContent.Icon>
-                <FontImageSource Glyph="{StaticResource info}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"/>
+                <FontImageSource Glyph="{StaticResource info}" FontFamily="fontawesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"/>
             </ShellContent.Icon>
         </ShellContent>
         <ShellContent Title="Validation" ContentTemplate="{DataTemplate views:ValidationView}" />
@@ -30,22 +30,22 @@
 
     <MenuFlyoutItem Text="{m:GetString Help}" Command="{Binding HelpCommand}">
         <MenuFlyoutItem.IconImageSource>
-            <FontImageSource Glyph="{StaticResource help}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+            <FontImageSource Glyph="{StaticResource help}" FontFamily="fontawesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
     <MenuFlyoutItem Text="{m:GetString Language}" Command="{Binding LanguageCommand}">
         <MenuFlyoutItem.IconImageSource>
-            <FontImageSource Glyph="{StaticResource language}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+            <FontImageSource Glyph="{StaticResource language}" FontFamily="fontawesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
     <MenuFlyoutItem Text="{m:GetString Theme}" Command="{Binding ColorCommand}">
         <MenuFlyoutItem.IconImageSource>
-            <FontImageSource Glyph="{StaticResource theme}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+            <FontImageSource Glyph="{StaticResource theme}" FontFamily="fontawesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
     <MenuFlyoutItem Text="{m:GetString Settings}" Command="{Binding SettingsCommand}">
         <MenuFlyoutItem.IconImageSource>
-            <FontImageSource Glyph="{StaticResource settings}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+            <FontImageSource Glyph="{StaticResource settings}" FontFamily="fontawesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
 
@@ -53,7 +53,7 @@
         <StackLayout Padding="20" HorizontalOptions="Center">
             <Button Text="{m:GetString SignOut}" Command="{Binding LoginCommand}">
                 <Button.ImageSource>
-                    <FontImageSource Glyph="{StaticResource signin}" Size="16" FontFamily="FontAwesome" Color="{StaticResource White}" />
+                    <FontImageSource Glyph="{StaticResource signin}" Size="16" FontFamily="fontawesome" Color="{StaticResource White}" />
                 </Button.ImageSource>
             </Button>
             <Label Text="{Binding BaseCommonServices.InfoService.Title}" Margin="10" />

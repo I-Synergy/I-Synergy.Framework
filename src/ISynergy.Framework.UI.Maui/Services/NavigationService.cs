@@ -28,9 +28,11 @@ namespace ISynergy.Framework.UI.Services
         /// Navigates to the viewmodel with parameters.
         /// </summary>
         /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="viewModel"></param>
         /// <param name="parameter"></param>
+        /// <param name="navigateBack"></param>
         /// <returns></returns>
-        public override Task NavigateAsync<TViewModel>(object parameter = null) =>
+        public override Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) =>
             Shell.Current.Navigation.PushViewModelAsync<TViewModel>(parameter);
 
         /// <summary>
