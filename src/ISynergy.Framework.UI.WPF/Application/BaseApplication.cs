@@ -3,11 +3,9 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -64,6 +62,7 @@ namespace ISynergy.Framework.UI
 
             _context = ServiceLocator.Default.GetInstance<IContext>();
             _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
+            _authenticationService.AuthenticationChanged += AuthenticationChanged;
             _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
             _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
@@ -81,6 +80,8 @@ namespace ISynergy.Framework.UI
 
             _logger.LogInformation("Finishing initialization of application");
         }
+
+        public abstract void AuthenticationChanged(object sender, Core.Events.ReturnEventArgs<bool> e);
 
         protected virtual void SetGlobalExceptionHandler()
         {
@@ -148,7 +149,7 @@ namespace ISynergy.Framework.UI
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
         /// <param name="e">Event data for the event.</param>
-        protected override async void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             MainWindow = new Window();
             MainWindow.Activate();
@@ -177,8 +178,6 @@ namespace ISynergy.Framework.UI
             }
 
             rootFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
-
-            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<IShellViewModel>();
 
             _logger.LogInformation("Loading theme");
             _themeService.SetStyle();
