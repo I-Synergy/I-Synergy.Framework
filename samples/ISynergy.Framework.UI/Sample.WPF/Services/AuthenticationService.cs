@@ -1,9 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Sample.ViewModels;
 
 namespace Sample.Services
 {
@@ -14,17 +14,27 @@ namespace Sample.Services
     /// <seealso cref="IAuthenticationService" />
     public class AuthenticationService : IAuthenticationService
     {
+        private bool _authenticated;
+
         private readonly IContext _context;
-        private readonly INavigationService _navigationService;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+
+        ///// <summary>
+        ///// Occurs when authentication changed.
+        ///// </summary>
+        public event EventHandler<ReturnEventArgs<bool>> AuthenticationChanged;
+
+        /// <summary>
+        /// Handles the <see cref="E:AuthenticationChanged" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="ReturnEventArgs{bool}"/> instance containing the event data.</param>
+        public void OnAuthenticationChanged(ReturnEventArgs<bool> e) => AuthenticationChanged?.Invoke(this, e);
 
         public AuthenticationService(
             IContext context,
-            INavigationService navigationService,
             IServiceScopeFactory serviceScopeFactory)
         {
             _context = context;
-            _navigationService = navigationService;
             _serviceScopeFactory = serviceScopeFactory;
         }
 
@@ -45,8 +55,9 @@ namespace Sample.Services
 
         public Task AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default)
         {
+            _authenticated = true;
             ValidateToken();
-            return _navigationService.NavigateModalAsync<ShellViewModel>();
+            return Task.CompletedTask;
         }
 
         public Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default)
@@ -84,15 +95,17 @@ namespace Sample.Services
             throw new NotImplementedException();
         }
 
-        public async Task SignOutAsync()
+        public Task SignOutAsync()
         {
+            _authenticated = false;
             ValidateToken();
-            await _navigationService.CleanBackStackAsync();
+            return Task.CompletedTask;
         }
 
         private void ValidateToken()
         {
             _context.ScopedServices = _serviceScopeFactory.CreateScope();
+            OnAuthenticationChanged(new ReturnEventArgs<bool>(_authenticated));
         }
     }
 }

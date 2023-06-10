@@ -1,6 +1,9 @@
-﻿using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Services;
+using ISynergy.Framework.UI.ViewModels;
 using Sample.ViewModels;
 
 namespace Sample
@@ -25,5 +28,20 @@ namespace Sample
             {
                 new Styles.Colors()
             };
+
+        public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+        {
+            if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
+            {
+                if (e.Value)
+                {
+                    await navigationService.NavigateModalAsync<AppShellViewModel>();
+                }
+                else
+                {
+                    await navigationService.NavigateModalAsync<AuthenticationViewModel>();
+                }
+            }
+        }
     }
 }

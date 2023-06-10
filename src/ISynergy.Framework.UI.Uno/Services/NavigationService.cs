@@ -207,27 +207,34 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="navigateBack"></param>
         /// <returns>Task&lt;IView&gt;.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-        public override async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+        public override Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
         {
             if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View page)
             {
-                // Check if actual page is the same as destination page.
-                if (_frame.Content is View originalView)
-                {
-                    if (originalView.GetType().Equals(page.GetType()))
-                        return;
+                DispatcherQueue.GetForCurrentThread().TryEnqueue(
+                    DispatcherQueuePriority.Normal,
+                    async () =>
+                    {
+                        // Check if actual page is the same as destination page.
+                        if (_frame.Content is View originalView)
+                        {
+                            if (originalView.GetType().Equals(page.GetType()))
+                                return;
 
-                    if (!navigateBack)
-                        _backStack.Push(originalView.ViewModel);
-                }                   
+                            if (!navigateBack)
+                                _backStack.Push(originalView.ViewModel);
+                        }
 
-                _frame.Content = page;
+                        _frame.Content = page;
 
-                if (!page.ViewModel.IsInitialized)
-                    await page.ViewModel.InitializeAsync();
+                        if (!page.ViewModel.IsInitialized)
+                            await page.ViewModel.InitializeAsync();
 
-                OnBackStackChanged(EventArgs.Empty);
+                        OnBackStackChanged(EventArgs.Empty);
+                    });
             }
+
+            return Task.CompletedTask;
         }
 
         public override Task NavigateModalAsync<TViewModel>(object parameter = null)
@@ -237,12 +244,12 @@ namespace ISynergy.Framework.UI.Services
                 DispatcherQueue.GetForCurrentThread().TryEnqueue(
                     DispatcherQueuePriority.Normal, 
                     async () =>
-                {
-                    baseApplication.MainWindow.Content = page;
+                    {
+                        baseApplication.MainWindow.Content = page;
 
-                    if (!page.ViewModel.IsInitialized)
-                        await page.ViewModel.InitializeAsync();
-                });
+                        if (!page.ViewModel.IsInitialized)
+                            await page.ViewModel.InitializeAsync();
+                    });
             }
 
             return Task.CompletedTask;
