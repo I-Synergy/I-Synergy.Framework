@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Models.Accounts;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {

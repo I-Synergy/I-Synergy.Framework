@@ -7,7 +7,7 @@ using Mopups.Pages;
 
 namespace ISynergy.Framework.UI.Services
 {
-    internal class NavigationService : BaseNavigationService
+    public class NavigationService : BaseNavigationService
     {
         private readonly IPopupNavigation _popupNavigation;
 
