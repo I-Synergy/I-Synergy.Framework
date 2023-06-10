@@ -1,22 +1,22 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Logging.Extensions;
+using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
-using Sample.Views;
 using System.Reflection;
 
 namespace Sample
@@ -64,6 +64,29 @@ namespace Sample
                     //logging.AddAppCenterLogging(context.Configuration);
                     //logging.AddSentryLogging(context.Configuration);
                 });
+        }
+
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        {
+            base.OnLaunched(e);
+            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+        }
+
+        public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+        {
+            if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
+            {
+                await navigationService.CleanBackStackAsync();
+
+                if (e.Value)
+                {
+                    await navigationService.NavigateModalAsync<ShellViewModel>();
+                }
+                else
+                {
+                    await navigationService.NavigateModalAsync<AuthenticationViewModel>();
+                }
+            }
         }
     }
 }

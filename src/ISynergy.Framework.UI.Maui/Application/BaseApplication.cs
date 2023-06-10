@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
@@ -60,6 +61,7 @@ namespace ISynergy.Framework.UI
             
             _context = ServiceLocator.Default.GetInstance<IContext>();
             _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
+            _authenticationService.AuthenticationChanged += AuthenticationChanged;
             _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
             _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
             _applicationSettingsService = ServiceLocator.Default.GetInstance<IBaseApplicationSettingsService>();
@@ -83,6 +85,8 @@ namespace ISynergy.Framework.UI
 
             _logger.LogInformation("Finishing initialization of application");
         }
+
+        public abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
 
         protected virtual void SetGlobalExceptionHandler()
         {
