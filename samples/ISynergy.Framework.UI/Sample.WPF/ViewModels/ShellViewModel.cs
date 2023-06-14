@@ -111,7 +111,6 @@ namespace Sample.ViewModels
 
             Title = commonServices.InfoService.ProductName;
             Version = commonServices.InfoService.ProductVersion;
-            DisplayName = "User";
 
             InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
             BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
