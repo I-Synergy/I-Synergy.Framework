@@ -27,16 +27,6 @@ namespace ISynergy.Framework.UI.ViewModels.Base
     public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     {
         /// <summary>
-        /// Gets or sets the DisplayName property value.
-        /// </summary>
-        /// <value>The display name.</value>
-        public string DisplayName
-        {
-            get => GetValue<string>();
-            set => SetValue(value);
-        }
-
-        /// <summary>
         /// Gets or sets the restart update command.
         /// </summary>
         /// <value>The restart update command.</value>
@@ -155,35 +145,6 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// </summary>
         /// <returns></returns>
         protected virtual Task SignOutAsync() => _authenticationService.SignOutAsync();
-
-        /// <summary>
-        /// Processes the authentication changed asynchronous.
-        /// </summary>
-        /// <returns>Task.</returns>
-        protected virtual Task ProcessAuthenticationChangedAsync()
-        {
-            PopulateNavItems();
-
-            if (Context.IsAuthenticated)
-            {
-                DisplayName = Context.Profile.Username;
-
-                if (PrimaryItems is not null && PrimaryItems.Count > 0)
-                {
-                    if (PrimaryItems.First().Command.CanExecute(PrimaryItems.First().CommandParameter))
-                        PrimaryItems.First().Command.Execute(PrimaryItems.First().CommandParameter);
-
-                    SelectedItem = PrimaryItems.First();
-                }
-            }
-            else
-            {
-                DisplayName = string.Empty;
-                PrimaryItems?.Clear();
-            }
-
-            return Task.CompletedTask;
-        }
 
         /// <summary>
         /// Populates the nav items.
