@@ -6,8 +6,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="{Binding Title}"
-    Width="{ThemeResource ContentDialogMaxWidth}" 
-    Template="{StaticResource WindowTemplate}"
     PrimaryButtonCommand="{Binding SubmitCommand}"
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
     SecondaryButtonCommand="{Binding CloseCommand}"
