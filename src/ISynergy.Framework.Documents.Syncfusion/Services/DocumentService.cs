@@ -97,7 +97,7 @@ namespace ISynergy.Framework.Documents.Services
                 {
                     using (document = new WordDocument(stream, Syncfusion.DocIO.FormatType.Docx))
                     {
-                        if (documentRequest.Stationary is byte[] imageArray && imageArray.Length > 0)
+                        if (documentRequest.Stationery is byte[] imageArray && imageArray.Length > 0)
                         {
                             //Adds picture watermark to the document.
                             var section = document.Sections[0];

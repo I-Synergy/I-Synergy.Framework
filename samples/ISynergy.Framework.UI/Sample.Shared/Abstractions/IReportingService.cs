@@ -22,8 +22,8 @@ namespace Sample.Abstractions.Services
         /// <param name="dataset">The dataset.</param>
         /// <param name="command">The command.</param>
         /// <param name="template">The template.</param>
-        /// <param name="stationary">The stationary.</param>
+        /// <param name="stationery">The stationary.</param>
         /// <returns>Task.</returns>
-        Task GenerateWordDocumentAsync(string filename, string foldername, object dataset, List<DictionaryEntry> command, byte[] template, byte[] stationary);
+        Task GenerateWordDocumentAsync(string filename, string foldername, object dataset, List<DictionaryEntry> command, byte[] template, byte[] stationery);
     }
 }
