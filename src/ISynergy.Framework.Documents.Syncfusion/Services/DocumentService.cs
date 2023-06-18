@@ -97,7 +97,7 @@ namespace ISynergy.Framework.Documents.Services
                 {
                     using (document = new WordDocument(stream, Syncfusion.DocIO.FormatType.Docx))
                     {
-                        if (documentRequest.Stationary is byte[] imageArray && imageArray.Length > 0)
+                        if (documentRequest.Stationery is byte[] imageArray && imageArray.Length > 0)
                         {
                             //Adds picture watermark to the document.
                             var section = document.Sections[0];
@@ -129,7 +129,7 @@ namespace ISynergy.Framework.Documents.Services
                         document.MailMerge.RemoveEmptyParagraphs = true;
                         document.MailMerge.ExecuteNestedGroup(dataSet, commands);
 
-                        foreach (var paragraph in mailMergeImgaeParagraph.EnsureNotNull())
+                        foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull())
                         {
                             if (paragraph.ChildEntities is not null)
                             {
@@ -193,7 +193,7 @@ namespace ISynergy.Framework.Documents.Services
         /// <summary>
         /// The mail merge imgae paragraph
         /// </summary>
-        private readonly List<WParagraph> mailMergeImgaeParagraph = new List<WParagraph>();
+        private readonly List<WParagraph> mailMergeImageParagraph = new List<WParagraph>();
 
         /// <summary>
         /// Handles the MergeImageField event of the MailMerge control.
@@ -204,7 +204,7 @@ namespace ISynergy.Framework.Documents.Services
         {
             // Get the image from disk during Merge.
             if (args.FieldName == "Image")
-                mailMergeImgaeParagraph.Add(args.CurrentMergeField.OwnerParagraph);
+                mailMergeImageParagraph.Add(args.CurrentMergeField.OwnerParagraph);
         }
     }
 }

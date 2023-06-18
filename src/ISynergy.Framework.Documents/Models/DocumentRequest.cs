@@ -13,9 +13,9 @@ namespace ISynergy.Framework.Documents.Models
         public byte[] Template { get; set; } = Array.Empty<byte>();
 
         /// <summary>
-        /// Gets or sets the stationary image bytes.
+        /// Gets or sets the stationery image bytes.
         /// </summary>
-        public byte[] Stationary { get; set; } = Array.Empty<byte>();
+        public byte[] Stationery { get; set; } = Array.Empty<byte>();
 
         /// <summary>
         /// Document mail-merge fields
