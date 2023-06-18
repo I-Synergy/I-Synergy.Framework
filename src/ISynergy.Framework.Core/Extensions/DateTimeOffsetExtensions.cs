@@ -177,6 +177,96 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
+        /// Converts to start of quarter.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>DateTimeOffset.</returns>
+        public static DateTimeOffset ToStartOfQuarter(this DateTimeOffset self)
+        {
+            if (self == DateTimeOffset.MinValue)
+            {
+                return self;
+            }
+
+            if (self.Month <= 3)
+            {
+                return new DateTimeOffset(self.Year, 1, 1, 0, 0, 0, 0, self.Offset);
+            }
+            if (self.Month <= 6)
+            {
+                return new DateTimeOffset(self.Year, 4, 1, 0, 0, 0, 0, self.Offset);
+            }
+            if (self.Month <= 9)
+            {
+                return new DateTimeOffset(self.Year, 7, 1, 0, 0, 0, 0, self.Offset);
+            }
+            else
+            {
+                return new DateTimeOffset(self.Year, 10, 1, 0, 0, 0, 0, self.Offset);
+            }
+        }
+
+        /// <summary>
+        /// Converts to end of quartermonth.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>DateTimeOffset.</returns>
+        public static DateTimeOffset ToEndOfQuarter(this DateTimeOffset self)
+        {
+            if (self == DateTimeOffset.MaxValue)
+            {
+                return self;
+            }
+
+            if (self.Month <= 3)
+            {
+                return new DateTimeOffset(self.Year, 3, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
+            }
+            if (self.Month <= 6)
+            {
+                return new DateTimeOffset(self.Year, 6, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
+            }
+            if (self.Month <= 9)
+            {
+                return new DateTimeOffset(self.Year, 9, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
+            }
+            else
+            {
+                return new DateTimeOffset(self.Year, 12, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
+            }
+        }
+
+        /// <summary>
+        /// Converts to startofmonth.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>DateTimeOffset.</returns>
+        public static DateTimeOffset ToStartOfYear(this DateTimeOffset self)
+        {
+            if (self == DateTimeOffset.MinValue)
+            {
+                return self;
+            }
+
+            return new DateTimeOffset(self.Year, 1, 1, 0, 0, 0, 0, self.Offset);
+        }
+
+        /// <summary>
+        /// Converts to endofmonth.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>DateTimeOffset.</returns>
+        public static DateTimeOffset ToEndOfYear(this DateTimeOffset self)
+        {
+            if (self == DateTimeOffset.MaxValue)
+            {
+                return self;
+            }
+
+            return new DateTimeOffset(self.Year, 12, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
+        }
+
+        /// <summary>
         /// Gets the possible time zones.
         /// </summary>
         /// <param name="self">The self.</param>

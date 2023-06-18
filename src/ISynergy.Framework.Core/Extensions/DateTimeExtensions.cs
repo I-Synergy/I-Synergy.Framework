@@ -308,5 +308,65 @@ namespace ISynergy.Framework.Core.Extensions
             }
             return current.First();
         }
+
+        /// <summary>
+        /// Converts to start of quarter.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>DateTimeOffset.</returns>
+        public static DateTime ToStartOfQuarter(this DateTime self)
+        {
+            if (self == DateTime.MinValue)
+            {
+                return self;
+            }
+
+            if (self.Month <= 3)
+            {
+                return new DateTime(self.Year, 1, 1, 0, 0, 0, 0);
+            }
+            if (self.Month <= 6)
+            {
+                return new DateTime(self.Year, 4, 1, 0, 0, 0, 0);
+            }
+            if (self.Month <= 9)
+            {
+                return new DateTime(self.Year, 7, 1, 0, 0, 0, 0);
+            }
+            else
+            {
+                return new DateTime(self.Year, 10, 1, 0, 0, 0, 0);
+            }
+        }
+
+        /// <summary>
+        /// Converts to end of quartermonth.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>DateTimeOffset.</returns>
+        public static DateTime ToEndOfQuarter(this DateTime self)
+        {
+            if (self == DateTime.MaxValue)
+            {
+                return self;
+            }
+
+            if (self.Month <= 3)
+            {
+                return new DateTime(self.Year, 3, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+            }
+            if (self.Month <= 6)
+            {
+                return new DateTime(self.Year, 6, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+            }
+            if (self.Month <= 9)
+            {
+                return new DateTime(self.Year, 9, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+            }
+            else
+            {
+                return new DateTime(self.Year, 12, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+            }
+        }
     }
 }

@@ -108,7 +108,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToStartOfYearLocalTest()
         {
-            DateTime result = new DateTime(1975, 10, 29).Year.ToStartOfYear();
+            var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfYear();
             Assert.AreEqual(new DateTimeOffset(1975, 1, 1, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime(), result);
         }
 
@@ -118,8 +118,28 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToEndOfYearLocalTest()
         {
-            DateTime result = new DateTime(1975, 10, 29).Year.ToEndOfYear();
+            var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfYear();
             Assert.AreEqual(new DateTimeOffset(1975, 1, 1, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddYears(1).AddTicks(-1).ToUniversalTime(), result);
+        }
+
+        /// <summary>
+        /// Defines the test method ToStartOfYearLocalTest.
+        /// </summary>
+        [TestMethod]
+        public void ToStartOfQuarterLocalTest()
+        {
+            var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfQuarter();
+            Assert.AreEqual(new DateTimeOffset(1975, 10, 1, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime(), result);
+        }
+
+        /// <summary>
+        /// Defines the test method ToEndOfYearLocalTest.
+        /// </summary>
+        [TestMethod]
+        public void ToEndOfQuarterLocalTest()
+        {
+            var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfQuarter();
+            Assert.AreEqual(new DateTimeOffset(1975, 12, 1, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddMonths(1).AddTicks(-1).ToUniversalTime(), result);
         }
 
         /// <summary>
