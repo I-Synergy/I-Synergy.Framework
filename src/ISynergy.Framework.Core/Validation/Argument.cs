@@ -136,7 +136,7 @@ namespace ISynergy.Framework.Core.Validation
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotEnum<T>(T value, [CallerArgumentExpression("value")] string name = null)
         {
-            if (!typeof(T).IsEnum)
+            if (value is null || !typeof(T).IsEnum)
             {
                 var error = new LanguageService().GetString("WarningEnum");
                 throw new ArgumentException(error, name);
@@ -204,7 +204,8 @@ namespace ISynergy.Framework.Core.Validation
             where T : IComparable
         {
             IsNotOutOfRange(value, minimumValue, maximumValue,
-                (innerParamValue, innerMinimumValue, innerMaximumValue) => innerParamValue.CompareTo(innerMinimumValue) >= 0 && innerParamValue.CompareTo(innerMaximumValue) <= 0);
+                (innerParamValue, innerMinimumValue, innerMaximumValue) => innerParamValue.CompareTo(innerMinimumValue) >= 0 && innerParamValue.CompareTo(innerMaximumValue) <= 0,
+                name);
         }
 
         /// <summary>
@@ -243,7 +244,8 @@ namespace ISynergy.Framework.Core.Validation
             where T : IComparable
         {
             IsMinimal(value, minimumValue,
-                (innerParamValue, innerMinimumValue) => innerParamValue.CompareTo(innerMinimumValue) >= 0);
+                (innerParamValue, innerMinimumValue) => innerParamValue.CompareTo(innerMinimumValue) >= 0,
+                name);
         }
 
         /// <summary>
@@ -280,7 +282,8 @@ namespace ISynergy.Framework.Core.Validation
             where T : IComparable
         {
             IsMaximum(value, maximumValue,
-                (innerParamValue, innerMaximumValue) => innerParamValue.CompareTo(innerMaximumValue) <= 0);
+                (innerParamValue, innerMaximumValue) => innerParamValue.CompareTo(innerMaximumValue) <= 0,
+                name);
         }
 
         /// <summary>
