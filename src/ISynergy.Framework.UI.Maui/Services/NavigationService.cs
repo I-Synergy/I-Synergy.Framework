@@ -1,28 +1,87 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Services.Base;
-using Mopups.Interfaces;
-using Mopups.Pages;
 
 namespace ISynergy.Framework.UI.Services
 {
-    public class NavigationService : BaseNavigationService
+    public class NavigationService : INavigationService
     {
-        private readonly IPopupNavigation _popupNavigation;
+        private readonly IContext _context;
+
+        public event EventHandler BackStackChanged;
+
+        /// <summary>
+        /// Handles the <see cref="E:BackStackChanged" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
+
+        /// <summary>
+        /// The frame.
+        /// </summary>
+        private Frame _frame;
+
+        /// <summary>
+        /// Navigation backstack.
+        /// </summary>
+        private Stack<object> _backStack = new Stack<object>();
+
+        /// <summary>
+        /// Gets or sets the frame.
+        /// </summary>
+        /// <value>The frame.</value>
+        public object Frame { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance can go back.
+        /// </summary>
+        /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
+        public bool CanGoBack => _backStack.Count > 0 ? true : false;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance can go forward.
+        /// </summary>
+        /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
+        public bool CanGoForward => true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="popupNavigation"></param>
-        public NavigationService(
-            IContext context,
-            IPopupNavigation popupNavigation)
-            : base(context)
+        public NavigationService(IContext context)
         {
-            _popupNavigation = popupNavigation;
+            _context = context;
         }
+
+        /// <summary>
+        /// Goes the back.
+        /// </summary>
+        public async Task GoBackAsync()
+        {
+            if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
+            {
+                await NavigateAsync(viewModel, navigateBack: true);
+            }
+        }
+
+        /// <summary>
+        /// Goes the forward.
+        /// </summary>
+        public Task GoForwardAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Navigates to a specified viewmodel asynchronous.
+        /// </summary>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="parameter"></param>
+        /// <param name="navigateBack"></param>
+        /// <returns></returns>
+        public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel =>
+            NavigateAsync(default(TViewModel), parameter);
 
         /// <summary>
         /// Navigates to the viewmodel with parameters.
@@ -32,7 +91,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="parameter"></param>
         /// <param name="navigateBack"></param>
         /// <returns></returns>
-        public override Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) =>
+        public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel =>
             Shell.Current.Navigation.PushViewModelAsync<TViewModel>(parameter);
 
         /// <summary>
@@ -41,7 +100,8 @@ namespace ISynergy.Framework.UI.Services
         /// <typeparam name="TViewModel"></typeparam>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public override Task NavigateModalAsync<TViewModel>(object parameter = null)
+        public Task NavigateModalAsync<TViewModel>(object parameter = null)
+             where TViewModel : class, IViewModel
         {
             Application.Current.MainPage.Dispatcher.Dispatch(() =>
             {
@@ -51,41 +111,15 @@ namespace ISynergy.Framework.UI.Services
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Shows dialog as an asynchronous operation.
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="window"></param>
-        /// <param name="viewmodel"></param>
-        /// <returns></returns>
-        public override async Task CreateDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
+        public Task CleanBackStackAsync()
         {
-            window.ViewModel = viewmodel;
-
-            viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
-
-            if (!viewmodel.IsInitialized)
-                await viewmodel.InitializeAsync();
-
-            if (window is Window dialog)
-                await _popupNavigation.PushAsync(dialog);
-        }
-
-        /// <summary>
-        /// Closes dialog window.
-        /// </summary>
-        /// <param name="dialog"></param>
-        public override Task CloseDialogAsync(IWindow dialog)
-        {
-            if (dialog is PopupPage page &&
-                _popupNavigation.PopupStack is not null &&
-                _popupNavigation.PopupStack.Count > 0 &&
-                _popupNavigation.PopupStack.Contains(page))
-                return _popupNavigation.RemovePageAsync(page);
-
+            _backStack.Clear();
+            OnBackStackChanged(EventArgs.Empty);
             return Task.CompletedTask;
         }
 
-        public override object Frame { get; set; }
+        public Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
+
+        public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
     }
 }

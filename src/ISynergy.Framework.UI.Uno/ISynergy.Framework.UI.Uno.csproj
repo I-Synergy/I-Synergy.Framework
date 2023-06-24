@@ -1,6 +1,6 @@
-<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\..\project.props" />
-	
+
 	<PropertyGroup>
 		<TargetFrameworks>net7.0-windows10.0.19041;net7.0;net7.0-ios;net7.0-maccatalyst;net7.0-android</TargetFrameworks>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
@@ -21,12 +21,12 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
 	</ItemGroup>
-	
+
 	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230602002" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 	</ItemGroup>
-	
+
 	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
 		<PackageReference Include="Uno.WinUI" Version="4.9.20" />
 		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.3.0" />
@@ -76,7 +76,73 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+		<AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Abstractions\IConfigureContainerAdapter.cs" Link="Abstractions\IConfigureContainerAdapter.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Application\BaseApplication.cs" Link="Application\BaseApplication.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Behaviors\AuthenticationAction.cs" Link="Behaviors\AuthenticationAction.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Behaviors\AuthorizationBehavior.cs" Link="Behaviors\AuthorizationBehavior.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Behaviors\MultiSelection\MultiSelectionBehavior.cs" Link="Behaviors\MultiSelection\MultiSelectionBehavior.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Collections\DependencyObjectCollection.cs" Link="Collections\DependencyObjectCollection.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Common\DeferredNavigation.cs" Link="Common\DeferredNavigation.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Common\DialogBox.cs" Link="Common\DialogBox.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Common\UserThemeResourceLoader.cs" Link="Common\UserThemeResourceLoader.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Common\UserThemeResources.cs" Link="Common\UserThemeResources.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\BladeConverters.cs" Link="Converters\BladeConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\BooleanConverters.cs" Link="Converters\BooleanConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\ByteConverters.cs" Link="Converters\ByteConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\ChangeTrackingConverters.cs" Link="Converters\ChangeTrackingConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\CollectionConverters.cs" Link="Converters\CollectionConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\ColorConverters.cs" Link="Converters\ColorConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\CurrencyConverters.cs" Link="Converters\CurrencyConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\DashboardConverters.cs" Link="Converters\DashboardConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\DateTimeConverters.cs" Link="Converters\DateTimeConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\DateTimeOffsetConverters.cs" Link="Converters\DateTimeOffsetConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\DecimalConverters.cs" Link="Converters\DecimalConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\DecimalFormatConverter.cs" Link="Converters\DecimalFormatConverter.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\DoubleConverters.cs" Link="Converters\DoubleConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\EnumConverters.cs" Link="Converters\EnumConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\GuidConverters.cs" Link="Converters\GuidConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\IntegerConverters.cs" Link="Converters\IntegerConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\NullObjectConverters.cs" Link="Converters\NullObjectConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\NumberFormatConverter.cs" Link="Converters\NumberFormatConverter.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\PageConverters.cs" Link="Converters\PageConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\RadioButtonValueConverter.cs" Link="Converters\RadioButtonValueConverter.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\RegexConverters.cs" Link="Converters\RegexConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\ResourceConverters.cs" Link="Converters\ResourceConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\SelectionModeConverter.cs" Link="Converters\SelectionModeConverter.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\StateConverters.cs" Link="Converters\StateConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\StringConverters.cs" Link="Converters\StringConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\TimeSpanConverters.cs" Link="Converters\TimeSpanConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\TypeConverters.cs" Link="Converters\TypeConverters.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\ByteArrayExtensions.cs" Link="Extensions\ByteArrayExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\ColorExtensions.cs" Link="Extensions\ColorExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\DependencyObjectExtensions.cs" Link="Extensions\DependencyObjectExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\MatrixExtensions.cs" Link="Extensions\MatrixExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\NavigationExtensions.cs" Link="Extensions\NavigationExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\SettingsStorageExtensions.cs" Link="Extensions\SettingsStorageExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\UriExtensions.cs" Link="Extensions\UriExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\WindowExtensions.cs" Link="Extensions\WindowExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\ColorHelper.cs" Link="Helpers\ColorHelper.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\NavigationHelper.cs" Link="Helpers\NavigationHelper.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\ResourceHelper.cs" Link="Helpers\ResourceHelper.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Markup\EnumCollection.cs" Link="Markup\EnumCollection.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Markup\LanguageResource.cs" Link="Markup\LanguageResource.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Navigation\MenuItemTemplateSelector.cs" Link="Navigation\MenuItemTemplateSelector.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\CameraService.cs" Link="Services\CameraService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\ClipboardService.cs" Link="Services\ClipboardService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\DialogService.cs" Link="Services\DialogService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\DispatcherService.cs" Link="Services\DispatcherService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\DownloadFileService.cs" Link="Services\DownloadFileService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\FileService.cs" Link="Services\FileService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\NavigationService.cs" Link="Services\NavigationService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\ThemeService.cs" Link="Services\ThemeService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\BooleanDataTrigger.cs" Link="Triggers\BooleanDataTrigger.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\DecimalDataTrigger.cs" Link="Triggers\DecimalDataTrigger.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\IntegerDataTrigger.cs" Link="Triggers\IntegerDataTrigger.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\ObjectDataTrigger.cs" Link="Triggers\ObjectDataTrigger.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -114,26 +180,40 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
-	
+
 	<ItemGroup>
-	  <Using Include="ISynergy.Framework.Core.Models.Style">
-	    <Alias>Style</Alias>
-	  </Using>
-	  <Using Include="ISynergy.Framework.UI.Controls.View">
-	    <Alias>View</Alias>
-	  </Using>
-	  <Using Include="ISynergy.Framework.UI.Controls.Window">
-	    <Alias>Window</Alias>
-	  </Using>
-	  <Using Include="ISynergy.Framework.UI.Models.Result">
-	    <Alias>Result</Alias>
-	  </Using>
-	  <Using Include="Microsoft.UI.Xaml.Application">
-	    <Alias>Application</Alias>
-	  </Using>
-	  <Using Include="Microsoft.UI.Xaml.LaunchActivatedEventArgs">
-	    <Alias>LaunchActivatedEventArgs</Alias>
-	  </Using>
+		<Using Include="ISynergy.Framework.Core.Models.Style">
+			<Alias>Style</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Controls.View">
+			<Alias>View</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Controls.Window">
+			<Alias>Window</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Models.Result">
+			<Alias>Result</Alias>
+		</Using>
+		<Using Include="Microsoft.UI.Xaml.Application">
+			<Alias>Application</Alias>
+		</Using>
+		<Using Include="Microsoft.UI.Xaml.LaunchActivatedEventArgs">
+			<Alias>LaunchActivatedEventArgs</Alias>
+		</Using>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Abstractions\" />
+		<Folder Include="Application\" />
+	  <Folder Include="Behaviors\MultiSelection\" />
+	  <Folder Include="Collections\" />
+	  <Folder Include="Common\" />
+	  <Folder Include="Converters\" />
+	  <Folder Include="Helpers\" />
+	  <Folder Include="Markup\" />
+	  <Folder Include="Navigation\" />
+	  <Folder Include="Services\" />
+	  <Folder Include="Triggers\" />
 	</ItemGroup>
 </Project>
 

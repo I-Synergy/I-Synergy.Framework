@@ -104,7 +104,7 @@ namespace Sample.ViewModels
         {
             NoteViewModel vm = new(Context, BaseCommonServices, Logger, "Lorem ipsum dolor sit amet");
             vm.Submitted += Vm_Submitted;
-            await BaseCommonServices.NavigationService.ShowDialogAsync(typeof(INoteWindow), vm);
+            await BaseCommonServices.DialogService.ShowDialogAsync(typeof(INoteWindow), vm);
         }
 
         private async void Vm_Submitted(object sender, ISynergy.Framework.Mvvm.Events.SubmitEventArgs<string> e)
@@ -134,7 +134,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-            return BaseCommonServices.NavigationService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
-            return BaseCommonServices.NavigationService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
         }
 
         /// <summary>
