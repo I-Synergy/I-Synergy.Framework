@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Models;
+using Sample.Views;
 using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels
@@ -52,6 +53,8 @@ namespace Sample.ViewModels
         /// </summary>
         public AsyncRelayCommand ShowDialogOkCancel { get; set; }
 
+        public AsyncRelayCommand ShowUnitsCommand { get; set; }
+
         /// <summary>
         /// Gets or sets the selected test items.
         /// </summary>
@@ -76,6 +79,22 @@ namespace Sample.ViewModels
             ShowDialogYesNoCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
             ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
             ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
+            ShowUnitsCommand = new AsyncRelayCommand(ShowUnitsAsync);
+        }
+
+        private async Task ShowUnitsAsync()
+        {
+            var vm = new TestViewModel(Context, BaseCommonServices, Logger);
+            vm.Submitted += Vm_Submitted;
+            await BaseCommonServices.DialogService.ShowDialogAsync(typeof(TestWindow), vm);
+        }
+
+        private async void Vm_Submitted(object sender, SubmitEventArgs<object> e)
+        {
+            if (sender is TestViewModel vm)
+                vm.Submitted -= Vm_Submitted;
+
+            await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result} selected.");
         }
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)

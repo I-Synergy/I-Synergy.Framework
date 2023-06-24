@@ -2,16 +2,14 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
-
-using Window = ISynergy.Framework.UI.Controls.Window;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -20,8 +18,18 @@ namespace ISynergy.Framework.UI.Services
     /// Implements the <see cref="Mvvm.Abstractions.Services.INavigationService" />
     /// </summary>
     /// <seealso cref="Mvvm.Abstractions.Services.INavigationService" />
-    public class NavigationService : BaseNavigationService
+    public class NavigationService : INavigationService
     {
+        private readonly IContext _context;
+
+        public event EventHandler BackStackChanged;
+
+        /// <summary>
+        /// Handles the <see cref="E:BackStackChanged" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
+
         /// <summary>
         /// The frame
         /// </summary>
@@ -33,50 +41,39 @@ namespace ISynergy.Framework.UI.Services
         private Stack<object> _backStack = new Stack<object>();
 
         /// <summary>
-        /// The is shown
-        /// </summary>
-        private bool _isShown = false;
-
-        /// <summary>
         /// Gets or sets the frame.
         /// </summary>
         /// <value>The frame.</value>
-        public override object Frame
+        public object Frame
         {
             get => _frame ??= (Frame)Application.Current.MainWindow.Content;
             set => _frame = (Frame)value;
         }
 
         /// <summary>
-        /// Gets the registered windows.
-        /// </summary>
-        /// <value>The registered windows.</value>
-        public List<Window> RegisteredWindows { get; internal set; } = new List<Window>();
-
-        /// <summary>
         /// Gets a value indicating whether this instance can go back.
         /// </summary>
         /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-        public override bool CanGoBack => _backStack.Count > 0 ? true : false;
+        public bool CanGoBack => _backStack.Count > 0 ? true : false;
         /// <summary>
         /// Gets a value indicating whether this instance can go forward.
         /// </summary>
         /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
-        public override bool CanGoForward => _frame.CanGoForward;
+        public bool CanGoForward => _frame.CanGoForward;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
         /// </summary>
         /// <param name="context"></param>
         public NavigationService(IContext context)
-            : base(context)
         {
+            _context = context;
         }
 
         /// <summary>
         /// Goes the back.
         /// </summary>
-        public override async Task GoBackAsync()
+        public async Task GoBackAsync()
         {
             if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
             {
@@ -87,7 +84,7 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Goes the forward.
         /// </summary>
-        public override Task GoForwardAsync()
+        public Task GoForwardAsync()
         {
             if (_frame.CanGoForward)
                 _frame.GoForward();
@@ -128,7 +125,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public override async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
+        public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
         {
             Argument.IsNotNull(owner);
 
@@ -170,7 +167,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public override void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
+        public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
         {
             Argument.IsNotNull(owner);
 
@@ -195,6 +192,16 @@ namespace ISynergy.Framework.UI.Services
         }
 
         /// <summary>
+        /// Navigates to a specified viewmodel asynchronous.
+        /// </summary>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="parameter"></param>
+        /// <param name="navigateBack"></param>
+        /// <returns></returns>
+        public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel =>
+            NavigateAsync(default(TViewModel), parameter);
+
+        /// <summary>
         /// navigate as an asynchronous operation.
         /// </summary>
         /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
@@ -203,7 +210,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="navigateBack"></param>
         /// <returns>Task&lt;IView&gt;.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-        public override async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+        public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel
         {
             if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View page)
             {
@@ -226,7 +233,7 @@ namespace ISynergy.Framework.UI.Services
             }
         }
 
-        public override Task NavigateModalAsync<TViewModel>(object parameter = null)
+        public Task NavigateModalAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
         {
             if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page && Application.Current is BaseApplication baseApplication)
             {
@@ -242,50 +249,11 @@ namespace ISynergy.Framework.UI.Services
             return Task.CompletedTask;
         }
 
-        public override Task CleanBackStackAsync()
+        public Task CleanBackStackAsync()
         {
             _backStack.Clear();
             OnBackStackChanged(EventArgs.Empty);
             return Task.CompletedTask;
-        }
-
-        public override Task CloseDialogAsync(IWindow dialog)
-        {
-            if (dialog is Window window)
-                window.Close();
-
-            return Task.CompletedTask;
-        }
-
-        public override async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
-        {
-            if (dialog is Window window)
-            {
-                window.ViewModel = viewmodel;
-                window.Owner = Application.Current.MainWindow;
-
-                viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
-                viewmodel.Submitted += async (sender, e) => await CloseDialogAsync(window);
-
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
-
-                RegisteredWindows.Add(window);
-
-                if (_isShown)
-                    return;
-
-                _isShown = true;
-
-                for (var i = 0; i < RegisteredWindows.Count(q => q.Equals(window)); i++)
-                {
-                    await RegisteredWindows[i].ShowAsync<TEntity>();
-                    RegisteredWindows.Remove(RegisteredWindows[i]);
-                    i--;
-                }
-
-                _isShown = false;
-            }
         }
     }
 }

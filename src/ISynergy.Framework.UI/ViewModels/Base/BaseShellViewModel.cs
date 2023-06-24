@@ -246,7 +246,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         {
             var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Culture);
             languageVM.Submitted += LanguageVM_Submitted;
-            return BaseCommonServices.NavigationService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         {
             var themeVM = new ThemeViewModel(Context, BaseCommonServices, _applicationSettingsService, Logger);
             themeVM.Submitted += ThemeVM_Submitted;
-            return BaseCommonServices.NavigationService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
         }
 
         /// <summary>

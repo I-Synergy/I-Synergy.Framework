@@ -6,12 +6,9 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using System;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -20,12 +17,17 @@ namespace ISynergy.Framework.UI.Services
     /// Implements the <see cref="INavigationService" />
     /// </summary>
     /// <seealso cref="INavigationService" />
-    public class NavigationService : BaseNavigationService
+    public class NavigationService : INavigationService
     {
+        private readonly IContext _context;
+
+        public event EventHandler BackStackChanged;
+
         /// <summary>
-        /// The active window.
+        /// Handles the <see cref="E:BackStackChanged" /> event.
         /// </summary>
-        private Window _activeDialog = null;
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
 
         /// <summary>
         /// The frame.
@@ -41,7 +43,7 @@ namespace ISynergy.Framework.UI.Services
         /// Gets or sets the frame.
         /// </summary>
         /// <value>The frame.</value>
-        public override object Frame
+        public object Frame
         {
             get => _frame ??= (Frame)Microsoft.UI.Xaml.Window.Current.Content;
             set => _frame = (Frame)value;
@@ -51,27 +53,27 @@ namespace ISynergy.Framework.UI.Services
         /// Gets a value indicating whether this instance can go back.
         /// </summary>
         /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-        public override bool CanGoBack => _backStack.Count > 0 ? true : false;
+        public bool CanGoBack => _backStack.Count > 0 ? true : false;
 
         /// <summary>
         /// Gets a value indicating whether this instance can go forward.
         /// </summary>
         /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
-        public override bool CanGoForward => _frame.CanGoForward;
+        public bool CanGoForward => _frame.CanGoForward;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
         /// </summary>
         /// <param name="context"></param>
         public NavigationService(IContext context)
-            : base(context)
         {
+            _context = context;
         }
 
         /// <summary>
         /// Goes the back.
         /// </summary>
-        public override async Task GoBackAsync()
+        public async Task GoBackAsync()
         {
             if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
             {
@@ -82,12 +84,12 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Goes the forward.
         /// </summary>
-        public override Task GoForwardAsync()
+        public Task GoForwardAsync()
         {
             if (_frame.CanGoForward)
                 _frame.GoForward();
 
-            return base.GoForwardAsync();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -132,7 +134,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public override async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
+        public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
         {
             Argument.IsNotNull(owner);
 
@@ -174,7 +176,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public override void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
+        public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
         {
             Argument.IsNotNull(owner);
 
@@ -199,6 +201,16 @@ namespace ISynergy.Framework.UI.Services
         }
 
         /// <summary>
+        /// Navigates to a specified viewmodel asynchronous.
+        /// </summary>
+        /// <typeparam name="TViewModel"></typeparam>
+        /// <param name="parameter"></param>
+        /// <param name="navigateBack"></param>
+        /// <returns></returns>
+        public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel =>
+            NavigateAsync(default(TViewModel), parameter);
+
+        /// <summary>
         /// navigate as an asynchronous operation.
         /// </summary>
         /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
@@ -207,7 +219,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="navigateBack"></param>
         /// <returns>Task&lt;IView&gt;.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-        public override Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+        public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel
         {
             if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View page)
             {
@@ -237,7 +249,7 @@ namespace ISynergy.Framework.UI.Services
             return Task.CompletedTask;
         }
 
-        public override Task NavigateModalAsync<TViewModel>(object parameter = null)
+        public Task NavigateModalAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
         {
             if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page && Application.Current is BaseApplication baseApplication)
             {
@@ -255,57 +267,10 @@ namespace ISynergy.Framework.UI.Services
             return Task.CompletedTask;
         }
 
-        public override Task CleanBackStackAsync()
+        public Task CleanBackStackAsync()
         {
             _backStack.Clear();
             OnBackStackChanged(EventArgs.Empty);
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Shows dialog as an asynchronous operation.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-        /// <param name="dialog">The dialog.</param>
-        /// <param name="viewmodel">The viewmodel.</param>
-        public override async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
-        {
-            if (dialog is Window window)
-            {
-                if (Application.Current is BaseApplication baseApplication)
-                    window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
-
-                window.ViewModel = viewmodel;
-
-                window.PrimaryButtonCommand = viewmodel.SubmitCommand;
-                window.SecondaryButtonCommand = viewmodel.CloseCommand;
-                window.CloseButtonCommand = viewmodel.CloseCommand;
-
-                window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-                window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-                window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
-
-                await OpenDialogAsync(window);
-            }
-        }
-
-        private async Task<ContentDialogResult> OpenDialogAsync(Window dialog)
-        {
-            if (_activeDialog is not null)
-                await CloseDialogAsync(_activeDialog);
-
-            _activeDialog = dialog;
-
-            return await _activeDialog.ShowAsync().AsTask();
-        }
-
-        public override Task CloseDialogAsync(IWindow dialog)
-        {
-            _activeDialog?.Close();
-            _activeDialog = null;
             return Task.CompletedTask;
         }
     }

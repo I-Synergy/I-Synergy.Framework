@@ -137,7 +137,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
-            return (BaseCommonServices.NavigationService as INavigationService)?.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
         }
 
         private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
@@ -152,7 +152,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-            return (BaseCommonServices.NavigationService as INavigationService)?.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
         }
 
         private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
