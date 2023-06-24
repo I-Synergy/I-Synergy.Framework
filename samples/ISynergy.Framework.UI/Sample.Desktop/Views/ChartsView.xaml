@@ -18,14 +18,15 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <charts:SfFunnelChart Header="Categories with the least demand" 
-                                Margin="2"
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                ItemsSource="{Binding CategoriesWithLeastDemand}"
-                                ShowDataLabels="True"
-                                XBindingPath="Description" 
-                                YBindingPath="Value">
+        <charts:SfFunnelChart
+            Header="Categories with the least demand" 
+            Margin="2"
+            Grid.Row="0"
+            Grid.Column="0"
+            ItemsSource="{Binding CategoriesWithLeastDemand}"
+            ShowDataLabels="True"
+            XBindingPath="Description" 
+            YBindingPath="Value">
             <charts:SfFunnelChart.Legend>
                 <charts:ChartLegend/>
             </charts:SfFunnelChart.Legend>
@@ -34,11 +35,12 @@
             </charts:SfFunnelChart.DataLabelSettings>
         </charts:SfFunnelChart>
 
-        <charts:SfCartesianChart Header="Budget" 
-                                 Margin="8,8,18,8" 
-                                 FontSize="18"
-                                 Grid.Column="1"
-                                 Grid.Row="0">
+        <charts:SfCartesianChart 
+            Header="Budget" 
+            Margin="8,8,18,8" 
+            FontSize="18"
+            Grid.Column="1"
+            Grid.Row="0">
             <charts:SfCartesianChart.XAxes>
                 <charts:CategoryAxis />
             </charts:SfCartesianChart.XAxes>

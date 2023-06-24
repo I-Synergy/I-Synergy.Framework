@@ -208,7 +208,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             var selectionVM = new ViewModelSelectionDialog<Module>(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
             selectionVM.Submitted += SelectionVM_Submitted;
-            return BaseCommonServices.NavigationService.ShowDialogAsync(typeof(SelectionWindow), selectionVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(SelectionWindow), selectionVM);
         }
 
         /// <summary>
