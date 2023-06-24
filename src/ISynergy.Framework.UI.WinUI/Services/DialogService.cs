@@ -1,34 +1,36 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using Mopups.Interfaces;
-using Mopups.Pages;
-using Application = Microsoft.Maui.Controls.Application;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ISynergy.Framework.UI.Services
 {
-    internal class DialogService : IDialogService
+    public class DialogService : IDialogService
     {
-        private readonly IPopupNavigation _popupNavigation;
+        /// <summary>
+        /// Gets the language service.
+        /// </summary>
+        /// <value>The language service.</value>
         private readonly ILanguageService _languageService;
         private readonly IContext _context;
+
+        private Window _activeDialog = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
         /// <param name="context"></param>
         /// <param name="languageService">The language service.</param>
-        /// <param name="popupNavigation"></param>
         public DialogService(
-            IContext context, 
-            ILanguageService languageService,
-            IPopupNavigation popupNavigation)
+            IContext context,
+            ILanguageService languageService)
         {
             _context = context;
             _languageService = languageService;
-            _popupNavigation = popupNavigation;
         }
 
         /// <summary>
@@ -105,34 +107,79 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>MessageBoxResult.</returns>
         public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
         {
+            var dialog = new Window()
+            {
+                Title = title,
+                Content = message
+            };
+
+            if (Application.Current is BaseApplication baseApplication)
+                dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+
             switch (buttons)
             {
                 case MessageBoxButton.OKCancel:
-                    if (await Application.Current.MainPage.DisplayAlert(
-                        title,
-                        message,
-                        _languageService.GetString("Ok"),
-                        _languageService.GetString("Cancel")))
-                        return MessageBoxResult.OK;
-                    else
-                        return MessageBoxResult.Cancel;
+                    dialog.PrimaryButtonText = _languageService.GetString("Ok");
+                    dialog.CloseButtonText = _languageService.GetString("Cancel");
+                    dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    break;
+                case MessageBoxButton.YesNoCancel:
+                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                    dialog.SecondaryButtonText = _languageService.GetString("No");
+                    dialog.CloseButtonText = _languageService.GetString("Cancel");
+                    dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    break;
                 case MessageBoxButton.YesNo:
-                    if (await Application.Current.MainPage.DisplayAlert(
-                        title,
-                        message,
-                        _languageService.GetString("Yes"),
-                        _languageService.GetString("No")))
-                        return MessageBoxResult.Yes;
-                    else
-                        return MessageBoxResult.No;
+                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                    dialog.CloseButtonText = _languageService.GetString("No");
+                    dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    break;
                 default:
-                    await Application.Current.MainPage.DisplayAlert(
-                        title,
-                        message,
-                        _languageService.GetString("Ok"));
-
-                    return MessageBoxResult.OK;
+                    dialog.CloseButtonText = _languageService.GetString("Ok");
+                    dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    break;
             }
+
+            if (await OpenDialogAsync(dialog) is ContentDialogResult result)
+            {
+                switch (buttons)
+                {
+                    case MessageBoxButton.OKCancel:
+                        switch (result)
+                        {
+                            case ContentDialogResult.Primary:
+                                return MessageBoxResult.OK;
+                            default:
+                                return MessageBoxResult.Cancel;
+                        }
+                    case MessageBoxButton.YesNoCancel:
+                        switch (result)
+                        {
+                            case ContentDialogResult.Primary:
+                                return MessageBoxResult.Yes;
+                            case ContentDialogResult.Secondary:
+                                return MessageBoxResult.No;
+                            default:
+                                return MessageBoxResult.Cancel;
+                        }
+                    case MessageBoxButton.YesNo:
+                        switch (result)
+                        {
+                            case ContentDialogResult.Primary:
+                                return MessageBoxResult.Yes;
+                            default:
+                                return MessageBoxResult.No;
+                        }
+                    default:
+                        return MessageBoxResult.OK;
+                }
+            }
+
+            return MessageBoxResult.Cancel;
         }
 
         /// <summary>
@@ -190,35 +237,47 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Shows dialog as an asynchronous operation.
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="window"></param>
-        /// <param name="viewmodel"></param>
-        /// <returns></returns>
-        public async Task CreateDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="dialog">The dialog.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
         {
-            window.ViewModel = viewmodel;
+            if (dialog is Window window)
+            {
+                if (Application.Current is BaseApplication baseApplication)
+                    window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
 
-            viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
+                window.ViewModel = viewmodel;
 
-            if (!viewmodel.IsInitialized)
-                await viewmodel.InitializeAsync();
+                window.PrimaryButtonCommand = viewmodel.SubmitCommand;
+                window.SecondaryButtonCommand = viewmodel.CloseCommand;
+                window.CloseButtonCommand = viewmodel.CloseCommand;
 
-            if (window is Window dialog)
-                await _popupNavigation.PushAsync(dialog);
+                window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+
+                if (!viewmodel.IsInitialized)
+                    await viewmodel.InitializeAsync();
+
+                await OpenDialogAsync(window);
+            }
         }
 
-        /// <summary>
-        /// Closes dialog window.
-        /// </summary>
-        /// <param name="dialog"></param>
+        private async Task<ContentDialogResult> OpenDialogAsync(Window dialog)
+        {
+            if (_activeDialog is not null)
+                await CloseDialogAsync(_activeDialog);
+
+            _activeDialog = dialog;
+
+            return await _activeDialog.ShowAsync().AsTask();
+        }
+
         public Task CloseDialogAsync(IWindow dialog)
         {
-            if (dialog is PopupPage page &&
-                _popupNavigation.PopupStack is not null &&
-                _popupNavigation.PopupStack.Count > 0 &&
-                _popupNavigation.PopupStack.Contains(page))
-                return _popupNavigation.RemovePageAsync(page);
-
+            _activeDialog.Close();
+            _activeDialog = null;
             return Task.CompletedTask;
         }
     }

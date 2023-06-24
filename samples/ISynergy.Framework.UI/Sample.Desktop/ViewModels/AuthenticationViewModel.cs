@@ -292,7 +292,7 @@ namespace Sample.ViewModels
         {
             ForgotPasswordViewModel forgotPasswordVM = new(Context, BaseCommonServices, _authenticationService, Logger);
             forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
-            return BaseCommonServices.NavigationService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
         }
 
         /// <summary>
