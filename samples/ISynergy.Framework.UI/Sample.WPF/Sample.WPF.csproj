@@ -52,6 +52,12 @@
 	  </Using>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Views\Test2Window.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
+
 	<Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
 
 </Project>

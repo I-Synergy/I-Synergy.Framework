@@ -215,16 +215,21 @@ namespace ISynergy.Framework.UI.Services
 
         public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
         {
-            if (dialog is Window window)
+            using (var window = dialog as Window)
             {
                 window.ViewModel = viewmodel;
                 window.Owner = Application.Current.MainWindow;
 
-                viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
-                viewmodel.Submitted += async (sender, e) => await CloseDialogAsync(window);
+                await viewmodel.InitializeAsync();
 
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
+                viewmodel.Closed += (sender, e) =>
+                {
+                    if (window is not null)
+                    {
+                        window.Close();
+                        window.Dispose();
+                    }
+                };
 
                 await window.ShowAsync<TEntity>();
             }
