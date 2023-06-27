@@ -242,7 +242,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="viewmodel">The viewmodel.</param>
         public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
         {
-            if (dialog is Window window)
+            using (var window = dialog as Window)
             {
                 if (Application.Current is BaseApplication baseApplication)
                     window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
@@ -257,8 +257,16 @@ namespace ISynergy.Framework.UI.Services
                 window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
 
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
+                await viewmodel.InitializeAsync();
+
+                viewmodel.Closed += (sender, e) =>
+                {
+                    if (window is not null)
+                    {
+                        window.Close();
+                        window.Dispose();
+                    }
+                };
 
                 await OpenDialogAsync(window);
             }
@@ -267,17 +275,29 @@ namespace ISynergy.Framework.UI.Services
         private async Task<ContentDialogResult> OpenDialogAsync(Window dialog)
         {
             if (_activeDialog is not null)
-                await CloseDialogAsync(_activeDialog);
+            {
+                _activeDialog.Close();
+                _activeDialog.Dispose();
+            }
 
             _activeDialog = dialog;
 
             return await _activeDialog.ShowAsync().AsTask();
         }
 
+        /// <summary>
+        /// Closes the dialog.
+        /// </summary>
+        /// <param name="dialog"></param>
+        /// <returns></returns>
         public Task CloseDialogAsync(IWindow dialog)
         {
-            _activeDialog.Close();
-            _activeDialog = null;
+            if (dialog is not null)
+            {
+                dialog.Close();
+                dialog.Dispose();
+            }
+            
             return Task.CompletedTask;
         }
     }
