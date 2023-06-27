@@ -84,10 +84,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// Shows the dialog asynchronous.
         /// </summary>
         /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-        /// <param name="window">The window.</param>
+        /// <param name="dialog">The window.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
-        Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel);
+        Task ShowDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel);
 
         /// <summary>
         /// Shows the dialog asynchronous.
@@ -97,5 +97,12 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
         Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel);
+
+        /// <summary>
+        /// Closes the dialog.
+        /// </summary>
+        /// <param name="dialog"></param>
+        /// <returns></returns>
+        Task CloseDialogAsync(IWindow dialog);
     }
 }

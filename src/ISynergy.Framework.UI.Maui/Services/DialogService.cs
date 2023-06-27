@@ -191,20 +191,21 @@ namespace ISynergy.Framework.UI.Services
         /// Shows dialog as an asynchronous operation.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="window"></param>
+        /// <param name="dialog"></param>
         /// <param name="viewmodel"></param>
         /// <returns></returns>
-        public async Task CreateDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
+        public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
         {
-            window.ViewModel = viewmodel;
+            using (var window = dialog as Window)
+            {
+                window.ViewModel = viewmodel;
 
-            viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
+                viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
 
-            if (!viewmodel.IsInitialized)
                 await viewmodel.InitializeAsync();
 
-            if (window is Window dialog)
-                await _popupNavigation.PushAsync(dialog);
+                await _popupNavigation.PushAsync(window);
+            }
         }
 
         /// <summary>
