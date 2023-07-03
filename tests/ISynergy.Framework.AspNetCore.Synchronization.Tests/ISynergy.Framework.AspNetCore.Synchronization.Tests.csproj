@@ -5,10 +5,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MessagePack" Version="2.5.108" />
+		<PackageReference Include="MessagePack" Version="2.5.124" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.8" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
 		<PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
 		<PackageReference Include="coverlet.collector" Version="6.0.0">
