@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
@@ -25,6 +26,8 @@ namespace Sample.ViewModels
     /// </summary>
     public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
+        private readonly IToastMessageService _toastMessageService;
+
         /// <summary>
         /// Gets or sets the Version property value.
         /// </summary>
@@ -85,6 +88,7 @@ namespace Sample.ViewModels
         public AsyncRelayCommand NugetUnlisterCommand { get; set; } 
         public AsyncRelayCommand SelectSingleCommand { get; set; }
         public AsyncRelayCommand SelectMultipleCommand { get; set; }
+        public AsyncRelayCommand ShowToastMessageCommand { get; set; }
 
 
         /// <summary>
@@ -101,6 +105,7 @@ namespace Sample.ViewModels
             ICommonServices commonServices,
             IBaseApplicationSettingsService settingsService,
             IAuthenticationService authenticationService,
+            IToastMessageService toastMessageService,
             ILogger logger,
             IThemeService themeService,
             ILocalizationService localizationService)
@@ -108,6 +113,8 @@ namespace Sample.ViewModels
         {
             CommonServices = commonServices;
             SettingsService = settingsService;
+
+            _toastMessageService = toastMessageService;
 
             Title = commonServices.InfoService.ProductName;
             Version = commonServices.InfoService.ProductVersion;
@@ -120,6 +127,7 @@ namespace Sample.ViewModels
             NugetUnlisterCommand = new AsyncRelayCommand(UnlistNugetAsync);
             SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
             SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
+            ShowToastMessageCommand = new AsyncRelayCommand(ShowToastMessageAsync);
 
             Items = new ObservableCollection<TestItem>()
             {
@@ -131,6 +139,15 @@ namespace Sample.ViewModels
             };
 
             PopulateNavItems();
+        }
+
+        private Task ShowToastMessageAsync()
+        {
+            _toastMessageService.ShowInformation("This is an informational message!");
+            _toastMessageService.ShowSuccess("This is a success message!");
+            _toastMessageService.ShowError("This is an error message!");
+            _toastMessageService.ShowWarning("This is a warning message!");
+            return Task.CompletedTask;
         }
 
         private Task SelectSingleAsync()
@@ -223,6 +240,7 @@ namespace Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("Select single item", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectSingleCommand));
             PrimaryItems.Add(new NavigationItem("Select multiple items", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectMultipleCommand));
             PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, NugetUnlisterCommand));
+            PrimaryItems.Add(new NavigationItem("Show toast message", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, ShowToastMessageCommand));
             PrimaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _themeService.Style.Color, LoginCommand));
         }
 

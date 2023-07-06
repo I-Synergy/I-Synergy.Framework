@@ -15,7 +15,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns></returns>
         public bool Invoke(Action action)
         {
-            Application.Current.Dispatcher.Invoke(action);
+            Application.Current?.Dispatcher.Invoke(action);
             return true;
         }
     }
