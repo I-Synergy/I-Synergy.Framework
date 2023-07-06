@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -98,6 +99,7 @@ namespace ISynergy.Framework.UI.Extensions
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IDispatcherService, DispatcherService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
+            services.AddSingleton<IToastMessageService, ToastMessageService>();
             services.AddTransient<IThemeService, ThemeService>();
             services.AddTransient<IFileService<FileResult>, FileService>();
 
