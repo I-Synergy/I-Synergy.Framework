@@ -135,5 +135,43 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.IsTrue(product.Validate());
             Assert.IsTrue(product.Errors.Count == 0);
         }
+
+        [TestMethod]
+        public void TestIfProductsAreEqual()
+        {
+            // Arrange
+            var productId = Guid.NewGuid();
+            var name = "Test1";
+            var quantity = 2;
+            var price = 10.0m;
+
+            var product1 = new Product(productId, name, quantity, price);
+            var product2 = new Product(productId, name, quantity, price);
+
+            // Act
+            var isEqual = product1.Equals(product2);
+
+            // Assert
+            Assert.IsTrue(isEqual);
+        }
+
+        [TestMethod]
+        public void TestIfProductsWithoutIdentityAreEqual()
+        {
+            // Arrange
+            var productId = Guid.NewGuid();
+            var name = "Test1";
+            var quantity = 2;
+            var price = 10.0m;
+
+            var product1 = new ProductWithoutIdentity(productId, name, quantity, price);
+            var product2 = new ProductWithoutIdentity(productId, name, quantity, price);
+
+            // Act
+            var isEqual = product1.Equals(product2);
+
+            // Assert
+            Assert.IsTrue(isEqual);
+        }
     }
 }
