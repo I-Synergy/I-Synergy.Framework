@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Application;
 using ISynergy.Framework.UI.Services;
 using Sample.ViewModels;
 using System.Windows;

@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.UI.Controls.ToastNotification;
 using ISynergy.Framework.UI.Controls.ToastNotification.Options;
 
-namespace ISynergy.Framework.UI.Abstractions.Controls.Toasts
+namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages
 {
     public interface INotification
     {

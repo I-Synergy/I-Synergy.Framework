@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace ISynergy.Framework.UI.Abstractions.Controls.Toasts
+namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages
 {
     public interface IKeyboardEventHandler
     {

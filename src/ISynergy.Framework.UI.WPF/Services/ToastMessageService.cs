@@ -1,15 +1,16 @@
-﻿using ISynergy.Framework.UI.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Controls.ToastMessage.Error;
 using ISynergy.Framework.UI.Controls.ToastMessage.Information;
 using ISynergy.Framework.UI.Controls.ToastMessage.Success;
 using ISynergy.Framework.UI.Controls.ToastMessage.Warning;
 using ISynergy.Framework.UI.Controls.ToastNotification;
-using ISynergy.Framework.UI.Controls.ToastNotification.Enumerations;
 using ISynergy.Framework.UI.Controls.ToastNotification.Lifetime;
 using ISynergy.Framework.UI.Controls.ToastNotification.Lifetime.Clear;
 using ISynergy.Framework.UI.Controls.ToastNotification.Options;
 using ISynergy.Framework.UI.Controls.ToastNotification.Position;
 using ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
+using ISynergy.Framework.UI.Options;
+using Microsoft.Extensions.Options;
 using System.Windows;
 
 namespace ISynergy.Framework.UI.Services
@@ -17,25 +18,37 @@ namespace ISynergy.Framework.UI.Services
     public class ToastMessageService : IToastMessageService
     {
         private readonly Notifier _notifier;
+        private readonly IDispatcherService _dispatcherService;
+        private readonly ToastMessageOptions _options;
 
-        public ToastMessageService()
+        public ToastMessageService(IDispatcherService dispatcherService, IOptions<ToastMessageOptions> options)
         {
+            _dispatcherService = dispatcherService;
+            _options = options.Value;
+
             _notifier = new Notifier(cfg =>
             {
                 cfg.PositionProvider = new WindowPositionProvider(
                     parentWindow: Application.Current.MainWindow,
-                    corner: Corner.BottomRight,
-                    offsetX: 25,
-                    offsetY: 25);
+                    corner: _options.Corner,
+                    offsetX: _options.OffsetX,
+                    offsetY: _options.OffsetY);
 
                 cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
-                    notificationLifetime: TimeSpan.FromSeconds(6),
-                    maximumNotificationCount: MaximumNotificationCount.FromCount(6));
+                    notificationLifetime: TimeSpan.FromSeconds(_options.NotificationLifetimeInSeconds),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(_options.MaximumNotificationCount));
 
-                cfg.Dispatcher = Application.Current.Dispatcher;
+                if (_dispatcherService.Dispatcher is System.Windows.Threading.Dispatcher dispatcher)
+                {
+                    cfg.Dispatcher = dispatcher;
+                }
+                else
+                {
+                    cfg.Dispatcher = Application.Current.Dispatcher;
+                }
 
-                cfg.DisplayOptions.TopMost = false;
-                cfg.DisplayOptions.Width = 250;
+                cfg.DisplayOptions.TopMost = _options.TopMost;
+                cfg.DisplayOptions.Width = _options.Width;
             });
 
             _notifier.ClearMessages(new ClearAll());
