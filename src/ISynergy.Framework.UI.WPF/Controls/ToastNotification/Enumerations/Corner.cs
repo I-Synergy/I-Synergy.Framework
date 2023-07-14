@@ -2,10 +2,10 @@
 {
     public enum Corner
     {
-        TopRight,
-        TopLeft,
-        BottomRight,
-        BottomLeft,
-        BottomCenter
+        TopRight = 0,
+        TopLeft = 1,
+        BottomRight = 2,
+        BottomLeft = 3,
+        BottomCenter = 4
     }
 }

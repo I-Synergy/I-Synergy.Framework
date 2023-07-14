@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.UI.Controls.ToastNotification.Enumerations;
 using System.Windows;
 
-namespace ISynergy.Framework.UI.Abstractions.Controls.Toasts
+namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages
 {
     public interface IPositionProvider : IDisposable
     {
