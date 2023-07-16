@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
@@ -82,15 +84,63 @@ namespace ISynergy.Framework.Core.Base
         /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             if (obj is IObservableClass observable && observable.HasIdentityProperty())
                 return observable.GetIdentityValue().Equals(this.GetIdentityValue());
 
-            if (base.Equals(obj))
-                return true;
+            var currentPropertiesToCheck = this.GetType()
+                .GetProperties()
+                .Where(q =>
+                    !q.Name.Equals(nameof(IObservableClass.AutomaticValidationTrigger)) &&
+                    !q.Name.Equals(nameof(IObservableClass.Error)) &&
+                    !q.Name.Equals(nameof(IObservableClass.Errors)) &&
+                    !q.Name.Equals(nameof(IObservableClass.HasErrors)) &&
+                    !q.Name.Equals("Item") &&
+                    !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
+                    !q.Name.Equals(nameof(IObservableClass.IsValid)) &&
+                    !q.Name.Equals(nameof(IObservableClass.Properties)) &&
+                    !q.Name.Equals(nameof(IObservableClass.Validator)));
 
-            return false;
+            var propertiesToCheck = obj.GetType()
+                .GetProperties()
+                .Where(q =>
+                    !q.Name.Equals(nameof(IObservableClass.AutomaticValidationTrigger)) &&
+                    !q.Name.Equals(nameof(IObservableClass.Error)) &&
+                    !q.Name.Equals(nameof(IObservableClass.Errors)) &&
+                    !q.Name.Equals(nameof(IObservableClass.HasErrors)) &&
+                    !q.Name.Equals("Item") &&
+                    !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
+                    !q.Name.Equals(nameof(IObservableClass.IsValid)) &&
+                    !q.Name.Equals(nameof(IObservableClass.Properties)) &&
+                    !q.Name.Equals(nameof(IObservableClass.Validator)));
+
+            foreach (var property in currentPropertiesToCheck)
+            {
+                if (!propertiesToCheck.Any(a => a.Name.Equals(property.Name)))
+                {
+                    return false;
+                }
+
+                if (propertiesToCheck.Where(q => q.Name.Equals(property.Name)).SingleOrDefault() is PropertyInfo propertyInfo)
+                {
+                    if ((property.GetValue(this) is null && propertyInfo.GetValue(obj) is not null) ||
+                        (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is null))
+                    {
+                        return false;
+                    }
+                    else if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this).Equals(propertyInfo.GetValue(obj)))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
-
 
         /// <summary>
         /// Returns a hash code for this instance.

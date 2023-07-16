@@ -98,6 +98,7 @@ namespace ISynergy.Framework.UI.Extensions
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IDispatcherService, DispatcherService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
+            services.AddSingleton<IToastMessageService, ToastMessageService>();
             services.AddTransient<IThemeService, ThemeService>();
             services.AddTransient<IFileService<FileResult>, FileService>();
 

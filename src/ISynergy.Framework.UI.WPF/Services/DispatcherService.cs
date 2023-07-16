@@ -1,5 +1,7 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using System.Windows;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using System.Windows.Threading;
+using Application = System.Windows.Application;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -8,6 +10,16 @@ namespace ISynergy.Framework.UI.Services
     /// </summary>
     public class DispatcherService : IDispatcherService
     {
+        private readonly Dispatcher _dispatcher;
+
+        public DispatcherService()
+        {
+            Argument.IsNotNull(Application.Current);
+            _dispatcher = Application.Current.Dispatcher;
+        }
+
+        public object Dispatcher { get => _dispatcher; }
+
         /// <summary>
         /// Invokes action with the dispatcher.
         /// </summary>
@@ -15,7 +27,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns></returns>
         public bool Invoke(Action action)
         {
-            Application.Current.Dispatcher.Invoke(action);
+            _dispatcher.Invoke(action);
             return true;
         }
     }
