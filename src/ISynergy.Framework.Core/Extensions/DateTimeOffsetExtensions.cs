@@ -25,8 +25,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns><c>true</c> if [is in range of date] [the specified comparer]; otherwise, <c>false</c>.</returns>
         public static bool IsInRangeOfDate(this DateTimeOffset self, DateTimeOffset comparer)
         {
-            var start = comparer.ToOffset(self.Offset);
-            var end = start.AddDays(1).AddTicks(-1);
+            var start = comparer.ToOffset(self.Offset).ToStartOfDay();
+            var end = start.ToEndOfDay();
 
             if (self.CompareTo(start) >= 0 && self.CompareTo(end) <= 0)
             {

@@ -29,10 +29,10 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IsInRangeOfDateDifferentOffsetTest()
         {
-            DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
-            DateTimeOffset comparer = new(2017, 10, 10, 22, 0, 0, new TimeSpan(0, 0, 0));
+            DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, new TimeSpan(-8,0,0));
+            DateTimeOffset comparer = new(2017, 10, 10, 23, 0, 0, new TimeSpan(0, 0, 0));
 
-            Assert.IsTrue(self.IsInRangeOfDate(comparer));
+            Assert.IsFalse(self.IsInRangeOfDate(comparer));
         }
 
         /// <summary>
@@ -54,11 +54,11 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IsInRangeOfDatesDifferentOffsetTest()
         {
-            DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
+            DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, new TimeSpan(-8,0,0));
             DateTimeOffset start = new(2017, 10, 10, 22, 0, 0, new TimeSpan(0, 0, 0));
             DateTimeOffset end = new(2017, 10, 11, 21, 59, 59, new TimeSpan(0, 0, 0));
 
-            Assert.IsTrue(self.IsInRangeOfDate(start, end));
+            Assert.IsFalse(self.IsInRangeOfDate(start, end));
         }
 
         /// <summary>
