@@ -38,7 +38,7 @@
 		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Mopups" Version="1.1.0" />
+		<PackageReference Include="Mopups" Version="1.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>

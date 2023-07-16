@@ -15,9 +15,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
+		<PackageReference Include="BenchmarkDotNet" Version="0.13.6" />
 		<PackageReference Include="lz4net" Version="1.0.15.93" />
-		<PackageReference Include="MessagePack" Version="2.5.108" />
+		<PackageReference Include="MessagePack" Version="2.5.124" />
 	</ItemGroup>
 
 	<ItemGroup>
