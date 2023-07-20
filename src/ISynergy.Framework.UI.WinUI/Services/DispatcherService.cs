@@ -9,17 +9,16 @@ namespace ISynergy.Framework.UI.Services
     /// </summary>
     public class DispatcherService : IDispatcherService
     {
-        private readonly DispatcherQueue _dispatcher;
-
-        public DispatcherService()
+        public object Dispatcher
         {
-            Argument.IsNotNull(Application.Current);
-
-            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
-                _dispatcher = dispatcherQueue;
+            get
+            {
+                if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
+                    return dispatcherQueue;
+                else
+                    return DispatcherQueue.GetForCurrentThread();
+            }
         }
-
-        public object Dispatcher { get => _dispatcher; }
 
         /// <summary>
         /// Invokes action with the dispatcher.
@@ -28,7 +27,11 @@ namespace ISynergy.Framework.UI.Services
         /// <returns></returns>
         public bool Invoke(Action action)
         {
-            return _dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () => action());
+            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
+                return dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => action());
+            else if (DispatcherQueue.GetForCurrentThread() is DispatcherQueue dispatcher)
+                return dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () => action());
+            return false;
         }
     }
 }
