@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Models;
 using ISynergy.Framework.Documents.Services;
@@ -22,6 +24,7 @@ namespace ISynergy.Framework.Documents.Extensions
         {
             services.AddOptions();
             services.Configure<SyncfusionLicenseOptions>(configuration.GetSection(nameof(SyncfusionLicenseOptions)).BindWithReload);
+            services.AddSingleton<ILanguageService, LanguageService>();
             services.AddSingleton<IDocumentService, DocumentService>();
 
             return services;
