@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// </summary>
         /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
         bool IsDirty { get; }
-        // <summary>
+        /// <summary>
         /// Returns true if ... is valid.
         /// </summary>
         /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
