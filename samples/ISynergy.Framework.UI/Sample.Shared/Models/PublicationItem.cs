@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
 using Sample.Enumerations;
+using System;
 
 namespace Sample.Models
 {

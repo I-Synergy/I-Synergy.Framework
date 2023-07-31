@@ -1,4 +1,8 @@
-﻿namespace Sample.Abstractions.Services
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Sample.Abstractions.Services
 {
     /// <summary>
     /// Interface ISettingsService
