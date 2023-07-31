@@ -1,4 +1,6 @@
-﻿namespace Sample.Abstractions.Services
+﻿using System.Threading.Tasks;
+
+namespace Sample.Abstractions.Services
 {
     /// <summary>
     /// Interface IUpdateService

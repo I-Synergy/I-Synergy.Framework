@@ -1,0 +1,76 @@
+﻿<c:View
+    x:Class="Sample.Views.SelectionTestView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <RelativePanel>
+
+        <ContentControl RelativePanel.AlignRightWithPanel="True" 
+                        RelativePanel.AlignLeftWithPanel="True" 
+                        RelativePanel.AlignTopWithPanel="True"
+                        IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <Button Command="{Binding SelectSingleCommand}" 
+                            Content="Select single item..." 
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
+                
+                    <Button Command="{Binding SelectMultipleCommand}" 
+                            Content="Select multiple items..."
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
+
+                    <Button Command="{Binding ShowDialogYesNo}" 
+                            Content="Show Yes/No dialog..."
+                            Width="200"
+                            Height="35"
+                            Margin="1,20,1,1"/>
+
+                    <Button Command="{Binding ShowDialogYesNoCancel}" 
+                            Content="Show Yes/No/Cancel dialog..."
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
+
+                    <Button Command="{Binding ShowDialogOk}" 
+                            Content="Show Ok dialog..."
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
+
+                    <Button Command="{Binding ShowDialogOkCancel}" 
+                            Content="Show Ok/Cancel dialog..."
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <c:Tile Title="Title" Icon="{StaticResource address}" Command="{Binding ShowUnitsCommand}" />
+                    <c:Tile Title="Title" Icon="{StaticResource accounting}"/>
+                    <c:Tile Title="Title" Header="Header" Count="5" Icon="{StaticResource atm}"/>
+                    <c:Tile Title="Title" Header="Header" Count="Count" Icon="{StaticResource admin}"/>
+                    <c:Tile Title="Title" Header="Header (small)" Mode="Small" Count="Count" Icon="{StaticResource admin}"/>
+                    <c:Tile Title="Title" Header="Header (wide)" Mode="Wide"  Count="Count" Icon="{StaticResource admin}"/>
+                </StackPanel>
+            </StackPanel>
+        </ContentControl>
+
+        <toolkit:BladeView x:Name="BladeDetails"
+                     AutoCollapseCountThreshold="3" 
+                     ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     RelativePanel.AlignBottomWithPanel="True" 
+                     RelativePanel.AlignTopWithPanel="True"
+                     RelativePanel.AlignRightWithPanel="True" />
+    </RelativePanel>
+</c:View>

@@ -6,6 +6,7 @@ using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Sample.Options;
+using System;
 using System.Globalization;
 
 namespace Sample
