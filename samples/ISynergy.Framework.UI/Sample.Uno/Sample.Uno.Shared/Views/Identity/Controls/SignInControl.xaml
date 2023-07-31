@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="Sample.Views.Identity.Controls.SignInControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    mc:Ignorable="d" Unloaded="UserControl_Unloaded">
+
+    <Grid>
+        <StackPanel Margin="2,10" VerticalAlignment="Center">
+            <TextBlock Text="{m:LanguageResource Key=Login}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" />
+
+            <AutoSuggestBox 
+                x:Name="TextBox_Username" 
+                Header="{m:LanguageResource Key=Username}" 
+                ToolTipService.ToolTip="{m:LanguageResource Key= Email}" 
+                Text="{Binding Username, Mode=TwoWay}"
+                ItemsSource="{Binding Usernames}"
+                TextChanged="TextBox_Username_TextChanged" 
+                QuerySubmitted="TextBox_Username_QuerySubmitted" 
+                SuggestionChosen="TextBox_Username_SuggestionChosen" />
+            <PasswordBox 
+                x:Name="TextBox_Password" 
+                Header="{m:LanguageResource Key=Password}" 
+                ToolTipService.ToolTip="{m:LanguageResource Key= Password}" 
+                Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                x:Uid="TextBox_Password" 
+                InputScope="Password" 
+                PasswordRevealMode="Peek" 
+                KeyDown="TextBox_Password_KeyDown"/>
+
+            <HyperlinkButton x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{m:LanguageResource Key=Password_Forgot}" Command="{Binding ForgotPasswordCommand}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
+            <TextBlock x:Name="TextBox_CapsLockOn" Grid.Row="2" Text="{m:LanguageResource Key=Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
+
+            <Button x:Name="Button_Submit" 
+                    Content="{m:LanguageResource Key=Login}" 
+                    Margin ="5,25" 
+                    HorizontalAlignment="Right" 
+                    Command="{Binding SignInCommand}"
+                    IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}"
+                    Style="{StaticResource DefaultDialogButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

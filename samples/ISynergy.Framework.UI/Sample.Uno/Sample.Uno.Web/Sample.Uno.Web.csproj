@@ -1,0 +1,94 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<NoWarn>$(NoWarn);NU1504;NU1505;NU1701</NoWarn>
+		<!-- Disabled due to issue with Central Package Management with implicit using -->
+		<ImplicitUsings>disable</ImplicitUsings>
+		<WasmPWAManifestFile>manifest.webmanifest</WasmPWAManifestFile>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<!--
+			Supports Deep Linking Routes
+			https://aka.platform.uno/wasm-deeplink
+		-->
+		<WasmShellWebAppBasePath>/</WasmShellWebAppBasePath>
+		<RootNamespace>Sample</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+		<DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<!--
+			IL Linking is disabled in Debug configuration.
+			When building in Release, see https://platform.uno/docs/articles/features/using-il-linker-WebAssembly.html
+		-->
+		<WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<!-- XAML Resource trimming https://aka.platform.uno/xaml-trimming -->
+		<!--<UnoXamlResourcesTrimming>true</UnoXamlResourcesTrimming>-->
+		<!-- Improve performance with AOT builds https://aka.platform.uno/wasm-aot -->
+		<!-- <WasmShellMonoRuntimeExecutionMode>InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode> -->
+		<!-- Temporarily uncomment to generate an AOT profile https://aka.platform.uno/wasm-aot-profile -->
+		<!-- <WasmShellGenerateAOTProfile>true</WasmShellGenerateAOTProfile> -->
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="manifest.webmanifest" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="WasmCSS\Fonts.css" />
+		<EmbeddedResource Include="WasmScripts\AppManifest.js" />
+	</ItemGroup>
+	<ItemGroup>
+		<LinkerDescriptor Include="LinkerConfig.xml" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--
+		This item group is required by the project template because of the
+		new SDK-Style project, otherwise some files are not added automatically.
+
+		You can safely remove this ItemGroup completely.
+		-->
+		<None Include="Program.cs" />
+		<None Include="LinkerConfig.xml" />
+		<None Include="wwwroot\web.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Logging.Sentry\ISynergy.Framework.Logging.Sentry.csproj" />
+		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Uno.WinUI" Version="4.9.45" />
+		<PackageReference Include="Uno.Resizetizer" Version="1.1.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.4" />
+		<PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.27" />
+		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.27" />
+		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.9.45" />
+		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.9.45" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.9.45" />
+		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+		<PackageReference Include="Uno.CommunityToolkit.WinUI.UI.Controls" Version="7.1.100" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Assets\**" />
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<PRIResource Include="**\*.resw" />
+	</ItemGroup>
+
+	<Import Project="..\..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
+	<Import Project="..\Sample.Uno.Shared\Sample.Uno.Shared.projitems" Label="Shared" />
+</Project>

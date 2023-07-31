@@ -1,4 +1,6 @@
-﻿namespace Sample.Models
+﻿using System;
+
+namespace Sample.Models
 {
     public class Measurement
     {

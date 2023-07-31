@@ -1,0 +1,22 @@
+<Project>
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)App.xaml" />
+		<ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml"
+								SubType="Designer"
+								XamlRuntime="WinUI"
+								Generator="MSBuild:Compile"
+								Link="App.xaml" />
+		<Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs"
+				XamlRuntime="WinUI"
+				DependentUpon="App.xaml"
+				Link="App.xaml.cs" />
+		<UnoIcon Include="$(MSBuildThisFileDirectory)Icons\iconapp.svg"
+				ForegroundFile="$(MSBuildThisFileDirectory)Icons\appconfig.svg"
+				ForegroundScale="0.65"
+				Color="#00000000" />
+		<UnoSplashScreen
+			Include="$(MSBuildThisFileDirectory)Splash\splash_screen.svg"
+			BaseSize="128,128"
+			Color="#086AD1" />
+	</ItemGroup>
+</Project>

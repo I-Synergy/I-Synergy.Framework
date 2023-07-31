@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
+using System;
 
 namespace Sample.Models
 {
