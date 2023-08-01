@@ -101,8 +101,6 @@ namespace ISynergy.Framework.UI.Converters
         }
     }
 
-
-
     /// <summary>
     /// Class EnumToStringConverter.
     /// Implements the <see cref="IValueConverter" />
