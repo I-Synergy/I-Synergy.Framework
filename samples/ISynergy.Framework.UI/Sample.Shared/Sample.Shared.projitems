@@ -112,6 +112,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Resource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
       <DependentUpon>Resources.cs</DependentUpon>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
@@ -7,7 +7,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
-		<CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 		<AssemblyName>Sample</AssemblyName>
 		<StartupObject>Sample.Program</StartupObject>
 		<Product>Sample WPF Desktop</Product>
@@ -16,10 +15,6 @@
 
 	<ItemGroup>
 	  <None Remove="Assets\Fonts\fontawesome.otf" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -38,8 +33,8 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-		<PackageReference Include="Syncfusion.SfInput.WPF" Version="22.2.5" />
-		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="22.2.5" />
+		<PackageReference Include="Syncfusion.SfInput.WPF" Version="22.2.8" />
+		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="22.2.8" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
@@ -13,7 +13,6 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -73,10 +72,6 @@
 		<UpToDateCheckInput Remove="Windows\LanguageWindow.xaml" />
 		<UpToDateCheckInput Remove="Windows\NoteWindow.xaml" />
 		<UpToDateCheckInput Remove="Windows\ThemeWindow.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -200,20 +195,6 @@
 		<Using Include="Microsoft.UI.Xaml.LaunchActivatedEventArgs">
 			<Alias>LaunchActivatedEventArgs</Alias>
 		</Using>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Abstractions\" />
-		<Folder Include="Application\" />
-	  <Folder Include="Behaviors\MultiSelection\" />
-	  <Folder Include="Collections\" />
-	  <Folder Include="Common\" />
-	  <Folder Include="Converters\" />
-	  <Folder Include="Helpers\" />
-	  <Folder Include="Markup\" />
-	  <Folder Include="Navigation\" />
-	  <Folder Include="Services\" />
-	  <Folder Include="Triggers\" />
 	</ItemGroup>
 </Project>
 

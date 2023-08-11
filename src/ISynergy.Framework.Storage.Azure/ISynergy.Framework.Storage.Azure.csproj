@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
@@ -8,10 +8,6 @@
         <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.Storage.Azure.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
-
-    <ItemGroup>
-      <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Azure.Storage.Blobs" Version="12.17.0" />
