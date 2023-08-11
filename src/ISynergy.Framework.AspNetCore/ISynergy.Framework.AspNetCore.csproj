@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
@@ -10,10 +10,6 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />

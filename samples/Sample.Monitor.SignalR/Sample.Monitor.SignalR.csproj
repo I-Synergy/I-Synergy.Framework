@@ -3,9 +3,6 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<CodeAnalysisRuleSet>Sample.Monitor.SignalR.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
-	<ItemGroup>
-	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ISynergy.Framework.Monitoring.SignalR\ISynergy.Framework.Monitoring.SignalR.csproj" />

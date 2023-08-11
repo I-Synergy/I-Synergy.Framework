@@ -1,4 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\Sample.Uno.Base\base.props" />
+	
 	<PropertyGroup>
 		<TargetFrameworks>net7.0-ios;net7.0-android;net7.0-maccatalyst</TargetFrameworks>
 		<SingleProject>true</SingleProject>
@@ -19,11 +21,11 @@
 		<!-- Required for C# Hot Reload -->
 		<UseInterpreter Condition="'$(Configuration)' == 'Debug' and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'maccatalyst'">True</UseInterpreter>
 		<IsUnoHead>true</IsUnoHead>
+		<RootNamespace>Sample</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Logging.Sentry\ISynergy.Framework.Logging.Sentry.csproj" />
 		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj" />
 	</ItemGroup>
@@ -42,7 +44,7 @@
 	<Choose>
 		<When Condition="$(IsAndroid)">
 			<ItemGroup>
-				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.8.0" />
+				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.7.0" />
 				<PackageReference Include="Uno.UniversalImageLoader" Version="1.9.36" />
 			</ItemGroup>
 			<ItemGroup>
@@ -77,7 +79,7 @@
 			</PropertyGroup>
 		</When>
 	</Choose>
-
+	
 	<Import Project="..\..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
 	<Import Project="..\Sample.Uno.Shared\Sample.Uno.Shared.projitems" Label="Shared" />
 </Project>
