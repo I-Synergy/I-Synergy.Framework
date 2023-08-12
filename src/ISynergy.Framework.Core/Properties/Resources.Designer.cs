@@ -19,7 +19,7 @@ namespace ISynergy.Framework.Core.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -61,11 +61,128 @@ namespace ISynergy.Framework.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Property {0} is mandatory..
+        ///   Looks up a localized string similar to and.
+        /// </summary>
+        public static string And {
+            get {
+                return ResourceManager.GetString("And", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to between.
+        /// </summary>
+        public static string Between {
+            get {
+                return ResourceManager.GetString("Between", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value must be between {0} and {1}..
+        /// </summary>
+        public static string WarningBetween {
+            get {
+                return ResourceManager.GetString("WarningBetween", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value can only contain enumerations..
+        /// </summary>
+        public static string WarningEnum {
+            get {
+                return ResourceManager.GetString("WarningEnum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be an emty Guid..
+        /// </summary>
+        public static string WarningGuidEmpty {
+            get {
+                return ResourceManager.GetString("WarningGuidEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is mandatory..
         /// </summary>
         public static string WarningMandatoryProperty {
             get {
                 return ResourceManager.GetString("WarningMandatoryProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value may not exceed {0}..
+        /// </summary>
+        public static string WarningMaximum {
+            get {
+                return ResourceManager.GetString("WarningMaximum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value may be at least {0}..
+        /// </summary>
+        public static string WarningMinumum {
+            get {
+                return ResourceManager.GetString("WarningMinumum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null..
+        /// </summary>
+        public static string WarningNull {
+            get {
+                return ResourceManager.GetString("WarningNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null or an empty Array..
+        /// </summary>
+        public static string WarningNullEmptyArray {
+            get {
+                return ResourceManager.GetString("WarningNullEmptyArray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null or an empty list..
+        /// </summary>
+        public static string WarningNullEmptyList {
+            get {
+                return ResourceManager.GetString("WarningNullEmptyList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null or an empty Guid..
+        /// </summary>
+        public static string WarningNullGuidEmpty {
+            get {
+                return ResourceManager.GetString("WarningNullGuidEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null or empty..
+        /// </summary>
+        public static string WarningNullOrEmpty {
+            get {
+                return ResourceManager.GetString("WarningNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null or contain only whitespaces..
+        /// </summary>
+        public static string WarningNullWhitespace {
+            get {
+                return ResourceManager.GetString("WarningNullWhitespace", resourceCulture);
             }
         }
     }

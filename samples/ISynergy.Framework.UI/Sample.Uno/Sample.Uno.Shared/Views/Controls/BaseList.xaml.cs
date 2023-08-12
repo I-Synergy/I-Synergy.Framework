@@ -1,9 +1,11 @@
-﻿namespace Sample.Views.Controls
+﻿using Microsoft.UI.Xaml.Controls;
+
+namespace Sample.Views.Controls
 {
     /// <summary>
     /// Class BaseList. This class cannot be inherited.
     /// </summary>
-    public sealed partial class BaseList
+    public sealed partial class BaseList : UserControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseList"/> class.

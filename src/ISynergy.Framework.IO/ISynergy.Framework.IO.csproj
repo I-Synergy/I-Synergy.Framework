@@ -14,10 +14,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<EmbeddedResource Include="FileTypeDefinitions.json">
 			<LogicalName>FileTypeDefinitions.json</LogicalName> 
 		</EmbeddedResource>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     
     <PropertyGroup>
@@ -8,13 +8,9 @@
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.MessageBus.Azure.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
-    
-    <ItemGroup>
-      <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.15.0" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.0" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     </ItemGroup>
     <ItemGroup>
