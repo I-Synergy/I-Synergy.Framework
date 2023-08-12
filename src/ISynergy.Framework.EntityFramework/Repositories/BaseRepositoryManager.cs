@@ -84,10 +84,23 @@ namespace ISynergy.Framework.EntityFramework.Repositories
             if (entityPropertyName is not null)
             {
                 var parameterExpression = Expression.Parameter(typeof(TEntity));
-                Expression query = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(id));
-                var predicate = Expression.Lambda<Func<TEntity, bool>>(query, parameterExpression);
+                var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(id));
+                var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
 
-                var result = await _dataContext.Set<TEntity>()
+                var query = _dataContext
+                    .Set<TEntity>()
+                    .AsQueryable();
+
+                var navigations = _dataContext.Model
+                    .FindEntityType(typeof(TEntity))
+                    .GetDerivedTypesInclusive()
+                    .SelectMany(t => t.GetNavigations())
+                    .Distinct();
+
+                foreach (var property in navigations)
+                    query = query.Include(property.Name);
+
+                var result = await query
                     .SingleOrDefaultAsync(predicate, cancellationToken)
                     .ConfigureAwait(false);
 
@@ -133,7 +146,7 @@ namespace ISynergy.Framework.EntityFramework.Repositories
 
             var target = e.Adapt<TModel, TEntity>();
 
-            _dataContext.Add(target);
+            var adds = _dataContext.Add(target);
 
             var result = await _dataContext
                 .SaveChangesAsync(cancellationToken)
@@ -167,16 +180,29 @@ namespace ISynergy.Framework.EntityFramework.Repositories
             if (entityPropertyName is not null && modelPropertyValue is not null)
             {
                 var parameterExpression = Expression.Parameter(typeof(TEntity));
-                Expression query = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(modelPropertyValue));
-                var predicate = Expression.Lambda<Func<TEntity, bool>>(query, parameterExpression);
+                var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(modelPropertyValue));
+                var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
 
-                var target = await _dataContext.Set<TEntity>()
+                var query = _dataContext
+                    .Set<TEntity>()
+                    .AsQueryable();
+
+                var navigations = _dataContext.Model
+                    .FindEntityType(typeof(TEntity))
+                    .GetDerivedTypesInclusive()
+                    .SelectMany(t => t.GetNavigations())
+                    .Distinct();
+
+                foreach (var property in navigations)
+                    query = query.Include(property.Name);
+
+                var target = await query
                     .SingleOrDefaultAsync(predicate, cancellationToken)
                     .ConfigureAwait(false);
 
                 target = e.Adapt(target);
 
-                _dataContext.Set<TEntity>().Update(target);
+                var updates = _dataContext.Update(target);
 
                 try
                 {
@@ -218,10 +244,23 @@ namespace ISynergy.Framework.EntityFramework.Repositories
             if (entityPropertyName is not null && modelPropertyValue is not null)
             {
                 var parameterExpression = Expression.Parameter(typeof(TEntity));
-                Expression query = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(modelPropertyValue));
-                var predicate = Expression.Lambda<Func<TEntity, bool>>(query, parameterExpression);
+                var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(modelPropertyValue));
+                var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
 
-                var target = await _dataContext.Set<TEntity>()
+                var query = _dataContext
+                    .Set<TEntity>()
+                    .AsQueryable();
+
+                var navigations = _dataContext.Model
+                    .FindEntityType(typeof(TEntity))
+                    .GetDerivedTypesInclusive()
+                    .SelectMany(t => t.GetNavigations())
+                    .Distinct();
+
+                foreach (var property in navigations)
+                    query = query.Include(property.Name);
+
+                var target = await query
                     .SingleOrDefaultAsync(predicate, cancellationToken)
                     .ConfigureAwait(false);
 
@@ -230,7 +269,8 @@ namespace ISynergy.Framework.EntityFramework.Repositories
                     if (target is null)
                     {
                         target = e.Adapt<TModel, TEntity>();
-                        _dataContext.Set<TEntity>().Add(target);
+
+                        var adds = _dataContext.Add(target);
 
                         result = await _dataContext
                             .SaveChangesAsync(cancellationToken)
@@ -239,7 +279,8 @@ namespace ISynergy.Framework.EntityFramework.Repositories
                     else
                     {
                         target = e.Adapt(target);
-                        _dataContext.Set<TEntity>().Update(target);
+
+                        var updates = _dataContext.Update(target);
 
                         result = await _dataContext
                             .SaveChangesAsync(cancellationToken)
@@ -283,11 +324,11 @@ namespace ISynergy.Framework.EntityFramework.Repositories
                     if (soft)
                     {
                         item.IsDeleted = true;
-                        _dataContext.Set<TEntity>().Update(item);
+                        var updates = _dataContext.Update(item);
                     }
                     else
                     {
-                        _dataContext.Set<TEntity>().Remove(item);
+                        var deletes = _dataContext.Remove(item);
                     }
 
                     result = await _dataContext.SaveChangesAsync(cancellationToken)
