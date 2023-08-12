@@ -2,16 +2,10 @@
 	<PropertyGroup>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-
 		<DebugType>portable</DebugType>
 		<DebugSymbols>True</DebugSymbols>
-
-		<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
-
 		<NoWarn>$(NoWarn);CA1416;NU1507</NoWarn>
-
 		<DefaultLanguage>en</DefaultLanguage>
-
 		<IsAndroid>false</IsAndroid>
 		<IsIOS>false</IsIOS>
 		<IsMac>false</IsMac>

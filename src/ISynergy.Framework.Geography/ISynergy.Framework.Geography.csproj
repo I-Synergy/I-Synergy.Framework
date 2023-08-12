@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
@@ -8,10 +8,6 @@
         <PackageTags>I-Synergy, Framework, Geography</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.Geography.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
-
-    <ItemGroup>
-      <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

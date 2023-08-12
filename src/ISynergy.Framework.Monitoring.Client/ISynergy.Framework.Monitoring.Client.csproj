@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -9,12 +9,9 @@
 		<RootNamespace>ISynergy.Framework.Monitoring.Client</RootNamespace>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Monitoring.Client.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
-    <ItemGroup>
-      <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.9" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.10" />
     </ItemGroup>
 
     <ItemGroup>

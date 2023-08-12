@@ -1,4 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\Sample.Uno.Base\base.props" />
+	
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
@@ -69,7 +71,6 @@
 	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
-	
 	<Import Project="..\..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
 	<Import Project="..\Sample.Uno.Shared\Sample.Uno.Shared.projitems" Label="Shared" />
 </Project>
