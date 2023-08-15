@@ -34,16 +34,6 @@ namespace ISynergy.Framework.UI.Controls
                 ScaleIn = 1,
                 ScaleOut = 0.7
             };
-
-            Loaded += Window_Loaded;
-        }
-
-        private async void Window_Loaded(object sender, EventArgs e)
-        {
-            Loaded -= Window_Loaded;
-
-            if (ViewModel is not null)
-                await ViewModel.InitializeAsync();
         }
 
         #region IDisposable

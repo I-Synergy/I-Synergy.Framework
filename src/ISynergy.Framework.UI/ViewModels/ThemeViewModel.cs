@@ -14,6 +14,8 @@ namespace ISynergy.Framework.UI.ViewModels
     /// </summary>
     public class ThemeViewModel : ViewModelDialog<Style>
     {
+        private readonly IBaseApplicationSettingsService _applicationSettingsService;
+
         /// <summary>
         /// Gets the title.
         /// </summary>
@@ -52,12 +54,19 @@ namespace ISynergy.Framework.UI.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            applicationSettingsService.LoadSettings();
+            _applicationSettingsService = applicationSettingsService;
+        }
+
+        public override Task InitializeAsync()
+        {
+            _applicationSettingsService.LoadSettings();
 
             ThemeColors = new ThemeColors();
 
-            SelectedItem.Color = applicationSettingsService.Settings.Color;
-            SelectedItem.Theme = applicationSettingsService.Settings.Theme;
+            SelectedItem.Color = _applicationSettingsService.Settings.Color;
+            SelectedItem.Theme = _applicationSettingsService.Settings.Theme;
+
+            return base.InitializeAsync();
         }
     }
 }
