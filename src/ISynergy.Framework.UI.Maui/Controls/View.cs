@@ -38,11 +38,6 @@ namespace ISynergy.Framework.UI.Controls
             : this()
         {
             ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService(viewModelType) as IViewModel;
-            Loaded += async (sender, e) =>
-            {
-                if (ViewModel is not null)
-                    await ViewModel.InitializeAsync();
-            };
         }
     }
 }

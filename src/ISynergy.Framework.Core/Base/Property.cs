@@ -82,9 +82,7 @@ namespace ISynergy.Framework.Core.Base
             set
             {
                 if (!IsOriginalSet)
-                {
                     OriginalValue = value;
-                }
 
                 Set(ref _Value, value);
                 IsDirty = true;
@@ -127,9 +125,7 @@ namespace ISynergy.Framework.Core.Base
         private static void Set<V>(ref V storage, V value)
         {
             if (!Equals(storage, value))
-            {
                 storage = value;
-            }
         }
 
         /// <summary>
