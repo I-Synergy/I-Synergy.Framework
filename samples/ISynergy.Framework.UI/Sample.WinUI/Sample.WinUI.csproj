@@ -35,9 +35,9 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230724000" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="22.2.8" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="22.2.8" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="22.2.8" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="22.2.9" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="22.2.9" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="22.2.9" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
