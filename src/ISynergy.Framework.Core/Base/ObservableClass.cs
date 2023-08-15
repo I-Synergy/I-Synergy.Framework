@@ -1,12 +1,10 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Validation;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
@@ -178,8 +176,6 @@ namespace ISynergy.Framework.Core.Base
         /// <returns>T.</returns>
         protected T GetValue<T>([CallerMemberName] string propertyName = null)
         {
-            Argument.IsNotNull(propertyName, propertyName);
-
             if (!Properties.ContainsKey(propertyName))
                 Properties.Add(propertyName, new Property<T>(propertyName));
 
@@ -197,8 +193,6 @@ namespace ISynergy.Framework.Core.Base
         /// <param name="propertyName">Name of the property.</param>
         protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
         {
-            Argument.IsNotNull(propertyName);
-
             if (!Properties.ContainsKey(propertyName))
                 Properties.Add(propertyName, new Property<T>(propertyName));
 
@@ -227,8 +221,6 @@ namespace ISynergy.Framework.Core.Base
         /// <param name="propertyName">Name of the property.</param>
         protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
-            Argument.IsNotNull(propertyName, propertyName);
-
             if (!Properties.ContainsKey(propertyName))
                 Properties.Add(propertyName, new Property<T>(propertyName));
 

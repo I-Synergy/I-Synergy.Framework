@@ -1,10 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using Microsoft.Maui.Controls;
-using System.Reflection.Metadata;
 
 namespace ISynergy.Framework.UI.Extensions
 {
@@ -18,7 +15,7 @@ namespace ISynergy.Framework.UI.Extensions
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         /// <exception cref="InvalidNavigationException"></exception>
-        public static Page CreatePage<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
+        public static async Task<Page> CreatePage<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
         {
             var context = ServiceLocator.Default.GetInstance<IContext>();
             var viewmodel = default(TViewModel);
@@ -41,6 +38,9 @@ namespace ISynergy.Framework.UI.Extensions
             if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is Page resolvedPage && resolvedPage is IView view)
             {
                 view.ViewModel = viewmodel;
+
+                await view.ViewModel.InitializeAsync();
+                
                 return resolvedPage;
             }
 
@@ -54,8 +54,13 @@ namespace ISynergy.Framework.UI.Extensions
         /// <param name="navigation"></param>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public static Task PushViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel =>
-            navigation.PushAsync(CreatePage<TViewModel>(parameter), true);
+        public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) 
+            where TViewModel : class, IViewModel
+        {
+            var page = await CreatePage<TViewModel>(parameter);
+            await navigation.PushAsync(page, true);
+        }
+
 
         /// <summary>
         /// Navigates to the viewmodel.
@@ -64,7 +69,10 @@ namespace ISynergy.Framework.UI.Extensions
         /// <param name="navigation"></param>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public static Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel =>
-            navigation.PushModalAsync(CreatePage<TViewModel>(parameter), true);
+        public static async Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel 
+        {
+            var page = await CreatePage<TViewModel>(parameter);
+            await navigation.PushModalAsync(page, true);
+        }
     }
 }
