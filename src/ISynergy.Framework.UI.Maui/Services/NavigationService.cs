@@ -100,15 +100,15 @@ namespace ISynergy.Framework.UI.Services
         /// <typeparam name="TViewModel"></typeparam>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public Task NavigateModalAsync<TViewModel>(object parameter = null)
+        public async Task NavigateModalAsync<TViewModel>(object parameter = null)
              where TViewModel : class, IViewModel
         {
+            var page = await NavigationExtensions.CreatePage<TViewModel>(parameter);
+            
             Application.Current.MainPage.Dispatcher.Dispatch(() =>
             {
-                Application.Current.MainPage = NavigationExtensions.CreatePage<TViewModel>(parameter);
+                Application.Current.MainPage = page;
             });
-
-            return Task.CompletedTask;
         }
 
         public Task CleanBackStackAsync()
