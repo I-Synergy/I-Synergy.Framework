@@ -72,7 +72,7 @@ namespace ISynergy.Framework.UI
             _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
 
             if (_applicationSettingsService.Settings is not null)
-                _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Culture);
+                _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
 
             _logger.LogInformation("Starting initialization of application");
 

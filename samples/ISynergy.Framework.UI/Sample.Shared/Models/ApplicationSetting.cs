@@ -9,7 +9,7 @@ namespace Sample.Models
 {
     public class ApplicationSetting : IBaseApplicationSettings
     {
-        public string Culture { get; set; } = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+        public Languages Language { get; set; } = Languages.English;
         public bool IsFullscreen { get; set; }
         public string DefaultUser { get; set; } = string.Empty;
         public string DefaultPassword { get; set; } = string.Empty;
@@ -20,5 +20,16 @@ namespace Sample.Models
         public bool IsAutoLogin { get; set; }
         public bool IsAdvanced { get; set; }
         public byte[] Wallpaper { get; set; } = Array.Empty<byte>();
+
+        public ApplicationSetting()
+        {
+           Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
+           {
+               "nl" => Languages.Dutch,
+               "de" => Languages.German,
+               "fr" => Languages.French,
+               _ => Languages.English,
+           };
+        }
     }
 }
