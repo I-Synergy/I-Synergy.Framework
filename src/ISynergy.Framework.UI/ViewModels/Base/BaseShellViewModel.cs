@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -244,7 +245,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// <returns>Task.</returns>
         protected virtual Task OpenLanguageAsync()
         {
-            var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Culture);
+            var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Language);
             languageVM.Submitted += LanguageVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
         }
@@ -254,17 +255,14 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private async void LanguageVM_Submitted(object sender, SubmitEventArgs<string> e)
+        private async void LanguageVM_Submitted(object sender, SubmitEventArgs<Languages> e)
         {
             if (sender is LanguageViewModel vm)
                 vm.Submitted -= LanguageVM_Submitted;
 
-            if (!string.IsNullOrEmpty(e.Result))
-            {
-                _applicationSettingsService.Settings.Culture = e.Result;
-                _applicationSettingsService.SaveSettings();
-                _localizationService.SetLocalizationLanguage(e.Result);
-            }
+            _applicationSettingsService.Settings.Language = e.Result;
+            _applicationSettingsService.SaveSettings();
+            _localizationService.SetLocalizationLanguage(e.Result);
 
             if (await BaseCommonServices.DialogService.ShowMessageAsync(
                         BaseCommonServices.LanguageService.GetString("WarningLanguageChange") +
