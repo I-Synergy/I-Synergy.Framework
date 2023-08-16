@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.0" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.1" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     </ItemGroup>
     <ItemGroup>
