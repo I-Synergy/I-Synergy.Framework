@@ -202,7 +202,8 @@ namespace ISynergy.Framework.UI.Services
 
                 viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
 
-                await viewmodel.InitializeAsync();
+                if (!viewmodel.IsInitialized)
+                    await viewmodel.InitializeAsync();
 
                 await _popupNavigation.PushAsync(window);
             }

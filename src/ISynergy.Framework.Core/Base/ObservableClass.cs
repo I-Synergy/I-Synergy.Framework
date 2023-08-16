@@ -103,6 +103,9 @@ namespace ISynergy.Framework.Core.Base
                     !q.Name.Equals(nameof(IObservableClass.Properties)) &&
                     !q.Name.Equals(nameof(IObservableClass.Validator)));
 
+            if (obj is null)
+                return false;
+
             var propertiesToCheck = obj.GetType()
                 .GetProperties()
                 .Where(q =>
