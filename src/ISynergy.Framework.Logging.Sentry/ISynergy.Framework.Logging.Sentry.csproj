@@ -13,7 +13,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Sentry" Version="3.35.0" />
+		<PackageReference Include="Sentry" Version="3.35.1" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
 	</ItemGroup>
 	<ItemGroup>
