@@ -70,33 +70,6 @@ namespace Sample
                     logging.AddFilter("Uno", LogLevel.Warning);
                     logging.AddFilter("Windows", LogLevel.Warning);
                     logging.AddFilter("Microsoft", LogLevel.Warning);
-
-                    // Generic Xaml events
-                    // logging.AddFilter("Microsoft.UI.Xaml", LogLevel.Debug );
-                    // logging.AddFilter("Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug );
-                    // logging.AddFilter("Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug );
-                    // logging.AddFilter("Microsoft.UI.Xaml.UIElement", LogLevel.Debug );
-                    // logging.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace );
-
-                    // Layouter specific messages
-                    // logging.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug );
-                    // logging.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug );
-                    // logging.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug );
-
-                    // logging.AddFilter("Windows.Storage", LogLevel.Debug );
-
-                    // Binding related messages
-                    // logging.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug );
-                    // logging.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug );
-
-                    // Binder memory references tracking
-                    // logging.AddFilter("Uno.UI.DataBinding.BinderReferenceHolder", LogLevel.Debug );
-
-                    // RemoteControl and HotReload related
-                    // logging.AddFilter("Uno.UI.RemoteControl", LogLevel.Information);
-
-                    // Debug JS interop
-                    // logging.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug );
                 });
         }
 

@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Models;
@@ -14,8 +13,6 @@ namespace ISynergy.Framework.UI.ViewModels
     /// </summary>
     public class ThemeViewModel : ViewModelDialog<Style>
     {
-        private readonly IBaseApplicationSettingsService _applicationSettingsService;
-
         /// <summary>
         /// Gets the title.
         /// </summary>
@@ -28,15 +25,6 @@ namespace ISynergy.Framework.UI.ViewModels
         public ThemeColors ThemeColors
         {
             get => GetValue<ThemeColors>();
-            set => SetValue(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the Themes property value.
-        /// </summary>
-        public Themes Themes
-        {
-            get => GetValue<Themes>();
             set => SetValue(value);
         }
 
@@ -54,19 +42,12 @@ namespace ISynergy.Framework.UI.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            _applicationSettingsService = applicationSettingsService;
-        }
-
-        public override Task InitializeAsync()
-        {
-            _applicationSettingsService.LoadSettings();
+            applicationSettingsService.LoadSettings();
 
             ThemeColors = new ThemeColors();
 
-            SelectedItem.Color = _applicationSettingsService.Settings.Color;
-            SelectedItem.Theme = _applicationSettingsService.Settings.Theme;
-
-            return base.InitializeAsync();
+            SelectedItem.Color = applicationSettingsService.Settings.Color;
+            SelectedItem.Theme = applicationSettingsService.Settings.Theme;
         }
     }
 }
