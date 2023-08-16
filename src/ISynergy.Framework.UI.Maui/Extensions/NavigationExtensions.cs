@@ -39,7 +39,8 @@ namespace ISynergy.Framework.UI.Extensions
             {
                 view.ViewModel = viewmodel;
 
-                await view.ViewModel.InitializeAsync();
+                if (!view.ViewModel.IsInitialized)
+                    await view.ViewModel.InitializeAsync();
                 
                 return resolvedPage;
             }

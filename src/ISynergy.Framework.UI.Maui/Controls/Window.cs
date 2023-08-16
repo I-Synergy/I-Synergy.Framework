@@ -34,6 +34,14 @@ namespace ISynergy.Framework.UI.Controls
                 ScaleIn = 1,
                 ScaleOut = 0.7
             };
+
+            Loaded += View_Loaded;
+        }
+
+        private async void View_Loaded(object sender, EventArgs e)
+        {
+            if (ViewModel is not null && !ViewModel.IsInitialized)
+                await ViewModel.InitializeAsync();
         }
 
         #region IDisposable
@@ -63,6 +71,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
+            Loaded -= View_Loaded;
+
             if (disposing)
             {
                 // free managed resources
