@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using NodaTime.TimeZones;
 using System.Globalization;
 
@@ -41,7 +42,7 @@ namespace ISynergy.Framework.UI.Services
         /// Sets the localization language.
         /// </summary>
         /// <param name="language">The iso language.</param>
-        public void SetLocalizationLanguage(string language)
+        public void SetLocalizationLanguage(Languages language)
         {
             var systemCulture = CultureInfo.CurrentCulture;
 
@@ -52,7 +53,21 @@ namespace ISynergy.Framework.UI.Services
             }
             else
             {
-                var applicationCulture = new CultureInfo(language);
+                CultureInfo applicationCulture;
+
+                var cultureMap = new Dictionary<Languages, string>
+                {
+                    { Languages.Dutch, "nl" },
+                    { Languages.German, "de" },
+                    { Languages.French, "fr" },
+                    { Languages.English, "en" }
+                };
+
+                if (cultureMap.TryGetValue(language, out var cultureString))
+                    applicationCulture = new CultureInfo(cultureString);
+                else
+                    applicationCulture = new CultureInfo("en");
+
                 applicationCulture.NumberFormat = systemCulture.NumberFormat;
 
                 CultureInfo.CurrentCulture = applicationCulture;

@@ -23,6 +23,6 @@ namespace Sample.Views
             _navigationService.Frame = ContentRootFrame;
         }
 
-        private async void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => await _navigationService?.GoBackAsync();
+        private async void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => await _navigationService.GoBackAsync();
     }
 }

@@ -10,7 +10,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// <summary>
         /// Setting for maintaining the default culture used.
         /// </summary>
-        string Culture { get; set; }
+        Languages Language { get; set; }
         /// <summary>
         /// Setting for maintaining if application is in fullscreen mode or not.
         /// </summary>
