@@ -15,28 +15,28 @@
     SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
 
     <c:Window.Resources>
-        <Converters:RadioButtonValueConverter x:Key="RadioButtonValueConverter"/>
+        <Converters:RadioButtonToLanguageConverter x:Key="RadioButtonValueConverter"/>
     </c:Window.Resources>
-    
+
     <StackPanel Orientation="Vertical">
         <RadioButton
             Content="{m:LanguageResource Key=Language_Dutch}"
-            IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=nl}"
+            IsChecked="{Binding SelectedItem, Mode=TwoWay, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=1}"
             GroupName="Language"/>
         <RadioButton
             Content="{m:LanguageResource Key=Language_English}"
-            IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=en}"
+            IsChecked="{Binding SelectedItem, Mode=TwoWay, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=0}"
             GroupName="Language" />
         <RadioButton 
             x:Name="Button_Language_de" 
             Content="{m:LanguageResource Key=Language_German}" 
-            IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=de}"
+            IsChecked="{Binding SelectedItem, Mode=TwoWay, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=2}"
             GroupName="Language" 
             IsEnabled="False" />
         <RadioButton 
             x:Name="Button_Language_fr" 
             Content="{m:LanguageResource Key=Language_French}" 
-            IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=fr}"
+            IsChecked="{Binding SelectedItem, Mode=TwoWay, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=3}"
             GroupName="Language" 
             IsEnabled="False" />
     </StackPanel>

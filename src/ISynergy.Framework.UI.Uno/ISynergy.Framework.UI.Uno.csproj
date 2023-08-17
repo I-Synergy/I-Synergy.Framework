@@ -104,7 +104,7 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\NullObjectConverters.cs" Link="Converters\NullObjectConverters.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\NumberFormatConverter.cs" Link="Converters\NumberFormatConverter.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\PageConverters.cs" Link="Converters\PageConverters.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\RadioButtonValueConverter.cs" Link="Converters\RadioButtonValueConverter.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\RadioButtonToLanguageConverter.cs" Link="Converters\RadioButtonToLanguageConverter.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\RegexConverters.cs" Link="Converters\RegexConverters.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\ResourceConverters.cs" Link="Converters\ResourceConverters.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\SelectionModeConverter.cs" Link="Converters\SelectionModeConverter.cs" />

@@ -5,13 +5,10 @@
           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
           xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
           xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+          xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
           x:Class="ISynergy.Framework.UI.Windows.LanguageWindow"
           Title="{Binding Title}">
 
-    <c:Window.Resources>
-        <converters:RadioButtonValueConverter x:Key="RadioButtonValueConverter"/>
-    </c:Window.Resources>
-    
     <ContentView 
         ControlTemplate="{StaticResource DefaultDialogTemplate}"
         WidthRequest="{OnPlatform WinUI=400, Default=400}">
@@ -19,20 +16,23 @@
         <VerticalStackLayout Margin="10" Spacing="10">
             <RadioButton 
                 Content="{m:GetString Key=Language_Dutch}"
-                IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=nl}"
-                GroupName="Language" />
+                IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=Dutch}}"
+                GroupName="Language"/>
+            
             <RadioButton 
                 Content="{m:GetString Key=Language_English}"
-                IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=en}"
+                IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=English}}"
                 GroupName="Language"/>
+            
             <RadioButton
                 Content="{m:GetString Key=Language_German}"
-                IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=de}"
+                IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=German}}"
                 GroupName="Language" 
                 IsEnabled="False"/>
+            
             <RadioButton 
                 Content="{m:GetString Key=Language_French}"
-                IsChecked="{Binding SelectedItem, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=fr}"
+                IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=French}}"
                 GroupName="Language" 
                 IsEnabled="False"/>
         </VerticalStackLayout>

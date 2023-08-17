@@ -8,10 +8,10 @@
         /// <summary>
         /// Light theme.
         /// </summary>
-        Light,
+        Light = 0,
         /// <summary>
         /// Dark theme.
         /// </summary>
-        Dark
+        Dark = 1
     }
 }
