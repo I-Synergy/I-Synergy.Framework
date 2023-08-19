@@ -33,10 +33,12 @@ namespace Sample
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
+                    fonts.AddFont("SegMDL2.ttf", "SegoeMdl2");
                     fonts.AddFont("opensans-regular.ttf", "opensans-regular");
                     fonts.AddFont("opensans-semibold.ttf", "opensans-semibold");
                     fonts.AddFont("opensans-medium.ttf", "sans-serif-medium");
                     fonts.AddFont("fontawesome.otf", "fontawesome");
+
                 })
                 .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(x => x.Name.StartsWith(typeof(MauiProgram).Namespace));
 

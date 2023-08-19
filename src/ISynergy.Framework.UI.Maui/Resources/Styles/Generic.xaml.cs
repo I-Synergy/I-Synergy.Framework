@@ -1,4 +1,4 @@
-namespace ISynergy.Framework.UI.Theme;
+namespace ISynergy.Framework.UI.Resources.Styles;
 
 public partial class Generic : ResourceDictionary
 {

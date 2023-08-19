@@ -61,5 +61,11 @@ namespace Sample.ViewModels
         protected override Task OpenSettingsAsync() => throw new NotImplementedException();
 
         protected override void PopulateNavItems() => throw new NotImplementedException();
+
+        protected override async Task RestartApplicationAsync()
+        {
+            await base.RestartApplicationAsync();
+            Application.Current.Quit();
+        }
     }
 }

@@ -2,7 +2,7 @@
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="ISynergy.Framework.UI.Theme.Generic"
+    x:Class="ISynergy.Framework.UI.Resources.Styles.Generic"
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
     xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls"
     xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors"
@@ -542,7 +542,8 @@
     </Style>
 
     <ControlTemplate x:Key="DefaultDialogTemplate">
-        <Border BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
+        <Border 
+            BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
             HorizontalOptions="Center"
             VerticalOptions="Center"
