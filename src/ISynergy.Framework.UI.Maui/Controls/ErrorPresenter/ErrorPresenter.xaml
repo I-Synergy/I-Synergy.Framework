@@ -13,10 +13,21 @@
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="{StaticResource DefaultCornerRadius}"/>
         </Border.StrokeShape>
-        <CollectionView ItemsSource="{Binding Errors}" SelectionMode="None" Margin="10,0">
+        <CollectionView 
+            ItemsSource="{Binding Errors}" 
+            SelectionMode="None" 
+            Margin="10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Label Text="{Binding Value}" TextColor="White" FontSize="12" FontAttributes="Bold"/>
+                    <Label TextColor="White">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="&#xe7c8;" FontFamily="SegoeMdl2" FontSize="8" FontAttributes="Bold"/>
+                                <Span Text=" "/>
+                                <Span Text="{Binding Value}" FontSize="12" FontAttributes="Bold"/>
+                            </FormattedString> 
+                        </Label.FormattedText>
+                    </Label>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
