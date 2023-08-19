@@ -29,7 +29,6 @@
 		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Mopups" Version="1.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -56,7 +55,7 @@
 	  <MauiXaml Update="Controls\ErrorPresenter\ErrorPresenter.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Theme\Generic.xaml">
+	  <MauiXaml Update="Resources\Styles\Generic.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LoadingView.xaml">
@@ -68,5 +67,10 @@
 	  <MauiXaml Update="Windows\SelectionWindow.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
 	</ItemGroup>
 </Project>

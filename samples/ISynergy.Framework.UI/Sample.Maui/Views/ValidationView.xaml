@@ -7,7 +7,7 @@
     x:Class="Sample.Views.ValidationView"
     Title="ValidationView">
     
-    <VerticalStackLayout Margin="10">
+    <VerticalStackLayout Margin="10" Spacing="4">
         <c:ErrorPresenter />
 
         <Label Text="Id" />

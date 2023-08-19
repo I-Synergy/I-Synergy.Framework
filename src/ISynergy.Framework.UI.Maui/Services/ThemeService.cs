@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Theme;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -121,7 +120,7 @@ namespace ISynergy.Framework.UI.Services
                     application.Resources.Add("colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
 
                 dictionary.Clear();
-                dictionary.Add(new Generic());
+                dictionary.Add(new ISynergy.Framework.UI.Resources.Styles.Generic());
 
                 foreach (var item in additionalResourceDictionaries)
                 {

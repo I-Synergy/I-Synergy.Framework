@@ -11,6 +11,12 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Globalization;
 
+[assembly: ExportFont("ISynergy.ttf", Alias = "ISynergy")]
+[assembly: ExportFont("OpenDyslexic3-Bold.ttf", Alias = "OpenDyslexic3-Bold")]
+[assembly: ExportFont("OpenDyslexic3-Regular.ttf", Alias = "OpenDyslexic3-Regular")]
+[assembly: ExportFont("SegMDL2.ttf", Alias = "SegoeMdl2")]
+[assembly: ExportFont("segoeui.ttf", Alias = "SegoeUI")]
+
 namespace ISynergy.Framework.UI
 {
     public abstract class BaseApplication : Application, IBaseApplication

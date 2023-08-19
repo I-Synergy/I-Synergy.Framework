@@ -1,12 +1,22 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Mopups.Animations;
-using Mopups.Enums;
-using Mopups.Pages;
+using CommunityToolkit.Maui.Views;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls
 {
-    public class Window : PopupPage, IWindow
+    public class Window : Popup, IWindow
     {
+        public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(Window), string.Empty);
+
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            set
+            {
+                SetValue(TitleProperty, value);
+                BindingContext = value;
+            }
+        }
+
         public static readonly BindableProperty ViewModelProperty = BindableProperty.Create(nameof(ViewModel), typeof(IViewModel), typeof(Window), null);
 
         public IViewModel ViewModel
@@ -21,27 +31,10 @@ namespace ISynergy.Framework.UI.Controls
 
         public Window()
         {
-            CloseWhenBackgroundIsClicked = false;
-
-            BackgroundColor = Color.FromArgb("#80000000");
-
-            Animation = new ScaleAnimation
-            {
-                DurationIn = 700,
-                EasingIn = Easing.BounceOut,
-                PositionIn = MoveAnimationOptions.Bottom,
-                PositionOut = MoveAnimationOptions.Center,
-                ScaleIn = 1,
-                ScaleOut = 0.7
-            };
-
-            Loaded += View_Loaded;
-        }
-
-        private async void View_Loaded(object sender, EventArgs e)
-        {
-            if (ViewModel is not null && !ViewModel.IsInitialized)
-                await ViewModel.InitializeAsync();
+            CanBeDismissedByTappingOutsideOfPopup = false;
+            Color = Color.FromArgb("#80000000");
+            VerticalOptions = Microsoft.Maui.Primitives.LayoutAlignment.Center;
+            HorizontalOptions = Microsoft.Maui.Primitives.LayoutAlignment.Center;
         }
 
         #region IDisposable
@@ -71,8 +64,6 @@ namespace ISynergy.Framework.UI.Controls
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            Loaded -= View_Loaded;
-
             if (disposing)
             {
                 // free managed resources

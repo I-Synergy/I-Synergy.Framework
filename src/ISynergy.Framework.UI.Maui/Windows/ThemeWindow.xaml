@@ -9,13 +9,14 @@
           xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
           Title="{Binding Title}">
 
-    <c:Window.Resources>
-        <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
-    </c:Window.Resources>
-    
     <ContentView 
         ControlTemplate="{DynamicResource DefaultDialogTemplate}"
-        MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
+        WidthRequest="400"
+        HeightRequest="500">
+        
+        <ContentView.Resources>
+            <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
+        </ContentView.Resources>
         
         <VerticalStackLayout>
             <HorizontalStackLayout HorizontalOptions="Center">
@@ -28,13 +29,14 @@
                             SelectionMode="Single"
                             HorizontalOptions="Center">
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="8" />
+                    <GridItemsLayout Orientation="Vertical" Span="6" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Ellipse Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
                                  WidthRequest="28"
                                  HeightRequest="28"
+                                 Margin="4"
                                  ToolTipProperties.Text="{Binding}"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
