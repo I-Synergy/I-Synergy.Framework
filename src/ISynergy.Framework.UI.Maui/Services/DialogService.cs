@@ -1,17 +1,15 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Maui.Views;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using Mopups.Interfaces;
-using Mopups.Pages;
 using Application = Microsoft.Maui.Controls.Application;
 
 namespace ISynergy.Framework.UI.Services
 {
     internal class DialogService : IDialogService
     {
-        private readonly IPopupNavigation _popupNavigation;
         private readonly ILanguageService _languageService;
         private readonly IContext _context;
 
@@ -20,15 +18,12 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <param name="context"></param>
         /// <param name="languageService">The language service.</param>
-        /// <param name="popupNavigation"></param>
         public DialogService(
             IContext context, 
-            ILanguageService languageService,
-            IPopupNavigation popupNavigation)
+            ILanguageService languageService)
         {
             _context = context;
             _languageService = languageService;
-            _popupNavigation = popupNavigation;
         }
 
         /// <summary>
@@ -205,7 +200,7 @@ namespace ISynergy.Framework.UI.Services
                 if (!viewmodel.IsInitialized)
                     await viewmodel.InitializeAsync();
 
-                await _popupNavigation.PushAsync(window);
+                await Shell.Current.ShowPopupAsync(window);
             }
         }
 
@@ -213,15 +208,10 @@ namespace ISynergy.Framework.UI.Services
         /// Closes dialog window.
         /// </summary>
         /// <param name="dialog"></param>
-        public Task CloseDialogAsync(IWindow dialog)
+        public async Task CloseDialogAsync(IWindow dialog)
         {
-            if (dialog is PopupPage page &&
-                _popupNavigation.PopupStack is not null &&
-                _popupNavigation.PopupStack.Count > 0 &&
-                _popupNavigation.PopupStack.Contains(page))
-                return _popupNavigation.RemovePageAsync(page);
-
-            return Task.CompletedTask;
+            if (dialog is Popup popup)
+                await popup.CloseAsync();
         }
     }
 }

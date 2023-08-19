@@ -5,6 +5,7 @@ using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Sample.ViewModels;
+using System.Runtime.ExceptionServices;
 
 namespace Sample
 {
@@ -19,15 +20,9 @@ namespace Sample
         public override async Task InitializeApplicationAsync()
         {
             await base.InitializeApplicationAsync();
-            await Task.Delay(5000);
+            await Task.Delay(1000);
             await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AppShellViewModel>();
         }
-
-        public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
-            new List<ResourceDictionary>()
-            {
-                new Styles.Colors()
-            };
 
         public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
         {
@@ -42,6 +37,11 @@ namespace Sample
                     await navigationService.NavigateModalAsync<AuthenticationViewModel>();
                 }
             }
+        }
+
+        protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
+        {
+            base.CurrentDomain_FirstChanceException(sender, e);
         }
     }
 }

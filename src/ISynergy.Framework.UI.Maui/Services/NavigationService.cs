@@ -31,7 +31,11 @@ namespace ISynergy.Framework.UI.Services
         /// Gets or sets the frame.
         /// </summary>
         /// <value>The frame.</value>
-        public object Frame { get; set; }
+        public object Frame 
+        { 
+            get => _frame; 
+            set => _frame = (Frame)value; 
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance can go back.

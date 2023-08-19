@@ -14,9 +14,6 @@ using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Mopups.Hosting;
-using Mopups.Interfaces;
-using Mopups.Services;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -100,7 +97,6 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<IDialogService, DialogService>();
             appBuilder.Services.AddSingleton<IDispatcherService, DispatcherService>();
             appBuilder.Services.AddSingleton<IClipboardService, ClipboardService>();
-            appBuilder.Services.AddSingleton<IPopupNavigation, PopupNavigation>();
             appBuilder.Services.AddSingleton<IThemeService, ThemeService>();
             appBuilder.Services.AddSingleton<IFileService<FileResult>, FileService>();
 
@@ -110,8 +106,7 @@ namespace ISynergy.Framework.UI.Extensions
 
             return appBuilder
                 .UseMauiCommunityToolkit()
-                .UseMauiCommunityToolkitMarkup()
-                .ConfigureMopups();
+                .UseMauiCommunityToolkitMarkup();
         }
 
         /// <summary>
