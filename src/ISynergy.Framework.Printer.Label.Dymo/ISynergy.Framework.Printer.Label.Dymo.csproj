@@ -9,7 +9,7 @@
 		<CodeAnalysisRuleSet>ISynergy.Framework.Printer.Label.Dymo.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="DYMO.Connect.SDK" Version="1.4.3.37" />
+      <PackageReference Include="DYMO.Connect.SDK" Version="1.4.4.21" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     </ItemGroup>
     <ItemGroup>
