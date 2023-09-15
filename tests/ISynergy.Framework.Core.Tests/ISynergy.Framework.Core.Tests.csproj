@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CompareNETObjects" Version="4.80.0" />
+        <PackageReference Include="CompareNETObjects" Version="4.82.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
         <PackageReference Include="Moq" Version="4.20.69" />
         <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
