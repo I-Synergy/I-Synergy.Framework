@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Timers;
+using ITimer = ISynergy.Framework.Core.Abstractions.Timers.ITimer;
 
 namespace ISynergy.Framework.Core.Helpers
 {
