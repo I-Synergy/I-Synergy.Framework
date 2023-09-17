@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿//using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -200,7 +200,7 @@ namespace ISynergy.Framework.UI.Services
                 if (!viewmodel.IsInitialized)
                     await viewmodel.InitializeAsync();
 
-                await Shell.Current.ShowPopupAsync(window);
+                await Shell.Current.Navigation.PushModalAsync(window);
             }
         }
 
@@ -210,8 +210,8 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="dialog"></param>
         public async Task CloseDialogAsync(IWindow dialog)
         {
-            if (dialog is Popup popup)
-                await popup.CloseAsync();
+            if (dialog is Window popup)
+                await Shell.Current.Navigation.PopModalAsync();
         }
     }
 }
