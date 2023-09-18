@@ -102,7 +102,9 @@ stages:
         - task: UseDotNet@2
           inputs:
             packageType: 'sdk'
-            useGlobalJson: true
+            version: 8.0.x
+            useGlobalJson: false
+            includePreviewVersions: true
 
         - task: Bash@3
           displayName: Install MAUI
@@ -519,7 +521,9 @@ stages:
         - task: UseDotNet@2
           inputs:
             packageType: 'sdk'
-            useGlobalJson: true
+            version: 8.0.x
+            useGlobalJson: false
+            includePreviewVersions: true
 
         - task: DotNetCoreCLI@2
           displayName: 'Run Core Tests'
@@ -595,7 +599,9 @@ stages:
         - task: UseDotNet@2
           inputs:
             packageType: 'sdk'
-            useGlobalJson: true
+            version: 8.0.x
+            useGlobalJson: false
+            includePreviewVersions: true
 
         - task: ChocolateyToolInstaller@0
           inputs:
