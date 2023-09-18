@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Geography</PackageId>
-        <Description>I-Synergy Framework Geography for .net Standard 2.0</Description>
+        <Description>I-Synergy Framework Geography for .net Standard 2.0, .net 6.0, .net 7.0 and .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, Geography</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.Geography.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

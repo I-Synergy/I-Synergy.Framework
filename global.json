@@ -1,10 +1,10 @@
 {
   "sdk": {
-    "version": "7.0.400",
+    "version": "8.0.100-rc.1",
     "rollForward": "latestPatch"
   },
   "tools": {
-    "dotnet": "7.0.400"
+    "dotnet": "8.0.100-rc.1"
   },
   "msbuild-sdks": {
     "MSBuild.Sdk.Extras": "3.0.44"

@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.AspNetCore.Proxy</PackageId>
-		<Description>I-Synergy Framework Proxy for .net 6.0 and .net 7.0</Description>
+		<Description>I-Synergy Framework Proxy for .net 6.0, .net 7.0 and .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Proxy, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Proxy.ruleset</CodeAnalysisRuleSet>
