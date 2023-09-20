@@ -13,11 +13,8 @@
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="{StaticResource DefaultCornerRadius}"/>
         </Border.StrokeShape>
-        <CollectionView 
-            ItemsSource="{Binding Errors}" 
-            SelectionMode="None" 
-            Margin="10">
-            <CollectionView.ItemTemplate>
+        <StackLayout BindableLayout.ItemsSource="{Binding Errors}" Margin="10">
+            <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <Label TextColor="White">
                         <Label.FormattedText>
@@ -29,7 +26,7 @@
                         </Label.FormattedText>
                     </Label>
                 </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
     </Border>
 </ContentView>
