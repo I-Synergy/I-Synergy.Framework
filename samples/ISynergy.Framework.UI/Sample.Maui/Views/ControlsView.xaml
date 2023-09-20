@@ -16,15 +16,6 @@
     </c:View.Resources>
     
     <VerticalStackLayout Spacing="10">
-        <Label Text="Decimal:"/>
-        <c:DecimalEntry Value="{Binding DecimalValue, StringFormat='{0:N2}'}" />
-
-        <Label Text="Double:"/>
-        <c:DoubleEntry Value="{Binding DoubleValue}" />
-
-        <Label Text="Integer:"/>
-        <c:IntegerEntry Value="{Binding IntegerValue}" />
-
         <Label Text="Entry:"/>
         <Entry Text="Hello Entry..." />
 
