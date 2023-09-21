@@ -206,9 +206,9 @@ namespace ISynergy.Framework.Mvvm.Commands
                 if (isAlreadyCompletedOrNull)
                     return;
 
-                static async void MonitorTask(AsyncRelayCommand @this, Task task)
+                void MonitorTask(AsyncRelayCommand @this, Task task)
                 {
-                    await task.GetAwaitableWithoutEndValidation();
+                    task.GetAwaitableWithoutEndValidation().GetAwaiter().GetResult();
 
                     if (ReferenceEquals(@this._executionTask, task))
                     {

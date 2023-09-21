@@ -73,7 +73,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public AsyncRelayCommand SubmitCommand { get; }
+        public AsyncRelayCommand SubmitCommand { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBlade{TEntity}"/> class.
@@ -116,6 +116,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             }
 
             return Task.CompletedTask;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Validator = null;
+
+            SubmitCommand?.Cancel();
+            SubmitCommand = null;
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -184,6 +184,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// </summary>
         public virtual void Cleanup()
         {
+
         }
 
         /// <summary>
@@ -231,7 +232,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         protected override void Dispose(bool disposing)
         {
             PropertyChanged -= OnPropertyChanged;
-
+            
+            CloseCommand = null;
             Cleanup();
 
             base.Dispose(disposing);

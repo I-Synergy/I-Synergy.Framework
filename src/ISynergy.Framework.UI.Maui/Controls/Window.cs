@@ -1,7 +1,4 @@
-using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Microsoft.Maui.Platform;
-using System.Diagnostics;
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -55,6 +52,7 @@ namespace ISynergy.Framework.UI.Controls
             {
                 // free managed resources
                 ViewModel?.Dispose();
+                ViewModel = null;
             }
 
             // free native resources if there are any.

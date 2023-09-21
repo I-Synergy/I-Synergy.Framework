@@ -17,17 +17,5 @@ namespace ISynergy.Framework.Mvvm.Abstractions
         /// </summary>
         /// <value><c>true</c> if this instance is enabled; otherwise, <c>false</c>.</value>
         bool IsEnabled { get; set; }
-        ///// <summary>
-        ///// Views the unloaded.
-        ///// </summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The e.</param>
-        //void View_Unloaded(object sender, object e);
-        ///// <summary>
-        ///// Views the loaded.
-        ///// </summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The e.</param>
-        //void View_Loaded(object sender, object e);
     }
 }

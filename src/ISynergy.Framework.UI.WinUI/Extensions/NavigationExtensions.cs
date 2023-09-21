@@ -42,7 +42,7 @@ namespace ISynergy.Framework.UI.Extensions
             if (page is null)
                 throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
 
-            if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is View resolvedPage)
+            if (ServiceLocator.Default.GetInstance(page) is View resolvedPage)
             {
                 resolvedPage.ViewModel = viewModel;
                 return resolvedPage;

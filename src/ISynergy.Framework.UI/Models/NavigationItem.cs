@@ -23,7 +23,7 @@ namespace ISynergy.Framework.UI.Models
         /// Gets or sets the command.
         /// </summary>
         /// <value>The command.</value>
-        public ICommand Command { get; set; }
+        public ICommand Command { get; private set; }
 
         /// <summary>
         /// Gets or sets the command parameter.

@@ -1,5 +1,4 @@
-﻿//using CommunityToolkit.Maui.Views;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -11,18 +10,22 @@ namespace ISynergy.Framework.UI.Services
     internal class DialogService : IDialogService
     {
         private readonly ILanguageService _languageService;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
         /// <param name="context"></param>
+        /// <param name="serviceProvider"></param>
         /// <param name="languageService">The language service.</param>
         public DialogService(
-            IContext context, 
+            IContext context,
+            IServiceProvider serviceProvider,
             ILanguageService languageService)
         {
             _context = context;
+            _serviceProvider = serviceProvider;
             _languageService = languageService;
         }
 
@@ -137,12 +140,18 @@ namespace ISynergy.Framework.UI.Services
         /// <typeparam name="TViewModel"></typeparam>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public Task ShowDialogAsync<TWindow, TViewModel, TEntity>()
+        public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>()
             where TWindow : IWindow
             where TViewModel : IViewModelDialog<TEntity>
         {
+            var scope = _serviceProvider.CreateScope();
             var viewmodel = (IViewModelDialog<TEntity>)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel));
-            return CreateDialogAsync((IWindow)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)), viewmodel);
+
+            if (scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+            {
+                dialog.Unloaded += (sender, e) => scope.Dispose();
+                await CreateDialogAsync(dialog, viewmodel);
+            }
         }
 
         /// <summary>
@@ -157,9 +166,16 @@ namespace ISynergy.Framework.UI.Services
             where TWindow : IWindow
             where TViewModel : IViewModelDialog<TEntity>
         {
+            var scope = _serviceProvider.CreateScope();
             var viewmodel = (IViewModelDialog<TEntity>)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel));
+
             await viewmodel.SetSelectedItemAsync(e);
-            await CreateDialogAsync((IWindow)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)), viewmodel);
+
+            if (scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+            {
+                dialog.Unloaded += (sender, e) => scope.Dispose();
+                await CreateDialogAsync(dialog, viewmodel);
+            }
         }
 
         /// <summary>
@@ -169,8 +185,16 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="window">The window.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
-        public Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel) =>
-            CreateDialogAsync((IWindow)_context.ScopedServices.ServiceProvider.GetRequiredService(window.GetType()), viewmodel);
+        public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
+        {
+            var scope = _serviceProvider.CreateScope();
+
+            if (scope.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
+            {
+                dialog.Unloaded += (sender, e) => scope.Dispose();
+                await CreateDialogAsync(dialog, viewmodel);
+            }
+        }
 
         /// <summary>
         /// Shows the dialog asynchronous.
@@ -179,8 +203,16 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="type">The type.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
-        public Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel) =>
-            CreateDialogAsync((IWindow)_context.ScopedServices.ServiceProvider.GetRequiredService(type), viewmodel);
+        public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+        {
+            var scope = _serviceProvider.CreateScope();
+
+            if (scope.ServiceProvider.GetRequiredService(type) is Window dialog)
+            {
+                dialog.Unloaded += (sender, e) => scope.Dispose();
+                await CreateDialogAsync(dialog, viewmodel);
+            }
+        }
 
         /// <summary>
         /// Shows dialog as an asynchronous operation.
@@ -191,27 +223,24 @@ namespace ISynergy.Framework.UI.Services
         /// <returns></returns>
         public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
         {
-            using (var window = dialog as Window)
+            if (dialog is Window window)
             {
                 window.ViewModel = viewmodel;
 
-                viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
+                void ViewModelClosedHandler(object sender, EventArgs e)
+                {
+                    viewmodel.Closed -= ViewModelClosedHandler;
 
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
+                    Shell.Current.Navigation.PopModalAsync().GetAwaiter().GetResult();
+                    window?.Dispose();
+                };
+
+                viewmodel.Closed += ViewModelClosedHandler;
+
+                await viewmodel.InitializeAsync();
 
                 await Shell.Current.Navigation.PushModalAsync(window);
             }
-        }
-
-        /// <summary>
-        /// Closes dialog window.
-        /// </summary>
-        /// <param name="dialog"></param>
-        public async Task CloseDialogAsync(IWindow dialog)
-        {
-            if (dialog is Window popup)
-                await Shell.Current.Navigation.PopModalAsync();
         }
     }
 }

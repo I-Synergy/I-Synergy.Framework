@@ -1,9 +1,17 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.UI.Xaml.Controls;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls
 {
-    public abstract class View : ContentPage, IView
+    /// <summary>
+    /// Class View.
+    /// Implements the <see cref="IView" />
+    /// </summary>
+    /// <seealso cref="IView" />
+    [Bindable(true)]
+    public abstract partial class View : Page, IView
     {
         private IViewModel _viewModel;
 
@@ -17,34 +25,8 @@ namespace ISynergy.Framework.UI.Controls
             set
             {
                 _viewModel = value;
-                BindingContext = _viewModel;
-                SetBinding(View.TitleProperty, new Binding(nameof(ViewModel.Title)));
+                DataContext = _viewModel;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the view class.
-        /// </summary>
-        protected View()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the view class.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="viewModelType"></param>
-        protected View(IContext context, Type viewModelType)
-            : this()
-        {
-            ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService(viewModelType) as IViewModel;
-            Loaded += View_Loaded;
-        }
-
-        private async void View_Loaded(object sender, EventArgs e)
-        {
-            if (ViewModel is not null)
-                await ViewModel.InitializeAsync();
         }
 
         #region IDisposable
@@ -74,8 +56,6 @@ namespace ISynergy.Framework.UI.Controls
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            Loaded -= View_Loaded;
-
             if (disposing)
             {
                 // free managed resources
