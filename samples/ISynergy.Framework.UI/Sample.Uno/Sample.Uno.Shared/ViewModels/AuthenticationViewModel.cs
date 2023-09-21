@@ -174,10 +174,10 @@ namespace Sample.ViewModels
             }
         }
 
-        public RelayCommand ShowSignInCommand { get; set; }
-        public AsyncRelayCommand SignInCommand { get; set; }
-        public AsyncRelayCommand SignUpCommand { get; set; }
-        public AsyncRelayCommand ForgotPasswordCommand { get; set; }
+        public RelayCommand ShowSignInCommand { get; private set; }
+        public AsyncRelayCommand SignInCommand { get; private set; }
+        public AsyncRelayCommand SignUpCommand { get; private set; }
+        public AsyncRelayCommand ForgotPasswordCommand { get; private set; }
 
         public AuthenticationViewModel(
             IContext context,

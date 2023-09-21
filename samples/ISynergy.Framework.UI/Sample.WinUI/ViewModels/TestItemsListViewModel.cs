@@ -83,9 +83,6 @@ namespace Sample.ViewModels
             : base(context, commonService, logger)
         {
             CommonServices = commonService;
-
-            SubmitCommand = new AsyncRelayCommand<TestItem>(SubmitAsync);
-            SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
             ClearCommand = new RelayCommand(ClearItems);
 
             Query = string.Empty;
@@ -96,7 +93,7 @@ namespace Sample.ViewModels
         /// Gets or sets the clear command.
         /// </summary>
         /// <value>The clear command.</value>
-        public RelayCommand ClearCommand { get; set; }
+        public RelayCommand ClearCommand { get; private set; }
 
         /// <summary>
         /// The search cancellationtoken

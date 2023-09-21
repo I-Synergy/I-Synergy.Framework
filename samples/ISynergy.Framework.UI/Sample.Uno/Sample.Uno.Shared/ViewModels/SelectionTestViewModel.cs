@@ -31,12 +31,12 @@ namespace Sample.ViewModels
         /// Gets or sets the select single command.
         /// </summary>
         /// <value>The select single command.</value>
-        public AsyncRelayCommand SelectSingleCommand { get; set; }
+        public AsyncRelayCommand SelectSingleCommand { get; private set; }
         /// <summary>
         /// Gets or sets the select multiple command.
         /// </summary>
         /// <value>The select multiple command.</value>
-        public AsyncRelayCommand SelectMultipleCommand { get; set; }
+        public AsyncRelayCommand SelectMultipleCommand { get; private set; }
 
         /// <summary>
         /// Show Yes/No dialog.
@@ -58,7 +58,7 @@ namespace Sample.ViewModels
         /// </summary>
         public AsyncRelayCommand ShowDialogOkCancel { get; set; }
 
-        public AsyncRelayCommand ShowUnitsCommand { get; set; }
+        public AsyncRelayCommand ShowUnitsCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the selected test items.

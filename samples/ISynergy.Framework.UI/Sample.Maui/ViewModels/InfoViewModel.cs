@@ -13,6 +13,8 @@ namespace Sample.ViewModels
     /// <seealso cref="ViewModelNavigation{Object}" />
     public class InfoViewModel : ViewModelNavigation<object>
     {
+        private System.Timers.Timer _timer;
+
         /// <summary>
         /// Gets the title.
         /// </summary>
@@ -68,8 +70,8 @@ namespace Sample.ViewModels
             set => SetValue(value);
         }
 
-        public RelayCommand BusyOnCommand { get; set; }
-        public AsyncRelayCommand DialogCommand { get; set; }    
+        public RelayCommand BusyOnCommand { get; private set; }
+        public AsyncRelayCommand DialogCommand { get; private set; }    
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -94,17 +96,26 @@ namespace Sample.ViewModels
 
         private void StartTimer()
         {
-            System.Timers.Timer timer = new(5000);
-            timer.Elapsed += Timer_Elapsed;
+            _timer = new(5000);
+            _timer.Elapsed += Timer_Elapsed;
             BaseCommonServices.BusyService.StartBusy();
-            timer.Enabled = true;
-            timer.AutoReset = true;
-            timer.Start();
+            _timer.Enabled = true;
+            _timer.AutoReset = true;
+            _timer.Start();
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             BaseCommonServices.BusyService.EndBusy();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _timer.Elapsed -= Timer_Elapsed;
+            _timer?.Dispose();
+            _timer = null;
+
+            base.Dispose(disposing);
         }
     }
 }

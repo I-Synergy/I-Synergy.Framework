@@ -47,49 +47,49 @@ namespace Sample.ViewModels
         /// Gets or sets the display command.
         /// </summary>
         /// <value>The display command.</value>
-        public AsyncRelayCommand DisplayCommand { get; set; }
+        public AsyncRelayCommand DisplayCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public AsyncRelayCommand InfoCommand { get; set; }
+        public AsyncRelayCommand InfoCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public AsyncRelayCommand BrowseCommand { get; set; }
+        public AsyncRelayCommand BrowseCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the converter command.
         /// </summary>
         /// <value>The converter command.</value>
-        public AsyncRelayCommand ConverterCommand { get; set; }
+        public AsyncRelayCommand ConverterCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the selection test command.
         /// </summary>
         /// <value>The selection test command.</value>
-        public AsyncRelayCommand SelectionTestCommand { get; set; }
+        public AsyncRelayCommand SelectionTestCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the ListView test command.
         /// </summary>
         /// <value>The ListView test command.</value>
-        public AsyncRelayCommand ListViewTestCommand { get; set; }
+        public AsyncRelayCommand ListViewTestCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public AsyncRelayCommand ValidationTestCommand { get; set; }
+        public AsyncRelayCommand ValidationTestCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the TreeNode test command.
         /// </summary>
-        public AsyncRelayCommand TreeNodeTestCommand { get; set; }
+        public AsyncRelayCommand TreeNodeTestCommand { get; private set; }
 
-        public AsyncRelayCommand ChartCommand { get; set; }
+        public AsyncRelayCommand ChartCommand { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -126,7 +126,6 @@ namespace Sample.ViewModels
             ValidationTestCommand = new AsyncRelayCommand(OpenValidationTestAsync);
             TreeNodeTestCommand = new AsyncRelayCommand(OpenTreenNodeTestAsync);
             ChartCommand = new AsyncRelayCommand(OpenChartTestAsync);
-            LoginCommand = new AsyncRelayCommand(OpenLoginAsync);
 
             PopulateNavItems();
         }
@@ -143,7 +142,7 @@ namespace Sample.ViewModels
             }
         }
 
-        private Task OpenLoginAsync() =>
+        protected override Task SignOutAsync() =>
             CommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
 
         private Task OpenChartTestAsync() =>

@@ -11,8 +11,8 @@ namespace Sample.ViewModels
 {
     public class ValidationViewModel : ViewModelNavigation<TestItem>
     {
-        public RelayCommand CreateInstanceCommand { get; set; }
-        public RelayCommand<TestItem> ValidateCommand { get; set; }
+        public RelayCommand CreateInstanceCommand { get; private set; }
+        public RelayCommand<TestItem> ValidateCommand { get; private set; }
 
         public ValidationViewModel(
             IContext context,
