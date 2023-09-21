@@ -13,6 +13,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets or sets the settings _command.
         /// </summary>
         /// <value>The settings _command.</value>
-        AsyncRelayCommand SettingsCommand { get; set; }
+        AsyncRelayCommand SettingsCommand { get; }
     }
 }

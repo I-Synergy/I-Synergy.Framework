@@ -64,7 +64,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the refresh command.
         /// </summary>
         /// <value>The refresh command.</value>
-        public AsyncRelayCommand<string> RefreshCommand { get; set; }
+        public AsyncRelayCommand<string> RefreshCommand { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
@@ -164,6 +164,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             }
 
             return Task.CompletedTask;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Validator = null;
+
+            RefreshCommand?.Cancel();
+            RefreshCommand = null;
+
+            base.Dispose(disposing);
         }
     }
 }
