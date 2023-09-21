@@ -23,12 +23,12 @@ namespace Sample.ViewModels
         /// Gets or sets the select single command.
         /// </summary>
         /// <value>The select single command.</value>
-        public AsyncRelayCommand SelectSingleCommand { get; set; }
+        public AsyncRelayCommand SelectSingleCommand { get; private set; }
         /// <summary>
         /// Gets or sets the select multiple command.
         /// </summary>
         /// <value>The select multiple command.</value>
-        public AsyncRelayCommand SelectMultipleCommand { get; set; }
+        public AsyncRelayCommand SelectMultipleCommand { get; private set; }
 
         /// <summary>
         /// Show Yes/No dialog.
@@ -104,14 +104,18 @@ namespace Sample.ViewModels
         {
             NoteViewModel vm = new(Context, BaseCommonServices, Logger, "Lorem ipsum dolor sit amet");
             vm.Submitted += Vm_Submitted;
+            vm.Closed += Vm_Closed;
             await BaseCommonServices.DialogService.ShowDialogAsync(typeof(INoteWindow), vm);
+        }
+
+        private void Vm_Closed(object sender, EventArgs e)
+        {
+            if (sender is NoteViewModel vm)
+                vm.Submitted -= Vm_Submitted;
         }
 
         private async void Vm_Submitted(object sender, ISynergy.Framework.Mvvm.Events.SubmitEventArgs<string> e)
         {
-            if (sender is NoteViewModel vm)
-                vm.Submitted -= Vm_Submitted;
-
             await BaseCommonServices.DialogService.ShowInformationAsync($"'{e.Result}' entered.", "Result...");
         }
 
@@ -134,7 +138,14 @@ namespace Sample.ViewModels
         {
             var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
+            selectionVm.Closed += SelectionVm_MultipleClosed;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        }
+
+        private void SelectionVm_MultipleClosed(object sender, EventArgs e)
+        {
+            if (sender is ViewModelSelectionDialog<TestItem> vm)
+                vm.Submitted -= SelectionVm_MultipleSubmitted;
         }
 
         /// <summary>
@@ -145,7 +156,14 @@ namespace Sample.ViewModels
         {
             var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
+            selectionVm.Closed += SelectionVm_SingleClosed;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        }
+
+        private void SelectionVm_SingleClosed(object sender, EventArgs e)
+        {
+            if (sender is ViewModelSelectionDialog<TestItem> vm)
+                vm.Submitted -= SelectionVm_SingleSubmitted;
         }
 
         /// <summary>
@@ -155,11 +173,7 @@ namespace Sample.ViewModels
         /// <param name="e">The e.</param>
         private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
         {
-            if (sender is ViewModelSelectionDialog<TestItem> vm)
-                vm.Submitted -= SelectionVm_MultipleSubmitted;
-
             SelectedTestItems = new ObservableCollection<TestItem>(e.Result.Cast<TestItem>());
-
             await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
         }
 
@@ -170,9 +184,6 @@ namespace Sample.ViewModels
         /// <param name="e">The e.</param>
         private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
         {
-            if (sender is ViewModelSelectionDialog<TestItem> vm)
-                vm.Submitted -= SelectionVm_SingleSubmitted;
-
             await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
         }
     }
