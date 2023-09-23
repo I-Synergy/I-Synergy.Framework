@@ -99,13 +99,12 @@ namespace Sample.ViewModels
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)
         {
-            if (await BaseCommonServices.DialogService.ShowMessageAsync(
+            var result = await BaseCommonServices.DialogService.ShowMessageAsync(
                                 $"Testing {buttons} Dialog",
                                 "Test",
-                                buttons) is MessageBoxResult result)
-            {
-                await BaseCommonServices.DialogService.ShowInformationAsync($"{result} selected.", "Result...");
-            }
+                                buttons);
+
+            await BaseCommonServices.DialogService.ShowInformationAsync($"{result} selected.", "Result...");
         }
 
         /// <summary>

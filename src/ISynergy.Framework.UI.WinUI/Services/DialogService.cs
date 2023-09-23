@@ -11,13 +11,10 @@ namespace ISynergy.Framework.UI.Services
 {
     public class DialogService : IDialogService
     {
-        /// <summary>
-        /// Gets the language service.
-        /// </summary>
-        /// <value>The language service.</value>
         private readonly ILanguageService _languageService;
         private readonly IServiceProvider _serviceProvider;
         private readonly IContext _context;
+        private Window _activeDialog = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
@@ -146,7 +143,7 @@ namespace ISynergy.Framework.UI.Services
                     break;
             }
 
-            if (await dialog.ShowAsync() is ContentDialogResult result)
+            if (await OpenDialogAsync(dialog) is ContentDialogResult result)
             {
                 switch (buttons)
                 {
@@ -301,8 +298,21 @@ namespace ISynergy.Framework.UI.Services
                 viewmodel.Closed += ViewModelClosedHandler;
 
                 await viewmodel.InitializeAsync();
-                await window.ShowAsync<TEntity>();
+                await OpenDialogAsync(window);
             }
+        }
+
+        private async Task<ContentDialogResult> OpenDialogAsync(Window dialog)
+        {
+            if (_activeDialog is not null)
+            {
+                _activeDialog.Close();
+                _activeDialog.Dispose();
+            }
+
+            _activeDialog = dialog;
+
+            return await _activeDialog.ShowAsync().AsTask();
         }
     }
 }
