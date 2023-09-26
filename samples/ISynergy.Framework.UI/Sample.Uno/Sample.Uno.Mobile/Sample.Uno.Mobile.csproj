@@ -32,13 +32,13 @@
 	
 	<ItemGroup>
 		<PackageReference Include="Uno.Resizetizer" Version="1.1.3" />
-		<PackageReference Include="Uno.WinUI" Version="4.10.22" />
+		<PackageReference Include="Uno.WinUI" Version="4.10.25" />
 		<PackageReference Include="Uno.Extensions.Toolkit.WinUI" Version="2.5.11" />
 		<PackageReference Include="Uno.Toolkit.WinUI" Version="4.2.22" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0-rc.1.23419.4" />
 		<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.6.0" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.10.22" />
-		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.10.22" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.10.25" />
+		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.10.25" Condition="'$(Configuration)'=='Debug'" />
 		<PackageReference Include="Uno.CommunityToolkit.WinUI.UI.Controls" Version="7.1.100" />
 	</ItemGroup>
 	<Choose>
