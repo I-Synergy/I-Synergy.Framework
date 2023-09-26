@@ -5,7 +5,6 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,7 +19,7 @@ namespace ISynergy.Framework.UI
     /// <summary>
     /// Class BaseApplication.
     /// </summary>
-    public abstract class BaseApplication : Application, IBaseApplication
+    public abstract class BaseApplication : Application, IBaseApplication, IDisposable
     {
         /// <summary>
         /// Gets the ExceptionHandler service.
@@ -210,5 +209,45 @@ namespace ISynergy.Framework.UI
         /// <exception cref="Result.Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
         private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
             throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
+
+        #region IDisposable
+        // Dispose() calls Dispose(true)
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // NOTE: Leave out the finalizer altogether if this class doesn't
+        // own unmanaged resources, but leave the other methods
+        // exactly as they are.
+        //~ObservableClass()
+        //{
+        //    // Finalizer calls Dispose(false)
+        //    Dispose(false);
+        //}
+
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+                _authenticationService.AuthenticationChanged -= AuthenticationChanged;
+                AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
+                AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+                TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            }
+
+            // free native resources if there are any.
+        }
+        #endregion
     }
 }

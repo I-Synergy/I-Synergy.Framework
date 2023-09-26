@@ -11,7 +11,7 @@
         <c:ErrorPresenter />
 
         <Label Text="Id" />
-        <c:IntegerEntry Value="{Binding SelectedItem.Id, Mode=TwoWay}"/>
+        <Entry Text="{Binding SelectedItem.Id, Mode=TwoWay}"/>
 
         <Label Text="Description "/>
         <Entry Text="{Binding SelectedItem.Description, Mode=TwoWay}"/>

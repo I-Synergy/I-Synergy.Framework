@@ -64,30 +64,30 @@ namespace Sample.ViewModels
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public AsyncRelayCommand InfoCommand { get; set; }
+        public AsyncRelayCommand InfoCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public AsyncRelayCommand BrowseCommand { get; set; }
+        public AsyncRelayCommand BrowseCommand { get; private set; }
 
-        public AsyncRelayCommand EditableComboCommand { get; set; }
+        public AsyncRelayCommand EditableComboCommand { get; private set; }
 
         /// <summary>
         /// gets or sets the Unit Conversion command.
         /// </summary>
-        public AsyncRelayCommand UnitConversionCommand { get; set; }
+        public AsyncRelayCommand UnitConversionCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public AsyncRelayCommand ValidationTestCommand { get; set; }
+        public AsyncRelayCommand ValidationTestCommand { get; private set; }
 
-        public AsyncRelayCommand NugetUnlisterCommand { get; set; } 
-        public AsyncRelayCommand SelectSingleCommand { get; set; }
-        public AsyncRelayCommand SelectMultipleCommand { get; set; }
-        public AsyncRelayCommand ShowToastMessageCommand { get; set; }
+        public AsyncRelayCommand NugetUnlisterCommand { get; private set; } 
+        public AsyncRelayCommand SelectSingleCommand { get; private set; }
+        public AsyncRelayCommand SelectMultipleCommand { get; private set; }
+        public AsyncRelayCommand ShowToastMessageCommand { get; private set; }
 
 
         /// <summary>

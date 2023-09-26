@@ -44,6 +44,11 @@ namespace ISynergy.Framework.UI.Controls
             }
         }
 
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Gets the name of the descendant from.
         /// </summary>
@@ -134,6 +139,7 @@ namespace ISynergy.Framework.UI.Controls
             {
                 // free managed resources
                 ViewModel?.Dispose();
+                ViewModel = null;
             }
 
             // free native resources if there are any.

@@ -19,7 +19,7 @@ using System.Globalization;
 
 namespace ISynergy.Framework.UI
 {
-    public abstract class BaseApplication : Application, IBaseApplication
+    public abstract class BaseApplication : Application, IBaseApplication, IDisposable
     {
         /// <summary>
         /// Gets the ExceptionHandler service.
@@ -156,5 +156,45 @@ namespace ISynergy.Framework.UI
         /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
         public virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>();
+
+        #region IDisposable
+        // Dispose() calls Dispose(true)
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // NOTE: Leave out the finalizer altogether if this class doesn't
+        // own unmanaged resources, but leave the other methods
+        // exactly as they are.
+        //~ObservableClass()
+        //{
+        //    // Finalizer calls Dispose(false)
+        //    Dispose(false);
+        //}
+
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+                _authenticationService.AuthenticationChanged -= AuthenticationChanged;
+                AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
+                MauiExceptions.UnhandledException -= CurrentDomain_UnhandledException;
+                TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            }
+
+            // free native resources if there are any.
+        }
+        #endregion
     }
 }

@@ -132,10 +132,10 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        public AsyncRelayCommand RegisterCommand { get; set; }
-        public AsyncRelayCommand ValidateMailCommand { get; set; }
-        public AsyncRelayCommand LoginCommand { get; set; }
-        public AsyncRelayCommand SelectModulesCommand { get; set; }
+        public AsyncRelayCommand RegisterCommand { get; private set; }
+        public AsyncRelayCommand ValidateMailCommand { get; private set; }
+        public AsyncRelayCommand LoginCommand { get; private set; }
+        public AsyncRelayCommand SelectModulesCommand { get; private set; }
 
         public RegistrationViewModel(
             IContext context,

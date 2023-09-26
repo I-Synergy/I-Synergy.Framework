@@ -368,6 +368,11 @@ namespace ISynergy.Framework.Core.Processes
         {
             if (disposing)
             {
+                OutputWorker.DoWork -= OutputWorker_DoWork;
+                OutputWorker.ProgressChanged -= OutputWorker_ProgressChanged;
+                ErrorWorker.DoWork -= ErrorWorker_DoWork;
+                ErrorWorker.ProgressChanged -= ErrorWorker_ProgressChanged;
+
                 if (OutputWorker is not null)
                 {
                     OutputWorker.Dispose();

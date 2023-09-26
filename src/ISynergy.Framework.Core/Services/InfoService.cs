@@ -88,17 +88,20 @@ namespace ISynergy.Framework.Core.Services
             ProductName = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
             Copyrights = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
 
-            if (assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false))
+            if (assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false) && 
+                Version.TryParse(assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion, out var informationalVersion))
             {
-                ProductVersion = new Version(assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
+                ProductVersion = informationalVersion;
             }
-            else if (assembly.IsDefined(typeof(AssemblyVersionAttribute), false))
+            else if (assembly.IsDefined(typeof(AssemblyVersionAttribute), false) && 
+                Version.TryParse(assembly.GetCustomAttribute<AssemblyVersionAttribute>().Version, out var assemblyVersion))
             {
-                ProductVersion = new Version(assembly.GetCustomAttribute<AssemblyVersionAttribute>().Version);
+                ProductVersion = assemblyVersion;
             }
-            else if (assembly.IsDefined(typeof(AssemblyFileVersionAttribute), false))
+            else if (assembly.IsDefined(typeof(AssemblyFileVersionAttribute), false) && 
+                Version.TryParse(assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version, out var fileVersion))
             {
-                ProductVersion = new Version(assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
+                ProductVersion = fileVersion;
             }
             else
             {

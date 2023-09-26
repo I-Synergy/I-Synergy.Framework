@@ -185,9 +185,9 @@ namespace ISynergy.Framework.Mvvm.Commands
                 if (isAlreadyCompletedOrNull)
                     return;
 
-                static async void MonitorTask(AsyncRelayCommand<T> @this, Task task)
+                void MonitorTask(AsyncRelayCommand<T> @this, Task task)
                 {
-                    await task.GetAwaitableWithoutEndValidation();
+                    task.GetAwaitableWithoutEndValidation().GetAwaiter().GetResult();
 
                     if (ReferenceEquals(@this._executionTask, task))
                     {
@@ -285,11 +285,11 @@ namespace ISynergy.Framework.Mvvm.Commands
                     executionTask = ExecutionTask = _cancelableExecute!(parameter, cancellationTokenSource.Token);
                 }
 
+                await executionTask;
+
                 // If concurrent executions are disabled, notify the can _execute change as well
                 if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
                     CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-
-                await executionTask;
             }
             catch (Exception ex)
             {

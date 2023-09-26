@@ -4,7 +4,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:c="using:ISynergy.Framework.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
@@ -57,7 +56,7 @@
 
                 <StackPanel Orientation="Vertical">
                     <c:Tile Title="Title" Icon="{StaticResource address}" Command="{Binding ShowUnitsCommand}" />
-                    <c:Tile Title="Title" Icon="{StaticResource accounting}"/>
+                    <c:Tile Title="Title" Icon="{StaticResource accounting}" Command="{Binding ShowTestCommand}"/>
                     <c:Tile Title="Title" Header="Header" Count="5" Icon="{StaticResource atm}"/>
                     <c:Tile Title="Title" Header="Header" Count="Count" Icon="{StaticResource admin}"/>
                     <c:Tile Title="Title" Header="Header (small)" Mode="Small" Count="Count" Icon="{StaticResource admin}"/>
@@ -66,11 +65,11 @@
             </StackPanel>
         </ContentControl>
 
-        <toolkit:BladeView x:Name="BladeDetails"
-                     AutoCollapseCountThreshold="3" 
-                     ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                     RelativePanel.AlignBottomWithPanel="True" 
-                     RelativePanel.AlignTopWithPanel="True"
-                     RelativePanel.AlignRightWithPanel="True" />
+        <c:BladeView x:Name="BladeDetails"
+            AutoCollapseCountThreshold="3" 
+            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            RelativePanel.AlignBottomWithPanel="True" 
+            RelativePanel.AlignTopWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True" />
     </RelativePanel>
 </c:View>
