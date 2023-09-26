@@ -8,6 +8,8 @@ using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Views;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Sample.ViewModels
 {
@@ -54,6 +56,7 @@ namespace Sample.ViewModels
         public AsyncRelayCommand ShowDialogOkCancel { get; set; }
 
         public AsyncRelayCommand ShowUnitsCommand { get; private set; }
+        public AsyncRelayCommand ShowTestCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the selected test items.
@@ -80,7 +83,18 @@ namespace Sample.ViewModels
             ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
             ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
             ShowUnitsCommand = new AsyncRelayCommand(ShowUnitsAsync);
+            ShowTestCommand = new AsyncRelayCommand(ShowUnitsAsync, canExecute: () => CanExecuteTest);
         }
+
+        /// <summary>
+        /// Gets or sets the CanExecuteTest property value.
+        /// </summary>
+        public bool CanExecuteTest
+        {
+            get => GetValue<bool>();
+            private set => SetValue(value);
+        }
+
 
         private async Task ShowUnitsAsync()
         {
@@ -94,7 +108,17 @@ namespace Sample.ViewModels
             if (sender is TestViewModel vm)
                 vm.Submitted -= Vm_Submitted;
 
+            CanExecuteTest = !CanExecuteTest;
+
             await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result} selected.");
+        }
+
+        public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(CanExecuteTest)))
+            {
+                ShowTestCommand.NotifyCanExecuteChanged();
+            }
         }
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)
