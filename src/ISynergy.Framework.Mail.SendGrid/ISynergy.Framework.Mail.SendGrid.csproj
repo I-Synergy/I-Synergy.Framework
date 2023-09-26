@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Mail.SendGrid</PackageId>
-		<Description>I-Synergy Framework Mail with SendGrid for .net Standard 2.0</Description>
+		<Description>I-Synergy Framework Mail with SendGrid for .net Standard 2.0, .net 6.0, .net 7.0 and .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Mail, SendGrid</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>ISynergy.Framework.Mail</RootNamespace>
@@ -11,11 +11,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
         <PackageReference Include="SendGrid" Version="9.28.1" />
     </ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0-rc.1.23419.4" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0-rc.1.23419.4" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0-rc.1.23419.4" />
+	</ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj" />

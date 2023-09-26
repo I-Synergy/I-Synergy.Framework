@@ -238,17 +238,22 @@ namespace ISynergy.Framework.Core.Collections
         /// The bulk of the clean-up code is implemented in Dispose(bool)
         protected override void Dispose(bool disposing)
         {
-            if (disposing && Data is IDisposable)
+            if (disposing)
             {
-                if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
-                    foreach (var node in Children)
-                        node.Dispose();
+                PropertyChanged -= TreeNode_PropertyChanged;
 
-                (Data as IDisposable).Dispose();
+                if (Data is IDisposable)
+                {
+                    if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
+                        foreach (var node in Children)
+                            node.Dispose();
 
-                if (DisposeTraversal == UpDownTraversalTypes.TopDown)
-                    foreach (var node in Children)
-                        node.Dispose();
+                    (Data as IDisposable).Dispose();
+
+                    if (DisposeTraversal == UpDownTraversalTypes.TopDown)
+                        foreach (var node in Children)
+                            node.Dispose();
+                }
             }
 
             // free native resources if there are any.

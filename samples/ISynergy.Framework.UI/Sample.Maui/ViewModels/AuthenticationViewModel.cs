@@ -33,8 +33,8 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        public AsyncRelayCommand LoginCommand { get; set; }
-        public AsyncRelayCommand RegisterCommand { get; set; }
+        public AsyncRelayCommand LoginCommand { get; private set; }
+        public AsyncRelayCommand RegisterCommand { get; private set; }
 
         public AuthenticationViewModel(
             IContext context,
@@ -77,6 +77,16 @@ namespace ISynergy.Framework.UI.ViewModels
                     Preferences.Set(nameof(Profile.Username), Username);
                 }
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            LoginCommand?.Cancel();
+            LoginCommand = null;
+            RegisterCommand?.Cancel();
+            RegisterCommand = null;
+
+            base.Dispose(disposing);
         }
     }
 }

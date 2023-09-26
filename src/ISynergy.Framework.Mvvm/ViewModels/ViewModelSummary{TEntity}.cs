@@ -58,7 +58,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public AsyncRelayCommand<TEntity> SubmitCommand { get; set; }
+        public AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether [refresh on initialization].
@@ -70,27 +70,27 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the add command.
         /// </summary>
         /// <value>The add command.</value>
-        public AsyncRelayCommand AddCommand { get; set; }
+        public AsyncRelayCommand AddCommand { get; private set; }
         /// <summary>
         /// Gets or sets the edit command.
         /// </summary>
         /// <value>The edit command.</value>
-        public AsyncRelayCommand<TEntity> EditCommand { get; set; }
+        public AsyncRelayCommand<TEntity> EditCommand { get; private set; }
         /// <summary>
         /// Gets or sets the delete command.
         /// </summary>
         /// <value>The delete command.</value>
-        public AsyncRelayCommand<TEntity> DeleteCommand { get; set; }
+        public AsyncRelayCommand<TEntity> DeleteCommand { get; private set; }
         /// <summary>
         /// Gets or sets the refresh command.
         /// </summary>
         /// <value>The refresh command.</value>
-        public AsyncRelayCommand RefreshCommand { get; set; }
+        public AsyncRelayCommand RefreshCommand { get; private set; }
         /// <summary>
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public AsyncRelayCommand<object> SearchCommand { get; set; }
+        public AsyncRelayCommand<object> SearchCommand { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelSummary{TEntity}"/> class.
@@ -273,6 +273,26 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 OnSubmitted(new SubmitEventArgs<TEntity>(e));
 
             return Task.CompletedTask;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Validator = null;
+
+            AddCommand?.Cancel();
+            AddCommand = null;
+            EditCommand?.Cancel();
+            EditCommand = null;
+            DeleteCommand?.Cancel();
+            DeleteCommand = null;
+            RefreshCommand?.Cancel();
+            RefreshCommand = null;
+            SearchCommand?.Cancel();
+            SearchCommand = null;
+            SubmitCommand?.Cancel();
+            SubmitCommand = null;
+
+            base.Dispose(disposing);
         }
     }
 }

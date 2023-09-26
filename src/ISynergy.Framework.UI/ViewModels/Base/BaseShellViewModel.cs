@@ -31,49 +31,49 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// Gets or sets the restart update command.
         /// </summary>
         /// <value>The restart update command.</value>
-        public AsyncRelayCommand RestartUpdateCommand { get; set; }
+        public AsyncRelayCommand RestartUpdateCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the login command.
         /// </summary>
         /// <value>The login command.</value>
-        public AsyncRelayCommand LoginCommand { get; set; }
+        public AsyncRelayCommand LoginCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the language command.
         /// </summary>
         /// <value>The language command.</value>
-        public AsyncRelayCommand LanguageCommand { get; set; }
+        public AsyncRelayCommand LanguageCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
-        public AsyncRelayCommand ColorCommand { get; set; }
+        public AsyncRelayCommand ColorCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the help command.
         /// </summary>
         /// <value>The help command.</value>
-        public AsyncRelayCommand HelpCommand { get; set; }
+        public AsyncRelayCommand HelpCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the settings command.
         /// </summary>
         /// <value>The settings command.</value>
-        public AsyncRelayCommand SettingsCommand { get; set; }
+        public AsyncRelayCommand SettingsCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the background command.
         /// </summary>
         /// <value>The background command.</value>
-        public AsyncRelayCommand BackgroundCommand { get; set; }
+        public AsyncRelayCommand BackgroundCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the feedback command.
         /// </summary>
         /// <value>The feedback command.</value>
-        public AsyncRelayCommand FeedbackCommand { get; set; }
+        public AsyncRelayCommand FeedbackCommand { get; private set; }
 
         /// <summary>
         /// Authentication service.
@@ -247,7 +247,14 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         {
             var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Language);
             languageVM.Submitted += LanguageVM_Submitted;
+            languageVM.Closed += LanguageVM_Closed;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+        }
+
+        private void LanguageVM_Closed(object sender, EventArgs e)
+        {
+            if (sender is LanguageViewModel vm)
+                vm.Submitted -= LanguageVM_Submitted;
         }
 
         /// <summary>
@@ -257,9 +264,6 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// <param name="e">The e.</param>
         private async void LanguageVM_Submitted(object sender, SubmitEventArgs<Languages> e)
         {
-            if (sender is LanguageViewModel vm)
-                vm.Submitted -= LanguageVM_Submitted;
-
             _applicationSettingsService.Settings.Language = e.Result;
             _applicationSettingsService.SaveSettings();
             _localizationService.SetLocalizationLanguage(e.Result);
@@ -283,7 +287,14 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         {
             var themeVM = new ThemeViewModel(Context, BaseCommonServices, _applicationSettingsService, Logger);
             themeVM.Submitted += ThemeVM_Submitted;
+            themeVM.Closed += ThemeVM_Closed;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
+        }
+
+        private void ThemeVM_Closed(object sender, EventArgs e)
+        {
+            if (sender is ThemeViewModel vm)
+                vm.Closed -= ThemeVM_Closed;
         }
 
         /// <summary>
@@ -321,5 +332,29 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// </summary>
         protected virtual Task RestartApplicationAsync() =>
             BaseCommonServices.DialogService.ShowInformationAsync("Please restart the application.");
+
+        protected override void Dispose(bool disposing)
+        {
+            Validator = null;
+
+            RestartUpdateCommand?.Cancel();
+            RestartUpdateCommand = null;
+            LoginCommand?.Cancel();
+            LoginCommand = null;
+            LanguageCommand?.Cancel();
+            LanguageCommand = null;
+            ColorCommand?.Cancel();
+            ColorCommand = null;
+            HelpCommand?.Cancel();
+            HelpCommand = null;
+            SettingsCommand?.Cancel();
+            SettingsCommand = null;
+            BackgroundCommand?.Cancel();
+            BackgroundCommand = null;
+            FeedbackCommand?.Cancel();
+            FeedbackCommand = null;
+
+            base.Dispose(disposing);
+        }
     }
 }

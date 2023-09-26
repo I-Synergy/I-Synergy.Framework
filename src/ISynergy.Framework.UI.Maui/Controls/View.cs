@@ -43,7 +43,7 @@ namespace ISynergy.Framework.UI.Controls
 
         private async void View_Loaded(object sender, EventArgs e)
         {
-            if (ViewModel is not null && !ViewModel.IsInitialized)
+            if (ViewModel is not null)
                 await ViewModel.InitializeAsync();
         }
 
@@ -80,6 +80,7 @@ namespace ISynergy.Framework.UI.Controls
             {
                 // free managed resources
                 ViewModel?.Dispose();
+                ViewModel = null;
             }
 
             // free native resources if there are any.

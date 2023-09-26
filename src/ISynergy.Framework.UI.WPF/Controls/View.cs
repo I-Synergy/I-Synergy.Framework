@@ -42,33 +42,44 @@ namespace ISynergy.Framework.UI.Controls
         protected View(IViewModel viewModel)
         {
             ViewModel = viewModel;
-
-            Loaded += View_Loaded;
-            Unloaded += View_Unloaded;
         }
 
+        #region IDisposable
+        // Dispose() calls Dispose(true)
         /// <summary>
-        /// Views the unloaded.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The e.</param>
-        public virtual void View_Unloaded(object sender, object e)
+        public void Dispose()
         {
-            //if(e is RoutedEventArgs args)
-            //{
-            //}
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
+        // NOTE: Leave out the finalizer altogether if this class doesn't
+        // own unmanaged resources, but leave the other methods
+        // exactly as they are.
+        //~ObservableClass()
+        //{
+        //    // Finalizer calls Dispose(false)
+        //    Dispose(false);
+        //}
+
+        // The bulk of the clean-up code is implemented in Dispose(bool)
         /// <summary>
-        /// Views the loaded.
+        /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The e.</param>
-        public virtual void View_Loaded(object sender, object e)
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
         {
-            //if (e is RoutedEventArgs args)
-            //{
-            //}
+            if (disposing)
+            {
+                // free managed resources
+                ViewModel?.Dispose();
+                ViewModel = null;
+            }
+
+            // free native resources if there are any.
         }
+        #endregion
     }
 }

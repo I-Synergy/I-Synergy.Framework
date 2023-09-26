@@ -69,8 +69,8 @@ namespace Sample.ViewModels
             set => SetValue(value);
         }
 
-        public RelayCommand BusyOnCommand { get; set; }
-        public AsyncRelayCommand DialogCommand { get; set; }    
+        public RelayCommand BusyOnCommand { get; private set; }
+        public AsyncRelayCommand DialogCommand { get; private set; }    
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.

@@ -100,7 +100,7 @@ namespace Sample.ViewModels
         /// Gets or sets the clear command.
         /// </summary>
         /// <value>The clear command.</value>
-        public RelayCommand ClearCommand { get; set; }
+        public RelayCommand ClearCommand { get; private set; }
 
         /// <summary>
         /// The search cancellationtoken

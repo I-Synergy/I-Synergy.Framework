@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<RootNamespace>ISynergy.Framework.MessageBus.Performance</RootNamespace>
 		<CodeAnalysisRuleSet>ISynergy.Framework.MessageBus.Performance.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
@@ -11,7 +11,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BenchmarkDotNet" Version="0.13.7" />
+		<PackageReference Include="BenchmarkDotNet" Version="0.13.8" />
 		<PackageReference Include="lz4net" Version="1.0.15.93" />
 		<PackageReference Include="MessagePack" Version="2.5.124" />
 	</ItemGroup>

@@ -72,12 +72,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets the back command.
         /// </summary>
         /// <value>The back command.</value>
-        public RelayCommand BackCommand { get; }
+        public RelayCommand BackCommand { get; private set; }
         /// <summary>
         /// Gets the next command.
         /// </summary>
         /// <value>The next command.</value>
-        public RelayCommand NextCommand { get; }
+        public RelayCommand NextCommand { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelDialogWizard{TEntity}"/> class.
@@ -161,6 +161,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             {
                 Page += 1;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Validator = null;
+
+            BackCommand = null;
+            NextCommand = null;
+
+            base.Dispose(disposing);
         }
     }
 }

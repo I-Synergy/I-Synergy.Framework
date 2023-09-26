@@ -1,22 +1,9 @@
-using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls
 {
-    public class Window : Popup, IWindow
+    public class Window : ContentPage, IWindow
     {
-        public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(Window), string.Empty);
-
-        public string Title
-        {
-            get => (string)GetValue(TitleProperty);
-            set
-            {
-                SetValue(TitleProperty, value);
-                BindingContext = value;
-            }
-        }
-
         public static readonly BindableProperty ViewModelProperty = BindableProperty.Create(nameof(ViewModel), typeof(IViewModel), typeof(Window), null);
 
         public IViewModel ViewModel
@@ -31,10 +18,7 @@ namespace ISynergy.Framework.UI.Controls
 
         public Window()
         {
-            CanBeDismissedByTappingOutsideOfPopup = false;
-            Color = Color.FromArgb("#80000000");
-            VerticalOptions = Microsoft.Maui.Primitives.LayoutAlignment.Center;
-            HorizontalOptions = Microsoft.Maui.Primitives.LayoutAlignment.Center;
+            BackgroundColor = Colors.Transparent;
         }
 
         #region IDisposable
@@ -68,6 +52,7 @@ namespace ISynergy.Framework.UI.Controls
             {
                 // free managed resources
                 ViewModel?.Dispose();
+                ViewModel = null;
             }
 
             // free native resources if there are any.

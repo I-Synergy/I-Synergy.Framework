@@ -14,8 +14,8 @@ namespace Sample.ViewModels
 {
     public class AppShellViewModel : BaseShellViewModel, IShellViewModel
     {
-        public AsyncRelayCommand ControlsCommand { get; set; }
-        public AsyncRelayCommand DialogsCommand { get; set; }
+        public AsyncRelayCommand ControlsCommand { get; private set; }
+        public AsyncRelayCommand DialogsCommand { get; private set; }
 
         public AppShellViewModel(
             IContext context,
@@ -66,6 +66,17 @@ namespace Sample.ViewModels
         {
             await base.RestartApplicationAsync();
             Application.Current.Quit();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ControlsCommand?.Cancel();
+            ControlsCommand = null;
+
+            DialogsCommand?.Cancel();
+            DialogsCommand = null;
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -1,20 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.AspNetCore.Authentication</PackageId>
-        <Description>I-Synergy Framework Authentication for .net 6.0 and .net 7.0</Description>
+        <Description>I-Synergy Framework Authentication for .net 6.0, .net 7.0 and .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Authentication.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.0" />
     </ItemGroup>
 
-    <ItemGroup>
+	<ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
     </ItemGroup>
 </Project>

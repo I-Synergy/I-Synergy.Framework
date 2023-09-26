@@ -3,7 +3,6 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
          xmlns:c="using:ISynergy.Framework.UI.Controls"
          xmlns:base_controls="using:Sample.Views.Controls"
          mc:Ignorable="d">
@@ -25,11 +24,11 @@
             <base_controls:BaseList x:Name="DataSummary" />
         </ScrollViewer>
 
-        <toolkit:BladeView x:Name="BladeDetails" 
-                           AutoCollapseCountThreshold="3" 
-                           ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                           RelativePanel.AlignBottomWithPanel="True" 
-                           RelativePanel.Below="MenuLayout" 
-                           RelativePanel.AlignRightWithPanel="True" />
+        <c:BladeView x:Name="BladeDetails" 
+            AutoCollapseCountThreshold="3" 
+            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            RelativePanel.AlignBottomWithPanel="True" 
+            RelativePanel.Below="MenuLayout" 
+            RelativePanel.AlignRightWithPanel="True" />
     </RelativePanel>
 </c:View>

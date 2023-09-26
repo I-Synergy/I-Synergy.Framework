@@ -21,6 +21,7 @@ namespace ISynergy.Framework.UI.Services
     public class NavigationService : INavigationService
     {
         private readonly IContext _context;
+        private readonly IServiceProvider _serviceProvider;
 
         public event EventHandler BackStackChanged;
 
@@ -60,14 +61,18 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
         public bool CanGoForward => _frame.CanGoForward;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
         /// </summary>
         /// <param name="context"></param>
-        public NavigationService(IContext context)
+        /// <param name="serviceProvider"></param>
+        public NavigationService(
+            IContext context,
+            IServiceProvider serviceProvider)
         {
             _context = context;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -106,7 +111,7 @@ namespace ISynergy.Framework.UI.Services
             if (page is null)
                 throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
 
-            if (_context.ScopedServices.ServiceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
+            if (_serviceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
             {
                 view.ViewModel = viewModel;
 

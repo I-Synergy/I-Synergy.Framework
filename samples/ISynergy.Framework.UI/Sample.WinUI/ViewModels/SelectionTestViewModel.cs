@@ -8,6 +8,8 @@ using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Views;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Sample.ViewModels
 {
@@ -26,12 +28,12 @@ namespace Sample.ViewModels
         /// Gets or sets the select single command.
         /// </summary>
         /// <value>The select single command.</value>
-        public AsyncRelayCommand SelectSingleCommand { get; set; }
+        public AsyncRelayCommand SelectSingleCommand { get; private set; }
         /// <summary>
         /// Gets or sets the select multiple command.
         /// </summary>
         /// <value>The select multiple command.</value>
-        public AsyncRelayCommand SelectMultipleCommand { get; set; }
+        public AsyncRelayCommand SelectMultipleCommand { get; private set; }
 
         /// <summary>
         /// Show Yes/No dialog.
@@ -53,7 +55,8 @@ namespace Sample.ViewModels
         /// </summary>
         public AsyncRelayCommand ShowDialogOkCancel { get; set; }
 
-        public AsyncRelayCommand ShowUnitsCommand { get; set; }
+        public AsyncRelayCommand ShowUnitsCommand { get; private set; }
+        public AsyncRelayCommand ShowTestCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the selected test items.
@@ -80,7 +83,18 @@ namespace Sample.ViewModels
             ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
             ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
             ShowUnitsCommand = new AsyncRelayCommand(ShowUnitsAsync);
+            ShowTestCommand = new AsyncRelayCommand(ShowUnitsAsync, canExecute: () => CanExecuteTest);
         }
+
+        /// <summary>
+        /// Gets or sets the CanExecuteTest property value.
+        /// </summary>
+        public bool CanExecuteTest
+        {
+            get => GetValue<bool>();
+            private set => SetValue(value);
+        }
+
 
         private async Task ShowUnitsAsync()
         {
@@ -94,18 +108,27 @@ namespace Sample.ViewModels
             if (sender is TestViewModel vm)
                 vm.Submitted -= Vm_Submitted;
 
+            CanExecuteTest = !CanExecuteTest;
+
             await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result} selected.");
+        }
+
+        public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(CanExecuteTest)))
+            {
+                ShowTestCommand.NotifyCanExecuteChanged();
+            }
         }
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)
         {
-            if (await BaseCommonServices.DialogService.ShowMessageAsync(
+            var result = await BaseCommonServices.DialogService.ShowMessageAsync(
                                 $"Testing {buttons} Dialog",
                                 "Test",
-                                buttons) is MessageBoxResult result)
-            {
-                await BaseCommonServices.DialogService.ShowInformationAsync($"{result} selected.", "Result...");
-            }
+                                buttons);
+
+            await BaseCommonServices.DialogService.ShowInformationAsync($"{result} selected.", "Result...");
         }
 
         /// <summary>

@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public AsyncRelayCommand<TEntity> SubmitCommand { get; set; }
+        public AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelDialog{TEntity}"/> class.
@@ -112,5 +112,15 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query) { }
+
+        protected override void Dispose(bool disposing)
+        {
+            Validator = null;
+            
+            SubmitCommand?.Cancel();
+            SubmitCommand = null;
+
+            base.Dispose(disposing);
+        }
     }
 }

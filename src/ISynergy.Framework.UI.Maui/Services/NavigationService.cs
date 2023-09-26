@@ -108,11 +108,7 @@ namespace ISynergy.Framework.UI.Services
              where TViewModel : class, IViewModel
         {
             var page = await NavigationExtensions.CreatePage<TViewModel>(parameter);
-            
-            Application.Current.MainPage.Dispatcher.Dispatch(() =>
-            {
-                Application.Current.MainPage = page;
-            });
+            Application.Current.MainPage.Dispatcher.Dispatch(() => Application.Current.MainPage = page);
         }
 
         public Task CleanBackStackAsync()

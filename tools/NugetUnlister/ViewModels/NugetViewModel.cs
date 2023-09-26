@@ -18,10 +18,10 @@ namespace NugetUnlister.ViewModels
     {
         private readonly INugetService _nugetService;
 
-        public AsyncRelayCommand ListVersionCommand { get; set; }
-        public RelayCommand SelectAllCommand { get; set; }
-        public RelayCommand DeselectAllCommand { get; set; }
-        public AsyncRelayCommand UnlistCommand { get; set; }
+        public AsyncRelayCommand ListVersionCommand { get; private set; }
+        public RelayCommand SelectAllCommand { get; private set; }
+        public RelayCommand DeselectAllCommand { get; private set; }
+        public AsyncRelayCommand UnlistCommand { get; private set; }
 
 
         /// <summary>
