@@ -56,7 +56,7 @@
 
                 <StackPanel Orientation="Vertical">
                     <c:Tile Title="Title" Icon="{StaticResource address}" Command="{Binding ShowUnitsCommand}" />
-                    <c:Tile Title="Title" Icon="{StaticResource accounting}"/>
+                    <c:Tile Title="Title" Icon="{StaticResource accounting}" Command="{Binding ShowTestCommand}"/>
                     <c:Tile Title="Title" Header="Header" Count="5" Icon="{StaticResource atm}"/>
                     <c:Tile Title="Title" Header="Header" Count="Count" Icon="{StaticResource admin}"/>
                     <c:Tile Title="Title" Header="Header (small)" Mode="Small" Count="Count" Icon="{StaticResource admin}"/>

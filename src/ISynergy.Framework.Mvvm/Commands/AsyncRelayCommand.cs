@@ -284,11 +284,11 @@ namespace ISynergy.Framework.Mvvm.Commands
                     executionTask = ExecutionTask = _cancelableExecute!(cancellationTokenSource.Token);
                 }
 
+                await executionTask;
+
                 // If concurrent executions are disabled, notify the can _execute change as well
                 if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
                     CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-
-                await executionTask;
             }
             catch (Exception ex)
             {
