@@ -13,43 +13,43 @@
 
     <CommandBar.Content>
         <TextBlock x:Name="TextBlockTitle" 
-                   Text="{Binding Title}" 
-                   Style="{StaticResource TitleTextBlockStyle}" />
+               Text="{Binding Title}" 
+               Style="{StaticResource TitleTextBlockStyle}" />
     </CommandBar.Content>
     <CommandBar.PrimaryCommands>
         <AppBarButton x:Name="Button_Add" 
-                      Command="{Binding AddCommand}" 
-                      Label="{m:LanguageResource Key=Add}" 
-                      ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
+                  Command="{Binding AddCommand}" 
+                  Label="{m:LanguageResource Key=Add}" 
+                  ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
             <AppBarButton.Icon>
-                <PathIcon Data="{StaticResource plus}"/>
+                <SymbolIcon Symbol="Add"/>
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Edit" 
-                      Command="{Binding EditCommand}" 
-                      CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
-                      Label="{m:LanguageResource Key=Edit}" 
-                      ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
+                  Command="{Binding EditCommand}" 
+                  CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
+                  Label="{m:LanguageResource Key=Edit}" 
+                  ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
             <AppBarButton.Icon>
-                <PathIcon Data="{StaticResource edit}"/>
+                <SymbolIcon Symbol="Edit"/>
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Delete" 
-                      Command="{Binding DeleteCommand}" 
-                      CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
-                      Label="{m:LanguageResource Key=Delete}" 
-                      ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
+                  Command="{Binding DeleteCommand}" 
+                  CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
+                  Label="{m:LanguageResource Key=Delete}" 
+                  ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
             <AppBarButton.Icon>
-                <PathIcon Data="{StaticResource delete}"/>
+                <SymbolIcon Symbol="Delete"/>
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Refresh" 
-                      Command="{Binding RefreshCommand}" 
-                      Label="{m:LanguageResource Key=Refresh}" 
-                      ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}" 
-                      Visibility="{Binding Refresh_Enabled, ElementName=BaseMenuInstance}">
+                  Command="{Binding RefreshCommand}" 
+                  Label="{m:LanguageResource Key=Refresh}" 
+                  ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}" 
+                  Visibility="{Binding Refresh_Enabled, ElementName=BaseMenuInstance}">
             <AppBarButton.Icon>
-                <PathIcon Data="{StaticResource refresh}"/>
+                <SymbolIcon Symbol="Refresh"/>
             </AppBarButton.Icon>
         </AppBarButton>
     </CommandBar.PrimaryCommands>

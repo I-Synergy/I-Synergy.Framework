@@ -22,7 +22,7 @@
                       Label="{m:LanguageResource Key=Add}" 
                       ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
             <AppBarButton.Icon>
-                <PathIcon Data="{StaticResource plus}"/>
+                <SymbolIcon Symbol="Add"/>
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Edit" 
@@ -31,7 +31,7 @@
                       Label="{m:LanguageResource Key=Edit}" 
                       ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
             <AppBarButton.Icon>
-                <PathIcon Data="{StaticResource edit}"/>
+                <SymbolIcon Symbol="Edit"/>
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Delete" 
@@ -40,7 +40,7 @@
                       Label="{m:LanguageResource Key=Delete}" 
                       ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
             <AppBarButton.Icon>
-                <PathIcon Data="{StaticResource delete}"/>
+                <SymbolIcon Symbol="Delete"/>
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton x:Name="Button_Refresh" 
@@ -49,7 +49,7 @@
                       ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}" 
                       Visibility="{Binding Refresh_Enabled, ElementName=BaseMenuInstance}">
             <AppBarButton.Icon>
-                <PathIcon Data="{StaticResource refresh}"/>
+                <SymbolIcon Symbol="Refresh"/>
             </AppBarButton.Icon>
         </AppBarButton>
     </CommandBar.PrimaryCommands>
