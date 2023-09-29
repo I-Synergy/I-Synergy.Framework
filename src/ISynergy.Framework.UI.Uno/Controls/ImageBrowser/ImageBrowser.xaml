@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <converters:BytesToImageSourceConverter x:Name="BytesToImageSourceConverter" />
     </UserControl.Resources>
-    
+
     <RelativePanel x:Name="ImageUploader">
         <StackPanel x:Name="ImageToolButtonLayout"
                     Orientation="Vertical"
@@ -22,36 +22,40 @@
                     RelativePanel.AlignRightWithPanel="True"
                     Margin="2"
                     Width="70">
-            <AppBarButton x:Name="Button_Browse" 
-                          ToolTipService.ToolTip="{m:LanguageResource Key=Browse}" 
-                          Label="{m:LanguageResource Key=Browse}" 
-                          Tapped="Button_Browse_Tapped">
+            <AppBarButton 
+                x:Name="Button_Browse" 
+                ToolTipService.ToolTip="{m:LanguageResource Key=Browse}" 
+                Label="{m:LanguageResource Key=Browse}" 
+                Tapped="Button_Browse_Tapped">
                 <AppBarButton.Icon>
-                    <PathIcon Data="{StaticResource search}"/>
+                    <SymbolIcon Symbol="Find"/>
                 </AppBarButton.Icon>
             </AppBarButton>
-            <AppBarButton x:Name="Button_Camera" 
-                          ToolTipService.ToolTip="{m:LanguageResource Key=Camera}" 
-                          Label="{m:LanguageResource Key=Camera}" 
-                          Tapped="Button_Camera_Tapped">
+            <AppBarButton 
+                x:Name="Button_Camera" 
+                ToolTipService.ToolTip="{m:LanguageResource Key=Camera}" 
+                Label="{m:LanguageResource Key=Camera}" 
+                Tapped="Button_Camera_Tapped">
                 <AppBarButton.Icon>
-                    <PathIcon Data="{StaticResource camera}"/>
+                    <SymbolIcon Symbol="Camera"/>
                 </AppBarButton.Icon>
             </AppBarButton>
-            <AppBarButton x:Name="Button_Paste" 
-                          ToolTipService.ToolTip="{m:LanguageResource Key=Paste}" 
-                          Label="{m:LanguageResource Key=Paste}" 
-                          Tapped="Button_Paste_Tapped">
+            <AppBarButton 
+                x:Name="Button_Paste" 
+                ToolTipService.ToolTip="{m:LanguageResource Key=Paste}" 
+                Label="{m:LanguageResource Key=Paste}" 
+                Tapped="Button_Paste_Tapped">
                 <AppBarButton.Icon>
-                    <PathIcon Data="{StaticResource paste}"/>
+                    <SymbolIcon Symbol="Paste"/>
                 </AppBarButton.Icon>
             </AppBarButton>
-            <AppBarButton x:Name="Button_Clear" 
-                          ToolTipService.ToolTip="{m:LanguageResource Key=Delete}" 
-                          Label="{m:LanguageResource Key=Delete}" 
-                          Tapped="Button_Clear_Tapped">
+            <AppBarButton
+                x:Name="Button_Clear" 
+                ToolTipService.ToolTip="{m:LanguageResource Key=Delete}" 
+                Label="{m:LanguageResource Key=Delete}" 
+                Tapped="Button_Clear_Tapped">
                 <AppBarButton.Icon>
-                    <PathIcon Data="{StaticResource delete}"/>
+                    <SymbolIcon Symbol="Delete"/>
                 </AppBarButton.Icon>
             </AppBarButton>
         </StackPanel>

@@ -13,17 +13,17 @@ namespace ISynergy.Framework.UI.Controls
         /// <summary>
         /// The path icon property
         /// </summary>
-        public static readonly DependencyProperty PathIconProperty =
-            DependencyProperty.Register(nameof(PathIcon), typeof(string), typeof(IconRadioButton), new PropertyMetadata(string.Empty));
+        public static readonly DependencyProperty IconProperty =
+            DependencyProperty.Register(nameof(Icon), typeof(string), typeof(IconRadioButton), new PropertyMetadata(string.Empty));
 
         /// <summary>
         /// Gets or sets the path icon.
         /// </summary>
         /// <value>The path icon.</value>
-        public string PathIcon
+        public string Icon
         {
-            get => (string)GetValue(PathIconProperty);
-            set => SetValue(PathIconProperty, value);
+            get => (string)GetValue(IconProperty);
+            set => SetValue(IconProperty, value);
         }
     }
 }
