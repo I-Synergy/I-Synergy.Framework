@@ -98,7 +98,14 @@ namespace ISynergy.Framework.UI.Services
             });
         }
 
-        public Task<FileResult> SaveFileAsync(string filename, byte[] file)
+        /// <summary>
+        /// Saves file to folder async
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="filename"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public Task<FileResult> SaveFileAsync(string folder, string filename, byte[] file)
         {
             var extension = Path.GetExtension(filename);
             var fileDialog = new SaveFileDialog();
@@ -109,7 +116,7 @@ namespace ISynergy.Framework.UI.Services
             fileDialog.AddExtension = false;
             fileDialog.Filter = $"{extension}|{extension}";
             fileDialog.DefaultExt = extension;
-            fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            fileDialog.InitialDirectory = folder;
             fileDialog.FileName = filename;
 
             if (fileDialog.ShowDialog() ?? false)

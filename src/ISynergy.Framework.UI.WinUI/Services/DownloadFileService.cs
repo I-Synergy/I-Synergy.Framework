@@ -1,12 +1,7 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using Windows.Storage;
-
-#if HAS_UNO_WINUI
 using Windows.System;
-#else
-using System.Diagnostics;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -32,18 +27,15 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// download file as an asynchronous operation.
         /// </summary>
+        /// <param name="folder"></param>
         /// <param name="file">The file.</param>
         /// <param name="filename">The filename.</param>
-        public async Task DownloadFileAsync(string filename, byte[] file)
+        public async Task DownloadFileAsync(string folder, string filename, byte[] file)
         {
-            if (await _fileService.SaveFileAsync(filename, file) is FileResult savedFile)
+            if (await _fileService.SaveFileAsync(folder, filename, file) is FileResult savedFile)
             {
-#if HAS_UNO_WINUI
                 var storageFile = await StorageFile.GetFileFromPathAsync(savedFile.FilePath);
                 await Launcher.LaunchFileAsync(storageFile);
-#else
-                Process.Start(savedFile.FilePath);
-#endif
             }
         }
     }

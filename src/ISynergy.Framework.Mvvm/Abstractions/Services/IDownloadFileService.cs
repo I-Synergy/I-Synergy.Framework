@@ -8,9 +8,10 @@
         /// <summary>
         /// Downloads the file asynchronous.
         /// </summary>
+        /// <param name="folder"></param>
         /// <param name="file">The file.</param>
         /// <param name="filename">The filename.</param>
         /// <returns>Task.</returns>
-        Task DownloadFileAsync(string filename, byte[] file);
+        Task DownloadFileAsync(string folder, string filename, byte[] file);
     }
 }
