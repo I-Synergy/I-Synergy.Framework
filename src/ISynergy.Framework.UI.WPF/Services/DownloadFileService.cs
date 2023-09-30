@@ -26,11 +26,12 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// download file as an asynchronous operation.
         /// </summary>
+        /// <param name="folder"></param>
         /// <param name="file">The file.</param>
         /// <param name="filename">The filename.</param>
-        public async Task DownloadFileAsync(string filename, byte[] file)
+        public async Task DownloadFileAsync(string folder, string filename, byte[] file)
         {
-            if (await _fileService.SaveFileAsync(filename, file) is FileResult savedFile)
+            if (await _fileService.SaveFileAsync(folder, filename, file) is FileResult savedFile)
             {
                 Process.Start(savedFile.FilePath);
             }
