@@ -1,14 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-
-#if WINDOWS
-using WinRT.Interop;
 using Windows.ApplicationModel;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -55,52 +52,66 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public void SetStyle()
         {
-            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.Content is FrameworkElement frameworkElement)
+            var palette = FindColorPaletteResourcesForTheme(Style.Theme.ToString());
+
+            if (palette is not null)
             {
-                var palette = FindColorPaletteResourcesForTheme(Style.Theme.ToString());
+                palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
+            }
+            else
+            {
+                palette = new ColorPaletteResources();
+                palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
+                Application.Current.Resources.MergedDictionaries.Add(palette);
+            }
 
-                if (palette is not null)
-                {
-                    palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
-                }
-                else
-                {
-                    palette = new ColorPaletteResources();
-                    palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
-                    Application.Current.Resources.MergedDictionaries.Add(palette);
-                }
+            Application.Current.Resources["SystemAccentColor"] = Style.Color;
+            Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = Style.Color;
 
-                Application.Current.Resources["SystemAccentColor"] = Style.Color;
-                Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = Style.Color;
+            switch (Style.Theme)
+            {
+                case Themes.Light:
+                    if (RootTheme != ElementTheme.Light)
+                        RootTheme = ElementTheme.Light;
+                    break;
+                case Themes.Dark:
+                    if (RootTheme != ElementTheme.Dark)
+                        RootTheme = ElementTheme.Dark;
+                    break;
+                default:
+                    if (RootTheme != ElementTheme.Default)
+                        RootTheme = ElementTheme.Default;
+                    break;
+            }
 
-                ReloadPageTheme(Style.Theme);
-                SetTitlebar(baseApplication.MainWindow);
+            foreach (var window in WindowHelper.ActiveWindows)
+            {
+                if (window.Content is FrameworkElement rootElement)
+                    SetTitlebar(window);
             }
         }
 
         /// <summary>
-        /// Reloads the page theme.
+        /// Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
         /// </summary>
-        /// <param name="theme">The theme.</param>
-        private void ReloadPageTheme(Themes theme)
+        private ElementTheme RootTheme
         {
-            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.Content is FrameworkElement frameworkElement)
+            get
             {
-                switch (theme)
+                foreach (var window in WindowHelper.ActiveWindows)
                 {
-                    case Themes.Light:
-                        frameworkElement.RequestedTheme = ElementTheme.Dark;
-                        frameworkElement.RequestedTheme = ElementTheme.Light;
-                        break;
-                    case Themes.Dark:
-                        frameworkElement.RequestedTheme = ElementTheme.Light;
-                        frameworkElement.RequestedTheme = ElementTheme.Dark;
-                        break;
-                    default:
-                        frameworkElement.RequestedTheme = ElementTheme.Light;
-                        frameworkElement.RequestedTheme = ElementTheme.Dark;
-                        frameworkElement.RequestedTheme = ElementTheme.Default;
-                        break;
+                    if (window.Content is FrameworkElement rootElement)
+                        return rootElement.ActualTheme;
+                }
+
+                return ElementTheme.Default;
+            }
+            set
+            {
+                foreach (var window in WindowHelper.ActiveWindows)
+                {
+                    if (window.Content is FrameworkElement rootElement)
+                        rootElement.RequestedTheme = value;
                 }
             }
         }
@@ -130,12 +141,40 @@ namespace ISynergy.Framework.UI.Services
         }
 
         /// <summary>
+        /// Gets the current actual theme of the app based on the requested theme of the
+        /// root element, or if that value is Default, the requested theme of the Application.
+        /// </summary>
+        private ElementTheme ActualTheme
+        {
+            get
+            {
+                foreach (var window in WindowHelper.ActiveWindows)
+                {
+                    if (window.Content is FrameworkElement rootElement && rootElement.RequestedTheme != ElementTheme.Default)
+                    {
+                        return rootElement.RequestedTheme;
+                    }
+                }
+
+                switch (Application.Current.RequestedTheme)
+                {
+                    case ApplicationTheme.Light:
+                        return ElementTheme.Light;
+                    case ApplicationTheme.Dark:
+                        return ElementTheme.Dark;
+                    default:
+                        return ElementTheme.Default;
+                }
+            }
+        }
+
+        /// <summary>
         /// Setups the titlebar.
         /// </summary>
         public void SetTitlebar(Microsoft.UI.Xaml.Window window)
         {
 #if WINDOWS
-            var appWindow = GetAppWindowForCurrentWindow(window);
+            var appWindow = WindowHelper.GetAppWindow(window);
 
             var iconPath = Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico");
             
@@ -166,14 +205,5 @@ namespace ISynergy.Framework.UI.Services
             }
 #endif
         }
-
-#if !HAS_UNO
-        protected virtual AppWindow GetAppWindowForCurrentWindow(Microsoft.UI.Xaml.Window window)
-        {
-            var hWnd = WindowNative.GetWindowHandle(window);
-            var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-            return AppWindow.GetFromWindowId(wndId);
-        }
-#endif
     }
 }
