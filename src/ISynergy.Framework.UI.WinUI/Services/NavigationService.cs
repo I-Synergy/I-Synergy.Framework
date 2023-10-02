@@ -21,6 +21,7 @@ namespace ISynergy.Framework.UI.Services
     {
         private readonly IContext _context;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IThemeService _themeService;
 
         public event EventHandler BackStackChanged;
 
@@ -67,12 +68,15 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <param name="context"></param>
         /// <param name="serviceProvider"></param>
+        /// <param name="themeService"></param>
         public NavigationService(
             IContext context,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            IThemeService themeService)
         {
             _context = context;
             _serviceProvider = serviceProvider;
+            _themeService = themeService;
         }
 
         /// <summary>
@@ -232,6 +236,19 @@ namespace ISynergy.Framework.UI.Services
                     DispatcherQueuePriority.Normal,
                     async () =>
                     {
+                        switch (_themeService.Style.Theme)
+                        {
+                            case Core.Enumerations.Themes.Light:
+                                _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                                break;
+                            case Core.Enumerations.Themes.Dark:
+                                _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                                break;
+                            default:
+                                _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                                break;
+                        }
+
                         // Check if actual page is the same as destination page.
                         if (_frame.Content is View originalView)
                         {
@@ -262,6 +279,19 @@ namespace ISynergy.Framework.UI.Services
                     DispatcherQueuePriority.Normal, 
                     async () =>
                     {
+                        switch (_themeService.Style.Theme)
+                        {
+                            case Core.Enumerations.Themes.Light:
+                                page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                                break;
+                            case Core.Enumerations.Themes.Dark:
+                                page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                                break;
+                            default:
+                                page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                                break;
+                        }
+
                         baseApplication.MainWindow.Content = page;
 
                         if (!page.ViewModel.IsInitialized)

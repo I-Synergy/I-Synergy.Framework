@@ -51,7 +51,15 @@ namespace ISynergy.Framework.UI.Services
         public Task OpenFileAsync(string fileToOpen) =>
             Launcher.Default.OpenAsync(new OpenFileRequest("", new ReadOnlyFile(fileToOpen)));
 
-        public Task<FileResult> SaveFileAsync(string filename, byte[] file)
+        /// <summary>
+        /// Saves file to folder async.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="filename"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Task<FileResult> SaveFileAsync(string folder, string filename, byte[] file)
         {
             throw new NotImplementedException();
         }

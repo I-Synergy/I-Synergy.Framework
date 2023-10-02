@@ -37,12 +37,14 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Determines the filename of the file what will be used.
         /// </summary>
+        /// <param name="folder"></param>
         /// <param name="filename">The filename.</param>
         /// <param name="file">The file.</param>
         /// <returns>FileResult.</returns>
-        public async Task<FileResult> SaveFileAsync(string filename, byte[] file)
+        public async Task<FileResult> SaveFileAsync(string folder, string filename, byte[] file)
         {
-            var createdFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(
+            var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
+            var createdFile = await storageFolder.CreateFileAsync(
                     filename,
                     CreationCollisionOption.ReplaceExisting);
 

@@ -6,6 +6,7 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Helpers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
@@ -13,6 +14,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
+using Windows.ApplicationModel.Activation;
 
 namespace ISynergy.Framework.UI
 {
@@ -90,7 +93,7 @@ namespace ISynergy.Framework.UI
             _logger.LogInformation("Finishing initialization of application");
         }
 
-        public abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
+        protected abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
 
         protected abstract IHostBuilder CreateHostBuilder();
 
@@ -167,9 +170,9 @@ namespace ISynergy.Framework.UI
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
         /// <param name="e">Event data for the event.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
-            MainWindow = new Microsoft.UI.Xaml.Window();
+            MainWindow = WindowHelper.CreateWindow();
 
             var rootFrame = MainWindow.Content as Frame;
 
@@ -189,10 +192,16 @@ namespace ISynergy.Framework.UI
                             Application.Current.Resources.MergedDictionaries.Add(item);
                     }
                 }
-
-                // Place the frame in the current Window
-                MainWindow.Content = rootFrame;
             }
+
+            if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Launch)
+                await HandleLaunchActivationAsync();
+
+            else if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Protocol)
+                await HandleProtocolActivationAsync();
+
+            // Place the frame in the current Window
+            MainWindow.Content = rootFrame;
 
             _logger.LogInformation("Loading theme");
             _themeService.SetStyle();
@@ -200,6 +209,10 @@ namespace ISynergy.Framework.UI
             MainWindow.Title = InfoService.Default.Title ?? string.Empty;
             MainWindow.Activate();
         }
+
+        protected virtual Task HandleLaunchActivationAsync() => Task.CompletedTask;
+
+        protected virtual Task HandleProtocolActivationAsync() => Task.CompletedTask;
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails

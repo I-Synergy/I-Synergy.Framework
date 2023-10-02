@@ -72,7 +72,7 @@ namespace Sample
             await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
         }
 
-        public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+        protected override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
         {
             if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
             {
