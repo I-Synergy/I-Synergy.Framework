@@ -13,6 +13,7 @@ namespace ISynergy.Framework.UI.Services
     {
         private readonly ILanguageService _languageService;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IThemeService _themeService;
         private readonly IContext _context;
         private Window _activeDialog = null;
 
@@ -22,14 +23,17 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="context"></param>
         /// <param name="serviceProvider"></param>
         /// <param name="languageService">The language service.</param>
+        /// <param name="themeService"></param>
         public DialogService(
             IContext context,
             IServiceProvider serviceProvider,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            IThemeService themeService)
         {
             _context = context;
             _serviceProvider = serviceProvider;
             _languageService = languageService;
+            _themeService = themeService;
         }
 
         /// <summary>
@@ -114,6 +118,19 @@ namespace ISynergy.Framework.UI.Services
 
             if (Application.Current is BaseApplication baseApplication)
                 dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+
+            switch (_themeService.Style.Theme)
+            {
+                case Core.Enumerations.Themes.Light:
+                    dialog.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                    break;
+                case Core.Enumerations.Themes.Dark:
+                    dialog.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                    break;
+                default:
+                    dialog.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                    break;
+            }
 
             switch (buttons)
             {
@@ -274,6 +291,19 @@ namespace ISynergy.Framework.UI.Services
             {
                 if (Application.Current is BaseApplication baseApplication)
                     window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+
+                switch (_themeService.Style.Theme)
+                {
+                    case Core.Enumerations.Themes.Light:
+                        window.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                        break;
+                    case Core.Enumerations.Themes.Dark:
+                        window.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                        break;
+                    default:
+                        window.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                        break;
+                }
 
                 window.ViewModel = viewmodel;
 

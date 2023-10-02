@@ -139,6 +139,8 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\ColorHelper.cs" Link="Helpers\ColorHelper.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\NavigationHelper.cs" Link="Helpers\NavigationHelper.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\ResourceHelper.cs" Link="Helpers\ResourceHelper.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\NativeHelper.cs" Link="Helpers\NativeHelper.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\WindowHelper.cs" Link="Helpers\WindowHelper.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Markup\EnumCollection.cs" Link="Markup\EnumCollection.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Markup\LanguageResource.cs" Link="Markup\LanguageResource.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Navigation\MenuItemTemplateSelector.cs" Link="Navigation\MenuItemTemplateSelector.cs" />

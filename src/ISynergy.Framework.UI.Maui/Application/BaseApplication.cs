@@ -45,6 +45,8 @@ namespace ISynergy.Framework.UI
 
         private Task Initialize { get; set; }
 
+        public AppTheme Theme { get; set; } = AppTheme.Dark;
+
         /// <summary>
         /// Default constructor.
         /// </summary>

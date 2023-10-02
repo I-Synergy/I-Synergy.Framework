@@ -97,8 +97,8 @@ namespace ISynergy.Framework.UI.Extensions
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IDispatcherService, DispatcherService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
-            services.AddTransient<IThemeService, ThemeService>();
-            services.AddTransient<IFileService<FileResult>, FileService>();
+            services.AddSingleton<IThemeService, ThemeService>();
+            services.AddSingleton<IFileService<FileResult>, FileService>();
 
             languageService.AddResourceManager(typeof(TResource));
 
