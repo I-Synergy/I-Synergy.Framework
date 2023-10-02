@@ -21,6 +21,7 @@
     
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
+            <RadioButton GroupName="Theme" Content="System" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <RadioButton GroupName="Theme" Content="Light" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <RadioButton GroupName="Theme" Content="Dark" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
