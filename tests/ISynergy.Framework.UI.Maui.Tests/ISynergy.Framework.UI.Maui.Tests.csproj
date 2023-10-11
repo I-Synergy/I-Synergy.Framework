@@ -58,8 +58,10 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.0-rc.2.9373" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.0-rc.2.9373" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
 	</ItemGroup>
