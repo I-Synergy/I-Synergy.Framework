@@ -234,7 +234,7 @@ Speichern Sie Ihre Arbeit, und starten Sie die Anwendung neu.</value>
 		<value>Update wird heruntergeladen und installiert...</value>
 	</data>
 	<data name="UpdateExecuteNow" xml:space="preserve">
-		<value>Möchten Sie wirklich ausführen?</value>
+		<value>Möchten Sie das Update wirklich jetzt installieren?</value>
 	</data>
 	<data name="UpdateFoundNewUpdate" xml:space="preserve">
 		<value>Es gibt ein neues Update.</value>
@@ -395,5 +395,9 @@ Nach Bestätigung Ihrer Anmeldung können Sie sich mit Ihrer E-Mail-Adresse und 
 	</data>
 	<data name="WarningUsernameSize" xml:space="preserve">
 		<value>Der Benutzername sollte mindestens 3 Zeichen enthalten.</value>
+	</data>
+	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
+		<value>Die obligatorische Paketaktualisierung ist fehlgeschlagen.
+Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsoft Store.</value>
 	</data>
 </root>

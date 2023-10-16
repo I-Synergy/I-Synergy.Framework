@@ -234,7 +234,7 @@ Sla uw werk op en start de toepassing opnieuw.</value>
 		<value>Update downloaden en installeren...</value>
 	</data>
 	<data name="UpdateExecuteNow" xml:space="preserve">
-		<value>Wil je dit zeker uitvoeren?</value>
+		<value>Wil je de update nu echt installeren?</value>
 	</data>
 	<data name="UpdateFoundNewUpdate" xml:space="preserve">
 		<value>Er is een nieuwe update.</value>
@@ -395,5 +395,9 @@ Na bevestiging van uw registratie kunt u uw e-mailadres en wachtwoord gebruiken 
 	</data>
 	<data name="WarningUsernameSize" xml:space="preserve">
 		<value>Gebruikersnaam moet ten minste 3 tekens bevatten.</value>
+	</data>
+	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
+		<value>De verplichte pakketupdate is mislukt.
+Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	</data>
 </root>

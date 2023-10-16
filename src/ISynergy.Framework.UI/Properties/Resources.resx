@@ -254,7 +254,7 @@ Save your work and restart the application.</value>
     <value>Downloading and installing update...</value>
   </data>
 	<data name="UpdateExecuteNow" xml:space="preserve">
-    <value>Do you really want to execute?</value>
+    <value>Do you really want to install the update now?</value>
   </data>
 	<data name="UpdateFoundNewUpdate" xml:space="preserve">
     <value>There is a new update.</value>
@@ -415,5 +415,9 @@ After confirmation of your registration you can use your e-mail address and pass
 	</data>
 	<data name="WarningUsernameSize" xml:space="preserve">
 		<value>Username should contain at least 3 characters.</value>
+	</data>
+	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
+		<value>The mandatory package update failed.
+Try again or update the application through the Microsoft Store.</value>
 	</data>
 </root>
