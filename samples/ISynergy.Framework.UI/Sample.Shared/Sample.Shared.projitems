@@ -14,7 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPrintingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IReportingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ISettingsService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IUpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\PublicationItemTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\QueryTypes.cs" />
@@ -36,7 +35,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ExceptionHandlerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
   </ItemGroup>
