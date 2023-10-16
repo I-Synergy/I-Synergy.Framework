@@ -234,7 +234,7 @@ Enregistrez votre travail et redémarrez l’application.</value>
 		<value>Téléchargement et installation de la mise à jour...</value>
 	</data>
 	<data name="UpdateExecuteNow" xml:space="preserve">
-		<value>Voulez-vous vraiment exécuter?</value>
+		<value>Voulez-vous vraiment installer la mise à jour maintenant ?</value>
 	</data>
 	<data name="UpdateFoundNewUpdate" xml:space="preserve">
 		<value>Il y a une nouvelle mise à jour.</value>
@@ -395,5 +395,9 @@ Après confirmation de votre inscription, vous pouvez utiliser votre adresse e-m
 	</data>
 	<data name="WarningUsernameSize" xml:space="preserve">
 		<value>Le nom d’utilisateur doit contenir au moins 3 caractères.</value>
+	</data>
+	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
+		<value>La mise à jour obligatoire du package a échoué.
+Réessayez ou mettez à jour l’application via le Microsoft Store.</value>
 	</data>
 </root>
