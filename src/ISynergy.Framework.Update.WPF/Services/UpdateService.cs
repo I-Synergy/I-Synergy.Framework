@@ -176,7 +176,7 @@ namespace ISynergy.Framework.Update.Services
         private Task HandleMandatoryPackageErrorAsync()
         {
             return _dialogService.ShowErrorAsync(
-                        _languageService.GetString("MandatoryUpdateFailed"));
+                        _languageService.GetString("WarningMandatoryUpdateFailed"));
         }
     }
 }
