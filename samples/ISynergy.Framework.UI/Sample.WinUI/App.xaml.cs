@@ -1,11 +1,15 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
+using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,13 +54,13 @@ namespace Sample
 
                     services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
-                    services.AddUpdatesIntegration();
-
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
+
+                    services.AddUpdatesIntegration();
                 })
                 .ConfigureLogging((context, logging) =>
                 {
@@ -69,6 +73,28 @@ namespace Sample
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             base.OnLaunched(e);
+
+            MainWindow.Content = new BusyIndicatorControl();
+
+            try
+            {
+                ServiceLocator.Default.GetInstance<IBusyService>().StartBusy(ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateCheckForUpdates"));
+
+                if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(
+                    ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateExecuteNow"),
+                    "Update",
+                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    ServiceLocator.Default.GetInstance<IBusyService>().BusyMessage = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateDownloadAndInstall");
+                    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
+                    Exit();
+                }
+            }
+            finally
+            {
+                ServiceLocator.Default.GetInstance<IBusyService>().EndBusy();
+            }
+
             await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
         }
 
