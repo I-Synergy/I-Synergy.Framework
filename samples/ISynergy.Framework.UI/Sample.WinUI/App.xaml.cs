@@ -6,7 +6,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.Update.Abstractions.Services;
@@ -17,11 +16,13 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
+using Microsoft.Windows.AppLifecycle;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
+using Windows.ApplicationModel.Activation;
 
 namespace Sample
 {
@@ -70,11 +71,9 @@ namespace Sample
                 });
         }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs e)
         {
             base.OnLaunched(e);
-
-            MainWindow.Content = new BusyIndicatorControl();
 
             try
             {
@@ -95,7 +94,25 @@ namespace Sample
                 ServiceLocator.Default.GetInstance<IBusyService>().EndBusy();
             }
 
-            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+            var activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+
+            if (activatedEventArgs.Kind == ExtendedActivationKind.Launch)
+            {
+                await HandleLaunchActivationAsync(activatedEventArgs.Data as Windows.ApplicationModel.Activation.LaunchActivatedEventArgs);
+            }
+            else if (activatedEventArgs.Kind == ExtendedActivationKind.Protocol)
+            {
+                await HandleProtocolActivationAsync(activatedEventArgs.Data as ProtocolActivatedEventArgs);
+            }
+            else if (Environment.GetCommandLineArgs().Length > 1)
+            {
+                foreach (var arg in Environment.GetCommandLineArgs())
+                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(arg, "Environment");
+            }
+            else
+            {
+                await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+            }
         }
 
         protected override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
@@ -113,6 +130,16 @@ namespace Sample
                     await navigationService.NavigateModalAsync<AuthenticationViewModel>();
                 }
             }
+        }
+
+        private async Task HandleProtocolActivationAsync(ProtocolActivatedEventArgs e)
+        {
+            await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{e.Uri}", "ProtocolActivatedEventArgs");
+        }
+
+        private async Task HandleLaunchActivationAsync(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs e)
+        {
+            await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{e.Arguments}", "LaunchActivatedEventArgs");
         }
     }
 }
