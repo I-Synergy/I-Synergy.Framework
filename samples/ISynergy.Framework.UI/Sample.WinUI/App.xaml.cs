@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -66,7 +67,7 @@ namespace Sample
                 .ConfigureLogging((context, logging) =>
                 {
                     logging.AddDebug();
-                    //logging.AddAppCenterLogging(context.Configuration);
+                    logging.AddAppCenterLogging(context.Configuration);
                     //logging.AddSentryLogging(context.Configuration);
                 });
         }
@@ -94,25 +95,26 @@ namespace Sample
                 ServiceLocator.Default.GetInstance<IBusyService>().EndBusy();
             }
 
-            var activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+            //var activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+            //if (activatedEventArgs.Kind == ExtendedActivationKind.Launch)
+            //{
+            //    await HandleLaunchActivationAsync(activatedEventArgs.Data as Windows.ApplicationModel.Activation.LaunchActivatedEventArgs);
+            //}
+            //else if (activatedEventArgs.Kind == ExtendedActivationKind.Protocol)
+            //{
+            //    await HandleProtocolActivationAsync(activatedEventArgs.Data as ProtocolActivatedEventArgs);
+            //}
+            //else if (Environment.GetCommandLineArgs().Length > 1)
+            //{
+            //    foreach (var arg in Environment.GetCommandLineArgs())
+            //        await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(arg, "Environment");
+            //}
+            //else
+            //{
+            //    await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+            //}
 
-            if (activatedEventArgs.Kind == ExtendedActivationKind.Launch)
-            {
-                await HandleLaunchActivationAsync(activatedEventArgs.Data as Windows.ApplicationModel.Activation.LaunchActivatedEventArgs);
-            }
-            else if (activatedEventArgs.Kind == ExtendedActivationKind.Protocol)
-            {
-                await HandleProtocolActivationAsync(activatedEventArgs.Data as ProtocolActivatedEventArgs);
-            }
-            else if (Environment.GetCommandLineArgs().Length > 1)
-            {
-                foreach (var arg in Environment.GetCommandLineArgs())
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(arg, "Environment");
-            }
-            else
-            {
-                await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
-            }
+            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
         }
 
         protected override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
