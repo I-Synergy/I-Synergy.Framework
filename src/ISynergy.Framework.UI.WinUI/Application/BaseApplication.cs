@@ -6,6 +6,7 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Helpers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -170,38 +171,22 @@ namespace ISynergy.Framework.UI
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
         /// <param name="e">Event data for the event.</param>
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             MainWindow = WindowHelper.CreateWindow();
+            MainWindow.Content = new BusyIndicatorControl();
 
-            var rootFrame = MainWindow.Content as Frame;
+            // Add custom resourcedictionaries from code.
+            var dictionary = Application.Current.Resources?.MergedDictionaries;
 
-            if (rootFrame is null)
+            if (dictionary is not null)
             {
-                rootFrame = new Frame();
-                rootFrame.NavigationFailed += OnNavigationFailed;
-
-                // Add custom resourcedictionaries from code.
-                var dictionary = Application.Current.Resources?.MergedDictionaries;
-
-                if (dictionary is not null)
+                foreach (var item in GetAdditionalResourceDictionaries())
                 {
-                    foreach (var item in GetAdditionalResourceDictionaries())
-                    {
-                        if (!dictionary.Any(t => t.Source == item.Source))
-                            Application.Current.Resources.MergedDictionaries.Add(item);
-                    }
+                    if (!dictionary.Any(t => t.Source == item.Source))
+                        Application.Current.Resources.MergedDictionaries.Add(item);
                 }
             }
-
-            if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Launch)
-                await HandleLaunchActivationAsync(e.Arguments);
-
-            else if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Protocol)
-                await HandleProtocolActivationAsync(e.Arguments);
-
-            // Place the frame in the current Window
-            MainWindow.Content = rootFrame;
 
             _logger.LogInformation("Loading theme");
             _themeService.SetStyle();
@@ -209,11 +194,6 @@ namespace ISynergy.Framework.UI
             MainWindow.Title = InfoService.Default.Title ?? string.Empty;
             MainWindow.Activate();
         }
-
-
-        protected virtual Task HandleLaunchActivationAsync(string arguments) => Task.CompletedTask;
-
-        protected virtual Task HandleProtocolActivationAsync(string arguments) => Task.CompletedTask;
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails
