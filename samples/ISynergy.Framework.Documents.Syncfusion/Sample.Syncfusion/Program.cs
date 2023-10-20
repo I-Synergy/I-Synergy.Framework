@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ISynergy.Framework.Documents.Extensions;
 using System;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Sample.Syncfusion
 {
@@ -14,13 +15,14 @@ namespace Sample.Syncfusion
                 IConfigurationRoot config = new ConfigurationBuilder()
                 .Build();
 
-                ServiceProvider serviceProvider = new ServiceCollection()
+                var services = new ServiceCollection()
                     .AddLogging()
-                    .AddOptions()
-                    .AddDocumentsSyncfusionIntegration(config)
-                    .AddScoped<Startup>()
-                    .BuildServiceProvider();
+                    .AddOptions();
+                    
+                services.AddDocumentsSyncfusionIntegration(config);
+                services.TryAddScoped<Startup>();
 
+                var serviceProvider = services.BuildServiceProvider();
                 Startup application = serviceProvider.GetRequiredService<Startup>();
                 await application.RunAsync();
             }

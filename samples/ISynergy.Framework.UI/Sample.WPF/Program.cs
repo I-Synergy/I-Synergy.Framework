@@ -35,8 +35,8 @@ namespace Sample
                         x.Name.StartsWith(typeof(App).Namespace) ||
                         x.FullName.Equals(typeof(Identifier).Assembly.FullName));
 
-                    services.AddSingleton<IAuthenticationService, AuthenticationService>();
-                    services.AddSingleton<IUnitConversionService, UnitConversionService>();
+                    services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                    services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());

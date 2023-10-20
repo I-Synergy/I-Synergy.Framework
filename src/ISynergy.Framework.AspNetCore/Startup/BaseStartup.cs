@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -235,7 +236,7 @@ namespace ISynergy.Framework.AspNetCore.Startup
         protected virtual void AddLogging(IServiceCollection services)
         {
             services.AddLogging();
-            services.AddSingleton((s) => new LoggerFactory().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+            services.TryAddSingleton((s) => new LoggerFactory().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
         }
 
         /// <summary>

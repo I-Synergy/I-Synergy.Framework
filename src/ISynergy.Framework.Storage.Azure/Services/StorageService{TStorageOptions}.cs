@@ -21,30 +21,21 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// The azure document options
         /// </summary>
         private readonly TStorageOptions _storageOptions;
-        /// <summary>
-        /// The cloud storage account
-        /// </summary>
-        private readonly BlobContainerClient _blobContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}"/> class.
         /// </summary>
         /// <param name="storageOptions">The azure BLOB options.</param>
-        /// <param name="containerName">Name of the container.</param>
-        public StorageService(IOptions<TStorageOptions> storageOptions, string containerName)
+        public StorageService(IOptions<TStorageOptions> storageOptions)
         {
             Argument.IsNotNull(storageOptions.Value);
-            Argument.IsNotNullOrEmpty(containerName);
-
             _storageOptions = storageOptions.Value;
-
-            _blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
-            _blobContainer.CreateIfNotExists(PublicAccessType.Blob);
         }
 
         /// <summary>
         /// upload file as an asynchronous operation.
         /// </summary>
+        /// <param name="containerName"></param>
         /// <param name="fileBytes">The file stream.</param>
         /// <param name="contentType">Type of the content.</param>
         /// <param name="filename">The filename.</param>
@@ -54,9 +45,14 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <returns>Uri.</returns>
         /// <exception cref="IOException">CloudBlob not found.</exception>
         /// <exception cref="IOException">CloudBlob not found.</exception>
-        public async Task<Uri> UploadFileAsync(byte[] fileBytes, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
+        public async Task<Uri> UploadFileAsync(string containerName, byte[] fileBytes, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
         {
-            if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
+            Argument.IsNotNullOrEmpty(containerName);
+
+            var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
+            blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+
+            if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
                 await blobClient.UploadAsync(
                         new MemoryStream(fileBytes),
@@ -77,15 +73,21 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <summary>
         /// download file as an asynchronous operation.
         /// </summary>
+        /// <param name="containerName"></param>
         /// <param name="filename">The filename.</param>
         /// <param name="folder">The folder.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>MemoryStream.</returns>
-        public async Task<byte[]> DownloadFileAsync(string filename, string folder, CancellationToken cancellationToken = default)
+        public async Task<byte[]> DownloadFileAsync(string containerName, string filename, string folder, CancellationToken cancellationToken = default)
         {
+            Argument.IsNotNullOrEmpty(containerName);
+
+            var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
+
+            blobContainer.CreateIfNotExists(PublicAccessType.Blob);
             var stream = new MemoryStream();
 
-            if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
+            if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
                 await blobClient
                     .DownloadToAsync(stream, cancellationToken)
@@ -100,6 +102,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <summary>
         /// update file as an asynchronous operation.
         /// </summary>
+        /// <param name="containerName"></param>
         /// <param name="fileBytes">The file stream.</param>
         /// <param name="contentType">Type of the content.</param>
         /// <param name="filename">The filename.</param>
@@ -108,9 +111,14 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <returns>Uri.</returns>
         /// <exception cref="IOException">CloudBlob not found.</exception>
         /// <exception cref="IOException">CloudBlob not found.</exception>
-        public async Task<Uri> UpdateFileAsync(byte[] fileBytes, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
+        public async Task<Uri> UpdateFileAsync(string containerName, byte[] fileBytes, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
         {
-            if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
+            Argument.IsNotNullOrEmpty(containerName);
+
+            var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
+            blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+
+            if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
                 await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
@@ -134,13 +142,19 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <summary>
         /// remove file as an asynchronous operation.
         /// </summary>
+        /// <param name="containerName"></param>
         /// <param name="filename">The filename.</param>
         /// <param name="folder">The folder.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
-        public async Task<bool> RemoveFileAsync(string filename, string folder, CancellationToken cancellationToken = default)
+        public async Task<bool> RemoveFileAsync(string containerName, string filename, string folder, CancellationToken cancellationToken = default)
         {
-            if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
+            Argument.IsNotNullOrEmpty(containerName);
+
+            var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
+            blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+
+            if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
                 return await blobClient.DeleteIfExistsAsync()
                     .ConfigureAwait(false);

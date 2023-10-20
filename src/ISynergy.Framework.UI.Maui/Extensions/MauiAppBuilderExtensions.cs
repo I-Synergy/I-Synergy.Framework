@@ -77,28 +77,28 @@ namespace ISynergy.Framework.UI.Extensions
             languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
 
             // Register singleton services
-            appBuilder.Services.AddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
+            appBuilder.Services.TryAddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
             {
                 builder.AddDebug();
                 builder.SetMinimumLevel(LogLevel.Trace);
             }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
 
-            appBuilder.Services.AddSingleton<IInfoService>(s => InfoService.Default);
-            appBuilder.Services.AddSingleton<ILanguageService>(s => LanguageService.Default);
-            appBuilder.Services.AddSingleton<IMessageService>(s => MessageService.Default);
+            appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
+            appBuilder.Services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
+            appBuilder.Services.TryAddSingleton<IMessageService>(s => MessageService.Default);
 
-            appBuilder.Services.AddSingleton<IContext, TContext>();
-            appBuilder.Services.AddSingleton<INavigationService, NavigationService>();
-            appBuilder.Services.AddSingleton<ILocalizationService, LocalizationService>();
-            appBuilder.Services.AddSingleton<IConverterService, ConverterService>();
-            appBuilder.Services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
-            appBuilder.Services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
-            appBuilder.Services.AddSingleton<IBusyService, BusyService>();
-            appBuilder.Services.AddSingleton<IDialogService, DialogService>();
-            appBuilder.Services.AddSingleton<IDispatcherService, DispatcherService>();
-            appBuilder.Services.AddSingleton<IClipboardService, ClipboardService>();
-            appBuilder.Services.AddSingleton<IThemeService, ThemeService>();
-            appBuilder.Services.AddSingleton<IFileService<FileResult>, FileService>();
+            appBuilder.Services.TryAddSingleton<IContext, TContext>();
+            appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
+            appBuilder.Services.TryAddSingleton<ILocalizationService, LocalizationService>();
+            appBuilder.Services.TryAddSingleton<IConverterService, ConverterService>();
+            appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
+            appBuilder.Services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
+            appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
+            appBuilder.Services.TryAddSingleton<IDialogService, DialogService>();
+            appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
+            appBuilder.Services.TryAddSingleton<IClipboardService, ClipboardService>();
+            appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();
+            appBuilder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
             languageService.AddResourceManager(typeof(TResource));
 
@@ -193,9 +193,9 @@ namespace ISynergy.Framework.UI.Extensions
                         && q.Name != nameof(IViewModel));
 
                 if (abstraction is not null && !viewmodel.IsGenericType && abstraction != typeof(IQueryAttributable))
-                    appBuilder.Services.AddScoped(abstraction, viewmodel);
+                    appBuilder.Services.TryAddScoped(abstraction, viewmodel);
 
-                appBuilder.Services.AddScoped(viewmodel);
+                appBuilder.Services.TryAddScoped(viewmodel);
             }
 
             foreach (var view in ViewTypes.Distinct())
@@ -207,9 +207,9 @@ namespace ISynergy.Framework.UI.Extensions
                         && q.Name != nameof(IView));
 
                 if (abstraction is not null)
-                    appBuilder.Services.AddTransient(abstraction, view);
+                    appBuilder.Services.TryAddTransient(abstraction, view);
 
-                appBuilder.Services.AddTransient(view);
+                appBuilder.Services.TryAddTransient(view);
             }
 
             foreach (var window in WindowTypes.Distinct())
@@ -221,14 +221,14 @@ namespace ISynergy.Framework.UI.Extensions
                         && q.Name != nameof(IWindow));
 
                 if (abstraction is not null)
-                    appBuilder.Services.AddTransient(abstraction, window);
+                    appBuilder.Services.TryAddTransient(abstraction, window);
 
-                appBuilder.Services.AddTransient(window);
+                appBuilder.Services.TryAddTransient(window);
             }
 
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
             {
-                appBuilder.Services.AddSingleton(bootstrapper);
+                appBuilder.Services.TryAddSingleton(bootstrapper);
             }
         }
 

@@ -56,15 +56,18 @@
 			</ItemGroup>
 		</Otherwise>
 	</Choose>
-
+	
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="Controls\BladeView\BladeView.xaml" />
 		<None Remove="Controls\Buttons\BaseDialogButtons.xaml" />
 		<None Remove="Controls\Console\Console.xaml" />
 		<None Remove="Controls\ErrorPresenter\ErrorPresenter.xaml" />
+		<None Remove="Controls\Expander\Expander.xaml" />
+		<None Remove="Controls\HeaderedContentControl\HeaderedContentControl.xaml" />
 		<None Remove="Controls\ImageBrowser\ImageBrowser.xaml" />
 		<None Remove="Controls\ImageView\ImageView.xaml" />
 		<None Remove="Controls\Menu\BaseMenu.xaml" />
@@ -158,6 +161,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Page Include="Controls\BladeView\BladeView.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="Controls\Buttons\BaseDialogButtons.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -166,6 +173,14 @@
 		</Page>
 		<Page Include="Controls\ErrorPresenter\ErrorPresenter.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Controls\Expander\Expander.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\ImageBrowser\ImageBrowser.xaml">
 			<Generator>MSBuild:Compile</Generator>

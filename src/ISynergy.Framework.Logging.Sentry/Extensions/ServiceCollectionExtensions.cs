@@ -2,6 +2,7 @@
 using ISynergy.Framework.Logging.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Sentry;
 
@@ -21,7 +22,7 @@ namespace ISynergy.Framework.Logging.Extensions
         public static ILoggingBuilder AddSentryLogging(this ILoggingBuilder builder, IConfiguration configuration)
         {
             builder.Services.Configure<SentryOptions>(configuration.GetSection(nameof(SentryOptions)).BindWithReload);
-            builder.Services.AddSingleton<ILogger, Logger>();
+            builder.Services.TryAddSingleton<ILogger, Logger>();
             return builder;
         }
     }

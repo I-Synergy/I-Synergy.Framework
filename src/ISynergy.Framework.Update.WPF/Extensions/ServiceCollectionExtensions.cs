@@ -4,6 +4,7 @@ using ISynergy.Framework.Update.Options;
 using ISynergy.Framework.Update.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Update.Extensions
 {
@@ -21,7 +22,7 @@ namespace ISynergy.Framework.Update.Extensions
         public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).BindWithReload);
-            services.AddSingleton<IUpdateService, UpdateService>();
+            services.TryAddSingleton<IUpdateService, UpdateService>();
             return services;
         }
     }
