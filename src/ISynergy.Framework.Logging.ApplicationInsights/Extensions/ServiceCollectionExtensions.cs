@@ -3,6 +3,7 @@ using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Logging.Extensions
@@ -21,7 +22,7 @@ namespace ISynergy.Framework.Logging.Extensions
         public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, IConfiguration configuration)
         {
             builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
-            builder.Services.AddSingleton<ILogger, Logger>();
+            builder.Services.TryAddSingleton<ILogger, Logger>();
 
             return builder;
         }

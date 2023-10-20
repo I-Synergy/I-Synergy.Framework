@@ -23,7 +23,7 @@ namespace NugetUnlister.Extensions
 
             services.Configure<NugetOptions>(configuration.GetSection(nameof(NugetOptions)).BindWithReload);
 
-            services.AddScoped<INugetService, NugetService>();
+            services.TryAddScoped<INugetService, NugetService>();
             return services;
         }
     }

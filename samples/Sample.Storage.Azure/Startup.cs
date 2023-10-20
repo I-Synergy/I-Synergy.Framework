@@ -8,6 +8,7 @@ namespace Sample.Storage.Azure
     public class Startup
     {
         private readonly IStorageService _storageService;
+        private readonly string _container = Guid.Parse("ECEB4346-97AD-4919-9248-3EA1012FCA47").ToString();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -65,22 +66,22 @@ namespace Sample.Storage.Azure
             // Open the file and upload its data
             byte[] file = await File.ReadAllBytesAsync(path);
 
-            return await _storageService.UploadFileAsync(file, "text/plain", fileName, "");
+            return await _storageService.UploadFileAsync(_container, file, "text/plain", fileName, "");
         }
 
         public Task<byte[]> DownloadAsync(string fileName)
         {
-            return _storageService.DownloadFileAsync(fileName, "");
+            return _storageService.DownloadFileAsync(_container, fileName, "");
         }
 
         public Task<Uri> UpdateAsync(byte[] fileBytes, string fileName)
         {
-            return _storageService.UpdateFileAsync(fileBytes, "text/plain", fileName, "");
+            return _storageService.UpdateFileAsync(_container, fileBytes, "text/plain", fileName, "");
         }
 
         public Task<bool> RemoveAsync(string fileName)
         {
-            return _storageService.RemoveFileAsync(fileName, "");
+            return _storageService.RemoveFileAsync(_container, fileName, "");
         }
 
         /// <summary>

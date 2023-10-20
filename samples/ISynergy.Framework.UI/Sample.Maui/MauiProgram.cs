@@ -42,10 +42,10 @@ namespace Sample
                 })
                 .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(x => x.Name.StartsWith(typeof(MauiProgram).Namespace));
 
-            builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            builder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
 
-            builder.Services.AddSingleton<IBaseApplicationSettingsService, AppSettingsService>();
-            builder.Services.AddSingleton<ISettingsService<Setting>, SettingsService>();
+            builder.Services.TryAddSingleton<IBaseApplicationSettingsService, AppSettingsService>();
+            builder.Services.TryAddSingleton<ISettingsService<Setting>, SettingsService>();
 
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());

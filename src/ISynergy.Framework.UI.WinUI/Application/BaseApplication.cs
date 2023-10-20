@@ -195,10 +195,10 @@ namespace ISynergy.Framework.UI
             }
 
             if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Launch)
-                await HandleLaunchActivationAsync();
+                await HandleLaunchActivationAsync(e.Arguments);
 
             else if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Protocol)
-                await HandleProtocolActivationAsync();
+                await HandleProtocolActivationAsync(e.Arguments);
 
             // Place the frame in the current Window
             MainWindow.Content = rootFrame;
@@ -210,9 +210,10 @@ namespace ISynergy.Framework.UI
             MainWindow.Activate();
         }
 
-        protected virtual Task HandleLaunchActivationAsync() => Task.CompletedTask;
 
-        protected virtual Task HandleProtocolActivationAsync() => Task.CompletedTask;
+        protected virtual Task HandleLaunchActivationAsync(string arguments) => Task.CompletedTask;
+
+        protected virtual Task HandleProtocolActivationAsync(string arguments) => Task.CompletedTask;
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails

@@ -6,6 +6,7 @@ using ISynergy.Framework.Documents.Models;
 using ISynergy.Framework.Documents.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Documents.Extensions
 {
@@ -24,8 +25,8 @@ namespace ISynergy.Framework.Documents.Extensions
         {
             services.AddOptions();
             services.Configure<SyncfusionLicenseOptions>(configuration.GetSection(nameof(SyncfusionLicenseOptions)).BindWithReload);
-            services.AddSingleton<ILanguageService, LanguageService>();
-            services.AddSingleton<IDocumentService, DocumentService>();
+            services.TryAddSingleton<ILanguageService, LanguageService>();
+            services.TryAddSingleton<IDocumentService, DocumentService>();
 
             return services;
         }

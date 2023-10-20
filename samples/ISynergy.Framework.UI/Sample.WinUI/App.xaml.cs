@@ -52,7 +52,7 @@ namespace Sample
                 {
                     services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
 
-                    services.AddSingleton<IAuthenticationService, AuthenticationService>();
+                    services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());

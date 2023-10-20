@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace Sample.ApplicationInsights
@@ -29,13 +30,15 @@ namespace Sample.ApplicationInsights
                 var infoService = InfoService.Default;
                 infoService.LoadAssembly(assembly);
 
-                ServiceProvider serviceProvider = new ServiceCollection()
+                var services = new ServiceCollection()
                     .AddLogging(builder => builder.AddApplicationInsightsLogging(config))
-                    .AddOptions()
-                    .AddScoped<IContext, Context>()
-                    .AddSingleton<IInfoService>(s => InfoService.Default)
-                    .AddScoped<Startup>()
-                    .BuildServiceProvider();
+                    .AddOptions();
+
+                services.TryAddScoped<IContext, Context>();
+                services.TryAddSingleton<IInfoService>(s => infoService);
+                services.TryAddScoped<Startup>();
+
+                var serviceProvider = services.BuildServiceProvider();
 
                 Startup application = serviceProvider.GetRequiredService<Startup>();
                 application.Run();
