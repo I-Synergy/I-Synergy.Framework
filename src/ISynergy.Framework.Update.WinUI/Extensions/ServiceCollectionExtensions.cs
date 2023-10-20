@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Update.Extensions
 {
@@ -16,7 +17,7 @@ namespace ISynergy.Framework.Update.Extensions
         /// <returns></returns>
         public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services)
         {
-            services.AddSingleton<IUpdateService, UpdateService>();
+            services.TryAddSingleton<IUpdateService, UpdateService>();
             return services;
         }
     }

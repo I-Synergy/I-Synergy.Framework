@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Storage.Azure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.Storage.Azure.Options;
 using System;
 
@@ -28,14 +29,15 @@ namespace Sample.Storage.Azure
                     ConnectionString = config["AzureBlobOptions:ConnectionString"]
                 };
 
-                ServiceProvider services = new ServiceCollection()
+                var services = new ServiceCollection()
                     .AddLogging()
-                    .AddOptions()
-                    .AddStorageAzureIntegration<AzureBlobOptions>(config, Guid.Parse("ECEB4346-97AD-4919-9248-3EA1012FCA47").ToString())
-                    .AddSingleton<Startup>()
-                    .BuildServiceProvider();
+                    .AddOptions();
 
-                Startup application = services.GetRequiredService<Startup>();
+                services.AddStorageAzureIntegration<AzureBlobOptions>(config);
+                services.TryAddScoped<Startup>();
+
+                var serviceProvider = services.BuildServiceProvider();
+                Startup application = serviceProvider.GetRequiredService<Startup>();
                 application.RunAsync().GetAwaiter().GetResult();
             }
             catch (Exception e)

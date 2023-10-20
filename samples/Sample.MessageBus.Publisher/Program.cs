@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.MessageBus.Azure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.MessageBus.Models;
 using System;
 
@@ -25,12 +26,14 @@ namespace Sample.MessageBus.Publisher
                 .AddUserSecrets<Program>()
                 .Build();
 
-                ServiceProvider serviceProvider = new ServiceCollection()
+                var services = new ServiceCollection()
                     .AddLogging()
                     .AddOptions()
-                    .AddMessageBusAzurePublishIntegration<TestDataModel>(config)
-                    .AddSingleton<ApplicationAzure>()
-                    .BuildServiceProvider();
+                    .AddMessageBusAzurePublishIntegration<TestDataModel>(config);
+
+                services.TryAddSingleton<ApplicationAzure>();
+
+                var serviceProvider = services.BuildServiceProvider();
 
                 ApplicationAzure application = serviceProvider.GetRequiredService<ApplicationAzure>();
                 application.RunAsync().GetAwaiter().GetResult();

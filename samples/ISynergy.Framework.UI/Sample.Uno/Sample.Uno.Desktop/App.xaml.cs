@@ -43,7 +43,7 @@ namespace Sample
                 {
                     services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
 
-                    services.AddSingleton<IAuthenticationService, AuthenticationService>();
+                    services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());
@@ -79,7 +79,7 @@ namespace Sample
             await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
         }
 
-        public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+        protected override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
         {
             if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
             {

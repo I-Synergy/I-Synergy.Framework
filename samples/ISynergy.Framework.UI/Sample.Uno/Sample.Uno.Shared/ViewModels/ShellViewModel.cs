@@ -129,7 +129,6 @@ namespace Sample.ViewModels
             ListViewTestCommand = new AsyncRelayCommand(OpenListViewTestAsync);
             ValidationTestCommand = new AsyncRelayCommand(OpenValidationTestAsync);
             TreeNodeTestCommand = new AsyncRelayCommand(OpenTreenNodeTestAsync);
-            LoginCommand = new AsyncRelayCommand(OpenLoginAsync);
 
             PopulateNavItems();
         }

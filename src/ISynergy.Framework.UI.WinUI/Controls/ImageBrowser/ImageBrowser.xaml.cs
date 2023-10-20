@@ -46,6 +46,15 @@ namespace ISynergy.Framework.UI.Controls
         // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(nameof(FileName), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
 
+        public DateTimeOffset DateTime
+        {
+            get { return (DateTimeOffset)GetValue(DateTimeProperty); }
+            set { SetValue(DateTimeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DateTimeProperty = DependencyProperty.Register(nameof(DateTime), typeof(DateTimeOffset), typeof(ImageBrowser), new PropertyMetadata(DateTimeOffset.Now));
+
         /// <summary>
         /// ImageBrowser constructor.
         /// </summary>
@@ -70,6 +79,7 @@ namespace ISynergy.Framework.UI.Controls
                     FileBytes = result.First().File;
                     ContentType = result.First().FilePath.ToContentType();
                     FileName = result.First().FileName;
+                    DateTime = System.DateTime.Now;
                 }
             };
         }
@@ -89,6 +99,7 @@ namespace ISynergy.Framework.UI.Controls
                     FileBytes = result.File;
                     ContentType = result.FilePath.ToContentType();
                     FileName = result.FileName;
+                    DateTime = System.DateTime.Now;
                 }
             };
         }
@@ -116,7 +127,8 @@ namespace ISynergy.Framework.UI.Controls
                 {
                     FileBytes = result;
                     ContentType = "image/png";
-                    FileName = $"FROM_CLIPBOARD_{DateTime.Now}";
+                    FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
+                    DateTime = System.DateTime.Now;
                 }
             }
         }
