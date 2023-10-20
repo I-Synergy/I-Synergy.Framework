@@ -199,7 +199,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         public async Task DeleteAsync(TEntity e)
         {
             string item;
-            if (e.GetType().GetProperty("Description").GetValue(e) is string value)
+            if (e.GetType().GetProperty("Description")?.GetValue(e) is string value)
             {
                 item = value;
             }

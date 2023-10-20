@@ -4,6 +4,7 @@ using ISynergy.Framework.Monitoring.Client.Services;
 using ISynergy.Framework.Monitoring.Common.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Monitoring.Client.Extensions
 {
@@ -22,7 +23,7 @@ namespace ISynergy.Framework.Monitoring.Client.Extensions
         {
             services.AddOptions();
             services.Configure<ClientMonitorOptions>(configuration.GetSection(nameof(ClientMonitorOptions)).BindWithReload);
-            services.AddSingleton<IClientMonitorService, ClientMonitorService>();
+            services.TryAddSingleton<IClientMonitorService, ClientMonitorService>();
             return services;
         }
     }

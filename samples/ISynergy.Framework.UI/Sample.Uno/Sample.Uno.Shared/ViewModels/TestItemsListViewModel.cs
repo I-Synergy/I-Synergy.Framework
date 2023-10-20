@@ -88,8 +88,6 @@ namespace Sample.ViewModels
         {
             CommonServices = commonService;
 
-            SubmitCommand = new AsyncRelayCommand<TestItem>(SubmitAsync);
-            SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
             ClearCommand = new RelayCommand(ClearItems);
 
             Query = string.Empty;
