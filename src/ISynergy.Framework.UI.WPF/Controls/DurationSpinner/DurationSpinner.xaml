@@ -9,8 +9,14 @@
              d:DesignHeight="26" d:DesignWidth="250">
 
     <UserControl.Resources>
-        <converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
-        <converters:MaskToRegexConverter x:Key="MaskToRegexConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
+            <converters:MaskToRegexConverter x:Key="MaskToRegexConverter"/>
+        </ResourceDictionary>
     </UserControl.Resources>
     
     <Grid>

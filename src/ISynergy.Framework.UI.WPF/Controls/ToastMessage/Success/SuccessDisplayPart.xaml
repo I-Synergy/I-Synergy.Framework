@@ -8,6 +8,14 @@
     mc:Ignorable="d" 
     d:DesignWidth="250">
 
+    <dp:NotificationDisplayPart.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </dp:NotificationDisplayPart.Resources>
+
     <Border x:Name="ContentWrapper" Style="{DynamicResource NotificationBorder}" Background="{DynamicResource SuccessColorBrush}">
         <Grid x:Name="ContentContainer">
             <Grid.ColumnDefinitions>
