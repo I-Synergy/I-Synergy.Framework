@@ -29,14 +29,15 @@
                             SelectionMode="Single"
                             HorizontalOptions="Center">
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="6" />
+                    <GridItemsLayout
+                        Orientation="Vertical" 
+                        Span="6" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Ellipse Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
-                                 WidthRequest="28"
-                                 HeightRequest="28"
-                                 Margin="4"
+                                 WidthRequest="32"
+                                 HeightRequest="32"
                                  ToolTipProperties.Text="{Binding}"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

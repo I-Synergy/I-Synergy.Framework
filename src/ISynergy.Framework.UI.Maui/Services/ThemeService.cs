@@ -11,9 +11,9 @@ namespace ISynergy.Framework.UI.Services
     /// <seealso cref="IThemeService" />
     public class ThemeService : IThemeService
     {
-        private const string AccentColor = nameof(AccentColor);
-        private const string AccentColorLight = nameof(AccentColorLight);
-        private const string AccentColorDark = nameof(AccentColorDark);
+        private const string Primary = nameof(Primary);
+        private const string Secondary = nameof(Secondary);
+        private const string Tertiary = nameof(Tertiary);
 
         private readonly IBaseApplicationSettingsService _applicationSettingsService;
 
@@ -63,14 +63,14 @@ namespace ISynergy.Framework.UI.Services
                 foreach (var item in additionalResourceDictionaries.Reverse())
                 {
                     // Accent color.
-                    if (item.ContainsKey(AccentColor) && item[AccentColor] is Color accentColor)
+                    if (item.ContainsKey(Primary) && item[Primary] is Color accentColor)
                     {
                         Application.AccentColor = accentColor;
 
-                        item.Remove(AccentColor);
+                        item.Remove(Primary);
 
-                        if (!application.Resources.ContainsKey(nameof(AccentColor)))
-                            application.Resources.Add(nameof(AccentColor), accentColor);
+                        if (!application.Resources.ContainsKey(nameof(Primary)))
+                            application.Resources.Add(nameof(Primary), accentColor);
 
                         if (!application.Resources.ContainsKey("colorPrimary"))
                             application.Resources.Add("colorPrimary", accentColor);
@@ -80,35 +80,35 @@ namespace ISynergy.Framework.UI.Services
                     }
 
                     // Accent color light.
-                    if (item.ContainsKey(AccentColorLight) && item[AccentColorLight] is Color accentColorLight)
+                    if (item.ContainsKey(Secondary) && item[Secondary] is Color accentColorLight)
                     {
-                        item.Remove(AccentColorLight);
+                        item.Remove(Secondary);
 
-                        if (!application.Resources.ContainsKey(nameof(AccentColorLight)))
-                            application.Resources.Add(nameof(AccentColorLight), accentColorLight);
+                        if (!application.Resources.ContainsKey(nameof(Secondary)))
+                            application.Resources.Add(nameof(Secondary), accentColorLight);
                     }
 
                     // Accent color dark
-                    if (item.ContainsKey(AccentColorDark) && item[AccentColorDark] is Color accentColorDark)
+                    if (item.ContainsKey(Tertiary) && item[Tertiary] is Color accentColorDark)
                     {
-                        item.Remove(AccentColorDark);
+                        item.Remove(Tertiary);
 
-                        if (!application.Resources.ContainsKey(nameof(AccentColorDark)))
-                            application.Resources.Add(nameof(AccentColorDark), accentColorDark);
+                        if (!application.Resources.ContainsKey(nameof(Tertiary)))
+                            application.Resources.Add(nameof(Tertiary), accentColorDark);
 
                         if (!application.Resources.ContainsKey("colorPrimaryDark"))
                             application.Resources.Add("colorPrimaryDark", accentColorDark);
                     }
                 }
 
-                if (!application.Resources.ContainsKey(nameof(AccentColor)))
-                    application.Resources.Add(nameof(AccentColor), Application.AccentColor);
+                if (!application.Resources.ContainsKey(nameof(Primary)))
+                    application.Resources.Add(nameof(Primary), Application.AccentColor);
 
-                if (!application.Resources.ContainsKey(nameof(AccentColorLight)))
-                    application.Resources.Add(nameof(AccentColorLight), Application.AccentColor.AddLuminosity(0.25f));
+                if (!application.Resources.ContainsKey(nameof(Secondary)))
+                    application.Resources.Add(nameof(Secondary), Application.AccentColor.AddLuminosity(0.25f));
 
-                if (!application.Resources.ContainsKey(nameof(AccentColorDark)))
-                    application.Resources.Add(nameof(AccentColorDark), Application.AccentColor.AddLuminosity(-0.25f));
+                if (!application.Resources.ContainsKey(nameof(Tertiary)))
+                    application.Resources.Add(nameof(Tertiary), Application.AccentColor.AddLuminosity(-0.25f));
 
                 if (!application.Resources.ContainsKey("colorPrimary"))
                     application.Resources.Add("colorPrimary", Application.AccentColor);
