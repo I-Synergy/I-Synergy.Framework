@@ -50,10 +50,14 @@
     </MenuFlyoutItem>
 
     <Shell.FlyoutFooter>
-        <StackLayout Padding="20" HorizontalOptions="Center">
+        <StackLayout HorizontalOptions="Center">
             <Button Text="{m:GetString SignOut}" Command="{Binding LoginCommand}">
                 <Button.ImageSource>
-                    <FontImageSource Glyph="{StaticResource signin}" Size="16" FontFamily="fontawesome" Color="{StaticResource White}" />
+                    <FontImageSource
+                        Glyph="{StaticResource signin}" 
+                        Size="16" 
+                        FontFamily="fontawesome" 
+                        Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}" />
                 </Button.ImageSource>
             </Button>
             <Label Text="{Binding BaseCommonServices.InfoService.Title}" Margin="10" />

@@ -31,13 +31,13 @@
                 HorizontalOptions="Center"
                 FontSize="24" 
                 FontAttributes="Bold" 
-                TextColor="{DynamicResource AccentColor}"
+                TextColor="{DynamicResource Primary}"
                 LineBreakMode="WordWrap" />
             <Label
                 Text="{m:GetString LoginText}"
                 SemanticProperties.HeadingLevel="Level2"
                 HorizontalOptions="Center"
-                TextColor="{DynamicResource AccentColor}"
+                TextColor="{DynamicResource Primary}"
                 LineBreakMode="WordWrap"/>
         </VerticalStackLayout>
 
@@ -56,7 +56,7 @@
             Margin="30" 
             VerticalOptions="End">
             <Label Text="{m:GetString LoginNoAccount}" TextColor="{DynamicResource Gray600}"/>
-            <Label Text="{m:GetString SignupHere}" TextColor="{DynamicResource AccentColor}">
+            <Label Text="{m:GetString SignupHere}" TextColor="{DynamicResource Primary}">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding RegisterCommand}" />
                 </Label.GestureRecognizers>
