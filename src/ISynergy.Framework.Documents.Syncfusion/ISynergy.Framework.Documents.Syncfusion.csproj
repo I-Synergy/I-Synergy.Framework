@@ -15,11 +15,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Syncfusion.DocIO.Net.Core" Version="23.1.42" />
-		<PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="23.1.42" />
+		<PackageReference Include="Syncfusion.DocIO.Net.Core" Version="23.1.43" />
+		<PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="23.1.43" />
 		<PackageReference Include="Syncfusion.Licensing" Version="23.1.43" />
-		<PackageReference Include="Syncfusion.Pdf.Net.Core" Version="23.1.42" />
-		<PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="23.1.42" />
+		<PackageReference Include="Syncfusion.Pdf.Net.Core" Version="23.1.43" />
+		<PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="23.1.43" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">

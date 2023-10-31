@@ -32,8 +32,8 @@
 	<Choose>
 		<When Condition="$(TargetFramework.StartsWith('net8.0')) == true">
 			<ItemGroup>
-				<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.0-rc.2.9373" />
-				<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.0-rc.2.9373" />
+				<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.0-rc.2.9511" />
+				<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.0-rc.2.9511" />
 				<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0-rc.2.23479.6" />
 				<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0-rc.2.23479.6" />
 			</ItemGroup>

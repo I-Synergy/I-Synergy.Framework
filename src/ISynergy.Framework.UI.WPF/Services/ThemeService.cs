@@ -48,7 +48,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public void SetStyle()
         {
-            //Application.AccentColor = Color.FromArgb(Style.Color);
+            //Application.Primary = Color.FromArgb(Style.Color);
 
             //if (IsLightThemeEnabled)
             //    Application.Current.Resources.ApplyLightTheme();
