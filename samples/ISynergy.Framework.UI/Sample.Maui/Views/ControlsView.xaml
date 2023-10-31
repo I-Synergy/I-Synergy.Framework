@@ -15,14 +15,16 @@
         <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter"/>
     </c:View.Resources>
     
-    <VerticalStackLayout Spacing="10">
+    <VerticalStackLayout
+        Margin="10"
+        Spacing="10">
         <Label Text="Entry:"/>
         <Entry Text="Hello Entry..." />
 
         <Label Text="DateTimeOffset"/>
-        <HorizontalStackLayout VerticalOptions="End">
-            <DatePicker Date="{Binding DateValue, Mode=TwoWay, Converter={StaticResource DateTimeOffsetToLocalDateTimeConverter}}"/>
-            <Label Text="{Binding DateValue, Mode=OneWay, Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}}"/>
+        <HorizontalStackLayout Spacing="10">
+            <DatePicker Date="{Binding DateValue, Mode=TwoWay, Converter={StaticResource DateTimeOffsetToLocalDateTimeConverter}}" VerticalOptions="Center"/>
+            <Label Text="{Binding DateValue, Mode=OneWay, Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}}" VerticalOptions="Center"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>
 </c:View>

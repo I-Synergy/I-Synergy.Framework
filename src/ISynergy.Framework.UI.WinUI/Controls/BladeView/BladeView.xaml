@@ -51,20 +51,21 @@
                         <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                            <ScrollViewer x:Name="ScrollViewer"
-                                      AutomationProperties.AccessibilityView="Raw"
-                                      BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}"
-                                      HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                                      HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
-                                      IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
-                                      IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
-                                      IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}"
-                                      IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
-                                      IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}"
-                                      TabNavigation="{TemplateBinding TabNavigation}"
-                                      VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
-                                      VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
-                                      ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                            <ScrollViewer
+                                x:Name="ScrollViewer"
+                                AutomationProperties.AccessibilityView="Raw"
+                                BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}"
+                                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                                IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                                IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
+                                IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}"
+                                IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
+                                IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}"
+                                TabNavigation="{TemplateBinding TabNavigation}"
+                                VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                                ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
                                 <ItemsPresenter Padding="{TemplateBinding Padding}" />
                             </ScrollViewer>
                             <VisualStateManager.VisualStateGroups>
@@ -123,9 +124,10 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:BladeItem">
-                        <Grid BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}"
-                          Width="{TemplateBinding Width}">
+                        <Grid
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Width="{TemplateBinding Width}">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="ExpandedStates">
                                     <VisualState x:Name="Expanded"/>
@@ -143,19 +145,22 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Grid Background="{TemplateBinding TitleBarBackground}"
-                              Visibility="{TemplateBinding TitleBarVisibility}"
-                              Height="32">
+                            <Grid
+                                Background="{TemplateBinding TitleBarBackground}"
+                                Visibility="{TemplateBinding TitleBarVisibility}"
+                                Height="32">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <ContentPresenter x:Name="TitleBar"
-                                              Content="{TemplateBinding Header}"
-                                              ContentTemplate="{TemplateBinding HeaderTemplate}"/>
-                                <Button Name="EnlargeButton"
+                                <ContentPresenter
+                                    x:Name="TitleBar"
+                                    Content="{TemplateBinding Header}"
+                                    ContentTemplate="{TemplateBinding HeaderTemplate}"/>
+                                <Button
+                                    x:Name="EnlargeButton"
                                     Grid.Column="1"
                                     TabIndex="0"
                                     HorizontalAlignment="Right"
@@ -167,7 +172,8 @@
                                     FontFamily="Segoe MDL2 Assets"
                                     FontSize="14"
                                     Foreground="{TemplateBinding CloseButtonForeground}" />
-                                <Button Name="CloseButton"
+                                <Button
+                                    x:Name="CloseButton"
                                     Grid.Column="2"
                                     TabIndex="0"
                                     HorizontalAlignment="Right"
@@ -181,11 +187,12 @@
                                     Foreground="{TemplateBinding CloseButtonForeground}" />
                             </Grid>
 
-                            <ContentPresenter x:Name="ContentPresenter"
-                                          Grid.Row="1"
-                                          VerticalAlignment="Stretch"
-                                          Background="{TemplateBinding Background}"
-                                          Visibility="{TemplateBinding IsOpen}" />
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Grid.Row="1"
+                                VerticalAlignment="Stretch"
+                                Background="{TemplateBinding Background}"
+                                Visibility="{TemplateBinding IsOpen}" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>

@@ -31,7 +31,7 @@
                         Command="{Binding DataContext.SubmitCommand, ElementName=UnitStackPanel}"
 						CommandParameter="{Binding}"
                         IsDoubleTapEnabled="False"
-                        Foreground="{StaticResource SystemAccentBrush}"
+                        Foreground="White"
 						Header="{Binding Header}"
 						Title="{Binding Description}"
                         Margin="1"
