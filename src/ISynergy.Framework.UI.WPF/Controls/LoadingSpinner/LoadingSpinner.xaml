@@ -9,100 +9,105 @@
              IsVisibleChanged="LoadingSpinner_IsVisibleChanged">
 
     <UserControl.Resources>
-        <Storyboard 
-            x:Key="spinner"  
-            BeginTime="00:00:00" 
-            RepeatBehavior="Forever">
-            
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle01" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle12" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle11" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0.5"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle02" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle03" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle04" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle05" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle06" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle07" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle08" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle09" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0.25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0.2"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle10" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0.2"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0.5"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0.25"/>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Storyboard 
+    x:Key="spinner"  
+    BeginTime="00:00:00" 
+    RepeatBehavior="Forever">
+
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle01" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle12" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="1"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle11" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0.5"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle02" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle03" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle04" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle05" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle06" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle07" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle08" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle09" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0.25"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0.2"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Rectangle10" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0.2"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0.5"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0.25"/>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+        </ResourceDictionary>
     </UserControl.Resources>
     
     <UserControl.Triggers>
