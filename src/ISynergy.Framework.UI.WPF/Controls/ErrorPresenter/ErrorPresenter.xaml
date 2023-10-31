@@ -10,8 +10,15 @@
     VerticalAlignment="Top">
 
     <UserControl.Resources>
-        <Converters:BooleanToVisibilityConverter x:Key="ErrorPresenterConverter" True="Visible" False="Collapsed"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Converters:BooleanToVisibilityConverter x:Key="ErrorPresenterConverter" True="Visible" False="Collapsed"/>
+        </ResourceDictionary>
     </UserControl.Resources>
+
     <UserControl.Visibility>
         <Binding Converter="{StaticResource ErrorPresenterConverter}" Path="HasErrors"/>
     </UserControl.Visibility>

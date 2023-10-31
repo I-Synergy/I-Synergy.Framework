@@ -14,10 +14,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Assets\Fonts\fontawesome.otf" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Include="logo.ico" />
 	</ItemGroup>
 
@@ -33,8 +29,8 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0-rc.2.23479.6" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-rc.2.23479.6" />
-		<PackageReference Include="Syncfusion.SfInput.WPF" Version="23.1.41" />
-		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="23.1.41" />
+		<PackageReference Include="Syncfusion.SfInput.WPF" Version="23.1.42" />
+		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="23.1.42" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -47,12 +43,5 @@
 	  </Using>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="Views\Test2Window.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	</ItemGroup>
-
 	<Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
-
 </Project>

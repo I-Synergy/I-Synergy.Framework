@@ -7,7 +7,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     mc:Ignorable="d" 
     d:DesignWidth="250">
-    
+
+    <dp:NotificationDisplayPart.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </dp:NotificationDisplayPart.Resources>
+
     <Border x:Name="ContentWrapper" Style="{DynamicResource NotificationBorder}" Background="{DynamicResource WarningColorBrush}">
         <Grid x:Name="ContentContainer">
             <Grid.ColumnDefinitions>
