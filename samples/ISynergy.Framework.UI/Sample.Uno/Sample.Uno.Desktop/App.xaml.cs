@@ -17,6 +17,7 @@ using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
+using HostBuilder = Microsoft.Extensions.Hosting.HostBuilder;
 
 namespace Sample
 {
