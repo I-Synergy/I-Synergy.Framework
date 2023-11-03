@@ -213,6 +213,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uno", "Uno", "{D2A22AD8-A58
 	ProjectSection(SolutionItems) = preProject
 		samples\ISynergy.Framework.UI\Sample.Uno\Directory.Build.props = samples\ISynergy.Framework.UI\Sample.Uno\Directory.Build.props
 		samples\ISynergy.Framework.UI\Sample.Uno\Directory.Build.targets = samples\ISynergy.Framework.UI\Sample.Uno\Directory.Build.targets
+		samples\ISynergy.Framework.UI\Sample.Uno\Directory.Packages.props = samples\ISynergy.Framework.UI\Sample.Uno\Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno.Desktop", "samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Desktop\Sample.Uno.Desktop.csproj", "{4B745300-BD85-4ECA-894F-FBC905CEE1D9}"

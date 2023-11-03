@@ -2,7 +2,7 @@
 	<Import Project="..\Sample.Uno.Base\base.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-ios;net8.0-android;net8.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
 		<SingleProject>true</SingleProject>
 		<OutputType>Exe</OutputType>
 		<!-- Display name -->
@@ -29,23 +29,33 @@
 		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
-		<PackageReference Include="Uno.Resizetizer" Version="1.2.0" />
-		<PackageReference Include="Uno.WinUI" Version="4.10.26" />
-		<PackageReference Include="Uno.Extensions.Toolkit.WinUI" Version="2.5.11" />
-		<PackageReference Include="Uno.Toolkit.WinUI" Version="4.2.22" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0-rc.2.23479.6" />
-		<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.7.0" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.10.26" />
-		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.10.26" Condition="'$(Configuration)'=='Debug'" />
-		<PackageReference Include="Uno.CommunityToolkit.WinUI.UI.Controls" Version="7.1.100" />
+		<PackageReference Include="Uno.WinUI" />
+		<PackageReference Include="CommunityToolkit.Mvvm" />
+		<PackageReference Include="Uno.Extensions.Configuration" />
+		<PackageReference Include="Uno.Extensions.Http" />
+		<PackageReference Include="Uno.Extensions.Http.Refit" />
+		<PackageReference Include="Uno.Extensions.Logging.WinUI" />
+		<PackageReference Include="Uno.Extensions.Serialization.Http" />
+		<PackageReference Include="Uno.Extensions.Serialization.Refit" />
+		<PackageReference Include="Uno.Material.WinUI" />
+		<PackageReference Include="Uno.Toolkit.WinUI.Material" />
+		<PackageReference Include="Uno.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Extensions.Hosting.WinUI" />
+		<PackageReference Include="Uno.Extensions.Navigation.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Extensions.Navigation.WinUI" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+		<PackageReference Include="Uno.Extensions.Logging.OSLog" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" />
+		<PackageReference Include="Uno.WinUI.DevServer" Condition="'$(Configuration)'=='Debug'" />
 	</ItemGroup>
+	
 	<Choose>
 		<When Condition="$(IsAndroid)">
 			<ItemGroup>
-				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.7.0" />
-				<PackageReference Include="Uno.UniversalImageLoader" Version="1.9.36" />
+				<PackageReference Include="Xamarin.Google.Android.Material"/>
+				<PackageReference Include="Uno.UniversalImageLoader" />
 			</ItemGroup>
 			<ItemGroup>
 				<AndroidEnvironment Include="Android/environment.conf" />
