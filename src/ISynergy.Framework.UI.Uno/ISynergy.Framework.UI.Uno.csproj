@@ -40,8 +40,8 @@
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.WinUI" Version="4.10.26" />
-				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.3.0" />
+				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.4.2" />
+				<PackageReference Include="Uno.WinUI" Version="5.0.19" />
 			</ItemGroup>
 
 			<ItemGroup>

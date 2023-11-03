@@ -12,12 +12,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
-using Sample;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
+using HostBuilder = Microsoft.Extensions.Hosting.HostBuilder;
 
 namespace Sample
 {
