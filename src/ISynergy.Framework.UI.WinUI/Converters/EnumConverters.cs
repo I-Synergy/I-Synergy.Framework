@@ -206,4 +206,40 @@ namespace ISynergy.Framework.UI.Converters
             throw new NotImplementedException();
         }
     }
+
+    public class EnumToIntegerConverter: IValueConverter
+    {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The culture.</param>
+        /// <returns>System.Object.</returns>
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is Enum enumeration)
+                return System.Convert.ToInt32(enumeration);
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The culture.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int id && Enum.TryParse(targetType, id.ToString(), out var result))
+                return result;
+
+            return default;
+        }
+    }
 }

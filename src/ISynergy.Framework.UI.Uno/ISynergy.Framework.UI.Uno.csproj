@@ -41,7 +41,7 @@
 		<Otherwise>
 			<ItemGroup>
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.4.2" />
-				<PackageReference Include="Uno.WinUI" Version="5.0.19" />
+				<PackageReference Include="Uno.WinUI" Version="5.0.41" />
 			</ItemGroup>
 
 			<ItemGroup>
@@ -132,12 +132,14 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\TypeConverters.cs" Link="Converters\TypeConverters.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\ByteArrayExtensions.cs" Link="Extensions\ByteArrayExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\ColorExtensions.cs" Link="Extensions\ColorExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\DateTimeOffsetExtensions.cs" Link="Extensions\DateTimeOffsetExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\DependencyObjectExtensions.cs" Link="Extensions\DependencyObjectExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\MatrixExtensions.cs" Link="Extensions\MatrixExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\NavigationExtensions.cs" Link="Extensions\NavigationExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\SettingsStorageExtensions.cs" Link="Extensions\SettingsStorageExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\UriExtensions.cs" Link="Extensions\UriExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\WindowExtensions.cs" Link="Extensions\WindowExtensions.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Formatters\DecimalFormatter.cs" Link="Formatters\DecimalFormatter.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\ColorHelper.cs" Link="Helpers\ColorHelper.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\NavigationHelper.cs" Link="Helpers\NavigationHelper.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\ResourceHelper.cs" Link="Helpers\ResourceHelper.cs" />
