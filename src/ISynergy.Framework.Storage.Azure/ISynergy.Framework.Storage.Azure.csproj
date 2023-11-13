@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Storage.Blobs" Version="12.18.0" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.19.0" />
      </ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
