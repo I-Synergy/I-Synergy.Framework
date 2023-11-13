@@ -1,15 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<IsPackable>false</IsPackable>
-		<SignAssembly>True</SignAssembly>
-		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
+		<TargetFrameworks>net8.0-windows10.0.19041;net7.0-windows10.0.19041</TargetFrameworks>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<UseWinUI>true</UseWinUI>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0-rc.2.23479.6" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-		<PackageReference Include="Moq" Version="4.20.69" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
 		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
 		<PackageReference Include="coverlet.collector" Version="6.0.0">
@@ -19,6 +18,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\ISynergy.Framework.Mail.Microsoft365\ISynergy.Framework.Mail.Microsoft365.csproj" />
+	  <ProjectReference Include="..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 	</ItemGroup>
 </Project>

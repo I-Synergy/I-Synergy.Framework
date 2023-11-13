@@ -4,6 +4,8 @@ using ISynergy.Framework.Core.Locators;
 using Microsoft.UI.Xaml.Data;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.UI.Converters
 {
@@ -269,6 +271,30 @@ namespace ISynergy.Framework.UI.Converters
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// Class IsoDateTimeOffsetConverter.
+    /// Implements the <see cref="IsoDateTimeOffsetJsonConverter" />
+    /// </summary>
+    /// <seealso cref="IsoDateTimeOffsetJsonConverter" />
+    public class IsoDateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
+    {
+        public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+            DateTimeOffset.ParseExact(reader.GetString(), "o", null);
+
+        public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
+        {
+            if (value.Offset == TimeSpan.Zero)
+            {
+                // If there is no offset, serialize as a DateTime
+                writer.WriteStringValue(value.UtcDateTime.ToString("o"));
+            }
+            else
+            {
+                writer.WriteStringValue(value.ToString("o"));
+            }
         }
     }
 }

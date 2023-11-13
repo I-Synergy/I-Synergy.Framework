@@ -13,7 +13,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Sentry" Version="3.40.1" />
+		<PackageReference Include="Sentry" Version="3.41.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
