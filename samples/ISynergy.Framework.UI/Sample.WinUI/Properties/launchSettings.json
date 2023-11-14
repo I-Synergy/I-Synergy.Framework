@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Sample.Desktop": {
+      "commandName": "MsixPackage",
+      "commandLineArgs": "?environment=local&country=nl"
+    }
+  }
+}

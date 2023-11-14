@@ -33,12 +33,5 @@ namespace ISynergy.Framework.Core.Exceptions
         public DuplicateClaimException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        /// <summary>
-        /// Serializable constructor.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected DuplicateClaimException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }
