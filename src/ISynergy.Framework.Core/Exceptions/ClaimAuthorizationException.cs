@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Core.Exceptions
+﻿namespace ISynergy.Framework.Core.Exceptions
 {
     /// <summary>
     /// Class ClaimAuthorizationException.
@@ -32,12 +30,5 @@ namespace ISynergy.Framework.Core.Exceptions
         protected ClaimAuthorizationException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        /// <summary>
-        /// Serializable constructor.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected ClaimAuthorizationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-windows10.0.19041;net7.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks>net8.0-windows10.0.19041</TargetFrameworks>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI.WinUI</PackageId>
@@ -18,22 +18,9 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
-
-	<Choose>
-		<When Condition="'$(TargetFramework)'=='net8.0-windows10.0.19041'">
-			<ItemGroup>
-				<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0-rc.2.23479.6" />
-				<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-rc.2.23479.6" />
-			</ItemGroup>
-		</When>
-		<Otherwise>
-			<ItemGroup>
-				<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
-				<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-			</ItemGroup>
-		</Otherwise>
-	</Choose>
 
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />

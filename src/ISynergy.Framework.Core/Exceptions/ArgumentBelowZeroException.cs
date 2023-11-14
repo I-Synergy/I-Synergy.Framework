@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Core.Exceptions
+﻿namespace ISynergy.Framework.Core.Exceptions
 {
     /// <summary>
     /// Class ArgumentBelowZeroException.
@@ -37,15 +35,6 @@ namespace ISynergy.Framework.Core.Exceptions
         /// <param name="paramName">Name of the parameter.</param>
         /// <param name="actualValue">The actual value.</param>
         public ArgumentBelowZeroException(string paramName, object actualValue) : base(paramName, actualValue, message)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ArgumentBelowZeroException"/> class.
-        /// </summary>
-        /// <param name="info">The object that holds the serialized object data.</param>
-        /// <param name="context">An object that describes the source or destination of the serialized data.</param>
-        protected ArgumentBelowZeroException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
