@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
-		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0-rc.2.23479.6" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
 	</ItemGroup>
   <ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

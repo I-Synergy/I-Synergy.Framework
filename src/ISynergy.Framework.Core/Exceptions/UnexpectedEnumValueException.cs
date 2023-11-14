@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Core.Exceptions
+﻿namespace ISynergy.Framework.Core.Exceptions
 {
     /// <summary>
     /// Class UnexpectedEnumValueException.
@@ -43,15 +41,6 @@ namespace ISynergy.Framework.Core.Exceptions
         /// <param name="value">The value.</param>
         public UnexpectedEnumValueException(Type enumClass, object value)
             : base($"The value({enumClass}) of Enum type '{value}' was unexpected.")
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnexpectedEnumValueException"/> class.
-        /// </summary>
-        /// <param name="serializationInfo">The serialization information.</param>
-        /// <param name="streamingContext">The streaming context.</param>
-        protected UnexpectedEnumValueException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         {
         }
     }

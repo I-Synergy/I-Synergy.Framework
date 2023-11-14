@@ -2,7 +2,7 @@
 	<Import Project="..\Sample.Uno.Base\base.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
 		<SingleProject>true</SingleProject>
 		<OutputType>Exe</OutputType>
 		<!-- Display name -->

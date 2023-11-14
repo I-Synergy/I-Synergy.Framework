@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Core.Exceptions
+﻿namespace ISynergy.Framework.Core.Exceptions
 {
     /// <summary>
     /// Class ViewNotRegisteredException.
@@ -20,12 +18,5 @@ namespace ISynergy.Framework.Core.Exceptions
             : base(message, innerException)
         {
         }
-
-        /// <summary>
-        /// Serializable constructor.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected ViewNotRegisteredException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

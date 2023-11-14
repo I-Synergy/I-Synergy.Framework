@@ -102,9 +102,7 @@ stages:
         - task: UseDotNet@2
           inputs:
             packageType: 'sdk'
-            version: 8.0.x
-            useGlobalJson: false
-            includePreviewVersions: true
+            useGlobalJson: true
 
         - task: Bash@3
           displayName: Install MAUI
