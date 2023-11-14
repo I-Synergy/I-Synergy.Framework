@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<LangVersion>11</LangVersion>
+		<LangVersion>12</LangVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<DefaultLanguage>en-US</DefaultLanguage>
 		<Authors>Ismail Hassani</Authors>
@@ -12,6 +12,7 @@
 		<RepositoryUrl>https://dev.azure.com/i-synergy/_git/I-Synergy.Framework</RepositoryUrl>
 		<PackageProjectUrl>https://www.i-synergy.net</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageOutputPath>..\..\packages</PackageOutputPath>
@@ -43,9 +44,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\..\icon.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
+		<None Include="..\..\icon.png" Pack="true" PackagePath="\"/>
+		<None Include="readme.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 </Project>

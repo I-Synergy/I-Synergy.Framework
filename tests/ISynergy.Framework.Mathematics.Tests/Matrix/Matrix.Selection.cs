@@ -155,8 +155,8 @@
             Assert.AreEqual(5, median);
 
             double r = Sort.NthElement(a, 0, a.Length, 1, asc: false);
-            Assert.AreEqual(a[1], 7);
-            Assert.AreEqual(r, 7);
+            Assert.AreEqual(7, a[1]);
+            Assert.AreEqual(7, r);
         }
 
         [TestMethod]

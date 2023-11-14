@@ -19,8 +19,8 @@
 	<Choose>
 		<When Condition="$(TargetFramework.StartsWith('net8.0')) == true">
 			<ItemGroup>
-				<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0-rc.2.23479.6" />
-				<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-rc.2.23479.6" />
+				<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+				<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 			</ItemGroup>
 		</When>
 		<Otherwise>
@@ -163,6 +163,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\SegMDL2.ttf" Link="Assets\Fonts\SegMDL2.ttf" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<Page Include="Controls\BladeView\BladeView.xaml">
 		  <SubType>Designer</SubType>
 		  <Generator>MSBuild:Compile</Generator>
@@ -229,6 +233,10 @@
 		<Using Include="Microsoft.UI.Xaml.LaunchActivatedEventArgs">
 			<Alias>LaunchActivatedEventArgs</Alias>
 		</Using>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Assets\Fonts\" />
 	</ItemGroup>
 </Project>
 

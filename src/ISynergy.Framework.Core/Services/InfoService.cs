@@ -83,7 +83,7 @@ namespace ISynergy.Framework.Core.Services
         /// <param name="assembly"></param>
         public void LoadAssembly(Assembly assembly)
         {
-            ApplicationPath = Path.GetDirectoryName(assembly.Location);
+            ApplicationPath = System.AppContext.BaseDirectory;
             CompanyName = assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
             ProductName = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
             Copyrights = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
