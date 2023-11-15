@@ -6,6 +6,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel;
+using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -176,7 +177,7 @@ namespace ISynergy.Framework.UI.Services
 #if WINDOWS
             var appWindow = WindowHelper.GetAppWindow(window);
 
-            var iconPath = Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico");
+            var iconPath = Path.Combine(System.AppContext.BaseDirectory, "icon.ico");
             
             if (File.Exists(iconPath))
                 appWindow.SetIcon(iconPath);
