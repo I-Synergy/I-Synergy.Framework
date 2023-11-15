@@ -24,6 +24,12 @@ namespace Sample
             await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AppShellViewModel>();
         }
 
+        public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() => new List<ResourceDictionary>()
+        {
+            new Styles.Colors(),
+            new Styles.Style()
+        };
+
         public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
         {
             if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)

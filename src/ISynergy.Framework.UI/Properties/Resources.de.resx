@@ -400,4 +400,10 @@ Nach Bestätigung Ihrer Anmeldung können Sie sich mit Ihrer E-Mail-Adresse und 
 		<value>Die obligatorische Paketaktualisierung ist fehlgeschlagen.
 Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsoft Store.</value>
 	</data>
+	<data name="Delete" xml:space="preserve">
+		<value>Löschen</value>
+	</data>
+	<data name="WarningFutureModule" xml:space="preserve">
+		<value>Diese Funktion ist in dieser Version derzeit nicht verfügbar.</value>
+	</data>
 </root>

@@ -162,13 +162,11 @@ namespace ISynergy.Framework.UI
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 // Add custom resourcedictionaries from code.
-                var dictionary = Application.Current.Resources?.MergedDictionaries;
-
-                if (dictionary is not null)
+                if (Application.Current.Resources?.MergedDictionaries is not null)
                 {
                     foreach (var item in GetAdditionalResourceDictionaries())
                     {
-                        if (!dictionary.Any(t => t.Source == item.Source))
+                        if (!Application.Current.Resources.MergedDictionaries.Contains(item))
                             Application.Current.Resources.MergedDictionaries.Add(item);
                     }
                 }

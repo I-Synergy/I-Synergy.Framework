@@ -2,19 +2,14 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
-        <Description>I-Synergy Framework Mvvm for .net Standard 2.0, .net 6.0, .net 7.0 and .net 8.0</Description>
+        <Description>I-Synergy Framework Mvvm for .Net 8.0</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.Mvvm.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-		<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="System.Drawing.Common" Version="8.0.0" />
 	</ItemGroup>
