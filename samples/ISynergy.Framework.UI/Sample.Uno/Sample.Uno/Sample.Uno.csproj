@@ -1,0 +1,103 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true'">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks>$(TargetFrameworks);net8.0;net8.0-android</TargetFrameworks>
+		<!--<TargetFrameworks>$(TargetFrameworks);net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>-->
+		<TargetFrameworks Condition="'$(OverrideTargetFrameworks)'!=''">$(OverrideTargetFrameworks)</TargetFrameworks>
+
+		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<RootNamespace>Sample</RootNamespace>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Uno.WinUI" Version="5.0.48" />
+		<PackageReference Include="Uno.Resizetizer" Version="1.2.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+	</ItemGroup>
+
+	<Choose>
+		<When Condition="$(IsWinAppSdk)">
+			<PropertyGroup>
+				<!--
+				If you encounter this error message:
+
+				  error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
+				  Please update to a newer .NET SDK in order to reference this assembly.
+
+				This means that the two packages below must be aligned with the "build" version number of
+				the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
+				must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
+				-->
+				<!-- <WindowsSdkPackageVersion>10.0.22621.28</WindowsSdkPackageVersion> -->
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
+				<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+			</ItemGroup>
+		</When>
+		<When Condition="$(IsIOS) OR $(IsMacCatalyst)">
+			<ItemGroup>
+				<PackageReference Include="Uno.WinUI.Lottie" Version="5.0.48" />
+				<PackageReference Include="Uno.WinUI.DevServer" Version="5.0.48" Condition="'$(Configuration)'=='Debug'" />
+				<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.7.0" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="Uno.WinUI.Lottie" Version="5.0.48" />
+				<PackageReference Include="Uno.WinUI.DevServer" Version="5.0.48" Condition="'$(Configuration)'=='Debug'" />
+				<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.7.0" />
+
+				<!-- Include all images by default - matches the __WindowsAppSdkDefaultImageIncludes property in the WindowsAppSDK -->
+				<Content Include="Assets\**;**/*.png;**/*.bmp;**/*.jpg;**/*.dds;**/*.tif;**/*.tga;**/*.gif" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);**\*.svg" />
+				<Page Include="**\*.xaml" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+				<Compile Update="**\*.xaml.cs">
+					<DependentUpon>%(Filename)</DependentUpon>
+				</Compile>
+				<PRIResource Include="**\*.resx" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<UnoImage Include="Assets\**\*.svg" />
+		<EmbeddedResource Include="appsettings.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+			<LogicalName>Sample.Uno.appsettings.json</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="appsettings.*.json" DependentUpon="appsettings.json" />
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="Assets\Images.xaml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="icon.ico">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+</Project>

@@ -6,7 +6,7 @@ namespace Sample
 
         public static int Main(string[] args)
         {
-            Microsoft.UI.Xaml.Application.Start(_ => _app = new App());
+            Microsoft.UI.Xaml.Application.Start(_ => _app = new AppHead());
             return 0;
         }
     }

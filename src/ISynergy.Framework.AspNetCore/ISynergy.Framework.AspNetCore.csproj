@@ -2,9 +2,9 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.AspNetCore</PackageId>
-		<Description>I-Synergy Framework AspNetCore for .net 6.0, .net 7.0 and .net 8.0</Description>
+		<Description>I-Synergy Framework AspNetCore for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -13,13 +13,6 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-	
-	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
-		<PackageReference Include="System.Text.Encodings.Web" Version="7.0.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
 		<PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
 	</ItemGroup>
 
