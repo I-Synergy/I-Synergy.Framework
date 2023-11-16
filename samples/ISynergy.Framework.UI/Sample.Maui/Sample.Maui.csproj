@@ -58,14 +58,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="appsettings.json" />
 	  <None Remove="Resources\Fonts\fontawesome.otf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="appsettings.json" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.3.1" />
+		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.0.0" />
 		<PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
 	</ItemGroup>
 
@@ -76,7 +81,12 @@
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
 
-	<Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
 
 	<ItemGroup>
 		<Using Include="ISynergy.Framework.Core.Models.Style">
@@ -94,5 +104,16 @@
 		<Using Include="ISynergy.Framework.UI.Controls.View">
 			<Alias>View</Alias>
 		</Using>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Styles\Style.xaml.cs">
+	    <DependentUpon>Style.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 </Project>

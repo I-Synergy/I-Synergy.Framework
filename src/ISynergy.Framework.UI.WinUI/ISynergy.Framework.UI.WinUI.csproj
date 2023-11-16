@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-windows10.0.19041</TargetFrameworks>
+		<TargetFramework>net8.0-windows10.0.19041</TargetFramework>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI.WinUI</PackageId>

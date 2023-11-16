@@ -1,26 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\project.props" />
-    <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Printer.Label.Dymo</PackageId>
-		<Description>I-Synergy Framework Dymo Label printer library for .net Standard 2.0, .net 6.0, .net 7.0 and .net 8.0</Description>
+		<Description>I-Synergy Framework Dymo Label printer library for .Net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Printer, Label, Dymo</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Printer.Label.Dymo.ruleset</CodeAnalysisRuleSet>
-    </PropertyGroup>
-    <ItemGroup>
-      <PackageReference Include="DYMO.Connect.SDK" Version="1.4.3.37" />
-    </ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="DYMO.Connect.SDK" Version="1.4.4.21" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="SkiaSharp" Version="2.88.6" />
 	</ItemGroup>
-	
-    <ItemGroup>
-        <ProjectReference Include="..\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj" />
-    </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj" />
+	</ItemGroup>
 </Project>

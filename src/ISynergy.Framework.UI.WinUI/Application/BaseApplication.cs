@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Windows.ApplicationModel.Activation;
+using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI
 {
@@ -177,13 +178,11 @@ namespace ISynergy.Framework.UI
             MainWindow.Content = new BusyIndicatorControl();
 
             // Add custom resourcedictionaries from code.
-            var dictionary = Application.Current.Resources?.MergedDictionaries;
-
-            if (dictionary is not null)
+            if (Application.Current.Resources?.MergedDictionaries is not null)
             {
                 foreach (var item in GetAdditionalResourceDictionaries())
                 {
-                    if (!dictionary.Any(t => t.Source == item.Source))
+                    if (!Application.Current.Resources.MergedDictionaries.Contains(item))
                         Application.Current.Resources.MergedDictionaries.Add(item);
                 }
             }
