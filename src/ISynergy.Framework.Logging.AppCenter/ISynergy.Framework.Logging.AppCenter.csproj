@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Logging.AppCenter</PackageId>
 		<Description>I-Synergy Framework AppCenter Logging library for Windows and Android</Description>
 		<PackageTags>I-Synergy, Framework, Logging, AppCenter, Windows, Android, Uno</PackageTags>
@@ -16,6 +16,13 @@
 		<PackageReference Include="Microsoft.AppCenter" Version="5.0.3" />
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.3" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
 		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
 	</ItemGroup>
   <ItemGroup>

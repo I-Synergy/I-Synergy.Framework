@@ -1,5 +1,4 @@
 <linker>
-	<assembly fullname="Sample.Uno" />
 	<assembly fullname="Sample.Uno.Web" />
 
 	<!--
