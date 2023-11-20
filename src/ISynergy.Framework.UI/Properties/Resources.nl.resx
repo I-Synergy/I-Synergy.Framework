@@ -400,10 +400,4 @@ Na bevestiging van uw registratie kunt u uw e-mailadres en wachtwoord gebruiken 
 		<value>De verplichte pakketupdate is mislukt.
 Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	</data>
-	<data name="Delete" xml:space="preserve">
-		<value>Verwijderen</value>
-	</data>
-	<data name="WarningFutureModule" xml:space="preserve">
-		<value>Deze functie is op dit moment niet beschikbaar in deze versie.</value>
-	</data>
 </root>

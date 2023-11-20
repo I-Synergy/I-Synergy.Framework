@@ -400,10 +400,4 @@ Après confirmation de votre inscription, vous pouvez utiliser votre adresse e-m
 		<value>La mise à jour obligatoire du package a échoué.
 Réessayez ou mettez à jour l’application via le Microsoft Store.</value>
 	</data>
-	<data name="Delete" xml:space="preserve">
-		<value>Supprimer</value>
-	</data>
-	<data name="WarningFutureModule" xml:space="preserve">
-		<value>Cette fonctionnalité n’est pas disponible pour le moment dans cette version.</value>
-	</data>
 </root>

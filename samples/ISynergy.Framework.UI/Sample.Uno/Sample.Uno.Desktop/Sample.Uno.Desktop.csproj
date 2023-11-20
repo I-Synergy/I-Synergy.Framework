@@ -4,15 +4,20 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>Sample</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;arm64</Platforms>
 		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
+		<StartupObject>Sample.Program</StartupObject>
+		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
 		<Product>Sample Uno Desktop</Product>
 		<AssemblyName>Sample</AssemblyName>
+		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 
 		<!-- Bundles the WinAppSDK binaries -->
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
@@ -23,22 +28,37 @@
 		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Logging.Sentry\ISynergy.Framework.Logging.Sentry.csproj" />
 		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\..\..\..\src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj" />
-		<ProjectReference Include="..\Sample.Uno\Sample.Uno.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Images\**" />
+		<AppxManifest Include="Package.appxmanifest">
+			<SubType>Designer</SubType>
+		</AppxManifest>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Uno.WinUI" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
+		<PackageReference Include="Uno.Extensions.Configuration" />
+		<PackageReference Include="Uno.Extensions.Http" />
+		<PackageReference Include="Uno.Extensions.Http.Refit" />
+		<PackageReference Include="Uno.Extensions.Logging.WinUI" />
+		<PackageReference Include="Uno.Extensions.Serialization.Http" />
+		<PackageReference Include="Uno.Extensions.Serialization.Refit" />
+		<PackageReference Include="Uno.Material.WinUI" />
+		<PackageReference Include="Uno.Toolkit.WinUI.Material" />
+		<PackageReference Include="Uno.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Extensions.Hosting.WinUI" />
+		<PackageReference Include="Uno.Extensions.Navigation.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Extensions.Navigation.WinUI" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+		<PackageReference Include="Uno.Core.Extensions.Logging.Singleton" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Manifest Include="$(ApplicationManifest)" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Uno.Resizetizer" Version="1.2.1" />
-		<PackageReference Include="Uno.WinUI" Version="5.0.48" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-		<PackageReference Include="Uno.Core.Extensions.Logging.Singleton" Version="4.0.1" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.0.48" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -47,21 +67,22 @@
 		</Using>
 	</ItemGroup>
 
-	<!--
-    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-    Tools extension to be activated for this project even if the Windows App SDK Nuget
-    package has not yet been restored.
-	  -->
+	<!-- 
+		Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+		Tools extension to be activated for this project even if the Windows App SDK Nuget
+		package has not yet been restored.
+	-->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
 
-	<!--
-    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
-    Explorer "Package and Publish" context menu entry to be enabled for this project even if
-    the Windows App SDK Nuget package has not yet been restored.
-	  -->
+	<!-- 
+		Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
+		Explorer "Package and Publish" context menu entry to be enabled for this project even if 
+		the Windows App SDK Nuget package has not yet been restored.
+	-->
 	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
+	<Import Project="..\Sample.Uno.Shared\Sample.Uno.Shared.projitems" Label="Shared" />
 </Project>

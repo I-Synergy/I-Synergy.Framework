@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Payment.Mollie</PackageId>
-        <Description>I-Synergy Framework Mollie Payment for .Net 8.0</Description>
+        <Description>I-Synergy Framework Mollie Payment for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Mollie, Payment</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>

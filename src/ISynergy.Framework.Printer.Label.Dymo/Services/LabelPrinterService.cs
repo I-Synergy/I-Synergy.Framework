@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Printer.Label.Dymo.Services
         /// <exception cref="NotImplementedException"></exception>
         public async Task PrintLabelAsync(string content, int copies = 1)
         {
-            var printers = await DymoPrinter.Instance.GetPrinters();
+            var printers = await DymoPrinter.Instance.GetPrinters(); 
             if (printers.Any() && printers.First() is IPrinter printer)
             {
                 // Send to print.

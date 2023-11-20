@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Helpers;
@@ -6,7 +6,6 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel;
-using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI.Services
 {

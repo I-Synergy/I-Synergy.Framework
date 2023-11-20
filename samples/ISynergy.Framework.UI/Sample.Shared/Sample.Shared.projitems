@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6279c845-92f8-4333-ab99-3d213163593c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Sample</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IClientMonitorService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IMasterDataService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPrintingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IReportingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ISettingsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumerations\PublicationItemTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumerations\QueryTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ApplicationSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Measurement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MediaItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Publication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PublicationItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Setting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TileItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\ConfigurationOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ExceptionHandlerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\icon.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-125.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-150.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-400.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-125.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-150.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-400.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-125.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-150.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-400.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-125.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-150.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-400.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-24.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-125.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-150.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-400.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-16.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-24.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-256.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-32.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-48.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-125.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-150.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-400.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-125.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-150.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-400.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)appsettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Resource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+    </Resource>
+  </ItemGroup>
+</Project>

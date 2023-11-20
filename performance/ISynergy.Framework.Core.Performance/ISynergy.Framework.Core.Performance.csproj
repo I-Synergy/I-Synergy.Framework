@@ -13,4 +13,5 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 	</ItemGroup>
+
 </Project>
