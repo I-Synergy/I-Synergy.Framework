@@ -278,152 +278,146 @@ Save your work and restart the application.</value>
     <value>Select</value>
   </data>
 	<data name="SignOut" xml:space="preserve">
-    <value>Sign out</value>
-  </data>
+		<value>Sign out</value>
+	</data>
 	<data name="SignIn" xml:space="preserve">
-    <value>Sign in</value>
-  </data>
+		<value>Sign in</value>
+	</data>
 	<data name="Register" xml:space="preserve">
-    <value>Register</value>
-  </data>
+		<value>Register</value>
+	</data>
 	<data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
+		<value>Settings</value>
+	</data>
 	<data name="Default" xml:space="preserve">
-    <value>Default</value>
-  </data>
+		<value>Default</value>
+	</data>
 	<data name="Light" xml:space="preserve">
-    <value>Light</value>
-  </data>
+		<value>Light</value>
+	</data>
 	<data name="Dark" xml:space="preserve">
-    <value>Dark</value>
-  </data>
+		<value>Dark</value>
+	</data>
 	<data name="NoItems" xml:space="preserve">
-    <value>No items available</value>
-  </data>
+		<value>No items available</value>
+	</data>
 	<data name="Username" xml:space="preserve">
-    <value>Username</value>
-  </data>
+		<value>Username</value>
+	</data>
 	<data name="Password" xml:space="preserve">
-    <value>Password</value>
-  </data>
+		<value>Password</value>
+	</data>
 	<data name="LoginAccount" xml:space="preserve">
-    <value>Already have an account?</value>
-  </data>
+		<value>Already have an account?</value>
+	</data>
 	<data name="LoginNoAccount" xml:space="preserve">
-    <value>Don't have an account?</value>
-  </data>
+		<value>Don't have an account?</value>
+	</data>
 	<data name="LoginText" xml:space="preserve">
-    <value>If you already have an account, you can use your e-mail address and password to login.</value>
-  </data>
+		<value>If you already have an account, you can use your e-mail address and password to login.</value>
+	</data>
 	<data name="LoginTitle" xml:space="preserve">
-    <value>Have an account?</value>
-  </data>
+		<value>Have an account?</value>
+	</data>
 	<data name="SignInHere" xml:space="preserve">
-    <value>Sign in here</value>
-  </data>
+		<value>Sign in here</value>
+	</data>
 	<data name="SignupHere" xml:space="preserve">
-    <value>Register here</value>
-  </data>
+		<value>Register here</value>
+	</data>
 	<data name="SignupText" xml:space="preserve">
-    <value>If you don't have an account, fill out the required fields and register. 
+		<value>If you don't have an account, fill out the required fields and register. 
 After confirmation of your registration you can use your e-mail address and password to login.</value>
-  </data>
+	</data>
 	<data name="SignupTitle" xml:space="preserve">
-    <value>Don't have an account?</value>
-  </data>
+		<value>Don't have an account?</value>
+	</data>
 	<data name="WarningNoModulesSelected" xml:space="preserve">
-    <value>There are no modules selected. Select at least one.</value>
-  </data>
+		<value>There are no modules selected. Select at least one.</value>
+	</data>
 	<data name="WarningPasswordMatch" xml:space="preserve">
-    <value>Passwords don't match!</value>
-  </data>
+		<value>Passwords don't match!</value>
+	</data>
 	<data name="WarningPasswordSize" xml:space="preserve">
-    <value>The password should have at least 6 characters and at least 1 lower case letter, 1 upper case letter and 1 number.</value>
-  </data>
+		<value>The password should have at least 6 characters and at least 1 lower case letter, 1 upper case letter and 1 number.</value>
+	</data>
 	<data name="WarningResetPassword" xml:space="preserve">
-    <value>You will receive an email with a link to reset your password.</value>
-  </data>
+		<value>You will receive an email with a link to reset your password.</value>
+	</data>
 	<data name="PasswordForgot" xml:space="preserve">
-    <value>Forgot your password?</value>
-  </data>
+		<value>Forgot your password?</value>
+	</data>
 	<data name="PasswordRetype" xml:space="preserve">
-    <value>Retype password</value>
-  </data>
+		<value>Retype password</value>
+	</data>
 	<data name="EmailAddress" xml:space="preserve">
-    <value>Email address</value>
-  </data>
+		<value>Email address</value>
+	</data>
 	<data name="Country" xml:space="preserve">
-    <value>Country</value>
-  </data>
+		<value>Country</value>
+	</data>
 	<data name="Modules" xml:space="preserve">
-    <value>Modules</value>
-  </data>
+		<value>Modules</value>
+	</data>
 	<data name="TimeZone" xml:space="preserve">
-    <value>Timezone</value>
-  </data>
+		<value>Timezone</value>
+	</data>
 	<data name="WarningNoCountrySelected" xml:space="preserve">
-    <value>There is no country selected.</value>
-  </data>
+		<value>There is no country selected.</value>
+	</data>
 	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
-    <value>There is no timezone selected.</value>
-  </data>
+		<value>There is no timezone selected.</value>
+	</data>
 	<data name="WarningInvalidEmail" xml:space="preserve">
-    <value>Entered e-mail address is invalid.</value>
-  </data>
+		<value>Entered e-mail address is invalid.</value>
+	</data>
 	<data name="WarningLicenseNameSize" xml:space="preserve">
-    <value>You have to enter an (company) name existing of at least 3 characters.</value>
-  </data>
+		<value>You have to enter an (company) name existing of at least 3 characters.</value>
+	</data>
 	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
-    <value>You will receive an email that you first need to confirm before you are able to log in.</value>
-  </data>
+		<value>You will receive an email that you first need to confirm before you are able to log in.</value>
+	</data>
 	<data name="Fullname" xml:space="preserve">
-    <value>Full name</value>
-  </data>
+		<value>Full name</value>
+	</data>
 	<data name="WarningBuildCalled" xml:space="preserve">
-    <value>Build can only be called once.</value>
-  </data>
+		<value>Build can only be called once.</value>
+	</data>
 	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
-    <value>CreateBuilder must be called before CreateServiceProvider.</value>
-  </data>
+		<value>CreateBuilder must be called before CreateServiceProvider.</value>
+	</data>
 	<data name="WarningNullIServiceProvider" xml:space="preserve">
-    <value>The IServiceProviderFactory returned a null IServiceProvider.</value>
-  </data>
+		<value>The IServiceProviderFactory returned a null IServiceProvider.</value>
+	</data>
 	<data name="WarningResolverReturnedNull" xml:space="preserve">
-    <value>The resolver returned a null IServiceProviderFactory.</value>
-  </data>
+		<value>The resolver returned a null IServiceProviderFactory.</value>
+	</data>
 	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
-    <value>Replacing IHostApplicationLifetime is not supported.</value>
-  </data>
+		<value>Replacing IHostApplicationLifetime is not supported.</value>
+	</data>
 	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
-    <value>File name is null or empty. Specify a valid file name.</value>
-  </data>
+		<value>File name is null or empty. Specify a valid file name.</value>
+	</data>
 	<data name="CannotFindUpdateFile" xml:space="preserve">
-    <value>Cannot find update file.</value>
-  </data>
+		<value>Cannot find update file.</value>
+	</data>
 	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
-    <value>Could not retrieve version information.</value>
-  </data>
+		<value>Could not retrieve version information.</value>
+	</data>
 	<data name="NoInternetConnectionAvailable" xml:space="preserve">
-    <value>No internet connection is available.</value>
-  </data>
+		<value>No internet connection is available.</value>
+	</data>
 	<data name="CannotInstallUpdate" xml:space="preserve">
-    <value>Cannot install update.</value>
-  </data>
+		<value>Cannot install update.</value>
+	</data>
 	<data name="MandatoryUpdateFailed" xml:space="preserve">
-    <value>Mandatory update has failed!</value>
-  </data>
+		<value>Mandatory update has failed!</value>
+	</data>
 	<data name="WarningUsernameSize" xml:space="preserve">
-    <value>Username should contain at least 3 characters.</value>
-  </data>
+		<value>Username should contain at least 3 characters.</value>
+	</data>
 	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
-    <value>The mandatory package update failed.
+		<value>The mandatory package update failed.
 Try again or update the application through the Microsoft Store.</value>
-  </data>
-	<data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-	<data name="WarningFutureModule" xml:space="preserve">
-    <value>This feature is not available at this moment in this version.</value>
-  </data>
+	</data>
 </root>

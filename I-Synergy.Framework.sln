@@ -207,9 +207,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Syncfusion", "sample
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uno", "Uno", "{D2A22AD8-A589-42EF-B33A-D09F26E43806}"
 	ProjectSection(SolutionItems) = preProject
-		samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Base\base.props = samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Base\base.props
 		samples\ISynergy.Framework.UI\Sample.Uno\Directory.Build.props = samples\ISynergy.Framework.UI\Sample.Uno\Directory.Build.props
 		samples\ISynergy.Framework.UI\Sample.Uno\Directory.Build.targets = samples\ISynergy.Framework.UI\Sample.Uno\Directory.Build.targets
+		samples\ISynergy.Framework.UI\Sample.Uno\Directory.Packages.props = samples\ISynergy.Framework.UI\Sample.Uno\Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno.Desktop", "samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Desktop\Sample.Uno.Desktop.csproj", "{4B745300-BD85-4ECA-894F-FBC905CEE1D9}"
@@ -218,9 +218,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno.Web", "samples\I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno.Mobile", "samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Mobile\Sample.Uno.Mobile.csproj", "{C29C88C8-386A-4D79-88BE-8A818BD9CE07}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.WinUI.Tests", "tests\ISynergy.Framework.UI.WinUI.Tests\ISynergy.Framework.UI.WinUI.Tests.csproj", "{7B82F850-633B-4774-94EC-28B2FFB15C22}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.Uno.Shared", "samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Shared\Sample.Uno.Shared.shproj", "{DB6D9B13-787E-46DD-ABF6-D1162EFF316B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno", "samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno\Sample.Uno.csproj", "{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.WinUI.Tests", "tests\ISynergy.Framework.UI.WinUI.Tests\ISynergy.Framework.UI.WinUI.Tests.csproj", "{7B82F850-633B-4774-94EC-28B2FFB15C22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -4561,7 +4561,6 @@ Global
 		{4B745300-BD85-4ECA-894F-FBC905CEE1D9}.AppStore|x86.ActiveCfg = Debug|Any CPU
 		{4B745300-BD85-4ECA-894F-FBC905CEE1D9}.AppStore|x86.Build.0 = Debug|Any CPU
 		{4B745300-BD85-4ECA-894F-FBC905CEE1D9}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{4B745300-BD85-4ECA-894F-FBC905CEE1D9}.Debug|Any CPU.Build.0 = Debug|x64
 		{4B745300-BD85-4ECA-894F-FBC905CEE1D9}.Debug|Any CPU.Deploy.0 = Debug|x64
 		{4B745300-BD85-4ECA-894F-FBC905CEE1D9}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{4B745300-BD85-4ECA-894F-FBC905CEE1D9}.Debug|ARM.Build.0 = Debug|Any CPU
@@ -4618,7 +4617,6 @@ Global
 		{3E571E9F-3A8F-4AD9-85F6-7D122875B136}.AppStore|x86.ActiveCfg = Debug|Any CPU
 		{3E571E9F-3A8F-4AD9-85F6-7D122875B136}.AppStore|x86.Build.0 = Debug|Any CPU
 		{3E571E9F-3A8F-4AD9-85F6-7D122875B136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E571E9F-3A8F-4AD9-85F6-7D122875B136}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E571E9F-3A8F-4AD9-85F6-7D122875B136}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{3E571E9F-3A8F-4AD9-85F6-7D122875B136}.Debug|ARM.Build.0 = Debug|Any CPU
 		{3E571E9F-3A8F-4AD9-85F6-7D122875B136}.Debug|ARM64.ActiveCfg = Debug|Any CPU
@@ -4674,7 +4672,6 @@ Global
 		{C29C88C8-386A-4D79-88BE-8A818BD9CE07}.AppStore|x86.ActiveCfg = Debug|Any CPU
 		{C29C88C8-386A-4D79-88BE-8A818BD9CE07}.AppStore|x86.Build.0 = Debug|Any CPU
 		{C29C88C8-386A-4D79-88BE-8A818BD9CE07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C29C88C8-386A-4D79-88BE-8A818BD9CE07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C29C88C8-386A-4D79-88BE-8A818BD9CE07}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{C29C88C8-386A-4D79-88BE-8A818BD9CE07}.Debug|ARM.Build.0 = Debug|Any CPU
 		{C29C88C8-386A-4D79-88BE-8A818BD9CE07}.Debug|ARM64.ActiveCfg = Debug|Any CPU
@@ -4757,62 +4754,6 @@ Global
 		{7B82F850-633B-4774-94EC-28B2FFB15C22}.Release|x64.Build.0 = Release|Any CPU
 		{7B82F850-633B-4774-94EC-28B2FFB15C22}.Release|x86.ActiveCfg = Release|Any CPU
 		{7B82F850-633B-4774-94EC-28B2FFB15C22}.Release|x86.Build.0 = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|Any CPU.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|ARM.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|ARM.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|ARM64.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|ARM64.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|x64.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|x86.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Ad-Hoc|x86.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|Any CPU.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|ARM.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|ARM.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|ARM64.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|ARM64.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|iPhone.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|x64.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|x64.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|x86.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.AppStore|x86.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|ARM.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|iPhone.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|iPhone.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|x64.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Debug|x86.Build.0 = Debug|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|ARM.ActiveCfg = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|ARM.Build.0 = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|ARM64.Build.0 = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|iPhone.ActiveCfg = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|iPhone.Build.0 = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|x64.ActiveCfg = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|x64.Build.0 = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|x86.ActiveCfg = Release|Any CPU
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -4909,15 +4850,19 @@ Global
 		{4B745300-BD85-4ECA-894F-FBC905CEE1D9} = {D2A22AD8-A589-42EF-B33A-D09F26E43806}
 		{3E571E9F-3A8F-4AD9-85F6-7D122875B136} = {D2A22AD8-A589-42EF-B33A-D09F26E43806}
 		{C29C88C8-386A-4D79-88BE-8A818BD9CE07} = {D2A22AD8-A589-42EF-B33A-D09F26E43806}
+		{DB6D9B13-787E-46DD-ABF6-D1162EFF316B} = {D2A22AD8-A589-42EF-B33A-D09F26E43806}
 		{7B82F850-633B-4774-94EC-28B2FFB15C22} = {600436D8-B218-4FC2-B2E0-90279B1D37D5}
-		{E6A0BEE2-8C6A-4CED-903B-92FE9C239070} = {D2A22AD8-A589-42EF-B33A-D09F26E43806}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Shared\Sample.Uno.Shared.projitems*{3e571e9f-3a8f-4ad9-85f6-7d122875b136}*SharedItemsImports = 5
+		samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Shared\Sample.Uno.Shared.projitems*{4b745300-bd85-4eca-894f-fbc905cee1d9}*SharedItemsImports = 5
 		samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.projitems*{58ac244e-38e5-4165-a25e-fedad3ad26c2}*SharedItemsImports = 13
 		samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.projitems*{81924ac4-c08f-4e9b-bd05-fb7f75291609}*SharedItemsImports = 5
+		samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Shared\Sample.Uno.Shared.projitems*{c29c88c8-386a-4d79-88be-8a818bd9ce07}*SharedItemsImports = 5
+		samples\ISynergy.Framework.UI\Sample.Uno\Sample.Uno.Shared\Sample.Uno.Shared.projitems*{db6d9b13-787e-46dd-abf6-d1162eff316b}*SharedItemsImports = 13
 		samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.projitems*{f0a50d88-bf53-4772-9057-b1f89442d4c4}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

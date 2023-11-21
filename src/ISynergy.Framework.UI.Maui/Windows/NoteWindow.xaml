@@ -7,7 +7,7 @@
 
     <ContentView 
         ControlTemplate="{StaticResource DefaultDialogTemplate}"
-        WidthRequest="{OnPlatform WinUI=600, Default=400}">
+        MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
 
         <Grid Margin="10">
             <Editor
