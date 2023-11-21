@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks>$(TargetFrameworks);net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0;net8.0-windows10.0.19041.0</TargetFrameworks>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<PublishReadyToRun>false</PublishReadyToRun>
@@ -23,18 +24,30 @@
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.0.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-	</ItemGroup>
+	<Choose>
+		<When Condition="$(TargetFramework.StartsWith('net8.0')) == true">
+			<ItemGroup>
+				<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
+				<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
+				<PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
+				<PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.0.0" />
+				<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+				<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
+				<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.3.1" />
+				<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+				<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -53,21 +66,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<MauiXaml Update="Controls\ErrorPresenter\ErrorPresenter.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Resources\Styles\Generic.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\LoadingView.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Windows\NoteWindow.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Windows\SelectionWindow.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
+	  <MauiXaml Update="Controls\ErrorPresenter\ErrorPresenter.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Resources\Styles\Generic.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\LoadingView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Windows\NoteWindow.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Windows\SelectionWindow.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>

@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFramework>net8.0-windows10.0.19041</TargetFramework>
+		<TargetFrameworks>net8.0-windows10.0.19041;net7.0-windows10.0.19041</TargetFrameworks>
 		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.Update.WinUI</PackageId>
@@ -17,7 +17,14 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows10.0.19041'">
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows10.0.19041'">
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

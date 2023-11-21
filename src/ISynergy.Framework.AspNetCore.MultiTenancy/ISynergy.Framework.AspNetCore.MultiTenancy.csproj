@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.AspNetCore.MultiTenancy</PackageId>
-		<Description>I-Synergy Framework MultiTenancy for .net 8.0</Description>
+		<Description>I-Synergy Framework MultiTenancy for .net 6.0, .net 7.0 and .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, MultiTenancy, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.MultiTenancy.ruleset</CodeAnalysisRuleSet>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -40,9 +40,9 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="23.1.44" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="23.1.44" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="23.1.44" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="23.2.4" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="23.2.4" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="23.2.4" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -50,6 +50,7 @@
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Logging.AppCenter\ISynergy.Framework.Logging.AppCenter.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj" />
 	</ItemGroup>

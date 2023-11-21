@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Update</PackageId>
 		<Description>I-Synergy Framework Update</Description>
 		<PackageTags>I-Synergy, Framework, Update</PackageTags>

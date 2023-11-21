@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 		
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Windows, Linux, Android and WebAssembly</Description>
@@ -30,6 +30,15 @@
 	
 	<ItemGroup>
 		<PackageReference Include="NodaTime" Version="3.1.9" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
