@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
+using Sample.Abstractions;
 using System.Reflection;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -43,6 +44,7 @@ namespace Sample
                 .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(x => x.Name.StartsWith(typeof(MauiProgram).Namespace));
 
             builder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+            builder.Services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
             builder.Services.TryAddSingleton<IBaseApplicationSettingsService, AppSettingsService>();
             builder.Services.TryAddSingleton<ISettingsService<Setting>, SettingsService>();

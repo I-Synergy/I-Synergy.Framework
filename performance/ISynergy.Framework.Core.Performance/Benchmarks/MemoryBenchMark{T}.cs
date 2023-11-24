@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Core.Performance.Benchmarks
         //[Arguments(100000)]
         public List<T> CreateList(int count)
         {
-            List<T> result = new();
+            List<T> result = [];
             for (int i = 0; i < count; i++)
             {
                 result.Add(new T());
@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Core.Performance.Benchmarks
         //[Arguments(100000)]
         public ObservableCollection<T> CreateObservableCollection(int count)
         {
-            ObservableCollection<T> result = new();
+            ObservableCollection<T> result = [];
             for (int i = 0; i < count; i++)
             {
                 result.Add(new T());

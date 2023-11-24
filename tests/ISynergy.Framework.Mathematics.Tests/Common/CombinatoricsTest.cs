@@ -118,9 +118,7 @@
                 //
             }
 
-            List<int[]> permutations = new();
-            foreach (int[] p in Combinatorics.Permutations(values))
-                permutations.Add(p);
+            List<int[]> permutations = [.. Combinatorics.Permutations(values)];
 
             Assert.AreEqual(6, permutations.Count);
             Assert.IsTrue(permutations[0].IsEqual(new[] { 1, 2, 3 }));

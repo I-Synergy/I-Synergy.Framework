@@ -57,7 +57,7 @@ namespace Sample
 #if __WASM__
 			        logging.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
 #elif __IOS__ || __MACCATALYST__
-			        logging.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
+			        logging.AddProvider(new OSLogLoggerProvider());
 #elif NETFX_CORE
 			        logging.AddDebug();
 #else

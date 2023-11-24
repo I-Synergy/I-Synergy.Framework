@@ -5,12 +5,12 @@ namespace ISynergy.Framework.Core.Fixtures
 {
     /// <summary>
     /// Class ModelFixture.
-    /// Implements the <see cref="Base.ModelBase" />
-    /// Implements the <see cref="System.IDisposable" />
+    /// Implements the <see cref="ModelBase" />
+    /// Implements the <see cref="IDisposable" />
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <seealso cref="Base.ModelBase" />
-    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="ModelBase" />
+    /// <seealso cref="IDisposable" />
     public class ModelFixture<T> : ModelBase, IDisposable
     {
         /// <summary>

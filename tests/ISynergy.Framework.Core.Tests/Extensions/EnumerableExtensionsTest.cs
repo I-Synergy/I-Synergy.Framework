@@ -52,18 +52,18 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IEnumerableTToDataTableTest()
         {
-            List<Product> collection = new()
-            {
+            List<Product> collection =
+            [
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
-            };
+            ];
 
             if (collection is IEnumerable<Product> data)
             {
-                System.Data.DataTable dataTable = data.ToDataTable<Product>("Test");
+                System.Data.DataTable dataTable = data.ToDataTable("Test");
 
                 Assert.IsNotNull(dataTable);
                 Assert.AreEqual(5, dataTable.Rows.Count);
@@ -83,14 +83,14 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IEnumerableToDataTableTest()
         {
-            List<Product> collection = new()
-            {
+            List<Product> collection =
+            [
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
-            };
+            ];
 
             if (collection is IEnumerable data)
             {

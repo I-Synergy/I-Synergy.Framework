@@ -36,7 +36,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             if (Directory.Exists(fileOrFolderToWatch) || File.Exists(fileOrFolderToWatch))
             {
-                ObservedFiles = new List<ObservedFile>();
+                ObservedFiles = [];
 
                 FileWatcher = new WatcherEx(new WatcherInfo
                 {

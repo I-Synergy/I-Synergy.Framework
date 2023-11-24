@@ -329,7 +329,7 @@
                 new double[] { 7, 2 },
             };
 
-            List<Tuple<double, double>> comparisons = new();
+            List<Tuple<double, double>> comparisons = [];
             double[] e = points[idx[0]];
             Func<double[], double[], int> comparer = (double[] x, double[] y) =>
             {

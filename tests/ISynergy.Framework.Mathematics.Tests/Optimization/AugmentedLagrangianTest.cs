@@ -39,23 +39,23 @@
             );
 
 
-            List<NonlinearConstraint> constraints = new();
+            List<NonlinearConstraint> constraints =
+            [
+                new NonlinearConstraint(f,
 
-            constraints.Add(new NonlinearConstraint(f,
+                    function: (x) => x[0],
+                    gradient: (x) => new[] { 1.0, 0.0 },
 
-                function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
+                    shouldBe: ConstraintType.LesserThanOrEqualTo, value: 0
+                ),
+                new NonlinearConstraint(f,
 
-                shouldBe: ConstraintType.LesserThanOrEqualTo, value: 0
-            ));
+                    function: (x) => x[1],
+                    gradient: (x) => new[] { 0.0, 1.0 },
 
-            constraints.Add(new NonlinearConstraint(f,
-
-                function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
-
-                shouldBe: ConstraintType.LesserThanOrEqualTo, value: 0
-            ));
+                    shouldBe: ConstraintType.LesserThanOrEqualTo, value: 0
+                ),
+            ];
 
             AugmentedLagrangian solver = new(f, constraints);
 
@@ -91,23 +91,23 @@
             );
 
 
-            List<NonlinearConstraint> constraints = new();
+            List<NonlinearConstraint> constraints =
+            [
+                new NonlinearConstraint(f,
 
-            constraints.Add(new NonlinearConstraint(f,
+                    function: (x) => x[0],
+                    gradient: (x) => new[] { 1.0, 0.0 },
 
-                function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0
+                ),
+                new NonlinearConstraint(f,
 
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0
-            ));
+                    function: (x) => x[1],
+                    gradient: (x) => new[] { 0.0, 1.0 },
 
-            constraints.Add(new NonlinearConstraint(f,
-
-                function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
-
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0
-            ));
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0
+                ),
+            ];
 
             AugmentedLagrangian solver = new(f, constraints);
 
@@ -149,23 +149,23 @@
             );
 
 
-            List<NonlinearConstraint> constraints = new();
+            List<NonlinearConstraint> constraints =
+            [
+                new NonlinearConstraint(f,
 
-            constraints.Add(new NonlinearConstraint(f,
+                    function: () => x * x - y * y + z * z,
+                    gradient: () => new[] { 2 * x, -2 * y, 2 * z },
 
-                function: () => x * x - y * y + z * z,
-                gradient: () => new[] { 2 * x, -2 * y, 2 * z },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 2
+                ),
+                new NonlinearConstraint(f,
 
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 2
-            ));
+                    function: () => x * x + y * y + z * z,
+                    gradient: () => new[] { 2 * x, 2 * y, 2 * z },
 
-            constraints.Add(new NonlinearConstraint(f,
-
-                function: () => x * x + y * y + z * z,
-                gradient: () => new[] { 2 * x, 2 * y, 2 * z },
-
-                shouldBe: ConstraintType.LesserThanOrEqualTo, value: 10
-            ));
+                    shouldBe: ConstraintType.LesserThanOrEqualTo, value: 10
+                ),
+            ];
 
             AugmentedLagrangian solver = new(f, constraints);
 
@@ -215,31 +215,30 @@
             );
 
 
-            List<NonlinearConstraint> constraints = new();
+            List<NonlinearConstraint> constraints =
+            [
+                new NonlinearConstraint(f,
 
-            constraints.Add(new NonlinearConstraint(f,
+                    function: () => x * x - y * y + z * z,
+                    gradient: () => new[] { 2 * x, -2 * y, 2 * z },
 
-                function: () => x * x - y * y + z * z,
-                gradient: () => new[] { 2 * x, -2 * y, 2 * z },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 2
+                ),
+                new NonlinearConstraint(f,
 
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 2
-            ));
+                    function: () => x * x + y * y + z * z,
+                    gradient: () => new[] { 2 * x, 2 * y, 2 * z },
 
-            constraints.Add(new NonlinearConstraint(f,
+                    shouldBe: ConstraintType.LesserThanOrEqualTo, value: 10
+                ),
+                new NonlinearConstraint(f,
 
-                function: () => x * x + y * y + z * z,
-                gradient: () => new[] { 2 * x, 2 * y, 2 * z },
+                    function: () => x + y,
+                    gradient: () => new[] { 1.0, 1.0, 0.0 },
 
-                shouldBe: ConstraintType.LesserThanOrEqualTo, value: 10
-            ));
-
-            constraints.Add(new NonlinearConstraint(f,
-
-                function: () => x + y,
-                gradient: () => new[] { 1.0, 1.0, 0.0 },
-
-                shouldBe: ConstraintType.EqualTo, value: 1
-            ));
+                    shouldBe: ConstraintType.EqualTo, value: 1
+                ),
+            ];
 
             foreach (NonlinearConstraint c in constraints)
                 c.Tolerance = 1e-5;
@@ -293,8 +292,8 @@
             );
 
             // Now we can start stating the constraints
-            List<NonlinearConstraint> constraints = new()
-            {
+            List<NonlinearConstraint> constraints =
+            [
                 // Add the non-negativity constraint for x
                 new NonlinearConstraint(f,
                     // 1st constraint: x should be greater than or equal to 0
@@ -312,7 +311,7 @@
                     value: 0,
                     gradient: () => new[] { 0.0, 1.0 }
                 )
-            };
+            ];
 
             // Finally, we create the non-linear programming solver
             AugmentedLagrangian solver = new(f, constraints);
@@ -445,18 +444,18 @@
 
 
             // Create the optimization constraints
-            List<NonlinearConstraint> constraints = new();
-
-            constraints.Add(new QuadraticConstraint(objective,
-                quadraticTerms: A,
-                shouldBe: ConstraintType.LesserThanOrEqualTo, value: k
-            ));
-
-            constraints.Add(new NonlinearConstraint(objective,
-                function: (x) => x.Sum(),
-                gradient: (x) => new[] { 1.0, 1.0 },
-                shouldBe: ConstraintType.EqualTo, value: 1
-            ));
+            List<NonlinearConstraint> constraints =
+            [
+                new QuadraticConstraint(objective,
+                    quadraticTerms: A,
+                    shouldBe: ConstraintType.LesserThanOrEqualTo, value: k
+                ),
+                new NonlinearConstraint(objective,
+                    function: (x) => x.Sum(),
+                    gradient: (x) => new[] { 1.0, 1.0 },
+                    shouldBe: ConstraintType.EqualTo, value: 1
+                ),
+            ];
 
 
             // Test first constraint
@@ -537,12 +536,13 @@
 
 
             // Create the optimization constraints
-            List<NonlinearConstraint> constraints = new();
-
-            constraints.Add(new QuadraticConstraint(objective,
-                quadraticTerms: A,
-                shouldBe: ConstraintType.LesserThanOrEqualTo, value: k
-            ));
+            List<NonlinearConstraint> constraints =
+            [
+                new QuadraticConstraint(objective,
+                    quadraticTerms: A,
+                    shouldBe: ConstraintType.LesserThanOrEqualTo, value: k
+                ),
+            ];
 
 
             // Test first constraint
@@ -793,37 +793,34 @@
                 function: (x) => (x[0] - 1.0) * (x[0] - 1.0) + (x[1] - 2.5) * (x[1] - 2.5),
                 gradient: (x) => new[] { 2.0 * (x[0] - 1.0), 2.0 * (x[1] - 2.5) });
 
-            List<NonlinearConstraint> constraints = new();
-
-            // Add the constraint $x_1 - 2x_2 + 2 \ge0$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => x[0] - 2.0 * x[1] + 2.0,
-                gradient: (x) => new[] { 1.0, -2.0 },
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0));
-
-            // Add the constraint $-x_0 - 2x_1 + 6 \ge 0$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => -x[0] - 2.0 * x[1] + 6.0,
-                gradient: (x) => new[] { -1.0, -2.0 },
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0));
-
-            // Add the constraint $-x_0 + 2x_1 + 2 \ge 0$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => -x[0] + 2.0 * x[1] + 2.0,
-                gradient: (x) => new[] { -1.0, 2.0 },
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0));
-
-            // Add the constraint $x_0  \ge 0$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0));
-
-            // Add the constraint $x_1  \ge 0$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0));
+            List<NonlinearConstraint> constraints =
+            [
+                // Add the constraint $x_1 - 2x_2 + 2 \ge0$.
+                new NonlinearConstraint(f,
+                    function: (x) => x[0] - 2.0 * x[1] + 2.0,
+                    gradient: (x) => new[] { 1.0, -2.0 },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
+                // Add the constraint $-x_0 - 2x_1 + 6 \ge 0$.
+                new NonlinearConstraint(f,
+                    function: (x) => -x[0] - 2.0 * x[1] + 6.0,
+                    gradient: (x) => new[] { -1.0, -2.0 },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
+                // Add the constraint $-x_0 + 2x_1 + 2 \ge 0$.
+                new NonlinearConstraint(f,
+                    function: (x) => -x[0] + 2.0 * x[1] + 2.0,
+                    gradient: (x) => new[] { -1.0, 2.0 },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
+                // Add the constraint $x_0  \ge 0$.
+                new NonlinearConstraint(f,
+                    function: (x) => x[0],
+                    gradient: (x) => new[] { 1.0, 0.0 },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
+                // Add the constraint $x_1  \ge 0$.
+                new NonlinearConstraint(f,
+                    function: (x) => x[1],
+                    gradient: (x) => new[] { 0.0, 1.0 },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
+            ];
 
             AugmentedLagrangian solver = new(f, constraints);
 
@@ -851,37 +848,34 @@
                 function: (x) => 3.0 * x[0] - 4.0 * x[1],
                 gradient: (x) => new[] { 3.0, -4.0 });
 
-            List<NonlinearConstraint> constraints = new();
-
-            // Add the constraint $x_0 \ge 0$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0));
-
-            // Add the constraint $x_0 \le 1$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
-                shouldBe: ConstraintType.LesserThanOrEqualTo, value: 1));
-
-            // Add the constraint $x_1 \ge 0$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
-                shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0));
-
-            // Add the constraint $x_1 \le 1$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
-                shouldBe: ConstraintType.LesserThanOrEqualTo, value: 1));
-
-            // Add the constraint $x_0 + x_1 = 1$.
-            constraints.Add(new NonlinearConstraint(f,
-                function: (x) => x[0] + x[1],
-                gradient: (x) => new[] { 1.0, 1.0 },
-                shouldBe: ConstraintType.EqualTo, value: 1));
+            List<NonlinearConstraint> constraints =
+            [
+                // Add the constraint $x_0 \ge 0$.
+                new NonlinearConstraint(f,
+                    function: (x) => x[0],
+                    gradient: (x) => new[] { 1.0, 0.0 },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
+                // Add the constraint $x_0 \le 1$.
+                new NonlinearConstraint(f,
+                    function: (x) => x[0],
+                    gradient: (x) => new[] { 1.0, 0.0 },
+                    shouldBe: ConstraintType.LesserThanOrEqualTo, value: 1),
+                // Add the constraint $x_1 \ge 0$.
+                new NonlinearConstraint(f,
+                    function: (x) => x[1],
+                    gradient: (x) => new[] { 0.0, 1.0 },
+                    shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
+                // Add the constraint $x_1 \le 1$.
+                new NonlinearConstraint(f,
+                    function: (x) => x[1],
+                    gradient: (x) => new[] { 0.0, 1.0 },
+                    shouldBe: ConstraintType.LesserThanOrEqualTo, value: 1),
+                // Add the constraint $x_0 + x_1 = 1$.
+                new NonlinearConstraint(f,
+                    function: (x) => x[0] + x[1],
+                    gradient: (x) => new[] { 1.0, 1.0 },
+                    shouldBe: ConstraintType.EqualTo, value: 1),
+            ];
 
             AugmentedLagrangian solver = new(f, constraints);
 

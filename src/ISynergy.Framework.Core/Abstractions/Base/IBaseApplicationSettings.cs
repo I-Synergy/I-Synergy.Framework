@@ -20,10 +20,6 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// </summary>
         string DefaultUser { get; set; }
         /// <summary>
-        /// Setting for maintaining all successfull usernames logged in.
-        /// </summary>
-        List<string> Users { get; set; }
-        /// <summary>
         /// Setting for storing the refresh token received on authentication.
         /// </summary>
         string RefreshToken { get; set; }
@@ -36,7 +32,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// </summary>
         Themes Theme { get; set; }
         /// <summary>
-        /// If RefreshToken is available and setting is true, the application can login automatically. 
+        /// If RefreshToken is available or user is available in Windows Credentials locker and setting is true, the application can login automatically. 
         /// </summary>
         bool IsAutoLogin { get; set; }
         /// <summary>

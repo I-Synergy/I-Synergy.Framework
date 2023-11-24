@@ -77,7 +77,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         [TestMethod]
         public void IsNotNullOrEmptyListTTest()
         {
-            List<object> test = new();
+            List<object> test = [];
             Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(test));
         }
 
@@ -97,9 +97,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         [TestMethod]
         public void HasNoNullsTTest()
         {
-            List<Product> test = new();
-            test.Add(new Product());
-            test.Add(null);
+            List<Product> test = [new Product(), null];
 
             Assert.ThrowsException<ArgumentNullException>(() => Argument.HasNoNulls(test));
         }
