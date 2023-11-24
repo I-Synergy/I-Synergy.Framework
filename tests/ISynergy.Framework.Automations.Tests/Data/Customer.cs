@@ -56,11 +56,7 @@ namespace ISynergy.Framework.Automations.Tests.Data
 
         public Customer()
         {
-            Actions = new List<string>();
-            Actions.Add("Block");
-            Actions.Add("Activate");
-            Actions.Add("Add");
-            Actions.Add("Delete");
+            Actions = ["Block", "Activate", "Add", "Delete"];
 
         }
 

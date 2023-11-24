@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Reset();
             TestRecipient.Reset();
 
-            List<TestRecipient1> list = new();
+            List<TestRecipient1> list = [];
 
             for (int index = 0; index < 10; index++)
             {
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Reset();
             TestRecipient.Reset();
 
-            List<TestRecipient2> list = new();
+            List<TestRecipient2> list = [];
 
             for (int index = 0; index < 10; index++)
             {

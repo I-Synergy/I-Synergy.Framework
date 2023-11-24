@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace Sample.Droid
 {
-    [global::Android.App.ApplicationAttribute(
+    [Android.App.Application(
         Label = "@string/ApplicationName",
         Icon = "@mipmap/iconapp",
         LargeHeap = true,

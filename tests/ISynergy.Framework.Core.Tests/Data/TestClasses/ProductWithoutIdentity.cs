@@ -8,9 +8,9 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
 {
     /// <summary>
     /// Class Product.
-    /// Implements the <see cref="Base.ObservableClass" />
+    /// Implements the <see cref="ObservableClass" />
     /// </summary>
-    /// <seealso cref="Base.ObservableClass" />
+    /// <seealso cref="ObservableClass" />
     public class ProductWithoutIdentity : ObservableClass
     {
         /// <summary>

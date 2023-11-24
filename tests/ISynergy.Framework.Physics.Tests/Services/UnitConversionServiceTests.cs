@@ -80,8 +80,8 @@ namespace ISynergy.Framework.Physics.Services.Tests
         [DataRow("L", 1000, "m3", 1)]
         public void UnitConvertTest(string sourceSymbol, double value, string targetSymbol, double result)
         {
-            IUnit source = _unitConversionService.Units.Where(q => q.Symbol.Equals(sourceSymbol)).Single();
-            IUnit target = _unitConversionService.Units.Where(q => q.Symbol.Equals(targetSymbol)).Single();
+            IUnit source = _unitConversionService.Units.Single(q => q.Symbol.Equals(sourceSymbol));
+            IUnit target = _unitConversionService.Units.Single(q => q.Symbol.Equals(targetSymbol));
 
             Assert.AreEqual(result, _unitConversionService.Convert(source, value, target));
         }

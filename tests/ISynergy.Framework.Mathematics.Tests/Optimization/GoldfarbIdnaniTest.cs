@@ -313,10 +313,12 @@
 
             double[] b = { -8, 2, 0 };
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(-4, -3, +0) { Value = -8 });
-            constraints.Add(new LinearConstraint(+2, +1, +0) { Value = +2 });
-            constraints.Add(new LinearConstraint(+0, -2, +1) { Value = +0 });
+            List<LinearConstraint> constraints =
+            [
+                new LinearConstraint(-4, -3, +0) { Value = -8 },
+                new LinearConstraint(+2, +1, +0) { Value = +2 },
+                new LinearConstraint(+0, -2, +1) { Value = +0 },
+            ];
 
             QuadraticObjectiveFunction f = new("2x² + y - z + 2");
 
@@ -380,8 +382,8 @@
 
 
             // Alternatively, we may use an explicit form:
-            List<LinearConstraint> constraints = new()
-            {
+            List<LinearConstraint> constraints =
+            [
                 // Define the first constraint, which involves only x
                 new LinearConstraint(numberOfVariables: 1)
                 {
@@ -407,7 +409,7 @@
                     ShouldBe = ConstraintType.EqualTo,
                     Value = 5
                 }
-            };
+            ];
 
 
             // Now we can finally create our optimization problem
@@ -463,11 +465,11 @@
             QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y);
 
             // Now, create the constraints
-            List<LinearConstraint> constraints = new()
-            {
+            List<LinearConstraint> constraints =
+            [
                 new LinearConstraint(f, () => x - y == 5),
                 new LinearConstraint(f, () => x >= 10)
-            };
+            ];
 
             // Now we create the quadratic programming solver 
             GoldfarbIdnani solver = new(f, constraints);
@@ -526,9 +528,7 @@
 
             QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y - 100);
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(f, () => x - y == 5));
-            constraints.Add(new LinearConstraint(f, () => x >= 10));
+            List<LinearConstraint> constraints = [new LinearConstraint(f, () => x - y == 5), new LinearConstraint(f, () => x >= 10)];
 
             GoldfarbIdnani solver = new(f, constraints);
 
@@ -561,9 +561,7 @@
 
             QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y + 100);
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(f, () => x - y == 5));
-            constraints.Add(new LinearConstraint(f, () => x >= 10));
+            List<LinearConstraint> constraints = [new LinearConstraint(f, () => x - y == 5), new LinearConstraint(f, () => x >= 10)];
 
             GoldfarbIdnani solver = new(f, constraints);
 
@@ -600,9 +598,7 @@
 
             QuadraticObjectiveFunction f = new("2x² - xy + 4y² - 5x - 6y");
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(f, "x-y = 5"));
-            constraints.Add(new LinearConstraint(f, "x >= 10"));
+            List<LinearConstraint> constraints = [new LinearConstraint(f, "x-y = 5"), new LinearConstraint(f, "x >= 10")];
 
 
             GoldfarbIdnani target = new(f, constraints);
@@ -648,11 +644,13 @@
 
             QuadraticObjectiveFunction f = new(() => x * x - 2 * x * y + 3 * y * y + z * z - 4 * x - 5 * y - z);
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(f, () => 6 * x - 7 * y <= 8));
-            constraints.Add(new LinearConstraint(f, () => 9 * x + 1 * y <= 11));
-            constraints.Add(new LinearConstraint(f, () => 9 * x - y <= 11));
-            constraints.Add(new LinearConstraint(f, () => -z - y == 12));
+            List<LinearConstraint> constraints =
+            [
+                new LinearConstraint(f, () => 6 * x - 7 * y <= 8),
+                new LinearConstraint(f, () => 9 * x + 1 * y <= 11),
+                new LinearConstraint(f, () => 9 * x - y <= 11),
+                new LinearConstraint(f, () => -z - y == 12),
+            ];
 
 
             GoldfarbIdnani target = new(f, constraints);
@@ -681,11 +679,13 @@
 
             QuadraticObjectiveFunction f = new("1x² - 2xy + 3y² + z² - 4x - 5y -z");
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(f, "6x-7y <= 8"));
-            constraints.Add(new LinearConstraint(f, "9x + 1y <= 11"));
-            constraints.Add(new LinearConstraint(f, "9x-y <= 11"));
-            constraints.Add(new LinearConstraint(f, "-z-y = 12"));
+            List<LinearConstraint> constraints =
+            [
+                new LinearConstraint(f, "6x-7y <= 8"),
+                new LinearConstraint(f, "9x + 1y <= 11"),
+                new LinearConstraint(f, "9x-y <= 11"),
+                new LinearConstraint(f, "-z-y = 12"),
+            ];
 
 
             GoldfarbIdnani target = new(f, constraints);
@@ -720,9 +720,7 @@
             // http://www.wolframalpha.com/input/?i=min+x%C2%B2+%2B+2xy+%2B+y%C2%B2+-+y%2C+x+%3E%3D+1%2C+y+%3E%3D+1
             QuadraticObjectiveFunction f = new(() => 3 * (x * x) + 2 * (x * y) + 3 * (y * y) - y);
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(f, () => x >= 1));
-            constraints.Add(new LinearConstraint(f, () => y >= 1));
+            List<LinearConstraint> constraints = [new LinearConstraint(f, () => x >= 1), new LinearConstraint(f, () => y >= 1)];
 
 
             GoldfarbIdnani target = new(f, constraints);
@@ -794,9 +792,7 @@
             // http://www.wolframalpha.com/input/?i=min+x%C2%B2+%2B+2xy+%2B+y%C2%B2+-+y%2C+x+%3E%3D+1%2C+y+%3E%3D+1
             QuadraticObjectiveFunction f = new(() => (x * x) + 2 * (x * y) + (y * y) - y);
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(f, () => x >= 1));
-            constraints.Add(new LinearConstraint(f, () => y >= 1));
+            List<LinearConstraint> constraints = [new LinearConstraint(f, () => x >= 1), new LinearConstraint(f, () => y >= 1)];
 
 
             GoldfarbIdnani target = new(f, constraints);
@@ -855,11 +851,13 @@
 
             QuadraticObjectiveFunction f = new(() => 2 * (x * x) + (x * y) + (y * y) - 5 * y);
 
-            List<LinearConstraint> constraints = new();
-            constraints.Add(new LinearConstraint(f, () => -x - 3 * y >= -2));
-            constraints.Add(new LinearConstraint(f, () => -x - y >= 0));
-            constraints.Add(new LinearConstraint(f, () => x >= 0));
-            constraints.Add(new LinearConstraint(f, () => y >= 0));
+            List<LinearConstraint> constraints =
+            [
+                new LinearConstraint(f, () => -x - 3 * y >= -2),
+                new LinearConstraint(f, () => -x - y >= 0),
+                new LinearConstraint(f, () => x >= 0),
+                new LinearConstraint(f, () => y >= 0),
+            ];
 
 
             GoldfarbIdnani target = new(f, constraints);
@@ -949,11 +947,11 @@
             QuadraticObjectiveFunction f = new("-2x² + xy - y² + 5y");
 
             // Now, create the constraints
-            List<LinearConstraint> constraints = new()
-            {
+            List<LinearConstraint> constraints =
+            [
                 new LinearConstraint(f, "x + y <= 0"),
                 new LinearConstraint(f, "    y >= 0")
-            };
+            ];
 
             // Now we create the quadratic programming solver 
             GoldfarbIdnani solver = new(f, constraints);
@@ -990,7 +988,7 @@
             };
 
             QuadraticObjectiveFunction function = new(strObjective);
-            LinearConstraintCollection cst = new();
+            LinearConstraintCollection cst = [];
             foreach (string tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst));
 
@@ -1022,7 +1020,7 @@
             };
 
             QuadraticObjectiveFunction function = new(strObjective, fr);
-            LinearConstraintCollection cst = new();
+            LinearConstraintCollection cst = [];
             foreach (string tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst, fr));
 
@@ -1050,7 +1048,7 @@
             };
 
             QuadraticObjectiveFunction function = new(strObjective);
-            LinearConstraintCollection cst = new();
+            LinearConstraintCollection cst = [];
             foreach (string tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst));
 
@@ -1077,7 +1075,7 @@
 
             // Now we can start creating our function:
             QuadraticObjectiveFunction function = new(strObjective, CultureInfo.CurrentCulture);
-            LinearConstraintCollection cst = new();
+            LinearConstraintCollection cst = [];
             foreach (string tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst, CultureInfo.CurrentCulture));
 
@@ -1113,15 +1111,16 @@
             QuadraticObjectiveFunction f = new(Q, d, "a", "b", "c", "d");
 
             // Now, create the constraints
-            LinearConstraintCollection constraints = new();
-
-            constraints.Add(new LinearConstraint(f, "0.0732 * a + 0.0799 * b + 0.1926 * c + 0.0047 * d = 0.098"));
-            constraints.Add(new LinearConstraint(f, "a + b + c + d = 1"));
-            constraints.Add(new LinearConstraint(f, "a >= 0"));
-            constraints.Add(new LinearConstraint(f, "b >= 0"));
-            constraints.Add(new LinearConstraint(f, "c >= 0"));
-            constraints.Add(new LinearConstraint(f, "d >= 0"));
-            constraints.Add(new LinearConstraint(f, "a >= 0.5"));
+            LinearConstraintCollection constraints =
+            [
+                new LinearConstraint(f, "0.0732 * a + 0.0799 * b + 0.1926 * c + 0.0047 * d = 0.098"),
+                new LinearConstraint(f, "a + b + c + d = 1"),
+                new LinearConstraint(f, "a >= 0"),
+                new LinearConstraint(f, "b >= 0"),
+                new LinearConstraint(f, "c >= 0"),
+                new LinearConstraint(f, "d >= 0"),
+                new LinearConstraint(f, "a >= 0.5"),
+            ];
 
             Assert.AreEqual(1, constraints[6].CombinedAs[0]);
             Assert.AreEqual(0.5, constraints[6].Value);
@@ -1186,15 +1185,16 @@
             QuadraticObjectiveFunction f = new(Q, d, "a", "b", "c", "d");
 
             // Now, create the constraints
-            LinearConstraintCollection constraints = new();
-
-            constraints.Add(new LinearConstraint(f, "0.0732 * a + 0.0799 * b + 0.1926 * c + 0.0047 * d = 0.098"));
-            constraints.Add(new LinearConstraint(f, "a + b + c + d = 1"));
-            constraints.Add(new LinearConstraint(f, "-a <= 0"));
-            constraints.Add(new LinearConstraint(f, "-b <= 0"));
-            constraints.Add(new LinearConstraint(f, "-c <= 0"));
-            constraints.Add(new LinearConstraint(f, "-d <= 0"));
-            constraints.Add(new LinearConstraint(f, "-a + 0.5 <= 0.0"));
+            LinearConstraintCollection constraints =
+            [
+                new LinearConstraint(f, "0.0732 * a + 0.0799 * b + 0.1926 * c + 0.0047 * d = 0.098"),
+                new LinearConstraint(f, "a + b + c + d = 1"),
+                new LinearConstraint(f, "-a <= 0"),
+                new LinearConstraint(f, "-b <= 0"),
+                new LinearConstraint(f, "-c <= 0"),
+                new LinearConstraint(f, "-d <= 0"),
+                new LinearConstraint(f, "-a + 0.5 <= 0.0"),
+            ];
 
             Assert.AreEqual(-1, constraints[6].CombinedAs[0]);
             Assert.AreEqual(-0.5, constraints[6].Value);

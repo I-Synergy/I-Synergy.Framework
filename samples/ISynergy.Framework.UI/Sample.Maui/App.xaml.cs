@@ -5,6 +5,7 @@ using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Sample.ViewModels;
+using Sample.Abstractions;
 using System.Runtime.ExceptionServices;
 
 namespace Sample
@@ -20,8 +21,23 @@ namespace Sample
         public override async Task InitializeApplicationAsync()
         {
             await base.InitializeApplicationAsync();
-            await Task.Delay(1000);
-            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AppShellViewModel>();
+
+            var navigateToAuthentication = true;
+
+            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
+            {
+                var username = _applicationSettingsService.Settings.DefaultUser;
+                var password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+
+                if (!string.IsNullOrEmpty(password))
+                {
+                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
+                    navigateToAuthentication = false;
+                }
+            }
+
+            if (navigateToAuthentication)
+                await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
         }
 
         public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() => new List<ResourceDictionary>()

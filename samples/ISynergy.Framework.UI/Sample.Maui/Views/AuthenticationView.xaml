@@ -44,7 +44,10 @@
         <VerticalStackLayout Grid.Row="2" Spacing="10" VerticalOptions="Center">
             <Entry Text="{Binding Username}" Placeholder="{m:GetString Username}" Keyboard="Email" MinimumWidthRequest="250" HorizontalOptions="Center" />
             <Entry Text="{Binding Password}" Placeholder="{m:GetString Password}" IsPassword="True" MinimumWidthRequest="250" HorizontalOptions="Center" />
-
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <CheckBox IsChecked="{Binding AutoLogin}" VerticalOptions="Center"/>
+                <Label Text="{m:GetString Remember}" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
             <Button Text="{m:GetString SignIn}" Command="{Binding LoginCommand}" HorizontalOptions="Center"/>
         </VerticalStackLayout>
 

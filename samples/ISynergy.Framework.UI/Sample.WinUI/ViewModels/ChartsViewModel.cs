@@ -44,21 +44,21 @@ namespace Sample.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            CategoriesWithLeastDemand = new List<Measurement>()
-            {
+            CategoriesWithLeastDemand =
+            [
                 new Measurement(Guid.NewGuid(), "Category 5", 40),
                 new Measurement(Guid.NewGuid(), "Category 4", 55),
                 new Measurement(Guid.NewGuid(), "Category 3", 60),
                 new Measurement(Guid.NewGuid(), "Category 2", 75),
                 new Measurement(Guid.NewGuid(), "Category 1", 100)
-            };
+            ];
 
             OperationBudget = BuildOperationBudget(DateTimeOffset.Parse("2021-01-01"), 12, 1250, 1500);
         }
 
         private List<Measurement> BuildOperationBudget(DateTimeOffset startDate, int totalMonths, double earnings, double expenses)
         {
-            List<Measurement> result = new();
+            List<Measurement> result = [];
 
             double buffer = 0d;
 

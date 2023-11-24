@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Mail.Services.Tests
         {
             MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
             MailMessage message = new(
-                new List<string> { "ismail.hassani@i-synergy.nl" },
+                ["ismail.hassani@i-synergy.nl"],
                 "Test subject",
                 "Test body",
                 false);
@@ -44,7 +44,7 @@ namespace ISynergy.Framework.Mail.Services.Tests
         {
             MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
             MailMessage message = new(
-                new List<string> { "ismail.hassani@i-synergy.nl" },
+                ["ismail.hassani@i-synergy.nl"],
                 "Test subject",
                 "Test body",
                 true);
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Mail.Services.Tests
             MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
             MailMessage message = new(
                 "info@i-synergy.nl",
-                new List<string> { "support@i-synergy.nl" },
+                ["support@i-synergy.nl"],
                 "Test subject",
                 "Test body",
                 false);
@@ -74,7 +74,7 @@ namespace ISynergy.Framework.Mail.Services.Tests
             MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
             MailMessage message = new(
                 "info@i-synergy.nl",
-                new List<string> { "support@i-synergy.nl" },
+                ["support@i-synergy.nl"],
                 "Test subject",
                 "Test body",
                 true);

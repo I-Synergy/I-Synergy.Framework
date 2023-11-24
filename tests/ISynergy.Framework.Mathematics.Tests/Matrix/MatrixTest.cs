@@ -1243,7 +1243,7 @@
                 { 1, 1 }
             };
 
-            double[,] actual = Matrix.Stack<double>(new[] { A, B });
+            double[,] actual = Matrix.Stack(new[] { A, B });
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual));
         }
@@ -1303,7 +1303,7 @@
 
             int[][] actual = Matrix.Cartesian(sequences);
 
-            List<int[]> list = new();
+            List<int[]> list = [];
             foreach (IEnumerable<int> point in actual)
                 list.Add(new List<int>(point).ToArray());
 

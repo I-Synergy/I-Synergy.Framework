@@ -448,7 +448,7 @@
             // Assert.IsFalse(Distance.IsMetric<double[]>(new Minkowski(3)));
 
             Assert.IsFalse(Distance.IsMetric<double[]>(new Kulczynski()));
-            Assert.IsTrue(Distance.IsMetric<double[]>(new Jaccard<double>()));
+            Assert.IsTrue(Distance.IsMetric(new Jaccard<double>()));
             Assert.IsFalse(Distance.IsMetric<double[]>(new RogersTanimoto()));
             Assert.IsFalse(Distance.IsMetric<double[]>(new SokalMichener()));
             Assert.IsFalse(Distance.IsMetric<double[]>(new SokalSneath()));

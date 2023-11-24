@@ -9,10 +9,12 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void SetTest()
         {
-            Sparse<double> s = new();
-            s[0] = 1;
-            s[99] = 99;
-            s[10] = 42;
+            Sparse<double> s = new()
+            {
+                [0] = 1,
+                [99] = 99,
+                [10] = 42
+            };
 
             double[] d = s.ToDense();
 

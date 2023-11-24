@@ -33,7 +33,7 @@ namespace Sample.MessageBus.Publisher
 
             Guid sessionId = Guid.NewGuid();
             CancellationTokenSource cancellationTokenSource = new();
-            List<Task> publishTasks = new();
+            List<Task> publishTasks = [];
 
             for (int i = 0; i < 10; i++)
             {
