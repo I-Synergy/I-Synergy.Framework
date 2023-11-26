@@ -16,8 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml;
-using Microsoft.Windows.AppLifecycle;
+using Sample.Abstractions;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
@@ -52,9 +51,10 @@ namespace Sample
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
+                    services.ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
 
                     services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                    services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());
@@ -114,7 +114,22 @@ namespace Sample
             //    await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
             //}
 
-            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+            var navigateToAuthentication = true;
+
+            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
+            {
+                var username = _applicationSettingsService.Settings.DefaultUser;
+                var password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+
+                if (!string.IsNullOrEmpty(password))
+                {
+                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
+                    navigateToAuthentication = false;
+                }
+            }
+
+            if (navigateToAuthentication)
+                await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
         }
 
         protected override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)

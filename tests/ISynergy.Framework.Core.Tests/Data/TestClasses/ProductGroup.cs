@@ -6,9 +6,9 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
 {
     /// <summary>
     /// Class ProductGroup.
-    /// Implements the <see cref="Base.ObservableClass" />
+    /// Implements the <see cref="ObservableClass" />
     /// </summary>
-    /// <seealso cref="Base.ObservableClass" />
+    /// <seealso cref="ObservableClass" />
     public class ProductGroup : ObservableClass
     {
         /// <summary>

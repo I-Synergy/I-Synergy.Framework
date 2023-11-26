@@ -142,8 +142,17 @@ namespace Sample.ViewModels
             }
         }
 
-        protected override Task SignOutAsync() =>
-            CommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+        protected override async Task SignOutAsync()
+        {
+            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
+            {
+                _applicationSettingsService.Settings.IsAutoLogin = false;
+                _applicationSettingsService.SaveSettings();
+            }
+            
+            await CommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+        }
+            
 
         private Task OpenChartTestAsync() =>
             CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();

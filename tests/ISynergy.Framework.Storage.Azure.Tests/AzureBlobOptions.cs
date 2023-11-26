@@ -4,9 +4,9 @@ namespace ISynergy.Framework.Storage.Azure.Tests
 {
     /// <summary>
     /// Class AzureBlobOptions.
-    /// Implements the <see cref="Abstractions.Options.IStorageOptions" />
+    /// Implements the <see cref="IStorageOptions" />
     /// </summary>
-    /// <seealso cref="Abstractions.Options.IStorageOptions" />
+    /// <seealso cref="IStorageOptions" />
     public class AzureBlobOptions : IStorageOptions
     {
         /// <summary>

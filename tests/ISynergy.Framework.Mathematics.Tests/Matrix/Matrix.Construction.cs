@@ -66,7 +66,7 @@
 
             int[] expected = { 0, 1, 2, 1, 2, 3 };
 
-            List<int> actual = new();
+            List<int> actual = [];
             foreach (object obj in Jagged.Enumerate(input, new int[] { 2, 3, 1 }))
                 actual.Add((int)obj);
 
@@ -90,7 +90,7 @@
 
             int[] expected = { 0, 1, 2, 1, 2, 3 };
 
-            List<int> actual = new();
+            List<int> actual = [];
             foreach (object obj in Jagged.Enumerate(input, new int[] { 2 }))
                 actual.AddRange((int[])obj);
 
@@ -114,7 +114,7 @@
 
             int[] expected = { 0, 1, 2, 1, 2, 3 };
 
-            List<int> actual = new();
+            List<int> actual = [];
             foreach (object obj in Jagged.Enumerate(input))
                 actual.Add((int)obj);
 
@@ -138,7 +138,7 @@
 
             int[] expected = { 0, 1, 0, 9, 0, 3 };
 
-            List<int> actual = new();
+            List<int> actual = [];
             foreach (object obj in Jagged.Enumerate(input, new int[] { 2, 3, 1 }))
                 actual.Add(obj is null ? 0 : (int)obj);
 

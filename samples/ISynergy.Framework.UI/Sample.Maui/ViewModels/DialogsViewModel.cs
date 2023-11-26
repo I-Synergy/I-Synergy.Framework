@@ -80,8 +80,8 @@ namespace Sample.ViewModels
             ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
             ShowNoteDialog = new AsyncRelayCommand(ShowNoteDialogAsync);
 
-            Items = new ObservableCollection<TestItem>()
-            {
+            Items =
+            [
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},
                 new TestItem { Id = 3, Description = "Test 3"},
@@ -97,7 +97,7 @@ namespace Sample.ViewModels
                 new TestItem { Id = 3, Description = "Test 13"},
                 new TestItem { Id = 4, Description = "Test 14"},
                 new TestItem { Id = 5, Description = "Test 15"}
-            };
+            ];
         }
 
         private async Task ShowNoteDialogAsync()
@@ -114,7 +114,7 @@ namespace Sample.ViewModels
                 vm.Submitted -= Vm_Submitted;
         }
 
-        private async void Vm_Submitted(object sender, ISynergy.Framework.Mvvm.Events.SubmitEventArgs<string> e)
+        private async void Vm_Submitted(object sender, SubmitEventArgs<string> e)
         {
             await BaseCommonServices.DialogService.ShowInformationAsync($"'{e.Result}' entered.", "Result...");
         }

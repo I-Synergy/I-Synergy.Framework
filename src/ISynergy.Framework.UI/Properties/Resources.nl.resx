@@ -400,4 +400,7 @@ Na bevestiging van uw registratie kunt u uw e-mailadres en wachtwoord gebruiken 
 		<value>De verplichte pakketupdate is mislukt.
 Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	</data>
+	<data name="Remember" xml:space="preserve">
+		<value>Onthouden</value>
+	</data>
 </root>

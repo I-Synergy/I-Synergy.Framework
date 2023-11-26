@@ -12,9 +12,10 @@
         [TestMethod]
         public void DuplicateTest()
         {
-            RedBlackTreeDictionary<int, string> map = new();
-
-            map[1] = "1";
+            RedBlackTreeDictionary<int, string> map = new()
+            {
+                [1] = "1"
+            };
 
             Assert.AreEqual("1", map[1]);
 
@@ -32,7 +33,7 @@
         [TestMethod]
         public void EmptyTest()
         {
-            RedBlackTreeDictionary<int, string> map = new();
+            RedBlackTreeDictionary<int, string> map = [];
 
             bool thrown;
 
@@ -68,11 +69,12 @@
         {
             bool thrown = false;
 
-            RedBlackTreeDictionary<int, string> map = new();
-
-            map[0] = "0";
-            map[1] = "1";
-            map[2] = "2";
+            RedBlackTreeDictionary<int, string> map = new()
+            {
+                [0] = "0",
+                [1] = "1",
+                [2] = "2"
+            };
 
 
             {

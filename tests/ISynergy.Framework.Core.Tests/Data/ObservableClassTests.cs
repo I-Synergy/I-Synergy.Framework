@@ -125,10 +125,10 @@ namespace ISynergy.Framework.Core.Data.Tests
             Product product = new()
             {
                 Name = "Test",
-                ProductGroups = new List<ProductGroup>()
-                {
+                ProductGroups =
+                [
                     new ProductGroup { Description = "Test"}
-                },
+                ],
                 Quantity = 1
             };
 

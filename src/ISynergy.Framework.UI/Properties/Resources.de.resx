@@ -400,4 +400,7 @@ Nach Bestätigung Ihrer Anmeldung können Sie sich mit Ihrer E-Mail-Adresse und 
 		<value>Die obligatorische Paketaktualisierung ist fehlgeschlagen.
 Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsoft Store.</value>
 	</data>
+	<data name="Remember" xml:space="preserve">
+		<value>Merken</value>
+	</data>
 </root>

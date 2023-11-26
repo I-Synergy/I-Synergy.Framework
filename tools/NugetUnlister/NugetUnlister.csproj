@@ -1,24 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+		<LangVersion>12</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Flurl.Http" Version="3.2.4" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
-    <PackageReference Include="NuGet.Commands" Version="6.8.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Flurl.Http" Version="3.2.4" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
+		<PackageReference Include="NuGet.Commands" Version="6.8.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-    <ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="nuget.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="nuget.exe">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

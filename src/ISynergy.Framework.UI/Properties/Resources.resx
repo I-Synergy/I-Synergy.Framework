@@ -420,4 +420,7 @@ After confirmation of your registration you can use your e-mail address and pass
 		<value>The mandatory package update failed.
 Try again or update the application through the Microsoft Store.</value>
 	</data>
+	<data name="Remember" xml:space="preserve">
+		<value>Remember</value>
+	</data>
 </root>

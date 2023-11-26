@@ -26,12 +26,12 @@ namespace Sample.ViewModels
             bool automaticValidation = false) 
             : base(context, commonServices, logger, automaticValidation)
         {
-            Units = new ObservableCollection<TileItem>()
-            {
+            Units =
+            [
                 new TileItem() { Description = "A", Header = "Header A" },
                 new TileItem() { Description = "B", Header = "Header B" },
                 new TileItem() { Description = "C", Header = "Header C" }
-            };
+            ];
         }
     }
 }

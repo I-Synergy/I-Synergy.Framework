@@ -120,8 +120,8 @@
                 t[i] = new Thread(() =>
                 {
                     int threadId = Thread.CurrentThread.ManagedThreadId;
-                    List<int> vd = values.GetOrAdd(threadId, new List<int>());
-                    List<int?> sd = seeds.GetOrAdd(threadId, new List<int?>());
+                    List<int> vd = values.GetOrAdd(threadId, []);
+                    List<int?> sd = seeds.GetOrAdd(threadId, []);
 
                     int? before = Generator.ThreadSeed;
                     System.Random r = Generator.Random;

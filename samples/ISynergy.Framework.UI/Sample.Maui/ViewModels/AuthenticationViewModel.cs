@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -7,6 +8,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.ViewModels
@@ -14,6 +16,7 @@ namespace ISynergy.Framework.UI.ViewModels
     public class AuthenticationViewModel : ViewModel
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IBaseApplicationSettingsService _applicationSettingsService;
 
         /// <summary>
         /// Gets or sets the Username property value.
@@ -33,6 +36,15 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
+        /// <summary>
+        /// Gets or sets the AutoLogin property value.
+        /// </summary>
+        public bool AutoLogin
+        {
+            get => GetValue<bool>();
+            set => SetValue(value);
+        }
+
         public AsyncRelayCommand LoginCommand { get; private set; }
         public AsyncRelayCommand RegisterCommand { get; private set; }
 
@@ -40,11 +52,15 @@ namespace ISynergy.Framework.UI.ViewModels
             IContext context,
             IBaseCommonServices commonServices,
             IAuthenticationService authenticationService,
+            IBaseApplicationSettingsService applicationSettingsService,
             ILogger logger,
             bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation)
         {
             _authenticationService = authenticationService;
+
+            _applicationSettingsService = applicationSettingsService;
+            _applicationSettingsService.LoadSettings();
 
             LoginCommand = new AsyncRelayCommand(SignInAsync);
             RegisterCommand = new AsyncRelayCommand(SignUpAsync);
@@ -59,6 +75,16 @@ namespace ISynergy.Framework.UI.ViewModels
             });
         }
 
+        public override async Task InitializeAsync()
+        {
+            await base.InitializeAsync();
+
+            AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
+
+            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
+                Username = _applicationSettingsService.Settings.DefaultUser;
+        }
+
         private Task SignUpAsync() =>
             BaseCommonServices.NavigationService.NavigateModalAsync<RegistrationViewModel>();
 
@@ -66,7 +92,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (Validate())
             {
-                await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
+                await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
 
                 if (Context.Profile is not null && Context.IsAuthenticated)
                 {

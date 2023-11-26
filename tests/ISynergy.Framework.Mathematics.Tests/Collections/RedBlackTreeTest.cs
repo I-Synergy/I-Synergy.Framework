@@ -34,7 +34,7 @@
         [TestMethod]
         public void DuplicateTest()
         {
-            RedBlackTree<int, string> t = new();
+            RedBlackTree<int, string> t = [];
             ICollection<KeyValuePair<int, string>> collection = t;
 
             KeyValuePair<int, string>[] values = collection.ToArray();
@@ -256,7 +256,7 @@
         {
             Random rand = Generator.Random;
 
-            RedBlackTree<int> t = new();
+            RedBlackTree<int> t = [];
 
             // Create a vector of random numbers with duplicates
             int[] k = new int[n];

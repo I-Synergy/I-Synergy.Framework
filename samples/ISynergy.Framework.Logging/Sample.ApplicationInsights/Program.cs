@@ -35,7 +35,7 @@ namespace Sample.ApplicationInsights
                     .AddOptions();
 
                 services.TryAddScoped<IContext, Context>();
-                services.TryAddSingleton<IInfoService>(s => infoService);
+                services.TryAddSingleton(s => infoService);
                 services.TryAddScoped<Startup>();
 
                 var serviceProvider = services.BuildServiceProvider();
