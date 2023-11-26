@@ -8,8 +8,8 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests
     public class ViewModelExtensionTests
     {
         [DataTestMethod]
-        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.MapsViewModel), "MapsViewModel")]
-        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "NoteViewModel")]
+        [DataRow(typeof(ViewModels.MapsViewModel), "MapsViewModel")]
+        [DataRow(typeof(ViewModels.NoteViewModel), "NoteViewModel")]
         public void GetNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
         {
             string result = viewModelType.GetViewModelName();
@@ -17,8 +17,8 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests
         }
 
         [DataTestMethod]
-        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.MapsViewModel), "ISynergy.Framework.Mvvm.ViewModels.MapsViewModel")]
-        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "ISynergy.Framework.Mvvm.ViewModels.NoteViewModel")]
+        [DataRow(typeof(ViewModels.MapsViewModel), "ISynergy.Framework.Mvvm.ViewModels.MapsViewModel")]
+        [DataRow(typeof(ViewModels.NoteViewModel), "ISynergy.Framework.Mvvm.ViewModels.NoteViewModel")]
         public void GetFullNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
         {
             string result = viewModelType.GetViewModelFullName();

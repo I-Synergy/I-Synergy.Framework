@@ -2,9 +2,9 @@
 {
     /// <summary>
     /// Class AdvancedLogger.
-    /// Implements the <see cref="ISynergy.Framework.Core.Tests.Components.ILogger" />
+    /// Implements the <see cref="ILogger" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Tests.Components.ILogger" />
+    /// <seealso cref="ILogger" />
     public class AdvancedLogger : ILogger
     {
         /// <summary>

@@ -14,6 +14,7 @@ using NugetUnlister.Extensions;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
+using Sample.Abstractions;
 using System.Reflection;
 
 namespace Sample
@@ -31,12 +32,13 @@ namespace Sample
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x =>
+                    services.ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(context.Configuration, x =>
                         x.Name.StartsWith(typeof(App).Namespace) ||
                         x.FullName.Equals(typeof(Identifier).Assembly.FullName));
 
                     services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                     services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
+                    services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());

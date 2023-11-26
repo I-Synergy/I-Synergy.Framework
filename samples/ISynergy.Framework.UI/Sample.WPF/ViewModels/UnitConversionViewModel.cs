@@ -100,12 +100,12 @@ namespace Sample.ViewModels
         {
             if (e.PropertyName.Equals(nameof(SelectedInputUnit)))
             {
-                InputUnit = ((ISynergy.Framework.Physics.Enumerations.Units)SelectedInputUnit).GetSymbol();
+                InputUnit = ((Units)SelectedInputUnit).GetSymbol();
             }
 
             if (e.PropertyName.Equals(nameof(SelectedOutputUnit)))
             {
-                OutputUnit = ((ISynergy.Framework.Physics.Enumerations.Units)SelectedOutputUnit).GetSymbol();
+                OutputUnit = ((Units)SelectedOutputUnit).GetSymbol();
             }
         }
 

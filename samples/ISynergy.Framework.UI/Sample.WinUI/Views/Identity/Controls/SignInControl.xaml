@@ -14,7 +14,7 @@
             <AutoSuggestBox 
                 x:Name="TextBox_Username" 
                 Header="{m:LanguageResource Key=Username}" 
-                ToolTipService.ToolTip="{m:LanguageResource Key= Email}" 
+                ToolTipService.ToolTip="{m:LanguageResource Key=Email}" 
                 Text="{Binding Username, Mode=TwoWay}"
                 ItemsSource="{Binding Usernames}"
                 TextChanged="TextBox_Username_TextChanged" 
@@ -23,15 +23,16 @@
             <PasswordBox 
                 x:Name="TextBox_Password" 
                 Header="{m:LanguageResource Key=Password}" 
-                ToolTipService.ToolTip="{m:LanguageResource Key= Password}" 
+                ToolTipService.ToolTip="{m:LanguageResource Key=Password}" 
                 Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                 x:Uid="TextBox_Password" 
                 InputScope="Password" 
                 PasswordRevealMode="Peek" 
                 KeyDown="TextBox_Password_KeyDown"/>
 
+            <CheckBox Content="{m:LanguageResource Key=Remember}" IsChecked="{Binding AutoLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <HyperlinkButton x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{m:LanguageResource Key=Password_Forgot}" Command="{Binding ForgotPasswordCommand}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
-            <TextBlock x:Name="TextBox_CapsLockOn" Grid.Row="2" Text="{m:LanguageResource Key=Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
+            <TextBlock x:Name="TextBox_CapsLockOn" Text="{m:LanguageResource Key=Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
 
             <Button x:Name="Button_Submit" 
                     Content="{m:LanguageResource Key=Login}" 

@@ -128,14 +128,14 @@ namespace Sample.ViewModels
             SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
             ShowToastMessageCommand = new AsyncRelayCommand(ShowToastMessageAsync);
 
-            Items = new ObservableCollection<TestItem>()
-            {
+            Items =
+            [
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},
                 new TestItem { Id = 3, Description = "Test 3"},
                 new TestItem { Id = 4, Description = "Test 4"},
                 new TestItem { Id = 5, Description = "Test 5"}
-            };
+            ];
 
             PopulateNavItems();
         }

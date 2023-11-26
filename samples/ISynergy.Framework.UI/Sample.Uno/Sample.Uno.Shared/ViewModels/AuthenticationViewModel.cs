@@ -259,9 +259,9 @@ namespace Sample.ViewModels
                 }
             });
 
-            Usernames = new ObservableCollection<string>();
+            Usernames = [];
             Registration_TimeZone = null;
-            Registration_Modules = new List<Module>();
+            Registration_Modules = [];
             LoginVisible = true;
         }
 

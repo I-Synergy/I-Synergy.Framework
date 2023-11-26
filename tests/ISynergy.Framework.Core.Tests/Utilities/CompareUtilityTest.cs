@@ -45,11 +45,11 @@ namespace ISynergy.Framework.Core.Utilities.Tests
             };
 
             List<string> result = CompareUtility.CompareObject(oOldRecord, oNewRecord);
-            List<string> assert = new()
-            {
+            List<string> assert =
+            [
                 "Property EmployeeNumber was: 1; is: 2",
                 "Property CompanyNumber was: 0; is: 3"
-            };
+            ];
 
             Assert.IsTrue(assert.All(result.Contains) && assert.Count == result.Count);
         }

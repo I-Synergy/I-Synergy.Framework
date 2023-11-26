@@ -1,9 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Sample.Abstractions;
 
 namespace Sample.Services
 {
@@ -14,10 +16,13 @@ namespace Sample.Services
     /// <seealso cref="IAuthenticationService" />
     public class AuthenticationService : IAuthenticationService
     {
+        
         private bool _authenticated;
 
         private readonly IContext _context;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IBaseApplicationSettingsService _applicationSettingsService;
+        private readonly ICredentialLockerService _credentialLockerService;
 
         /// <summary>
         /// Occurs when authentication changed.
@@ -32,10 +37,15 @@ namespace Sample.Services
 
         public AuthenticationService(
             IContext context,
-            IServiceScopeFactory serviceScopeFactory)
+            IServiceScopeFactory serviceScopeFactory,
+            IBaseApplicationSettingsService applicationSettingsService,
+            ICredentialLockerService credentialLockerService)
         {
             _context = context;
             _serviceScopeFactory = serviceScopeFactory;
+            _applicationSettingsService = applicationSettingsService;
+            _applicationSettingsService.LoadSettings();
+            _credentialLockerService = credentialLockerService;
         }
 
         public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
@@ -53,11 +63,24 @@ namespace Sample.Services
             return Task.CompletedTask;
         }
 
-        public Task AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default)
+        public async Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
         {
             _authenticated = true;
+
+            if (remember)
+            {
+                if (_applicationSettingsService.Settings.IsAutoLogin != remember ||
+                    _applicationSettingsService.Settings.DefaultUser != username)
+                {
+                    _applicationSettingsService.Settings.IsAutoLogin = true;
+                    _applicationSettingsService.Settings.DefaultUser = username;
+                    _applicationSettingsService.SaveSettings();
+                }
+
+                await _credentialLockerService.AddCredentialToCredentialLockerAsync(username, password);
+            }
+
             ValidateToken();
-            return Task.CompletedTask;
         }
 
         public Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default)

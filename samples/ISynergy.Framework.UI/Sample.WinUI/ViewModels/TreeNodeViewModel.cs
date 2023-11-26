@@ -38,7 +38,7 @@ namespace Sample.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            Publication = new ObservableCollection<TreeNode<Guid, PublicationItem>>();
+            Publication = [];
 
             Publication publication = new("Test publication", "1.0.0", 0);
 

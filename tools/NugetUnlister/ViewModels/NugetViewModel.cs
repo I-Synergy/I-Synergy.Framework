@@ -60,8 +60,8 @@ namespace NugetUnlister.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            Items = new ObservableCollection<PackageVersion>();
-            Logs = new ObservableCollection<string>();
+            Items = [];
+            Logs = [];
 
             _nugetService = nugetService;
 

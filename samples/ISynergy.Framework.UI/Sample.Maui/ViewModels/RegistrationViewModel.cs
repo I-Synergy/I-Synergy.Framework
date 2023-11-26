@@ -218,7 +218,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="e">The e.</param>
         private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<Module>> e)
         {
-            List<Module> selectedItems = new();
+            List<Module> selectedItems = [];
 
             foreach (object item in e.Result)
             {
@@ -243,10 +243,10 @@ namespace ISynergy.Framework.UI.ViewModels
 
                 Modules = modules.OrderBy(o => o.ModuleId).ToList();
 
-                SelectedModules = new List<Module>
-                {
+                SelectedModules =
+                [
                     Modules.First()
-                };
+                ];
 
                 Countries = countries.OrderBy(o => o.CountryISO).ToList();
             }

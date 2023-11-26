@@ -208,13 +208,13 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 
             using (TestServer server = PrepareTestServer(configuration))
             {
-                List<HttpClient> clients = new();
+                List<HttpClient> clients = [];
                 for (int i = 0; i < concurrentRequestsCount; i++)
                 {
                     clients.Add(server.CreateClient());
                 }
 
-                List<Task<HttpResponseMessageWithTiming>> responsesWithTimingsTasks = new();
+                List<Task<HttpResponseMessageWithTiming>> responsesWithTimingsTasks = [];
 
                 foreach (HttpClient client in clients)
                 {

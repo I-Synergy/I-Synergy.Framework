@@ -86,7 +86,7 @@ namespace Sample.ViewModels
             ClearCommand = new RelayCommand(ClearItems);
 
             Query = string.Empty;
-            Items = new ObservableCollection<TestItem>();
+            Items = [];
         }
 
         /// <summary>

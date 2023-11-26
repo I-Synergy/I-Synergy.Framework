@@ -46,7 +46,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
         private class TestMessenger : MessageService
         {
-            private readonly List<Delegate> _recipients = new();
+            private readonly List<Delegate> _recipients = [];
 
             public int MessagesTransmitted
             {

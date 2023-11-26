@@ -25,9 +25,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
+        /// <param name="remember"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-        Task AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default);
+        Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// authenticate with client credentials as an asynchronous operation.
