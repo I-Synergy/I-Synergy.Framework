@@ -22,34 +22,55 @@ namespace ISynergy.Framework.UI.Formatters
             Decimals = decimals;
         }
 
-        public string FormatDouble(double value)
-        {
-            return value.ToString($"N{Decimals}");
-        }
+        public string FormatDouble(double value) =>
+            value.ToString($"N{Decimals}", _context.NumberFormat);
 
-        public string FormatInt(long value)
-        {
-            return value.ToString($"N{Decimals}");
-        }
+        public string FormatInt(long value) =>
+            value.ToString($"N{Decimals}", _context.NumberFormat);
 
-        public string FormatUInt(ulong value)
-        {
-            return value.ToString($"N{Decimals}");
-        }
+        public string FormatUInt(ulong value) =>
+            value.ToString($"N{Decimals}", _context.NumberFormat);
 
         public double? ParseDouble(string text)
         {
-            return Convert.ToDouble(text);
+            var decimalSeparator = _context.NumberFormat.NumberDecimalSeparator;
+            var groupSeparator = _context.NumberFormat.NumberGroupSeparator;
+
+            if (text.Contains(groupSeparator))
+                text = text.Replace(groupSeparator, decimalSeparator);
+
+            var charposition = text.LastIndexOf(decimalSeparator);
+
+            if (charposition != -1)
+            {
+                var originalPosition = text.Length - charposition;
+                text = text.Replace(decimalSeparator, "");
+                text = text.Insert(text.Length - (originalPosition - 1), decimalSeparator);
+
+                if (text.StartsWith(decimalSeparator))
+                    text = text.Insert(0, "0");
+            }
+
+            if (double.TryParse(text, _context.NumberFormat, out double result))
+                return result;
+
+            return 0d;
         }
 
         public long? ParseInt(string text)
         {
-            return Convert.ToInt64(text);
+            if (long.TryParse(text, _context.NumberFormat, out long result))
+                return result;
+
+            return 0L;
         }
 
         public ulong? ParseUInt(string text)
         {
-            return Convert.ToUInt32(text);
+            if (ulong.TryParse(text, _context.NumberFormat, out ulong result))
+                return result;
+
+            return 0;
         }
     }
 }
