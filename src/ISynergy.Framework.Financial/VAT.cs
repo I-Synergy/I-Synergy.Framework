@@ -11,7 +11,7 @@
         /// <param name="vatPercentage">The vat percentage.</param>
         /// <param name="amountVatIncluded">The amount vat included.</param>
         /// <returns>System.double.</returns>
-        public static decimal CalculateAmountFromAmountExcludingVAT(decimal vatPercentage, decimal amountVatIncluded)
+        public static decimal CalculateAmountFromAmountIncludingVAT(decimal vatPercentage, decimal amountVatIncluded)
         {
             return (amountVatIncluded / (100 + vatPercentage)) * 100;
         }
@@ -22,7 +22,7 @@
         /// <param name="vatPercentage">The vat percentage.</param>
         /// <param name="amountVatExcluded">The amount vat excluded.</param>
         /// <returns>System.double.</returns>
-        public static decimal CalculateAmountFromAmountIncludingVAT(decimal vatPercentage, decimal amountVatExcluded)
+        public static decimal CalculateAmountFromAmountExcludingVAT(decimal vatPercentage, decimal amountVatExcluded)
         {
             return amountVatExcluded + ((amountVatExcluded / 100) * vatPercentage);
         }
