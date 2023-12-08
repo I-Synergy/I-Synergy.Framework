@@ -1,13 +1,12 @@
-﻿namespace ISynergy.Framework.Logging.Abstractions.Options
+﻿namespace ISynergy.Framework.Logging.Abstractions.Options;
+
+/// <summary>
+/// Logging options.
+/// </summary>
+public interface ILoggerOptions
 {
     /// <summary>
-    /// Logging options.
+    /// Logging Api key.
     /// </summary>
-    public interface ILoggerOptions
-    {
-        /// <summary>
-        /// Logging Api key.
-        /// </summary>
-        string Key { get; set; }
-    }
+    string Key { get; set; }
 }

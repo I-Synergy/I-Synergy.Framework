@@ -1,29 +1,28 @@
-﻿namespace ISynergy.Framework.Core.Enumerations
+﻿namespace ISynergy.Framework.Core.Enumerations;
+
+/// <summary>
+/// Enum NodeRelationTypes
+/// </summary>
+public enum NodeRelationTypes
 {
     /// <summary>
-    /// Enum NodeRelationTypes
+    /// The ancestor
     /// </summary>
-    public enum NodeRelationTypes
-    {
-        /// <summary>
-        /// The ancestor
-        /// </summary>
-        Ancestor,
-        /// <summary>
-        /// The parent
-        /// </summary>
-        Parent,
-        /// <summary>
-        /// The self
-        /// </summary>
-        Self,
-        /// <summary>
-        /// The child
-        /// </summary>
-        Child,
-        /// <summary>
-        /// The descendant
-        /// </summary>
-        Descendant
-    }
+    Ancestor,
+    /// <summary>
+    /// The parent
+    /// </summary>
+    Parent,
+    /// <summary>
+    /// The self
+    /// </summary>
+    Self,
+    /// <summary>
+    /// The child
+    /// </summary>
+    Child,
+    /// <summary>
+    /// The descendant
+    /// </summary>
+    Descendant
 }

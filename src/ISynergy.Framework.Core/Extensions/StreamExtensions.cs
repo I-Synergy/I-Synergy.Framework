@@ -1,36 +1,35 @@
-﻿namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions;
+
+/// <summary>
+/// Stream extensions
+/// </summary>
+public static class StreamExtensions
 {
     /// <summary>
-    /// Stream extensions
+    /// Convert stream to byte array.
     /// </summary>
-    public static class StreamExtensions
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public static byte[] ToByteArray(this Stream stream)
     {
-        /// <summary>
-        /// Convert stream to byte array.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        public static byte[] ToByteArray(this Stream stream)
+        using (var ms = new MemoryStream())
         {
-            using (var ms = new MemoryStream())
-            {
-                stream.CopyTo(ms);
-                return ms.ToArray();
-            }
+            stream.CopyTo(ms);
+            return ms.ToArray();
         }
+    }
 
-        /// <summary>
-        /// Convert stream to byte array asynchronous.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        public static async Task<byte[]> ToByteArrayAsync(this Stream stream)
+    /// <summary>
+    /// Convert stream to byte array asynchronous.
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public static async Task<byte[]> ToByteArrayAsync(this Stream stream)
+    {
+        using (var ms = new MemoryStream())
         {
-            using (var ms = new MemoryStream())
-            {
-                await stream.CopyToAsync(ms).ConfigureAwait(false);
-                return ms.ToArray();
-            }
+            await stream.CopyToAsync(ms).ConfigureAwait(false);
+            return ms.ToArray();
         }
     }
 }

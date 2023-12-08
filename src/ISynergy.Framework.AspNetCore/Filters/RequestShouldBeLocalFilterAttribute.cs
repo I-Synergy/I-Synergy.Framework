@@ -2,23 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ISynergy.Framework.AspNetCore.Filters
+namespace ISynergy.Framework.AspNetCore.Filters;
+
+/// <summary>
+/// Class RequestShouldBeLocalFilter. This class cannot be inherited.
+/// Implements the <see cref="ActionFilterAttribute" />
+/// </summary>
+/// <seealso cref="ActionFilterAttribute" />
+public sealed class RequestShouldBeLocalFilterAttribute : ActionFilterAttribute
 {
     /// <summary>
-    /// Class RequestShouldBeLocalFilter. This class cannot be inherited.
-    /// Implements the <see cref="ActionFilterAttribute" />
+    /// Called when [action executing].
     /// </summary>
-    /// <seealso cref="ActionFilterAttribute" />
-    public sealed class RequestShouldBeLocalFilterAttribute : ActionFilterAttribute
+    /// <param name="context">The context.</param>
+    public override void OnActionExecuting(ActionExecutingContext context)
     {
-        /// <summary>
-        /// Called when [action executing].
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            if (!context.HttpContext.Request.IsLocal())
-                context.Result = new ForbidResult();
-        }
+        if (!context.HttpContext.Request.IsLocal())
+            context.Result = new ForbidResult();
     }
 }

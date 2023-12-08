@@ -1,83 +1,82 @@
 ﻿using System.Text;
 
-namespace ISynergy.Framework.Core.Extensions
+namespace ISynergy.Framework.Core.Extensions;
+
+/// <summary>
+/// Class IntegerExtensions.
+/// </summary>
+public static class IntegerExtensions
 {
     /// <summary>
-    /// Class IntegerExtensions.
+    /// Converts to guid.
     /// </summary>
-    public static class IntegerExtensions
+    /// <param name="_self">The value.</param>
+    /// <returns>Guid.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Unsigned integer is greater than 24bit</exception>
+    public static Guid ToGuid(this int _self)
     {
-        /// <summary>
-        /// Converts to guid.
-        /// </summary>
-        /// <param name="_self">The value.</param>
-        /// <returns>Guid.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Unsigned integer is greater than 24bit</exception>
-        public static Guid ToGuid(this int _self)
+        var result = new byte[16];
+        BitConverter.GetBytes(_self).CopyTo(result, 0);
+        return new Guid(result);
+    }
+
+    /// <summary>
+    /// Generates the alpha numeric key.
+    /// </summary>
+    /// <param name="_self">The self.</param>
+    /// <returns>System.String.</returns>
+    public static string GenerateAlphaNumericKey(this int _self)
+    {
+        var rawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
+        var result = new StringBuilder();
+
+        for (var i = 1; i <= _self; i++)
         {
-            var result = new byte[16];
-            BitConverter.GetBytes(_self).CopyTo(result, 0);
-            return new Guid(result);
-        }
-
-        /// <summary>
-        /// Generates the alpha numeric key.
-        /// </summary>
-        /// <param name="_self">The self.</param>
-        /// <returns>System.String.</returns>
-        public static string GenerateAlphaNumericKey(this int _self)
-        {
-            var rawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
-            var result = new StringBuilder();
-
-            for (var i = 1; i <= _self; i++)
-            {
-                result.Append(rawChars.Trim().Substring(
-                    Convert.ToInt32(
-                            new Random().Next(int.MaxValue) * (rawChars.Length - 1))
-                        , 1)
-                    );
-            }
-
-            return result.ToString();
-        }
-
-        /// <summary>
-        /// Generates the numeric key.
-        /// </summary>
-        /// <param name="_self">The self.</param>
-        /// <returns>System.String.</returns>
-        public static string GenerateNumericKey(this int _self)
-        {
-            var rawChars = "0123456789";
-            var result = new StringBuilder();
-
-            for (var i = 1; i <= _self; i++)
-            {
-                result.Append(rawChars.Trim().Substring(
-                    Convert.ToInt32(
+            result.Append(rawChars.Trim().Substring(
+                Convert.ToInt32(
                         new Random().Next(int.MaxValue) * (rawChars.Length - 1))
                     , 1)
                 );
-            }
-
-            return result.ToString();
         }
 
-        /// <summary>
-        /// Converts int to uint.
-        /// </summary>
-        /// <param name="_self">The value.</param>
-        /// <returns>uint</returns>
-        public static uint ToUInt(this int _self) =>
-            unchecked((uint)(_self - int.MinValue));
-
-        /// <summary>
-        /// Converts uint to int.
-        /// </summary>
-        /// <param name="_self"></param>
-        /// <returns>int</returns>
-        public static int ToInt(this uint _self) =>
-            unchecked((int)_self + int.MinValue);
+        return result.ToString();
     }
+
+    /// <summary>
+    /// Generates the numeric key.
+    /// </summary>
+    /// <param name="_self">The self.</param>
+    /// <returns>System.String.</returns>
+    public static string GenerateNumericKey(this int _self)
+    {
+        var rawChars = "0123456789";
+        var result = new StringBuilder();
+
+        for (var i = 1; i <= _self; i++)
+        {
+            result.Append(rawChars.Trim().Substring(
+                Convert.ToInt32(
+                    new Random().Next(int.MaxValue) * (rawChars.Length - 1))
+                , 1)
+            );
+        }
+
+        return result.ToString();
+    }
+
+    /// <summary>
+    /// Converts int to uint.
+    /// </summary>
+    /// <param name="_self">The value.</param>
+    /// <returns>uint</returns>
+    public static uint ToUInt(this int _self) =>
+        unchecked((uint)(_self - int.MinValue));
+
+    /// <summary>
+    /// Converts uint to int.
+    /// </summary>
+    /// <param name="_self"></param>
+    /// <returns>int</returns>
+    public static int ToInt(this uint _self) =>
+        unchecked((int)_self + int.MinValue);
 }

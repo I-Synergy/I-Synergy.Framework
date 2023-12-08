@@ -1,55 +1,54 @@
 ﻿using ISynergy.Framework.Automations.States.Base;
 
-namespace ISynergy.Framework.Automations.States
+namespace ISynergy.Framework.Automations.States;
+
+/// <summary>
+/// Numeric trigger based on an integer.
+/// </summary>
+public class IntegerState : BaseState<int>
 {
     /// <summary>
-    /// Numeric trigger based on an integer.
+    /// Default constructor.
     /// </summary>
-    public class IntegerState : BaseState<int>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="for"></param>
+    public IntegerState(int from, int to, TimeSpan @for)
+        : base(from, to, @for)
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="for"></param>
-        public IntegerState(int from, int to, TimeSpan @for)
-            : base(from, to, @for)
-        {
-        }
     }
+}
 
+/// <summary>
+/// Numeric trigger based on a decimal.
+/// </summary>
+public class DecimalState : BaseState<decimal>
+{
     /// <summary>
-    /// Numeric trigger based on a decimal.
+    /// Default constructor.
     /// </summary>
-    public class DecimalState : BaseState<decimal>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="for"></param>
+    public DecimalState(decimal from, decimal to, TimeSpan @for)
+        : base(from, to, @for)
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="for"></param>
-        public DecimalState(decimal from, decimal to, TimeSpan @for)
-            : base(from, to, @for)
-        {
-        }
     }
+}
 
+/// <summary>
+/// Numeric trigger based on a double.
+/// </summary>
+public class DoubleState : BaseState<double>
+{
     /// <summary>
-    /// Numeric trigger based on a double.
+    /// Default constructor.
     /// </summary>
-    public class DoubleState : BaseState<double>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="for"></param>
+    public DoubleState(double from, double to, TimeSpan @for)
+        : base(from, to, @for)
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="for"></param>
-        public DoubleState(double from, double to, TimeSpan @for)
-            : base(from, to, @for)
-        {
-        }
     }
 }

@@ -1,17 +1,16 @@
-﻿namespace ISynergy.Framework.Core.Enumerations
+﻿namespace ISynergy.Framework.Core.Enumerations;
+
+/// <summary>
+/// Enum DepthBreadthTraversalTypes
+/// </summary>
+public enum DepthBreadthTraversalTypes
 {
     /// <summary>
-    /// Enum DepthBreadthTraversalTypes
+    /// The depth first
     /// </summary>
-    public enum DepthBreadthTraversalTypes
-    {
-        /// <summary>
-        /// The depth first
-        /// </summary>
-        DepthFirst,
-        /// <summary>
-        /// The breadth first
-        /// </summary>
-        BreadthFirst
-    }
+    DepthFirst,
+    /// <summary>
+    /// The breadth first
+    /// </summary>
+    BreadthFirst
 }

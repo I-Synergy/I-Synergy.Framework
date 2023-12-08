@@ -1,7 +1,6 @@
-﻿namespace ISynergy.Framework.Core.Abstractions
+﻿namespace ISynergy.Framework.Core.Abstractions;
+
+public interface IResult<out T> : IResult
 {
-    public interface IResult<out T> : IResult
-    {
-        T Data { get; }
-    }
+    T Data { get; }
 }

@@ -5,235 +5,234 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
-namespace ISynergy.Framework.Core.Data.Tests
+namespace ISynergy.Framework.Core.Data.Tests;
+
+/// <summary>
+/// Class ValidationTests.
+/// </summary>
+[TestClass]
+public class ValidationTests
 {
+    private const string _valueIsNull = "Value is null";
+
     /// <summary>
-    /// Class ValidationTests.
+    /// Defines the test method ValidateIsNullTest.
     /// </summary>
-    [TestClass]
-    public class ValidationTests
+    [TestMethod]
+    public void ValidateIsNullTest()
     {
-        private const string _valueIsNull = "Value is null";
-
-        /// <summary>
-        /// Defines the test method ValidateIsNullTest.
-        /// </summary>
-        [TestMethod]
-        public void ValidateIsNullTest()
+        using ModelFixture<string> model = new()
         {
-            using ModelFixture<string> model = new()
+            Value = null,
+            Validator = new Action<IObservableClass>(arg =>
             {
-                Value = null,
-                Validator = new Action<IObservableClass>(arg =>
+                var i = arg as ModelFixture<string>;
+
+                if (string.IsNullOrEmpty(i.Value))
                 {
-                    var i = arg as ModelFixture<string>;
+                    i.AddValidationError(nameof(i.Value), _valueIsNull);
+                }
+            })
+        };
+        Assert.IsFalse(model.Validate());
+    }
 
-                    if (string.IsNullOrEmpty(i.Value))
-                    {
-                        i.AddValidationError(nameof(i.Value), _valueIsNull);
-                    }
-                })
-            };
-            Assert.IsFalse(model.Validate());
-        }
-
-        /// <summary>
-        /// Defines the test method ValidateIsNotNullTest.
-        /// </summary>
-        [TestMethod]
-        public void ValidateIsNotNullTest()
+    /// <summary>
+    /// Defines the test method ValidateIsNotNullTest.
+    /// </summary>
+    [TestMethod]
+    public void ValidateIsNotNullTest()
+    {
+        using ModelFixture<string> model = new()
         {
-            using ModelFixture<string> model = new()
+            Value = "192.168.1.0",
+            Validator = new Action<IObservableClass>(arg =>
             {
-                Value = "192.168.1.0",
-                Validator = new Action<IObservableClass>(arg =>
+                var i = arg as ModelFixture<string>;
+
+                if (string.IsNullOrEmpty(i.Value))
                 {
-                    var i = arg as ModelFixture<string>;
-
-                    if (string.IsNullOrEmpty(i.Value))
-                    {
-                        i.AddValidationError(nameof(i.Value), _valueIsNull);
-                    }
-                })
-            };
-            Assert.IsTrue(model.Validate());
-        }
+                    i.AddValidationError(nameof(i.Value), _valueIsNull);
+                }
+            })
+        };
+        Assert.IsTrue(model.Validate());
+    }
 
 
-        private const string _portNumberNotInRange = "Portnumber is not in range [1,100]";
+    private const string _portNumberNotInRange = "Portnumber is not in range [1,100]";
 
-        /// <summary>
-        /// Defines the test method ValidateIsNotInRangeTest.
-        /// </summary>
-        [TestMethod]
-        public void ValidateIsNotInRangeTest()
+    /// <summary>
+    /// Defines the test method ValidateIsNotInRangeTest.
+    /// </summary>
+    [TestMethod]
+    public void ValidateIsNotInRangeTest()
+    {
+        using ModelFixture<int> model = new()
         {
-            using ModelFixture<int> model = new()
+            Value = 9999,
+            Validator = new Action<IObservableClass>(arg =>
             {
-                Value = 9999,
-                Validator = new Action<IObservableClass>(arg =>
+                var i = arg as ModelFixture<int>;
+
+                if (!Enumerable.Range(1, 100).Contains(i.Value))
                 {
-                    var i = arg as ModelFixture<int>;
+                    i.AddValidationError(nameof(i.Value), _portNumberNotInRange);
+                }
+            })
+        };
+        Assert.IsFalse(model.Validate());
+    }
 
-                    if (!Enumerable.Range(1, 100).Contains(i.Value))
-                    {
-                        i.AddValidationError(nameof(i.Value), _portNumberNotInRange);
-                    }
-                })
-            };
-            Assert.IsFalse(model.Validate());
-        }
-
-        /// <summary>
-        /// Defines the test method ValidateIsInRangeTest.
-        /// </summary>
-        [TestMethod]
-        public void ValidateIsInRangeTest()
+    /// <summary>
+    /// Defines the test method ValidateIsInRangeTest.
+    /// </summary>
+    [TestMethod]
+    public void ValidateIsInRangeTest()
+    {
+        using ModelFixture<int> model = new()
         {
-            using ModelFixture<int> model = new()
+            Value = 80,
+            Validator = new Action<IObservableClass>(arg =>
             {
-                Value = 80,
-                Validator = new Action<IObservableClass>(arg =>
+                var i = arg as ModelFixture<int>;
+
+                if (!Enumerable.Range(1, 500).Contains(i.Value))
                 {
-                    var i = arg as ModelFixture<int>;
+                    i.AddValidationError(nameof(i.Value), _portNumberNotInRange);
+                }
+            })
+        };
+        Assert.IsTrue(model.Validate());
+    }
 
-                    if (!Enumerable.Range(1, 500).Contains(i.Value))
-                    {
-                        i.AddValidationError(nameof(i.Value), _portNumberNotInRange);
-                    }
-                })
-            };
-            Assert.IsTrue(model.Validate());
-        }
+    private const string _stringLengthNotInRange = "String should have length of 1-35 characters";
 
-        private const string _stringLengthNotInRange = "String should have length of 1-35 characters";
-
-        /// <summary>
-        /// Defines the test method ValidateStringLengthIsNotInRangeTest.
-        /// </summary>
-        [TestMethod]
-        public void ValidateStringLengthIsNotInRangeTest()
+    /// <summary>
+    /// Defines the test method ValidateStringLengthIsNotInRangeTest.
+    /// </summary>
+    [TestMethod]
+    public void ValidateStringLengthIsNotInRangeTest()
+    {
+        using ModelFixture<string> model = new()
         {
-            using ModelFixture<string> model = new()
+            Value = "",
+            Validator = new Action<IObservableClass>(arg =>
             {
-                Value = "",
-                Validator = new Action<IObservableClass>(arg =>
+                var i = arg as ModelFixture<string>;
+
+                if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                 {
-                    var i = arg as ModelFixture<string>;
+                    i.AddValidationError(nameof(i.Value), _stringLengthNotInRange);
+                }
+            })
+        };
+        Assert.IsFalse(model.Validate());
+    }
 
-                    if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
-                    {
-                        i.AddValidationError(nameof(i.Value), _stringLengthNotInRange);
-                    }
-                })
-            };
-            Assert.IsFalse(model.Validate());
-        }
-
-        /// <summary>
-        /// Defines the test method ValidateStringLengthIsInRangeTest.
-        /// </summary>
-        [TestMethod]
-        public void ValidateStringLengthIsInRangeTest()
+    /// <summary>
+    /// Defines the test method ValidateStringLengthIsInRangeTest.
+    /// </summary>
+    [TestMethod]
+    public void ValidateStringLengthIsInRangeTest()
+    {
+        using ModelFixture<string> model = new()
         {
-            using ModelFixture<string> model = new()
+            Value = "192.168.1.0",
+            Validator = new Action<IObservableClass>(arg =>
             {
-                Value = "192.168.1.0",
-                Validator = new Action<IObservableClass>(arg =>
+                var i = arg as ModelFixture<string>;
+
+                if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                 {
-                    var i = arg as ModelFixture<string>;
+                    i.AddValidationError(nameof(i.Value), _stringLengthNotInRange);
+                }
+            })
+        };
+        Assert.IsTrue(model.Validate());
+    }
 
-                    if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
-                    {
-                        i.AddValidationError(nameof(i.Value), _stringLengthNotInRange);
-                    }
-                })
-            };
-            Assert.IsTrue(model.Validate());
-        }
+    private const string _selectedItemNull = "SelectedItem cannot be null.";
 
-        private const string _selectedItemNull = "SelectedItem cannot be null.";
+    [TestMethod]
+    public void ViewModelProductIsNullTest()
+    {
+        var fixture = new TestViewModel();
 
-        [TestMethod]
-        public void ViewModelProductIsNullTest()
+        Assert.IsFalse(fixture.Validate());
+        Assert.AreEqual(1, fixture.Errors.Count);
+        Assert.AreEqual(_selectedItemNull, fixture.Errors.Single().Value);
+    }
+
+    [TestMethod]
+    public void ViewModelProductIsNotNullTest()
+    {
+        var fixture = new TestViewModel
         {
-            var fixture = new TestViewModel();
+            SelectedItem = new Product()
+        };
 
-            Assert.IsFalse(fixture.Validate());
-            Assert.AreEqual(1, fixture.Errors.Count);
-            Assert.AreEqual(_selectedItemNull, fixture.Errors.Single().Value);
-        }
+        Assert.IsFalse(fixture.Validate());
+        Assert.AreEqual(2, fixture.Errors.Count);
 
-        [TestMethod]
-        public void ViewModelProductIsNotNullTest()
+        Assert.IsTrue(fixture.Validate(false));
+        Assert.AreEqual(0, fixture.Errors.Count);
+    }
+
+    [TestMethod]
+    public void ViewModelProductIsNotNullAndQuantityIsOneTest()
+    {
+        var fixture = new TestViewModel
         {
-            var fixture = new TestViewModel
-            {
-                SelectedItem = new Product()
-            };
+            SelectedItem = new Product() { Quantity = 1 }
+        };
 
-            Assert.IsFalse(fixture.Validate());
-            Assert.AreEqual(2, fixture.Errors.Count);
+        Assert.IsFalse(fixture.Validate());
+        Assert.AreEqual(1, fixture.Errors.Count);
 
-            Assert.IsTrue(fixture.Validate(false));
-            Assert.AreEqual(0, fixture.Errors.Count);
-        }
+        Assert.IsTrue(fixture.Validate(false));
+        Assert.AreEqual(0, fixture.Errors.Count);
+    }
 
-        [TestMethod]
-        public void ViewModelProductIsNotNullAndQuantityIsOneTest()
+    [TestMethod]
+    public void ViewModelProductIsNotNullAndQuantityIsOneChangedValidationTest()
+    {
+        var fixture = new TestViewModel();
+
+        Assert.IsFalse(fixture.Validate());
+        Assert.AreEqual(1, fixture.Errors.Count);
+
+        fixture.SelectedItem = new Product()
         {
-            var fixture = new TestViewModel
-            {
-                SelectedItem = new Product() { Quantity = 1 }
-            };
+            Quantity = 0
+        };
 
-            Assert.IsFalse(fixture.Validate());
-            Assert.AreEqual(1, fixture.Errors.Count);
+        Assert.IsFalse(fixture.Validate());
+        Assert.AreEqual(2, fixture.Errors.Count);
 
-            Assert.IsTrue(fixture.Validate(false));
-            Assert.AreEqual(0, fixture.Errors.Count);
-        }
+        Assert.IsTrue(fixture.Validate(false));
+        Assert.AreEqual(0, fixture.Errors.Count);
+    }
 
-        [TestMethod]
-        public void ViewModelProductIsNotNullAndQuantityIsOneChangedValidationTest()
+    [TestMethod]
+    public void ViewModelProductIsNotNullAndQuantityIsOnePropertiesValidationTest()
+    {
+        var fixture = new TestViewModel();
+
+        Assert.IsFalse(fixture.Validate());
+        Assert.AreEqual(1, fixture.Errors.Count);
+
+        fixture.SelectedItem = new Product()
         {
-            var fixture = new TestViewModel();
+            Quantity = 0
+        };
 
-            Assert.IsFalse(fixture.Validate());
-            Assert.AreEqual(1, fixture.Errors.Count);
+        Assert.IsFalse(fixture.Validate());
+        Assert.AreEqual(2, fixture.Errors.Count);
 
-            fixture.SelectedItem = new Product()
-            {
-                Quantity = 0
-            };
+        fixture.SelectedItem.Quantity = 1;
 
-            Assert.IsFalse(fixture.Validate());
-            Assert.AreEqual(2, fixture.Errors.Count);
-
-            Assert.IsTrue(fixture.Validate(false));
-            Assert.AreEqual(0, fixture.Errors.Count);
-        }
-
-        [TestMethod]
-        public void ViewModelProductIsNotNullAndQuantityIsOnePropertiesValidationTest()
-        {
-            var fixture = new TestViewModel();
-
-            Assert.IsFalse(fixture.Validate());
-            Assert.AreEqual(1, fixture.Errors.Count);
-
-            fixture.SelectedItem = new Product()
-            {
-                Quantity = 0
-            };
-
-            Assert.IsFalse(fixture.Validate());
-            Assert.AreEqual(2, fixture.Errors.Count);
-
-            fixture.SelectedItem.Quantity = 1;
-
-            Assert.IsFalse(fixture.Validate());
-            Assert.AreEqual(1, fixture.Errors.Count);
-        }
+        Assert.IsFalse(fixture.Validate());
+        Assert.AreEqual(1, fixture.Errors.Count);
     }
 }

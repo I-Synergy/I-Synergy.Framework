@@ -1,7 +1,6 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Services
+﻿namespace ISynergy.Framework.Core.Abstractions.Services;
+
+public interface IExceptionHandlerService
 {
-    public interface IExceptionHandlerService
-    {
-        Task HandleExceptionAsync(Exception exception);
-    }
+    Task HandleExceptionAsync(Exception exception);
 }

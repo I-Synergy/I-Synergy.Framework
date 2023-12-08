@@ -1,10 +1,9 @@
-﻿namespace ISynergy.Framework.UI.Controls.ToastNotification.Enumerations
+﻿namespace ISynergy.Framework.UI.Controls.ToastNotification.Enumerations;
+
+public enum WindowsTaskBarLocation
 {
-    public enum WindowsTaskBarLocation
-    {
-        Bottom,
-        Left,
-        Top,
-        Right
-    }
+    Bottom,
+    Left,
+    Top,
+    Right
 }

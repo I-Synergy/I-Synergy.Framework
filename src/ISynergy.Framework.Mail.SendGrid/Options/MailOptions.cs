@@ -1,13 +1,12 @@
-﻿namespace ISynergy.Framework.Mail.Options
+﻿namespace ISynergy.Framework.Mail.Options;
+
+/// <summary>
+/// Sendgrid options.
+/// </summary>
+internal class MailOptions : BaseMailOptions
 {
     /// <summary>
-    /// Sendgrid options.
+    /// Sendgrid Api key
     /// </summary>
-    internal class MailOptions : BaseMailOptions
-    {
-        /// <summary>
-        /// Sendgrid Api key
-        /// </summary>
-        public string Key { get; set; }
-    }
+    public string Key { get; set; }
 }

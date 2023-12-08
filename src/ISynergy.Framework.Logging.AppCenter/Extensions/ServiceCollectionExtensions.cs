@@ -6,25 +6,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace ISynergy.Framework.Logging.Extensions
+namespace ISynergy.Framework.Logging.Extensions;
+
+/// <summary>
+/// Service collection extensions for AppCenter logging.
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Service collection extensions for AppCenter logging.
+    /// Adds AppCenter logging integration.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="builder"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static ILoggingBuilder AddAppCenterLogging(this ILoggingBuilder builder, IConfiguration configuration)
     {
-        /// <summary>
-        /// Adds AppCenter logging integration.
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static ILoggingBuilder AddAppCenterLogging(this ILoggingBuilder builder, IConfiguration configuration)
-        {
-            builder.Services.Configure<AppCenterOptions>(configuration.GetSection(nameof(AppCenterOptions)).BindWithReload);
-            builder.Services.TryAddSingleton<ILogger, Logger>();
+        builder.Services.Configure<AppCenterOptions>(configuration.GetSection(nameof(AppCenterOptions)).BindWithReload);
+        builder.Services.TryAddSingleton<ILogger, Logger>();
 
-            return builder;
-        }
+        return builder;
     }
 }

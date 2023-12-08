@@ -1,6 +1,5 @@
-﻿namespace NugetUnlister
+﻿namespace NugetUnlister;
+
+public sealed class Identifier
 {
-    public sealed class Identifier
-    {
-    }
 }

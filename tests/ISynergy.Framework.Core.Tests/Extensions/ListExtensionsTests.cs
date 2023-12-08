@@ -3,48 +3,47 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Extensions.Tests;
+
+/// <summary>
+/// Class ListExtensionsTests.
+/// </summary>
+[TestClass]
+public class ListExtensionsTests
 {
     /// <summary>
-    /// Class ListExtensionsTests.
+    /// Defines the test method NullListNonFailableTest.
     /// </summary>
-    [TestClass]
-    public class ListExtensionsTests
+    [TestMethod]
+    public void NullListNonFailableTest()
     {
-        /// <summary>
-        /// Defines the test method NullListNonFailableTest.
-        /// </summary>
-        [TestMethod]
-        public void NullListNonFailableTest()
+        List<object> list = null;
+        bool result = false;
+
+        foreach (object item in list.EnsureNotNull())
+        {
+        }
+
+        result = true;
+
+        Assert.IsTrue(result);
+    }
+
+    /// <summary>
+    /// Defines the test method NullListFailableTest.
+    /// </summary>
+    [TestMethod]
+    public void NullListFailableTest()
+    {
+        Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
         {
             List<object> list = null;
-            bool result = false;
 
-            foreach (object item in list.EnsureNotNull())
+            foreach (object item in list)
             {
             }
 
-            result = true;
-
-            Assert.IsTrue(result);
-        }
-
-        /// <summary>
-        /// Defines the test method NullListFailableTest.
-        /// </summary>
-        [TestMethod]
-        public void NullListFailableTest()
-        {
-            Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
-            {
-                List<object> list = null;
-
-                foreach (object item in list)
-                {
-                }
-
-                return Task.CompletedTask;
-            });
-        }
+            return Task.CompletedTask;
+        });
     }
 }

@@ -1,8 +1,7 @@
 ﻿using ISynergy.Framework.Core.Base;
 
-namespace ISynergy.Framework.Mvvm.Models.Tests
+namespace ISynergy.Framework.Mvvm.Models.Tests;
+
+public class TestClass : ModelBase
 {
-    public class TestClass : ModelBase
-    {
-    }
 }

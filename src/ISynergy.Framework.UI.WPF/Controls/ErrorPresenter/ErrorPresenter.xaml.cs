@@ -1,13 +1,12 @@
-﻿namespace ISynergy.Framework.UI.Controls
+﻿namespace ISynergy.Framework.UI.Controls;
+
+public sealed partial class ErrorPresenter
 {
-    public sealed partial class ErrorPresenter
+    /// <summary>
+    /// Error presenter class.
+    /// </summary>
+    public ErrorPresenter()
     {
-        /// <summary>
-        /// Error presenter class.
-        /// </summary>
-        public ErrorPresenter()
-        {
-            this.InitializeComponent();
-        }
+        this.InitializeComponent();
     }
 }

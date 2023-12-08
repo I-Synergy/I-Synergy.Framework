@@ -5,46 +5,45 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.MessageBus.Models;
 using System;
 
-namespace Sample.MessageBus.Subscriber
+namespace Sample.MessageBus.Subscriber;
+
+/// <summary>
+/// Class Program.
+/// </summary>
+internal class Program
 {
-    /// <summary>
-    /// Class Program.
-    /// </summary>
-    internal class Program
+    protected Program()
     {
-        protected Program()
+    }
+
+    static int Main(string[] args)
+    {
+        try
         {
+            IConfigurationRoot config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false)
+            .AddEnvironmentVariables()
+            .AddUserSecrets<Program>()
+            .Build();
+
+            var services = new ServiceCollection()
+                .AddLogging()
+                .AddOptions();
+
+            services.AddMessageBusAzureSubscribeIntegration<TestDataModel>(config);
+            services.TryAddScoped<Startup>();
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            Startup application = serviceProvider.GetRequiredService<Startup>();
+            application.RunAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+            return 1;
         }
 
-        static int Main(string[] args)
-        {
-            try
-            {
-                IConfigurationRoot config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", false)
-                .AddEnvironmentVariables()
-                .AddUserSecrets<Program>()
-                .Build();
-
-                var services = new ServiceCollection()
-                    .AddLogging()
-                    .AddOptions();
-
-                services.AddMessageBusAzureSubscribeIntegration<TestDataModel>(config);
-                services.TryAddScoped<Startup>();
-
-                var serviceProvider = services.BuildServiceProvider();
-
-                Startup application = serviceProvider.GetRequiredService<Startup>();
-                application.RunAsync().GetAwaiter().GetResult();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return 1;
-            }
-
-            return 0;
-        }
+        return 0;
     }
 }

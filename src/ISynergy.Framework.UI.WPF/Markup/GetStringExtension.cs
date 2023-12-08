@@ -3,39 +3,38 @@ using ISynergy.Framework.Core.Locators;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace ISynergy.Framework.UI.Markup
+namespace ISynergy.Framework.UI.Markup;
+
+[MarkupExtensionReturnType(typeof(string))]
+public class GetStringExtension : MarkupExtension
 {
-    [MarkupExtensionReturnType(typeof(string))]
-    public class GetStringExtension : MarkupExtension
+    [ConstructorArgument("key")]
+    public string Key { get; protected set; }
+
+    public GetStringExtension(string key)
     {
-        [ConstructorArgument("key")]
-        public string Key { get; protected set; }
+        Key = key;
+    }
 
-        public GetStringExtension(string key)
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+        var result = string.Empty;
+
+        if (!string.IsNullOrEmpty(Key))
         {
-            Key = key;
+            result = ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
+        }
+        else
+        {
+            result = $"[{Key}]";
         }
 
-        public override object ProvideValue(IServiceProvider serviceProvider)
+        var binding = new Binding()
         {
-            var result = string.Empty;
+            Source = result,
+            Mode = BindingMode.OneWay
+        };
 
-            if (!string.IsNullOrEmpty(Key))
-            {
-                result = ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
-            }
-            else
-            {
-                result = $"[{Key}]";
-            }
-
-            var binding = new Binding()
-            {
-                Source = result,
-                Mode = BindingMode.OneWay
-            };
-
-            return binding.ProvideValue(serviceProvider);
-        }
+        return binding.ProvideValue(serviceProvider);
     }
 }

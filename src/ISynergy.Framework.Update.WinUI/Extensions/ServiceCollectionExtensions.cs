@@ -3,22 +3,21 @@ using ISynergy.Framework.Update.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ISynergy.Framework.Update.Extensions
+namespace ISynergy.Framework.Update.Extensions;
+
+/// <summary>
+/// Service collection extensions for Microsoft Stor updates
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Service collection extensions for Microsoft Stor updates
+    /// Adds update integration.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services)
     {
-        /// <summary>
-        /// Adds update integration.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IUpdateService, UpdateService>();
-            return services;
-        }
+        services.TryAddSingleton<IUpdateService, UpdateService>();
+        return services;
     }
 }

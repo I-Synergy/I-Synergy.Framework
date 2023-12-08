@@ -2,93 +2,92 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Globalization;
 
-namespace ISynergy.Framework.UI.Converters
+namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Class CurrencyConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class CurrencyConverter : IValueConverter
 {
     /// <summary>
-    /// Class CurrencyConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the specified value.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class CurrencyConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var currencySymbol = "$";
+        var currencySymbol = "$";
 
-            if (decimal.TryParse(value.ToString(), out var amount))
-                return ServiceLocator.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount);
+        if (decimal.TryParse(value.ToString(), out var amount))
+            return ServiceLocator.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount);
 
-            var info = culture.NumberFormat;
-            info.CurrencySymbol = $"{currencySymbol} ";
-            info.CurrencyNegativePattern = 1;
+        var info = culture.NumberFormat;
+        info.CurrencySymbol = $"{currencySymbol} ";
+        info.CurrencyNegativePattern = 1;
 
-            return string.Format(info, "{0:C2}", 0);
-        }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return string.Format(info, "{0:C2}", 0);
     }
 
     /// <summary>
-    /// Class NegativeCurrencyConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class NegativeCurrencyConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var currencySymbol = "$";
+        throw new NotImplementedException();
+    }
+}
 
-            if (decimal.TryParse(value.ToString(), out var amount))
-                return ServiceLocator.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount * -1);
+/// <summary>
+/// Class NegativeCurrencyConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class NegativeCurrencyConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var currencySymbol = "$";
 
-            var info = culture.NumberFormat;
-            info.CurrencySymbol = $"{currencySymbol} ";
-            info.CurrencyNegativePattern = 1;
+        if (decimal.TryParse(value.ToString(), out var amount))
+            return ServiceLocator.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount * -1);
 
-            return string.Format(info, "{0:C2}", 0);
-        }
+        var info = culture.NumberFormat;
+        info.CurrencySymbol = $"{currencySymbol} ";
+        info.CurrencyNegativePattern = 1;
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return string.Format(info, "{0:C2}", 0);
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

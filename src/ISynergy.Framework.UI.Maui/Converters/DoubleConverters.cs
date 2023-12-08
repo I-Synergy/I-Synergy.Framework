@@ -1,283 +1,282 @@
 ﻿using System.Globalization;
 
-namespace ISynergy.Framework.UI.Converters
+namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Class ZeroDoubleToIsVisibleConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class ZeroDoubleToIsVisibleConverter : IValueConverter
 {
     /// <summary>
-    /// Class ZeroDoubleToIsVisibleConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the specified value.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class ZeroDoubleToIsVisibleConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (value is double doubleValue && doubleValue == 0d)
         {
-            if (value is double doubleValue && doubleValue == 0d)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        else
         {
-            throw new NotImplementedException();
-        }
-    }
-
-    /// <summary>
-    /// Class DoubleToIsVisibleConverter.
-    /// Implements the <see cref="IValueConverter" />
-    /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class DoubleToIsVisibleConverter : IValueConverter
-    {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if ((double)value == 0 || value is null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    /// <summary>
-    /// Class DoubleOfDoubleConverter.
-    /// Implements the <see cref="IValueConverter" />
-    /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class DoubleOfDoubleConverter : IValueConverter
-    {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            double result = 0;
-
-            if (double.TryParse(value.ToString(), out var size) && double.TryParse(parameter.ToString(), out var margin))
-            {
-                var calc = size - margin;
-                if (calc >= 0) result = calc;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    /// <summary>
-    /// Class DoubleIsLesserThenConverter.
-    /// Implements the <see cref="IValueConverter" />
-    /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class DoubleIsLesserThenConverter : IValueConverter
-    {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test < limit)
-                return true;
-
             return false;
         }
+    }
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DoubleToIsVisibleConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DoubleToIsVisibleConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((double)value == 0 || value is null)
         {
-            throw new NotImplementedException();
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 
     /// <summary>
-    /// Class DoubleIsLesserOrEqualThenConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class DoubleIsLesserOrEqualThenConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test <= limit)
-                return true;
+        throw new NotImplementedException();
+    }
+}
 
-            return false;
+/// <summary>
+/// Class DoubleOfDoubleConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DoubleOfDoubleConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        double result = 0;
+
+        if (double.TryParse(value.ToString(), out var size) && double.TryParse(parameter.ToString(), out var margin))
+        {
+            var calc = size - margin;
+            if (calc >= 0) result = calc;
         }
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return result;
     }
 
     /// <summary>
-    /// Class DoubleIsGreaterThenConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class DoubleIsGreaterThenConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test > limit)
-                return true;
+        throw new NotImplementedException();
+    }
+}
 
-            return false;
-        }
+/// <summary>
+/// Class DoubleIsLesserThenConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DoubleIsLesserThenConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test < limit)
+            return true;
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return false;
     }
 
     /// <summary>
-    /// Class DoubleIsGreaterOrEqualThenConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test >= limit)
-                return true;
+        throw new NotImplementedException();
+    }
+}
 
-            return false;
-        }
+/// <summary>
+/// Class DoubleIsLesserOrEqualThenConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DoubleIsLesserOrEqualThenConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test <= limit)
+            return true;
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return false;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DoubleIsGreaterThenConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DoubleIsGreaterThenConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test > limit)
+            return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DoubleIsGreaterOrEqualThenConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test >= limit)
+            return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

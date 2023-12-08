@@ -2,42 +2,41 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace ISynergy.Framework.UI.Converters
+namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Mask to Regex converter.
+/// </summary>
+public class MaskToRegexConverter : IValueConverter
 {
     /// <summary>
-    /// Mask to Regex converter.
+    /// Converts Mask string to Regex.
     /// </summary>
-    public class MaskToRegexConverter : IValueConverter
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts Mask string to Regex.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (value is not null && !string.IsNullOrEmpty(value.ToString()))
         {
-            if (value is not null && !string.IsNullOrEmpty(value.ToString()))
-            {
-                return RegexUtility.MaskToRegexConverter(value.ToString());
-            }
-
-            return null;
+            return RegexUtility.MaskToRegexConverter(value.ToString());
         }
 
-        /// <summary>
-        /// Converts regex back to Mask string.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return null;
+    }
+
+    /// <summary>
+    /// Converts regex back to Mask string.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

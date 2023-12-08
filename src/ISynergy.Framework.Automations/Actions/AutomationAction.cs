@@ -1,28 +1,27 @@
 ﻿using ISynergy.Framework.Automations.Actions.Base;
 
-namespace ISynergy.Framework.Automations.Actions
+namespace ISynergy.Framework.Automations.Actions;
+
+/// <summary>
+/// Executes another automation.
+/// </summary>
+public class AutomationAction : BaseAction
 {
     /// <summary>
-    /// Executes another automation.
+    /// Gets or sets the Service property value.
     /// </summary>
-    public class AutomationAction : BaseAction
+    public Automation Automation
     {
-        /// <summary>
-        /// Gets or sets the Service property value.
-        /// </summary>
-        public Automation Automation
-        {
-            get { return GetValue<Automation>(); }
-            set { SetValue(value); }
-        }
+        get { return GetValue<Automation>(); }
+        set { SetValue(value); }
+    }
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="automationId"></param>
-        public AutomationAction(Guid automationId)
-            : base(automationId)
-        {
-        }
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    /// <param name="automationId"></param>
+    public AutomationAction(Guid automationId)
+        : base(automationId)
+    {
     }
 }

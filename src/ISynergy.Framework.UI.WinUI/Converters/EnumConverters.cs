@@ -6,240 +6,239 @@ using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml.Data;
 using System.Globalization;
 
-namespace ISynergy.Framework.UI.Converters
+namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Class EnumToBooleanConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class EnumToBooleanConverter : IValueConverter
 {
     /// <summary>
-    /// Class EnumToBooleanConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Gets or sets the type of the enum.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class EnumToBooleanConverter : IValueConverter
+    /// <value>The type of the enum.</value>
+    public string EnumType { get; set; }
+
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="ArgumentException">ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized()</exception>
+    /// <exception cref="ArgumentException">ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized()</exception>
+    public object Convert(object value, Type targetType, object parameter, string language)
     {
-        /// <summary>
-        /// Gets or sets the type of the enum.
-        /// </summary>
-        /// <value>The type of the enum.</value>
-        public string EnumType { get; set; }
-
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The language.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="ArgumentException">ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized()</exception>
-        /// <exception cref="ArgumentException">ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized()</exception>
-        public object Convert(object value, Type targetType, object parameter, string language)
+        if (parameter is string enumString)
         {
-            if (parameter is string enumString)
+            var type = Type.GetType(EnumType);
+
+            if (!Enum.IsDefined(type, value))
             {
-                var type = Type.GetType(EnumType);
-
-                if (!Enum.IsDefined(type, value))
-                {
-                    throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized());
-                }
-
-                var enumValue = Enum.Parse(type, enumString);
-
-                return enumValue.Equals(value);
+                throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized());
             }
 
-            throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
+            var enumValue = Enum.Parse(type, enumString);
+
+            return enumValue.Equals(value);
         }
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The language.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="ArgumentException">ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized()</exception>
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            if (parameter is string enumString)
-            {
-                return Enum.Parse(Type.GetType(EnumType), enumString);
-            }
-
-            throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
-        }
+        throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
     }
 
     /// <summary>
-    /// Class EnumToArrayConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class EnumToArrayConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="ArgumentException">ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized()</exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The language.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, string language)
+        if (parameter is string enumString)
         {
-            var list = new List<KeyValuePair<int, string>>();
+            return Enum.Parse(Type.GetType(EnumType), enumString);
+        }
 
-            if (value is Enum)
+        throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
+    }
+}
+
+/// <summary>
+/// Class EnumToArrayConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class EnumToArrayConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        var list = new List<KeyValuePair<int, string>>();
+
+        if (value is Enum)
+        {
+            foreach (Enum item in Enum.GetValues(value.GetType()))
             {
-                foreach (Enum item in Enum.GetValues(value.GetType()))
-                {
-                    list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
-                }
+                list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
             }
-
-            return list;
         }
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The language.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Gets the description.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        /// <exception cref="ArgumentNullException">value</exception>
-        public static string GetDescription(Enum value)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(value.ToString());
-        }
+        return list;
     }
 
     /// <summary>
-    /// Class EnumToStringConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class EnumToStringConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is Type type && type.IsEnum)
-                return (Enum.Parse(type, value.ToString()) as Enum).GetLocalizedDescription();
-
-            return (Enum.Parse(value.GetType(), value.ToString()) as Enum).GetLocalizedDescription();
-        }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 
     /// <summary>
-    /// Class EnumToStringConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Gets the description.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class EnumToDescriptionConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <returns>System.String.</returns>
+    /// <exception cref="ArgumentNullException">value</exception>
+    public static string GetDescription(Enum value)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, string language)
+        if (value is null)
         {
-            if (value is Enum enumeration)
-                return enumeration.GetLocalizedDescription();
-
-            return value;
+            throw new ArgumentNullException(nameof(value));
         }
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+        return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(value.ToString());
+    }
+}
+
+/// <summary>
+/// Class EnumToStringConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class EnumToStringConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is Type type && type.IsEnum)
+            return (Enum.Parse(type, value.ToString()) as Enum).GetLocalizedDescription();
+
+        return (Enum.Parse(value.GetType(), value.ToString()) as Enum).GetLocalizedDescription();
     }
 
-    public class EnumToIntegerConverter: IValueConverter
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value is Enum enumeration)
-                return System.Convert.ToInt32(enumeration);
+        throw new NotImplementedException();
+    }
+}
 
-            return 0;
-        }
+/// <summary>
+/// Class EnumToStringConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class EnumToDescriptionConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value is Enum enumeration)
+            return enumeration.GetLocalizedDescription();
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            if (value is int id && Enum.TryParse(targetType, id.ToString(), out var result))
-                return result;
+        return value;
+    }
 
-            return default;
-        }
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class EnumToIntegerConverter: IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value is Enum enumeration)
+            return System.Convert.ToInt32(enumeration);
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        if (value is int id && Enum.TryParse(targetType, id.ToString(), out var result))
+            return result;
+
+        return default;
     }
 }

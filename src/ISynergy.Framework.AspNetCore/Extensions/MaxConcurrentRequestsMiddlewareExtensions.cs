@@ -2,23 +2,22 @@
 using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Builder;
 
-namespace ISynergy.Framework.AspNetCore.Extensions
+namespace ISynergy.Framework.AspNetCore.Extensions;
+
+/// <summary>
+/// Class MaxConcurrentRequestsMiddlewareExtensions.
+/// </summary>
+public static class MaxConcurrentRequestsMiddlewareExtensions
 {
     /// <summary>
-    /// Class MaxConcurrentRequestsMiddlewareExtensions.
+    /// Uses the maximum concurrent requests.
     /// </summary>
-    public static class MaxConcurrentRequestsMiddlewareExtensions
+    /// <param name="app">The application.</param>
+    /// <returns>IApplicationBuilder.</returns>
+    /// <exception cref="ArgumentNullException">app</exception>
+    public static IApplicationBuilder UseMaxConcurrentRequests(this IApplicationBuilder app)
     {
-        /// <summary>
-        /// Uses the maximum concurrent requests.
-        /// </summary>
-        /// <param name="app">The application.</param>
-        /// <returns>IApplicationBuilder.</returns>
-        /// <exception cref="ArgumentNullException">app</exception>
-        public static IApplicationBuilder UseMaxConcurrentRequests(this IApplicationBuilder app)
-        {
-            Argument.IsNotNull(app);
-            return app.UseMiddleware<MaxConcurrentRequestsMiddleware>();
-        }
+        Argument.IsNotNull(app);
+        return app.UseMiddleware<MaxConcurrentRequestsMiddleware>();
     }
 }

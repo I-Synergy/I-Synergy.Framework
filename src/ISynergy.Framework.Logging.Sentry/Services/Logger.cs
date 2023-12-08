@@ -6,140 +6,139 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Sentry;
 
-namespace ISynergy.Framework.Logging.Services
+namespace ISynergy.Framework.Logging.Services;
+
+public class Logger : BaseLogger
 {
-    public class Logger : BaseLogger
+    /// <summary>
+    /// The context
+    /// </summary>
+    private readonly IContext _context;
+
+    /// <summary>
+    /// The information service
+    /// </summary>
+    private readonly IInfoService _infoService;
+
+    /// <summary>
+    /// The application center options
+    /// </summary>
+    private readonly SentryOptions _sentryOptions;
+
+    /// <summary>
+    /// Logging client for Application Insights.
+    /// </summary>
+    private readonly ISentryClient _client;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Logger" /> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="infoService">The information service.</param>
+    /// <param name="options">The options.</param>
+    public Logger(IContext context, IInfoService infoService, IOptions<SentryOptions> options)
+        : base("Sentry Logger")
     {
-        /// <summary>
-        /// The context
-        /// </summary>
-        private readonly IContext _context;
+        _context = context;
+        _infoService = infoService;
+        _sentryOptions = options.Value;
 
-        /// <summary>
-        /// The information service
-        /// </summary>
-        private readonly IInfoService _infoService;
+        _client = new SentryClient(_sentryOptions);
 
-        /// <summary>
-        /// The application center options
-        /// </summary>
-        private readonly SentryOptions _sentryOptions;
+        AppDomain.CurrentDomain.ProcessExit += (s, e) => Flush();
+    }
 
-        /// <summary>
-        /// Logging client for Application Insights.
-        /// </summary>
-        private readonly ISentryClient _client;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Logger" /> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="infoService">The information service.</param>
-        /// <param name="options">The options.</param>
-        public Logger(IContext context, IInfoService infoService, IOptions<SentryOptions> options)
-            : base("Sentry Logger")
+    /// <summary>
+    /// Sets profile in logging context.
+    /// </summary>
+    private void SetUserProfile()
+    {
+        if (_context.IsAuthenticated && _context.Profile is IProfile profile)
         {
-            _context = context;
-            _infoService = infoService;
-            _sentryOptions = options.Value;
+            SentrySdk.ConfigureScope(scope =>
+            {
+                scope.User = new User
+                {
+                    Username = profile.Username,
+                    Id = profile.UserId.ToString(),
+                    Other = new Dictionary<string, string>()
+                    {
+                        { "AccountId", profile.AccountId.ToString() },
+                        { "AccountDescription", profile.AccountDescription }
+                    }
+                };
+            });
+        }
+        else
+        {
+            SentrySdk.ConfigureScope(scope =>
+            {
+                scope.User = null;
+            });
+        }
+    }
 
-            _client = new SentryClient(_sentryOptions);
+    /// <summary>
+    /// Flushes this instance.
+    /// </summary>
+    public void Flush()
+    {
+        SetUserProfile();
 
-            AppDomain.CurrentDomain.ProcessExit += (s, e) => Flush();
+        _client.FlushAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
+    }
+
+    /// <summary>
+    /// Gets the metrics.
+    /// </summary>
+    /// <returns>Dictionary&lt;System.String, System.String&gt;.</returns>
+    private Dictionary<string, object> GetMetrics()
+    {
+        var metrics = new Dictionary<string, object>();
+
+        if (_context.IsAuthenticated && _context.Profile is IProfile profile)
+        {
+            metrics.Add(nameof(profile.Username), profile.Username);
+            metrics.Add(nameof(profile.UserId), profile.UserId.ToString());
+            metrics.Add(nameof(profile.AccountId), profile.AccountId.ToString());
+            metrics.Add(nameof(profile.AccountDescription), profile.AccountDescription);
         }
 
-        /// <summary>
-        /// Sets profile in logging context.
-        /// </summary>
-        private void SetUserProfile()
+        metrics.Add(nameof(_infoService.ProductName), _infoService.ProductName);
+        metrics.Add(nameof(_infoService.ProductVersion), _infoService.ProductVersion.ToString());
+
+        return metrics;
+    }
+
+    public override void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+    {
+        base.Log(logLevel, eventId, state, exception, formatter);
+
+        var message = formatter(state, exception);
+
+        SetUserProfile();
+
+        var metrics = GetMetrics();
+
+        if (!string.IsNullOrEmpty(message) || exception != null)
         {
-            if (_context.IsAuthenticated && _context.Profile is IProfile profile)
+            if (logLevel == LogLevel.Error)
             {
-                SentrySdk.ConfigureScope(scope =>
-                {
-                    scope.User = new User
-                    {
-                        Username = profile.Username,
-                        Id = profile.UserId.ToString(),
-                        Other = new Dictionary<string, string>()
-                        {
-                            { "AccountId", profile.AccountId.ToString() },
-                            { "AccountDescription", profile.AccountDescription }
-                        }
-                    };
-                });
+                _client.CaptureException(exception);
             }
             else
             {
-                SentrySdk.ConfigureScope(scope =>
+                metrics.Add("LogLevel", logLevel.ToLogLevelString());
+
+                var data = new SentryEvent
                 {
-                    scope.User = null;
-                });
-            }
-        }
+                    Message = message,
+                    Level = logLevel.ToSentryLevel(),
+                };
 
-        /// <summary>
-        /// Flushes this instance.
-        /// </summary>
-        public void Flush()
-        {
-            SetUserProfile();
+                data.SetExtras(metrics);
 
-            _client.FlushAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Gets the metrics.
-        /// </summary>
-        /// <returns>Dictionary&lt;System.String, System.String&gt;.</returns>
-        private Dictionary<string, object> GetMetrics()
-        {
-            var metrics = new Dictionary<string, object>();
-
-            if (_context.IsAuthenticated && _context.Profile is IProfile profile)
-            {
-                metrics.Add(nameof(profile.Username), profile.Username);
-                metrics.Add(nameof(profile.UserId), profile.UserId.ToString());
-                metrics.Add(nameof(profile.AccountId), profile.AccountId.ToString());
-                metrics.Add(nameof(profile.AccountDescription), profile.AccountDescription);
-            }
-
-            metrics.Add(nameof(_infoService.ProductName), _infoService.ProductName);
-            metrics.Add(nameof(_infoService.ProductVersion), _infoService.ProductVersion.ToString());
-
-            return metrics;
-        }
-
-        public override void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            base.Log(logLevel, eventId, state, exception, formatter);
-
-            var message = formatter(state, exception);
-
-            SetUserProfile();
-
-            var metrics = GetMetrics();
-
-            if (!string.IsNullOrEmpty(message) || exception != null)
-            {
-                if (logLevel == LogLevel.Error)
-                {
-                    _client.CaptureException(exception);
-                }
-                else
-                {
-                    metrics.Add("LogLevel", logLevel.ToLogLevelString());
-
-                    var data = new SentryEvent
-                    {
-                        Message = message,
-                        Level = logLevel.ToSentryLevel(),
-                    };
-
-                    data.SetExtras(metrics);
-
-                    _client.CaptureEvent(data);
-                }
+                _client.CaptureEvent(data);
             }
         }
     }

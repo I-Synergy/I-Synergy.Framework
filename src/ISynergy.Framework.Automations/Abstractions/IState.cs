@@ -1,18 +1,17 @@
-﻿namespace ISynergy.Framework.Automations.Abstractions
+﻿namespace ISynergy.Framework.Automations.Abstractions;
+
+/// <summary>
+/// Base state interface
+/// </summary>
+public interface IState
 {
     /// <summary>
-    /// Base state interface
+    /// Gets or sets the StateId property value.
     /// </summary>
-    public interface IState
-    {
-        /// <summary>
-        /// Gets or sets the StateId property value.
-        /// </summary>
-        Guid StateId { get; }
+    Guid StateId { get; }
 
-        /// <summary>
-        /// You can use For to have the trigger only fire if the state holds for some time.
-        /// </summary>
-        TimeSpan For { get; set; }
-    }
+    /// <summary>
+    /// You can use For to have the trigger only fire if the state holds for some time.
+    /// </summary>
+    TimeSpan For { get; set; }
 }

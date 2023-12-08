@@ -2,22 +2,21 @@
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Windows;
 
-namespace ISynergy.Framework.UI
+namespace ISynergy.Framework.UI;
+
+/// <summary>
+/// Class ThemeWindow. This class cannot be inherited.
+/// </summary>
+public sealed partial class ThemeWindow : ISynergy.Framework.UI.Controls.Window, IThemeWindow
 {
     /// <summary>
-    /// Class ThemeWindow. This class cannot be inherited.
+    /// Initializes a new instance of the <see cref="ThemeWindow"/> class.
     /// </summary>
-    public sealed partial class ThemeWindow : ISynergy.Framework.UI.Controls.Window, IThemeWindow
+    public ThemeWindow()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeWindow"/> class.
-        /// </summary>
-        public ThemeWindow()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Save");
-            SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
-        }
+        PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Save");
+        SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
     }
 }

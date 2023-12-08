@@ -1,592 +1,591 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests
+﻿namespace ISynergy.Framework.Mathematics.Tests;
+
+using ISynergy.Framework.Mathematics.Optimization;
+using ISynergy.Framework.Mathematics.Optimization.Constrained;
+using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+
+[TestClass]
+public class CobylaTest
 {
-    using ISynergy.Framework.Mathematics.Optimization;
-    using ISynergy.Framework.Mathematics.Optimization.Constrained;
-    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
 
-    [TestClass]
-    public class CobylaTest
+    [TestMethod]
+    public void ConstructorTest1()
     {
+        Func<double[], double> function = // min f(x) = 10 * (x+1)^2 + y^2
+        x => 10.0 * Math.Pow(x[0] + 1.0, 2.0) + Math.Pow(x[1], 2.0);
 
-        [TestMethod]
-        public void ConstructorTest1()
+        Cobyla cobyla = new(2, function);
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+
+        double[] solution = cobyla.Solution;
+
+        Assert.AreEqual(0, minimum, 1e-10);
+        Assert.AreEqual(-1, solution[0], 1e-5);
+        Assert.AreEqual(0, solution[1], 1e-5);
+
+        double expectedMinimum = function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest2()
+    {
+        NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+
+        NonlinearConstraint[] constraints =
         {
-            Func<double[], double> function = // min f(x) = 10 * (x+1)^2 + y^2
-            x => 10.0 * Math.Pow(x[0] + 1.0, 2.0) + Math.Pow(x[1], 2.0);
+            new NonlinearConstraint(function, x => 1.0 - x[0] * x[0] - x[1] * x[1])
+        };
 
-            Cobyla cobyla = new(2, function);
+        Cobyla cobyla = new(function, constraints);
 
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
+        for (int i = 0; i < cobyla.Solution.Length; i++)
+            cobyla.Solution[i] = 1;
 
-            double[] solution = cobyla.Solution;
+        bool success = cobyla.Minimize();
 
-            Assert.AreEqual(0, minimum, 1e-10);
-            Assert.AreEqual(-1, solution[0], 1e-5);
-            Assert.AreEqual(0, solution[1], 1e-5);
+        double violation = constraints[0].GetViolation(cobyla.Solution);
 
-            double expectedMinimum = function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
+        CobylaStatus status = cobyla.Status;
 
-        [TestMethod]
-        public void ConstructorTest2()
+
+        Assert.IsTrue(success);
+        double minimum = cobyla.Value;
+
+        double[] solution = cobyla.Solution;
+
+        double sqrthalf = Math.Sqrt(0.5);
+
+        Assert.AreEqual(-0.5, minimum, 1e-10);
+        Assert.AreEqual(sqrthalf, solution[0], 1e-5);
+        Assert.AreEqual(-sqrthalf, solution[1], 1e-5);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest2_1()
+    {
+        NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+
+        NonlinearConstraint[] constraints =
         {
-            NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+            new NonlinearConstraint(function, x =>  x[0] * x[0] + x[1] * x[1],
+                ConstraintType.LesserThanOrEqualTo, 1.0)
+        };
 
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(function, x => 1.0 - x[0] * x[0] - x[1] * x[1])
-            };
+        Cobyla cobyla = new(function, constraints);
 
-            Cobyla cobyla = new(function, constraints);
+        for (int i = 0; i < cobyla.Solution.Length; i++)
+            cobyla.Solution[i] = 1;
 
-            for (int i = 0; i < cobyla.Solution.Length; i++)
-                cobyla.Solution[i] = 1;
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
 
-            bool success = cobyla.Minimize();
+        double[] solution = cobyla.Solution;
 
-            double violation = constraints[0].GetViolation(cobyla.Solution);
+        double sqrthalf = Math.Sqrt(0.5);
 
-            CobylaStatus status = cobyla.Status;
+        Assert.AreEqual(-0.5, minimum, 1e-10);
+        Assert.AreEqual(sqrthalf, solution[0], 1e-5);
+        Assert.AreEqual(-sqrthalf, solution[1], 1e-5);
 
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
 
-            Assert.IsTrue(success);
-            double minimum = cobyla.Value;
+    [TestMethod]
+    public void ConstructorTest2_2()
+    {
+        NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
 
-            double[] solution = cobyla.Solution;
-
-            double sqrthalf = Math.Sqrt(0.5);
-
-            Assert.AreEqual(-0.5, minimum, 1e-10);
-            Assert.AreEqual(sqrthalf, solution[0], 1e-5);
-            Assert.AreEqual(-sqrthalf, solution[1], 1e-5);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
-        [TestMethod]
-        public void ConstructorTest2_1()
+        NonlinearConstraint[] constraints =
         {
-            NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+            new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= 1.0)
+        };
 
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(function, x =>  x[0] * x[0] + x[1] * x[1],
-                    ConstraintType.LesserThanOrEqualTo, 1.0)
-            };
+        test_body(function, constraints);
+    }
 
-            Cobyla cobyla = new(function, constraints);
+    private static void test_body(NonlinearObjectiveFunction function, NonlinearConstraint[] constraints)
+    {
+        Cobyla cobyla = new(function, constraints);
 
-            for (int i = 0; i < cobyla.Solution.Length; i++)
-                cobyla.Solution[i] = 1;
+        for (int i = 0; i < cobyla.Solution.Length; i++)
+            cobyla.Solution[i] = 1;
 
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
+        bool success = cobyla.Minimize();
+        double minimum = cobyla.Value;
+        Assert.IsTrue(success);
 
-            double[] solution = cobyla.Solution;
+        double[] solution = cobyla.Solution;
 
-            double sqrthalf = Math.Sqrt(0.5);
+        double sqrthalf = Math.Sqrt(0.5);
 
-            Assert.AreEqual(-0.5, minimum, 1e-10);
-            Assert.AreEqual(sqrthalf, solution[0], 1e-5);
-            Assert.AreEqual(-sqrthalf, solution[1], 1e-5);
+        Assert.AreEqual(-0.5, minimum, 1e-10);
+        Assert.AreEqual(sqrthalf, solution[0], 1e-5);
+        Assert.AreEqual(-sqrthalf, solution[1], 1e-5);
+    }
 
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
+    [TestMethod]
+    public void cobyla_should_accept_variable_values_gh688()
+    {
+        // https://github.com/accord-net/framework/issues/688
+        NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+        double a = 1.0;
 
-        [TestMethod]
-        public void ConstructorTest2_2()
+        NonlinearConstraint[] constraints =
         {
-            NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+            new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= a)
+        };
 
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= 1.0)
-            };
+        test_body(function, constraints);
+    }
 
-            test_body(function, constraints);
-        }
+    private double propertyTest = 1;
 
-        private static void test_body(NonlinearObjectiveFunction function, NonlinearConstraint[] constraints)
+    public double PropertyTest
+    {
+        get { return propertyTest; }
+        set { propertyTest = value; }
+    }
+
+    [TestMethod]
+    public void cobyla_should_accept_property_values_gh688()
+    {
+        // https://github.com/accord-net/framework/issues/688
+        NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+
+        NonlinearConstraint[] constraints =
         {
-            Cobyla cobyla = new(function, constraints);
+            new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= PropertyTest)
+        };
 
-            for (int i = 0; i < cobyla.Solution.Length; i++)
-                cobyla.Solution[i] = 1;
+        test_body(function, constraints);
+    }
 
-            bool success = cobyla.Minimize();
-            double minimum = cobyla.Value;
-            Assert.IsTrue(success);
 
-            double[] solution = cobyla.Solution;
+    [TestMethod]
+    public void cobyla_should_accept_parameter_values_gh688()
+    {
+        // https://github.com/accord-net/framework/issues/688
+        NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+        double a = 1.0;
 
-            double sqrthalf = Math.Sqrt(0.5);
+        NonlinearConstraint[] constraints = create_constraints(a);
 
-            Assert.AreEqual(-0.5, minimum, 1e-10);
-            Assert.AreEqual(sqrthalf, solution[0], 1e-5);
-            Assert.AreEqual(-sqrthalf, solution[1], 1e-5);
-        }
+        test_body(function, constraints);
+    }
 
-        [TestMethod]
-        public void cobyla_should_accept_variable_values_gh688()
+    [TestMethod]
+    public void cobyla_should_not_accept_lambdas()
+    {
+        // https://github.com/accord-net/framework/issues/688
+        NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+
+        Func<double> func = () => 1.0;
+
+        Assert.ThrowsException<ArgumentException>(() => new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= func()));
+    }
+
+    private static NonlinearConstraint[] create_constraints(double a)
+    {
+        return new[]
         {
-            // https://github.com/accord-net/framework/issues/688
-            NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
-            double a = 1.0;
+            new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= a)
+        };
+    }
 
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= a)
-            };
+    [TestMethod]
+    public void ConstructorTest3()
+    {
+        // Easy three dimensional minimization in ellipsoid.
+        NonlinearObjectiveFunction function = new(3, x => x[0] * x[1] * x[2]);
 
-            test_body(function, constraints);
-        }
-
-        private double propertyTest = 1;
-
-        public double PropertyTest
+        NonlinearConstraint[] constraints =
         {
-            get { return propertyTest; }
-            set { propertyTest = value; }
-        }
+            new NonlinearConstraint(3, x =>  1.0 - x[0] * x[0] - 2.0 * x[1] * x[1] - 3.0 * x[2] * x[2])
+        };
 
-        [TestMethod]
-        public void cobyla_should_accept_property_values_gh688()
+        Cobyla cobyla = new(function, constraints);
+
+        for (int i = 0; i < cobyla.Solution.Length; i++)
+            cobyla.Solution[i] = 1;
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
+
+        double sqrthalf = Math.Sqrt(0.5);
+
+        double[] expected =
         {
-            // https://github.com/accord-net/framework/issues/688
-            NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
-
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= PropertyTest)
-            };
-
-            test_body(function, constraints);
-        }
+            1.0 / Math.Sqrt(3.0), 1.0 / Math.Sqrt(6.0), -1.0 / 3.0
+        };
 
 
-        [TestMethod]
-        public void cobyla_should_accept_parameter_values_gh688()
+        for (int i = 0; i < expected.Length; i++)
+            Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-4);
+        Assert.AreEqual(-0.078567420132031968, minimum, 1e-10);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest4()
+    {
+        // Weak version of Rosenbrock's problem.
+        NonlinearObjectiveFunction function = new(2, x =>
+            Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
+
+        Cobyla cobyla = new(function);
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
+
+        Assert.AreEqual(0, minimum, 1e-8);
+        Assert.AreEqual(-1, solution[0], 1e-5);
+        Assert.AreEqual(1, solution[1], 1e-4);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest5()
+    {
+        // Intermediate version of Rosenbrock's problem.
+        NonlinearObjectiveFunction function = new(2, x =>
+            10.0 * Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
+
+        Cobyla cobyla = new(function);
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
+
+        Assert.AreEqual(-0, minimum, 1e-6);
+        Assert.AreEqual(-1, solution[0], 1e-3);
+        Assert.AreEqual(+1, solution[1], 1e-3);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest6()
+    {
+        // This problem is taken from Fletcher's book Practical Methods of
+        // Optimization and has the equation number (9.1.15).
+        NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
+
+        NonlinearConstraint[] constraints =
         {
-            // https://github.com/accord-net/framework/issues/688
-            NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
-            double a = 1.0;
+            new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0]),
+            new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1]),
+        };
 
-            NonlinearConstraint[] constraints = create_constraints(a);
+        Cobyla cobyla = new(function, constraints);
 
-            test_body(function, constraints);
-        }
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
 
-        [TestMethod]
-        public void cobyla_should_not_accept_lambdas()
+        double sqrthalf = Math.Sqrt(0.5);
+        Assert.AreEqual(-sqrthalf * 2, minimum, 1e-10);
+        Assert.AreEqual(sqrthalf, solution[0], 1e-5);
+        Assert.AreEqual(sqrthalf, solution[1], 1e-5);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest6_0()
+    {
+        // This problem is taken from Fletcher's book Practical Methods of
+        // Optimization and has the equation number (9.1.15).
+        NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
+
+        NonlinearConstraint[] constraints =
         {
-            // https://github.com/accord-net/framework/issues/688
-            NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
+            new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0] >= 0),
+            new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1] >= 0),
+        };
 
-            Func<double> func = () => 1.0;
+        Cobyla cobyla = new(function, constraints);
 
-            Assert.ThrowsException<ArgumentException>(() => new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= func()));
-        }
+        bool success = cobyla.Minimize();
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
 
-        private static NonlinearConstraint[] create_constraints(double a)
+        Assert.IsTrue(success);
+
+        double sqrthalf = Math.Sqrt(0.5);
+        Assert.AreEqual(-sqrthalf * 2, minimum, 1e-10);
+        Assert.AreEqual(sqrthalf, solution[0], 1e-5);
+        Assert.AreEqual(sqrthalf, solution[1], 1e-5);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest6_1()
+    {
+        // This problem is taken from Fletcher's book Practical Methods of
+        // Optimization and has the equation number (9.1.15).
+        NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
+
+        NonlinearConstraint[] constraints =
         {
-            return new[]
-            {
-                new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= a)
-            };
-        }
+            new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0] >= 0),
+            new NonlinearConstraint(2, x =>  -x[0] * x[0] - x[1] * x[1] >= -1.0),
+        };
 
-        [TestMethod]
-        public void ConstructorTest3()
+        Cobyla cobyla = new(function, constraints);
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
+
+        double sqrthalf = Math.Sqrt(0.5);
+        Assert.AreEqual(-sqrthalf * 2, minimum, 1e-10);
+        Assert.AreEqual(sqrthalf, solution[0], 1e-5);
+        Assert.AreEqual(sqrthalf, solution[1], 1e-5);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest6_2()
+    {
+        // This problem is taken from Fletcher's book Practical Methods of
+        // Optimization and has the equation number (9.1.15).
+        NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
+
+        NonlinearConstraint[] constraints =
         {
-            // Easy three dimensional minimization in ellipsoid.
-            NonlinearObjectiveFunction function = new(3, x => x[0] * x[1] * x[2]);
+            new NonlinearConstraint(2, x =>  -(x[1] - x[0] * x[0]) <= 0),
+            new NonlinearConstraint(2, x =>  -(-x[0] * x[0] - x[1] * x[1]) <= 1.0),
+        };
 
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(3, x =>  1.0 - x[0] * x[0] - 2.0 * x[1] * x[1] - 3.0 * x[2] * x[2])
-            };
+        Cobyla cobyla = new(function, constraints);
 
-            Cobyla cobyla = new(function, constraints);
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
 
-            for (int i = 0; i < cobyla.Solution.Length; i++)
-                cobyla.Solution[i] = 1;
+        double sqrthalf = Math.Sqrt(0.5);
+        Assert.AreEqual(-sqrthalf * 2, minimum, 1e-10);
+        Assert.AreEqual(sqrthalf, solution[0], 1e-5);
+        Assert.AreEqual(sqrthalf, solution[1], 1e-5);
 
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
 
-            double sqrthalf = Math.Sqrt(0.5);
+    [TestMethod]
+    public void ConstructorTest6_3()
+    {
+        bool thrown = false;
 
-            double[] expected =
-            {
-                1.0 / Math.Sqrt(3.0), 1.0 / Math.Sqrt(6.0), -1.0 / 3.0
-            };
-
-
-            for (int i = 0; i < expected.Length; i++)
-                Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-4);
-            Assert.AreEqual(-0.078567420132031968, minimum, 1e-10);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
-        [TestMethod]
-        public void ConstructorTest4()
+        try
         {
-            // Weak version of Rosenbrock's problem.
-            NonlinearObjectiveFunction function = new(2, x =>
-                Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
-
-            Cobyla cobyla = new(function);
-
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            Assert.AreEqual(0, minimum, 1e-8);
-            Assert.AreEqual(-1, solution[0], 1e-5);
-            Assert.AreEqual(1, solution[1], 1e-4);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
-        [TestMethod]
-        public void ConstructorTest5()
-        {
-            // Intermediate version of Rosenbrock's problem.
-            NonlinearObjectiveFunction function = new(2, x =>
-                10.0 * Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
-
-            Cobyla cobyla = new(function);
-
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            Assert.AreEqual(-0, minimum, 1e-6);
-            Assert.AreEqual(-1, solution[0], 1e-3);
-            Assert.AreEqual(+1, solution[1], 1e-3);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
-        [TestMethod]
-        public void ConstructorTest6()
-        {
-            // This problem is taken from Fletcher's book Practical Methods of
-            // Optimization and has the equation number (9.1.15).
             NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
 
             NonlinearConstraint[] constraints =
             {
                 new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0]),
-                new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1]),
+                new NonlinearConstraint(4, x =>  1.0 - x[0] * x[0] - x[1] * x[1]),
             };
 
             Cobyla cobyla = new(function, constraints);
 
             Assert.IsTrue(cobyla.Minimize());
             double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            double sqrthalf = Math.Sqrt(0.5);
-            Assert.AreEqual(-sqrthalf * 2, minimum, 1e-10);
-            Assert.AreEqual(sqrthalf, solution[0], 1e-5);
-            Assert.AreEqual(sqrthalf, solution[1], 1e-5);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
         }
-
-        [TestMethod]
-        public void ConstructorTest6_0()
+        catch (Exception)
         {
-            // This problem is taken from Fletcher's book Practical Methods of
-            // Optimization and has the equation number (9.1.15).
-            NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
-
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0] >= 0),
-                new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1] >= 0),
-            };
-
-            Cobyla cobyla = new(function, constraints);
-
-            bool success = cobyla.Minimize();
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            Assert.IsTrue(success);
-
-            double sqrthalf = Math.Sqrt(0.5);
-            Assert.AreEqual(-sqrthalf * 2, minimum, 1e-10);
-            Assert.AreEqual(sqrthalf, solution[0], 1e-5);
-            Assert.AreEqual(sqrthalf, solution[1], 1e-5);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
+            thrown = true;
         }
 
-        [TestMethod]
-        public void ConstructorTest6_1()
-        {
-            // This problem is taken from Fletcher's book Practical Methods of
-            // Optimization and has the equation number (9.1.15).
-            NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
-
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0] >= 0),
-                new NonlinearConstraint(2, x =>  -x[0] * x[0] - x[1] * x[1] >= -1.0),
-            };
-
-            Cobyla cobyla = new(function, constraints);
-
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            double sqrthalf = Math.Sqrt(0.5);
-            Assert.AreEqual(-sqrthalf * 2, minimum, 1e-10);
-            Assert.AreEqual(sqrthalf, solution[0], 1e-5);
-            Assert.AreEqual(sqrthalf, solution[1], 1e-5);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
-        [TestMethod]
-        public void ConstructorTest6_2()
-        {
-            // This problem is taken from Fletcher's book Practical Methods of
-            // Optimization and has the equation number (9.1.15).
-            NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
-
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(2, x =>  -(x[1] - x[0] * x[0]) <= 0),
-                new NonlinearConstraint(2, x =>  -(-x[0] * x[0] - x[1] * x[1]) <= 1.0),
-            };
-
-            Cobyla cobyla = new(function, constraints);
-
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            double sqrthalf = Math.Sqrt(0.5);
-            Assert.AreEqual(-sqrthalf * 2, minimum, 1e-10);
-            Assert.AreEqual(sqrthalf, solution[0], 1e-5);
-            Assert.AreEqual(sqrthalf, solution[1], 1e-5);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
-        [TestMethod]
-        public void ConstructorTest6_3()
-        {
-            bool thrown = false;
-
-            try
-            {
-                NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
-
-                NonlinearConstraint[] constraints =
-                {
-                    new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0]),
-                    new NonlinearConstraint(4, x =>  1.0 - x[0] * x[0] - x[1] * x[1]),
-                };
-
-                Cobyla cobyla = new(function, constraints);
-
-                Assert.IsTrue(cobyla.Minimize());
-                double minimum = cobyla.Value;
-            }
-            catch (Exception)
-            {
-                thrown = true;
-            }
-
-            Assert.IsTrue(thrown);
-        }
-
-        [TestMethod]
-        public void ConstructorTest7()
-        {
-            ISynergy.Framework.Mathematics.Random.Generator.Seed = 0;
-
-            // This problem is taken from Fletcher's book Practical Methods of
-            // Optimization and has the equation number (14.4.2).
-            NonlinearObjectiveFunction function = new(3, x => x[2]);
-
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(3, x=> 5.0 * x[0] - x[1] + x[2]),
-                new NonlinearConstraint(3, x =>  x[2] - x[0] * x[0] - x[1] * x[1] - 4.0 * x[1]),
-                new NonlinearConstraint(3, x =>  x[2] - 5.0 * x[0] - x[1]),
-            };
-
-            Cobyla cobyla = new(function, constraints);
-
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            Assert.AreEqual(-3, minimum, 1e-5);
-            Assert.AreEqual(0.0, solution[0], 1e-5);
-            Assert.AreEqual(-3.0, solution[1], 1e-5);
-            Assert.AreEqual(-3.0, solution[2], 1e-5);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-
-            Assert.IsTrue(ISynergy.Framework.Mathematics.Random.Generator.HasBeenAccessed);
-        }
-
-        [TestMethod]
-        public void ConstructorTest8()
-        {
-            // This problem is taken from page 66 of Hock and Schittkowski's book Test
-            // Examples for Nonlinear Programming Codes. It is their Test problem Number
-            // 43, and has the name Rosen-Suzuki.
-            NonlinearObjectiveFunction function = new(4, x => x[0] * x[0]
-                + x[1] * x[1] + 2.0 * x[2] * x[2]
-                + x[3] * x[3] - 5.0 * x[0] - 5.0 * x[1]
-                - 21.0 * x[2] + 7.0 * x[3]);
-
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(4, x=> 8.0 - x[0] * x[0]
-                    - x[1] * x[1] - x[2] * x[2] - x[3] * x[3] - x[0] + x[1] - x[2] + x[3]),
-
-                new NonlinearConstraint(4, x => 10.0 - x[0] * x[0]
-                    - 2.0 * x[1] * x[1] - x[2] * x[2] - 2.0 * x[3] * x[3] + x[0] + x[3]),
-
-                new NonlinearConstraint(4, x => 5.0 - 2.0 * x[0] * x[0]
-                    - x[1] * x[1] - x[2] * x[2] - 2.0 * x[0] + x[1] + x[3])
-            };
-
-            Cobyla cobyla = new(function, constraints);
-
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            double[] expected =
-            {
-                0.0, 1.0, 2.0, -1.0
-            };
-
-            for (int i = 0; i < expected.Length; i++)
-                Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-4);
-            Assert.AreEqual(-44, minimum, 1e-10);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
-        [TestMethod]
-        public void ConstructorTest9()
-        {
-            // This problem is taken from page 111 of Hock and Schittkowski's
-            // book Test Examples for Nonlinear Programming Codes. It is their
-            // Test problem Number 100.
-            // 
-            NonlinearObjectiveFunction function = new(7, x =>
-                Math.Pow(x[0] - 10.0, 2.0) + 5.0 * Math.Pow(x[1] - 12.0, 2.0) + Math.Pow(x[2], 4.0) +
-                3.0 * Math.Pow(x[3] - 11.0, 2.0) + 10.0 * Math.Pow(x[4], 6.0) + 7.0 * x[5] * x[5] + Math.Pow(x[6], 4.0) -
-                4.0 * x[5] * x[6] - 10.0 * x[5] - 8.0 * x[6]);
-
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(7, x => 127.0 - 2.0 * x[0] * x[0] - 3.0 * Math.Pow(x[1], 4.0)
-                    - x[2] - 4.0 * x[3] * x[3] - 5.0 * x[4]),
-                new NonlinearConstraint(7, x => 282.0 - 7.0 * x[0] - 3.0 * x[1] - 10.0 * x[2] * x[2] - x[3] + x[4]),
-                new NonlinearConstraint(7, x => 196.0 - 23.0 * x[0] - x[1] * x[1] - 6.0 * x[5] * x[5] + 8.0 * x[6]),
-                new NonlinearConstraint(7, x => -4.0 * x[0] * x[0] - x[1] * x[1] + 3.0 * x[0] * x[1]
-                    - 2.0 * x[2] * x[2] - 5.0 * x[5] + 11.0 * x[6])
-            };
-
-            Cobyla cobyla = new(function, constraints);
-
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            double[] expected =
-            {
-                2.330499, 1.951372, -0.4775414, 4.365726, -0.624487, 1.038131, 1.594227
-            };
-
-            for (int i = 0; i < expected.Length; i++)
-                Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-4);
-            Assert.AreEqual(680.63005737443393, minimum, 1e-6);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
-        [TestMethod]
-        public void ConstructorTest10()
-        {
-            // This problem is taken from page 415 of Luenberger's book Applied
-            // Nonlinear Programming. It is to maximize the area of a hexagon of
-            // unit diameter.
-            // 
-            NonlinearObjectiveFunction function = new(9, x =>
-                -0.5 * (x[0] * x[3] - x[1] * x[2] + x[2] * x[8]
-                - x[4] * x[8] + x[4] * x[7] - x[5] * x[6]));
-
-            NonlinearConstraint[] constraints =
-            {
-                new NonlinearConstraint(9, x => 1.0 - x[2] * x[2] - x[3] * x[3]),
-                new NonlinearConstraint(9, x =>  1.0 - x[8] * x[8]),
-                new NonlinearConstraint(9, x =>  1.0 - x[4] * x[4] - x[5] * x[5]),
-                new NonlinearConstraint(9, x =>  1.0 - x[0] * x[0] - Math.Pow(x[1] - x[8], 2.0)),
-                new NonlinearConstraint(9, x =>  1.0 - Math.Pow(x[0] - x[4], 2.0) - Math.Pow(x[1] - x[5], 2.0)),
-                new NonlinearConstraint(9, x =>  1.0 - Math.Pow(x[0] - x[6], 2.0) - Math.Pow(x[1] - x[7], 2.0)),
-                new NonlinearConstraint(9, x =>  1.0 - Math.Pow(x[2] - x[4], 2.0) - Math.Pow(x[3] - x[5], 2.0)),
-                new NonlinearConstraint(9, x =>  1.0 - Math.Pow(x[2] - x[6], 2.0) - Math.Pow(x[3] - x[7], 2.0)),
-                new NonlinearConstraint(9, x =>  1.0 - x[6] * x[6] - Math.Pow(x[7] - x[8], 2.0)),
-                new NonlinearConstraint(9, x =>  x[0] * x[3] - x[1] * x[2]),
-                new NonlinearConstraint(9, x =>  x[2] * x[8]),
-                new NonlinearConstraint(9, x =>  -x[4] * x[8]),
-                new NonlinearConstraint(9, x =>  x[4] * x[7] - x[5] * x[6]),
-                new NonlinearConstraint(9, x =>  x[8]),
-            };
-
-            Cobyla cobyla = new(function, constraints);
-
-            for (int i = 0; i < cobyla.Solution.Length; i++)
-                cobyla.Solution[i] = 1;
-
-            Assert.IsTrue(cobyla.Minimize());
-            double minimum = cobyla.Value;
-            double[] solution = cobyla.Solution;
-
-            double[] expected =
-            {
-                0.688341, 0.725387, -0.284033, 0.958814, 0.688341, 0.725387, -0.284033, 0.958814, 0.0
-            };
-
-            for (int i = 0; i < expected.Length; i++)
-                Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-2);
-            Assert.AreEqual(-0.86602540378486847, minimum, 1e-10);
-
-            double expectedMinimum = function.Function(cobyla.Solution);
-            Assert.AreEqual(expectedMinimum, minimum);
-        }
-
+        Assert.IsTrue(thrown);
     }
+
+    [TestMethod]
+    public void ConstructorTest7()
+    {
+        ISynergy.Framework.Mathematics.Random.Generator.Seed = 0;
+
+        // This problem is taken from Fletcher's book Practical Methods of
+        // Optimization and has the equation number (14.4.2).
+        NonlinearObjectiveFunction function = new(3, x => x[2]);
+
+        NonlinearConstraint[] constraints =
+        {
+            new NonlinearConstraint(3, x=> 5.0 * x[0] - x[1] + x[2]),
+            new NonlinearConstraint(3, x =>  x[2] - x[0] * x[0] - x[1] * x[1] - 4.0 * x[1]),
+            new NonlinearConstraint(3, x =>  x[2] - 5.0 * x[0] - x[1]),
+        };
+
+        Cobyla cobyla = new(function, constraints);
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
+
+        Assert.AreEqual(-3, minimum, 1e-5);
+        Assert.AreEqual(0.0, solution[0], 1e-5);
+        Assert.AreEqual(-3.0, solution[1], 1e-5);
+        Assert.AreEqual(-3.0, solution[2], 1e-5);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+
+        Assert.IsTrue(ISynergy.Framework.Mathematics.Random.Generator.HasBeenAccessed);
+    }
+
+    [TestMethod]
+    public void ConstructorTest8()
+    {
+        // This problem is taken from page 66 of Hock and Schittkowski's book Test
+        // Examples for Nonlinear Programming Codes. It is their Test problem Number
+        // 43, and has the name Rosen-Suzuki.
+        NonlinearObjectiveFunction function = new(4, x => x[0] * x[0]
+            + x[1] * x[1] + 2.0 * x[2] * x[2]
+            + x[3] * x[3] - 5.0 * x[0] - 5.0 * x[1]
+            - 21.0 * x[2] + 7.0 * x[3]);
+
+        NonlinearConstraint[] constraints =
+        {
+            new NonlinearConstraint(4, x=> 8.0 - x[0] * x[0]
+                - x[1] * x[1] - x[2] * x[2] - x[3] * x[3] - x[0] + x[1] - x[2] + x[3]),
+
+            new NonlinearConstraint(4, x => 10.0 - x[0] * x[0]
+                - 2.0 * x[1] * x[1] - x[2] * x[2] - 2.0 * x[3] * x[3] + x[0] + x[3]),
+
+            new NonlinearConstraint(4, x => 5.0 - 2.0 * x[0] * x[0]
+                - x[1] * x[1] - x[2] * x[2] - 2.0 * x[0] + x[1] + x[3])
+        };
+
+        Cobyla cobyla = new(function, constraints);
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
+
+        double[] expected =
+        {
+            0.0, 1.0, 2.0, -1.0
+        };
+
+        for (int i = 0; i < expected.Length; i++)
+            Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-4);
+        Assert.AreEqual(-44, minimum, 1e-10);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest9()
+    {
+        // This problem is taken from page 111 of Hock and Schittkowski's
+        // book Test Examples for Nonlinear Programming Codes. It is their
+        // Test problem Number 100.
+        // 
+        NonlinearObjectiveFunction function = new(7, x =>
+            Math.Pow(x[0] - 10.0, 2.0) + 5.0 * Math.Pow(x[1] - 12.0, 2.0) + Math.Pow(x[2], 4.0) +
+            3.0 * Math.Pow(x[3] - 11.0, 2.0) + 10.0 * Math.Pow(x[4], 6.0) + 7.0 * x[5] * x[5] + Math.Pow(x[6], 4.0) -
+            4.0 * x[5] * x[6] - 10.0 * x[5] - 8.0 * x[6]);
+
+        NonlinearConstraint[] constraints =
+        {
+            new NonlinearConstraint(7, x => 127.0 - 2.0 * x[0] * x[0] - 3.0 * Math.Pow(x[1], 4.0)
+                - x[2] - 4.0 * x[3] * x[3] - 5.0 * x[4]),
+            new NonlinearConstraint(7, x => 282.0 - 7.0 * x[0] - 3.0 * x[1] - 10.0 * x[2] * x[2] - x[3] + x[4]),
+            new NonlinearConstraint(7, x => 196.0 - 23.0 * x[0] - x[1] * x[1] - 6.0 * x[5] * x[5] + 8.0 * x[6]),
+            new NonlinearConstraint(7, x => -4.0 * x[0] * x[0] - x[1] * x[1] + 3.0 * x[0] * x[1]
+                - 2.0 * x[2] * x[2] - 5.0 * x[5] + 11.0 * x[6])
+        };
+
+        Cobyla cobyla = new(function, constraints);
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
+
+        double[] expected =
+        {
+            2.330499, 1.951372, -0.4775414, 4.365726, -0.624487, 1.038131, 1.594227
+        };
+
+        for (int i = 0; i < expected.Length; i++)
+            Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-4);
+        Assert.AreEqual(680.63005737443393, minimum, 1e-6);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
+    [TestMethod]
+    public void ConstructorTest10()
+    {
+        // This problem is taken from page 415 of Luenberger's book Applied
+        // Nonlinear Programming. It is to maximize the area of a hexagon of
+        // unit diameter.
+        // 
+        NonlinearObjectiveFunction function = new(9, x =>
+            -0.5 * (x[0] * x[3] - x[1] * x[2] + x[2] * x[8]
+            - x[4] * x[8] + x[4] * x[7] - x[5] * x[6]));
+
+        NonlinearConstraint[] constraints =
+        {
+            new NonlinearConstraint(9, x => 1.0 - x[2] * x[2] - x[3] * x[3]),
+            new NonlinearConstraint(9, x =>  1.0 - x[8] * x[8]),
+            new NonlinearConstraint(9, x =>  1.0 - x[4] * x[4] - x[5] * x[5]),
+            new NonlinearConstraint(9, x =>  1.0 - x[0] * x[0] - Math.Pow(x[1] - x[8], 2.0)),
+            new NonlinearConstraint(9, x =>  1.0 - Math.Pow(x[0] - x[4], 2.0) - Math.Pow(x[1] - x[5], 2.0)),
+            new NonlinearConstraint(9, x =>  1.0 - Math.Pow(x[0] - x[6], 2.0) - Math.Pow(x[1] - x[7], 2.0)),
+            new NonlinearConstraint(9, x =>  1.0 - Math.Pow(x[2] - x[4], 2.0) - Math.Pow(x[3] - x[5], 2.0)),
+            new NonlinearConstraint(9, x =>  1.0 - Math.Pow(x[2] - x[6], 2.0) - Math.Pow(x[3] - x[7], 2.0)),
+            new NonlinearConstraint(9, x =>  1.0 - x[6] * x[6] - Math.Pow(x[7] - x[8], 2.0)),
+            new NonlinearConstraint(9, x =>  x[0] * x[3] - x[1] * x[2]),
+            new NonlinearConstraint(9, x =>  x[2] * x[8]),
+            new NonlinearConstraint(9, x =>  -x[4] * x[8]),
+            new NonlinearConstraint(9, x =>  x[4] * x[7] - x[5] * x[6]),
+            new NonlinearConstraint(9, x =>  x[8]),
+        };
+
+        Cobyla cobyla = new(function, constraints);
+
+        for (int i = 0; i < cobyla.Solution.Length; i++)
+            cobyla.Solution[i] = 1;
+
+        Assert.IsTrue(cobyla.Minimize());
+        double minimum = cobyla.Value;
+        double[] solution = cobyla.Solution;
+
+        double[] expected =
+        {
+            0.688341, 0.725387, -0.284033, 0.958814, 0.688341, 0.725387, -0.284033, 0.958814, 0.0
+        };
+
+        for (int i = 0; i < expected.Length; i++)
+            Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-2);
+        Assert.AreEqual(-0.86602540378486847, minimum, 1e-10);
+
+        double expectedMinimum = function.Function(cobyla.Solution);
+        Assert.AreEqual(expectedMinimum, minimum);
+    }
+
 }
