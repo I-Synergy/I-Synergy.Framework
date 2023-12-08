@@ -1,6 +1,5 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+
+public interface IDashboardViewModel : IViewModel
 {
-    public interface IDashboardViewModel : IViewModel
-    {
-    }
 }

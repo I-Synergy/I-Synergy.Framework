@@ -1,20 +1,19 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.AspNetCore.Authentication.Tests
+namespace ISynergy.Framework.AspNetCore.Authentication.Tests;
+
+/// <summary>
+/// Class InitialTests.
+/// </summary>
+[TestClass]
+public class InitialTests
 {
     /// <summary>
-    /// Class InitialTests.
+    /// Defines the test method Test.
     /// </summary>
-    [TestClass]
-    public class InitialTests
+    [TestMethod]
+    public void Test()
     {
-        /// <summary>
-        /// Defines the test method Test.
-        /// </summary>
-        [TestMethod]
-        public void Test()
-        {
-            Assert.IsTrue(true);
-        }
+        Assert.IsTrue(true);
     }
 }

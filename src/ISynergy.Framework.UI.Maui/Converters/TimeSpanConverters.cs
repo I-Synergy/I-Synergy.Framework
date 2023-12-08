@@ -3,59 +3,58 @@ using ISynergy.Framework.Core.Locators;
 using System.Globalization;
 using System.Text;
 
-namespace ISynergy.Framework.UI.Converters
+namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Class TimeSpanToStringConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class TimeSpanToStringConverter : IValueConverter
 {
     /// <summary>
-    /// Class TimeSpanToStringConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the specified value.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class TimeSpanToStringConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (value is TimeSpan timeSpan)
         {
-            if (value is TimeSpan timeSpan)
+            var result = new StringBuilder();
+
+            if (timeSpan.Days > 0)
             {
-                var result = new StringBuilder();
-
-                if (timeSpan.Days > 0)
-                {
-                    result.Append($"{timeSpan.Days} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Day_s")}, ");
-                }
-
-                result.Append(
-                    $"{timeSpan.Hours} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Hour_s")} " +
-                    $"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("And")} " +
-                    $"{timeSpan.Minutes} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Minute_s")}");
-
-                return result.ToString();
+                result.Append($"{timeSpan.Days} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Day_s")}, ");
             }
-            else
-            {
-                return null;
-            }
+
+            result.Append(
+                $"{timeSpan.Hours} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Hour_s")} " +
+                $"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("And")} " +
+                $"{timeSpan.Minutes} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Minute_s")}");
+
+            return result.ToString();
         }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        else
         {
-            throw new NotImplementedException();
+            return null;
         }
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

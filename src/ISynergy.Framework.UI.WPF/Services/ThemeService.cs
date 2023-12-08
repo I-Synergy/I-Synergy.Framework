@@ -3,71 +3,70 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Style = ISynergy.Framework.Core.Models.Style;
 
-namespace ISynergy.Framework.UI.Services
+namespace ISynergy.Framework.UI.Services;
+
+/// <summary>
+/// Class ThemeSelectorService.
+/// Implements the <see cref="IThemeService" />
+/// </summary>
+/// <seealso cref="IThemeService" />
+public class ThemeService : IThemeService
 {
+    private readonly IBaseApplicationSettingsService _applicationSettingsService;
+
     /// <summary>
-    /// Class ThemeSelectorService.
-    /// Implements the <see cref="IThemeService" />
+    /// Gets or sets the theme.
     /// </summary>
-    /// <seealso cref="IThemeService" />
-    public class ThemeService : IThemeService
+    /// <value>The theme.</value>
+    public Style Style
     {
-        private readonly IBaseApplicationSettingsService _applicationSettingsService;
-
-        /// <summary>
-        /// Gets or sets the theme.
-        /// </summary>
-        /// <value>The theme.</value>
-        public Style Style
+        get => new()
         {
-            get => new()
-            {
-                Theme = _applicationSettingsService.Settings.Theme,
-                Color = _applicationSettingsService.Settings.Color
-            };
-        }
+            Theme = _applicationSettingsService.Settings.Theme,
+            Color = _applicationSettingsService.Settings.Color
+        };
+    }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is light theme enabled.
-        /// </summary>
-        /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
-        public bool IsLightThemeEnabled => Style.Theme == Themes.Light;
+    /// <summary>
+    /// Gets a value indicating whether this instance is light theme enabled.
+    /// </summary>
+    /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
+    public bool IsLightThemeEnabled => Style.Theme == Themes.Light;
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="applicationSettingsService"></param>
-        public ThemeService(IBaseApplicationSettingsService applicationSettingsService)
-        {
-            _applicationSettingsService = applicationSettingsService;
-            _applicationSettingsService.LoadSettings();
-        }
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    /// <param name="applicationSettingsService"></param>
+    public ThemeService(IBaseApplicationSettingsService applicationSettingsService)
+    {
+        _applicationSettingsService = applicationSettingsService;
+        _applicationSettingsService.LoadSettings();
+    }
 
-        /// <summary>
-        /// Sets the theme.
-        /// </summary>
-        public void SetStyle()
-        {
-            //Application.Primary = Color.FromArgb(Style.Color);
+    /// <summary>
+    /// Sets the theme.
+    /// </summary>
+    public void SetStyle()
+    {
+        //Application.Primary = Color.FromArgb(Style.Color);
 
-            //if (IsLightThemeEnabled)
-            //    Application.Current.Resources.ApplyLightTheme();
-            //else
-            //    Application.Current.Resources.ApplyDarkTheme();
+        //if (IsLightThemeEnabled)
+        //    Application.Current.Resources.ApplyLightTheme();
+        //else
+        //    Application.Current.Resources.ApplyDarkTheme();
 
-            // Add custom resourcedictionaries from code.
+        // Add custom resourcedictionaries from code.
 
-            //if (Application.Current is BaseApplication application && application.Resources?.MergedDictionaries is ICollection<ResourceDictionary> dictionary)
-            //{
-            //    var additionalResourceDictionaries = application.GetAdditionalResourceDictionaries();
+        //if (Application.Current is BaseApplication application && application.Resources?.MergedDictionaries is ICollection<ResourceDictionary> dictionary)
+        //{
+        //    var additionalResourceDictionaries = application.GetAdditionalResourceDictionaries();
 
-            //    dictionary.Add(new Generic());
+        //    dictionary.Add(new Generic());
 
-            //    foreach (var item in additionalResourceDictionaries)
-            //    {
-            //        dictionary.Add(item);
-            //    }
-            //}
-        }
+        //    foreach (var item in additionalResourceDictionaries)
+        //    {
+        //        dictionary.Add(item);
+        //    }
+        //}
     }
 }

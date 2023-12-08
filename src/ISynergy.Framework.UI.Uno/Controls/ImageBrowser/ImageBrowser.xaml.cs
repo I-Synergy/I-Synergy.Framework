@@ -7,117 +7,116 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
-namespace ISynergy.Framework.UI.Controls
+namespace ISynergy.Framework.UI.Controls;
+
+public sealed partial class ImageBrowser : UserControl
 {
-    public sealed partial class ImageBrowser : UserControl
+    /// <summary>
+    /// Gets or sets the Image property value.
+    /// </summary>
+    /// <value>The file.</value>
+    public byte[] FileBytes
     {
-        /// <summary>
-        /// Gets or sets the Image property value.
-        /// </summary>
-        /// <value>The file.</value>
-        public byte[] FileBytes
+        get { return (byte[])GetValue(FileProperty); }
+        set { SetValue(FileProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for File.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty FileProperty = DependencyProperty.Register(nameof(FileBytes), typeof(byte[]), typeof(ImageBrowser), new PropertyMetadata(Array.Empty<byte>()));
+
+    /// <summary>
+    /// Gets or sets the ContentType property value.
+    /// </summary>
+    /// <value>The content type identifier.</value>
+    public string ContentType
+    {
+        get { return (string)GetValue(ContentTypeProperty); }
+        set { SetValue(ContentTypeProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ContentType.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ContentTypeProperty = DependencyProperty.Register(nameof(ContentType), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
+
+    public string FileName
+    {
+        get { return (string)GetValue(FileNameProperty); }
+        set { SetValue(FileNameProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(nameof(FileName), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
+
+    /// <summary>
+    /// ImageBrowser constructor.
+    /// </summary>
+    public ImageBrowser()
+    {
+        this.InitializeComponent();
+    }
+
+    /// <summary>
+    /// browse image as an asynchronous operation.
+    /// </summary>
+    /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
+    private async void Button_Browse_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (ServiceLocator.Default.GetInstance<ILanguageService>() is ILanguageService languageService &&
+            ServiceLocator.Default.GetInstance<IFileService<FileResult>>() is IFileService<FileResult> fileService)
         {
-            get { return (byte[])GetValue(FileProperty); }
-            set { SetValue(FileProperty, value); }
-        }
+            var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png");
 
-        // Using a DependencyProperty as the backing store for File.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FileProperty = DependencyProperty.Register(nameof(FileBytes), typeof(byte[]), typeof(ImageBrowser), new PropertyMetadata(Array.Empty<byte>()));
-
-        /// <summary>
-        /// Gets or sets the ContentType property value.
-        /// </summary>
-        /// <value>The content type identifier.</value>
-        public string ContentType
-        {
-            get { return (string)GetValue(ContentTypeProperty); }
-            set { SetValue(ContentTypeProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for ContentType.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ContentTypeProperty = DependencyProperty.Register(nameof(ContentType), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
-
-        public string FileName
-        {
-            get { return (string)GetValue(FileNameProperty); }
-            set { SetValue(FileNameProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(nameof(FileName), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
-
-        /// <summary>
-        /// ImageBrowser constructor.
-        /// </summary>
-        public ImageBrowser()
-        {
-            this.InitializeComponent();
-        }
-
-        /// <summary>
-        /// browse image as an asynchronous operation.
-        /// </summary>
-        /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-        private async void Button_Browse_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (ServiceLocator.Default.GetInstance<ILanguageService>() is ILanguageService languageService &&
-                ServiceLocator.Default.GetInstance<IFileService<FileResult>>() is IFileService<FileResult> fileService)
+            if (result is not null && result.Count > 0)
             {
-                var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png");
+                FileBytes = result.First().File;
+                ContentType = result.First().FilePath.ToContentType();
+                FileName = result.First().FileName;
+            }
+        };
+    }
 
-                if (result is not null && result.Count > 0)
-                {
-                    FileBytes = result.First().File;
-                    ContentType = result.First().FilePath.ToContentType();
-                    FileName = result.First().FileName;
-                }
-            };
-        }
-
-        /// <summary>
-        /// take picture as an asynchronous operation.
-        /// </summary>
-        /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-        private async void Button_Camera_Tapped(object sender, TappedRoutedEventArgs e)
+    /// <summary>
+    /// take picture as an asynchronous operation.
+    /// </summary>
+    /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
+    private async void Button_Camera_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (ServiceLocator.Default.GetInstance<ICameraService>() is ICameraService cameraService)
         {
-            if (ServiceLocator.Default.GetInstance<ICameraService>() is ICameraService cameraService)
+            var result = await cameraService.TakePictureAsync();
+
+            if (result is not null)
             {
-                var result = await cameraService.TakePictureAsync();
+                FileBytes = result.File;
+                ContentType = result.FilePath.ToContentType();
+                FileName = result.FileName;
+            }
+        };
+    }
 
-                if (result is not null)
-                {
-                    FileBytes = result.File;
-                    ContentType = result.FilePath.ToContentType();
-                    FileName = result.FileName;
-                }
-            };
-        }
+    /// <summary>
+    /// Clears the image.
+    /// </summary>
+    private void Button_Clear_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+        FileBytes = null;
+        ContentType = string.Empty;
+    }
 
-        /// <summary>
-        /// Clears the image.
-        /// </summary>
-        private void Button_Clear_Tapped(object sender, TappedRoutedEventArgs e)
+    /// <summary>
+    /// paste from clipboard as an asynchronous operation.
+    /// </summary>
+    /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
+    private async void Button_Paste_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (ServiceLocator.Default.GetInstance<IClipboardService>() is IClipboardService clipboardService)
         {
-            FileBytes = null;
-            ContentType = string.Empty;
-        }
+            var result = await clipboardService.GetByteArrayFromClipboardImageAsync(Framework.Core.Enumerations.ImageFormats.png);
 
-        /// <summary>
-        /// paste from clipboard as an asynchronous operation.
-        /// </summary>
-        /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-        private async void Button_Paste_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (ServiceLocator.Default.GetInstance<IClipboardService>() is IClipboardService clipboardService)
+            if (result is not null)
             {
-                var result = await clipboardService.GetByteArrayFromClipboardImageAsync(Framework.Core.Enumerations.ImageFormats.png);
-
-                if (result is not null)
-                {
-                    FileBytes = result;
-                    ContentType = "image/png";
-                    FileName = $"FROM_CLIPBOARD_{DateTime.Now}";
-                }
+                FileBytes = result;
+                ContentType = "image/png";
+                FileName = $"FROM_CLIPBOARD_{DateTime.Now}";
             }
         }
     }

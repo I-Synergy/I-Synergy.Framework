@@ -1,277 +1,224 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests
+﻿namespace ISynergy.Framework.Mathematics.Tests;
+
+using ISynergy.Framework.Mathematics;
+using ISynergy.Framework.Mathematics.Differentiation;
+using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Optimization;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+
+
+[TestClass]
+public class QuadraticObjectiveFunctionTest
 {
-    using ISynergy.Framework.Mathematics;
-    using ISynergy.Framework.Mathematics.Differentiation;
-    using ISynergy.Framework.Mathematics.Exceptions;
-    using ISynergy.Framework.Mathematics.Optimization;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
 
-
-    [TestClass]
-    public class QuadraticObjectiveFunctionTest
+    [TestMethod]
+    public void QuadraticConstructorTest()
     {
-
-        [TestMethod]
-        public void QuadraticConstructorTest()
+        double[,] quadraticTerms =
         {
-            double[,] quadraticTerms =
+            {  1, 2, 3 },
+            {  2, 5, 6 },
+            {  3, 6, 9 },
+        };
+
+        double[] linearTerms = { 1, 2, 3 };
+
+        QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+
+        Func<double[], double> function = target.Function;
+        Func<double[], double[]> gradient = target.Gradient;
+
+        FiniteDifferences fd = new(3, function);
+
+        double[][] x =
+        {
+            new double[] { 1, 2, 3 },
+            new double[] { 3, 1, 4 },
+            new double[] { -6 , 5, 9 },
+            new double[] { 31, 25, 246 },
+            new double[] { -0.102, 0, 10 },
+        };
+
+
+        { // Function Test
+            for (int i = 0; i < x.Length; i++)
             {
-                {  1, 2, 3 },
-                {  2, 5, 6 },
-                {  3, 6, 9 },
-            };
+                double expected = 0.5 *
+                    (x[i].Dot(quadraticTerms)).Dot(x[i])
+                    + linearTerms.Dot(x[i]);
 
-            double[] linearTerms = { 1, 2, 3 };
+                double actual = function(x[i]);
 
-            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
-
-            Func<double[], double> function = target.Function;
-            Func<double[], double[]> gradient = target.Gradient;
-
-            FiniteDifferences fd = new(3, function);
-
-            double[][] x =
-            {
-                new double[] { 1, 2, 3 },
-                new double[] { 3, 1, 4 },
-                new double[] { -6 , 5, 9 },
-                new double[] { 31, 25, 246 },
-                new double[] { -0.102, 0, 10 },
-            };
-
-
-            { // Function Test
-                for (int i = 0; i < x.Length; i++)
-                {
-                    double expected = 0.5 *
-                        (x[i].Dot(quadraticTerms)).Dot(x[i])
-                        + linearTerms.Dot(x[i]);
-
-                    double actual = function(x[i]);
-
-                    Assert.AreEqual(expected, actual, 1e-8);
-                }
-            }
-
-            { // Gradient Test
-                for (int i = 0; i < x.Length; i++)
-                {
-                    double[] expected = fd.Gradient(x[i]);
-                    double[] actual = gradient(x[i]);
-
-                    for (int j = 0; j < actual.Length; j++)
-                        Assert.AreEqual(expected[j], actual[j], 1e-8);
-                }
+                Assert.AreEqual(expected, actual, 1e-8);
             }
         }
 
-        [TestMethod]
-        public void LinearTest()
-        {
-            double[,] quadraticTerms =
+        { // Gradient Test
+            for (int i = 0; i < x.Length; i++)
             {
-                {  0, 0, 0 },
-                {  0, 0, 0 },
-                {  0, 0, 0 },
-            };
+                double[] expected = fd.Gradient(x[i]);
+                double[] actual = gradient(x[i]);
 
-            double[] linearTerms = { 1, 2, 3 };
-
-            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
-
-            Func<double[], double> function = target.Function;
-            Func<double[], double[]> gradient = target.Gradient;
-
-            FiniteDifferences fd = new(3, function);
-
-            double[][] x =
-            {
-                new double[] { 1, 2, 3 },
-                new double[] { 3, 1, 4 },
-                new double[] { -6 , 5, 9 },
-                new double[] { 31, 25, 246 },
-                new double[] { -0.102, 0, 10 },
-            };
-
-
-            { // Function Test
-                for (int i = 0; i < x.Length; i++)
-                {
-                    double expected = 0.5 *
-                        (x[i]
-                        .Dot(quadraticTerms))
-                        .Dot(x[i]) + linearTerms
-                        .Dot(x[i]);
-
-                    double actual = function(x[i]);
-
-                    Assert.AreEqual(expected, actual, 1e-8);
-                }
+                for (int j = 0; j < actual.Length; j++)
+                    Assert.AreEqual(expected[j], actual[j], 1e-8);
             }
+        }
+    }
 
-            { // Gradient Test
-                for (int i = 0; i < x.Length; i++)
-                {
-                    double[] expected = fd.Gradient(x[i]);
-                    double[] actual = gradient(x[i]);
+    [TestMethod]
+    public void LinearTest()
+    {
+        double[,] quadraticTerms =
+        {
+            {  0, 0, 0 },
+            {  0, 0, 0 },
+            {  0, 0, 0 },
+        };
 
-                    for (int j = 0; j < actual.Length; j++)
-                        Assert.AreEqual(expected[j], actual[j], 1e-8);
-                }
+        double[] linearTerms = { 1, 2, 3 };
+
+        QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+
+        Func<double[], double> function = target.Function;
+        Func<double[], double[]> gradient = target.Gradient;
+
+        FiniteDifferences fd = new(3, function);
+
+        double[][] x =
+        {
+            new double[] { 1, 2, 3 },
+            new double[] { 3, 1, 4 },
+            new double[] { -6 , 5, 9 },
+            new double[] { 31, 25, 246 },
+            new double[] { -0.102, 0, 10 },
+        };
+
+
+        { // Function Test
+            for (int i = 0; i < x.Length; i++)
+            {
+                double expected = 0.5 *
+                    (x[i]
+                    .Dot(quadraticTerms))
+                    .Dot(x[i]) + linearTerms
+                    .Dot(x[i]);
+
+                double actual = function(x[i]);
+
+                Assert.AreEqual(expected, actual, 1e-8);
             }
         }
 
-        [TestMethod]
-        public void HomogeneousTest()
-        {
-            double[,] quadraticTerms =
+        { // Gradient Test
+            for (int i = 0; i < x.Length; i++)
             {
-                {  8, 3, 1 },
-                {  3, 4, 2 },
-                {  1, 2, 6 },
-            };
+                double[] expected = fd.Gradient(x[i]);
+                double[] actual = gradient(x[i]);
 
-            double[] linearTerms = { 0, 0, 0 };
-
-            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
-
-            Func<double[], double> function = target.Function;
-            Func<double[], double[]> gradient = target.Gradient;
-
-            FiniteDifferences fd = new(3, function);
-
-            double[][] x =
-            {
-                new double[] { 1, 2, 3 },
-                new double[] { 3, 1, 4 },
-                new double[] { -6 , 5, 9 },
-                new double[] { 31, 25, 246 },
-                new double[] { -0.102, 0, 10 },
-            };
-
-            { // Gradient Test
-                for (int i = 0; i < x.Length; i++)
-                {
-                    double[] expected = fd.Gradient(x[i]);
-                    double[] actual = gradient(x[i]);
-
-                    for (int j = 0; j < actual.Length; j++)
-                        Assert.AreEqual(expected[j], actual[j], 1e-6);
-                }
+                for (int j = 0; j < actual.Length; j++)
+                    Assert.AreEqual(expected[j], actual[j], 1e-8);
             }
         }
+    }
 
-        [TestMethod]
-        public void HomogeneousTest2()
+    [TestMethod]
+    public void HomogeneousTest()
+    {
+        double[,] quadraticTerms =
         {
-            double[,] quadraticTerms =
+            {  8, 3, 1 },
+            {  3, 4, 2 },
+            {  1, 2, 6 },
+        };
+
+        double[] linearTerms = { 0, 0, 0 };
+
+        QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+
+        Func<double[], double> function = target.Function;
+        Func<double[], double[]> gradient = target.Gradient;
+
+        FiniteDifferences fd = new(3, function);
+
+        double[][] x =
+        {
+            new double[] { 1, 2, 3 },
+            new double[] { 3, 1, 4 },
+            new double[] { -6 , 5, 9 },
+            new double[] { 31, 25, 246 },
+            new double[] { -0.102, 0, 10 },
+        };
+
+        { // Gradient Test
+            for (int i = 0; i < x.Length; i++)
             {
-                {  1, 0, 1 },
-                {  0, 2, 0 },
-                {  1, 0, 1 },
-            };
+                double[] expected = fd.Gradient(x[i]);
+                double[] actual = gradient(x[i]);
 
-            double[] linearTerms = { 0, 0, 0 };
-
-            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
-
-            Func<double[], double> function = target.Function;
-            Func<double[], double[]> gradient = target.Gradient;
-
-            FiniteDifferences fd = new(3, function);
-
-            double[][] x =
-            {
-                new double[] { 1, 2, 3 },
-                new double[] { 3, 1, 4 },
-                new double[] { -6 , 5, 9 },
-                new double[] { 31, 25, 246 },
-                new double[] { -0.102, 0, 10 },
-            };
-
-            { // Gradient Test
-                for (int i = 0; i < x.Length; i++)
-                {
-                    double[] expected = fd.Gradient(x[i]);
-                    double[] actual = gradient(x[i]);
-
-                    for (int j = 0; j < actual.Length; j++)
-                        Assert.AreEqual(expected[j], actual[j], 1e-8);
-                }
+                for (int j = 0; j < actual.Length; j++)
+                    Assert.AreEqual(expected[j], actual[j], 1e-6);
             }
         }
+    }
 
-        [TestMethod]
-        public void FunctionTest()
+    [TestMethod]
+    public void HomogeneousTest2()
+    {
+        double[,] quadraticTerms =
         {
-            double x = 0;
-            double y = 0;
+            {  1, 0, 1 },
+            {  0, 2, 0 },
+            {  1, 0, 1 },
+        };
 
-            Func<double> expected = () => -2 * x * x + x * y - y * y + 5 * y;
-            QuadraticObjectiveFunction actual = new("-2x² + xy - y² + 5y");
+        double[] linearTerms = { 0, 0, 0 };
 
-            for (int i = 0; i < 10; i++)
+        QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+
+        Func<double[], double> function = target.Function;
+        Func<double[], double[]> gradient = target.Gradient;
+
+        FiniteDifferences fd = new(3, function);
+
+        double[][] x =
+        {
+            new double[] { 1, 2, 3 },
+            new double[] { 3, 1, 4 },
+            new double[] { -6 , 5, 9 },
+            new double[] { 31, 25, 246 },
+            new double[] { -0.102, 0, 10 },
+        };
+
+        { // Gradient Test
+            for (int i = 0; i < x.Length; i++)
             {
-                for (int j = 0; j < 10; j++)
-                {
-                    x = (i - 5) / 10.0;
-                    y = (j - 5) / 10.0;
+                double[] expected = fd.Gradient(x[i]);
+                double[] actual = gradient(x[i]);
 
-                    double a = actual.Function(new[] { x, y });
-                    double e = expected();
-
-                    Assert.AreEqual(e, a, 1e-10);
-                    Assert.IsFalse(double.IsNaN(a));
-                    Assert.IsFalse(double.IsNaN(e));
-                }
+                for (int j = 0; j < actual.Length; j++)
+                    Assert.AreEqual(expected[j], actual[j], 1e-8);
             }
         }
+    }
 
-        [TestMethod]
-        public void FunctionTest2()
+    [TestMethod]
+    public void FunctionTest()
+    {
+        double x = 0;
+        double y = 0;
+
+        Func<double> expected = () => -2 * x * x + x * y - y * y + 5 * y;
+        QuadraticObjectiveFunction actual = new("-2x² + xy - y² + 5y");
+
+        for (int i = 0; i < 10; i++)
         {
-            double x = 0;
-            double y = 0;
-            double z = 0;
-
-            Func<double> expected = () => -2 * x * x + x * y - y * y - 10 * x * z + z * z;
-            QuadraticObjectiveFunction actual = new("-2x² + xy - y² - 10xz + z²");
-
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = expected();
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void FunctionTest3()
-        {
-            double x = 0;
-
-            Func<double> expected = () => x * x + 1;
-            QuadraticObjectiveFunction actual = new("x² + 1");
-
-            for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
             {
                 x = (i - 5) / 10.0;
+                y = (j - 5) / 10.0;
 
-                double a = actual.Function(new[] { x });
+                double a = actual.Function(new[] { x, y });
                 double e = expected();
 
                 Assert.AreEqual(e, a, 1e-10);
@@ -279,100 +226,29 @@
                 Assert.IsFalse(double.IsNaN(e));
             }
         }
+    }
 
-        [TestMethod]
-        public void FunctionTest4()
+    [TestMethod]
+    public void FunctionTest2()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        Func<double> expected = () => -2 * x * x + x * y - y * y - 10 * x * z + z * z;
+        QuadraticObjectiveFunction actual = new("-2x² + xy - y² - 10xz + z²");
+
+        for (int i = 0; i < 10; i++)
         {
-            double x = 0;
-            double y = 0;
-            double z = 0;
-
-            Func<double> expected = () => -x * y + y * z;
-            QuadraticObjectiveFunction actual = new("-x*y + y*z");
-
-            for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
             {
-                for (int j = 0; j < 10; j++)
-                {
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = expected();
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void FunctionTest5()
-        {
-            QuadraticObjectiveFunction f1 = new("x² + 1");
-            QuadraticObjectiveFunction f2 = new("-x*y + y*z");
-            QuadraticObjectiveFunction f3 = new("-2x² + xy - y² - 10xz + z²");
-            QuadraticObjectiveFunction f4 = new("-2x² + xy - y² + 5y");
-            QuadraticObjectiveFunction f5 = new("2x² -5");
-
-            double x = 0, y = 0, z = 0;
-            QuadraticObjectiveFunction g1 = new(() => x * x + 1);
-            QuadraticObjectiveFunction g2 = new(() => -x * y + y * z);
-            QuadraticObjectiveFunction g3 = new(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
-            QuadraticObjectiveFunction g4 = new(() => -2 * x * x + x * y - y * y + 5 * y);
-            QuadraticObjectiveFunction g5 = new(() => 2 * x * x - 5);
-
-
-            QuadraticObjectiveFunction[] f = { f1, f2, f3, f4, f5 };
-            QuadraticObjectiveFunction[] g = { g1, g2, g3, g4, g5 };
-
-            for (int l = 0; l < f.Length; l++)
-            {
-                QuadraticObjectiveFunction fl = f[l];
-                QuadraticObjectiveFunction gl = g[l];
-
-                Assert.AreEqual(fl.NumberOfVariables, gl.NumberOfVariables);
-
-                for (int i = 0; i < 10; i++)
-                    for (int j = 0; j < 10; j++)
-                        for (int k = 0; k < 10; k++)
-                        {
-                            x = (i - 5) / 10.0;
-                            y = (j - 5) / 10.0;
-                            z = (k - 5) / 10.0;
-
-                            double a = fl.Function(new[] { x, y, z }.First(fl.NumberOfVariables));
-                            double e = gl.Function(new[] { x, y, z }.First(fl.NumberOfVariables));
-
-                            Assert.AreEqual(e, a, 1e-10);
-                            Assert.IsFalse(double.IsNaN(a));
-                            Assert.IsFalse(double.IsNaN(e));
-                        }
-            }
-        }
-
-        [TestMethod]
-        public void LambdaFunctionTest()
-        {
-            double x = 0;
-            double y = 0;
-
-            Func<double> expected = () => -2 * x * x + x * y - y * y + 5 * y;
-            QuadraticObjectiveFunction actual = new(() => -2 * x * x + x * y - y * y + 5 * y);
-
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
                 {
                     x = (i - 5) / 10.0;
                     y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y });
+                    double a = actual.Function(new[] { x, y, z });
                     double e = expected();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -381,16 +257,86 @@
                 }
             }
         }
+    }
 
-        [TestMethod]
-        public void LambdaFunctionTest2()
+    [TestMethod]
+    public void FunctionTest3()
+    {
+        double x = 0;
+
+        Func<double> expected = () => x * x + 1;
+        QuadraticObjectiveFunction actual = new("x² + 1");
+
+        for (int i = 0; i < 10; i++)
         {
-            double x = 0;
-            double y = 0;
-            double z = 0;
+            x = (i - 5) / 10.0;
 
-            Func<double> expected = () => -2 * x * x + x * y - y * y - 10 * x * z + z * z;
-            QuadraticObjectiveFunction actual = new(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
+            double a = actual.Function(new[] { x });
+            double e = expected();
+
+            Assert.AreEqual(e, a, 1e-10);
+            Assert.IsFalse(double.IsNaN(a));
+            Assert.IsFalse(double.IsNaN(e));
+        }
+    }
+
+    [TestMethod]
+    public void FunctionTest4()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        Func<double> expected = () => -x * y + y * z;
+        QuadraticObjectiveFunction actual = new("-x*y + y*z");
+
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double a = actual.Function(new[] { x, y, z });
+                    double e = expected();
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+            }
+        }
+    }
+
+    [TestMethod]
+    public void FunctionTest5()
+    {
+        QuadraticObjectiveFunction f1 = new("x² + 1");
+        QuadraticObjectiveFunction f2 = new("-x*y + y*z");
+        QuadraticObjectiveFunction f3 = new("-2x² + xy - y² - 10xz + z²");
+        QuadraticObjectiveFunction f4 = new("-2x² + xy - y² + 5y");
+        QuadraticObjectiveFunction f5 = new("2x² -5");
+
+        double x = 0, y = 0, z = 0;
+        QuadraticObjectiveFunction g1 = new(() => x * x + 1);
+        QuadraticObjectiveFunction g2 = new(() => -x * y + y * z);
+        QuadraticObjectiveFunction g3 = new(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
+        QuadraticObjectiveFunction g4 = new(() => -2 * x * x + x * y - y * y + 5 * y);
+        QuadraticObjectiveFunction g5 = new(() => 2 * x * x - 5);
+
+
+        QuadraticObjectiveFunction[] f = { f1, f2, f3, f4, f5 };
+        QuadraticObjectiveFunction[] g = { g1, g2, g3, g4, g5 };
+
+        for (int l = 0; l < f.Length; l++)
+        {
+            QuadraticObjectiveFunction fl = f[l];
+            QuadraticObjectiveFunction gl = g[l];
+
+            Assert.AreEqual(fl.NumberOfVariables, gl.NumberOfVariables);
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -400,437 +346,490 @@
                         y = (j - 5) / 10.0;
                         z = (k - 5) / 10.0;
 
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = expected();
+                        double a = fl.Function(new[] { x, y, z }.First(fl.NumberOfVariables));
+                        double e = gl.Function(new[] { x, y, z }.First(fl.NumberOfVariables));
 
                         Assert.AreEqual(e, a, 1e-10);
                         Assert.IsFalse(double.IsNaN(a));
                         Assert.IsFalse(double.IsNaN(e));
                     }
         }
+    }
 
-        [TestMethod]
-        public void LambdaFunctionTest3()
+    [TestMethod]
+    public void LambdaFunctionTest()
+    {
+        double x = 0;
+        double y = 0;
+
+        Func<double> expected = () => -2 * x * x + x * y - y * y + 5 * y;
+        QuadraticObjectiveFunction actual = new(() => -2 * x * x + x * y - y * y + 5 * y);
+
+        for (int i = 0; i < 10; i++)
         {
-            double x = 0;
-
-            Func<double> expected = () => x * x + 1;
-            QuadraticObjectiveFunction actual = new(() => x * x + 1);
-
-            for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
             {
                 x = (i - 5) / 10.0;
+                y = (j - 5) / 10.0;
 
-                double a = actual.Function(new[] { x });
+                double a = actual.Function(new[] { x, y });
                 double e = expected();
 
                 Assert.AreEqual(e, a, 1e-10);
-                Assert.IsFalse(Double.IsNaN(a));
-                Assert.IsFalse(Double.IsNaN(e));
+                Assert.IsFalse(double.IsNaN(a));
+                Assert.IsFalse(double.IsNaN(e));
             }
         }
+    }
 
-        [TestMethod]
-        public void LambdaFunctionTest4()
+    [TestMethod]
+    public void LambdaFunctionTest2()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        Func<double> expected = () => -2 * x * x + x * y - y * y - 10 * x * z + z * z;
+        QuadraticObjectiveFunction actual = new(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double a = actual.Function(new[] { x, y, z });
+                    double e = expected();
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+    }
+
+    [TestMethod]
+    public void LambdaFunctionTest3()
+    {
+        double x = 0;
+
+        Func<double> expected = () => x * x + 1;
+        QuadraticObjectiveFunction actual = new(() => x * x + 1);
+
+        for (int i = 0; i < 10; i++)
         {
-            double x = 0;
-            double y = 0;
-            double z = 0;
+            x = (i - 5) / 10.0;
 
-            Func<double> expected = () => -x * y + y * z;
-            QuadraticObjectiveFunction actual = new(() => -x * y + y * z);
+            double a = actual.Function(new[] { x });
+            double e = expected();
 
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = expected();
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(Double.IsNaN(a));
-                        Assert.IsFalse(Double.IsNaN(e));
-                    }
+            Assert.AreEqual(e, a, 1e-10);
+            Assert.IsFalse(Double.IsNaN(a));
+            Assert.IsFalse(Double.IsNaN(e));
         }
+    }
 
-        [TestMethod]
-        public void LambdaFunctionTest5()
+    [TestMethod]
+    public void LambdaFunctionTest4()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        Func<double> expected = () => -x * y + y * z;
+        QuadraticObjectiveFunction actual = new(() => -x * y + y * z);
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double a = actual.Function(new[] { x, y, z });
+                    double e = expected();
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(Double.IsNaN(a));
+                    Assert.IsFalse(Double.IsNaN(e));
+                }
+    }
+
+    [TestMethod]
+    public void LambdaFunctionTest5()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        Func<double> expected = () => 2 * y * x - x * y + y * z;
+        QuadraticObjectiveFunction actual = new(() => 2 * y * x - x * y + y * z);
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double a = actual.Function(new[] { x, y, z });
+                    double e = expected();
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(Double.IsNaN(a));
+                    Assert.IsFalse(Double.IsNaN(e));
+                }
+    }
+
+    [TestMethod]
+    public void OperatorAdditionTest()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        Func<double> expected1 = () => 2 * y * x - x * y + y * z;
+        Func<double> expected2 = () => z * x - x * y + y * z + 4 * z + 2;
+        QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
+        QuadraticObjectiveFunction actual2 = new(() => z * x - x * y + y * z + 4 * z + 2);
+        QuadraticObjectiveFunction actual = actual1 + actual2;
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double a = actual.Function(new[] { x, y, z });
+                    double e = expected1() + expected2();
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(Double.IsNaN(a));
+                    Assert.IsFalse(Double.IsNaN(e));
+                }
+    }
+
+    [DataTestMethod]
+    [DataRow("x² + 1", "x² + 1")]
+    [DataRow("x² + 1", "2x²")]
+    [DataRow("-x*y + y*z", "-x*y + y*z")]
+    [DataRow("-x*y + y*z", "-2x² + xy - y² - 10xz + z²")]
+    [DataRow("-x*y + y*z", "-2x² + xy - y² + 5z")]
+    [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² - 10xz + z²")]
+    [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² + 5z")]
+    [DataRow("-2x² + xy - y² + 5y", "-2x² + xy - y² + 5y")]
+    [DataRow("-2x² + xy - y² + 5y", "2x² -5y -5")]
+    [DataRow("2x² -5", "2x² -5")]
+    public void OperatorAdditionTest2(string string1, string string2)
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        QuadraticObjectiveFunction actual1 = new(string1);
+        QuadraticObjectiveFunction actual2 = new(string2);
+        QuadraticObjectiveFunction actual = actual1 + actual2;
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+
+                    double a = actual.Function(arg);
+                    double e = actual1.Function(arg) + actual2.Function(arg);
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+    }
+
+    [TestMethod]
+    public void OperatorCompositionDocumentation()
+    {
+        #region doc_example
+        // The quadratic objective function supports the notion
+        // of vector addition and scalar multiplication. That is,
+        // QP programs can be linearly combined to create new QP
+        // problems. This idea can be useful when composing
+        // objective functions.
+        QuadraticObjectiveFunction f1 = new("2x² + 4y² - 2xy + 6");
+        QuadraticObjectiveFunction f2 = new("3x² - 4y² + 6xy + 3x + 2y");
+
+        // Suppose we have the functions:
+        //      f₁(x,y) = 2x² - 2xy + 4y² + 6
+        //      f₂(x,y) = 3x² + 6xy - 4y² + 3x + 2y
+        //
+        // Then we can create a new function - f(x,y) - defined as
+        // some linear combination of f₁ and f₂. e.g.
+        //      f(x,y) = {f₁ + 2f₂}(x,y)
+        // 
+        // In code, we can write this:
+        QuadraticObjectiveFunction f = f1 + (2 * f2); // 8x² -4y² +10xy +6x +4y +6
+
+        // And now we can Test our new objective function:
+        double[] x = { 1, 2 };
+
+        double result1 = f1.Function(x);
+        double result2 = f2.Function(x);
+
+        double result = f.Function(x);          // should be 32
+        double check = result1 + 2 * result2;   // should be the same
+        #endregion
+
+        Assert.AreEqual(result, check);
+    }
+
+    [DataTestMethod]
+    [DataRow("x² + 1", "x² + 1", 3, 5)]
+    [DataRow("x² + 1", "2x²", 1, 0)]
+    [DataRow("-x*y + y*z", "-x*y + y*z", 2, 2)]
+    [DataRow("-x*y + y*z", "-2x² + xy - y² - 10xz + z²", 0, 0)]
+    [DataRow("-x*y + y*z", "-2x² + xy - y² + 5z", -1, -1)]
+    [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² - 10xz + z²", 4, 5)]
+    [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² + 5z", 7, 6)]
+    [DataRow("-2x² + xy - y² + 5y", "-2x² + xy - y² + 5y", 3, 9)]
+    [DataRow("-2x² + xy - y² + 5y", "2x² -5y -5", 4, -7)]
+    [DataRow("2x² -5", "2x² -5", 2, -2)]
+    public void OperatorCompositionTest(string string1, string string2, double weight1, double weight2)
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        QuadraticObjectiveFunction actual1 = new(string1);
+        QuadraticObjectiveFunction actual2 = new(string2);
+        QuadraticObjectiveFunction actual = (weight1 * actual1) + (weight2 * actual2);
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+
+                    double a = actual.Function(arg);
+                    double e = (weight1 * actual1.Function(arg)) + (weight2 * actual2.Function(arg));
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+    }
+
+    [DataTestMethod]
+    [DataRow("x² + 1", "x² + 1")]
+    [DataRow("x² + 1", "2x²")]
+    [DataRow("-x*y + y*z", "-x*y + y*z")]
+    [DataRow("-x*y + y*z", "-2x² + xy - y² - 10xz + z²")]
+    [DataRow("-x*y + y*z", "-2x² + xy - y² + 5z")]
+    [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² - 10xz + z²")]
+    [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² + 5z")]
+    [DataRow("-2x² + xy - y² + 5y", "-2x² + xy - y² + 5y")]
+    [DataRow("-2x² + xy - y² + 5y", "2x² -5y -5")]
+    [DataRow("2x² -5", "2x² -5")]
+    public void OperatorSubtractionTest2(string string1, string string2)
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        QuadraticObjectiveFunction actual1 = new(string1);
+        QuadraticObjectiveFunction actual2 = new(string2);
+        QuadraticObjectiveFunction actual = actual1 - actual2;
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+
+                    double a = actual.Function(arg);
+                    double e = actual1.Function(arg) - actual2.Function(arg);
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+    }
+
+    [TestMethod]
+    public void OperatorScalingTest()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+        double scalar = 5;
+
+        Func<double> expected1 = () => 2 * y * x - x * y + y * z;
+        QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
+        QuadraticObjectiveFunction actual = actual1 * scalar;
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double a = actual.Function(new[] { x, y, z });
+                    double e = scalar * expected1();
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+    }
+
+    [DataTestMethod]
+    [DataRow("x² + 1", 6)]
+    [DataRow("-x*y + y*z", 7)]
+    [DataRow("-2x² + xy - y² - 10xz + z²", 0)]
+    [DataRow("-2x² + xy - y² + 5y", -3)]
+    [DataRow("2x² -5", 1)]
+    public void OperatorScalingTest2(string string1, double scalar)
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        QuadraticObjectiveFunction actual1 = new(string1);
+        QuadraticObjectiveFunction actual = actual1 * scalar;
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+
+                    double a = actual.Function(arg);
+                    double e = actual1.Function(arg) * scalar;
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+    }
+
+    [TestMethod]
+    public void OperatorNegateTest()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        Func<double> expected1 = () => 2 * y * x - x * y + y * z;
+        QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
+        QuadraticObjectiveFunction actual = -actual1;
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double a = actual.Function(new[] { x, y, z });
+                    double e = -expected1();
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+    }
+
+    [TestMethod]
+    public void OperatorDivisionTest()
+    {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        Func<double> expected1 = () => 2 * y * x - x * y + y * z;
+        QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
+        QuadraticObjectiveFunction actual = actual1 / 5;
+
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                for (int k = 0; k < 10; k++)
+                {
+                    x = (i - 5) / 10.0;
+                    y = (j - 5) / 10.0;
+                    z = (k - 5) / 10.0;
+
+                    double a = actual.Function(new[] { x, y, z });
+                    double e = expected1() / 5;
+
+                    Assert.AreEqual(e, a, 1e-10);
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
+                }
+
+        Assert.ThrowsException<DivideByZeroException>(() =>
         {
-            double x = 0;
-            double y = 0;
-            double z = 0;
+            QuadraticObjectiveFunction resultant = actual / 0;
+            Assert.IsNull(resultant);
+        });
+    }
 
-            Func<double> expected = () => 2 * y * x - x * y + y * z;
-            QuadraticObjectiveFunction actual = new(() => 2 * y * x - x * y + y * z);
-
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = expected();
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(Double.IsNaN(a));
-                        Assert.IsFalse(Double.IsNaN(e));
-                    }
-        }
-
-        [TestMethod]
-        public void OperatorAdditionTest()
+    [TestMethod]
+    public void NonSymmetricThrowsExceptionTest()
+    {
+        double[,] quadraticTerms =
         {
-            double x = 0;
-            double y = 0;
-            double z = 0;
+            {  8, 3, 100000 },
+            {  3, 4, 2 },
+            {  1, 2, 6 },
+        };
 
-            Func<double> expected1 = () => 2 * y * x - x * y + y * z;
-            Func<double> expected2 = () => z * x - x * y + y * z + 4 * z + 2;
-            QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
-            QuadraticObjectiveFunction actual2 = new(() => z * x - x * y + y * z + 4 * z + 2);
-            QuadraticObjectiveFunction actual = actual1 + actual2;
+        double[] linearTerms = { 0, 2, 0 };
 
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = expected1() + expected2();
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(Double.IsNaN(a));
-                        Assert.IsFalse(Double.IsNaN(e));
-                    }
-        }
-
-        [DataTestMethod]
-        [DataRow("x² + 1", "x² + 1")]
-        [DataRow("x² + 1", "2x²")]
-        [DataRow("-x*y + y*z", "-x*y + y*z")]
-        [DataRow("-x*y + y*z", "-2x² + xy - y² - 10xz + z²")]
-        [DataRow("-x*y + y*z", "-2x² + xy - y² + 5z")]
-        [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² - 10xz + z²")]
-        [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² + 5z")]
-        [DataRow("-2x² + xy - y² + 5y", "-2x² + xy - y² + 5y")]
-        [DataRow("-2x² + xy - y² + 5y", "2x² -5y -5")]
-        [DataRow("2x² -5", "2x² -5")]
-        public void OperatorAdditionTest2(string string1, string string2)
+        Assert.ThrowsException<NonSymmetricMatrixException>(() =>
         {
-            double x = 0;
-            double y = 0;
-            double z = 0;
+            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+            Assert.IsNotNull(target);
+        });
+    }
 
-            QuadraticObjectiveFunction actual1 = new(string1);
-            QuadraticObjectiveFunction actual2 = new(string2);
-            QuadraticObjectiveFunction actual = actual1 + actual2;
+    [TestMethod]
+    public void NonSymmetricSelfCorrectsTest()
+    {
+        double x = 0, y = 0;
+        QuadraticObjectiveFunction f1 = new(() => -2 * x * x + x * y - y * y - 3 * y * x);
+        QuadraticObjectiveFunction f2 = new("-2x² + xy - y² - 3yx");
 
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
+        QuadraticObjectiveFunction correct = new("-2x² + xy - y² - 3yx");
 
-                        double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+        double[] arg = { 3, 7 };
 
-                        double a = actual.Function(arg);
-                        double e = actual1.Function(arg) + actual2.Function(arg);
+        double result1 = f1.Function(arg);
+        double result2 = f2.Function(arg);
+        double expected = correct.Function(arg);
 
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-        }
-
-        [TestMethod]
-        public void OperatorCompositionDocumentation()
-        {
-            #region doc_example
-            // The quadratic objective function supports the notion
-            // of vector addition and scalar multiplication. That is,
-            // QP programs can be linearly combined to create new QP
-            // problems. This idea can be useful when composing
-            // objective functions.
-            QuadraticObjectiveFunction f1 = new("2x² + 4y² - 2xy + 6");
-            QuadraticObjectiveFunction f2 = new("3x² - 4y² + 6xy + 3x + 2y");
-
-            // Suppose we have the functions:
-            //      f₁(x,y) = 2x² - 2xy + 4y² + 6
-            //      f₂(x,y) = 3x² + 6xy - 4y² + 3x + 2y
-            //
-            // Then we can create a new function - f(x,y) - defined as
-            // some linear combination of f₁ and f₂. e.g.
-            //      f(x,y) = {f₁ + 2f₂}(x,y)
-            // 
-            // In code, we can write this:
-            QuadraticObjectiveFunction f = f1 + (2 * f2); // 8x² -4y² +10xy +6x +4y +6
-
-            // And now we can Test our new objective function:
-            double[] x = { 1, 2 };
-
-            double result1 = f1.Function(x);
-            double result2 = f2.Function(x);
-
-            double result = f.Function(x);          // should be 32
-            double check = result1 + 2 * result2;   // should be the same
-            #endregion
-
-            Assert.AreEqual(result, check);
-        }
-
-        [DataTestMethod]
-        [DataRow("x² + 1", "x² + 1", 3, 5)]
-        [DataRow("x² + 1", "2x²", 1, 0)]
-        [DataRow("-x*y + y*z", "-x*y + y*z", 2, 2)]
-        [DataRow("-x*y + y*z", "-2x² + xy - y² - 10xz + z²", 0, 0)]
-        [DataRow("-x*y + y*z", "-2x² + xy - y² + 5z", -1, -1)]
-        [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² - 10xz + z²", 4, 5)]
-        [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² + 5z", 7, 6)]
-        [DataRow("-2x² + xy - y² + 5y", "-2x² + xy - y² + 5y", 3, 9)]
-        [DataRow("-2x² + xy - y² + 5y", "2x² -5y -5", 4, -7)]
-        [DataRow("2x² -5", "2x² -5", 2, -2)]
-        public void OperatorCompositionTest(string string1, string string2, double weight1, double weight2)
-        {
-            double x = 0;
-            double y = 0;
-            double z = 0;
-
-            QuadraticObjectiveFunction actual1 = new(string1);
-            QuadraticObjectiveFunction actual2 = new(string2);
-            QuadraticObjectiveFunction actual = (weight1 * actual1) + (weight2 * actual2);
-
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
-
-                        double a = actual.Function(arg);
-                        double e = (weight1 * actual1.Function(arg)) + (weight2 * actual2.Function(arg));
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-        }
-
-        [DataTestMethod]
-        [DataRow("x² + 1", "x² + 1")]
-        [DataRow("x² + 1", "2x²")]
-        [DataRow("-x*y + y*z", "-x*y + y*z")]
-        [DataRow("-x*y + y*z", "-2x² + xy - y² - 10xz + z²")]
-        [DataRow("-x*y + y*z", "-2x² + xy - y² + 5z")]
-        [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² - 10xz + z²")]
-        [DataRow("-2x² + xy - y² - 10xz + z²", "-2x² + xy - y² + 5z")]
-        [DataRow("-2x² + xy - y² + 5y", "-2x² + xy - y² + 5y")]
-        [DataRow("-2x² + xy - y² + 5y", "2x² -5y -5")]
-        [DataRow("2x² -5", "2x² -5")]
-        public void OperatorSubtractionTest2(string string1, string string2)
-        {
-            double x = 0;
-            double y = 0;
-            double z = 0;
-
-            QuadraticObjectiveFunction actual1 = new(string1);
-            QuadraticObjectiveFunction actual2 = new(string2);
-            QuadraticObjectiveFunction actual = actual1 - actual2;
-
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
-
-                        double a = actual.Function(arg);
-                        double e = actual1.Function(arg) - actual2.Function(arg);
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-        }
-
-        [TestMethod]
-        public void OperatorScalingTest()
-        {
-            double x = 0;
-            double y = 0;
-            double z = 0;
-            double scalar = 5;
-
-            Func<double> expected1 = () => 2 * y * x - x * y + y * z;
-            QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
-            QuadraticObjectiveFunction actual = actual1 * scalar;
-
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = scalar * expected1();
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-        }
-
-        [DataTestMethod]
-        [DataRow("x² + 1", 6)]
-        [DataRow("-x*y + y*z", 7)]
-        [DataRow("-2x² + xy - y² - 10xz + z²", 0)]
-        [DataRow("-2x² + xy - y² + 5y", -3)]
-        [DataRow("2x² -5", 1)]
-        public void OperatorScalingTest2(string string1, double scalar)
-        {
-            double x = 0;
-            double y = 0;
-            double z = 0;
-
-            QuadraticObjectiveFunction actual1 = new(string1);
-            QuadraticObjectiveFunction actual = actual1 * scalar;
-
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
-
-                        double a = actual.Function(arg);
-                        double e = actual1.Function(arg) * scalar;
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-        }
-
-        [TestMethod]
-        public void OperatorNegateTest()
-        {
-            double x = 0;
-            double y = 0;
-            double z = 0;
-
-            Func<double> expected1 = () => 2 * y * x - x * y + y * z;
-            QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
-            QuadraticObjectiveFunction actual = -actual1;
-
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = -expected1();
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-        }
-
-        [TestMethod]
-        public void OperatorDivisionTest()
-        {
-            double x = 0;
-            double y = 0;
-            double z = 0;
-
-            Func<double> expected1 = () => 2 * y * x - x * y + y * z;
-            QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
-            QuadraticObjectiveFunction actual = actual1 / 5;
-
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    for (int k = 0; k < 10; k++)
-                    {
-                        x = (i - 5) / 10.0;
-                        y = (j - 5) / 10.0;
-                        z = (k - 5) / 10.0;
-
-                        double a = actual.Function(new[] { x, y, z });
-                        double e = expected1() / 5;
-
-                        Assert.AreEqual(e, a, 1e-10);
-                        Assert.IsFalse(double.IsNaN(a));
-                        Assert.IsFalse(double.IsNaN(e));
-                    }
-
-            Assert.ThrowsException<DivideByZeroException>(() =>
-            {
-                QuadraticObjectiveFunction resultant = actual / 0;
-                Assert.IsNull(resultant);
-            });
-        }
-
-        [TestMethod]
-        public void NonSymmetricThrowsExceptionTest()
-        {
-            double[,] quadraticTerms =
-            {
-                {  8, 3, 100000 },
-                {  3, 4, 2 },
-                {  1, 2, 6 },
-            };
-
-            double[] linearTerms = { 0, 2, 0 };
-
-            Assert.ThrowsException<NonSymmetricMatrixException>(() =>
-            {
-                QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
-                Assert.IsNotNull(target);
-            });
-        }
-
-        [TestMethod]
-        public void NonSymmetricSelfCorrectsTest()
-        {
-            double x = 0, y = 0;
-            QuadraticObjectiveFunction f1 = new(() => -2 * x * x + x * y - y * y - 3 * y * x);
-            QuadraticObjectiveFunction f2 = new("-2x² + xy - y² - 3yx");
-
-            QuadraticObjectiveFunction correct = new("-2x² + xy - y² - 3yx");
-
-            double[] arg = { 3, 7 };
-
-            double result1 = f1.Function(arg);
-            double result2 = f2.Function(arg);
-            double expected = correct.Function(arg);
-
-            Assert.AreEqual(expected, result1);
-            Assert.AreEqual(expected, result2);
-        }
+        Assert.AreEqual(expected, result1);
+        Assert.AreEqual(expected, result2);
     }
 }

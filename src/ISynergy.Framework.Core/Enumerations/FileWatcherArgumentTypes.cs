@@ -1,29 +1,28 @@
-﻿namespace ISynergy.Framework.Core.Enumerations
+﻿namespace ISynergy.Framework.Core.Enumerations;
+
+/// <summary>
+/// Enum FileWatcherArgumentTypes
+/// </summary>
+public enum FileWatcherArgumentTypes
 {
     /// <summary>
-    /// Enum FileWatcherArgumentTypes
+    /// The file system
     /// </summary>
-    public enum FileWatcherArgumentTypes
-    {
-        /// <summary>
-        /// The file system
-        /// </summary>
-        FileSystem,
-        /// <summary>
-        /// The renamed
-        /// </summary>
-        Renamed,
-        /// <summary>
-        /// The error
-        /// </summary>
-        Error,
-        /// <summary>
-        /// The standard event
-        /// </summary>
-        StandardEvent,
-        /// <summary>
-        /// The path availability
-        /// </summary>
-        PathAvailability
-    }
+    FileSystem,
+    /// <summary>
+    /// The renamed
+    /// </summary>
+    Renamed,
+    /// <summary>
+    /// The error
+    /// </summary>
+    Error,
+    /// <summary>
+    /// The standard event
+    /// </summary>
+    StandardEvent,
+    /// <summary>
+    /// The path availability
+    /// </summary>
+    PathAvailability
 }

@@ -10,170 +10,169 @@ using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Reflection;
 
-namespace ISynergy.Framework.Mvvm.ViewModels
+namespace ISynergy.Framework.Mvvm.ViewModels;
+
+/// <summary>
+/// Class ViewModelDialogSelection.
+/// Implements the <see name="ViewModelDialog{List{TEntity}}" />
+/// </summary>
+/// <seealso name="ViewModelDialog{List{TEntity}}" />
+public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, ISelectionViewModel
 {
     /// <summary>
-    /// Class ViewModelDialogSelection.
-    /// Implements the <see name="ViewModelDialog{List{TEntity}}" />
+    /// Gets the title.
     /// </summary>
-    /// <seealso name="ViewModelDialog{List{TEntity}}" />
-    public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, ISelectionViewModel
+    /// <value>The title.</value>
+    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Selection"); } }
+
+    /// <summary>
+    /// Gets or sets the raw items.
+    /// </summary>
+    /// <value>The raw items.</value>
+    private IEnumerable<TEntity> RawItems { get; set; }
+
+    /// <summary>
+    /// Gets or sets the SelectionMode property value.
+    /// </summary>
+    /// <value>The selection mode.</value>
+    public SelectionModes SelectionMode
     {
-        /// <summary>
-        /// Gets the title.
-        /// </summary>
-        /// <value>The title.</value>
-        public override string Title { get { return BaseCommonServices.LanguageService.GetString("Selection"); } }
+        get { return GetValue<SelectionModes>(); }
+        set { SetValue(value); }
+    }
 
-        /// <summary>
-        /// Gets or sets the raw items.
-        /// </summary>
-        /// <value>The raw items.</value>
-        private IEnumerable<TEntity> RawItems { get; set; }
+    /// <summary>
+    /// Gets or sets the Item property value.
+    /// </summary>
+    /// <value>The items.</value>
+    public ObservableCollection<TEntity> Items
+    {
+        get { return GetValue<ObservableCollection<TEntity>>(); }
+        set { SetValue(value); }
+    }
 
-        /// <summary>
-        /// Gets or sets the SelectionMode property value.
-        /// </summary>
-        /// <value>The selection mode.</value>
-        public SelectionModes SelectionMode
+    /// <summary>
+    /// Gets or sets the SelectedItems property value.
+    /// </summary>
+    public List<object> SelectedItems
+    {
+        get => GetValue<List<object>>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the refresh command.
+    /// </summary>
+    /// <value>The refresh command.</value>
+    public AsyncRelayCommand<string> RefreshCommand { get; private set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="commonServices">The common services.</param>
+    /// <param name="logger">The logger factory.</param>
+    /// <param name="items">The items.</param>
+    /// <param name="selectedItems">The selected items.</param>
+    /// <param name="selectionMode">The selection mode.</param>
+    /// <param name="automaticValidation"></param>
+    public ViewModelSelectionBlade(
+        IContext context,
+        IBaseCommonServices commonServices,
+        ILogger logger,
+        IEnumerable<TEntity> items,
+        IEnumerable<TEntity> selectedItems,
+        SelectionModes selectionMode = SelectionModes.Single,
+        bool automaticValidation = false)
+        : base(context, commonServices, logger, automaticValidation)
+    {
+        if (items is null)
+            items = items.EnsureNotNull();
+
+        if (selectedItems is null)
+            selectedItems = selectedItems.EnsureNotNull();
+
+        SelectionMode = selectionMode;
+
+        Validator = new Action<IObservableClass>(arg =>
         {
-            get { return GetValue<SelectionModes>(); }
-            set { SetValue(value); }
+            if (SelectionMode == SelectionModes.Single && SelectedItems.Count != 1)
+                AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
+
+            if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
+                AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
+        });
+
+        RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
+        RawItems = items;
+        Items = new ObservableCollection<TEntity>(items);
+        
+        SelectedItems = new List<object>();
+
+        foreach (var item in selectedItems.EnsureNotNull())
+        {
+            SelectedItems.Add(item);
         }
 
-        /// <summary>
-        /// Gets or sets the Item property value.
-        /// </summary>
-        /// <value>The items.</value>
-        public ObservableCollection<TEntity> Items
+        OnPropertyChanged(nameof(SelectedItems));
+
+        IsInitialized = true;
+    }
+
+    /// <summary>
+    /// Queries the items.
+    /// </summary>
+    /// <param name="query">Query parameter.</param>
+    protected virtual Task QueryItemsAsync(string query)
+    {
+        if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
         {
-            get { return GetValue<ObservableCollection<TEntity>>(); }
-            set { SetValue(value); }
+            Items = new ObservableCollection<TEntity>(RawItems);
         }
-
-        /// <summary>
-        /// Gets or sets the SelectedItems property value.
-        /// </summary>
-        public List<object> SelectedItems
+        else
         {
-            get => GetValue<List<object>>();
-            set => SetValue(value);
-        }
+            var filteredList = new List<TEntity>();
 
-        /// <summary>
-        /// Gets or sets the refresh command.
-        /// </summary>
-        /// <value>The refresh command.</value>
-        public AsyncRelayCommand<string> RefreshCommand { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="commonServices">The common services.</param>
-        /// <param name="logger">The logger factory.</param>
-        /// <param name="items">The items.</param>
-        /// <param name="selectedItems">The selected items.</param>
-        /// <param name="selectionMode">The selection mode.</param>
-        /// <param name="automaticValidation"></param>
-        public ViewModelSelectionBlade(
-            IContext context,
-            IBaseCommonServices commonServices,
-            ILogger logger,
-            IEnumerable<TEntity> items,
-            IEnumerable<TEntity> selectedItems,
-            SelectionModes selectionMode = SelectionModes.Single,
-            bool automaticValidation = false)
-            : base(context, commonServices, logger, automaticValidation)
-        {
-            if (items is null)
-                items = items.EnsureNotNull();
-
-            if (selectedItems is null)
-                selectedItems = selectedItems.EnsureNotNull();
-
-            SelectionMode = selectionMode;
-
-            Validator = new Action<IObservableClass>(arg =>
+            foreach (var item in RawItems)
             {
-                if (SelectionMode == SelectionModes.Single && SelectedItems.Count != 1)
-                    AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
+                if (item.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    filteredList.Add(item);
+                }
+            }
 
-                if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
-                    AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
-            });
+            Items = new ObservableCollection<TEntity>(filteredList);
+        }
 
-            RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
-            RawItems = items;
-            Items = new ObservableCollection<TEntity>(items);
+        return Task.CompletedTask;
+    }
+
+    public override Task SubmitAsync(List<TEntity> e)
+    {
+        if (Validate())
+        {
+            var result = new List<TEntity>();
             
-            SelectedItems = new List<object>();
-
-            foreach (var item in selectedItems.EnsureNotNull())
+            foreach (var item in SelectedItems.EnsureNotNull())
             {
-                SelectedItems.Add(item);
+                if (item is TEntity entity)
+                    result.Add(entity);
             }
 
-            OnPropertyChanged(nameof(SelectedItems));
-
-            IsInitialized = true;
+            OnSubmitted(new SubmitEventArgs<List<TEntity>>(result));
+            Close();
         }
 
-        /// <summary>
-        /// Queries the items.
-        /// </summary>
-        /// <param name="query">Query parameter.</param>
-        protected virtual Task QueryItemsAsync(string query)
-        {
-            if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
-            {
-                Items = new ObservableCollection<TEntity>(RawItems);
-            }
-            else
-            {
-                var filteredList = new List<TEntity>();
+        return Task.CompletedTask;
+    }
 
-                foreach (var item in RawItems)
-                {
-                    if (item.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
-                    {
-                        filteredList.Add(item);
-                    }
-                }
+    protected override void Dispose(bool disposing)
+    {
+        Validator = null;
 
-                Items = new ObservableCollection<TEntity>(filteredList);
-            }
+        RefreshCommand?.Cancel();
+        RefreshCommand = null;
 
-            return Task.CompletedTask;
-        }
-
-        public override Task SubmitAsync(List<TEntity> e)
-        {
-            if (Validate())
-            {
-                var result = new List<TEntity>();
-                
-                foreach (var item in SelectedItems.EnsureNotNull())
-                {
-                    if (item is TEntity entity)
-                        result.Add(entity);
-                }
-
-                OnSubmitted(new SubmitEventArgs<List<TEntity>>(result));
-                Close();
-            }
-
-            return Task.CompletedTask;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            Validator = null;
-
-            RefreshCommand?.Cancel();
-            RefreshCommand = null;
-
-            base.Dispose(disposing);
-        }
+        base.Dispose(disposing);
     }
 }

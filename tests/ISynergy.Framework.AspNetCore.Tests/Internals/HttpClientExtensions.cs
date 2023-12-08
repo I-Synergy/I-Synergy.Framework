@@ -2,32 +2,31 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.AspNetCore.Tests.Internals
+namespace ISynergy.Framework.AspNetCore.Tests.Internals;
+
+/// <summary>
+/// Class HttpClientExtensions.
+/// </summary>
+internal static class HttpClientExtensions
 {
     /// <summary>
-    /// Class HttpClientExtensions.
+    /// get with timing as an asynchronous operation.
     /// </summary>
-    internal static class HttpClientExtensions
+    /// <param name="client">The client.</param>
+    /// <param name="requestUri">The request URI.</param>
+    /// <returns>A Task&lt;HttpResponseMessageWithTiming&gt; representing the asynchronous operation.</returns>
+    internal static async Task<HttpResponseMessageWithTiming> GetWithTimingAsync(this HttpClient client, string requestUri)
     {
-        /// <summary>
-        /// get with timing as an asynchronous operation.
-        /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="requestUri">The request URI.</param>
-        /// <returns>A Task&lt;HttpResponseMessageWithTiming&gt; representing the asynchronous operation.</returns>
-        internal static async Task<HttpResponseMessageWithTiming> GetWithTimingAsync(this HttpClient client, string requestUri)
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        HttpResponseMessage response = await client.GetAsync(requestUri);
+        System.TimeSpan timing = stopwatch.Elapsed;
+
+        stopwatch.Stop();
+
+        return new HttpResponseMessageWithTiming
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            HttpResponseMessage response = await client.GetAsync(requestUri);
-            System.TimeSpan timing = stopwatch.Elapsed;
-
-            stopwatch.Stop();
-
-            return new HttpResponseMessageWithTiming
-            {
-                Response = response,
-                Timing = timing
-            };
-        }
+            Response = response,
+            Timing = timing
+        };
     }
 }

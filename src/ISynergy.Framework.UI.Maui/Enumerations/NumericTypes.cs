@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.UI.Enumerations
+﻿namespace ISynergy.Framework.UI.Enumerations;
+
+public enum NumericTypes
 {
-    public enum NumericTypes
-    {
-        Integer,
-        Double,
-        Decimal
-    }
+    Integer,
+    Double,
+    Decimal
 }

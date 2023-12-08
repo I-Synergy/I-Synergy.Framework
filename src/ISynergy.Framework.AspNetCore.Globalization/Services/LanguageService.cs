@@ -1,58 +1,57 @@
-﻿namespace ISynergy.Framework.AspNetCore.Globalization.Services
+﻿namespace ISynergy.Framework.AspNetCore.Globalization.Services;
+
+/// <summary>
+/// Class LanguageService.
+/// Implements the <see cref="ILanguageService" />
+/// </summary>
+/// <seealso cref="ILanguageService" />
+internal class LanguageService : ILanguageService
 {
     /// <summary>
-    /// Class LanguageService.
-    /// Implements the <see cref="ILanguageService" />
+    /// The managers
     /// </summary>
-    /// <seealso cref="ILanguageService" />
-    internal class LanguageService : ILanguageService
+    private readonly List<ResourceManager> _managers;
+
+    /// <summary>
+    /// The HTTP context accessor
+    /// </summary>
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LanguageService" /> class.
+    /// </summary>
+    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
+    public LanguageService(IHttpContextAccessor httpContextAccessor)
     {
-        /// <summary>
-        /// The managers
-        /// </summary>
-        private readonly List<ResourceManager> _managers;
+        _httpContextAccessor = httpContextAccessor;
+        _managers = new List<ResourceManager>();
+    }
 
-        /// <summary>
-        /// The HTTP context accessor
-        /// </summary>
-        private readonly IHttpContextAccessor _httpContextAccessor;
+    /// <summary>
+    /// Adds the resource manager.
+    /// </summary>
+    /// <param name="resourceType">The resource manager.</param>
+    public void AddResourceManager(Type resourceType) =>
+        _managers.Add(new ResourceManager(resourceType));
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LanguageService" /> class.
-        /// </summary>
-        /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-        public LanguageService(IHttpContextAccessor httpContextAccessor)
+    /// <summary>
+    /// Gets the string.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <returns>System.String.</returns>
+    public string GetString(string key)
+    {
+        foreach (var manager in _managers)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _managers = new List<ResourceManager>();
+            var result = manager.GetString(key, CultureInfo.CurrentCulture);
+
+            if (string.IsNullOrEmpty(result))
+                result = manager.GetString(key);
+
+            if (!string.IsNullOrEmpty(result))
+                return result;
         }
 
-        /// <summary>
-        /// Adds the resource manager.
-        /// </summary>
-        /// <param name="resourceType">The resource manager.</param>
-        public void AddResourceManager(Type resourceType) =>
-            _managers.Add(new ResourceManager(resourceType));
-
-        /// <summary>
-        /// Gets the string.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>System.String.</returns>
-        public string GetString(string key)
-        {
-            foreach (var manager in _managers)
-            {
-                var result = manager.GetString(key, CultureInfo.CurrentCulture);
-
-                if (string.IsNullOrEmpty(result))
-                    result = manager.GetString(key);
-
-                if (!string.IsNullOrEmpty(result))
-                    return result;
-            }
-
-            return $"[{key}]";
-        }
+        return $"[{key}]";
     }
 }

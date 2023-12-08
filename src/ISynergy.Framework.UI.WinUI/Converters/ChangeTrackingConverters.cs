@@ -4,63 +4,62 @@ using ISynergy.Framework.Core.Locators;
 using Microsoft.UI.Xaml.Data;
 using System.Text;
 
-namespace ISynergy.Framework.UI.Converters
+namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Class ChangeTrackingConverters.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class ChangeTrackingConverters : IValueConverter
 {
     /// <summary>
-    /// Class ChangeTrackingConverters.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the specified value.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class ChangeTrackingConverters : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The language.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, string language)
+        if (value is IModelBase model)
         {
-            if (value is IModelBase model)
+            var result = new StringBuilder();
+
+            var userCreated = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Unknown");
+            var userChanged = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Unknown");
+
+            if (!string.IsNullOrEmpty(model.CreatedBy)) userCreated = model.CreatedBy;
+
+            result.AppendLine($"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("InputFirst")} " +
+                $"{model.CreatedDate.ToLocalTime():f} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userCreated}");
+
+            if (model.ChangedDate.HasValue)
             {
-                var result = new StringBuilder();
+                if (!string.IsNullOrEmpty(model.ChangedBy)) userChanged = model.ChangedBy;
 
-                var userCreated = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Unknown");
-                var userChanged = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Unknown");
-
-                if (!string.IsNullOrEmpty(model.CreatedBy)) userCreated = model.CreatedBy;
-
-                result.AppendLine($"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("InputFirst")} " +
-                    $"{model.CreatedDate.ToLocalTime():f} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userCreated}");
-
-                if (model.ChangedDate.HasValue)
-                {
-                    if (!string.IsNullOrEmpty(model.ChangedBy)) userChanged = model.ChangedBy;
-
-                    result.AppendLine($"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("InputLast")} " +
-                        $"{model.ChangedDate.Value.ToLocalTime():f} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userChanged}");
-                }
-
-                return result.ToString();
+                result.AppendLine($"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("InputLast")} " +
+                    $"{model.ChangedDate.Value.ToLocalTime():f} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userChanged}");
             }
 
-            return string.Empty;
+            return result.ToString();
         }
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="language">The language.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+        return string.Empty;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,21 +1,20 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace ISynergy.Framework.Core.Extensions
+namespace ISynergy.Framework.Core.Extensions;
+
+/// <summary>
+/// Class ConfigurationBinderExtensions.
+/// </summary>
+public static class ConfigurationBinderExtensions
 {
     /// <summary>
-    /// Class ConfigurationBinderExtensions.
+    /// Binds the with reload.
     /// </summary>
-    public static class ConfigurationBinderExtensions
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="instance">The instance.</param>
+    public static void BindWithReload(this IConfiguration configuration, object instance)
     {
-        /// <summary>
-        /// Binds the with reload.
-        /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        /// <param name="instance">The instance.</param>
-        public static void BindWithReload(this IConfiguration configuration, object instance)
-        {
-            configuration.Bind(instance);
-            configuration.GetReloadToken().RegisterChangeCallback((_) => configuration.Bind(instance), null);
-        }
+        configuration.Bind(instance);
+        configuration.GetReloadToken().RegisterChangeCallback((_) => configuration.Bind(instance), null);
     }
 }

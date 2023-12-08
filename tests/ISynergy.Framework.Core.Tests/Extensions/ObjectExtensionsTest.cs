@@ -2,37 +2,36 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Extensions.Tests;
+
+/// <summary>
+/// Class ObjectExtensionTests.
+/// </summary>
+[TestClass]
+public class ObjectExtensionTests
 {
     /// <summary>
-    /// Class ObjectExtensionTests.
+    /// Defines the test method NonNullableTypeTest.
     /// </summary>
-    [TestClass]
-    public class ObjectExtensionTests
+    /// <param name="type">The type.</param>
+    [DataTestMethod]
+    [DataRow(typeof(int))]
+    [DataRow(typeof(bool))]
+    public void NonNullableTypeTest(Type type)
     {
-        /// <summary>
-        /// Defines the test method NonNullableTypeTest.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        [DataTestMethod]
-        [DataRow(typeof(int))]
-        [DataRow(typeof(bool))]
-        public void NonNullableTypeTest(Type type)
-        {
-            Assert.IsFalse(type.IsNullableType());
-        }
+        Assert.IsFalse(type.IsNullableType());
+    }
 
-        /// <summary>
-        /// Defines the test method NullableTypeTest.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        [DataTestMethod]
-        [DataRow(typeof(string))]
-        [DataRow(typeof(object))]
-        [DataRow(typeof(Product))]
-        public void NullableTypeTest(Type type)
-        {
-            Assert.IsTrue(type.IsNullableType());
-        }
+    /// <summary>
+    /// Defines the test method NullableTypeTest.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    [DataTestMethod]
+    [DataRow(typeof(string))]
+    [DataRow(typeof(object))]
+    [DataRow(typeof(Product))]
+    public void NullableTypeTest(Type type)
+    {
+        Assert.IsTrue(type.IsNullableType());
     }
 }

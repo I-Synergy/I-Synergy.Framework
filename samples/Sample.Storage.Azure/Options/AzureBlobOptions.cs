@@ -1,9 +1,8 @@
 ﻿using ISynergy.Framework.Storage.Abstractions.Options;
 
-namespace Sample.Storage.Azure.Options
+namespace Sample.Storage.Azure.Options;
+
+public class AzureBlobOptions : IStorageOptions
 {
-    public class AzureBlobOptions : IStorageOptions
-    {
-        public string ConnectionString { get; set; }
-    }
+    public string ConnectionString { get; set; }
 }

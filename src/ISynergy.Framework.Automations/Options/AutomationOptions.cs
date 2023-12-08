@@ -1,21 +1,20 @@
-﻿namespace ISynergy.Framework.Automations.Options
+﻿namespace ISynergy.Framework.Automations.Options;
+
+/// <summary>
+/// Automation options.
+/// </summary>
+public class AutomationOptions
 {
     /// <summary>
-    /// Automation options.
+    /// Default timeout.
     /// </summary>
-    public class AutomationOptions
-    {
-        /// <summary>
-        /// Default timeout.
-        /// </summary>
-        public TimeSpan DefaultTimeout { get; set; }
-        /// <summary>
-        /// Default refresh rate.
-        /// </summary>
-        public TimeSpan DefaultRefreshRate { get; set; }
-        /// <summary>
-        /// Default queue refresh rate.
-        /// </summary>
-        public TimeSpan DefaultQueueRefreshRate { get; set; }
-    }
+    public TimeSpan DefaultTimeout { get; set; }
+    /// <summary>
+    /// Default refresh rate.
+    /// </summary>
+    public TimeSpan DefaultRefreshRate { get; set; }
+    /// <summary>
+    /// Default queue refresh rate.
+    /// </summary>
+    public TimeSpan DefaultQueueRefreshRate { get; set; }
 }

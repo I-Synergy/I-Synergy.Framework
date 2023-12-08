@@ -8,62 +8,61 @@ using Sample.ViewModels;
 using Sample.Abstractions;
 using System.Runtime.ExceptionServices;
 
-namespace Sample
+namespace Sample;
+
+public partial class App : BaseApplication
 {
-    public partial class App : BaseApplication
+    public App()
+        : base()
     {
-        public App()
-            : base()
+        InitializeComponent();
+    }
+
+    public override async Task InitializeApplicationAsync()
+    {
+        await base.InitializeApplicationAsync();
+
+        var navigateToAuthentication = true;
+
+        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
         {
-            InitializeComponent();
-        }
+            var username = _applicationSettingsService.Settings.DefaultUser;
+            var password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
-        public override async Task InitializeApplicationAsync()
-        {
-            await base.InitializeApplicationAsync();
-
-            var navigateToAuthentication = true;
-
-            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
+            if (!string.IsNullOrEmpty(password))
             {
-                var username = _applicationSettingsService.Settings.DefaultUser;
-                var password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
-
-                if (!string.IsNullOrEmpty(password))
-                {
-                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
-                    navigateToAuthentication = false;
-                }
-            }
-
-            if (navigateToAuthentication)
-                await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
-        }
-
-        public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() => new List<ResourceDictionary>()
-        {
-            new Styles.Colors(),
-            new Styles.Style()
-        };
-
-        public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
-        {
-            if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
-            {
-                if (e.Value)
-                {
-                    await navigationService.NavigateModalAsync<AppShellViewModel>();
-                }
-                else
-                {
-                    await navigationService.NavigateModalAsync<AuthenticationViewModel>();
-                }
+                await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
+                navigateToAuthentication = false;
             }
         }
 
-        protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
+        if (navigateToAuthentication)
+            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+    }
+
+    public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() => new List<ResourceDictionary>()
+    {
+        new Styles.Colors(),
+        new Styles.Style()
+    };
+
+    public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+    {
+        if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
         {
-            base.CurrentDomain_FirstChanceException(sender, e);
+            if (e.Value)
+            {
+                await navigationService.NavigateModalAsync<AppShellViewModel>();
+            }
+            else
+            {
+                await navigationService.NavigateModalAsync<AuthenticationViewModel>();
+            }
         }
+    }
+
+    protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
+    {
+        base.CurrentDomain_FirstChanceException(sender, e);
     }
 }

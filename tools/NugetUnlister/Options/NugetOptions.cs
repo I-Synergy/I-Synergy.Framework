@@ -1,7 +1,6 @@
-﻿namespace NugetUnlister.Options
+﻿namespace NugetUnlister.Options;
+
+public class NugetOptions
 {
-    public class NugetOptions
-    {
-        public string ApiKey { get; set; }
-    }
+    public string ApiKey { get; set; }
 }

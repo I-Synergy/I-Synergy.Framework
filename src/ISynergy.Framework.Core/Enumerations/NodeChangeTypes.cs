@@ -1,17 +1,16 @@
-﻿namespace ISynergy.Framework.Core.Enumerations
+﻿namespace ISynergy.Framework.Core.Enumerations;
+
+/// <summary>
+/// Enum NodeChangeTypes
+/// </summary>
+public enum NodeChangeTypes
 {
     /// <summary>
-    /// Enum NodeChangeTypes
+    /// The node added
     /// </summary>
-    public enum NodeChangeTypes
-    {
-        /// <summary>
-        /// The node added
-        /// </summary>
-        NodeAdded,
-        /// <summary>
-        /// The node removed
-        /// </summary>
-        NodeRemoved
-    }
+    NodeAdded,
+    /// <summary>
+    /// The node removed
+    /// </summary>
+    NodeRemoved
 }

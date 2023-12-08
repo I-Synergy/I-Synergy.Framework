@@ -1,15 +1,14 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 
-namespace Sample.Views
+namespace Sample.Views;
+
+/// <summary>
+/// Interaction logic for TestWindow.xaml
+/// </summary>
+public partial class TestWindow : IWindow
 {
-    /// <summary>
-    /// Interaction logic for TestWindow.xaml
-    /// </summary>
-    public partial class TestWindow : IWindow
+    public TestWindow()
     {
-        public TestWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

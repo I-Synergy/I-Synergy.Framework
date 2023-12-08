@@ -1,8 +1,7 @@
-﻿namespace ISynergy.Framework.UI.Abstractions
+﻿namespace ISynergy.Framework.UI.Abstractions;
+
+public interface IBaseApplication
 {
-    public interface IBaseApplication
-    {
-        Task InitializeApplicationAsync();
-        void InitializeApplication();
-    }
+    Task InitializeApplicationAsync();
+    void InitializeApplication();
 }

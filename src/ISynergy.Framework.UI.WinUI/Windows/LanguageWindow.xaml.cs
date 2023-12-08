@@ -2,22 +2,21 @@
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 
-namespace ISynergy.Framework.UI
+namespace ISynergy.Framework.UI;
+
+/// <summary>
+/// Class LanguageWindow. This class cannot be inherited.
+/// </summary>
+public partial class LanguageWindow : ISynergy.Framework.UI.Controls.Window, ILanguageWindow
 {
     /// <summary>
-    /// Class LanguageWindow. This class cannot be inherited.
+    /// Initializes a new instance of the <see cref="LanguageWindow"/> class.
     /// </summary>
-    public partial class LanguageWindow : ISynergy.Framework.UI.Controls.Window, ILanguageWindow
+    public LanguageWindow()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LanguageWindow"/> class.
-        /// </summary>
-        public LanguageWindow()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Ok");
-            SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
-        }
+        PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Ok");
+        SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
     }
 }

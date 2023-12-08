@@ -1,6 +1,5 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.Windows
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Windows;
+
+public interface ISelectionWindow : IWindow
 {
-    public interface ISelectionWindow : IWindow
-    {
-    }
 }

@@ -1,13 +1,12 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions
+﻿namespace ISynergy.Framework.Mvvm.Abstractions;
+
+/// <summary>
+/// Bootstrapper interface.
+/// </summary>
+public interface IBootstrap
 {
     /// <summary>
-    /// Bootstrapper interface.
+    /// Bootstrap method.
     /// </summary>
-    public interface IBootstrap
-    {
-        /// <summary>
-        /// Bootstrap method.
-        /// </summary>
-        void Bootstrap();
-    }
+    void Bootstrap();
 }

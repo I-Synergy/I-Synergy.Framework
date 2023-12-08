@@ -2,113 +2,112 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel;
 
-namespace ISynergy.Framework.Core.Data.Tests
+namespace ISynergy.Framework.Core.Data.Tests;
+
+/// <summary>
+/// Class ModelFieldTests.
+/// </summary>
+[TestClass]
+public class ModelFieldTests
 {
     /// <summary>
-    /// Class ModelFieldTests.
+    /// Defines the test method ViewModelFieldNotifyPropertyChangedNotifiesOnNewValueTest.
     /// </summary>
-    [TestClass]
-    public class ModelFieldTests
+    [TestMethod]
+    public void ViewModelFieldNotifyPropertyChangedNotifiesOnNewValueTest()
     {
-        /// <summary>
-        /// Defines the test method ViewModelFieldNotifyPropertyChangedNotifiesOnNewValueTest.
-        /// </summary>
-        [TestMethod]
-        public void ViewModelFieldNotifyPropertyChangedNotifiesOnNewValueTest()
+        string originalValue = "original value";
+
+        ModelFixture<string> instance = new(originalValue);
+
+        Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
+
+        bool gotEvent = false;
+
+        ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
         {
-            string originalValue = "original value";
+            gotEvent = true;
+            Assert.IsTrue(e.PropertyName.Equals("Value") | e.PropertyName.Equals("IsValid"), "PropertyName was wrong.");
+        };
 
-            ModelFixture<string> instance = new(originalValue);
+        string newValue = "new value";
+        instance.Value = newValue;
 
-            Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
+        Assert.IsTrue(newValue.Equals(instance.Value), "Value didn't change.");
+        Assert.IsTrue(gotEvent, "Didn't get the PropertyChanged event.");
+    }
 
-            bool gotEvent = false;
+    /// <summary>
+    /// Defines the test method ViewModelFieldNotifyPropertyChangedDoesNotNotifyOnSameValueTest.
+    /// </summary>
+    [TestMethod]
+    public void ViewModelFieldNotifyPropertyChangedDoesNotNotifyOnSameValueTest()
+    {
+        string originalValue = "original value";
 
-            ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
-            {
-                gotEvent = true;
-                Assert.IsTrue(e.PropertyName.Equals("Value") | e.PropertyName.Equals("IsValid"), "PropertyName was wrong.");
-            };
+        ModelFixture<string> instance = new(originalValue);
 
-            string newValue = "new value";
-            instance.Value = newValue;
+        Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
 
-            Assert.IsTrue(newValue.Equals(instance.Value), "Value didn't change.");
-            Assert.IsTrue(gotEvent, "Didn't get the PropertyChanged event.");
-        }
+        bool gotEvent = false;
 
-        /// <summary>
-        /// Defines the test method ViewModelFieldNotifyPropertyChangedDoesNotNotifyOnSameValueTest.
-        /// </summary>
-        [TestMethod]
-        public void ViewModelFieldNotifyPropertyChangedDoesNotNotifyOnSameValueTest()
+        ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
         {
-            string originalValue = "original value";
+            gotEvent = true;
+            Assert.IsFalse(gotEvent, "Should not get any PropertyChanged events.");
+        };
 
-            ModelFixture<string> instance = new(originalValue);
+        instance.Value = originalValue;
 
-            Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
+        Assert.IsFalse(gotEvent, "Should not have gotten the PropertyChanged event.");
+    }
 
-            bool gotEvent = false;
+    /// <summary>
+    /// Defines the test method ViewModelFieldConstructorEmptyTest.
+    /// </summary>
+    [TestMethod]
+    public void ViewModelFieldConstructorEmptyTest()
+    {
+        ModelFixture<string> instance = new();
+        Assert.IsTrue(instance.Value is null, "Value should be null.");
+    }
 
-            ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
-            {
-                gotEvent = true;
-                Assert.IsFalse(gotEvent, "Should not get any PropertyChanged events.");
-            };
+    /// <summary>
+    /// Defines the test method ViewModelFieldConstructorWithValueTest.
+    /// </summary>
+    [TestMethod]
+    public void ViewModelFieldConstructorWithValueTest()
+    {
+        string expectedValue = "expected value";
 
-            instance.Value = originalValue;
+        ModelFixture<string> instance = new(expectedValue);
 
-            Assert.IsFalse(gotEvent, "Should not have gotten the PropertyChanged event.");
-        }
+        Assert.IsTrue(expectedValue.Equals(instance.Value), "Value was wrong.");
+    }
 
-        /// <summary>
-        /// Defines the test method ViewModelFieldConstructorEmptyTest.
-        /// </summary>
-        [TestMethod]
-        public void ViewModelFieldConstructorEmptyTest()
-        {
-            ModelFixture<string> instance = new();
-            Assert.IsTrue(instance.Value is null, "Value should be null.");
-        }
+    /// <summary>
+    /// Defines the test method ViewModelFieldToStringReturnsEmptyStringWhenValueIsNullTest.
+    /// </summary>
+    [TestMethod]
+    public void ViewModelFieldToStringReturnsEmptyStringWhenValueIsNullTest()
+    {
+        ModelFixture<string> instance = new();
 
-        /// <summary>
-        /// Defines the test method ViewModelFieldConstructorWithValueTest.
-        /// </summary>
-        [TestMethod]
-        public void ViewModelFieldConstructorWithValueTest()
-        {
-            string expectedValue = "expected value";
+        Assert.IsTrue(instance.Value is null, "Value should be null.");
+        Assert.IsTrue(instance.ToString() == string.Empty, "ToString() should return empty.");
+    }
 
-            ModelFixture<string> instance = new(expectedValue);
+    /// <summary>
+    /// Defines the test method ViewModelFieldToStringTest.
+    /// </summary>
+    [TestMethod]
+    public void ViewModelFieldToStringTest()
+    {
+        string expectedValue = "expected value";
 
-            Assert.IsTrue(expectedValue.Equals(instance.Value), "Value was wrong.");
-        }
+        ModelFixture<string> instance = new(expectedValue);
 
-        /// <summary>
-        /// Defines the test method ViewModelFieldToStringReturnsEmptyStringWhenValueIsNullTest.
-        /// </summary>
-        [TestMethod]
-        public void ViewModelFieldToStringReturnsEmptyStringWhenValueIsNullTest()
-        {
-            ModelFixture<string> instance = new();
-
-            Assert.IsTrue(instance.Value is null, "Value should be null.");
-            Assert.IsTrue(instance.ToString() == string.Empty, "ToString() should return empty.");
-        }
-
-        /// <summary>
-        /// Defines the test method ViewModelFieldToStringTest.
-        /// </summary>
-        [TestMethod]
-        public void ViewModelFieldToStringTest()
-        {
-            string expectedValue = "expected value";
-
-            ModelFixture<string> instance = new(expectedValue);
-
-            Assert.IsTrue(expectedValue.Equals(instance.Value), "Value was wrong.");
-            Assert.IsTrue(expectedValue.Equals(instance.ToString()), "ToString() was wrong.");
-        }
+        Assert.IsTrue(expectedValue.Equals(instance.Value), "Value was wrong.");
+        Assert.IsTrue(expectedValue.Equals(instance.ToString()), "ToString() was wrong.");
     }
 }

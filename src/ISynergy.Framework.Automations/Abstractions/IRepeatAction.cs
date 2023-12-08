@@ -1,11 +1,10 @@
 ﻿using ISynergy.Framework.Automations.Enumerations;
 
-namespace ISynergy.Framework.Automations.Abstractions
+namespace ISynergy.Framework.Automations.Abstractions;
+
+public interface IRepeatAction : IAction
 {
-    public interface IRepeatAction : IAction
-    {
-        RepeatTypes RepeatType { get; }
-        int CountCircuitBreaker { get; }
-        bool ValidateAction(object entity);
-    }
+    RepeatTypes RepeatType { get; }
+    int CountCircuitBreaker { get; }
+    bool ValidateAction(object entity);
 }

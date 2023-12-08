@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.Core.Tests.Enumerations
+﻿namespace ISynergy.Framework.Core.Tests.Enumerations;
+
+public enum SpaceTypes
 {
-    public enum SpaceTypes
-    {
-        Building = 0,
-        Room = 1,
-        Inventory = 2
-    }
+    Building = 0,
+    Room = 1,
+    Inventory = 2
 }

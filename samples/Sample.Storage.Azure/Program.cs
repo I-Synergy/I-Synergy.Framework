@@ -5,48 +5,47 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.Storage.Azure.Options;
 using System;
 
-namespace Sample.Storage.Azure
+namespace Sample.Storage.Azure;
+
+internal class Program
 {
-    internal class Program
+    protected Program()
     {
-        protected Program()
+    }
+
+    static int Main(string[] args)
+    {
+        try
         {
+            string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", false)
+                .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true)
+                .Build();
+
+            AzureBlobOptions options = new()
+            {
+                ConnectionString = config["AzureBlobOptions:ConnectionString"]
+            };
+
+            var services = new ServiceCollection()
+                .AddLogging()
+                .AddOptions();
+
+            services.AddStorageAzureIntegration<AzureBlobOptions>(config);
+            services.TryAddScoped<Startup>();
+
+            var serviceProvider = services.BuildServiceProvider();
+            Startup application = serviceProvider.GetRequiredService<Startup>();
+            application.RunAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+            return 1;
         }
 
-        static int Main(string[] args)
-        {
-            try
-            {
-                string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-                IConfigurationRoot config = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", false)
-                    .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true)
-                    .Build();
-
-                AzureBlobOptions options = new()
-                {
-                    ConnectionString = config["AzureBlobOptions:ConnectionString"]
-                };
-
-                var services = new ServiceCollection()
-                    .AddLogging()
-                    .AddOptions();
-
-                services.AddStorageAzureIntegration<AzureBlobOptions>(config);
-                services.TryAddScoped<Startup>();
-
-                var serviceProvider = services.BuildServiceProvider();
-                Startup application = serviceProvider.GetRequiredService<Startup>();
-                application.RunAsync().GetAwaiter().GetResult();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return 1;
-            }
-
-            return 0;
-        }
+        return 0;
     }
 }
