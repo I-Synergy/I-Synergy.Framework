@@ -1,14 +1,13 @@
-﻿namespace ISynergy.Framework.Documents.Models.Base
+﻿namespace ISynergy.Framework.Documents.Models.Base;
+
+/// <summary>
+/// Base report request.
+/// </summary>
+public abstract class BaseRequest
 {
     /// <summary>
-    /// Base report request.
+    /// Gets or sets the name of the file.
     /// </summary>
-    public abstract class BaseRequest
-    {
-        /// <summary>
-        /// Gets or sets the name of the file.
-        /// </summary>
-        /// <value>The name of the file.</value>
-        public string FileName { get; set; }
-    }
+    /// <value>The name of the file.</value>
+    public string FileName { get; set; }
 }

@@ -2,59 +2,58 @@
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Enumerations;
 
-namespace ISynergy.Framework.UI.Windows
+namespace ISynergy.Framework.UI.Windows;
+
+/// <summary>
+/// Interaction logic for SelectionWindow.xaml
+/// </summary>
+public partial class SelectionWindow : ISelectionWindow
 {
-    /// <summary>
-    /// Interaction logic for SelectionWindow.xaml
-    /// </summary>
-    public partial class SelectionWindow : ISelectionWindow
+    public SelectionWindow()
     {
-        public SelectionWindow()
-        {
-            InitializeComponent();
-            DataContextChanged += this.SelectionWindow_DataContextChanged;
-        }
+        InitializeComponent();
+        DataContextChanged += this.SelectionWindow_DataContextChanged;
+    }
 
-        private void SelectionWindow_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+    private void SelectionWindow_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+    {
+        if (ViewModel is ISelectionViewModel viewModel)
         {
-            if (ViewModel is ISelectionViewModel viewModel)
+            if (viewModel.SelectionMode == SelectionModes.Single && viewModel.SelectedItems is not null && viewModel.SelectedItems.Count == 1)
             {
-                if (viewModel.SelectionMode == SelectionModes.Single && viewModel.SelectedItems is not null && viewModel.SelectedItems.Count == 1)
+                DataSummary.SelectedItem = viewModel.SelectedItems.Single();
+            }
+            else
+            {
+                foreach (var item in viewModel.SelectedItems)
                 {
-                    DataSummary.SelectedItem = viewModel.SelectedItems.Single();
-                }
-                else
-                {
-                    foreach (var item in viewModel.SelectedItems)
-                    {
-                        _ = DataSummary.Items.IndexOf(item);
-                    }
+                    _ = DataSummary.Items.IndexOf(item);
                 }
             }
         }
+    }
 
-        private void DataSummary_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private void DataSummary_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (ViewModel is ISelectionViewModel viewModel)
         {
-            if (ViewModel is ISelectionViewModel viewModel)
-            {
-                viewModel.SelectedItems = new List<object>();
+            viewModel.SelectedItems = new List<object>();
 
-                if (viewModel.SelectionMode == SelectionModes.Single)
-                    viewModel.SelectedItems.Add(DataSummary.SelectedItem);
-                else
+            if (viewModel.SelectionMode == SelectionModes.Single)
+                viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+            else
+            {
+                foreach (var item in DataSummary.SelectedItems)
                 {
-                    foreach (var item in DataSummary.SelectedItems)
-                    {
-                        viewModel.SelectedItems.Add(item);
-                    }
+                    viewModel.SelectedItems.Add(item);
                 }
             }
         }
+    }
 
-        private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
-        {
-            Left = Left + e.HorizontalChange;
-            Top = Top + e.VerticalChange;
-        }
+    private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+    {
+        Left = Left + e.HorizontalChange;
+        Top = Top + e.VerticalChange;
     }
 }

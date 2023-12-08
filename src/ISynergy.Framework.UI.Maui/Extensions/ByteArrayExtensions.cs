@@ -1,27 +1,26 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 
-namespace ISynergy.Framework.UI.Extensions
+namespace ISynergy.Framework.UI.Extensions;
+
+/// <summary>
+/// Class ByteArrayExtensions.
+/// </summary>
+public static class ByteArrayExtensions
 {
     /// <summary>
-    /// Class ByteArrayExtensions.
+    /// Converts the byte array to an image source.
     /// </summary>
-    public static class ByteArrayExtensions
+    /// <param name="_self">The image.</param>
+    /// <returns>ImageSource.</returns>
+
+    public static ImageSource ToImageSource(this byte[] _self)
     {
-        /// <summary>
-        /// Converts the byte array to an image source.
-        /// </summary>
-        /// <param name="_self">The image.</param>
-        /// <returns>ImageSource.</returns>
-
-        public static ImageSource ToImageSource(this byte[] _self)
+        return ImageSource.FromStream(() =>
         {
-            return ImageSource.FromStream(() =>
-            {
-                if (_self.ToMemoryStream() is MemoryStream stream)
-                    return stream;
+            if (_self.ToMemoryStream() is MemoryStream stream)
+                return stream;
 
-                return null;
-            });
-        }
+            return null;
+        });
     }
 }

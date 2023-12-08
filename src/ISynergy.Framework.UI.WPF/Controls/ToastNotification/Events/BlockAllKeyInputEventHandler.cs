@@ -1,13 +1,12 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using System.Windows.Input;
 
-namespace ISynergy.Framework.UI.Controls.ToastNotification.Events
+namespace ISynergy.Framework.UI.Controls.ToastNotification.Events;
+
+public class BlockAllKeyInputEventHandler : IKeyboardEventHandler
 {
-    public class BlockAllKeyInputEventHandler : IKeyboardEventHandler
+    public void Handle(KeyEventArgs eventArgs)
     {
-        public void Handle(KeyEventArgs eventArgs)
-        {
-            eventArgs.Handled = true;
-        }
+        eventArgs.Handled = true;
     }
 }

@@ -5,41 +5,40 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Monitoring.Services.Tests
+namespace ISynergy.Framework.Monitoring.Services.Tests;
+
+[TestClass]
+public class MonitorServiceTests
 {
-    [TestClass]
-    public class MonitorServiceTests
+    private const string _channel = "channel";
+
+    private readonly IMonitorService<object> _monitorService;
+
+    public MonitorServiceTests()
     {
-        private const string _channel = "channel";
+        Mock<IHubContext<MonitorHub>> contextMock = new();
+        contextMock.Setup(x => x.Clients)
+            .Returns(() => new Mock<IHubClients>().Object);
+        contextMock.Setup(x => x.Groups)
+            .Returns(() => new Mock<IGroupManager>().Object);
+        contextMock.Setup(x => x.Clients.Group(_channel))
+            .Returns(() => new Mock<IClientProxy>().Object);
 
-        private readonly IMonitorService<object> _monitorService;
+        IHubContext<MonitorHub> context = contextMock.Object;
+        context.Groups.AddToGroupAsync("0", _channel);
 
-        public MonitorServiceTests()
-        {
-            Mock<IHubContext<MonitorHub>> contextMock = new();
-            contextMock.Setup(x => x.Clients)
-                .Returns(() => new Mock<IHubClients>().Object);
-            contextMock.Setup(x => x.Groups)
-                .Returns(() => new Mock<IGroupManager>().Object);
-            contextMock.Setup(x => x.Clients.Group(_channel))
-                .Returns(() => new Mock<IClientProxy>().Object);
+        _monitorService = new MonitorService<object>(context);
+    }
 
-            IHubContext<MonitorHub> context = contextMock.Object;
-            context.Groups.AddToGroupAsync("0", _channel);
+    [TestMethod]
+    public async Task PublishTestAsync()
+    {
+        await _monitorService.PublishAsync(_channel, "eventName", null);
+    }
 
-            _monitorService = new MonitorService<object>(context);
-        }
-
-        [TestMethod]
-        public async Task PublishTestAsync()
-        {
-            await _monitorService.PublishAsync(_channel, "eventName", null);
-        }
-
-        [TestMethod]
-        public async Task PublishInvalidChannelTestAsync()
-        {
-            await _monitorService.PublishAsync("invalidchannel", "eventName", null);
-        }
+    [TestMethod]
+    public async Task PublishInvalidChannelTestAsync()
+    {
+        await _monitorService.PublishAsync("invalidchannel", "eventName", null);
     }
 }

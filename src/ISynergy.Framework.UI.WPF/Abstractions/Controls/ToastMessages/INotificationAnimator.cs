@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages
+﻿namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+
+public interface INotificationAnimator
 {
-    public interface INotificationAnimator
-    {
-        void Setup();
-        void PlayShowAnimation();
-        void PlayHideAnimation();
-    }
+    void Setup();
+    void PlayShowAnimation();
+    void PlayHideAnimation();
 }

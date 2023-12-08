@@ -2,29 +2,28 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace ISynergy.Framework.Core.Utilities.Tests
+namespace ISynergy.Framework.Core.Utilities.Tests;
+
+/// <summary>
+/// Class TypeExtensionsTests.
+/// </summary>
+[TestClass]
+public class TypeExtensionsTests
 {
     /// <summary>
-    /// Class TypeExtensionsTests.
+    /// Defines the test method BasicTypeActivatorTest.
     /// </summary>
-    [TestClass]
-    public class TypeExtensionsTests
+    /// <param name="type">The type.</param>
+    [DataTestMethod]
+    [DataRow(typeof(string))]
+    [DataRow(typeof(bool))]
+    [DataRow(typeof(object))]
+    [DataRow(typeof(Guid))]
+    [DataRow(typeof(Product))]
+    public void BasicTypeActivatorTest(Type type)
     {
-        /// <summary>
-        /// Defines the test method BasicTypeActivatorTest.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        [DataTestMethod]
-        [DataRow(typeof(string))]
-        [DataRow(typeof(bool))]
-        [DataRow(typeof(object))]
-        [DataRow(typeof(Guid))]
-        [DataRow(typeof(Product))]
-        public void BasicTypeActivatorTest(Type type)
-        {
-            object result = TypeActivator.CreateInstance(type);
-            Assert.IsNotNull(result);
-        }
-
+        object result = TypeActivator.CreateInstance(type);
+        Assert.IsNotNull(result);
     }
+
 }

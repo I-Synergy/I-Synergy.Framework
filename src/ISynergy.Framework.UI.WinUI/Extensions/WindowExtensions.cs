@@ -1,20 +1,19 @@
 ﻿using System.Diagnostics;
 
-namespace ISynergy.Framework.UI.Extensions
+namespace ISynergy.Framework.UI.Extensions;
+
+/// <summary>
+/// Window extensions class
+/// </summary>
+public static partial class WindowExtensions
 {
     /// <summary>
-    /// Window extensions class
+    /// Get handle from main window.
     /// </summary>
-    public static partial class WindowExtensions
+    /// <returns></returns>
+    public static IntPtr GetCurrentProcMainWindowHandle()
     {
-        /// <summary>
-        /// Get handle from main window.
-        /// </summary>
-        /// <returns></returns>
-        public static IntPtr GetCurrentProcMainWindowHandle()
-        {
-            using var process = Process.GetCurrentProcess();
-            return process.MainWindowHandle;
-        }
+        using var process = Process.GetCurrentProcess();
+        return process.MainWindowHandle;
     }
 }

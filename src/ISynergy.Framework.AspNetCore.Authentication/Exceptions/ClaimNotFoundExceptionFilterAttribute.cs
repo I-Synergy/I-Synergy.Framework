@@ -2,23 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ISynergy.Framework.AspNetCore.Authentication.Exceptions
+namespace ISynergy.Framework.AspNetCore.Authentication.Exceptions;
+
+/// <summary>
+/// Class ClaimNotFoundExceptionFilterAttribute. This class cannot be inherited.
+/// Implements the <see cref="ExceptionFilterAttribute" />
+/// </summary>
+/// <seealso cref="ExceptionFilterAttribute" />
+public sealed class ClaimNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
 {
     /// <summary>
-    /// Class ClaimNotFoundExceptionFilterAttribute. This class cannot be inherited.
-    /// Implements the <see cref="ExceptionFilterAttribute" />
+    /// Called when [exception].
     /// </summary>
-    /// <seealso cref="ExceptionFilterAttribute" />
-    public sealed class ClaimNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
+    /// <param name="context">The context.</param>
+    public override void OnException(ExceptionContext context)
     {
-        /// <summary>
-        /// Called when [exception].
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public override void OnException(ExceptionContext context)
-        {
-            if (context.Exception is ClaimAuthorizationException)
-                context.Result = new ChallengeResult();
-        }
+        if (context.Exception is ClaimAuthorizationException)
+            context.Result = new ChallengeResult();
     }
 }

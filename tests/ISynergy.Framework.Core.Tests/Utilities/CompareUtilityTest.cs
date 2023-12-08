@@ -2,76 +2,75 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ISynergy.Framework.Core.Utilities.Tests
+namespace ISynergy.Framework.Core.Utilities.Tests;
+
+/// <summary>
+/// Class CompareUtilityTest.
+/// </summary>
+[TestClass]
+public class CompareUtilityTest
 {
     /// <summary>
-    /// Class CompareUtilityTest.
+    /// Class EmployeeRecord.
     /// </summary>
-    [TestClass]
-    public class CompareUtilityTest
+    public class EmployeeRecord
     {
         /// <summary>
-        /// Class EmployeeRecord.
+        /// Gets or sets the employee number.
         /// </summary>
-        public class EmployeeRecord
-        {
-            /// <summary>
-            /// Gets or sets the employee number.
-            /// </summary>
-            /// <value>The employee number.</value>
-            public int EmployeeNumber { get; set; }
-            /// <summary>
-            /// Gets or sets the company number.
-            /// </summary>
-            /// <value>The company number.</value>
-            public int CompanyNumber { get; set; }
-        }
-
+        /// <value>The employee number.</value>
+        public int EmployeeNumber { get; set; }
         /// <summary>
-        /// Defines the test method CompareObject.
+        /// Gets or sets the company number.
         /// </summary>
-        [TestMethod]
-        public void CompareObject()
+        /// <value>The company number.</value>
+        public int CompanyNumber { get; set; }
+    }
+
+    /// <summary>
+    /// Defines the test method CompareObject.
+    /// </summary>
+    [TestMethod]
+    public void CompareObject()
+    {
+        EmployeeRecord oOldRecord = new()
         {
-            EmployeeRecord oOldRecord = new()
-            {
-                EmployeeNumber = 1
-            };
+            EmployeeNumber = 1
+        };
 
-            EmployeeRecord oNewRecord = new()
-            {
-                EmployeeNumber = 2,
-                CompanyNumber = 3
-            };
-
-            List<string> result = CompareUtility.CompareObject(oOldRecord, oNewRecord);
-            List<string> assert =
-            [
-                "Property EmployeeNumber was: 1; is: 2",
-                "Property CompanyNumber was: 0; is: 3"
-            ];
-
-            Assert.IsTrue(assert.All(result.Contains) && assert.Count == result.Count);
-        }
-
-        /// <summary>
-        /// Defines the test method CompareDecimalValues.
-        /// </summary>
-        /// <param name="result">if set to <c>true</c> [result].</param>
-        /// <param name="operation">The operation.</param>
-        /// <param name="value1">The value1.</param>
-        /// <param name="value2">The value2.</param>
-        [DataTestMethod]
-        [DataRow(true, "==", 50.99, 50.99)]
-        [DataRow(true, "!=", 50.99, 50)]
-        [DataRow(true, ">", 1, 0)]
-        [DataRow(true, ">=", 50.01, 50)]
-        [DataRow(true, "<", 0, 1)]
-        [DataRow(true, "<=", 49, 49.99)]
-        public void CompareDecimalValues(bool result, string operation, double value1, double value2)
+        EmployeeRecord oNewRecord = new()
         {
-            bool assert = CompareUtility.Compare(operation, value1, value2);
-            Assert.AreEqual(result, assert);
-        }
+            EmployeeNumber = 2,
+            CompanyNumber = 3
+        };
+
+        List<string> result = CompareUtility.CompareObject(oOldRecord, oNewRecord);
+        List<string> assert =
+        [
+            "Property EmployeeNumber was: 1; is: 2",
+            "Property CompanyNumber was: 0; is: 3"
+        ];
+
+        Assert.IsTrue(assert.All(result.Contains) && assert.Count == result.Count);
+    }
+
+    /// <summary>
+    /// Defines the test method CompareDecimalValues.
+    /// </summary>
+    /// <param name="result">if set to <c>true</c> [result].</param>
+    /// <param name="operation">The operation.</param>
+    /// <param name="value1">The value1.</param>
+    /// <param name="value2">The value2.</param>
+    [DataTestMethod]
+    [DataRow(true, "==", 50.99, 50.99)]
+    [DataRow(true, "!=", 50.99, 50)]
+    [DataRow(true, ">", 1, 0)]
+    [DataRow(true, ">=", 50.01, 50)]
+    [DataRow(true, "<", 0, 1)]
+    [DataRow(true, "<=", 49, 49.99)]
+    public void CompareDecimalValues(bool result, string operation, double value1, double value2)
+    {
+        bool assert = CompareUtility.Compare(operation, value1, value2);
+        Assert.AreEqual(result, assert);
     }
 }

@@ -2,291 +2,286 @@
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization;
+
+internal static class QuadraticExpressionParser
 {
-    internal static class QuadraticExpressionParser
+    public static string ToVariable(this int num, char prefix = 'x')
     {
-        public static string ToVariable(this int num, char prefix = 'x')
+        var number = num.ToString();
+        var chars = new char[number.Length + 1];
+        chars[0] = prefix;
+
+        for (var i = 0; i < number.Length; i++) chars[i + 1] = (char)(number[i] + (0x2080 - '0'));
+
+        return new string(chars);
+    }
+
+    public static Dictionary<Tuple<string, string>, double> ParseString(string f, CultureInfo culture)
+    {
+        f = f.Replace("*", string.Empty).Replace(" ", string.Empty);
+
+        var terms = new Dictionary<Tuple<string, string>, double>();
+
+        var replaceQuad = new Regex(@"([a-zA-Z])(²)", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+        f = replaceQuad.Replace(f, "$1$1");
+        var separator = culture.NumberFormat.NumberDecimalSeparator;
+
+        var r = new Regex(@"[\-\+]?[\s]*((\d*\" + separator + @"{0,1}\d+)|[a-zA-Z][²]?)+", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+        var number = new Regex(@"\d*\" + separator + @"{0,1}\d+", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+        var symbol = new Regex(@"[a-zA-Z]", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+        var matches = r.Matches(f, 0);
+
+        foreach (Match m in matches)
         {
-            var number = num.ToString();
-            var chars = new char[number.Length + 1];
-            chars[0] = prefix;
+            var term = m.Value;
 
-            for (var i = 0; i < number.Length; i++) chars[i + 1] = (char)(number[i] + (0x2080 - '0'));
+            double scalar = term[0] == '-' ? -1 : 1;
 
-            return new string(chars);
+            // Extract value
+            var coeff = number.Matches(term);
+
+            foreach (Match c in coeff)
+                scalar *= double.Parse(c.Value, culture);
+
+            // Extract symbols
+            var symbols = symbol.Matches(term);
+
+            if (symbols.Count == 1)
+                terms.Add(Tuple.Create(symbols[0].Value, (string)null), scalar);
+            else if (symbols.Count == 2)
+                terms.Add(Tuple.Create(symbols[0].Value, symbols[1].Value), scalar);
+            else
+                terms.Add(Tuple.Create((string)null, (string)null), scalar);
         }
 
-        public static Dictionary<Tuple<string, string>, double> ParseString(string f, CultureInfo culture)
+        return terms;
+    }
+
+    public static Tuple<string, string> ParseExpression(
+        Dictionary<Tuple<string, string>, double> terms,
+        Expression expr, out double scalar,
+        bool dontAdd = false)
+    {
+        scalar = 0;
+
+        if (expr is null)
+            return null;
+
+        var eb = expr as BinaryExpression;
+        var em = expr as MemberExpression;
+        var eu = expr as UnaryExpression;
+
+        if (em is not null) // member expression
         {
-            f = f.Replace("*", string.Empty).Replace(" ", string.Empty);
-
-            var terms = new Dictionary<Tuple<string, string>, double>();
-
-            var replaceQuad = new Regex(@"([a-zA-Z])(²)", RegexOptions.None, TimeSpan.FromMilliseconds(100));
-            f = replaceQuad.Replace(f, "$1$1");
-            var separator = culture.NumberFormat.NumberDecimalSeparator;
-
-            var r = new Regex(@"[\-\+]?[\s]*((\d*\" + separator + @"{0,1}\d+)|[a-zA-Z][²]?)+", RegexOptions.None, TimeSpan.FromMilliseconds(100));
-            var number = new Regex(@"\d*\" + separator + @"{0,1}\d+", RegexOptions.None, TimeSpan.FromMilliseconds(100));
-            var symbol = new Regex(@"[a-zA-Z]", RegexOptions.None, TimeSpan.FromMilliseconds(100));
-            var matches = r.Matches(f, 0);
-
-            foreach (Match m in matches)
-            {
-                var term = m.Value;
-
-                double scalar = term[0] == '-' ? -1 : 1;
-
-                // Extract value
-                var coeff = number.Matches(term);
-
-                foreach (Match c in coeff)
-                    scalar *= double.Parse(c.Value, culture);
-
-                // Extract symbols
-                var symbols = symbol.Matches(term);
-
-                if (symbols.Count == 1)
-                    terms.Add(Tuple.Create(symbols[0].Value, (string)null), scalar);
-                else if (symbols.Count == 2)
-                    terms.Add(Tuple.Create(symbols[0].Value, symbols[1].Value), scalar);
-                else
-                    terms.Add(Tuple.Create((string)null, (string)null), scalar);
-            }
-
-            return terms;
+            var term = Tuple.Create(em.Member.Name, (string)null);
+            terms[term] = 1;
+            return term;
         }
 
-        public static Tuple<string, string> ParseExpression(
-            Dictionary<Tuple<string, string>, double> terms,
-            Expression expr, out double scalar,
-            bool dontAdd = false)
+        if (eb is not null) // binary expression
         {
-            scalar = 0;
-
-            if (expr is null)
-                return null;
-
-            var eb = expr as BinaryExpression;
-            var em = expr as MemberExpression;
-            var eu = expr as UnaryExpression;
-
-            if (em is not null) // member expression
+            if (expr.NodeType == ExpressionType.Multiply)
             {
-                var term = Tuple.Create(em.Member.Name, (string)null);
-                terms[term] = 1;
-                return term;
-            }
+                // This could be either a constant*expression, expression*constant or expression*expression
+                var c = eb.Left as ConstantExpression ?? eb.Right as ConstantExpression;
 
-            if (eb is not null) // binary expression
-            {
-                if (expr.NodeType == ExpressionType.Multiply)
+                var lm = eb.Left as MemberExpression;
+                var lb = eb.Left as BinaryExpression;
+                var lu = eb.Left as UnaryExpression;
+
+                var rm = eb.Right as MemberExpression;
+                var rb = eb.Right as BinaryExpression;
+                var ru = eb.Right as UnaryExpression;
+                if (c is not null)
                 {
-                    // This could be either a constant*expression, expression*constant or expression*expression
-                    var c = eb.Left as ConstantExpression ?? eb.Right as ConstantExpression;
+                    // This is constant*expression or expression*constant
+                    scalar = (double)c.Value;
 
-                    var lm = eb.Left as MemberExpression;
-                    var lb = eb.Left as BinaryExpression;
-                    var lu = eb.Left as UnaryExpression;
-
-                    var rm = eb.Right as MemberExpression;
-                    var rb = eb.Right as BinaryExpression;
-                    var ru = eb.Right as UnaryExpression;
-                    if (c is not null)
+                    if ((lm ?? rm) is not null)
                     {
-                        // This is constant*expression or expression*constant
-                        scalar = (double)c.Value;
-
-                        if ((lm ?? rm) is not null)
-                        {
-                            var term = Tuple.Create((lm ?? rm).Member.Name, (string)null);
-                            if (!dontAdd) terms[term] = scalar;
-                            return term;
-                        }
-
-                        if ((lb ?? rb ?? (Expression)lm ?? lu) is not null)
-                        {
-                            double n;
-                            var term = ParseExpression(terms, lb ?? lu ?? (Expression)rb ?? ru, out n);
-                            if (!dontAdd) terms[term] = scalar;
-                            return term;
-                        }
-
-                        throw new FormatException("Unexpected expression.");
+                        var term = Tuple.Create((lm ?? rm).Member.Name, (string)null);
+                        if (!dontAdd) terms[term] = scalar;
+                        return term;
                     }
 
-                    // This is x * x
-                    if (lm is not null && rm is not null)
+                    if ((lb ?? rb ?? (Expression)lm ?? lu) is not null)
                     {
-                        scalar = 1;
-                        return addTuple(terms, scalar, lm.Member.Name, rm.Member.Name);
-                    }
-
-                    if ((lb ?? rb ?? lu ?? (Expression)ru) is not null && (lm ?? rm) is not null)
-                    {
-                        // This is expression * x
-                        var term = ParseExpression(terms, lb ?? rb ?? lu ?? (Expression)ru, out scalar, true);
-                        return addTuple(terms, scalar, term.Item1, (lm ?? rm).Member.Name);
+                        double n;
+                        var term = ParseExpression(terms, lb ?? lu ?? (Expression)rb ?? ru, out n);
+                        if (!dontAdd) terms[term] = scalar;
+                        return term;
                     }
 
                     throw new FormatException("Unexpected expression.");
                 }
 
-                if (expr.NodeType == ExpressionType.Add)
+                // This is x * x
+                if (lm is not null && rm is not null)
                 {
-                    // This could be an expression + term, a term + expression or an expression + expression
-                    var lb = eb.Left as BinaryExpression;
-                    var lm = eb.Left as MemberExpression;
-                    var lu = eb.Left as UnaryExpression;
-
-                    var rb = eb.Right as BinaryExpression;
-                    var rm = eb.Right as MemberExpression;
-                    var rc = eb.Right as ConstantExpression;
-
                     scalar = 1;
-                    if (lb is not null)
-                    {
-                        ParseExpression(terms, lb, out scalar);
-                    }
-                    else if (lm is not null)
-                    {
-                        var term = Tuple.Create(lm.Member.Name, (string)null);
-                        if (!dontAdd)
-                            terms[term] = scalar;
-                    }
-                    else if (lu is not null)
-                    {
-                        ParseExpression(terms, lu, out scalar);
-                    }
-                    else
-                    {
-                        throw new FormatException("Unexpected expression.");
-                    }
-
-                    scalar = 1;
-                    if (rb is not null)
-                    {
-                        ParseExpression(terms, rb, out scalar);
-                    }
-                    else if (rm is not null)
-                    {
-                        var term = Tuple.Create(rm.Member.Name, (string)null);
-                        if (!dontAdd)
-                            terms[term] = scalar;
-                    }
-                    else if (rc is not null)
-                    {
-                        scalar = (double)rc.Value;
-                        var term = Tuple.Create((string)null, (string)null);
-                        if (!dontAdd)
-                            terms[term] = scalar;
-                    }
-                    else
-                    {
-                        throw new FormatException("Unexpected expression.");
-                    }
+                    return addTuple(terms, scalar, lm.Member.Name, rm.Member.Name);
                 }
-                else if (expr.NodeType == ExpressionType.Subtract)
+
+                if ((lb ?? rb ?? lu ?? (Expression)ru) is not null && (lm ?? rm) is not null)
                 {
-                    // This could be an expression - term, a term - expression or an expression - expression
-                    var lb = eb.Left as BinaryExpression;
-                    var lm = eb.Left as MemberExpression;
-                    var lu = eb.Left as UnaryExpression;
+                    // This is expression * x
+                    var term = ParseExpression(terms, lb ?? rb ?? lu ?? (Expression)ru, out scalar, true);
+                    return addTuple(terms, scalar, term.Item1, (lm ?? rm).Member.Name);
+                }
 
-                    var rb = eb.Right as BinaryExpression;
-                    var rm = eb.Right as MemberExpression;
+                throw new FormatException("Unexpected expression.");
+            }
 
-                    var rc = eb.Right as ConstantExpression;
-                    if (lb is not null)
-                    {
-                        ParseExpression(terms, lb, out scalar);
-                    }
-                    else if (lm is not null)
-                    {
-                        scalar = 1;
-                        var term = Tuple.Create(lm.Member.Name, (string)null);
-                        if (!dontAdd) terms[term] = scalar;
-                    }
-                    else if (lu is not null)
-                    {
-                        ParseExpression(terms, lu, out scalar);
-                    }
-                    else
-                    {
-                        throw new FormatException("Unexpected expression.");
-                    }
+            if (expr.NodeType == ExpressionType.Add)
+            {
+                // This could be an expression + term, a term + expression or an expression + expression
+                var lb = eb.Left as BinaryExpression;
+                var lm = eb.Left as MemberExpression;
+                var lu = eb.Left as UnaryExpression;
 
-                    if (rb is not null)
-                    {
-                        var term = ParseExpression(terms, rb, out scalar);
-                        terms[term] = -scalar;
-                    }
-                    else if (rm is not null)
-                    {
-                        scalar = -1;
-                        var term = Tuple.Create(rm.Member.Name, (string)null);
-                        if (!dontAdd) terms[term] = scalar;
-                    }
-                    else if (rc is not null)
-                    {
-                        scalar = (double)rc.Value;
-                        var term = Tuple.Create((string)null, (string)null);
-                        terms[term] = -scalar;
-                    }
-                    else
-                    {
-                        throw new FormatException("Unexpected expression.");
-                    }
+                var rb = eb.Right as BinaryExpression;
+                var rm = eb.Right as MemberExpression;
+                var rc = eb.Right as ConstantExpression;
+
+                scalar = 1;
+                if (lb is not null)
+                {
+                    ParseExpression(terms, lb, out scalar);
+                }
+                else if (lm is not null)
+                {
+                    var term = Tuple.Create(lm.Member.Name, (string)null);
+                    if (!dontAdd)
+                        terms[term] = scalar;
+                }
+                else if (lu is not null)
+                {
+                    ParseExpression(terms, lu, out scalar);
+                }
+                else
+                {
+                    throw new FormatException("Unexpected expression.");
+                }
+
+                scalar = 1;
+                if (rb is not null)
+                {
+                    ParseExpression(terms, rb, out scalar);
+                }
+                else if (rm is not null)
+                {
+                    var term = Tuple.Create(rm.Member.Name, (string)null);
+                    if (!dontAdd)
+                        terms[term] = scalar;
+                }
+                else if (rc is not null)
+                {
+                    scalar = (double)rc.Value;
+                    var term = Tuple.Create((string)null, (string)null);
+                    if (!dontAdd)
+                        terms[term] = scalar;
+                }
+                else
+                {
+                    throw new FormatException("Unexpected expression.");
                 }
             }
-            else if (eu is not null) // unary expression
+            else if (expr.NodeType == ExpressionType.Subtract)
             {
-                if (expr.NodeType == ExpressionType.UnaryPlus)
+                // This could be an expression - term, a term - expression or an expression - expression
+                var lb = eb.Left as BinaryExpression;
+                var lm = eb.Left as MemberExpression;
+                var lu = eb.Left as UnaryExpression;
+
+                var rb = eb.Right as BinaryExpression;
+                var rm = eb.Right as MemberExpression;
+
+                var rc = eb.Right as ConstantExpression;
+                if (lb is not null)
                 {
-                    var lb = eu.Operand as BinaryExpression;
-                    var lm = eu.Operand as MemberExpression;
-
-                    if (lm is not null)
-                    {
-                        scalar = 1;
-                        var term = Tuple.Create(lm.Member.Name, (string)null);
-                        if (!dontAdd) terms[term] = scalar;
-                        return term;
-                    }
-
-                    if (lb is not null)
-                    {
-                        var term = ParseExpression(terms, lb, out scalar);
-                        if (!dontAdd) terms[term] = scalar;
-                    }
-                    else
-                    {
-                        throw new FormatException("Unexpected expression.");
-                    }
+                    ParseExpression(terms, lb, out scalar);
                 }
-                else if (expr.NodeType == ExpressionType.Negate)
+                else if (lm is not null)
                 {
-                    var lb = eu.Operand as BinaryExpression;
-                    var lm = eu.Operand as MemberExpression;
+                    scalar = 1;
+                    var term = Tuple.Create(lm.Member.Name, (string)null);
+                    if (!dontAdd) terms[term] = scalar;
+                }
+                else if (lu is not null)
+                {
+                    ParseExpression(terms, lu, out scalar);
+                }
+                else
+                {
+                    throw new FormatException("Unexpected expression.");
+                }
 
-                    if (lm is not null)
-                    {
-                        scalar = -1;
-                        var term = Tuple.Create(lm.Member.Name, (string)null);
-                        if (!dontAdd) terms[term] = scalar;
-                        return term;
-                    }
+                if (rb is not null)
+                {
+                    var term = ParseExpression(terms, rb, out scalar);
+                    terms[term] = -scalar;
+                }
+                else if (rm is not null)
+                {
+                    scalar = -1;
+                    var term = Tuple.Create(rm.Member.Name, (string)null);
+                    if (!dontAdd) terms[term] = scalar;
+                }
+                else if (rc is not null)
+                {
+                    scalar = (double)rc.Value;
+                    var term = Tuple.Create((string)null, (string)null);
+                    terms[term] = -scalar;
+                }
+                else
+                {
+                    throw new FormatException("Unexpected expression.");
+                }
+            }
+        }
+        else if (eu is not null) // unary expression
+        {
+            if (expr.NodeType == ExpressionType.UnaryPlus)
+            {
+                var lb = eu.Operand as BinaryExpression;
+                var lm = eu.Operand as MemberExpression;
 
-                    if (lb is not null)
-                    {
-                        var term = ParseExpression(terms, lb, out scalar);
-                        terms[term] = -scalar;
-                    }
-                    else
-                    {
-                        throw new FormatException("Unexpected expression.");
-                    }
+                if (lm is not null)
+                {
+                    scalar = 1;
+                    var term = Tuple.Create(lm.Member.Name, (string)null);
+                    if (!dontAdd) terms[term] = scalar;
+                    return term;
+                }
+
+                if (lb is not null)
+                {
+                    var term = ParseExpression(terms, lb, out scalar);
+                    if (!dontAdd) terms[term] = scalar;
+                }
+                else
+                {
+                    throw new FormatException("Unexpected expression.");
+                }
+            }
+            else if (expr.NodeType == ExpressionType.Negate)
+            {
+                var lb = eu.Operand as BinaryExpression;
+                var lm = eu.Operand as MemberExpression;
+
+                if (lm is not null)
+                {
+                    scalar = -1;
+                    var term = Tuple.Create(lm.Member.Name, (string)null);
+                    if (!dontAdd) terms[term] = scalar;
+                    return term;
+                }
+
+                if (lb is not null)
+                {
+                    var term = ParseExpression(terms, lb, out scalar);
+                    terms[term] = -scalar;
                 }
                 else
                 {
@@ -297,19 +292,23 @@ namespace ISynergy.Framework.Mathematics.Optimization
             {
                 throw new FormatException("Unexpected expression.");
             }
-
-            return null;
         }
-
-        private static Tuple<string, string> addTuple(Dictionary<Tuple<string, string>,
-            double> terms, double v, string v1, string v2)
+        else
         {
-            var t1 = Tuple.Create(v1, v2);
-            var t2 = Tuple.Create(v2, v1);
-
-            if (!terms.ContainsKey(t1) && !terms.ContainsKey(t2))
-                terms[t1] = v;
-            return t1;
+            throw new FormatException("Unexpected expression.");
         }
+
+        return null;
+    }
+
+    private static Tuple<string, string> addTuple(Dictionary<Tuple<string, string>,
+        double> terms, double v, string v1, string v2)
+    {
+        var t1 = Tuple.Create(v1, v2);
+        var t2 = Tuple.Create(v2, v1);
+
+        if (!terms.ContainsKey(t1) && !terms.ContainsKey(t2))
+            terms[t1] = v;
+        return t1;
     }
 }

@@ -2,53 +2,52 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Globalization;
 
-namespace ISynergy.Framework.UI.Services
+namespace ISynergy.Framework.UI.Services;
+
+/// <summary>
+/// Class ConverterService.
+/// Implements the <see cref="IConverterService" />
+/// </summary>
+/// <seealso cref="IConverterService" />
+public class ConverterService : IConverterService
 {
     /// <summary>
-    /// Class ConverterService.
-    /// Implements the <see cref="IConverterService" />
+    /// The context
     /// </summary>
-    /// <seealso cref="IConverterService" />
-    public class ConverterService : IConverterService
+    private readonly IContext Context;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConverterService"/> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    public ConverterService(IContext context)
     {
-        /// <summary>
-        /// The context
-        /// </summary>
-        private readonly IContext Context;
+        Context = context;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConverterService"/> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public ConverterService(IContext context)
-        {
-            Context = context;
-        }
+    /// <summary>
+    /// Converts the media color2 integer.
+    /// </summary>
+    /// <param name="mediacolor">The mediacolor.</param>
+    /// <returns>System.Int32.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public int ConvertMediaColor2Integer(object mediacolor)
+    {
+        throw new NotImplementedException();
+    }
 
-        /// <summary>
-        /// Converts the media color2 integer.
-        /// </summary>
-        /// <param name="mediacolor">The mediacolor.</param>
-        /// <returns>System.Int32.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public int ConvertMediaColor2Integer(object mediacolor)
-        {
-            throw new NotImplementedException();
-        }
+    /// <summary>
+    /// Converts the decimal to currency.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>System.String.</returns>
+    public string ConvertDecimalToCurrency(decimal value)
+    {
+        var currencySymbol = Context.CurrencySymbol ?? "$";
+        var info = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
+        info.CurrencySymbol = $"{currencySymbol} ";
+        info.CurrencyNegativePattern = 1;
 
-        /// <summary>
-        /// Converts the decimal to currency.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        public string ConvertDecimalToCurrency(decimal value)
-        {
-            var currencySymbol = Context.CurrencySymbol ?? "$";
-            var info = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
-            info.CurrencySymbol = $"{currencySymbol} ";
-            info.CurrencyNegativePattern = 1;
-
-            return string.Format(info, "{0:C2}", value).Replace("  ", " ");
-        }
+        return string.Format(info, "{0:C2}", value).Replace("  ", " ");
     }
 }

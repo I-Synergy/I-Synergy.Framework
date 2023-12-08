@@ -1,29 +1,28 @@
-﻿namespace ISynergy.Framework.Core.Enumerations
+﻿namespace ISynergy.Framework.Core.Enumerations;
+
+/// <summary>
+/// Enum Week
+/// </summary>
+public enum Week
 {
     /// <summary>
-    /// Enum Week
+    /// The first
     /// </summary>
-    public enum Week
-    {
-        /// <summary>
-        /// The first
-        /// </summary>
-        First,
-        /// <summary>
-        /// The second
-        /// </summary>
-        Second,
-        /// <summary>
-        /// The third
-        /// </summary>
-        Third,
-        /// <summary>
-        /// The fourth
-        /// </summary>
-        Fourth,
-        /// <summary>
-        /// The last
-        /// </summary>
-        Last
-    }
+    First,
+    /// <summary>
+    /// The second
+    /// </summary>
+    Second,
+    /// <summary>
+    /// The third
+    /// </summary>
+    Third,
+    /// <summary>
+    /// The fourth
+    /// </summary>
+    Fourth,
+    /// <summary>
+    /// The last
+    /// </summary>
+    Last
 }

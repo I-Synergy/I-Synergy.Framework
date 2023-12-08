@@ -1,13 +1,12 @@
-﻿namespace ISynergy.Framework.Monitoring.Common.Options
+﻿namespace ISynergy.Framework.Monitoring.Common.Options;
+
+/// <summary>
+/// Client monitor options.
+/// </summary>
+public class ClientMonitorOptions
 {
     /// <summary>
-    /// Client monitor options.
+    /// Endpoint url.
     /// </summary>
-    public class ClientMonitorOptions
-    {
-        /// <summary>
-        /// Endpoint url.
-        /// </summary>
-        public string EndpointUrl { get; set; }
-    }
+    public string EndpointUrl { get; set; }
 }

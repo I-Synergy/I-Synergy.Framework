@@ -6,25 +6,24 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ISynergy.Framework.Mail.Extensions
+namespace ISynergy.Framework.Mail.Extensions;
+
+/// <summary>
+/// Service collection extensions for Sendgrid
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Service collection extensions for Sendgrid
+    /// Adds Sendgrid Mail integration.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddMailSendGridIntegration(this IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// Adds Sendgrid Mail integration.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddMailSendGridIntegration(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddOptions();
-            services.Configure<MailOptions>(configuration.GetSection(nameof(MailOptions)).BindWithReload);
-            services.TryAddSingleton<IMailService, MailService>();
-            return services;
-        }
+        services.AddOptions();
+        services.Configure<MailOptions>(configuration.GetSection(nameof(MailOptions)).BindWithReload);
+        services.TryAddSingleton<IMailService, MailService>();
+        return services;
     }
 }

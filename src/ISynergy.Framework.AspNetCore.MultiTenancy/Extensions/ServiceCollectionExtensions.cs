@@ -4,23 +4,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ISynergy.Framework.AspNetCore.MultiTenancy.Extensions
+namespace ISynergy.Framework.AspNetCore.MultiTenancy.Extensions;
+
+/// <summary>
+/// Service collection extensions for multi tenancy service
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Service collection extensions for multi tenancy service
+    /// Adds multi tenancy integration.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddMultiTenancyIntegration(this IServiceCollection services)
     {
-        /// <summary>
-        /// Adds multi tenancy integration.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddMultiTenancyIntegration(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.TryAddTransient<ITenantService, TenantService>();
-            return services;
-        }
+        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.TryAddTransient<ITenantService, TenantService>();
+        return services;
     }
 }

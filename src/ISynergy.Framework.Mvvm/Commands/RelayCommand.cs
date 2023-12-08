@@ -8,85 +8,84 @@ using System.Runtime.CompilerServices;
 
 #nullable enable
 
-namespace ISynergy.Framework.Mvvm.Commands
+namespace ISynergy.Framework.Mvvm.Commands;
+
+/// <summary>
+/// A _command whose sole purpose is to relay its functionality to other
+/// objects by invoking delegates. The default return value for the <see cref="CanExecute"/>
+/// method is <see langword="true"/>. This type does not allow you to accept _command parameters
+/// in the <see cref="Execute"/> and <see cref="CanExecute"/> callback methods.
+/// </summary>
+public sealed class RelayCommand : IRelayCommand
 {
     /// <summary>
-    /// A _command whose sole purpose is to relay its functionality to other
-    /// objects by invoking delegates. The default return value for the <see cref="CanExecute"/>
-    /// method is <see langword="true"/>. This type does not allow you to accept _command parameters
-    /// in the <see cref="Execute"/> and <see cref="CanExecute"/> callback methods.
+    /// The <see cref="Action"/> to invoke when <see cref="Execute"/> is used.
     /// </summary>
-    public sealed class RelayCommand : IRelayCommand
+    private readonly Action _execute;
+
+    /// <summary>
+    /// The optional action to invoke when <see cref="CanExecute"/> is used.
+    /// </summary>
+    private readonly Func<bool>? _canExecute;
+
+    /// <inheritdoc/>
+    public event EventHandler? CanExecuteChanged;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RelayCommand"/> class that can always _execute.
+    /// </summary>
+    /// <param name="execute">The execution logic.</param>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
+    public RelayCommand(Action execute)
     {
-        /// <summary>
-        /// The <see cref="Action"/> to invoke when <see cref="Execute"/> is used.
-        /// </summary>
-        private readonly Action _execute;
+        Argument.IsNotNull(execute);
 
-        /// <summary>
-        /// The optional action to invoke when <see cref="CanExecute"/> is used.
-        /// </summary>
-        private readonly Func<bool>? _canExecute;
+        _execute = execute;
+    }
 
-        /// <inheritdoc/>
-        public event EventHandler? CanExecuteChanged;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RelayCommand"/> class.
+    /// </summary>
+    /// <param name="execute">The execution logic.</param>
+    /// <param name="canExecute">The execution status logic.</param>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
+    public RelayCommand(Action execute, Func<bool> canExecute)
+        : this(execute)
+    {
+        Argument.IsNotNull(canExecute);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RelayCommand"/> class that can always _execute.
-        /// </summary>
-        /// <param name="execute">The execution logic.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
-        public RelayCommand(Action execute)
+        _canExecute = canExecute;
+    }
+
+    /// <inheritdoc/>
+    public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool CanExecute(object? parameter) => _canExecute?.Invoke() != false;
+
+    /// <inheritdoc/>
+    public void Execute(object? parameter)
+    {
+        try
         {
-            Argument.IsNotNull(execute);
-
-            _execute = execute;
+            _execute();
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RelayCommand"/> class.
-        /// </summary>
-        /// <param name="execute">The execution logic.</param>
-        /// <param name="canExecute">The execution status logic.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
-        public RelayCommand(Action execute, Func<bool> canExecute)
-            : this(execute)
+        catch (Exception ex)
         {
-            Argument.IsNotNull(canExecute);
-
-            _canExecute = canExecute;
-        }
-
-        /// <inheritdoc/>
-        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool CanExecute(object? parameter) => _canExecute?.Invoke() != false;
-
-        /// <inheritdoc/>
-        public void Execute(object? parameter)
-        {
-            try
+            var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+            var task = new Task(async () =>
             {
-                _execute();
-            }
-            catch (Exception ex)
-            {
-                var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
-                var task = new Task(async () =>
+                if (ex.InnerException != null)
                 {
-                    if (ex.InnerException != null)
-                    {
-                        await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
-                    }
-                    else
-                    {
-                        await exceptionHandlerService.HandleExceptionAsync(ex);
-                    }
-                });
-                task.RunSynchronously();
-            }
+                    await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                }
+                else
+                {
+                    await exceptionHandlerService.HandleExceptionAsync(ex);
+                }
+            });
+            task.RunSynchronously();
         }
     }
 }

@@ -1,21 +1,20 @@
 ﻿using ISynergy.Framework.UI.Controls.ToastNotification;
 using ISynergy.Framework.UI.Controls.ToastNotification.Options;
 
-namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages
+namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+
+public interface INotification
 {
-    public interface INotification
-    {
-        int Id { get; set; }
+    int Id { get; set; }
 
-        NotificationDisplayPart DisplayPart { get; }
+    NotificationDisplayPart DisplayPart { get; }
 
-        void Bind(Action<INotification> closeAction);
+    void Bind(Action<INotification> closeAction);
 
-        void Close();
+    void Close();
 
-        string Message { get; }
-        bool CanClose { get; set; }
+    string Message { get; }
+    bool CanClose { get; set; }
 
-        MessageOptions Options { get; }
-    }
+    MessageOptions Options { get; }
 }

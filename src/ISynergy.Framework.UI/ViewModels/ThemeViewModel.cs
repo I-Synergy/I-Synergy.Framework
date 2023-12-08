@@ -6,48 +6,47 @@ using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 
-namespace ISynergy.Framework.UI.ViewModels
+namespace ISynergy.Framework.UI.ViewModels;
+
+/// <summary>
+/// Class ThemeViewModel.
+/// </summary>
+public class ThemeViewModel : ViewModelDialog<Style>
 {
     /// <summary>
-    /// Class ThemeViewModel.
+    /// Gets the title.
     /// </summary>
-    public class ThemeViewModel : ViewModelDialog<Style>
+    /// <value>The title.</value>
+    public override string Title => BaseCommonServices.LanguageService.GetString("Theme");
+
+    /// <summary>
+    /// Gets or sets the Items property value.
+    /// </summary>
+    public ThemeColors ThemeColors
     {
-        /// <summary>
-        /// Gets the title.
-        /// </summary>
-        /// <value>The title.</value>
-        public override string Title => BaseCommonServices.LanguageService.GetString("Theme");
+        get => GetValue<ThemeColors>();
+        set => SetValue(value);
+    }
 
-        /// <summary>
-        /// Gets or sets the Items property value.
-        /// </summary>
-        public ThemeColors ThemeColors
-        {
-            get => GetValue<ThemeColors>();
-            set => SetValue(value);
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="commonServices">The common services.</param>
+    /// <param name="applicationSettingsService"></param>
+    /// <param name="logger">The logger factory.</param>
+    public ThemeViewModel(
+        IContext context,
+        IBaseCommonServices commonServices,
+        IBaseApplicationSettingsService applicationSettingsService,
+        ILogger logger)
+        : base(context, commonServices, logger)
+    {
+        applicationSettingsService.LoadSettings();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="commonServices">The common services.</param>
-        /// <param name="applicationSettingsService"></param>
-        /// <param name="logger">The logger factory.</param>
-        public ThemeViewModel(
-            IContext context,
-            IBaseCommonServices commonServices,
-            IBaseApplicationSettingsService applicationSettingsService,
-            ILogger logger)
-            : base(context, commonServices, logger)
-        {
-            applicationSettingsService.LoadSettings();
+        ThemeColors = new ThemeColors();
 
-            ThemeColors = new ThemeColors();
-
-            SelectedItem.Color = applicationSettingsService.Settings.Color;
-            SelectedItem.Theme = applicationSettingsService.Settings.Theme;
-        }
+        SelectedItem.Color = applicationSettingsService.Settings.Color;
+        SelectedItem.Theme = applicationSettingsService.Settings.Theme;
     }
 }

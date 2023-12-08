@@ -6,134 +6,133 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
 
-namespace ISynergy.Framework.AspNetCore.Middleware
+namespace ISynergy.Framework.AspNetCore.Middleware;
+
+/// <summary>
+/// Class MaxConcurrentRequestsMiddleware.
+/// </summary>
+public class MaxConcurrentRequestsMiddleware
 {
     /// <summary>
-    /// Class MaxConcurrentRequestsMiddleware.
+    /// The concurrent requests count
     /// </summary>
-    public class MaxConcurrentRequestsMiddleware
+    private int _concurrentRequestsCount;
+
+    /// <summary>
+    /// The next
+    /// </summary>
+    private readonly RequestDelegate _next;
+    /// <summary>
+    /// The options
+    /// </summary>
+    private readonly MaxConcurrentRequestsOptions _options;
+    /// <summary>
+    /// The enqueuer
+    /// </summary>
+    private readonly MaxConcurrentRequestsEnqueuer _enqueuer;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MaxConcurrentRequestsMiddleware"/> class.
+    /// </summary>
+    /// <param name="next">The next.</param>
+    /// <param name="options">The options.</param>
+    public MaxConcurrentRequestsMiddleware(RequestDelegate next, IOptions<MaxConcurrentRequestsOptions> options)
     {
-        /// <summary>
-        /// The concurrent requests count
-        /// </summary>
-        private int _concurrentRequestsCount;
+        Argument.IsNotNull(options.Value, nameof(MaxConcurrentRequestsOptions));
+        Argument.IsNotNull(next);
 
-        /// <summary>
-        /// The next
-        /// </summary>
-        private readonly RequestDelegate _next;
-        /// <summary>
-        /// The options
-        /// </summary>
-        private readonly MaxConcurrentRequestsOptions _options;
-        /// <summary>
-        /// The enqueuer
-        /// </summary>
-        private readonly MaxConcurrentRequestsEnqueuer _enqueuer;
+        _concurrentRequestsCount = 0;
+        _next = next;
+        _options = options.Value;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaxConcurrentRequestsMiddleware"/> class.
-        /// </summary>
-        /// <param name="next">The next.</param>
-        /// <param name="options">The options.</param>
-        public MaxConcurrentRequestsMiddleware(RequestDelegate next, IOptions<MaxConcurrentRequestsOptions> options)
+        if (_options.LimitExceededPolicy != MaxConcurrentRequestsLimitExceededPolicy.Drop)
         {
-            Argument.IsNotNull(options.Value, nameof(MaxConcurrentRequestsOptions));
-            Argument.IsNotNull(next);
+            _enqueuer = new MaxConcurrentRequestsEnqueuer(_options.MaxQueueLength, (MaxConcurrentRequestsEnqueuer.DropMode)_options.LimitExceededPolicy, _options.MaxTimeInQueue);
+        }
+    }
 
-            _concurrentRequestsCount = 0;
-            _next = next;
-            _options = options.Value;
-
-            if (_options.LimitExceededPolicy != MaxConcurrentRequestsLimitExceededPolicy.Drop)
+    /// <summary>
+    /// Invokes the specified context.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    public async Task Invoke(HttpContext context)
+    {
+        if (CheckLimitExceeded() && !(await TryWaitInQueueAsync(context.RequestAborted).ConfigureAwait(false)))
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
             {
-                _enqueuer = new MaxConcurrentRequestsEnqueuer(_options.MaxQueueLength, (MaxConcurrentRequestsEnqueuer.DropMode)_options.LimitExceededPolicy, _options.MaxTimeInQueue);
+                var responseFeature = context.Features.Get<IHttpResponseFeature>();
+                responseFeature.StatusCode = StatusCodes.Status503ServiceUnavailable;
+                responseFeature.ReasonPhrase = "Concurrent request limit exceeded.";
             }
         }
-
-        /// <summary>
-        /// Invokes the specified context.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public async Task Invoke(HttpContext context)
+        else
         {
-            if (CheckLimitExceeded() && !(await TryWaitInQueueAsync(context.RequestAborted).ConfigureAwait(false)))
+            try
             {
-                if (!context.RequestAborted.IsCancellationRequested)
-                {
-                    var responseFeature = context.Features.Get<IHttpResponseFeature>();
-                    responseFeature.StatusCode = StatusCodes.Status503ServiceUnavailable;
-                    responseFeature.ReasonPhrase = "Concurrent request limit exceeded.";
-                }
+                await _next(context).ConfigureAwait(false);
             }
-            else
+            finally
             {
-                try
+                if (await ShouldDecrementConcurrentRequestsCountAsync().ConfigureAwait(false))
                 {
-                    await _next(context).ConfigureAwait(false);
-                }
-                finally
-                {
-                    if (await ShouldDecrementConcurrentRequestsCountAsync().ConfigureAwait(false))
-                    {
-                        Interlocked.Decrement(ref _concurrentRequestsCount);
-                    }
+                    Interlocked.Decrement(ref _concurrentRequestsCount);
                 }
             }
         }
+    }
 
-        /// <summary>
-        /// Checks the limit exceeded.
-        /// </summary>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        private bool CheckLimitExceeded()
+    /// <summary>
+    /// Checks the limit exceeded.
+    /// </summary>
+    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    private bool CheckLimitExceeded()
+    {
+        bool limitExceeded;
+
+        if (_options.Limit == MaxConcurrentRequestsOptions.ConcurrentRequestsUnlimited)
         {
-            bool limitExceeded;
-
-            if (_options.Limit == MaxConcurrentRequestsOptions.ConcurrentRequestsUnlimited)
+            limitExceeded = false;
+        }
+        else
+        {
+            int initialConcurrentRequestsCount, incrementedConcurrentRequestsCount;
+            do
             {
+                limitExceeded = true;
+
+                initialConcurrentRequestsCount = _concurrentRequestsCount;
+                if (initialConcurrentRequestsCount >= _options.Limit)
+                {
+                    break;
+                }
+
                 limitExceeded = false;
+                incrementedConcurrentRequestsCount = initialConcurrentRequestsCount + 1;
             }
-            else
-            {
-                int initialConcurrentRequestsCount, incrementedConcurrentRequestsCount;
-                do
-                {
-                    limitExceeded = true;
-
-                    initialConcurrentRequestsCount = _concurrentRequestsCount;
-                    if (initialConcurrentRequestsCount >= _options.Limit)
-                    {
-                        break;
-                    }
-
-                    limitExceeded = false;
-                    incrementedConcurrentRequestsCount = initialConcurrentRequestsCount + 1;
-                }
-                while (initialConcurrentRequestsCount != Interlocked.CompareExchange(ref _concurrentRequestsCount, incrementedConcurrentRequestsCount, initialConcurrentRequestsCount));
-            }
-
-            return limitExceeded;
+            while (initialConcurrentRequestsCount != Interlocked.CompareExchange(ref _concurrentRequestsCount, incrementedConcurrentRequestsCount, initialConcurrentRequestsCount));
         }
 
-        /// <summary>
-        /// try wait in queue as an asynchronous operation.
-        /// </summary>
-        /// <param name="requestAbortedCancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        private async Task<bool> TryWaitInQueueAsync(CancellationToken requestAbortedCancellationToken)
-        {
-            return (_enqueuer is not null) && (await _enqueuer.EnqueueAsync(requestAbortedCancellationToken).ConfigureAwait(false));
-        }
+        return limitExceeded;
+    }
 
-        /// <summary>
-        /// should decrement concurrent requests count as an asynchronous operation.
-        /// </summary>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        private async Task<bool> ShouldDecrementConcurrentRequestsCountAsync()
-        {
-            return (_options.Limit != MaxConcurrentRequestsOptions.ConcurrentRequestsUnlimited)
-                && ((_enqueuer is null) || !(await _enqueuer.DequeueAsync().ConfigureAwait(false)));
-        }
+    /// <summary>
+    /// try wait in queue as an asynchronous operation.
+    /// </summary>
+    /// <param name="requestAbortedCancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    private async Task<bool> TryWaitInQueueAsync(CancellationToken requestAbortedCancellationToken)
+    {
+        return (_enqueuer is not null) && (await _enqueuer.EnqueueAsync(requestAbortedCancellationToken).ConfigureAwait(false));
+    }
+
+    /// <summary>
+    /// should decrement concurrent requests count as an asynchronous operation.
+    /// </summary>
+    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    private async Task<bool> ShouldDecrementConcurrentRequestsCountAsync()
+    {
+        return (_options.Limit != MaxConcurrentRequestsOptions.ConcurrentRequestsUnlimited)
+            && ((_enqueuer is null) || !(await _enqueuer.DequeueAsync().ConfigureAwait(false)));
     }
 }

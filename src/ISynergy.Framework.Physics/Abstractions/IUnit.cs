@@ -1,25 +1,24 @@
 ﻿using ISynergy.Framework.Physics.Enumerations;
 
-namespace ISynergy.Framework.Physics.Abstractions
+namespace ISynergy.Framework.Physics.Abstractions;
+
+/// <summary>
+/// public interface for units and SI units.
+/// </summary>
+public interface IUnit
 {
     /// <summary>
-    /// public interface for units and SI units.
+    /// Name of the unit.
     /// </summary>
-    public interface IUnit
-    {
-        /// <summary>
-        /// Name of the unit.
-        /// </summary>
-        string Name { get; }
+    string Name { get; }
 
-        /// <summary>
-        /// Symbol of the unit.
-        /// </summary>
-        string Symbol { get; }
+    /// <summary>
+    /// Symbol of the unit.
+    /// </summary>
+    string Symbol { get; }
 
-        /// <summary>
-        /// Unit types for this unit.
-        /// </summary>
-        UnitTypes[] UnitTypes { get; }
-    }
+    /// <summary>
+    /// Unit types for this unit.
+    /// </summary>
+    UnitTypes[] UnitTypes { get; }
 }

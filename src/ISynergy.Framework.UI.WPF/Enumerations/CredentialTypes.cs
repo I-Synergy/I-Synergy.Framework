@@ -1,14 +1,13 @@
-﻿namespace ISynergy.Framework.UI.Enumerations
+﻿namespace ISynergy.Framework.UI.Enumerations;
+
+public enum CredentialTypes
 {
-    public enum CredentialTypes
-    {
-        Generic = 1,
-        DomainPassword,
-        DomainCertificate,
-        DomainVisiblePassword,
-        GenericCertificate,
-        DomainExtended,
-        Maximum,
-        MaximumEx = Maximum + 1000,
-    }
+    Generic = 1,
+    DomainPassword,
+    DomainCertificate,
+    DomainVisiblePassword,
+    GenericCertificate,
+    DomainExtended,
+    Maximum,
+    MaximumEx = Maximum + 1000,
 }

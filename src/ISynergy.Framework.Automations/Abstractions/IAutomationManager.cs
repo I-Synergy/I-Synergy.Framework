@@ -1,11 +1,10 @@
-﻿namespace ISynergy.Framework.Automations.Abstractions
+﻿namespace ISynergy.Framework.Automations.Abstractions;
+
+public interface IAutomationManager
 {
-    public interface IAutomationManager
-    {
-        Task<Automation> GetItemAsync(Guid automationId);
-        Task<bool> AddAsync(Automation automation);
-        Task<bool> RemoveAsync(Guid automationId);
-        Task<bool> UpdateAsync(Automation automation);
-        Task<List<Automation>> GetItemsAsync();
-    }
+    Task<Automation> GetItemAsync(Guid automationId);
+    Task<bool> AddAsync(Automation automation);
+    Task<bool> RemoveAsync(Guid automationId);
+    Task<bool> UpdateAsync(Automation automation);
+    Task<List<Automation>> GetItemsAsync();
 }

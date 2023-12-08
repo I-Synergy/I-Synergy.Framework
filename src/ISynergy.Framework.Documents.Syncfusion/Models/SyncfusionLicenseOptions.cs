@@ -1,13 +1,12 @@
-﻿namespace ISynergy.Framework.Documents.Models
+﻿namespace ISynergy.Framework.Documents.Models;
+
+/// <summary>
+/// Syncfusion license options.
+/// </summary>
+internal class SyncfusionLicenseOptions
 {
     /// <summary>
-    /// Syncfusion license options.
+    /// License key.
     /// </summary>
-    internal class SyncfusionLicenseOptions
-    {
-        /// <summary>
-        /// License key.
-        /// </summary>
-        public string LicenseKey { get; set; }
-    }
+    public string LicenseKey { get; set; }
 }

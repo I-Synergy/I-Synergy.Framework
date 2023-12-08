@@ -1,29 +1,28 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Base
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Base;
+
+using ISynergy.Framework.Mathematics.Optimization.Constrained;
+using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+using System;
+
+/// <summary>
+///   Common interface for function optimization methods.
+/// </summary>
+/// 
+/// <seealso cref="BoundedBroydenFletcherGoldfarbShanno"/>
+/// <seealso cref="BroydenFletcherGoldfarbShanno"/>
+/// <seealso cref="ConjugateGradient"/>
+/// <seealso cref="ResilientBackpropagation"/>
+/// <seealso cref="GoldfarbIdnani"/>
+/// 
+public interface IFunctionOptimizationMethod<TInput, TOutput> : IOptimizationMethod<TInput, TOutput>
 {
-    using ISynergy.Framework.Mathematics.Optimization.Constrained;
-    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
-    using System;
 
     /// <summary>
-    ///   Common interface for function optimization methods.
+    ///   Gets or sets the function to be optimized.
     /// </summary>
     /// 
-    /// <seealso cref="BoundedBroydenFletcherGoldfarbShanno"/>
-    /// <seealso cref="BroydenFletcherGoldfarbShanno"/>
-    /// <seealso cref="ConjugateGradient"/>
-    /// <seealso cref="ResilientBackpropagation"/>
-    /// <seealso cref="GoldfarbIdnani"/>
+    /// <value>The function to be optimized.</value>
     /// 
-    public interface IFunctionOptimizationMethod<TInput, TOutput> : IOptimizationMethod<TInput, TOutput>
-    {
+    Func<TInput, TOutput> Function { get; set; }
 
-        /// <summary>
-        ///   Gets or sets the function to be optimized.
-        /// </summary>
-        /// 
-        /// <value>The function to be optimized.</value>
-        /// 
-        Func<TInput, TOutput> Function { get; set; }
-
-    }
 }

@@ -1,17 +1,16 @@
-﻿namespace ISynergy.Framework.Automations.Enumerations
+﻿namespace ISynergy.Framework.Automations.Enumerations;
+
+/// <summary>
+/// Condition types.
+/// </summary>
+public enum OperatorTypes
 {
     /// <summary>
-    /// Condition types.
+    /// And operator.
     /// </summary>
-    public enum OperatorTypes
-    {
-        /// <summary>
-        /// And operator.
-        /// </summary>
-        And,
-        /// <summary>
-        /// Or operator.
-        /// </summary>
-        Or
-    }
+    And,
+    /// <summary>
+    /// Or operator.
+    /// </summary>
+    Or
 }

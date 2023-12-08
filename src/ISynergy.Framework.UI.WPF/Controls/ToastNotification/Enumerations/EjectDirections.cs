@@ -1,8 +1,7 @@
-﻿namespace ISynergy.Framework.UI.Controls.ToastNotification.Enumerations
+﻿namespace ISynergy.Framework.UI.Controls.ToastNotification.Enumerations;
+
+public enum EjectDirection
 {
-    public enum EjectDirection
-    {
-        ToBottom,
-        ToTop
-    }
+    ToBottom,
+    ToTop
 }

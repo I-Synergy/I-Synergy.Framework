@@ -5,48 +5,47 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.MessageBus.Models;
 using System;
 
-namespace Sample.MessageBus.Publisher
+namespace Sample.MessageBus.Publisher;
+
+/// <summary>
+/// Class Program.
+/// </summary>
+internal class Program
 {
-    /// <summary>
-    /// Class Program.
-    /// </summary>
-    internal class Program
+    protected Program()
     {
-        protected Program()
-        {
-        }
-
-        static int Main(string[] args)
-        {
-            try
-            {
-                IConfigurationRoot config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", false)
-                .AddEnvironmentVariables()
-                .AddUserSecrets<Program>()
-                .Build();
-
-                var services = new ServiceCollection()
-                    .AddLogging()
-                    .AddOptions()
-                    .AddMessageBusAzurePublishIntegration<TestDataModel>(config);
-
-                services.TryAddSingleton<ApplicationAzure>();
-
-                var serviceProvider = services.BuildServiceProvider();
-
-                ApplicationAzure application = serviceProvider.GetRequiredService<ApplicationAzure>();
-                application.RunAsync().GetAwaiter().GetResult();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return 1;
-            }
-
-            return 0;
-        }
-
-
     }
+
+    static int Main(string[] args)
+    {
+        try
+        {
+            IConfigurationRoot config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false)
+            .AddEnvironmentVariables()
+            .AddUserSecrets<Program>()
+            .Build();
+
+            var services = new ServiceCollection()
+                .AddLogging()
+                .AddOptions()
+                .AddMessageBusAzurePublishIntegration<TestDataModel>(config);
+
+            services.TryAddSingleton<ApplicationAzure>();
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            ApplicationAzure application = serviceProvider.GetRequiredService<ApplicationAzure>();
+            application.RunAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+            return 1;
+        }
+
+        return 0;
+    }
+
+
 }

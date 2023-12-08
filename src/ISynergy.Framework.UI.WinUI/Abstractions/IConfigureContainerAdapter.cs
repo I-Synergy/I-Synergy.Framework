@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace ISynergy.Framework.UI.Abstractions
+namespace ISynergy.Framework.UI.Abstractions;
+
+internal interface IConfigureContainerAdapter
 {
-    internal interface IConfigureContainerAdapter
-    {
-        void ConfigureContainer(HostBuilderContext hostContext, object containerBuilder);
-    }
+    void ConfigureContainer(HostBuilderContext hostContext, object containerBuilder);
 }

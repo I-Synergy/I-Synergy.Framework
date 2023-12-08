@@ -1,7 +1,6 @@
-﻿namespace ISynergy.Framework.Core.Constants
+﻿namespace ISynergy.Framework.Core.Constants;
+
+public class StringFormats
 {
-    public class StringFormats
-    {
-        public const string IsoDateTimeFormat = "O";
-    }
+    public const string IsoDateTimeFormat = "O";
 }

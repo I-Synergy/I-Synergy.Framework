@@ -6,25 +6,24 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ISynergy.Framework.Monitoring.Client.Extensions
+namespace ISynergy.Framework.Monitoring.Client.Extensions;
+
+/// <summary>
+/// Service collection extensions for monitoring with SignalR
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Service collection extensions for monitoring with SignalR
+    /// Adds monitoring with SignalR integration.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddMonitorSignalRIntegration(this IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// Adds monitoring with SignalR integration.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddMonitorSignalRIntegration(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddOptions();
-            services.Configure<ClientMonitorOptions>(configuration.GetSection(nameof(ClientMonitorOptions)).BindWithReload);
-            services.TryAddSingleton<IClientMonitorService, ClientMonitorService>();
-            return services;
-        }
+        services.AddOptions();
+        services.Configure<ClientMonitorOptions>(configuration.GetSection(nameof(ClientMonitorOptions)).BindWithReload);
+        services.TryAddSingleton<IClientMonitorService, ClientMonitorService>();
+        return services;
     }
 }

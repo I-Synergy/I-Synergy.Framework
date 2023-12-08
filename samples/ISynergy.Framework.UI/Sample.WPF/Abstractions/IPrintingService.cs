@@ -1,14 +1,13 @@
-﻿namespace Sample.Abstractions.Services
+﻿namespace Sample.Abstractions.Services;
+
+/// <summary>
+/// Interface IPrintingService
+/// </summary>
+public interface IPrintingService
 {
     /// <summary>
-    /// Interface IPrintingService
+    /// Prints the dymo label.
     /// </summary>
-    public interface IPrintingService
-    {
-        /// <summary>
-        /// Prints the dymo label.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        void PrintDymoLabel(string content);
-    }
+    /// <param name="content">The content.</param>
+    void PrintDymoLabel(string content);
 }
