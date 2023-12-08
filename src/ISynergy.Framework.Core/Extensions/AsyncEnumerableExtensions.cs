@@ -1,35 +1,34 @@
 ﻿using ISynergy.Framework.Core.Validation;
 
-namespace ISynergy.Framework.Core.Extensions
+namespace ISynergy.Framework.Core.Extensions;
+
+/// <summary>
+/// Class AsyncEnumerableExtensions.
+/// </summary>
+public static class AsyncEnumerableExtensions
 {
     /// <summary>
-    /// Class AsyncEnumerableExtensions.
+    /// Converts to listasync.
     /// </summary>
-    public static class AsyncEnumerableExtensions
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <returns>Task&lt;List&lt;T&gt;&gt;.</returns>
+    public static Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> source)
     {
-        /// <summary>
-        /// Converts to listasync.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source">The source.</param>
-        /// <returns>Task&lt;List&lt;T&gt;&gt;.</returns>
-        public static Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> source)
+        Argument.IsNotNull(source);
+
+        return ExecuteAsync();
+
+        async Task<List<T>> ExecuteAsync()
         {
-            Argument.IsNotNull(source);
+            var list = new List<T>();
 
-            return ExecuteAsync();
-
-            async Task<List<T>> ExecuteAsync()
+            await foreach (var element in source)
             {
-                var list = new List<T>();
-
-                await foreach (var element in source)
-                {
-                    list.Add(element);
-                }
-
-                return list;
+                list.Add(element);
             }
+
+            return list;
         }
     }
 }

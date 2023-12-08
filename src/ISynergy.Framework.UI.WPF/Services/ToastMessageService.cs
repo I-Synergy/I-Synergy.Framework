@@ -13,85 +13,84 @@ using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Options;
 using System.Windows;
 
-namespace ISynergy.Framework.UI.Services
+namespace ISynergy.Framework.UI.Services;
+
+public class ToastMessageService : IToastMessageService
 {
-    public class ToastMessageService : IToastMessageService
+    private readonly Notifier _notifier;
+    private readonly IDispatcherService _dispatcherService;
+    private readonly ToastMessageOptions _options;
+
+    public ToastMessageService(IDispatcherService dispatcherService, IOptions<ToastMessageOptions> options)
     {
-        private readonly Notifier _notifier;
-        private readonly IDispatcherService _dispatcherService;
-        private readonly ToastMessageOptions _options;
+        _dispatcherService = dispatcherService;
+        _options = options.Value;
 
-        public ToastMessageService(IDispatcherService dispatcherService, IOptions<ToastMessageOptions> options)
+        _notifier = new Notifier(cfg =>
         {
-            _dispatcherService = dispatcherService;
-            _options = options.Value;
+            cfg.PositionProvider = new WindowPositionProvider(
+                parentWindow: Application.Current.MainWindow,
+                corner: _options.Corner,
+                offsetX: _options.OffsetX,
+                offsetY: _options.OffsetY);
 
-            _notifier = new Notifier(cfg =>
+            cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                notificationLifetime: TimeSpan.FromSeconds(_options.NotificationLifetimeInSeconds),
+                maximumNotificationCount: MaximumNotificationCount.FromCount(_options.MaximumNotificationCount));
+
+            if (_dispatcherService.Dispatcher is System.Windows.Threading.Dispatcher dispatcher)
             {
-                cfg.PositionProvider = new WindowPositionProvider(
-                    parentWindow: Application.Current.MainWindow,
-                    corner: _options.Corner,
-                    offsetX: _options.OffsetX,
-                    offsetY: _options.OffsetY);
+                cfg.Dispatcher = dispatcher;
+            }
+            else
+            {
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            }
 
-                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
-                    notificationLifetime: TimeSpan.FromSeconds(_options.NotificationLifetimeInSeconds),
-                    maximumNotificationCount: MaximumNotificationCount.FromCount(_options.MaximumNotificationCount));
+            cfg.DisplayOptions.TopMost = _options.TopMost;
+            cfg.DisplayOptions.Width = _options.Width;
+        });
 
-                if (_dispatcherService.Dispatcher is System.Windows.Threading.Dispatcher dispatcher)
-                {
-                    cfg.Dispatcher = dispatcher;
-                }
-                else
-                {
-                    cfg.Dispatcher = Application.Current.Dispatcher;
-                }
+        _notifier.ClearMessages(new ClearAll());
+    }
 
-                cfg.DisplayOptions.TopMost = _options.TopMost;
-                cfg.DisplayOptions.Width = _options.Width;
-            });
+    public void ShowError(string message)
+    {
+        _notifier.Notify<ErrorMessage>(() => new ErrorMessage(message));
+    }
 
-            _notifier.ClearMessages(new ClearAll());
-        }
+    public void ShowError(string message, MessageOptions displayOptions)
+    {
+        _notifier.Notify<ErrorMessage>(() => new ErrorMessage(message, displayOptions));
+    }
 
-        public void ShowError(string message)
-        {
-            _notifier.Notify<ErrorMessage>(() => new ErrorMessage(message));
-        }
+    public void ShowInformation(string message)
+    {
+        _notifier.Notify(() => new InformationMessage(message));
+    }
 
-        public void ShowError(string message, MessageOptions displayOptions)
-        {
-            _notifier.Notify<ErrorMessage>(() => new ErrorMessage(message, displayOptions));
-        }
+    public void ShowInformation(string message, MessageOptions displayOptions)
+    {
+        _notifier.Notify(() => new InformationMessage(message, displayOptions));
+    }
 
-        public void ShowInformation(string message)
-        {
-            _notifier.Notify(() => new InformationMessage(message));
-        }
+    public void ShowSuccess(string message)
+    {
+        _notifier.Notify<SuccessMessage>(() => new SuccessMessage(message));
+    }
 
-        public void ShowInformation(string message, MessageOptions displayOptions)
-        {
-            _notifier.Notify(() => new InformationMessage(message, displayOptions));
-        }
+    public void ShowSuccess(string message, MessageOptions displayOptions)
+    {
+        _notifier.Notify<SuccessMessage>(() => new SuccessMessage(message, displayOptions));
+    }
 
-        public void ShowSuccess(string message)
-        {
-            _notifier.Notify<SuccessMessage>(() => new SuccessMessage(message));
-        }
+    public void ShowWarning(string message)
+    {
+        _notifier.Notify<WarningMessage>(() => new WarningMessage(message));
+    }
 
-        public void ShowSuccess(string message, MessageOptions displayOptions)
-        {
-            _notifier.Notify<SuccessMessage>(() => new SuccessMessage(message, displayOptions));
-        }
-
-        public void ShowWarning(string message)
-        {
-            _notifier.Notify<WarningMessage>(() => new WarningMessage(message));
-        }
-
-        public void ShowWarning(string message, MessageOptions displayOptions)
-        {
-            _notifier.Notify<WarningMessage>(() => new WarningMessage(message, displayOptions));
-        }
+    public void ShowWarning(string message, MessageOptions displayOptions)
+    {
+        _notifier.Notify<WarningMessage>(() => new WarningMessage(message, displayOptions));
     }
 }

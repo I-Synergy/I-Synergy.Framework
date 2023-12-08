@@ -4,83 +4,82 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace ISynergy.Framework.IO.Tests
+namespace ISynergy.Framework.IO.Tests;
+
+/// <summary>
+/// Class FileWatcherExTests.
+/// Implements the <see cref="IClassFixture{FileWatcherExFixture}" />
+/// </summary>
+public class FileWatcherExTests
 {
     /// <summary>
-    /// Class FileWatcherExTests.
-    /// Implements the <see cref="IClassFixture{FileWatcherExFixture}" />
+    /// The fixture
     /// </summary>
-    public class FileWatcherExTests
+    private readonly FileWatcherExFixture _fixture;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileWatcherExTests"/> class.
+    /// </summary>
+    public FileWatcherExTests()
     {
-        /// <summary>
-        /// The fixture
-        /// </summary>
-        private readonly FileWatcherExFixture _fixture;
+        _fixture = new FileWatcherExFixture();
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileWatcherExTests"/> class.
-        /// </summary>
-        public FileWatcherExTests()
+    /// <summary>
+    /// Files the watcher ex added test.
+    /// </summary>
+    public void FileWatcherExAddedTest()
+    {
+        int count = 1000;
+
+        string location = AppDomain.CurrentDomain.BaseDirectory;
+        string folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherExAddedTest))).FullName;
+
+        if (_fixture.InitializeWatcher(folder, false))
         {
-            _fixture = new FileWatcherExFixture();
-        }
+            _fixture.FileWatcher.Start();
 
-        /// <summary>
-        /// Files the watcher ex added test.
-        /// </summary>
-        public void FileWatcherExAddedTest()
-        {
-            int count = 1000;
-
-            string location = AppDomain.CurrentDomain.BaseDirectory;
-            string folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherExAddedTest))).FullName;
-
-            if (_fixture.InitializeWatcher(folder, false))
+            for (int i = 0; i < count; i++)
             {
-                _fixture.FileWatcher.Start();
-
-                for (int i = 0; i < count; i++)
-                {
-                    File.WriteAllText(Path.Combine(folder, Path.GetRandomFileName()), $"File: {Path.GetRandomFileName()}");
-                }
-
-                _fixture.FileWatcher.Stop();
-                _fixture.RemoveEventHandlers();
-
-                Directory.GetFiles(folder).ToList().ForEach(File.Delete);
+                File.WriteAllText(Path.Combine(folder, Path.GetRandomFileName()), $"File: {Path.GetRandomFileName()}");
             }
 
-            Assert.IsTrue(_fixture.ObservedFiles.Any());
-            Assert.AreEqual(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created").Count());
+            _fixture.FileWatcher.Stop();
+            _fixture.RemoveEventHandlers();
+
+            Directory.GetFiles(folder).ToList().ForEach(File.Delete);
         }
 
-        /// <summary>
-        /// Files the watcher ex deleted test.
-        /// </summary>
-        public void FileWatcherExDeletedTest()
+        Assert.IsTrue(_fixture.ObservedFiles.Any());
+        Assert.AreEqual(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created").Count());
+    }
+
+    /// <summary>
+    /// Files the watcher ex deleted test.
+    /// </summary>
+    public void FileWatcherExDeletedTest()
+    {
+        int count = 1000;
+
+        string location = AppDomain.CurrentDomain.BaseDirectory;
+        string folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherExDeletedTest))).FullName;
+
+        if (_fixture.InitializeWatcher(folder, false))
         {
-            int count = 1000;
+            _fixture.FileWatcher.Start();
 
-            string location = AppDomain.CurrentDomain.BaseDirectory;
-            string folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherExDeletedTest))).FullName;
-
-            if (_fixture.InitializeWatcher(folder, false))
+            for (int i = 0; i < count; i++)
             {
-                _fixture.FileWatcher.Start();
-
-                for (int i = 0; i < count; i++)
-                {
-                    File.WriteAllText(Path.Combine(folder, Path.GetRandomFileName()), $"File: {Path.GetRandomFileName()}");
-                }
-
-                Directory.GetFiles(folder).ToList().ForEach(File.Delete);
-
-                _fixture.FileWatcher.Stop();
-                _fixture.RemoveEventHandlers();
+                File.WriteAllText(Path.Combine(folder, Path.GetRandomFileName()), $"File: {Path.GetRandomFileName()}");
             }
 
-            Assert.IsTrue(_fixture.ObservedFiles.Any());
-            Assert.AreEqual(count, _fixture.ObservedFiles.Where(q => q.EventName == "Deleted").Count());
+            Directory.GetFiles(folder).ToList().ForEach(File.Delete);
+
+            _fixture.FileWatcher.Stop();
+            _fixture.RemoveEventHandlers();
         }
+
+        Assert.IsTrue(_fixture.ObservedFiles.Any());
+        Assert.AreEqual(count, _fixture.ObservedFiles.Where(q => q.EventName == "Deleted").Count());
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace ISynergy.Framework.Core.Abstractions
+﻿namespace ISynergy.Framework.Core.Abstractions;
+
+public interface IResult
 {
-    public interface IResult
-    {
-        List<string> Messages { get; set; }
-        bool Succeeded { get; set; }
-    }
+    List<string> Messages { get; set; }
+    bool Succeeded { get; set; }
 }

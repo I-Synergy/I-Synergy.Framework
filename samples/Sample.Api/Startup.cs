@@ -7,34 +7,33 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Sample.Api
+namespace Sample.Api;
+
+public class Startup : BaseStartup
 {
-    public class Startup : BaseStartup
+    public Startup(IWebHostEnvironment environment, IConfiguration configuration)
+        : base(environment, configuration)
     {
-        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
-            : base(environment, configuration)
-        {
-        }
+    }
 
-        protected override void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
-        {
-            services.AddControllersWithViews();
+    protected override void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
+    {
+        services.AddControllersWithViews();
 
-            services
-                .AddMvc()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                    options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
-                    options.JsonSerializerOptions.AllowTrailingCommas = true;
-                    options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
-                    options.JsonSerializerOptions.ReferenceHandler = null;
+        services
+            .AddMvc()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+                options.JsonSerializerOptions.AllowTrailingCommas = true;
+                options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
+                options.JsonSerializerOptions.ReferenceHandler = null;
 
-                    options.JsonSerializerOptions.Converters.Add(new IsoDateTimeJsonConverter());
-                    options.JsonSerializerOptions.Converters.Add(new IsoDateTimeOffsetJsonConverter());
-                });
-        }
+                options.JsonSerializerOptions.Converters.Add(new IsoDateTimeJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new IsoDateTimeOffsetJsonConverter());
+            });
     }
 }

@@ -4,585 +4,584 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization;
+
+/// <summary>
+///     Quadratic objective function.
+/// </summary>
+/// <remarks>
+///     <para>
+///         In mathematics, a quadratic function, a quadratic polynomial, a polynomial
+///         of degree 2, or simply a quadratic, is a polynomial function in one or more
+///         variables in which the highest-degree term is of the second degree. For example,
+///         a quadratic function in three variables x, y, and z contains exclusively terms
+///         x², y², z², xy, xz, yz, x, y, z, and a constant:
+///     </para>
+///     <code>
+///   f(x,y,z) = ax² + by² +cz² + dxy + exz + fyz + gx + hy + iz + j
+/// </code>
+///     <para>
+///         Please note that the function's constructor expects the function
+///         expression to be given on this form. Scalar values must be located
+///         on the left of the variables, and no term should be duplicated in
+///         the quadratic expression. Please take a look on the examples section
+///         of this page for some examples of expected functions.
+///     </para>
+///     <para>
+///         References:
+///         <list type="bullet">
+///             <item>
+///                 <description>
+///                     <a href="https://en.wikipedia.org/wiki/Quadratic_function">
+///                         Wikipedia, The Free Encyclopedia. Quadratic Function. Available on:
+///                         https://en.wikipedia.org/wiki/Quadratic_function
+///                     </a>
+///                 </description>
+///             </item>
+///         </list>
+///     </para>
+/// </remarks>
+/// <example>
+///     <para>
+///         Examples of valid quadratic functions are:
+///     </para>
+///     <code>
+///   var f1 = new QuadraticObjectiveFunction("x² + 1");
+///   var f2 = new QuadraticObjectiveFunction("-x*y + y*z");
+///   var f3 = new QuadraticObjectiveFunction("-2x² + xy - y² - 10xz + z²");
+///   var f4 = new QuadraticObjectiveFunction("-2x² + xy - y² + 5y");
+/// </code>
+///     <para>
+///         It is also possible to specify quadratic functions using lambda expressions.
+///         In this case, it is first necessary to create some dummy symbol variables to
+///         act as placeholders in the quadratic expressions. Their value is not important,
+///         as they will only be used to parse the form of the expression, not its value.
+///     </para>
+///     <code>
+///   // Declare symbol variables
+///   double x = 0, y = 0, z = 0;
+/// 
+///   var g1 = new QuadraticObjectiveFunction(() => x * x + 1);
+///   var g2 = new QuadraticObjectiveFunction(() => -x * y + y * z);
+///   var g3 = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
+///   var g4 = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y + 5 * y);
+/// </code>
+///     <para>
+///         Finally, for large problems, it is usually best to declare quadratic
+///         problems using matrices and vectors. Without loss of generality, the
+///         quadratic matrix can always be taken to be symmetric (as the anti-
+///         symmetric part has no contribution to the function). For efficiency
+///         reasons, the quadratic matrix must be symmetric.
+///     </para>
+///     <code>
+///   var h1 = new QuadraticObjectiveFunction("3x² - 4y² + 6xy + 3x + 2y");
+/// 
+///   double[,] Q = { { 6, 6 }, { 6, -8 } }; // Note the factor of 2
+///   double[] d = { 3, 2 };
+/// 
+///   // Equivalently this can be written:
+///   var h2 = new QuadraticObjectiveFunction(Q, d);
+/// </code>
+///     <para>
+///         After those functions are created, you can either query their values
+///         using
+///     </para>
+///     <code>
+///   f1.Function(new [] { 5.0 }); // x*x+1 = x² + 1 = 25 + 1 = 26
+/// </code>
+///     <para>
+///         Or you can pass it to a quadratic optimization method such
+///         as Goldfarb-Idnani to explore its minimum or maximal points:
+///     </para>
+///     <code>
+///   // Declare symbol variables
+///   double x = 0, y = 0, z = 0;
+/// 
+///   // Create the function to be optimized
+///   var f = new QuadraticObjectiveFunction(() => x * x - 2 * x * y + 3 * y * y + z * z - 4 * x - 5 * y - z);
+/// 
+///   // Create some constraints for the solution
+///   var constraints = new List&lt;LinearConstraint>();
+///   constraints.Add(new LinearConstraint(f, () => 6 * x - 7 * y &lt;= 8));
+///   constraints.Add(new LinearConstraint(f, () => 9 * x + 1 * y &lt;= 11));
+///   constraints.Add(new LinearConstraint(f, () => 9 * x - y &lt;= 11));
+///   constraints.Add(new LinearConstraint(f, () => -z - y == 12));
+/// 
+///   // Create the Quadratic Programming solver
+///   GoldfarbIdnani solver = new GoldfarbIdnani(f, constraints);
+/// 
+///   // Minimize the function
+///   bool success = solver.Minimize();
+///   
+///   double value = solver.Value;
+///   double[] solutions = solver.Solution;
+/// </code>
+///     <para>
+///         Sometimes it is easiest to compose quadratic functions as linear
+///         combinations of other quadratic functions. The <see cref="QuadraticObjectiveFunction" />
+///         supports this by overloading the addition and multiplication operators.
+///     </para>
+/// </example>
+/// <seealso cref="GoldfarbIdnani" />
+public class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IObjectiveFunction
 {
     /// <summary>
-    ///     Quadratic objective function.
+    ///     Creates a new objective function specified through a string.
     /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         In mathematics, a quadratic function, a quadratic polynomial, a polynomial
-    ///         of degree 2, or simply a quadratic, is a polynomial function in one or more
-    ///         variables in which the highest-degree term is of the second degree. For example,
-    ///         a quadratic function in three variables x, y, and z contains exclusively terms
-    ///         x², y², z², xy, xz, yz, x, y, z, and a constant:
-    ///     </para>
-    ///     <code>
-    ///   f(x,y,z) = ax² + by² +cz² + dxy + exz + fyz + gx + hy + iz + j
-    /// </code>
-    ///     <para>
-    ///         Please note that the function's constructor expects the function
-    ///         expression to be given on this form. Scalar values must be located
-    ///         on the left of the variables, and no term should be duplicated in
-    ///         the quadratic expression. Please take a look on the examples section
-    ///         of this page for some examples of expected functions.
-    ///     </para>
-    ///     <para>
-    ///         References:
-    ///         <list type="bullet">
-    ///             <item>
-    ///                 <description>
-    ///                     <a href="https://en.wikipedia.org/wiki/Quadratic_function">
-    ///                         Wikipedia, The Free Encyclopedia. Quadratic Function. Available on:
-    ///                         https://en.wikipedia.org/wiki/Quadratic_function
-    ///                     </a>
-    ///                 </description>
-    ///             </item>
-    ///         </list>
-    ///     </para>
-    /// </remarks>
-    /// <example>
-    ///     <para>
-    ///         Examples of valid quadratic functions are:
-    ///     </para>
-    ///     <code>
-    ///   var f1 = new QuadraticObjectiveFunction("x² + 1");
-    ///   var f2 = new QuadraticObjectiveFunction("-x*y + y*z");
-    ///   var f3 = new QuadraticObjectiveFunction("-2x² + xy - y² - 10xz + z²");
-    ///   var f4 = new QuadraticObjectiveFunction("-2x² + xy - y² + 5y");
-    /// </code>
-    ///     <para>
-    ///         It is also possible to specify quadratic functions using lambda expressions.
-    ///         In this case, it is first necessary to create some dummy symbol variables to
-    ///         act as placeholders in the quadratic expressions. Their value is not important,
-    ///         as they will only be used to parse the form of the expression, not its value.
-    ///     </para>
-    ///     <code>
-    ///   // Declare symbol variables
-    ///   double x = 0, y = 0, z = 0;
-    /// 
-    ///   var g1 = new QuadraticObjectiveFunction(() => x * x + 1);
-    ///   var g2 = new QuadraticObjectiveFunction(() => -x * y + y * z);
-    ///   var g3 = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
-    ///   var g4 = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y + 5 * y);
-    /// </code>
-    ///     <para>
-    ///         Finally, for large problems, it is usually best to declare quadratic
-    ///         problems using matrices and vectors. Without loss of generality, the
-    ///         quadratic matrix can always be taken to be symmetric (as the anti-
-    ///         symmetric part has no contribution to the function). For efficiency
-    ///         reasons, the quadratic matrix must be symmetric.
-    ///     </para>
-    ///     <code>
-    ///   var h1 = new QuadraticObjectiveFunction("3x² - 4y² + 6xy + 3x + 2y");
-    /// 
-    ///   double[,] Q = { { 6, 6 }, { 6, -8 } }; // Note the factor of 2
-    ///   double[] d = { 3, 2 };
-    /// 
-    ///   // Equivalently this can be written:
-    ///   var h2 = new QuadraticObjectiveFunction(Q, d);
-    /// </code>
-    ///     <para>
-    ///         After those functions are created, you can either query their values
-    ///         using
-    ///     </para>
-    ///     <code>
-    ///   f1.Function(new [] { 5.0 }); // x*x+1 = x² + 1 = 25 + 1 = 26
-    /// </code>
-    ///     <para>
-    ///         Or you can pass it to a quadratic optimization method such
-    ///         as Goldfarb-Idnani to explore its minimum or maximal points:
-    ///     </para>
-    ///     <code>
-    ///   // Declare symbol variables
-    ///   double x = 0, y = 0, z = 0;
-    /// 
-    ///   // Create the function to be optimized
-    ///   var f = new QuadraticObjectiveFunction(() => x * x - 2 * x * y + 3 * y * y + z * z - 4 * x - 5 * y - z);
-    /// 
-    ///   // Create some constraints for the solution
-    ///   var constraints = new List&lt;LinearConstraint>();
-    ///   constraints.Add(new LinearConstraint(f, () => 6 * x - 7 * y &lt;= 8));
-    ///   constraints.Add(new LinearConstraint(f, () => 9 * x + 1 * y &lt;= 11));
-    ///   constraints.Add(new LinearConstraint(f, () => 9 * x - y &lt;= 11));
-    ///   constraints.Add(new LinearConstraint(f, () => -z - y == 12));
-    /// 
-    ///   // Create the Quadratic Programming solver
-    ///   GoldfarbIdnani solver = new GoldfarbIdnani(f, constraints);
-    /// 
-    ///   // Minimize the function
-    ///   bool success = solver.Minimize();
-    ///   
-    ///   double value = solver.Value;
-    ///   double[] solutions = solver.Solution;
-    /// </code>
-    ///     <para>
-    ///         Sometimes it is easiest to compose quadratic functions as linear
-    ///         combinations of other quadratic functions. The <see cref="QuadraticObjectiveFunction" />
-    ///         supports this by overloading the addition and multiplication operators.
-    ///     </para>
-    /// </example>
-    /// <seealso cref="GoldfarbIdnani" />
-    public class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IObjectiveFunction
+    /// <param name="quadraticTerms">A Hessian matrix of quadratic terms defining the quadratic objective function.</param>
+    /// <param name="linearTerms">The vector of linear terms associated with <paramref name="quadraticTerms" />.</param>
+    /// <param name="variables">The name for each variable in the problem.</param>
+    public QuadraticObjectiveFunction(double[,] quadraticTerms, double[] linearTerms, params string[] variables)
     {
-        /// <summary>
-        ///     Creates a new objective function specified through a string.
-        /// </summary>
-        /// <param name="quadraticTerms">A Hessian matrix of quadratic terms defining the quadratic objective function.</param>
-        /// <param name="linearTerms">The vector of linear terms associated with <paramref name="quadraticTerms" />.</param>
-        /// <param name="variables">The name for each variable in the problem.</param>
-        public QuadraticObjectiveFunction(double[,] quadraticTerms, double[] linearTerms, params string[] variables)
+        if (!quadraticTerms.IsSquare())
+            throw new DimensionMismatchException("quadraticTerms", "The matrix must be square.");
+
+        if (!quadraticTerms.IsSymmetric(rtol: 1e-6))
+            throw new NonSymmetricMatrixException("The matrix must be symmetric.");
+
+        if (quadraticTerms.Rows() != linearTerms.Length)
+            throw new DimensionMismatchException("linearTerms",
+                "The vector of linear terms must have the same length as the Hessian matrix side.");
+
+        if (variables.Length == 0)
         {
-            if (!quadraticTerms.IsSquare())
-                throw new DimensionMismatchException("quadraticTerms", "The matrix must be square.");
-
-            if (!quadraticTerms.IsSymmetric(rtol: 1e-6))
-                throw new NonSymmetricMatrixException("The matrix must be symmetric.");
-
-            if (quadraticTerms.Rows() != linearTerms.Length)
-                throw new DimensionMismatchException("linearTerms",
-                    "The vector of linear terms must have the same length as the Hessian matrix side.");
-
-            if (variables.Length == 0)
-            {
-                variables = new string[linearTerms.Length];
-                for (var i = 0; i < variables.Length; i++)
-                    variables[i] = i.ToVariable();
-            }
-            else if (variables.Length != linearTerms.Length)
-            {
-                throw new DimensionMismatchException("variables",
-                    "The vector of variable names must have the same length as the vector of linear terms.");
-            }
-
+            variables = new string[linearTerms.Length];
             for (var i = 0; i < variables.Length; i++)
+                variables[i] = i.ToVariable();
+        }
+        else if (variables.Length != linearTerms.Length)
+        {
+            throw new DimensionMismatchException("variables",
+                "The vector of variable names must have the same length as the vector of linear terms.");
+        }
+
+        for (var i = 0; i < variables.Length; i++)
+        {
+            var var = variables[i];
+            InnerVariables[var] = i;
+            InnerIndices[i] = var;
+        }
+
+        QuadraticTerms = quadraticTerms;
+        LinearTerms = linearTerms;
+        NumberOfVariables = LinearTerms.Length;
+
+        Function = function;
+        Gradient = gradient;
+    }
+
+    /// <summary>
+    ///     Creates a new objective function specified through a string.
+    /// </summary>
+    /// <param name="function">
+    ///     A <see cref="System.String" /> containing
+    ///     the function in the form similar to "ax²+b".
+    /// </param>
+    public QuadraticObjectiveFunction(string function)
+        : this(function, CultureInfo.InvariantCulture)
+    {
+    }
+
+    /// <summary>
+    ///     Creates a new objective function specified through a string.
+    /// </summary>
+    /// <param name="function">
+    ///     A <see cref="System.String" /> containing
+    ///     the function in the form similar to "ax²+b".
+    /// </param>
+    /// <param name="culture">
+    ///     The culture information specifying how
+    ///     numbers written in the <paramref name="function" /> should
+    ///     be parsed. Default is CultureInfo.InvariantCulture.
+    /// </param>
+    public QuadraticObjectiveFunction(string function, CultureInfo culture)
+    {
+        var terms = QuadraticExpressionParser.ParseString(function, culture);
+
+        initialize(terms);
+    }
+
+    /// <summary>
+    ///     Creates a new objective function specified through a string.
+    /// </summary>
+    /// <param name="function">
+    ///     A <see cref="Expression{TDelegate}" /> containing
+    ///     the function in the form of a lambda expression.
+    /// </param>
+    public QuadraticObjectiveFunction(Expression<Func<double>> function)
+    {
+        var terms = new Dictionary<Tuple<string, string>, double>();
+        double scalar;
+        QuadraticExpressionParser.ParseExpression(terms, function.Body, out scalar);
+
+        initialize(terms);
+    }
+
+    /// <summary>
+    ///     Gets the quadratic terms of the quadratic function.
+    /// </summary>
+    public double[,] QuadraticTerms { get; private set; }
+
+    /// <summary>
+    ///     Gets the vector of linear terms of the quadratic function.
+    /// </summary>
+    public double[] LinearTerms { get; private set; }
+
+    /// <summary>
+    ///     Gets the constant term in the quadratic function.
+    /// </summary>
+    public double ConstantTerm { get; set; }
+
+    private void initialize(Dictionary<Tuple<string, string>, double> terms)
+    {
+        var linear = new Dictionary<string, double>();
+        var quadratic = new Dictionary<Tuple<string, string>, double>();
+
+        var list = new SortedSet<string>();
+
+        foreach (var term in terms)
+            if (term.Key.Item2 is not null)
             {
-                var var = variables[i];
-                InnerVariables[var] = i;
-                InnerIndices[i] = var;
+                list.Add(term.Key.Item1);
+                list.Add(term.Key.Item2);
+
+                quadratic.Add(term.Key, term.Value);
+            }
+            else if (term.Key.Item1 is not null)
+            {
+                list.Add(term.Key.Item1);
+
+                linear.Add(term.Key.Item1, term.Value);
+            }
+            else
+            {
+                ConstantTerm = term.Value;
             }
 
-            QuadraticTerms = quadraticTerms;
-            LinearTerms = linearTerms;
-            NumberOfVariables = LinearTerms.Length;
-
-            Function = function;
-            Gradient = gradient;
+        var i = 0;
+        foreach (var variable in list)
+        {
+            InnerVariables.Add(variable, i);
+            InnerIndices.Add(i, variable);
+            i++;
         }
 
-        /// <summary>
-        ///     Creates a new objective function specified through a string.
-        /// </summary>
-        /// <param name="function">
-        ///     A <see cref="System.String" /> containing
-        ///     the function in the form similar to "ax²+b".
-        /// </param>
-        public QuadraticObjectiveFunction(string function)
-            : this(function, CultureInfo.InvariantCulture)
+        NumberOfVariables = Variables.Count;
+        QuadraticTerms = createQuadraticTermsMatrix(quadratic);
+        LinearTerms = createLinearTermsVector(linear);
+
+        Function = function;
+        Gradient = gradient;
+    }
+
+    private double[,] createQuadraticTermsMatrix(Dictionary<Tuple<string, string>, double> quadratic)
+    {
+        var n = Variables.Count;
+
+        var Q = new double[n, n];
+        for (var i = 0; i < n; i++)
         {
-        }
-
-        /// <summary>
-        ///     Creates a new objective function specified through a string.
-        /// </summary>
-        /// <param name="function">
-        ///     A <see cref="System.String" /> containing
-        ///     the function in the form similar to "ax²+b".
-        /// </param>
-        /// <param name="culture">
-        ///     The culture information specifying how
-        ///     numbers written in the <paramref name="function" /> should
-        ///     be parsed. Default is CultureInfo.InvariantCulture.
-        /// </param>
-        public QuadraticObjectiveFunction(string function, CultureInfo culture)
-        {
-            var terms = QuadraticExpressionParser.ParseString(function, culture);
-
-            initialize(terms);
-        }
-
-        /// <summary>
-        ///     Creates a new objective function specified through a string.
-        /// </summary>
-        /// <param name="function">
-        ///     A <see cref="Expression{TDelegate}" /> containing
-        ///     the function in the form of a lambda expression.
-        /// </param>
-        public QuadraticObjectiveFunction(Expression<Func<double>> function)
-        {
-            var terms = new Dictionary<Tuple<string, string>, double>();
-            double scalar;
-            QuadraticExpressionParser.ParseExpression(terms, function.Body, out scalar);
-
-            initialize(terms);
-        }
-
-        /// <summary>
-        ///     Gets the quadratic terms of the quadratic function.
-        /// </summary>
-        public double[,] QuadraticTerms { get; private set; }
-
-        /// <summary>
-        ///     Gets the vector of linear terms of the quadratic function.
-        /// </summary>
-        public double[] LinearTerms { get; private set; }
-
-        /// <summary>
-        ///     Gets the constant term in the quadratic function.
-        /// </summary>
-        public double ConstantTerm { get; set; }
-
-        private void initialize(Dictionary<Tuple<string, string>, double> terms)
-        {
-            var linear = new Dictionary<string, double>();
-            var quadratic = new Dictionary<Tuple<string, string>, double>();
-
-            var list = new SortedSet<string>();
-
-            foreach (var term in terms)
-                if (term.Key.Item2 is not null)
-                {
-                    list.Add(term.Key.Item1);
-                    list.Add(term.Key.Item2);
-
-                    quadratic.Add(term.Key, term.Value);
-                }
-                else if (term.Key.Item1 is not null)
-                {
-                    list.Add(term.Key.Item1);
-
-                    linear.Add(term.Key.Item1, term.Value);
-                }
-                else
-                {
-                    ConstantTerm = term.Value;
-                }
-
-            var i = 0;
-            foreach (var variable in list)
+            var x = Indices[i];
+            for (var j = 0; j < n; j++)
             {
-                InnerVariables.Add(variable, i);
-                InnerIndices.Add(i, variable);
-                i++;
-            }
+                var y = Indices[j];
+                var k = Tuple.Create(x, y);
 
-            NumberOfVariables = Variables.Count;
-            QuadraticTerms = createQuadraticTermsMatrix(quadratic);
-            LinearTerms = createLinearTermsVector(linear);
-
-            Function = function;
-            Gradient = gradient;
-        }
-
-        private double[,] createQuadraticTermsMatrix(Dictionary<Tuple<string, string>, double> quadratic)
-        {
-            var n = Variables.Count;
-
-            var Q = new double[n, n];
-            for (var i = 0; i < n; i++)
-            {
-                var x = Indices[i];
-                for (var j = 0; j < n; j++)
+                if (quadratic.ContainsKey(k))
                 {
-                    var y = Indices[j];
-                    var k = Tuple.Create(x, y);
-
-                    if (quadratic.ContainsKey(k))
-                    {
-                        var s = quadratic[k];
-                        Q[i, j] += s;
-                        Q[j, i] += s;
-                    }
+                    var s = quadratic[k];
+                    Q[i, j] += s;
+                    Q[j, i] += s;
                 }
             }
-
-            return Q;
         }
 
-        private double[] createLinearTermsVector(Dictionary<string, double> linear)
-        {
-            var n = Variables.Count;
-            var d = new double[n];
+        return Q;
+    }
 
-            for (var i = 0; i < Indices.Count; i++)
+    private double[] createLinearTermsVector(Dictionary<string, double> linear)
+    {
+        var n = Variables.Count;
+        var d = new double[n];
+
+        for (var i = 0; i < Indices.Count; i++)
+        {
+            var x = Indices[i];
+            if (linear.ContainsKey(x))
+                d[i] += linear[x];
+        }
+
+        return d;
+    }
+
+    private double function(double[] input)
+    {
+        var a = 0.5 * input.DotAndDot(QuadraticTerms, input);
+        var b = input.Dot(LinearTerms);
+        return a + b + ConstantTerm;
+    }
+
+    private double[] gradient(double[] input)
+    {
+        var g = QuadraticTerms.Dot(input);
+        g.Add(LinearTerms, g);
+
+        return g;
+    }
+
+    /// <summary>
+    ///     Returns a <see cref="System.String" /> that represents this instance.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="System.String" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        var simpleString = string.Format("{0}-dimensional quadratic objective function", NumberOfVariables);
+
+        const int MaxTerms = 15;
+        var terms = 0;
+
+        var sb = new StringBuilder();
+
+        for (var i = 0; i < NumberOfVariables; i++)
+        {
+            if (QuadraticTerms[i, i] == 0)
+                continue;
+
+            if (++terms > MaxTerms)
+                return simpleString;
+
+            sb.AppendFormat("{0:+#;-#}{1}² ", 0.5 * QuadraticTerms[i, i], InnerIndices[i]);
+        }
+
+        for (var i = 0; i < NumberOfVariables; i++)
+            for (var j = i + 1; j < NumberOfVariables; j++)
             {
-                var x = Indices[i];
-                if (linear.ContainsKey(x))
-                    d[i] += linear[x];
-            }
-
-            return d;
-        }
-
-        private double function(double[] input)
-        {
-            var a = 0.5 * input.DotAndDot(QuadraticTerms, input);
-            var b = input.Dot(LinearTerms);
-            return a + b + ConstantTerm;
-        }
-
-        private double[] gradient(double[] input)
-        {
-            var g = QuadraticTerms.Dot(input);
-            g.Add(LinearTerms, g);
-
-            return g;
-        }
-
-        /// <summary>
-        ///     Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            var simpleString = string.Format("{0}-dimensional quadratic objective function", NumberOfVariables);
-
-            const int MaxTerms = 15;
-            var terms = 0;
-
-            var sb = new StringBuilder();
-
-            for (var i = 0; i < NumberOfVariables; i++)
-            {
-                if (QuadraticTerms[i, i] == 0)
+                if (QuadraticTerms[i, j] == 0)
                     continue;
 
                 if (++terms > MaxTerms)
                     return simpleString;
 
-                sb.AppendFormat("{0:+#;-#}{1}² ", 0.5 * QuadraticTerms[i, i], InnerIndices[i]);
+                sb.AppendFormat("{0:+#;-#}{1}{2} ", QuadraticTerms[i, j], InnerIndices[i], InnerIndices[j]);
             }
 
-            for (var i = 0; i < NumberOfVariables; i++)
-                for (var j = i + 1; j < NumberOfVariables; j++)
-                {
-                    if (QuadraticTerms[i, j] == 0)
-                        continue;
+        for (var i = 0; i < NumberOfVariables; i++)
+        {
+            if (LinearTerms[i] == 0)
+                continue;
 
-                    if (++terms > MaxTerms)
-                        return simpleString;
+            if (++terms > MaxTerms)
+                return simpleString;
 
-                    sb.AppendFormat("{0:+#;-#}{1}{2} ", QuadraticTerms[i, j], InnerIndices[i], InnerIndices[j]);
-                }
+            sb.AppendFormat("{0:+#;-#}{1} ", LinearTerms[i], InnerIndices[i]);
+        }
+        if (ConstantTerm != 0)
+            sb.AppendFormat("{0:+#;-#} ", ConstantTerm);
 
-            for (var i = 0; i < NumberOfVariables; i++)
-            {
-                if (LinearTerms[i] == 0)
-                    continue;
+        if (sb.Length == 0)
+            return "0";
 
-                if (++terms > MaxTerms)
-                    return simpleString;
+        sb.Remove(sb.Length - 1, 1);
 
-                sb.AppendFormat("{0:+#;-#}{1} ", LinearTerms[i], InnerIndices[i]);
-            }
-            if (ConstantTerm != 0)
-                sb.AppendFormat("{0:+#;-#} ", ConstantTerm);
+        if (sb[0] == '+') sb.Remove(0, 1);
 
-            if (sb.Length == 0)
-                return "0";
+        return sb.ToString();
+    }
 
-            sb.Remove(sb.Length - 1, 1);
+    /// <summary>
+    ///     Attempts to create a <see cref="QuadraticObjectiveFunction" />
+    ///     from a <see cref="System.String" /> representation.
+    /// </summary>
+    /// <param name="str">The string containing the function in textual form.</param>
+    /// <param name="function">The resulting function, if it could be parsed.</param>
+    /// <returns>
+    ///     <c>true</c> if the function could be parsed
+    ///     from the string, <c>false</c> otherwise.
+    /// </returns>
+    public static bool TryParse(string str, out QuadraticObjectiveFunction function)
+    {
+        return TryParse(str, CultureInfo.InvariantCulture, out function);
+    }
 
-            if (sb[0] == '+') sb.Remove(0, 1);
+    /// <summary>
+    ///     Attempts to create a <see cref="QuadraticObjectiveFunction" />
+    ///     from a <see cref="System.String" /> representation.
+    /// </summary>
+    /// <param name="str">The string containing the function in textual form.</param>
+    /// <param name="function">The resulting function, if it could be parsed.</param>
+    /// <param name="culture">
+    ///     The culture information specifying how
+    ///     numbers written in the <paramref name="function" /> should
+    ///     be parsed. Default is CultureInfo.InvariantCulture.
+    /// </param>
+    /// <returns>
+    ///     <c>true</c> if the function could be parsed
+    ///     from the string, <c>false</c> otherwise.
+    /// </returns>
+    public static bool TryParse(string str, CultureInfo culture, out QuadraticObjectiveFunction function)
+    {
+        // TODO: implement this method without the try-catch block.
 
-            return sb.ToString();
+        try
+        {
+            function = new QuadraticObjectiveFunction(str, culture);
+        }
+        catch (FormatException)
+        {
+            function = null;
+            return false;
         }
 
-        /// <summary>
-        ///     Attempts to create a <see cref="QuadraticObjectiveFunction" />
-        ///     from a <see cref="System.String" /> representation.
-        /// </summary>
-        /// <param name="str">The string containing the function in textual form.</param>
-        /// <param name="function">The resulting function, if it could be parsed.</param>
-        /// <returns>
-        ///     <c>true</c> if the function could be parsed
-        ///     from the string, <c>false</c> otherwise.
-        /// </returns>
-        public static bool TryParse(string str, out QuadraticObjectiveFunction function)
+        return true;
+    }
+
+    #region Operator Overloads
+
+    /// <summary>
+    ///     Multiplies each term in the <see cref="QuadraticObjectiveFunction" /> by the specified scalar.
+    /// </summary>
+    /// <param name="scalar">Scalar to multiply the individual terms by.</param>
+    /// <param name="a">A <see cref="QuadraticObjectiveFunction" /> instance.</param>
+    /// <returns>
+    ///     Returns a new <see cref="QuadraticObjectiveFunction" /> instance
+    ///     with all terms multiplied by the specified scalar.
+    /// </returns>
+    public static QuadraticObjectiveFunction operator *(double scalar, QuadraticObjectiveFunction a)
+    {
+        double[] linearTerms = a.LinearTerms.Multiply(scalar);
+        double[,] quadraticTerms = a.QuadraticTerms.Multiply(scalar);
+        var constantTerm = a.ConstantTerm * scalar;
+
+        var variables = new string[a.NumberOfVariables];
+        for (var i = 0; i < variables.Length; i++)
+            variables[i] = a.InnerIndices[i];
+
+        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
         {
-            return TryParse(str, CultureInfo.InvariantCulture, out function);
-        }
+            ConstantTerm = constantTerm
+        };
+    }
 
-        /// <summary>
-        ///     Attempts to create a <see cref="QuadraticObjectiveFunction" />
-        ///     from a <see cref="System.String" /> representation.
-        /// </summary>
-        /// <param name="str">The string containing the function in textual form.</param>
-        /// <param name="function">The resulting function, if it could be parsed.</param>
-        /// <param name="culture">
-        ///     The culture information specifying how
-        ///     numbers written in the <paramref name="function" /> should
-        ///     be parsed. Default is CultureInfo.InvariantCulture.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if the function could be parsed
-        ///     from the string, <c>false</c> otherwise.
-        /// </returns>
-        public static bool TryParse(string str, CultureInfo culture, out QuadraticObjectiveFunction function)
+    /// <summary>
+    ///     Multiplies each term in the <see cref="QuadraticObjectiveFunction" /> by the specified scalar.
+    /// </summary>
+    /// <param name="a">A <see cref="QuadraticObjectiveFunction" /> instance.</param>
+    /// <param name="scalar">Scalar to multiply the individual terms by.</param>
+    /// <returns>
+    ///     Returns a new <see cref="QuadraticObjectiveFunction" /> instance
+    ///     with all terms multiplied by the specified scalar.
+    /// </returns>
+    public static QuadraticObjectiveFunction operator *(QuadraticObjectiveFunction a, double scalar)
+    {
+        return scalar * a;
+    }
+
+    /// <summary>
+    ///     Divides each term in the <see cref="QuadraticObjectiveFunction" /> by the specified scalar.
+    /// </summary>
+    /// <param name="a">A <see cref="QuadraticObjectiveFunction" /> instance.</param>
+    /// <param name="scalar">Scalar to divide the individual terms by.</param>
+    /// <returns>
+    ///     Returns a new <see cref="QuadraticObjectiveFunction" /> instance
+    ///     with all terms divided by the specified scalar.
+    /// </returns>
+    public static QuadraticObjectiveFunction operator /(QuadraticObjectiveFunction a, double scalar)
+    {
+        if (scalar == 0) throw new DivideByZeroException("Cannot divide objective function by zero");
+
+        return a * (1 / scalar);
+    }
+
+    /// <summary>
+    ///     Negates the quadratic objective function.
+    /// </summary>
+    /// <param name="a">A <see cref="QuadraticObjectiveFunction" /> instance.</param>
+    /// <returns>
+    ///     Returns a new <see cref="QuadraticObjectiveFunction" /> instance where
+    ///     each term has been negated.
+    /// </returns>
+    public static QuadraticObjectiveFunction operator -(QuadraticObjectiveFunction a)
+    {
+        return -1 * a;
+    }
+
+    /// <summary>
+    ///     Adds two quadratic objective functions together by linearly combining
+    ///     the individual terms.
+    /// </summary>
+    /// <param name="a">The first quadratic objective function.</param>
+    /// <param name="b">The second quadratic objective function.</param>
+    /// <returns>
+    ///     Returns a new <see cref="QuadraticObjectiveFunction" /> where the resultant
+    ///     terms are the sum of the individuals.
+    /// </returns>
+    public static QuadraticObjectiveFunction operator +(QuadraticObjectiveFunction a, QuadraticObjectiveFunction b)
+    {
+        if (a.NumberOfVariables != b.NumberOfVariables)
+            throw new DimensionMismatchException("NumberOfVariables",
+                "The quadratic objective functions must have the same number of variables.");
+
+        double[] linearTerms = a.LinearTerms.Add(b.LinearTerms);
+        double[,] quadraticTerms = a.QuadraticTerms.Add(b.QuadraticTerms);
+        var constantTerm = a.ConstantTerm + b.ConstantTerm;
+
+        string[] variables;
+        if (a.InnerIndices.All(kvp => kvp.Value == b.InnerIndices[kvp.Key]))
         {
-            // TODO: implement this method without the try-catch block.
-
-            try
-            {
-                function = new QuadraticObjectiveFunction(str, culture);
-            }
-            catch (FormatException)
-            {
-                function = null;
-                return false;
-            }
-
-            return true;
-        }
-
-        #region Operator Overloads
-
-        /// <summary>
-        ///     Multiplies each term in the <see cref="QuadraticObjectiveFunction" /> by the specified scalar.
-        /// </summary>
-        /// <param name="scalar">Scalar to multiply the individual terms by.</param>
-        /// <param name="a">A <see cref="QuadraticObjectiveFunction" /> instance.</param>
-        /// <returns>
-        ///     Returns a new <see cref="QuadraticObjectiveFunction" /> instance
-        ///     with all terms multiplied by the specified scalar.
-        /// </returns>
-        public static QuadraticObjectiveFunction operator *(double scalar, QuadraticObjectiveFunction a)
-        {
-            double[] linearTerms = a.LinearTerms.Multiply(scalar);
-            double[,] quadraticTerms = a.QuadraticTerms.Multiply(scalar);
-            var constantTerm = a.ConstantTerm * scalar;
-
-            var variables = new string[a.NumberOfVariables];
+            variables = new string[a.NumberOfVariables];
             for (var i = 0; i < variables.Length; i++)
                 variables[i] = a.InnerIndices[i];
-
-            return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
-            {
-                ConstantTerm = constantTerm
-            };
         }
-
-        /// <summary>
-        ///     Multiplies each term in the <see cref="QuadraticObjectiveFunction" /> by the specified scalar.
-        /// </summary>
-        /// <param name="a">A <see cref="QuadraticObjectiveFunction" /> instance.</param>
-        /// <param name="scalar">Scalar to multiply the individual terms by.</param>
-        /// <returns>
-        ///     Returns a new <see cref="QuadraticObjectiveFunction" /> instance
-        ///     with all terms multiplied by the specified scalar.
-        /// </returns>
-        public static QuadraticObjectiveFunction operator *(QuadraticObjectiveFunction a, double scalar)
+        else
         {
-            return scalar * a;
+            variables = new string[0];
         }
 
-        /// <summary>
-        ///     Divides each term in the <see cref="QuadraticObjectiveFunction" /> by the specified scalar.
-        /// </summary>
-        /// <param name="a">A <see cref="QuadraticObjectiveFunction" /> instance.</param>
-        /// <param name="scalar">Scalar to divide the individual terms by.</param>
-        /// <returns>
-        ///     Returns a new <see cref="QuadraticObjectiveFunction" /> instance
-        ///     with all terms divided by the specified scalar.
-        /// </returns>
-        public static QuadraticObjectiveFunction operator /(QuadraticObjectiveFunction a, double scalar)
+        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
         {
-            if (scalar == 0) throw new DivideByZeroException("Cannot divide objective function by zero");
-
-            return a * (1 / scalar);
-        }
-
-        /// <summary>
-        ///     Negates the quadratic objective function.
-        /// </summary>
-        /// <param name="a">A <see cref="QuadraticObjectiveFunction" /> instance.</param>
-        /// <returns>
-        ///     Returns a new <see cref="QuadraticObjectiveFunction" /> instance where
-        ///     each term has been negated.
-        /// </returns>
-        public static QuadraticObjectiveFunction operator -(QuadraticObjectiveFunction a)
-        {
-            return -1 * a;
-        }
-
-        /// <summary>
-        ///     Adds two quadratic objective functions together by linearly combining
-        ///     the individual terms.
-        /// </summary>
-        /// <param name="a">The first quadratic objective function.</param>
-        /// <param name="b">The second quadratic objective function.</param>
-        /// <returns>
-        ///     Returns a new <see cref="QuadraticObjectiveFunction" /> where the resultant
-        ///     terms are the sum of the individuals.
-        /// </returns>
-        public static QuadraticObjectiveFunction operator +(QuadraticObjectiveFunction a, QuadraticObjectiveFunction b)
-        {
-            if (a.NumberOfVariables != b.NumberOfVariables)
-                throw new DimensionMismatchException("NumberOfVariables",
-                    "The quadratic objective functions must have the same number of variables.");
-
-            double[] linearTerms = a.LinearTerms.Add(b.LinearTerms);
-            double[,] quadraticTerms = a.QuadraticTerms.Add(b.QuadraticTerms);
-            var constantTerm = a.ConstantTerm + b.ConstantTerm;
-
-            string[] variables;
-            if (a.InnerIndices.All(kvp => kvp.Value == b.InnerIndices[kvp.Key]))
-            {
-                variables = new string[a.NumberOfVariables];
-                for (var i = 0; i < variables.Length; i++)
-                    variables[i] = a.InnerIndices[i];
-            }
-            else
-            {
-                variables = new string[0];
-            }
-
-            return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
-            {
-                ConstantTerm = constantTerm
-            };
-        }
-
-        /// <summary>
-        ///     Subtracts a quadratic objective function together by linearly subtracting
-        ///     the individual terms.
-        /// </summary>
-        /// <param name="a">The first quadratic objective function.</param>
-        /// <param name="b">The second quadratic objective function.</param>
-        /// <returns>
-        ///     Returns a new <see cref="QuadraticObjectiveFunction" /> where each of the resultant
-        ///     terms are taken to be the difference of the corresponding individual terms.
-        /// </returns>
-        public static QuadraticObjectiveFunction operator -(QuadraticObjectiveFunction a, QuadraticObjectiveFunction b)
-        {
-            if (a.NumberOfVariables != b.NumberOfVariables)
-                throw new DimensionMismatchException("NumberOfVariables",
-                    "The quadratic objective functions must have the same number of variables.");
-
-            double[] linearTerms = a.LinearTerms.Subtract(b.LinearTerms);
-            double[,] quadraticTerms = a.QuadraticTerms.Subtract(b.QuadraticTerms);
-            var constantTerm = a.ConstantTerm - b.ConstantTerm;
-
-            string[] variables;
-            if (a.InnerIndices.All(kvp => kvp.Value == b.InnerIndices[kvp.Key]))
-            {
-                variables = new string[a.NumberOfVariables];
-                for (var i = 0; i < variables.Length; i++)
-                    variables[i] = a.InnerIndices[i];
-            }
-            else
-            {
-                variables = new string[0];
-            }
-
-            return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
-            {
-                ConstantTerm = constantTerm
-            };
-        }
-
-        #endregion
+            ConstantTerm = constantTerm
+        };
     }
+
+    /// <summary>
+    ///     Subtracts a quadratic objective function together by linearly subtracting
+    ///     the individual terms.
+    /// </summary>
+    /// <param name="a">The first quadratic objective function.</param>
+    /// <param name="b">The second quadratic objective function.</param>
+    /// <returns>
+    ///     Returns a new <see cref="QuadraticObjectiveFunction" /> where each of the resultant
+    ///     terms are taken to be the difference of the corresponding individual terms.
+    /// </returns>
+    public static QuadraticObjectiveFunction operator -(QuadraticObjectiveFunction a, QuadraticObjectiveFunction b)
+    {
+        if (a.NumberOfVariables != b.NumberOfVariables)
+            throw new DimensionMismatchException("NumberOfVariables",
+                "The quadratic objective functions must have the same number of variables.");
+
+        double[] linearTerms = a.LinearTerms.Subtract(b.LinearTerms);
+        double[,] quadraticTerms = a.QuadraticTerms.Subtract(b.QuadraticTerms);
+        var constantTerm = a.ConstantTerm - b.ConstantTerm;
+
+        string[] variables;
+        if (a.InnerIndices.All(kvp => kvp.Value == b.InnerIndices[kvp.Key]))
+        {
+            variables = new string[a.NumberOfVariables];
+            for (var i = 0; i < variables.Length; i++)
+                variables[i] = a.InnerIndices[i];
+        }
+        else
+        {
+            variables = new string[0];
+        }
+
+        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
+        {
+            ConstantTerm = constantTerm
+        };
+    }
+
+    #endregion
 }

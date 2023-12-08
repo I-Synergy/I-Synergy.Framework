@@ -4,35 +4,34 @@ using ISynergy.Framework.Documents.Extensions;
 using System;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Sample.Syncfusion
+namespace Sample.Syncfusion;
+
+internal class Program
 {
-    internal class Program
+    static async Task<int> Main(string[] args)
     {
-        static async Task<int> Main(string[] args)
+        try
         {
-            try
-            {
-                IConfigurationRoot config = new ConfigurationBuilder()
-                .Build();
+            IConfigurationRoot config = new ConfigurationBuilder()
+            .Build();
 
-                var services = new ServiceCollection()
-                    .AddLogging()
-                    .AddOptions();
-                    
-                services.AddDocumentsSyncfusionIntegration(config);
-                services.TryAddScoped<Startup>();
+            var services = new ServiceCollection()
+                .AddLogging()
+                .AddOptions();
+                
+            services.AddDocumentsSyncfusionIntegration(config);
+            services.TryAddScoped<Startup>();
 
-                var serviceProvider = services.BuildServiceProvider();
-                Startup application = serviceProvider.GetRequiredService<Startup>();
-                await application.RunAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return 1;
-            }
-
-            return 0;
+            var serviceProvider = services.BuildServiceProvider();
+            Startup application = serviceProvider.GetRequiredService<Startup>();
+            await application.RunAsync();
         }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+            return 1;
+        }
+
+        return 0;
     }
 }

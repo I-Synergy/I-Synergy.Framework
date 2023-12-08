@@ -6,51 +6,50 @@ using ISynergy.Framework.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 
-namespace ISynergy.Framework.UI.Extensions
+namespace ISynergy.Framework.UI.Extensions;
+
+public static class NavigationExtensions
 {
-    public static class NavigationExtensions
+    /// <summary>
+    /// Creates or gets Page from ViewModel.
+    /// </summary>
+    /// <typeparam name="TViewModel"></typeparam>
+    /// <param name="parameter"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    /// <exception cref="FileNotFoundException"></exception>
+    public static View CreatePage<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
+        => CreatePage<TViewModel>(default(TViewModel), parameter);
+
+    /// <summary>
+    /// Creates or gets Page from ViewModel.
+    /// </summary>
+    /// <typeparam name="TViewModel"></typeparam>
+    /// <param name="viewModel"></param>
+    /// <param name="parameter"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    /// <exception cref="FileNotFoundException"></exception>
+    public static View CreatePage<TViewModel>(TViewModel viewModel, object parameter = null) where TViewModel : class, IViewModel
     {
-        /// <summary>
-        /// Creates or gets Page from ViewModel.
-        /// </summary>
-        /// <typeparam name="TViewModel"></typeparam>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        /// <exception cref="FileNotFoundException"></exception>
-        public static View CreatePage<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
-            => CreatePage<TViewModel>(default(TViewModel), parameter);
+        var context = ServiceLocator.Default.GetInstance<IContext>();
 
-        /// <summary>
-        /// Creates or gets Page from ViewModel.
-        /// </summary>
-        /// <typeparam name="TViewModel"></typeparam>
-        /// <param name="viewModel"></param>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        /// <exception cref="FileNotFoundException"></exception>
-        public static View CreatePage<TViewModel>(TViewModel viewModel, object parameter = null) where TViewModel : class, IViewModel
+        if (viewModel is null && context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
+            viewModel = resolvedViewModel;
+
+        viewModel.Parameter = parameter;
+
+        var page = WPFAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
+
+        if (page is null)
+            throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
+
+        if (ServiceLocator.Default.GetInstance(page) is View resolvedPage)
         {
-            var context = ServiceLocator.Default.GetInstance<IContext>();
-
-            if (viewModel is null && context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
-                viewModel = resolvedViewModel;
-
-            viewModel.Parameter = parameter;
-
-            var page = WPFAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
-
-            if (page is null)
-                throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
-
-            if (ServiceLocator.Default.GetInstance(page) is View resolvedPage)
-            {
-                resolvedPage.ViewModel = viewModel;
-                return resolvedPage;
-            }
-
-            throw new FileNotFoundException($"Cannot create or navigate to page: {viewModel.GetViewFullName()}.");
+            resolvedPage.ViewModel = viewModel;
+            return resolvedPage;
         }
+
+        throw new FileNotFoundException($"Cannot create or navigate to page: {viewModel.GetViewFullName()}.");
     }
 }

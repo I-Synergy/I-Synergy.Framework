@@ -5,110 +5,109 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Extensions.Tests;
+
+/// <summary>
+/// Class EnumerableExtensionsTest.
+/// </summary>
+[TestClass]
+public class EnumerableExtensionsTest
 {
     /// <summary>
-    /// Class EnumerableExtensionsTest.
+    /// Defines the test method NullEnumerableNonFailableTest.
     /// </summary>
-    [TestClass]
-    public class EnumerableExtensionsTest
+    [TestMethod]
+    public void NullEnumerableNonFailableTest()
     {
-        /// <summary>
-        /// Defines the test method NullEnumerableNonFailableTest.
-        /// </summary>
-        [TestMethod]
-        public void NullEnumerableNonFailableTest()
+        IEnumerable<object> list = null;
+        bool result = false;
+
+        foreach (object item in list.EnsureNotNull())
+        {
+        }
+
+        result = true;
+
+        Assert.IsTrue(result);
+    }
+
+    /// <summary>
+    /// Defines the test method NullEnumerableFailableTest.
+    /// </summary>
+    [TestMethod]
+    public void NullEnumerableFailableTest()
+    {
+        Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
         {
             IEnumerable<object> list = null;
-            bool result = false;
 
-            foreach (object item in list.EnsureNotNull())
+            foreach (object item in list)
             {
             }
 
-            result = true;
+            return Task.CompletedTask;
+        });
+    }
 
-            Assert.IsTrue(result);
-        }
+    [TestMethod]
+    public void IEnumerableTToDataTableTest()
+    {
+        List<Product> collection =
+        [
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
+        ];
 
-        /// <summary>
-        /// Defines the test method NullEnumerableFailableTest.
-        /// </summary>
-        [TestMethod]
-        public void NullEnumerableFailableTest()
+        if (collection is IEnumerable<Product> data)
         {
-            Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
-            {
-                IEnumerable<object> list = null;
+            System.Data.DataTable dataTable = data.ToDataTable("Test");
 
-                foreach (object item in list)
-                {
-                }
-
-                return Task.CompletedTask;
-            });
+            Assert.IsNotNull(dataTable);
+            Assert.AreEqual(5, dataTable.Rows.Count);
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.HasErrors)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
         }
-
-        [TestMethod]
-        public void IEnumerableTToDataTableTest()
+        else
         {
-            List<Product> collection =
-            [
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
-            ];
-
-            if (collection is IEnumerable<Product> data)
-            {
-                System.Data.DataTable dataTable = data.ToDataTable("Test");
-
-                Assert.IsNotNull(dataTable);
-                Assert.AreEqual(5, dataTable.Rows.Count);
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.HasErrors)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
-            }
-            else
-            {
-                throw new Exception();
-            }
+            throw new Exception();
         }
+    }
 
-        [TestMethod]
-        public void IEnumerableToDataTableTest()
+    [TestMethod]
+    public void IEnumerableToDataTableTest()
+    {
+        List<Product> collection =
+        [
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
+            new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
+        ];
+
+        if (collection is IEnumerable data)
         {
-            List<Product> collection =
-            [
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
-                new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
-            ];
+            System.Data.DataTable dataTable = data.ToDataTable(typeof(Product), "Test");
 
-            if (collection is IEnumerable data)
-            {
-                System.Data.DataTable dataTable = data.ToDataTable(typeof(Product), "Test");
-
-                Assert.IsNotNull(dataTable);
-                Assert.AreEqual(5, dataTable.Rows.Count);
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.HasErrors)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
-            }
-            else
-            {
-                throw new Exception();
-            }
+            Assert.IsNotNull(dataTable);
+            Assert.AreEqual(5, dataTable.Rows.Count);
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.HasErrors)));
+            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
+        }
+        else
+        {
+            throw new Exception();
         }
     }
 }

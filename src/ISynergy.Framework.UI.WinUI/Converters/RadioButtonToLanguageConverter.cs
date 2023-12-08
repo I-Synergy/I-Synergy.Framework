@@ -2,33 +2,32 @@
 using Microsoft.UI.Xaml.Data;
 using Windows.Globalization;
 
-namespace ISynergy.Framework.UI.Converters
+namespace ISynergy.Framework.UI.Converters;
+
+public class RadioButtonToLanguageConverter : IValueConverter
 {
-    public class RadioButtonToLanguageConverter : IValueConverter
+    private Languages _value;
+
+    public object Convert(object value, Type targetType, object parameter, string culture)
     {
-        private Languages _value;
+        if (value is Languages languages)
+            _value = languages;
 
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        if (Enum.TryParse(typeof(Languages), parameter.ToString(), true, out var language) && value.Equals(language))
         {
-            if (value is Languages languages)
-                _value = languages;
-
-            if (Enum.TryParse(typeof(Languages), parameter.ToString(), true, out var language) && value.Equals(language))
-            {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
-        public object ConvertBack(object isChecked, Type targetType, object parameter, string culture)
-        {
-            if ((bool)isChecked && Enum.TryParse(typeof(Languages), parameter.ToString(), true, out var language))
-            {
-                return language;
-            }
+        return false;
+    }
 
-            return _value;
+    public object ConvertBack(object isChecked, Type targetType, object parameter, string culture)
+    {
+        if ((bool)isChecked && Enum.TryParse(typeof(Languages), parameter.ToString(), true, out var language))
+        {
+            return language;
         }
+
+        return _value;
     }
 }

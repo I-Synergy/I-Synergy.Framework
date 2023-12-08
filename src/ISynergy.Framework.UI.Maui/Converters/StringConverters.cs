@@ -1,479 +1,478 @@
 ﻿using System.Globalization;
 
-namespace ISynergy.Framework.UI.Converters
+namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Class StringFormatConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringFormatConverter : IValueConverter
 {
     /// <summary>
-    /// Class StringFormatConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the specified value.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringFormatConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (value is null)
+            return null;
+
+        if (parameter is null)
+            return value;
+
+        return string.Format((string)parameter, value);
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class StringToBooleanConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringToBooleanConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (parameter.ToString().Equals(value.ToString()))
         {
-            if (value is null)
-                return null;
-
-            if (parameter is null)
-                return value;
-
-            return string.Format((string)parameter, value);
+            return true;
         }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        else
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 
     /// <summary>
-    /// Class StringToBooleanConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringToBooleanConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if ((bool)value)
         {
-            if (parameter.ToString().Equals(value.ToString()))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return parameter.ToString();
         }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        else
         {
-            if ((bool)value)
-            {
-                return parameter.ToString();
-            }
-            else
-            {
-                return string.Empty;
-            }
+            return string.Empty;
+        }
+    }
+}
+
+/// <summary>
+/// Class StringToIsVisibleConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringToIsVisibleConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is string stringValue && !string.IsNullOrEmpty(stringValue))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
     /// <summary>
-    /// Class StringToIsVisibleConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringToIsVisibleConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is string stringValue && !string.IsNullOrEmpty(stringValue))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        throw new NotImplementedException();
+    }
+}
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+/// <summary>
+/// Class StringToEnabledConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringToEnabledConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (string.IsNullOrEmpty((string)value))
         {
-            throw new NotImplementedException();
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 
     /// <summary>
-    /// Class StringToEnabledConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringToEnabledConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (string.IsNullOrEmpty((string)value))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
+        throw new NotImplementedException();
+    }
+}
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+/// <summary>
+/// Class StringToInvertEnabledConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringToInvertEnabledConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (string.IsNullOrEmpty((string)value))
         {
-            throw new NotImplementedException();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
     /// <summary>
-    /// Class StringToInvertEnabledConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringToInvertEnabledConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (string.IsNullOrEmpty((string)value))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
+}
 
+/// <summary>
+/// Class StringToDecimalConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringToDecimalConverter : IValueConverter
+{
     /// <summary>
-    /// Class StringToDecimalConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the specified value.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringToDecimalConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (decimal.TryParse(value.ToString(), out var result))
         {
-            if (decimal.TryParse(value.ToString(), out var result))
-            {
-                return result;
-            }
-            else
-            {
-                return 0m;
-            }
+            return result;
         }
-
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        else
         {
-            if (decimal.TryParse(value.ToString(), out var result))
-                return result;
             return 0m;
         }
     }
 
     /// <summary>
-    /// Class StringToDecimalConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringToDoubleConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (double.TryParse(value.ToString(), out var result))
-            {
-                return result;
-            }
-            else
-            {
-                return 0d;
-            }
-        }
+        if (decimal.TryParse(value.ToString(), out var result))
+            return result;
+        return 0m;
+    }
+}
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+/// <summary>
+/// Class StringToDecimalConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringToDoubleConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (double.TryParse(value.ToString(), out var result))
         {
-            if (double.TryParse(value.ToString(), out var result))
-                return result;
+            return result;
+        }
+        else
+        {
             return 0d;
         }
     }
 
     /// <summary>
-    /// Class StringToIntegerConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Converts the back.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringToIntegerConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (int.TryParse(value.ToString(), out var result))
-            {
-                return result;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        if (double.TryParse(value.ToString(), out var result))
+            return result;
+        return 0d;
+    }
+}
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+/// <summary>
+/// Class StringToIntegerConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringToIntegerConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (int.TryParse(value.ToString(), out var result))
         {
-            return value.ToString();
+            return result;
+        }
+        else
+        {
+            return 0;
         }
     }
 
     /// <summary>
-    /// Converts hex string to color.
+    /// Converts the back.
     /// </summary>
-    public class StringToColorConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Convert
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is string color && !string.IsNullOrEmpty(color))
-                return Color.FromArgb(color);
-
-            return null;
-        }
-
-        /// <summary>
-        /// Convert back
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return value.ToString();
     }
+}
 
-
-    public class StringToUriConverter : IValueConverter
+/// <summary>
+/// Converts hex string to color.
+/// </summary>
+public class StringToColorConverter : IValueConverter
+{
+    /// <summary>
+    /// Convert
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (Uri.TryCreate(value.ToString(), UriKind.RelativeOrAbsolute, out Uri uri))
-                return uri;
+        if (value is string color && !string.IsNullOrEmpty(color))
+            return Color.FromArgb(color);
 
-            return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return null;
     }
 
     /// <summary>
-    /// Class UriToImageSourceConverter.
-    /// Implements the <see cref="IValueConverter" />
+    /// Convert back
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class UriToImageSourceConverter : IValueConverter
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Converts the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (string.IsNullOrEmpty(value?.ToString()))
-                return null;
+        throw new NotImplementedException();
+    }
+}
 
-            return new Image()
-            {
-                Source = new Uri(value as string)
-            };
-        }
 
-        /// <summary>
-        /// Converts the back.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="targetType">Type of the target.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="culture">The culture.</param>
-        /// <returns>System.Object.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+public class StringToUriConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (Uri.TryCreate(value.ToString(), UriKind.RelativeOrAbsolute, out Uri uri))
+            return uri;
+
+        return null;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class UriToImageSourceConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class UriToImageSourceConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (string.IsNullOrEmpty(value?.ToString()))
+            return null;
+
+        return new Image()
         {
-            throw new NotImplementedException();
-        }
+            Source = new Uri(value as string)
+        };
     }
 
     /// <summary>
-    /// Converts hex string to color.
+    /// Converts the back.
     /// </summary>
-    public class StringToColorBrushConverter : IValueConverter
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Convert
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (!string.IsNullOrEmpty(value?.ToString()))
-            {
-                var color = Color.FromArgb(value.ToString());
-                return new SolidColorBrush(color);
-            }
+        throw new NotImplementedException();
+    }
+}
 
-            return null;
+/// <summary>
+/// Converts hex string to color.
+/// </summary>
+public class StringToColorBrushConverter : IValueConverter
+{
+    /// <summary>
+    /// Convert
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (!string.IsNullOrEmpty(value?.ToString()))
+        {
+            var color = Color.FromArgb(value.ToString());
+            return new SolidColorBrush(color);
         }
 
-        /// <summary>
-        /// Convert back
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return null;
+    }
+
+    /// <summary>
+    /// Convert back
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

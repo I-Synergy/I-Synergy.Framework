@@ -7,27 +7,26 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ISynergy.Framework.Automations.Extensions
+namespace ISynergy.Framework.Automations.Extensions;
+
+/// <summary>
+/// ServiceCollection extensions for Automation.
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// ServiceCollection extensions for Automation.
+    /// Adds automation services to ServiceCollection.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    public static void AddAutomationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// Adds automation services to ServiceCollection.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        public static void AddAutomationServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<AutomationOptions>(configuration.GetSection(nameof(AutomationOptions)).BindWithReload);
+        services.Configure<AutomationOptions>(configuration.GetSection(nameof(AutomationOptions)).BindWithReload);
 
-            services.TryAddSingleton<IActionService, ActionService>();
-            services.TryAddSingleton<IAutomationService, AutomationService>();
+        services.TryAddSingleton<IActionService, ActionService>();
+        services.TryAddSingleton<IAutomationService, AutomationService>();
 
-            services.AddHostedService<ActionQueuingBackgroundService>();
-            services.AddHostedService<AutomationBackgroundService>();
-        }
+        services.AddHostedService<ActionQueuingBackgroundService>();
+        services.AddHostedService<AutomationBackgroundService>();
     }
 }

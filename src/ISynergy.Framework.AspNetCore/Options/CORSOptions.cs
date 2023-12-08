@@ -1,7 +1,6 @@
-﻿namespace ISynergy.Framework.AspNetCore.Options
+﻿namespace ISynergy.Framework.AspNetCore.Options;
+
+public class CORSOptions
 {
-    public class CORSOptions
-    {
-        public string[] AllowedOrigins { get; set; }
-    }
+    public string[] AllowedOrigins { get; set; }
 }

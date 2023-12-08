@@ -4,47 +4,46 @@ using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Enumerations;
 using ISynergy.Framework.Physics.Extensions;
 
-namespace ISynergy.Framework.Physics.Base
+namespace ISynergy.Framework.Physics.Base;
+
+/// <summary>
+/// Base Unit
+/// </summary>
+public abstract class UnitBase : IUnit
 {
     /// <summary>
-    /// Base Unit
+    /// Name of the unit.
     /// </summary>
-    public abstract class UnitBase : IUnit
+    public string Name { get; }
+
+    /// <summary>
+    /// Symbol of the unit.
+    /// </summary>
+    public string Symbol { get; }
+
+    /// <summary>
+    /// Unit types for this unit.
+    /// </summary>
+    public UnitTypes[] UnitTypes { get; }
+
+    /// <summary>
+    /// Default constructor for creating a base unit.
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="unitTypes"></param>
+    protected UnitBase(Units unit, UnitTypes[] unitTypes)
     {
-        /// <summary>
-        /// Name of the unit.
-        /// </summary>
-        public string Name { get; }
+        Argument.IsNotNull(unit);
 
-        /// <summary>
-        /// Symbol of the unit.
-        /// </summary>
-        public string Symbol { get; }
+        Name = unit.GetDescription();
+        Symbol = unit.GetSymbol();
 
-        /// <summary>
-        /// Unit types for this unit.
-        /// </summary>
-        public UnitTypes[] UnitTypes { get; }
+        Argument.IsNotNullOrEmpty(Name);
+        Argument.IsNotNullOrEmpty(Symbol);
 
-        /// <summary>
-        /// Default constructor for creating a base unit.
-        /// </summary>
-        /// <param name="unit"></param>
-        /// <param name="unitTypes"></param>
-        protected UnitBase(Units unit, UnitTypes[] unitTypes)
-        {
-            Argument.IsNotNull(unit);
+        Argument.IsNotNull(unitTypes);
+        Argument.Condition(unitTypes, value => unitTypes.Count() >= 1);
 
-            Name = unit.GetDescription();
-            Symbol = unit.GetSymbol();
-
-            Argument.IsNotNullOrEmpty(Name);
-            Argument.IsNotNullOrEmpty(Symbol);
-
-            Argument.IsNotNull(unitTypes);
-            Argument.Condition(unitTypes, value => unitTypes.Count() >= 1);
-
-            UnitTypes = unitTypes;
-        }
+        UnitTypes = unitTypes;
     }
 }

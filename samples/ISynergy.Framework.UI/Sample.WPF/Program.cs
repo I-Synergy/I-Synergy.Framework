@@ -17,49 +17,48 @@ using Sample.Services;
 using Sample.Abstractions;
 using System.Reflection;
 
-namespace Sample
+namespace Sample;
+
+public static class Program
 {
-    public static class Program
+    [STAThread]
+    public static void Main()
     {
-        [STAThread]
-        public static void Main()
-        {
-            IHost host = new HostBuilder()
-                .ConfigureHostConfiguration(builder =>
-                {
-                    Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
-                    builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
-                })
-                .ConfigureServices((context, services) =>
-                {
-                    services.ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(context.Configuration, x =>
-                        x.Name.StartsWith(typeof(App).Namespace) ||
-                        x.FullName.Equals(typeof(Identifier).Assembly.FullName));
+        IHost host = new HostBuilder()
+            .ConfigureHostConfiguration(builder =>
+            {
+                Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
+                builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
+            })
+            .ConfigureServices((context, services) =>
+            {
+                services.ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(context.Configuration, x =>
+                    x.Name.StartsWith(typeof(App).Namespace) ||
+                    x.FullName.Equals(typeof(Identifier).Assembly.FullName));
 
-                    services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-                    services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
-                    services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
+                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
+                services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                    services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
-                    services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());
 
-                    services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
-                    services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
-                    services.AddNugetServiceIntegrations(context.Configuration);
-                })
-                .ConfigureLogging((context, logging) =>
-                {
-                })
-                .Build();
+                services.AddNugetServiceIntegrations(context.Configuration);
+            })
+            .ConfigureLogging((context, logging) =>
+            {
+            })
+            .Build();
 
-            using IServiceScope scope = host.Services.CreateScope();
-            ServiceLocator.SetLocatorProvider(scope.ServiceProvider);
+        using IServiceScope scope = host.Services.CreateScope();
+        ServiceLocator.SetLocatorProvider(scope.ServiceProvider);
 
-            App application = new();
-            application.InitializeComponent();
-            application.InitializeApplication();
-            application.Run();
-        }
+        App application = new();
+        application.InitializeComponent();
+        application.InitializeApplication();
+        application.Run();
     }
 }

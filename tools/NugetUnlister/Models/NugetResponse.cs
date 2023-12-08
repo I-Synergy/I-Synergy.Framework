@@ -1,7 +1,6 @@
-﻿namespace NugetUnlister.Models
+﻿namespace NugetUnlister.Models;
+
+public class NugetResponse
 {
-    public class NugetResponse
-    {
-        public string[] Versions { get; set; }
-    }
+    public string[] Versions { get; set; }
 }

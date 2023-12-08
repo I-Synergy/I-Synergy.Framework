@@ -10,73 +10,72 @@ using Sample.Abstractions.Services;
 using Sample.Models;
 using System.Collections.ObjectModel;
 
-namespace Sample.ViewModels
+namespace Sample.ViewModels;
+
+public class AppShellViewModel : BaseShellViewModel, IShellViewModel
 {
-    public class AppShellViewModel : BaseShellViewModel, IShellViewModel
+    public AsyncRelayCommand ControlsCommand { get; private set; }
+    public AsyncRelayCommand DialogsCommand { get; private set; }
+
+    public AppShellViewModel(
+        IContext context,
+        ICommonServices commonServices,
+        IBaseApplicationSettingsService baseApplicationSettingsService,
+        IAuthenticationService authenticationService,
+        ILogger<AppShellViewModel> logger,
+        IThemeService themeService,
+        ILocalizationService localizationService)
+        : base(context, commonServices, baseApplicationSettingsService, authenticationService, logger, themeService, localizationService)
     {
-        public AsyncRelayCommand ControlsCommand { get; private set; }
-        public AsyncRelayCommand DialogsCommand { get; private set; }
+        ControlsCommand = new AsyncRelayCommand(ControlsAsync);
+        DialogsCommand = new AsyncRelayCommand(DialogsAsync);
+    }
 
-        public AppShellViewModel(
-            IContext context,
-            ICommonServices commonServices,
-            IBaseApplicationSettingsService baseApplicationSettingsService,
-            IAuthenticationService authenticationService,
-            ILogger<AppShellViewModel> logger,
-            IThemeService themeService,
-            ILocalizationService localizationService)
-            : base(context, commonServices, baseApplicationSettingsService, authenticationService, logger, themeService, localizationService)
+    private async Task DialogsAsync()
+    {
+        var e = new ObservableCollection<TestItem>()
         {
-            ControlsCommand = new AsyncRelayCommand(ControlsAsync);
-            DialogsCommand = new AsyncRelayCommand(DialogsAsync);
-        }
+            new TestItem { Id = 1, Description = "Test 1"},
+            new TestItem { Id = 2, Description = "Test 2"},
+            new TestItem { Id = 3, Description = "Test 3"},
+            new TestItem { Id = 4, Description = "Test 4"},
+            new TestItem { Id = 5, Description = "Test 5"},
+            new TestItem { Id = 1, Description = "Test 6"},
+            new TestItem { Id = 2, Description = "Test 7"},
+            new TestItem { Id = 3, Description = "Test 8"},
+            new TestItem { Id = 4, Description = "Test 9"},
+            new TestItem { Id = 5, Description = "Test 10"},
+            new TestItem { Id = 1, Description = "Test 11"},
+            new TestItem { Id = 2, Description = "Test 12"},
+            new TestItem { Id = 3, Description = "Test 13"},
+            new TestItem { Id = 4, Description = "Test 14"},
+            new TestItem { Id = 5, Description = "Test 15"}
+        };
 
-        private async Task DialogsAsync()
-        {
-            var e = new ObservableCollection<TestItem>()
-            {
-                new TestItem { Id = 1, Description = "Test 1"},
-                new TestItem { Id = 2, Description = "Test 2"},
-                new TestItem { Id = 3, Description = "Test 3"},
-                new TestItem { Id = 4, Description = "Test 4"},
-                new TestItem { Id = 5, Description = "Test 5"},
-                new TestItem { Id = 1, Description = "Test 6"},
-                new TestItem { Id = 2, Description = "Test 7"},
-                new TestItem { Id = 3, Description = "Test 8"},
-                new TestItem { Id = 4, Description = "Test 9"},
-                new TestItem { Id = 5, Description = "Test 10"},
-                new TestItem { Id = 1, Description = "Test 11"},
-                new TestItem { Id = 2, Description = "Test 12"},
-                new TestItem { Id = 3, Description = "Test 13"},
-                new TestItem { Id = 4, Description = "Test 14"},
-                new TestItem { Id = 5, Description = "Test 15"}
-            };
+        await BaseCommonServices.NavigationService.NavigateAsync<DialogsViewModel>(e);
+    }
 
-            await BaseCommonServices.NavigationService.NavigateAsync<DialogsViewModel>(e);
-        }
+    private Task ControlsAsync() =>
+        BaseCommonServices.NavigationService.NavigateAsync<ControlsViewModel>();
 
-        private Task ControlsAsync() =>
-            BaseCommonServices.NavigationService.NavigateAsync<ControlsViewModel>();
+    protected override Task OpenSettingsAsync() => throw new NotImplementedException();
 
-        protected override Task OpenSettingsAsync() => throw new NotImplementedException();
+    protected override void PopulateNavItems() => throw new NotImplementedException();
 
-        protected override void PopulateNavItems() => throw new NotImplementedException();
+    protected override async Task RestartApplicationAsync()
+    {
+        await base.RestartApplicationAsync();
+        Application.Current.Quit();
+    }
 
-        protected override async Task RestartApplicationAsync()
-        {
-            await base.RestartApplicationAsync();
-            Application.Current.Quit();
-        }
+    protected override void Dispose(bool disposing)
+    {
+        ControlsCommand?.Cancel();
+        ControlsCommand = null;
 
-        protected override void Dispose(bool disposing)
-        {
-            ControlsCommand?.Cancel();
-            ControlsCommand = null;
+        DialogsCommand?.Cancel();
+        DialogsCommand = null;
 
-            DialogsCommand?.Cancel();
-            DialogsCommand = null;
-
-            base.Dispose(disposing);
-        }
+        base.Dispose(disposing);
     }
 }

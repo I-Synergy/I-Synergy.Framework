@@ -8,27 +8,26 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ISynergy.Framework.Documents.Extensions
+namespace ISynergy.Framework.Documents.Extensions;
+
+/// <summary>
+/// Service collection extensions for Syncfusion document service.
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Service collection extensions for Syncfusion document service.
+    /// Adds Syncfusion document service integration.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddDocumentsSyncfusionIntegration(this IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// Adds Syncfusion document service integration.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddDocumentsSyncfusionIntegration(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddOptions();
-            services.Configure<SyncfusionLicenseOptions>(configuration.GetSection(nameof(SyncfusionLicenseOptions)).BindWithReload);
-            services.TryAddSingleton<ILanguageService, LanguageService>();
-            services.TryAddSingleton<IDocumentService, DocumentService>();
+        services.AddOptions();
+        services.Configure<SyncfusionLicenseOptions>(configuration.GetSection(nameof(SyncfusionLicenseOptions)).BindWithReload);
+        services.TryAddSingleton<ILanguageService, LanguageService>();
+        services.TryAddSingleton<IDocumentService, DocumentService>();
 
-            return services;
-        }
+        return services;
     }
 }

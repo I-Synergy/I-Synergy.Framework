@@ -1,10 +1,9 @@
-﻿namespace ISynergy.Framework.Core.Messaging.Tests
+﻿namespace ISynergy.Framework.Core.Messaging.Tests;
+
+public interface ITestMessage
 {
-    public interface ITestMessage
+    string Content
     {
-        string Content
-        {
-            get;
-        }
+        get;
     }
 }

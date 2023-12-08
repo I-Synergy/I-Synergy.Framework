@@ -1,17 +1,16 @@
-﻿namespace ISynergy.Framework.Mvvm.Enumerations
+﻿namespace ISynergy.Framework.Mvvm.Enumerations;
+
+/// <summary>
+/// Enum DataActions
+/// </summary>
+public enum DataActions
 {
     /// <summary>
-    /// Enum DataActions
+    /// The save
     /// </summary>
-    public enum DataActions
-    {
-        /// <summary>
-        /// The save
-        /// </summary>
-        Save = 0,
-        /// <summary>
-        /// The delete
-        /// </summary>
-        Delete = 1
-    }
+    Save = 0,
+    /// <summary>
+    /// The delete
+    /// </summary>
+    Delete = 1
 }

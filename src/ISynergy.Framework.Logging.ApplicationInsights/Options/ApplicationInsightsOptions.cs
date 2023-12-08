@@ -1,7 +1,6 @@
-﻿namespace ISynergy.Framework.Logging.ApplicationInsights.Options
+﻿namespace ISynergy.Framework.Logging.ApplicationInsights.Options;
+
+public class ApplicationInsightsOptions
 {
-    public class ApplicationInsightsOptions
-    {
-        public string ConnectionString { get; set; }
-    }
+    public string ConnectionString { get; set; }
 }

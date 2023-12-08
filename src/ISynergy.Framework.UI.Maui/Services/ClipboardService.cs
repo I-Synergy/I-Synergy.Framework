@@ -1,30 +1,29 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
-namespace ISynergy.Framework.UI.Services
+namespace ISynergy.Framework.UI.Services;
+
+/// <summary>
+/// Class ClipboardService.
+/// </summary>
+public class ClipboardService : IClipboardService
 {
     /// <summary>
-    /// Class ClipboardService.
+    /// Gets the bitmap source from clipboard asynchronous.
     /// </summary>
-    public class ClipboardService : IClipboardService
+    /// <returns>Task&lt;System.Object&gt;.</returns>
+    public Task<object> GetBitmapSourceFromClipboardAsync()
     {
-        /// <summary>
-        /// Gets the bitmap source from clipboard asynchronous.
-        /// </summary>
-        /// <returns>Task&lt;System.Object&gt;.</returns>
-        public Task<object> GetBitmapSourceFromClipboardAsync()
-        {
-            return Task.FromResult<object>(null);
-        }
+        return Task.FromResult<object>(null);
+    }
 
-        /// <summary>
-        /// Gets the byte array from clipboard image asynchronous.
-        /// </summary>
-        /// <returns>Task&lt;System.Byte[]&gt;.</returns>
-        public Task<byte[]> GetByteArrayFromClipboardImageAsync(ImageFormats format)
-        {
-            byte[] result = null;
-            return Task.FromResult(result);
-        }
+    /// <summary>
+    /// Gets the byte array from clipboard image asynchronous.
+    /// </summary>
+    /// <returns>Task&lt;System.Byte[]&gt;.</returns>
+    public Task<byte[]> GetByteArrayFromClipboardImageAsync(ImageFormats format)
+    {
+        byte[] result = null;
+        return Task.FromResult(result);
     }
 }

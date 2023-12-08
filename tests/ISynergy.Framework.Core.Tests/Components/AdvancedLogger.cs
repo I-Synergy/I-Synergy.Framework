@@ -1,18 +1,17 @@
-﻿namespace ISynergy.Framework.Core.Tests.Components
+﻿namespace ISynergy.Framework.Core.Tests.Components;
+
+/// <summary>
+/// Class AdvancedLogger.
+/// Implements the <see cref="ILogger" />
+/// </summary>
+/// <seealso cref="ILogger" />
+public class AdvancedLogger : ILogger
 {
     /// <summary>
-    /// Class AdvancedLogger.
-    /// Implements the <see cref="ILogger" />
+    /// Logs the specified MSG.
     /// </summary>
-    /// <seealso cref="ILogger" />
-    public class AdvancedLogger : ILogger
+    /// <param name="msg">The MSG.</param>
+    public void Log(string msg)
     {
-        /// <summary>
-        /// Logs the specified MSG.
-        /// </summary>
-        /// <param name="msg">The MSG.</param>
-        public void Log(string msg)
-        {
-        }
     }
 }

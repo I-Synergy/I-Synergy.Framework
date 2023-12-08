@@ -1,36 +1,35 @@
 ﻿using System.Runtime.Serialization;
 
-namespace ISynergy.Framework.Core.Exceptions
+namespace ISynergy.Framework.Core.Exceptions;
+
+/// <summary>
+/// Class ClaimNotFoundException.
+/// Implements the <see cref="ClaimAuthorizationException" />
+/// </summary>
+/// <seealso cref="ClaimAuthorizationException" />
+public class ClaimNotFoundException : ClaimAuthorizationException
 {
     /// <summary>
-    /// Class ClaimNotFoundException.
-    /// Implements the <see cref="ClaimAuthorizationException" />
+    /// Initializes a new instance of the <see cref="ClaimNotFoundException"/> class.
     /// </summary>
-    /// <seealso cref="ClaimAuthorizationException" />
-    public class ClaimNotFoundException : ClaimAuthorizationException
+    public ClaimNotFoundException()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ClaimNotFoundException"/> class.
-        /// </summary>
-        public ClaimNotFoundException()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ClaimNotFoundException"/> class.
-        /// </summary>
-        /// <param name="claimType">Type of the claim.</param>
-        public ClaimNotFoundException(string claimType) : base($"Claim '{claimType}' not found.")
-        {
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ClaimNotFoundException"/> class.
+    /// </summary>
+    /// <param name="claimType">Type of the claim.</param>
+    public ClaimNotFoundException(string claimType) : base($"Claim '{claimType}' not found.")
+    {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ClaimNotFoundException"/> class.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="innerException">The inner exception.</param>
-        public ClaimNotFoundException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ClaimNotFoundException"/> class.
+    /// </summary>
+    /// <param name="message">The message.</param>
+    /// <param name="innerException">The inner exception.</param>
+    public ClaimNotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
     }
 }

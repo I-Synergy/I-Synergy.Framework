@@ -1,135 +1,134 @@
 ﻿using ISynergy.Framework.Core.Validation;
 
-namespace ISynergy.Framework.IO.Models
+namespace ISynergy.Framework.IO.Models;
+
+/// <summary>
+/// Class DriveInformation.
+/// </summary>
+public static class DriveInformation
 {
     /// <summary>
-    /// Class DriveInformation.
+    /// Determines whether free space is available on the specified path.
+    /// If path is a network URI then result is always true.
     /// </summary>
-    public static class DriveInformation
+    /// <param name="path">The path.</param>
+    /// <param name="fileSize">Size of the file.</param>
+    /// <returns><c>true</c> if [is free space available] [the specified path]; otherwise, <c>false</c>.</returns>
+    /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and IsFreeSpaceAvailable does not support relative paths.</exception>
+    public static bool IsFreeSpaceAvailable(string path, long fileSize)
     {
-        /// <summary>
-        /// Determines whether free space is available on the specified path.
-        /// If path is a network URI then result is always true.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="fileSize">Size of the file.</param>
-        /// <returns><c>true</c> if [is free space available] [the specified path]; otherwise, <c>false</c>.</returns>
-        /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and IsFreeSpaceAvailable does not support relative paths.</exception>
-        public static bool IsFreeSpaceAvailable(string path, long fileSize)
-        {
-            Argument.IsNotNullOrEmpty(path);
-            Argument.IsMinimal(fileSize, 1);
+        Argument.IsNotNullOrEmpty(path);
+        Argument.IsMinimal(fileSize, 1);
 
-            if (!Path.IsPathRooted(path))
-                throw new ArgumentException($"The path '{path}' was not a rooted path and IsFreeSpaceAvailable does not support relative paths.");
+        if (!Path.IsPathRooted(path))
+            throw new ArgumentException($"The path '{path}' was not a rooted path and IsFreeSpaceAvailable does not support relative paths.");
 
-            if (path.StartsWith(@"\\"))
-                return true;
+        if (path.StartsWith(@"\\"))
+            return true;
 
-            // Get just the drive letter for WMI call
-            if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive)
-                return drive.TotalFreeSpace > fileSize;
+        // Get just the drive letter for WMI call
+        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive)
+            return drive.TotalFreeSpace > fileSize;
 
-            return false;
-        }
+        return false;
+    }
 
-        /// <summary>
-        /// Determines whether the specified path is a network drive.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns><c>true</c> if [is network drive] [the specified path]; otherwise, <c>false</c>.</returns>
-        /// <exception cref="ArgumentException">The path '{path}' was not a rooted path.</exception>
-        public static bool IsNetworkDrive(string path)
-        {
-            Argument.IsNotNullOrEmpty(path);
+    /// <summary>
+    /// Determines whether the specified path is a network drive.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns><c>true</c> if [is network drive] [the specified path]; otherwise, <c>false</c>.</returns>
+    /// <exception cref="ArgumentException">The path '{path}' was not a rooted path.</exception>
+    public static bool IsNetworkDrive(string path)
+    {
+        Argument.IsNotNullOrEmpty(path);
 
-            if (!Path.IsPathRooted(path))
-                throw new ArgumentException($"The path '{path}' was not a rooted path.");
+        if (!Path.IsPathRooted(path))
+            throw new ArgumentException($"The path '{path}' was not a rooted path.");
 
-            if (path.StartsWith(@"\\"))
-                return true;
+        if (path.StartsWith(@"\\"))
+            return true;
 
-            // Get just the drive letter for WMI call
-            if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive && drive.DriveType == DriveType.Network)
-                return true;
+        // Get just the drive letter for WMI call
+        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive && drive.DriveType == DriveType.Network)
+            return true;
 
-            return false;
-        }
+        return false;
+    }
 
-        /// <summary>
-        /// Gets the name of the drive.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns>System.String.</returns>
-        /// <exception cref="ArgumentException">The path '{path}' was not a rooted path.</exception>
-        /// <exception cref="ArgumentException">A UNC path was passed to GetDriveName</exception>
-        /// <exception cref="ArgumentException">The path '{path}' was not a rooted path.</exception>
-        /// <exception cref="ArgumentException">A UNC path was passed to GetDriveName</exception>
-        public static string GetDriveName(string path)
-        {
-            Argument.IsNotNullOrEmpty(path);
+    /// <summary>
+    /// Gets the name of the drive.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>System.String.</returns>
+    /// <exception cref="ArgumentException">The path '{path}' was not a rooted path.</exception>
+    /// <exception cref="ArgumentException">A UNC path was passed to GetDriveName</exception>
+    /// <exception cref="ArgumentException">The path '{path}' was not a rooted path.</exception>
+    /// <exception cref="ArgumentException">A UNC path was passed to GetDriveName</exception>
+    public static string GetDriveName(string path)
+    {
+        Argument.IsNotNullOrEmpty(path);
 
-            if (!Path.IsPathRooted(path))
-                throw new ArgumentException($"The path '{path}' was not a rooted path.");
+        if (!Path.IsPathRooted(path))
+            throw new ArgumentException($"The path '{path}' was not a rooted path.");
 
-            if (path.StartsWith(@"\\"))
-                throw new ArgumentException("A UNC path was passed to GetDriveName");
+        if (path.StartsWith(@"\\"))
+            throw new ArgumentException("A UNC path was passed to GetDriveName");
 
+        return Directory.GetDirectoryRoot(path);
+    }
+
+    /// <summary>
+    /// Resolves the given path to a root UNC path if the path is a mapped drive.
+    /// Otherwise, just returns the given path.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>System.String.</returns>
+    /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and ResolveToRootUNC does not support relative paths.</exception>
+    public static string ResolveToRootUNC(string path)
+    {
+        Argument.IsNotNullOrEmpty(path);
+
+        if (!Path.IsPathRooted(path))
+            throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToRootUNC does not support relative paths.");
+
+        if (path.StartsWith(@"\\"))
             return Directory.GetDirectoryRoot(path);
-        }
 
-        /// <summary>
-        /// Resolves the given path to a root UNC path if the path is a mapped drive.
-        /// Otherwise, just returns the given path.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns>System.String.</returns>
-        /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and ResolveToRootUNC does not support relative paths.</exception>
-        public static string ResolveToRootUNC(string path)
+        // Get just the drive letter for WMI call
+        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive && drive.DriveType == DriveType.Network)
+            return drive.RootDirectory.ToString();
+
+        return GetDriveName(path);
+    }
+
+    /// <summary>
+    /// Resolves the given path to a full UNC path if the path is a mapped drive.
+    /// Otherwise, just returns the given path.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>System.String.</returns>
+    /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and ResolveToUNC does not support relative paths.</exception>
+    public static string ResolveToUNC(string path)
+    {
+        Argument.IsNotNullOrEmpty(path);
+
+        if (!Path.IsPathRooted(path))
+            throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToUNC does not support relative paths.");
+
+        // Is the path already in the UNC format?
+        if (path.StartsWith(@"\\"))
+            return path;
+
+        string rootPath = ResolveToRootUNC(path);
+
+        if (path.StartsWith(rootPath))
         {
-            Argument.IsNotNullOrEmpty(path);
-
-            if (!Path.IsPathRooted(path))
-                throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToRootUNC does not support relative paths.");
-
-            if (path.StartsWith(@"\\"))
-                return Directory.GetDirectoryRoot(path);
-
-            // Get just the drive letter for WMI call
-            if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive && drive.DriveType == DriveType.Network)
-                return drive.RootDirectory.ToString();
-
-            return GetDriveName(path);
+            return path; // Local drive, no resolving occurred
         }
-
-        /// <summary>
-        /// Resolves the given path to a full UNC path if the path is a mapped drive.
-        /// Otherwise, just returns the given path.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns>System.String.</returns>
-        /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and ResolveToUNC does not support relative paths.</exception>
-        public static string ResolveToUNC(string path)
+        else
         {
-            Argument.IsNotNullOrEmpty(path);
-
-            if (!Path.IsPathRooted(path))
-                throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToUNC does not support relative paths.");
-
-            // Is the path already in the UNC format?
-            if (path.StartsWith(@"\\"))
-                return path;
-
-            string rootPath = ResolveToRootUNC(path);
-
-            if (path.StartsWith(rootPath))
-            {
-                return path; // Local drive, no resolving occurred
-            }
-            else
-            {
-                return path.Replace(GetDriveName(path), rootPath);
-            }
+            return path.Replace(GetDriveName(path), rootPath);
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
 
-namespace ISynergy.Framework.Core.Abstractions.Services
+namespace ISynergy.Framework.Core.Abstractions.Services;
+
+public interface ILocalizationService
 {
-    public interface ILocalizationService
-    {
-        void SetLocalizationLanguage(Languages language);
-        List<string> GetTimeZoneIds(string iso2country);
-    }
+    void SetLocalizationLanguage(Languages language);
+    List<string> GetTimeZoneIds(string iso2country);
 }

@@ -1,6 +1,5 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.Navigation
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Navigation;
+
+public interface INavigationItem
 {
-    public interface INavigationItem
-    {
-    }
 }

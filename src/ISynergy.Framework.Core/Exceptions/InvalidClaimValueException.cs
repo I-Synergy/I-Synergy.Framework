@@ -1,37 +1,36 @@
 ﻿using System.Runtime.Serialization;
 
-namespace ISynergy.Framework.Core.Exceptions
+namespace ISynergy.Framework.Core.Exceptions;
+
+/// <summary>
+/// Class InvalidClaimValueException.
+/// Implements the <see cref="ClaimAuthorizationException" />
+/// </summary>
+/// <seealso cref="ClaimAuthorizationException" />
+public class InvalidClaimValueException : ClaimAuthorizationException
 {
     /// <summary>
-    /// Class InvalidClaimValueException.
-    /// Implements the <see cref="ClaimAuthorizationException" />
+    /// Initializes a new instance of the <see cref="InvalidClaimValueException"/> class.
     /// </summary>
-    /// <seealso cref="ClaimAuthorizationException" />
-    public class InvalidClaimValueException : ClaimAuthorizationException
+    /// <param name="claimType">Type of the claim.</param>
+    public InvalidClaimValueException(string claimType)
+        : base($"Claim '{claimType}' is found, but has an invalid value.")
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidClaimValueException"/> class.
-        /// </summary>
-        /// <param name="claimType">Type of the claim.</param>
-        public InvalidClaimValueException(string claimType)
-            : base($"Claim '{claimType}' is found, but has an invalid value.")
-        {
-        }
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidClaimValueException"/> class.
-        /// </summary>
-        public InvalidClaimValueException()
-        {
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InvalidClaimValueException"/> class.
+    /// </summary>
+    public InvalidClaimValueException()
+    {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidClaimValueException"/> class.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="innerException">The inner exception.</param>
-        public InvalidClaimValueException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InvalidClaimValueException"/> class.
+    /// </summary>
+    /// <param name="message">The message.</param>
+    /// <param name="innerException">The inner exception.</param>
+    public InvalidClaimValueException(string message, Exception innerException) : base(message, innerException)
+    {
     }
 }

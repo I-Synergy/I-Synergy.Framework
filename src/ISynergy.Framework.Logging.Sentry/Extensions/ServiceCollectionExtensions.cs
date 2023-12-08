@@ -6,24 +6,23 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Sentry;
 
-namespace ISynergy.Framework.Logging.Extensions
+namespace ISynergy.Framework.Logging.Extensions;
+
+/// <summary>
+/// Service collection extensions for Application Insights logging.
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Service collection extensions for Application Insights logging.
+    /// Adds Application Insights logging integration.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="builder"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static ILoggingBuilder AddSentryLogging(this ILoggingBuilder builder, IConfiguration configuration)
     {
-        /// <summary>
-        /// Adds Application Insights logging integration.
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static ILoggingBuilder AddSentryLogging(this ILoggingBuilder builder, IConfiguration configuration)
-        {
-            builder.Services.Configure<SentryOptions>(configuration.GetSection(nameof(SentryOptions)).BindWithReload);
-            builder.Services.TryAddSingleton<ILogger, Logger>();
-            return builder;
-        }
+        builder.Services.Configure<SentryOptions>(configuration.GetSection(nameof(SentryOptions)).BindWithReload);
+        builder.Services.TryAddSingleton<ILogger, Logger>();
+        return builder;
     }
 }

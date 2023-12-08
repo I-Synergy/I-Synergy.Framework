@@ -2,48 +2,47 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Extensions.Tests;
+
+/// <summary>
+/// Class ArrayExtensionsTests.
+/// </summary>
+[TestClass]
+public class ArrayExtensionsTests
 {
     /// <summary>
-    /// Class ArrayExtensionsTests.
+    /// Defines the test method NullArrayNonFailableTest.
     /// </summary>
-    [TestClass]
-    public class ArrayExtensionsTests
+    [TestMethod]
+    public void NullArrayNonFailableTest()
     {
-        /// <summary>
-        /// Defines the test method NullArrayNonFailableTest.
-        /// </summary>
-        [TestMethod]
-        public void NullArrayNonFailableTest()
+        object[] list = null;
+        bool result = false;
+
+        foreach (object item in list.EnsureNotNull())
+        {
+        }
+
+        result = true;
+
+        Assert.IsTrue(result);
+    }
+
+    /// <summary>
+    /// Defines the test method NullArrayFailableTest.
+    /// </summary>
+    [TestMethod]
+    public void NullArrayFailableTest()
+    {
+        Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
         {
             object[] list = null;
-            bool result = false;
 
-            foreach (object item in list.EnsureNotNull())
+            foreach (object item in list)
             {
             }
 
-            result = true;
-
-            Assert.IsTrue(result);
-        }
-
-        /// <summary>
-        /// Defines the test method NullArrayFailableTest.
-        /// </summary>
-        [TestMethod]
-        public void NullArrayFailableTest()
-        {
-            Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
-            {
-                object[] list = null;
-
-                foreach (object item in list)
-                {
-                }
-
-                return Task.CompletedTask;
-            });
-        }
+            return Task.CompletedTask;
+        });
     }
 }
