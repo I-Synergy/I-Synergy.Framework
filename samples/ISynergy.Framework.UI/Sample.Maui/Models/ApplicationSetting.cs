@@ -19,12 +19,12 @@ public class ApplicationSetting : IBaseApplicationSettings
 
     public ApplicationSetting()
     {
-       Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
-       {
-           "nl" => Languages.Dutch,
-           "de" => Languages.German,
-           "fr" => Languages.French,
-           _ => Languages.English,
-       };
+        Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
+        {
+            "nl" => Languages.Dutch,
+            "de" => Languages.German,
+            "fr" => Languages.French,
+            _ => Languages.English,
+        };
     }
 }

@@ -26,11 +26,11 @@ internal class Program
             .AddJsonFile("appsettings.json", false)
             .Build();
 
-            var assembly = Assembly.GetAssembly(typeof(Program));
-            var infoService = InfoService.Default;
+            Assembly assembly = Assembly.GetAssembly(typeof(Program));
+            IInfoService infoService = InfoService.Default;
             infoService.LoadAssembly(assembly);
 
-            var services = new ServiceCollection()
+            IServiceCollection services = new ServiceCollection()
                 .AddLogging(builder => builder.AddApplicationInsightsLogging(config))
                 .AddOptions();
 
@@ -38,7 +38,7 @@ internal class Program
             services.TryAddSingleton(s => infoService);
             services.TryAddScoped<Startup>();
 
-            var serviceProvider = services.BuildServiceProvider();
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
 
             Startup application = serviceProvider.GetRequiredService<Startup>();
             application.Run();

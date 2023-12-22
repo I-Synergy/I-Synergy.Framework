@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
 using Microsoft.UI.Xaml.Data;
-using Windows.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
 

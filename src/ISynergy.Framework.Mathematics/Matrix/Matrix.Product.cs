@@ -1629,7 +1629,7 @@ public static partial class Matrix
     /// 
     /// <returns>The Kronecker product of the two vectors.</returns>
     /// 
-		public static double[] Kronecker(this double[] a, double[] b, double[] result)
+    public static double[] Kronecker(this double[] a, double[] b, double[] result)
     {
         unsafe
         {

@@ -206,7 +206,7 @@ public class RegistrationViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        var selectionVM = new ViewModelSelectionDialog<Module>(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
+        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
         selectionVM.Submitted += SelectionVM_Submitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(SelectionWindow), selectionVM);
     }

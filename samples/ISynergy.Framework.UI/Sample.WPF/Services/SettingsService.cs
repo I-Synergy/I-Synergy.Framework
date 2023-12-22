@@ -1,9 +1,6 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using Sample.Abstractions.Services;
 using Sample.Models;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sample.Services;
 

@@ -1,11 +1,99 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using ISynergy.Framework.UI.Extensions;
+﻿using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0-windows10.0.19041)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net7.0)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net7.0-ios)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net7.0-maccatalyst)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net7.0-android)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0-ios)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0-maccatalyst)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0-android)'
+Before:
+using Windows.Foundation;
+After:
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
+*/
+using System.Diagnostics.CodeAnalysis;
 using Windows.Foundation;
 
 namespace ISynergy.Framework.UI.Controls;

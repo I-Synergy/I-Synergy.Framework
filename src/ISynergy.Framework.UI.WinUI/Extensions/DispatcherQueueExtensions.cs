@@ -1,7 +1,21 @@
-﻿using System;
+﻿
+/* Unmerged change from project 'ISynergy.Framework.UI.WinUI (net7.0-windows10.0.19041)'
+Before:
+using System;
+After:
+using Microsoft.UI.Dispatching;
+using System;
+*/
+using Microsoft.UI.Dispatching;
 using System.Runtime.CompilerServices;
+/* Unmerged change from project 'ISynergy.Framework.UI.WinUI (net7.0-windows10.0.19041)'
+Before:
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
+After:
+using System.Threading.Tasks;
+*/
+
 
 #nullable enable
 

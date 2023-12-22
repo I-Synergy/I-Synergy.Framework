@@ -1,10 +1,86 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
+
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0-windows10.0.19041)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net7.0)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net7.0-ios)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.WinUI (net8.0-windows10.0.19041)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.WinUI (net7.0-windows10.0.19041)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net7.0-maccatalyst)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net7.0-android)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0-ios)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0-maccatalyst)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI.Uno (net8.0-android)'
+Before:
+using ISynergy.Framework.Core.Extensions;
+After:
+using ISynergy.Framework.Core.Locators;
+*/
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml.Data;
-using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -207,7 +283,7 @@ public class EnumToDescriptionConverter : IValueConverter
     }
 }
 
-public class EnumToIntegerConverter: IValueConverter
+public class EnumToIntegerConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

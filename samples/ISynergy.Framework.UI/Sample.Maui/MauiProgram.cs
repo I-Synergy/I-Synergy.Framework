@@ -6,10 +6,10 @@ using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
-using Sample.Abstractions;
 using System.Reflection;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]

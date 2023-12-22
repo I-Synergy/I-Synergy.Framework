@@ -5,8 +5,6 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
-using Sample.Enumerations;
-using Sample.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -177,7 +175,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        var selectionVM = new ViewModelSelectionBlade<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;
         return CommonServices.NavigationService.OpenBladeAsync(this, selectionVM);
     }

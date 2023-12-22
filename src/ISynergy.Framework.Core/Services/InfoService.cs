@@ -75,7 +75,7 @@ public class InfoService : IInfoService
     /// <summary>
     /// Gets the application title.
     /// </summary>
-    public string Title { get; private set; } 
+    public string Title { get; private set; }
 
     /// <summary>
     /// Loads the assembly into the Version service.
@@ -88,17 +88,17 @@ public class InfoService : IInfoService
         ProductName = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
         Copyrights = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
 
-        if (assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false) && 
+        if (assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false) &&
             Version.TryParse(assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion, out var informationalVersion))
         {
             ProductVersion = informationalVersion;
         }
-        else if (assembly.IsDefined(typeof(AssemblyVersionAttribute), false) && 
+        else if (assembly.IsDefined(typeof(AssemblyVersionAttribute), false) &&
             Version.TryParse(assembly.GetCustomAttribute<AssemblyVersionAttribute>().Version, out var assemblyVersion))
         {
             ProductVersion = assemblyVersion;
         }
-        else if (assembly.IsDefined(typeof(AssemblyFileVersionAttribute), false) && 
+        else if (assembly.IsDefined(typeof(AssemblyFileVersionAttribute), false) &&
             Version.TryParse(assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version, out var fileVersion))
         {
             ProductVersion = fileVersion;

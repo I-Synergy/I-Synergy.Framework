@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Sample.Models;
 using System;
 
 namespace Sample.Converters;

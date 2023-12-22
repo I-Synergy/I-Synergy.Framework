@@ -2,7 +2,6 @@
 using ISynergy.Framework.UI.Models;
 using Microsoft.Win32.SafeHandles;
 using System.ComponentModel;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -32,8 +31,52 @@ public static class CredentialManager
         {
             using (CriticalCredentialHandle critCred = new CriticalCredentialHandle(nCredPtr))
             {
+
+                /* Unmerged change from project 'ISynergy.Framework.UI.WPF (net48)'
+                Before:
+                                CREDENTIAL cred = critCred.GetCredential();
+
+                                if (Marshal.PtrToStringUni(cred.UserName) == username)
+                After:
+                                CREDENTIAL cred = critCred.GetCredential();
+
+                                if (Marshal.PtrToStringUni(cred.UserName) == username)
+                */
+
+                /* Unmerged change from project 'ISynergy.Framework.UI.WPF (net6.0-windows)'
+                Before:
+                                CREDENTIAL cred = critCred.GetCredential();
+
+                                if (Marshal.PtrToStringUni(cred.UserName) == username)
+                After:
+                                CREDENTIAL cred = critCred.GetCredential();
+
+                                if (Marshal.PtrToStringUni(cred.UserName) == username)
+                */
+
+                /* Unmerged change from project 'ISynergy.Framework.UI.WPF (net7.0-windows)'
+                Before:
+                                CREDENTIAL cred = critCred.GetCredential();
+
+                                if (Marshal.PtrToStringUni(cred.UserName) == username)
+                After:
+                                CREDENTIAL cred = critCred.GetCredential();
+
+                                if (Marshal.PtrToStringUni(cred.UserName) == username)
+                */
+
+                /* Unmerged change from project 'ISynergy.Framework.UI.WPF (net8.0-windows)'
+                Before:
+                                CREDENTIAL cred = critCred.GetCredential();
+
+                                if (Marshal.PtrToStringUni(cred.UserName) == username)
+                After:
+                                CREDENTIAL cred = critCred.GetCredential();
+
+                                if (Marshal.PtrToStringUni(cred.UserName) == username)
+                */
                 CREDENTIAL cred = critCred.GetCredential();
-                
+
                 if (Marshal.PtrToStringUni(cred.UserName) == username)
                     return ReadCredential(cred);
             }
@@ -56,7 +99,7 @@ public static class CredentialManager
 
     public static bool DeleteCredential(string resource) =>
         CredDelete(resource, CredentialTypes.Generic, 0);
-           
+
 
     public static int WriteCredential(string resource, string username, string password, CredentialPersistence persistence = CredentialPersistence.LocalMachine)
     {

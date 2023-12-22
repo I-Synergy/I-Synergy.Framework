@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Extensions.Logging;

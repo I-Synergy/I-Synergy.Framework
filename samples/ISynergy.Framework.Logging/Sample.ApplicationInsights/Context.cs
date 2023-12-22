@@ -1,13 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Sample.ApplicationInsights.Models;
 using Sample.ApplicationInsights.Options;
-using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace Sample;

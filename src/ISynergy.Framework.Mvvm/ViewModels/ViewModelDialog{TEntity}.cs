@@ -116,7 +116,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     protected override void Dispose(bool disposing)
     {
         Validator = null;
-        
+
         SubmitCommand?.Cancel();
         SubmitCommand = null;
 

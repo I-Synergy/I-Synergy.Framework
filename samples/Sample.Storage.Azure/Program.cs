@@ -29,14 +29,14 @@ internal class Program
                 ConnectionString = config["AzureBlobOptions:ConnectionString"]
             };
 
-            var services = new ServiceCollection()
+            IServiceCollection services = new ServiceCollection()
                 .AddLogging()
                 .AddOptions();
 
             services.AddStorageAzureIntegration<AzureBlobOptions>(config);
             services.TryAddScoped<Startup>();
 
-            var serviceProvider = services.BuildServiceProvider();
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
             Startup application = serviceProvider.GetRequiredService<Startup>();
             application.RunAsync().GetAwaiter().GetResult();
         }
