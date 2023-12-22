@@ -135,7 +135,7 @@ public class DateTimeExtensionsTests
     [TestMethod]
     public void ToStartOfQuarterLocalTest()
     {
-        var result = new DateTime(1975, 10, 29, 14, 43, 35).ToStartOfQuarter();
+        DateTime result = new DateTime(1975, 10, 29, 14, 43, 35).ToStartOfQuarter();
         Assert.AreEqual(new DateTime(1975, 10, 1, 0, 0, 0), result);
     }
 
@@ -145,7 +145,7 @@ public class DateTimeExtensionsTests
     [TestMethod]
     public void ToEndOfQuarterLocalTest()
     {
-        var result = new DateTime(1975, 10, 29, 14, 43, 35).ToEndOfQuarter();
+        DateTime result = new DateTime(1975, 10, 29, 14, 43, 35).ToEndOfQuarter();
         Assert.AreEqual(new DateTime(1975, 12, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1), result);
     }
 }

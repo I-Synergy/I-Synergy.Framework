@@ -2,7 +2,6 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using Sample.Models;
 using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
@@ -20,10 +19,10 @@ public class TestViewModel : ViewModelDialog<object>
     }
 
     public TestViewModel(
-        IContext context, 
-        IBaseCommonServices commonServices, 
-        ILogger logger, 
-        bool automaticValidation = false) 
+        IContext context,
+        IBaseCommonServices commonServices,
+        ILogger logger,
+        bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
         Units =

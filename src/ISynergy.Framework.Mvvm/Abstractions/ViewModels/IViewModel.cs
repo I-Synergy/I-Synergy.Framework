@@ -99,5 +99,5 @@ public interface IViewModel : IObservableClass, ICleanup
     /// <summary>
     /// Gets or sets an optional parameter.
     /// </summary>
-    object Parameter { get;  set; }
+    object Parameter { get; set; }
 }

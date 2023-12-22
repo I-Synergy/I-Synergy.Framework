@@ -5,8 +5,8 @@ using System.Windows;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification;
 
-public class Notifier: IDisposable
-{ 
+public class Notifier : IDisposable
+{
     private readonly object _syncRoot = new object();
 
     private readonly Action<NotifierConfiguration> _configureAction;

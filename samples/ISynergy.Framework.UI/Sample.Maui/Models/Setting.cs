@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.Core.Base;
 
 namespace Sample.Models;
 

@@ -5,7 +5,6 @@ using ISynergy.Framework.UI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Windows.ApplicationModel;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -177,7 +176,7 @@ public class ThemeService : IThemeService
         var appWindow = WindowHelper.GetAppWindow(window);
 
         var iconPath = Path.Combine(System.AppContext.BaseDirectory, "icon.ico");
-        
+
         if (File.Exists(iconPath))
             appWindow.SetIcon(iconPath);
 

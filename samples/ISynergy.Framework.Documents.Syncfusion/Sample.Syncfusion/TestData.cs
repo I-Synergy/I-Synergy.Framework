@@ -6,5 +6,5 @@ public class TestData
     public string Name { get; set; }
     public int Quantity { get; set; }
     public DateTimeOffset Date { get; set; }
-    public decimal Price { get; set; }  
+    public decimal Price { get; set; }
 }

@@ -12,9 +12,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
-using Sample;
 using Sample.Abstractions.Services;
-using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
@@ -55,7 +53,7 @@ public sealed partial class App : BaseApplication
             .ConfigureLogging((context, logging) =>
             {
 #if __WASM__
-			        logging.AddProvider(new Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
+                logging.AddProvider(new Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
 #elif __IOS__ || __MACCATALYST__
 			        logging.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
 #elif NETFX_CORE

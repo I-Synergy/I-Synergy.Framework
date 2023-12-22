@@ -9,9 +9,6 @@
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Proxy.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Flurl" Version="3.0.7" />
-	</ItemGroup>
-	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
 	</ItemGroup>
 </Project>

@@ -26,7 +26,7 @@ public class ValidationTests
             Value = null,
             Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<string>;
+                ModelFixture<string> i = arg as ModelFixture<string>;
 
                 if (string.IsNullOrEmpty(i.Value))
                 {
@@ -48,7 +48,7 @@ public class ValidationTests
             Value = "192.168.1.0",
             Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<string>;
+                ModelFixture<string> i = arg as ModelFixture<string>;
 
                 if (string.IsNullOrEmpty(i.Value))
                 {
@@ -73,7 +73,7 @@ public class ValidationTests
             Value = 9999,
             Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<int>;
+                ModelFixture<int> i = arg as ModelFixture<int>;
 
                 if (!Enumerable.Range(1, 100).Contains(i.Value))
                 {
@@ -95,7 +95,7 @@ public class ValidationTests
             Value = 80,
             Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<int>;
+                ModelFixture<int> i = arg as ModelFixture<int>;
 
                 if (!Enumerable.Range(1, 500).Contains(i.Value))
                 {
@@ -119,7 +119,7 @@ public class ValidationTests
             Value = "",
             Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<string>;
+                ModelFixture<string> i = arg as ModelFixture<string>;
 
                 if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                 {
@@ -141,7 +141,7 @@ public class ValidationTests
             Value = "192.168.1.0",
             Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<string>;
+                ModelFixture<string> i = arg as ModelFixture<string>;
 
                 if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                 {
@@ -157,7 +157,7 @@ public class ValidationTests
     [TestMethod]
     public void ViewModelProductIsNullTest()
     {
-        var fixture = new TestViewModel();
+        TestViewModel fixture = new TestViewModel();
 
         Assert.IsFalse(fixture.Validate());
         Assert.AreEqual(1, fixture.Errors.Count);
@@ -167,7 +167,7 @@ public class ValidationTests
     [TestMethod]
     public void ViewModelProductIsNotNullTest()
     {
-        var fixture = new TestViewModel
+        TestViewModel fixture = new TestViewModel
         {
             SelectedItem = new Product()
         };
@@ -182,7 +182,7 @@ public class ValidationTests
     [TestMethod]
     public void ViewModelProductIsNotNullAndQuantityIsOneTest()
     {
-        var fixture = new TestViewModel
+        TestViewModel fixture = new TestViewModel
         {
             SelectedItem = new Product() { Quantity = 1 }
         };
@@ -197,7 +197,7 @@ public class ValidationTests
     [TestMethod]
     public void ViewModelProductIsNotNullAndQuantityIsOneChangedValidationTest()
     {
-        var fixture = new TestViewModel();
+        TestViewModel fixture = new TestViewModel();
 
         Assert.IsFalse(fixture.Validate());
         Assert.AreEqual(1, fixture.Errors.Count);
@@ -217,7 +217,7 @@ public class ValidationTests
     [TestMethod]
     public void ViewModelProductIsNotNullAndQuantityIsOnePropertiesValidationTest()
     {
-        var fixture = new TestViewModel();
+        TestViewModel fixture = new TestViewModel();
 
         Assert.IsFalse(fixture.Validate());
         Assert.AreEqual(1, fixture.Errors.Count);

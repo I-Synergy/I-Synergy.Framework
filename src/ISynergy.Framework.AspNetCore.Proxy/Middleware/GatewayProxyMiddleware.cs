@@ -1,5 +1,4 @@
-﻿using Flurl;
-using ISynergy.Framework.AspNetCore.Extensions;
+﻿using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.AspNetCore.Proxy.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -48,13 +47,13 @@ internal class GatewayProxyMiddleware
                 {
                     _logger.LogDebug($"TargetUri: {proxy.DestinationUri.AbsoluteUri}");
 
-                    var url = new Url(proxy.DestinationUri);
-                    url.AppendPathSegment(context.Request.Path);
+                    var url = new UriBuilder(proxy.DestinationUri);
+                    url.Path += context.Request.Path;
 
-                    if (!string.IsNullOrEmpty(context.Request.QueryString.ToString()))
-                        url.SetQueryParam(context.Request.QueryString.ToString().Replace("?", ""));
+                    if (context.Request.QueryString.ToUriComponent().Any())
+                        url.Query += context.Request.QueryString.ToUriComponent();
 
-                    var targetRequestMessage = context.CreateProxyHttpRequest(url.ToUri());
+                    var targetRequestMessage = context.CreateProxyHttpRequest(url.Uri);
 
                     using var httpClient = httpClientFactory.CreateClient();
                     using var responseMessage = await httpClient.SendAsync(targetRequestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted);

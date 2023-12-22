@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 		
 	<PropertyGroup>
@@ -26,22 +26,18 @@
 	  <None Remove="Assets\Fonts\segoeuil.ttf" />
 	  <None Remove="Assets\Fonts\segoeuisl.ttf" />
 	  <None Remove="Assets\Fonts\seguisb.ttf" />
+	  <None Remove="Assets\Images\Error.png" />
+	  <None Remove="Assets\Images\Information.png" />
+	  <None Remove="Assets\Images\Question.png" />
+	  <None Remove="Assets\Images\Refresh.png" />
+	  <None Remove="Assets\Images\Warning.png" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="NodaTime" Version="3.1.9" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'!='net8.0'">
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -57,15 +53,50 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="Assets\Fonts\ISynergy.ttf" />
-	  <Resource Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
-	  <Resource Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
-	  <Resource Include="Assets\Fonts\SegMDL2.ttf" />
-	  <Resource Include="Assets\Fonts\segoesb.ttf" />
-	  <Resource Include="Assets\Fonts\segoeui.ttf" />
-	  <Resource Include="Assets\Fonts\segoeuib.ttf" />
-	  <Resource Include="Assets\Fonts\segoeuil.ttf" />
-	  <Resource Include="Assets\Fonts\segoeuisl.ttf" />
-	  <Resource Include="Assets\Fonts\seguisb.ttf" />
+	  <Content Include="Assets\Fonts\ISynergy.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\OpenDyslexic3-Bold.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\OpenDyslexic3-Regular.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\SegMDL2.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\segoesb.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\segoeui.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\segoeuib.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\segoeuil.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\segoeuisl.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Fonts\seguisb.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Images\Error.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Images\Information.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Images\Question.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Images\Refresh.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\Images\Warning.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 </Project>

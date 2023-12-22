@@ -54,11 +54,11 @@ public class EnumerableExtensionsTest
     {
         List<Product> collection =
         [
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
+            new Product { ProductId = Guid.NewGuid(), Name = "Test1" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test2" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test3" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test4" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test5" }
         ];
 
         if (collection is IEnumerable<Product> data)
@@ -85,11 +85,11 @@ public class EnumerableExtensionsTest
     {
         List<Product> collection =
         [
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
+            new Product { ProductId = Guid.NewGuid(), Name = "Test1" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test2" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test3" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test4" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test5" }
         ];
 
         if (collection is IEnumerable data)

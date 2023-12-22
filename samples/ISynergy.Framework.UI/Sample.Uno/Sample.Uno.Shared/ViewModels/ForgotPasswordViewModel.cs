@@ -44,7 +44,7 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
         {
             if (string.IsNullOrEmpty(EmailAddress) || !NetworkUtility.IsValidEMail(EmailAddress))
             {
-                AddValidationError(nameof(EmailAddress),"E-mail address is invalid.");
+                AddValidationError(nameof(EmailAddress), "E-mail address is invalid.");
             }
         });
 

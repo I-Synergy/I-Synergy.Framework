@@ -114,12 +114,12 @@ public sealed partial class App : BaseApplication
         //    await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
         //}
 
-        var navigateToAuthentication = true;
+        bool navigateToAuthentication = true;
 
         if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
         {
-            var username = _applicationSettingsService.Settings.DefaultUser;
-            var password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+            string username = _applicationSettingsService.Settings.DefaultUser;
+            string password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
             if (!string.IsNullOrEmpty(password))
             {

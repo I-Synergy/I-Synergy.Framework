@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using System.Collections.ObjectModel;
 using System.Globalization;

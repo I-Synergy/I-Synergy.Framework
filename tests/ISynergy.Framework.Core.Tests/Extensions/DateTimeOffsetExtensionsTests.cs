@@ -29,7 +29,7 @@ public class DateTimeOffsetExtensionsTests
     [TestMethod]
     public void IsInRangeOfDateDifferentOffsetTest()
     {
-        DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, new TimeSpan(-8,0,0));
+        DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, new TimeSpan(-8, 0, 0));
         DateTimeOffset comparer = new(2017, 10, 10, 23, 0, 0, new TimeSpan(0, 0, 0));
 
         Assert.IsFalse(self.IsInRangeOfDate(comparer));
@@ -54,7 +54,7 @@ public class DateTimeOffsetExtensionsTests
     [TestMethod]
     public void IsInRangeOfDatesDifferentOffsetTest()
     {
-        DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, new TimeSpan(-8,0,0));
+        DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, new TimeSpan(-8, 0, 0));
         DateTimeOffset start = new(2017, 10, 10, 22, 0, 0, new TimeSpan(0, 0, 0));
         DateTimeOffset end = new(2017, 10, 11, 21, 59, 59, new TimeSpan(0, 0, 0));
 
@@ -108,7 +108,7 @@ public class DateTimeOffsetExtensionsTests
     [TestMethod]
     public void ToStartOfYearLocalTest()
     {
-        var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfYear();
+        DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfYear();
         Assert.AreEqual(new DateTimeOffset(1975, 1, 1, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime(), result);
     }
 
@@ -118,7 +118,7 @@ public class DateTimeOffsetExtensionsTests
     [TestMethod]
     public void ToEndOfYearLocalTest()
     {
-        var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfYear();
+        DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfYear();
         Assert.AreEqual(new DateTimeOffset(1975, 1, 1, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddYears(1).AddTicks(-1).ToUniversalTime(), result);
     }
 
@@ -128,7 +128,7 @@ public class DateTimeOffsetExtensionsTests
     [TestMethod]
     public void ToStartOfQuarterLocalTest()
     {
-        var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfQuarter();
+        DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfQuarter();
         Assert.AreEqual(new DateTimeOffset(1975, 10, 1, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime(), result);
     }
 
@@ -138,7 +138,7 @@ public class DateTimeOffsetExtensionsTests
     [TestMethod]
     public void ToEndOfQuarterLocalTest()
     {
-        var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfQuarter();
+        DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfQuarter();
         Assert.AreEqual(new DateTimeOffset(1975, 12, 1, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddMonths(1).AddTicks(-1).ToUniversalTime(), result);
     }
 

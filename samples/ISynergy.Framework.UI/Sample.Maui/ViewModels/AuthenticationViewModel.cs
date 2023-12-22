@@ -8,7 +8,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.ViewModels;

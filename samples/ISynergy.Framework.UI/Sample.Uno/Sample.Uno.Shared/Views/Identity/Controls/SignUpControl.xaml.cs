@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Models.Accounts;
-using Microsoft.UI.Xaml.Controls;
-using Sample.ViewModels;
+﻿using Microsoft.UI.Xaml.Controls;
 
 namespace Sample.Views.Identity.Controls;
 

@@ -11,9 +11,9 @@ public class DateTimeOffsetConverterTests
     public void DateTimeOffsetToTimeSpanTest()
     {
         // Arrange
-        var dateTimeOffset = DateTimeOffset.Now;
+        DateTimeOffset dateTimeOffset = DateTimeOffset.Now;
         // Act
-        var result = DateTimeOffsetConverter.DateTimeOffsetToTimeSpan(dateTimeOffset);
+        TimeSpan? result = DateTimeOffsetConverter.DateTimeOffsetToTimeSpan(dateTimeOffset);
         // Assert
         Assert.AreEqual(dateTimeOffset.TimeOfDay, result);
     }
@@ -23,11 +23,11 @@ public class DateTimeOffsetConverterTests
     public void TimeSpanToDateTimeOffsetTest()
     {
         // Arrange
-        var dateTimeOffset = new DateTimeOffset(1975, 10, 29, 15, 0, 0, TimeSpan.Zero);
-        var timeSpan = new TimeSpan(1, 2, 3);
+        DateTimeOffset dateTimeOffset = new DateTimeOffset(1975, 10, 29, 15, 0, 0, TimeSpan.Zero);
+        TimeSpan timeSpan = new TimeSpan(1, 2, 3);
         // Act
-        var result = DateTimeOffsetConverter.TimeSpanToDateTimeOffset(dateTimeOffset, timeSpan);
+        DateTimeOffset? result = DateTimeOffsetConverter.TimeSpanToDateTimeOffset(dateTimeOffset, timeSpan);
         // Assert
-        Assert.AreEqual(new DateTimeOffset(1975,10,29,1,2,3,TimeSpan.Zero), result);
+        Assert.AreEqual(new DateTimeOffset(1975, 10, 29, 1, 2, 3, TimeSpan.Zero), result);
     }
 }

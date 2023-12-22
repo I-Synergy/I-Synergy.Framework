@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Models;
-using System.Threading;
 
 namespace Sample.Syncfusion;
 
@@ -24,7 +23,7 @@ public class Startup
     {
         Console.WriteLine("Syncfusion implementation started...");
 
-        var data = new List<TestData>()
+        List<TestData> data = new List<TestData>()
         {
             new TestData { Id = Guid.NewGuid(), Name = "Test1", Date = DateTimeOffset.Now, Quantity= 1, Price = 1m },
             new TestData { Id = Guid.NewGuid(), Name = "Test2", Date = DateTimeOffset.Now, Quantity= 2, Price = 2m },
@@ -33,7 +32,7 @@ public class Startup
             new TestData { Id = Guid.NewGuid(), Name = "Test5", Date = DateTimeOffset.Now, Quantity= 5, Price = 5m }
         };
 
-        var request = new SpreadsheetRequest<TestData>()
+        SpreadsheetRequest<TestData> request = new SpreadsheetRequest<TestData>()
         {
             DataSet = data,
             FileName = "test.xlsx"

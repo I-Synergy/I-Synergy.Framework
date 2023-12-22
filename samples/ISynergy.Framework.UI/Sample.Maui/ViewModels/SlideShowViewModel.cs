@@ -3,9 +3,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Timers;
 using Timer = System.Timers.Timer;
 

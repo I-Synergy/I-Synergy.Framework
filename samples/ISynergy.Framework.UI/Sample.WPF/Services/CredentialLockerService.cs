@@ -1,5 +1,5 @@
-﻿using Sample.Abstractions;
-using ISynergy.Framework.UI.Win32;
+﻿using ISynergy.Framework.UI.Win32;
+using Sample.Abstractions;
 
 namespace Sample.Services;
 
@@ -9,7 +9,7 @@ internal class CredentialLockerService : ICredentialLockerService
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
-        var result = CredentialManager.ReadCredential(_resource, username);
+        ISynergy.Framework.UI.Models.Credential result = CredentialManager.ReadCredential(_resource, username);
 
         if (result is not null)
             return Task.FromResult(result.Password);
@@ -19,7 +19,7 @@ internal class CredentialLockerService : ICredentialLockerService
 
     public Task<List<string>> GetUsernamesFromCredentialLockerAsync()
     {
-        var credentials = CredentialManager.EnumerateCrendentials();
+        IReadOnlyList<ISynergy.Framework.UI.Models.Credential> credentials = CredentialManager.EnumerateCrendentials();
         return Task.FromResult(credentials.Select(q => q.Username).ToList());
     }
 

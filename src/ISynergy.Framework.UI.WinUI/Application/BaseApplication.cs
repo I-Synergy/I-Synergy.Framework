@@ -11,12 +11,9 @@ using ISynergy.Framework.UI.Helpers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text.RegularExpressions;
-using Windows.ApplicationModel.Activation;
 using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI;
@@ -74,7 +71,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
         SetGlobalExceptionHandler();
-        
+
         _context = ServiceLocator.Default.GetInstance<IContext>();
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;

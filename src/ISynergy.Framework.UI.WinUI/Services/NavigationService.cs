@@ -277,7 +277,7 @@ public class NavigationService : INavigationService
         if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page && Application.Current is BaseApplication baseApplication)
         {
             DispatcherQueue.GetForCurrentThread().TryEnqueue(
-                DispatcherQueuePriority.Normal, 
+                DispatcherQueuePriority.Normal,
                 async () =>
                 {
                     switch (_themeService.Style.Theme)

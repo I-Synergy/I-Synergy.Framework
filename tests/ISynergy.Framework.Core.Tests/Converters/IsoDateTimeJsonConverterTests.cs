@@ -15,8 +15,8 @@ public class IsoDateTimeJsonConverterTests
     private readonly string _jsonUnspecified;
     private readonly string _jsonUtc;
     private readonly string _jsonLocal;
-    
-    
+
+
     private readonly JsonSerializerOptions _serializerOptions;
 
     public IsoDateTimeJsonConverterTests()
@@ -37,7 +37,7 @@ public class IsoDateTimeJsonConverterTests
     [TestMethod()]
     public void ReadTestUtc()
     {
-        var date = JsonSerializer.Deserialize<DateTime>(_jsonUtc, _serializerOptions);
+        DateTime date = JsonSerializer.Deserialize<DateTime>(_jsonUtc, _serializerOptions);
         Assert.AreEqual(_dateUtc, date.ToUniversalTime());
     }
 
@@ -45,7 +45,7 @@ public class IsoDateTimeJsonConverterTests
     [TestMethod()]
     public void WriteTestUtc()
     {
-        var json = JsonSerializer.Serialize(_dateUtc, _serializerOptions);
+        string json = JsonSerializer.Serialize(_dateUtc, _serializerOptions);
         Assert.AreEqual(_jsonUtc, Regex.Unescape(json));
     }
 
@@ -53,7 +53,7 @@ public class IsoDateTimeJsonConverterTests
     [TestMethod()]
     public void ReadTestUnspecified()
     {
-        var date = JsonSerializer.Deserialize<DateTime>(_jsonUnspecified, _serializerOptions);
+        DateTime date = JsonSerializer.Deserialize<DateTime>(_jsonUnspecified, _serializerOptions);
         Assert.AreEqual(_dateUnspecified, date);
     }
 
@@ -61,7 +61,7 @@ public class IsoDateTimeJsonConverterTests
     [TestMethod()]
     public void WriteTestUnspecified()
     {
-        var json = JsonSerializer.Serialize(_dateUnspecified, _serializerOptions);
+        string json = JsonSerializer.Serialize(_dateUnspecified, _serializerOptions);
         Assert.AreEqual(_jsonUnspecified, Regex.Unescape(json));
     }
 

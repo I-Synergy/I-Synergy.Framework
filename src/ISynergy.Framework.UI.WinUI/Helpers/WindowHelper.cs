@@ -33,7 +33,8 @@ public class WindowHelper
 
     static public void TrackWindow(Microsoft.UI.Xaml.Window window)
     {
-        window.Closed += (sender, args) => {
+        window.Closed += (sender, args) =>
+        {
             _activeWindows.Remove(window);
         };
 
