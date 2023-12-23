@@ -11,10 +11,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using NugetUnlister;
 using NugetUnlister.Extensions;
+using Sample.Abstractions;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
-using Sample.Abstractions;
 using System.Reflection;
 
 namespace Sample;

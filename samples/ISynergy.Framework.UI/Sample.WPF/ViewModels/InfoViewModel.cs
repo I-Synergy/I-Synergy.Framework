@@ -70,7 +70,7 @@ public class InfoViewModel : ViewModelNavigation<object>
     }
 
     public RelayCommand BusyOnCommand { get; private set; }
-    public AsyncRelayCommand DialogCommand { get; private set; }    
+    public AsyncRelayCommand DialogCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -96,7 +96,7 @@ public class InfoViewModel : ViewModelNavigation<object>
 
     private async Task OpenDialogAsync()
     {
-        var testVm = new TestViewModel(Context, BaseCommonServices, Logger);
+        TestViewModel testVm = new TestViewModel(Context, BaseCommonServices, Logger);
         testVm.Submitted += TestVm_Submitted;
         await BaseCommonServices.DialogService.ShowDialogAsync(typeof(TestWindow), testVm);
     }

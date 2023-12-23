@@ -84,7 +84,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     public AsyncRelayCommand ValidationTestCommand { get; private set; }
 
-    public AsyncRelayCommand NugetUnlisterCommand { get; private set; } 
+    public AsyncRelayCommand NugetUnlisterCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
     public AsyncRelayCommand ShowToastMessageCommand { get; private set; }
@@ -130,11 +130,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         Items =
         [
-            new TestItem { Id = 1, Description = "Test 1"},
-            new TestItem { Id = 2, Description = "Test 2"},
-            new TestItem { Id = 3, Description = "Test 3"},
-            new TestItem { Id = 4, Description = "Test 4"},
-            new TestItem { Id = 5, Description = "Test 5"}
+            new TestItem { Id = 1, Description = "Test 1" },
+            new TestItem { Id = 2, Description = "Test 2" },
+            new TestItem { Id = 3, Description = "Test 3" },
+            new TestItem { Id = 4, Description = "Test 4" },
+            new TestItem { Id = 5, Description = "Test 5" }
         ];
 
         PopulateNavItems();
@@ -151,7 +151,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private Task SelectSingleAsync()
     {
-        var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
+        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
@@ -166,7 +166,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private Task SelectMultipleAsync()
     {
-        var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
+        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }

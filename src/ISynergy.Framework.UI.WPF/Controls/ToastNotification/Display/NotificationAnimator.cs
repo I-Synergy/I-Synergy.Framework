@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
-using ISynergy.Framework.UI.Controls.ToastNotification;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;

@@ -37,7 +37,7 @@ public class ValidationViewModel : ViewModelNavigation<TestItem>
 
         if (Validate())
         {
-            var task = new Task(() => BaseCommonServices.DialogService.ShowInformationAsync($"Validation succeeded."));
+            Task task = new Task(() => BaseCommonServices.DialogService.ShowInformationAsync($"Validation succeeded."));
             task.RunSynchronously();
         }
     }

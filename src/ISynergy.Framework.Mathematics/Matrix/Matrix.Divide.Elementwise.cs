@@ -118,7 +118,7 @@ public static partial class Elementwise
     ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The vector <c>b</c>.</param>
-		/// <param name="dimension">
+    /// <param name="dimension">
     ///   The type of the vector being passed to the function. If the vector
     ///   is a <see cref="VectorType.RowVector"/>, then the operation will
     ///   be applied between each row of the matrix and the given vector. If
@@ -137,7 +137,7 @@ public static partial class Elementwise
     ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The vector <c>b</c>.</param>
-		/// <param name="dimension">
+    /// <param name="dimension">
     ///   The type of the vector being passed to the function. If the vector
     ///   is a <see cref="VectorType.RowVector"/>, then the operation will
     ///   be applied between each row of the matrix and the given vector. If
@@ -175,7 +175,7 @@ public static partial class Elementwise
     ///
     /// <param name="a">The vector <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
-		/// <param name="dimension">
+    /// <param name="dimension">
     ///   The type of the vector being passed to the function. If the vector
     ///   is a <see cref="VectorType.RowVector"/>, then the operation will
     ///   be applied between each row of the matrix and the given vector. If
@@ -492,7 +492,7 @@ public static partial class Elementwise
     ///
     /// <param name="a">The vector <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
-		/// <param name="dimension">
+    /// <param name="dimension">
     ///   The type of the vector being passed to the function. If the vector
     ///   is a <see cref="VectorType.RowVector"/>, then the operation will
     ///   be applied between each row of the matrix and the given vector. If
@@ -514,7 +514,7 @@ public static partial class Elementwise
     ///
     /// <param name="a">The vector <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
-		/// <param name="dimension">
+    /// <param name="dimension">
     ///   The type of the vector being passed to the function. If the vector
     ///   is a <see cref="VectorType.RowVector"/>, then the operation will
     ///   be applied between each row of the matrix and the given vector. If
@@ -536,7 +536,7 @@ public static partial class Elementwise
     ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The vector <c>b</c>.</param>
-		/// <param name="dimension">
+    /// <param name="dimension">
     ///   The type of the vector being passed to the function. If the vector
     ///   is a <see cref="VectorType.RowVector"/>, then the operation will
     ///   be applied between each row of the matrix and the given vector. If
@@ -575,7 +575,7 @@ public static partial class Elementwise
     ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The vector <c>b</c>.</param>
-		/// <param name="dimension">
+    /// <param name="dimension">
     ///   The type of the vector being passed to the function. If the vector
     ///   is a <see cref="VectorType.RowVector"/>, then the operation will
     ///   be applied between each row of the matrix and the given vector. If

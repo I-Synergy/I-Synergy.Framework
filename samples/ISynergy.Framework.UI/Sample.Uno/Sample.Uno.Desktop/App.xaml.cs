@@ -13,7 +13,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions.Services;
-using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;

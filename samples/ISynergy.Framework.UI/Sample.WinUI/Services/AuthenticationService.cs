@@ -16,7 +16,7 @@ namespace Sample.Services;
 /// <seealso cref="IAuthenticationService" />
 public class AuthenticationService : IAuthenticationService
 {
-    
+
     private bool _authenticated;
 
     private readonly IContext _context;

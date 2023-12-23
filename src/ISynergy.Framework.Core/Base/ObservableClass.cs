@@ -277,7 +277,7 @@ public abstract class ObservableClass : IObservableClass
                 }
             }
         }
-        
+
         Validator?.Invoke(this);
 
         OnPropertyChanged(nameof(IsValid));

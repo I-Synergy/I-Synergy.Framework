@@ -32,7 +32,7 @@ public class CollectionExtensionsTests
         Assert.ThrowsException<NullReferenceException>(() =>
         {
             ObservableCollection<object> list = null;
-            foreach (object item in list) 
+            foreach (object item in list)
             {
                 Assert.IsNotNull(item);
             }
@@ -47,11 +47,11 @@ public class CollectionExtensionsTests
     {
         List<Product> collection =
         [
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
+            new Product { ProductId = Guid.NewGuid(), Name = "Test1" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test2" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test3" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test4" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test5" }
         ];
 
         if (collection is ICollection<Product> data)
@@ -81,11 +81,11 @@ public class CollectionExtensionsTests
     {
         List<Product> collection =
         [
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
-            new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
+            new Product { ProductId = Guid.NewGuid(), Name = "Test1" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test2" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test3" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test4" },
+            new Product { ProductId = Guid.NewGuid(), Name = "Test5" }
         ];
 
         if (collection is ICollection data)

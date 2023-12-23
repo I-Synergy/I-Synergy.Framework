@@ -31,10 +31,10 @@ public class NavigationService : INavigationService
     /// Gets or sets the frame.
     /// </summary>
     /// <value>The frame.</value>
-    public object Frame 
-    { 
-        get => _frame; 
-        set => _frame = (Frame)value; 
+    public object Frame
+    {
+        get => _frame;
+        set => _frame = (Frame)value;
     }
 
     /// <summary>

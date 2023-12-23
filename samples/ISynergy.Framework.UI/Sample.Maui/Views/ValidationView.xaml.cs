@@ -5,9 +5,9 @@ namespace Sample.Views;
 
 public partial class ValidationView : IView
 {
-	public ValidationView(IContext context)
-		: base(context, typeof(ValidationViewModel))
-	{
-		InitializeComponent();
-	}
+    public ValidationView(IContext context)
+        : base(context, typeof(ValidationViewModel))
+    {
+        InitializeComponent();
+    }
 }

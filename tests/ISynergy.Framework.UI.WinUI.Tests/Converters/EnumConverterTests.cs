@@ -13,8 +13,8 @@ public class EnumConverterTests
     [DataRow(TestEnum.Value3, 3)]
     public void EnumToIntegerConverter_Convert_ReturnsIntValue(TestEnum enumeration, int id)
     {
-        var converter = new EnumToIntegerConverter();
-        var result = converter.Convert(enumeration, typeof(int), null, null);
+        EnumToIntegerConverter converter = new EnumToIntegerConverter();
+        object result = converter.Convert(enumeration, typeof(int), null, null);
         Assert.AreEqual(id, result);
     }
 
@@ -24,8 +24,8 @@ public class EnumConverterTests
     [DataRow(3, TestEnum.Value3)]
     public void EnumToIntegerConverter_ConvertBack_ReturnsEnumValue(int id, TestEnum enumeration)
     {
-        var converter = new EnumToIntegerConverter();
-        var result = converter.ConvertBack(id, typeof(TestEnum), null, null);
+        EnumToIntegerConverter converter = new EnumToIntegerConverter();
+        object result = converter.ConvertBack(id, typeof(TestEnum), null, null);
         Assert.AreEqual(enumeration, result);
     }
 }

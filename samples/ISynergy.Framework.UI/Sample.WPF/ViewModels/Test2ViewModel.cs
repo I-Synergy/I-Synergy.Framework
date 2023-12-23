@@ -8,10 +8,10 @@ namespace Sample.ViewModels;
 public class Test2ViewModel : ViewModelDialog<object>
 {
     public Test2ViewModel(
-        IContext context, 
-        IBaseCommonServices commonServices, 
-        ILogger logger, 
-        bool automaticValidation = false) 
+        IContext context,
+        IBaseCommonServices commonServices,
+        ILogger logger,
+        bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
     }

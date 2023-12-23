@@ -8,12 +8,12 @@ public static partial class Vector
     /// <summary>
     ///   Creates an interval vector (like NumPy's linspace function).
     /// </summary>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.linspace function. For 
-		///   a similar method that accepts a step size instead of a number of steps, see
-		///   <see cref="Vector.Range(int, int)"/>.</para>
+    ///   a similar method that accepts a step size instead of a number of steps, see
+    ///   <see cref="Vector.Range(int, int)"/>.</para>
     /// </remarks>
     ///
     /// <seealso cref="Vector.Range(int, int)"/>
@@ -29,12 +29,12 @@ public static partial class Vector
     /// <summary>
     ///   Creates an interval vector (like NumPy's linspace function).
     /// </summary>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.linspace function. For 
-		///   a similar method that accepts a step size instead of a number of steps, see
-		///   <see cref="Vector.Range(int, int)"/>.</para>
+    ///   a similar method that accepts a step size instead of a number of steps, see
+    ///   <see cref="Vector.Range(int, int)"/>.</para>
     /// </remarks>
     ///
     /// <seealso cref="Vector.Range(int, int)"/>
@@ -86,12 +86,12 @@ public static partial class Vector
     /// <summary>
     ///   Creates an interval vector (like NumPy's linspace function).
     /// </summary>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.linspace function. For 
-		///   a similar method that accepts a step size instead of a number of steps, see
-		///   <see cref="Vector.Range(int, int)"/>.</para>
+    ///   a similar method that accepts a step size instead of a number of steps, see
+    ///   <see cref="Vector.Range(int, int)"/>.</para>
     /// </remarks>
     ///
     /// <seealso cref="Vector.Range(int, int)"/>
@@ -104,12 +104,12 @@ public static partial class Vector
     /// <summary>
     ///   Creates an interval vector (like NumPy's linspace function).
     /// </summary>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.linspace function. For 
-		///   a similar method that accepts a step size instead of a number of steps, see
-		///   <see cref="Vector.Range(int, int)"/>.</para>
+    ///   a similar method that accepts a step size instead of a number of steps, see
+    ///   <see cref="Vector.Range(int, int)"/>.</para>
     /// </remarks>
     ///
     /// <seealso cref="Vector.Range(int, int)"/>
@@ -160,12 +160,12 @@ public static partial class Vector
     /// <summary>
     ///   Creates an interval vector (like NumPy's linspace function).
     /// </summary>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.linspace function. For 
-		///   a similar method that accepts a step size instead of a number of steps, see
-		///   <see cref="Vector.Range(int, int)"/>.</para>
+    ///   a similar method that accepts a step size instead of a number of steps, see
+    ///   <see cref="Vector.Range(int, int)"/>.</para>
     /// </remarks>
     ///
     /// <seealso cref="Vector.Range(int, int)"/>
@@ -209,7 +209,7 @@ public static partial class Vector
     /// <summary>
     ///   Obsolete. Please use Vector.Range(range, stepSize) instead.
     /// </summary>
-		[Obsolete("Please use Vector.Range(range, stepSize) instead.")]
+    [Obsolete("Please use Vector.Range(range, stepSize) instead.")]
     public static double[] Interval(this NumericRange range, double stepSize)
     {
         return Interval(range.Min, range.Max, stepSize);

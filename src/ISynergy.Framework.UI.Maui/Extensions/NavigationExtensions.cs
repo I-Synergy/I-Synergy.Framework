@@ -41,7 +41,7 @@ public static class NavigationExtensions
 
             if (!view.ViewModel.IsInitialized)
                 await view.ViewModel.InitializeAsync();
-            
+
             return resolvedPage;
         }
 
@@ -55,7 +55,7 @@ public static class NavigationExtensions
     /// <param name="navigation"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) 
+    public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null)
         where TViewModel : class, IViewModel
     {
         var page = await CreatePage<TViewModel>(parameter);
@@ -70,7 +70,7 @@ public static class NavigationExtensions
     /// <param name="navigation"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public static async Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel 
+    public static async Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, object parameter = null) where TViewModel : class, IViewModel
     {
         var page = await CreatePage<TViewModel>(parameter);
         await navigation.PushModalAsync(page, true);

@@ -24,6 +24,6 @@ public partial class ShellView : View, IShellView
     {
         if (e.Item.DataContext is ISynergy.Framework.UI.Models.NavigationItem navigationItem &&
             navigationItem.Command.CanExecute(navigationItem.CommandParameter))
-                navigationItem.Command.Execute(navigationItem.CommandParameter);
+            navigationItem.Command.Execute(navigationItem.CommandParameter);
     }
 }

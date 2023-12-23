@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Collections;
 using Sample.Enumerations;
-using System;
 
 namespace Sample.Models;
 
