@@ -212,7 +212,7 @@ public class DialogService : IDialogService
     {
         var scope = _serviceProvider.CreateScope();
         var viewmodel = (IViewModelDialog<TEntity>)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel));
-        
+
         if (scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
         {
             dialog.Unloaded += (sender, e) => scope.Dispose();

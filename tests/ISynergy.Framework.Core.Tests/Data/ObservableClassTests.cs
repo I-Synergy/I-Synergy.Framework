@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Data.Tests;
 
@@ -127,7 +126,7 @@ public class ObservableClassTests
             Name = "Test",
             ProductGroups =
             [
-                new ProductGroup { Description = "Test"}
+                new ProductGroup { Description = "Test" }
             ],
             Quantity = 1
         };
@@ -140,16 +139,16 @@ public class ObservableClassTests
     public void TestIfProductsAreEqual()
     {
         // Arrange
-        var productId = Guid.NewGuid();
-        var name = "Test1";
-        var quantity = 2;
-        var price = 10.0m;
+        Guid productId = Guid.NewGuid();
+        string name = "Test1";
+        int quantity = 2;
+        decimal price = 10.0m;
 
-        var product1 = new Product(productId, name, quantity, price);
-        var product2 = new Product(productId, name, quantity, price);
+        Product product1 = new Product(productId, name, quantity, price);
+        Product product2 = new Product(productId, name, quantity, price);
 
         // Act
-        var isEqual = product1.Equals(product2);
+        bool isEqual = product1.Equals(product2);
 
         // Assert
         Assert.IsTrue(isEqual);
@@ -159,16 +158,16 @@ public class ObservableClassTests
     public void TestIfProductsWithoutIdentityAreEqual()
     {
         // Arrange
-        var productId = Guid.NewGuid();
-        var name = "Test1";
-        var quantity = 2;
-        var price = 10.0m;
+        Guid productId = Guid.NewGuid();
+        string name = "Test1";
+        int quantity = 2;
+        decimal price = 10.0m;
 
-        var product1 = new ProductWithoutIdentity(productId, name, quantity, price);
-        var product2 = new ProductWithoutIdentity(productId, name, quantity, price);
+        ProductWithoutIdentity product1 = new ProductWithoutIdentity(productId, name, quantity, price);
+        ProductWithoutIdentity product2 = new ProductWithoutIdentity(productId, name, quantity, price);
 
         // Act
-        var isEqual = product1.Equals(product2);
+        bool isEqual = product1.Equals(product2);
 
         // Assert
         Assert.IsTrue(isEqual);

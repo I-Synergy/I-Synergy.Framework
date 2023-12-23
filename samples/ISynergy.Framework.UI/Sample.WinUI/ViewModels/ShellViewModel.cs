@@ -149,10 +149,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             _applicationSettingsService.Settings.IsAutoLogin = false;
             _applicationSettingsService.SaveSettings();
         }
-        
+
         await CommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
-        
+
 
     private Task OpenChartTestAsync() =>
         CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();

@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Models;
-using System;
-using System.Collections.Generic;
 
 namespace Sample.Shared.Models;
 

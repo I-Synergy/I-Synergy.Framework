@@ -1,6 +1,4 @@
-﻿using Flurl;
-using Flurl.Http;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using NugetUnlister.Abstractions;
 using NugetUnlister.Models;
 using NugetUnlister.Options;
@@ -8,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,28 +15,37 @@ namespace NugetUnlister.Services;
 
 internal class NugetService : INugetService
 {
-    private readonly IFlurlClient _client;
     private readonly NugetOptions _nugetOptions;
 
-    public NugetService(IFlurlClient client, IOptions<NugetOptions> options)
+    public NugetService(IOptions<NugetOptions> options)
     {
-        _client = client;
         _nugetOptions = options.Value;
     }
 
     public async Task<NugetResponse> GetIndexAsync(string packageId, CancellationToken cancellationToken = default)
     {
-        return await new Url($"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/index.json")
-               .WithClient(_client)
-               .GetJsonAsync<NugetResponse>(cancellationToken);
+        using HttpClient client = new HttpClient();
+        Uri url = new Uri($"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/index.json");
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                return default;
+
+            return await response.Content.ReadFromJsonAsync<NugetResponse>(cancellationToken: cancellationToken);
+        }
+        else
+            return default;
     }
 
     public async Task<List<PackageVersion>> ListVersionAsync(string packageId, CancellationToken cancellationToken = default)
     {
-        var result = new List<PackageVersion>();
-        var response = await GetIndexAsync(packageId, cancellationToken);
+        List<PackageVersion> result = new List<PackageVersion>();
+        NugetResponse response = await GetIndexAsync(packageId, cancellationToken);
 
-        foreach (var version in response.Versions)
+        foreach (string version in response.Versions)
         {
             result.Add(new PackageVersion(packageId, version, true));
         }

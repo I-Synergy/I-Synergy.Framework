@@ -8,10 +8,10 @@ namespace Sample.Services;
 public class ExceptionHandlerService : BaseExceptionHandlerService
 {
     public ExceptionHandlerService(
-        IBusyService busyService, 
-        IDialogService dialogService, 
-        ILanguageService languageService, 
-        ILogger<BaseExceptionHandlerService> logger) 
+        IBusyService busyService,
+        IDialogService dialogService,
+        ILanguageService languageService,
+        ILogger<BaseExceptionHandlerService> logger)
         : base(busyService, dialogService, languageService, logger)
     {
     }

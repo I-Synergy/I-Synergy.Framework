@@ -26,14 +26,14 @@ internal class Program
             .AddUserSecrets<Program>()
             .Build();
 
-            var services = new ServiceCollection()
+            IServiceCollection services = new ServiceCollection()
                 .AddLogging()
                 .AddOptions();
 
             services.AddMessageBusAzureSubscribeIntegration<TestDataModel>(config);
             services.TryAddScoped<Startup>();
 
-            var serviceProvider = services.BuildServiceProvider();
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
 
             Startup application = serviceProvider.GetRequiredService<Startup>();
             application.RunAsync().GetAwaiter().GetResult();

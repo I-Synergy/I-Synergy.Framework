@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Models;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 namespace Sample.Models;
@@ -23,12 +21,12 @@ public class ApplicationSetting : IBaseApplicationSettings
 
     public ApplicationSetting()
     {
-       Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
-       {
-           "nl" => Languages.Dutch,
-           "de" => Languages.German,
-           "fr" => Languages.French,
-           _ => Languages.English,
-       };
+        Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
+        {
+            "nl" => Languages.Dutch,
+            "de" => Languages.German,
+            "fr" => Languages.French,
+            _ => Languages.English,
+        };
     }
 }

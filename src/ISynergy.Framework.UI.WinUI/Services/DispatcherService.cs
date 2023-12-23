@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.UI.Dispatching;
 
 namespace ISynergy.Framework.UI.Services;

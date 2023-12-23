@@ -8,7 +8,6 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -105,8 +104,41 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
         RawItems = items;
+
+        /* Unmerged change from project 'ISynergy.Framework.Mvvm (net8.0)'
+        Before:
+                Items = new ObservableCollection<TEntity>(items);
+
+                SelectedItems = new List<object>();
+        After:
+                Items = new ObservableCollection<TEntity>(items);
+
+                SelectedItems = new List<object>();
+        */
+
+        /* Unmerged change from project 'ISynergy.Framework.Mvvm (netstandard2.0)'
+        Before:
+                Items = new ObservableCollection<TEntity>(items);
+
+                SelectedItems = new List<object>();
+        After:
+                Items = new ObservableCollection<TEntity>(items);
+
+                SelectedItems = new List<object>();
+        */
+
+        /* Unmerged change from project 'ISynergy.Framework.Mvvm (net6.0)'
+        Before:
+                Items = new ObservableCollection<TEntity>(items);
+
+                SelectedItems = new List<object>();
+        After:
+                Items = new ObservableCollection<TEntity>(items);
+
+                SelectedItems = new List<object>();
+        */
         Items = new ObservableCollection<TEntity>(items);
-        
+
         SelectedItems = new List<object>();
 
         foreach (var item in selectedItems.EnsureNotNull())
@@ -152,7 +184,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         if (Validate())
         {
             var result = new List<TEntity>();
-            
+
             foreach (var item in SelectedItems.EnsureNotNull())
             {
                 if (item is TEntity entity)

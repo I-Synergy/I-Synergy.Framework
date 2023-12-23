@@ -71,7 +71,7 @@ public class InfoViewModel : ViewModelNavigation<object>
     }
 
     public RelayCommand BusyOnCommand { get; private set; }
-    public AsyncRelayCommand DialogCommand { get; private set; }    
+    public AsyncRelayCommand DialogCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InfoViewModel"/> class.

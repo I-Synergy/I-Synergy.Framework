@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ISynergy.Framework.Documents.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ISynergy.Framework.Documents.Extensions;
-using System;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Sample.Syncfusion;
@@ -15,14 +14,14 @@ internal class Program
             IConfigurationRoot config = new ConfigurationBuilder()
             .Build();
 
-            var services = new ServiceCollection()
+            IServiceCollection services = new ServiceCollection()
                 .AddLogging()
                 .AddOptions();
-                
+
             services.AddDocumentsSyncfusionIntegration(config);
             services.TryAddScoped<Startup>();
 
-            var serviceProvider = services.BuildServiceProvider();
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
             Startup application = serviceProvider.GetRequiredService<Startup>();
             await application.RunAsync();
         }

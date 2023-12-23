@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Models.Accounts;
+﻿using ISynergy.Framework.Core.Models.Accounts;
 using Microsoft.UI.Xaml.Controls;
 using Sample.ViewModels;
 using Syncfusion.UI.Xaml.Editors;

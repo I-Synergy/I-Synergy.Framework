@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Messaging.Base;
 using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
 
@@ -344,11 +343,11 @@ public class PropertyChangedMessageTest
         public DateTime AnotherDate
         {
             get { return GetValue<DateTime>(); }
-            set 
+            set
             {
-                var oldValue = GetValue<DateTime>();
+                DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
-                var message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(AnotherDate));
+                PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(AnotherDate));
                 MessageService.Default.Send(message);
             }
         }
@@ -361,11 +360,11 @@ public class PropertyChangedMessageTest
         public DateTime MyDate
         {
             get { return GetValue<DateTime>(); }
-            set 
+            set
             {
-                var oldValue = GetValue<DateTime>();
+                DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
-                var message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(MyDate));
+                PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(MyDate));
                 MessageService.Default.Send(message);
             }
         }
@@ -376,11 +375,11 @@ public class PropertyChangedMessageTest
         public InvalidOperationException MyException
         {
             get { return GetValue<InvalidOperationException>(); }
-            set 
+            set
             {
-                var oldValue = GetValue<InvalidOperationException>();
+                InvalidOperationException oldValue = GetValue<InvalidOperationException>();
                 SetValue(value);
-                var message = new PropertyChangedMessage<InvalidOperationException>(this, oldValue, value, nameof(MyException));
+                PropertyChangedMessage<InvalidOperationException> message = new PropertyChangedMessage<InvalidOperationException>(this, oldValue, value, nameof(MyException));
                 MessageService.Default.Send(message);
             }
         }

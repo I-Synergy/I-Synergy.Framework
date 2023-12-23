@@ -9,12 +9,12 @@ internal class CredentialLockerService : ICredentialLockerService
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
-        var result = string.Empty;
+        string result = string.Empty;
 
         try
         {
-            var vault = new PasswordVault();
-            var credentials = vault.FindAllByResource(_resource);
+            PasswordVault vault = new PasswordVault();
+            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_resource);
 
             if (credentials.Count > 0)
                 result = vault.Retrieve(_resource, username)?.Password;
@@ -31,8 +31,8 @@ internal class CredentialLockerService : ICredentialLockerService
     {
         try
         {
-            var vault = new PasswordVault();
-            var credentials = vault.FindAllByResource(_resource);
+            PasswordVault vault = new PasswordVault();
+            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_resource);
             return Task.FromResult(credentials.Select(q => q.UserName).ToList());
         }
         catch (Exception)
@@ -43,8 +43,8 @@ internal class CredentialLockerService : ICredentialLockerService
 
     public async Task AddCredentialToCredentialLockerAsync(string username, string password)
     {
-        var vault = new PasswordVault();
-        var oldPassword = await GetPasswordFromCredentialLockerAsync(username);
+        PasswordVault vault = new PasswordVault();
+        string oldPassword = await GetPasswordFromCredentialLockerAsync(username);
 
         if (oldPassword != password)
         {
@@ -65,9 +65,9 @@ internal class CredentialLockerService : ICredentialLockerService
     {
         try
         {
-            var vault = new PasswordVault();
-            var credentials = vault.FindAllByResource(_resource);
-            var credential = credentials.FirstOrDefault(q => q.UserName == username);
+            PasswordVault vault = new PasswordVault();
+            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_resource);
+            PasswordCredential credential = credentials.FirstOrDefault(q => q.UserName == username);
 
             if (credential is not null)
                 vault.Remove(credential);

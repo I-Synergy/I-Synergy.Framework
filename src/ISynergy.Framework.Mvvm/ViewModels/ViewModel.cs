@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -232,7 +231,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     protected override void Dispose(bool disposing)
     {
         PropertyChanged -= OnPropertyChanged;
-        
+
         CloseCommand = null;
         Cleanup();
 

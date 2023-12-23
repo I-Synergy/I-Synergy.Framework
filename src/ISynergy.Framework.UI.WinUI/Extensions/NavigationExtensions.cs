@@ -31,7 +31,7 @@ public static class NavigationExtensions
     public static View CreatePage<TViewModel>(TViewModel viewModel, object parameter = null) where TViewModel : class, IViewModel
     {
         var context = ServiceLocator.Default.GetInstance<IContext>();
-        
+
         if (viewModel is null && context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
             viewModel = resolvedViewModel;
 

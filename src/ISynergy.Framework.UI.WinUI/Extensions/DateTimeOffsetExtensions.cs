@@ -2,7 +2,7 @@
 
 namespace ISynergy.Framework.UI.Extensions;
 
-public static  class DateTimeOffsetExtensions
+public static class DateTimeOffsetExtensions
 {
     public static string ToStringISO8601(this DateTimeOffset value) =>
         value.ToString("o");

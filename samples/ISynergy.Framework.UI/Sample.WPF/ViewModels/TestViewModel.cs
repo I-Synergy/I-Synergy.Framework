@@ -9,17 +9,17 @@ namespace Sample.ViewModels;
 public class TestViewModel : ViewModelDialog<object>
 {
     public TestViewModel(
-        IContext context, 
-        IBaseCommonServices commonServices, 
-        ILogger logger, 
-        bool automaticValidation = false) 
+        IContext context,
+        IBaseCommonServices commonServices,
+        ILogger logger,
+        bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
     }
 
     public override async Task SubmitAsync(object e)
     {
-        var testVm = new Test2ViewModel(Context, BaseCommonServices, Logger);
+        Test2ViewModel testVm = new Test2ViewModel(Context, BaseCommonServices, Logger);
         testVm.Submitted += TestVm_Submitted;
         await BaseCommonServices.DialogService.ShowDialogAsync(typeof(Test2Window), testVm);
     }

@@ -33,7 +33,7 @@ public class AppShellViewModel : BaseShellViewModel, IShellViewModel
 
     private async Task DialogsAsync()
     {
-        var e = new ObservableCollection<TestItem>()
+        ObservableCollection<TestItem> e = new ObservableCollection<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
             new TestItem { Id = 2, Description = "Test 2"},

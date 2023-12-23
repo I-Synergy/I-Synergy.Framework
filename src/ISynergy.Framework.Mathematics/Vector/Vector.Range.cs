@@ -11,7 +11,7 @@ public static partial class Vector
     /// </summary>
     /// 
     /// <param name="n">The exclusive upper bound of the range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -38,7 +38,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -110,7 +110,7 @@ public static partial class Vector
     /// </summary>
     /// 
     /// <param name="n">The exclusive upper bound of the range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -138,7 +138,7 @@ public static partial class Vector
     ///
     /// <param name="a">The inclusive lower bound of the range.</param>
     /// <param name="b">The exclusive upper bound of the range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -181,7 +181,7 @@ public static partial class Vector
     ///
     /// <param name="a">The inclusive lower bound of the range.</param>
     /// <param name="b">The exclusive upper bound of the range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -223,7 +223,7 @@ public static partial class Vector
     /// </summary>
     /// 
     /// <param name="n">The exclusive upper bound of the range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -249,7 +249,7 @@ public static partial class Vector
     /// 
     /// <param name="a">The inclusive lower bound of the range.</param>
     /// <param name="b">The exclusive upper bound of the range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -289,7 +289,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -364,7 +364,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -434,7 +434,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -509,7 +509,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -579,7 +579,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -654,7 +654,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -724,7 +724,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -799,7 +799,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -869,7 +869,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -944,7 +944,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -1014,7 +1014,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -1089,7 +1089,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -1159,7 +1159,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -1234,7 +1234,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -1304,7 +1304,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -1379,7 +1379,7 @@ public static partial class Vector
     /// <param name="b">The exclusive upper bound of the range.</param>
     /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -1446,7 +1446,7 @@ public static partial class Vector
     /// </summary>
     /// 
     /// <param name="range">The range from where values should be created.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
@@ -1470,9 +1470,9 @@ public static partial class Vector
     /// </summary>
     /// 
     /// <param name="range">The range from where values should be created.</param>
-		/// <param name="stepSize">The step size to be taken between elements. 
+    /// <param name="stepSize">The step size to be taken between elements. 
     ///   This parameter can be negative to create a decreasing range.</param>
-		///
+    ///
     /// <remarks>
     /// <para>
     ///   The Range methods should be equivalent to NumPy's np.arange method, with one
