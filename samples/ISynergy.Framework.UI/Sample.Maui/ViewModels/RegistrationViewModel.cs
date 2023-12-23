@@ -234,7 +234,7 @@ public class RegistrationViewModel : ViewModel
 
     private async Task ValidateMailAsync()
     {
-        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials()))
+        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(Context)))
         {
             ArePickersAvailable = true;
 
