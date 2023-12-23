@@ -122,7 +122,6 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\TypeConverters.cs" Link="Converters\TypeConverters.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\ByteArrayExtensions.cs" Link="Extensions\ByteArrayExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\ColorExtensions.cs" Link="Extensions\ColorExtensions.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\DateTimeOffsetExtensions.cs" Link="Extensions\DateTimeOffsetExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\DependencyObjectExtensions.cs" Link="Extensions\DependencyObjectExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\MatrixExtensions.cs" Link="Extensions\MatrixExtensions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Extensions\NavigationExtensions.cs" Link="Extensions\NavigationExtensions.cs" />
@@ -150,6 +149,54 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\DecimalDataTrigger.cs" Link="Triggers\DecimalDataTrigger.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\IntegerDataTrigger.cs" Link="Triggers\IntegerDataTrigger.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\ObjectDataTrigger.cs" Link="Triggers\ObjectDataTrigger.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\ISynergy.ttf" Link="Assets\Fonts\ISynergy.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Bold.ttf" Link="Assets\Fonts\OpenDyslexic3-Bold.ttf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Regular.ttf" Link="Assets\Fonts\OpenDyslexic3-Regular.ttf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\SegMDL2.ttf" Link="Assets\Fonts\SegMDL2.ttf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoesb.ttf" Link="Assets\Fonts\segoesb.ttf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeui.ttf" Link="Assets\Fonts\segoeui.ttf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuib.ttf" Link="Assets\Fonts\segoeuib.ttf">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuil.ttf" Link="Assets\Fonts\segoeuil.ttf">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuisl.ttf" Link="Assets\Fonts\segoeuisl.ttf">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\seguisb.ttf" Link="Assets\Fonts\seguisb.ttf">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Error.png" Link="Assets\Images\Error.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Information.png" Link="Assets\Images\Information.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Question.png" Link="Assets\Images\Question.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Refresh.png" Link="Assets\Images\Refresh.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Warning.png" Link="Assets\Images\Warning.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 	
 	<ItemGroup>
