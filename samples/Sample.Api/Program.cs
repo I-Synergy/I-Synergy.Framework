@@ -1,19 +1,43 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using ISynergy.Framework.Core.Converters;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Sample.Api;
 
-public static class Program
+public class Program
 {
     public static void Main(string[] args)
     {
-        CreateHostBuilder(args).Build().Run();
-    }
+        var builder = WebApplication.CreateBuilder(args);
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
+        // Add services to the container.
+        builder.Services
+            .AddMvc()
+            .AddJsonOptions(options =>
             {
-                webBuilder.UseStartup<Startup>();
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+                options.JsonSerializerOptions.AllowTrailingCommas = true;
+                options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
+                options.JsonSerializerOptions.ReferenceHandler = null;
+
+                options.JsonSerializerOptions.Converters.Add(new IsoDateTimeJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new IsoDateTimeOffsetJsonConverter());
             });
+
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddEndpointsApiExplorer();
+
+        var app = builder.Build();
+
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+
+        app.Run();
+    }
 }

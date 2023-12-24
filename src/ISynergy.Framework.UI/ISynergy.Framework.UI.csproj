@@ -14,27 +14,9 @@
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<CodeAnalysisRuleSet>ISynergy.Framework.UI.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
-		
-	<ItemGroup>
-	  <None Remove="Assets\Fonts\ISynergy.ttf" />
-	  <None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
-	  <None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
-	  <None Remove="Assets\Fonts\SegMDL2.ttf" />
-	  <None Remove="Assets\Fonts\segoesb.ttf" />
-	  <None Remove="Assets\Fonts\segoeui.ttf" />
-	  <None Remove="Assets\Fonts\segoeuib.ttf" />
-	  <None Remove="Assets\Fonts\segoeuil.ttf" />
-	  <None Remove="Assets\Fonts\segoeuisl.ttf" />
-	  <None Remove="Assets\Fonts\seguisb.ttf" />
-	  <None Remove="Assets\Images\Error.png" />
-	  <None Remove="Assets\Images\Information.png" />
-	  <None Remove="Assets\Images\Question.png" />
-	  <None Remove="Assets\Images\Refresh.png" />
-	  <None Remove="Assets\Images\Warning.png" />
-	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="NodaTime" Version="3.1.9" />
+		<PackageReference Include="NodaTime" Version="3.1.10" />
 		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
@@ -50,53 +32,5 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Assets\Fonts\ISynergy.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\OpenDyslexic3-Bold.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\OpenDyslexic3-Regular.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\SegMDL2.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\segoesb.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\segoeui.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\segoeuib.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\segoeuil.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\segoeuisl.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Fonts\seguisb.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Images\Error.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Images\Information.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Images\Question.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Images\Refresh.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Assets\Images\Warning.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
 	</ItemGroup>
 </Project>
