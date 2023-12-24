@@ -48,10 +48,10 @@ internal class GatewayProxyMiddleware
                     _logger.LogDebug($"TargetUri: {proxy.DestinationUri.AbsoluteUri}");
 
                     var url = new UriBuilder(proxy.DestinationUri);
-                    url.Path += context.Request.Path;
+                    url.Path = context.Request.Path;
 
-                    if (context.Request.QueryString.ToUriComponent().Any())
-                        url.Query += context.Request.QueryString.ToUriComponent();
+                    if (!string.IsNullOrEmpty(context.Request.QueryString.ToUriComponent()))
+                        url.Query = context.Request.QueryString.ToUriComponent();
 
                     var targetRequestMessage = context.CreateProxyHttpRequest(url.Uri);
 
