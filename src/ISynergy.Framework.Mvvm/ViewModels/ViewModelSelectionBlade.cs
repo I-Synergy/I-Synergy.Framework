@@ -105,38 +105,6 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
         RawItems = items;
 
-        /* Unmerged change from project 'ISynergy.Framework.Mvvm (net8.0)'
-        Before:
-                Items = new ObservableCollection<TEntity>(items);
-
-                SelectedItems = new List<object>();
-        After:
-                Items = new ObservableCollection<TEntity>(items);
-
-                SelectedItems = new List<object>();
-        */
-
-        /* Unmerged change from project 'ISynergy.Framework.Mvvm (netstandard2.0)'
-        Before:
-                Items = new ObservableCollection<TEntity>(items);
-
-                SelectedItems = new List<object>();
-        After:
-                Items = new ObservableCollection<TEntity>(items);
-
-                SelectedItems = new List<object>();
-        */
-
-        /* Unmerged change from project 'ISynergy.Framework.Mvvm (net6.0)'
-        Before:
-                Items = new ObservableCollection<TEntity>(items);
-
-                SelectedItems = new List<object>();
-        After:
-                Items = new ObservableCollection<TEntity>(items);
-
-                SelectedItems = new List<object>();
-        */
         Items = new ObservableCollection<TEntity>(items);
 
         SelectedItems = new List<object>();

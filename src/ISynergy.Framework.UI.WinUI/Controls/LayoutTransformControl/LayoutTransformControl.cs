@@ -3,16 +3,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-
-/* Unmerged change from project 'ISynergy.Framework.UI.WinUI (net7.0-windows10.0.19041)'
-Before:
-using Windows.Foundation;
-After:
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using Windows.Foundation;
-*/
 using System.Diagnostics.CodeAnalysis;
 using Windows.Foundation;
 
