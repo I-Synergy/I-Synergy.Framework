@@ -3,12 +3,13 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0-windows10.0.19041;net7.0-windows10.0.19041</TargetFrameworks>
+		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI.WinUI</PackageId>
 		<Description>I-Synergy UI Framework for WinUI</Description>
 		<PackageTags>I-Synergy, Framework, UI, Windows, WinUI, WinUI3</PackageTags>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -17,6 +18,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
@@ -27,21 +29,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Assets\Fonts\ISynergy.ttf" />
-		<None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
-		<None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
-		<None Remove="Assets\Fonts\SegMDL2.ttf" />
-		<None Remove="Assets\Fonts\segoesb.ttf" />
-		<None Remove="Assets\Fonts\segoeui.ttf" />
-		<None Remove="Assets\Fonts\segoeuib.ttf" />
-		<None Remove="Assets\Fonts\segoeuil.ttf" />
-		<None Remove="Assets\Fonts\segoeuisl.ttf" />
-		<None Remove="Assets\Fonts\seguisb.ttf" />
-		<None Remove="Assets\Images\Error.png" />
-		<None Remove="Assets\Images\Information.png" />
-		<None Remove="Assets\Images\Question.png" />
-		<None Remove="Assets\Images\Refresh.png" />
-		<None Remove="Assets\Images\Warning.png" />
 		<None Remove="Controls\BladeView\BladeView.xaml" />
 		<None Remove="Controls\Buttons\BaseDialogButtons.xaml" />
 		<None Remove="Controls\Console\Console.xaml" />
@@ -70,6 +57,24 @@
 		<UpToDateCheckInput Remove="Windows\LanguageWindow.xaml" />
 		<UpToDateCheckInput Remove="Windows\NoteWindow.xaml" />
 		<UpToDateCheckInput Remove="Windows\ThemeWindow.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Assets\Fonts\ISynergy.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\SegMDL2.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\segoesb.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\segoeui.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\segoeuib.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\segoeuil.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\segoeuisl.ttf" />
+	  <EmbeddedResource Include="Assets\Fonts\seguisb.ttf" />
+	  <EmbeddedResource Include="Assets\Images\Error.png" />
+	  <EmbeddedResource Include="Assets\Images\Information.png" />
+	  <EmbeddedResource Include="Assets\Images\Question.png" />
+	  <EmbeddedResource Include="Assets\Images\Refresh.png" />
+	  <EmbeddedResource Include="Assets\Images\Warning.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -137,53 +142,4 @@
 			<Alias>LaunchActivatedEventArgs</Alias>
 		</Using>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Update="Assets\Fonts\ISynergy.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\OpenDyslexic3-Bold.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\OpenDyslexic3-Regular.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\SegMDL2.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoesb.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeui.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuib.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuil.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuisl.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\seguisb.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Error.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Information.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Question.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Refresh.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Warning.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-
 </Project>

@@ -6,17 +6,12 @@ using Sample.Views;
 
 namespace Sample.ViewModels;
 
-public class TestViewModel : ViewModelDialog<object>
+public class TestViewModel(
+    IContext context,
+    IBaseCommonServices commonServices,
+    ILogger logger,
+    bool automaticValidation = false) : ViewModelDialog<object>(context, commonServices, logger, automaticValidation)
 {
-    public TestViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        ILogger logger,
-        bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
-    {
-    }
-
     public override async Task SubmitAsync(object e)
     {
         Test2ViewModel testVm = new Test2ViewModel(Context, BaseCommonServices, Logger);

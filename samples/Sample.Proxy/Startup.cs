@@ -12,22 +12,17 @@ namespace Sample.Proxy;
 /// <summary>
 /// Startup class.
 /// </summary>
-public class Startup : BaseStartup
+/// <remarks>
+/// Constructor for Startup class
+/// </remarks>
+/// <param name="environment"></param>
+/// <param name="configuration"></param>
+public class Startup(IWebHostEnvironment environment, IConfiguration configuration) : BaseStartup(environment, configuration)
 {
     /// <summary>
     /// Display name for service.
     /// </summary>
     protected override string ApiDisplayName => $"{GetType().Assembly.GetName().Name} v{GetType().Assembly.GetName().Version}";
-
-    /// <summary>
-    /// Constructor for Startup class
-    /// </summary>
-    /// <param name="environment"></param>
-    /// <param name="configuration"></param>
-    public Startup(IWebHostEnvironment environment, IConfiguration configuration)
-        : base(environment, configuration)
-    {
-    }
 
     /// <summary>
     /// Adds DataProtection.

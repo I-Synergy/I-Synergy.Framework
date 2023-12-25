@@ -2,14 +2,9 @@
 
 namespace Sample.ApplicationInsights;
 
-public class Startup
+public class Startup(ILogger logger)
 {
-    private readonly ILogger _logger;
-
-    public Startup(ILogger logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger _logger = logger;
 
     // <summary>
     /// run as an asynchronous operation.
