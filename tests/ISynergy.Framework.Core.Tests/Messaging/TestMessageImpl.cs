@@ -1,12 +1,7 @@
 ﻿namespace ISynergy.Framework.Core.Messaging.Tests;
 
-public class TestMessageImpl : TestMessageBase
+public class TestMessageImpl(object sender) : TestMessageBase(sender)
 {
-    public TestMessageImpl(object sender)
-        : base(sender)
-    {
-    }
-
     public bool Result
     {
         get;

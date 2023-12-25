@@ -9,18 +9,13 @@ namespace Sample.MessageBus.Subscriber;
 /// <summary>
 /// Class ApplicationAzure.
 /// </summary>
-public class Startup
+/// <remarks>
+/// Initializes a new instance of the <see cref="Startup"/> class.
+/// </remarks>
+/// <param name="messageBus">The message bus.</param>
+public class Startup(ISubscriberServiceBus<TestDataModel> messageBus)
 {
-    private readonly ISubscriberServiceBus<TestDataModel> _messageBus;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Startup"/> class.
-    /// </summary>
-    /// <param name="messageBus">The message bus.</param>
-    public Startup(ISubscriberServiceBus<TestDataModel> messageBus)
-    {
-        _messageBus = messageBus;
-    }
+    private readonly ISubscriberServiceBus<TestDataModel> _messageBus = messageBus;
 
     /// <summary>
     /// run as an asynchronous operation.

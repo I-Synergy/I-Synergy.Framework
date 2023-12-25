@@ -16,12 +16,14 @@ namespace Sample.Services;
 /// Implements the <see cref="IAuthenticationService" />
 /// </summary>
 /// <seealso cref="IAuthenticationService" />
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService(
+    IContext context,
+    IServiceScopeFactory serviceScopeFactory) : IAuthenticationService
 {
     private bool _authenticated;
 
-    private readonly IContext _context;
-    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly IContext _context = context;
+    private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
 
     /// <summary>
     /// Occurs when authentication changed.
@@ -29,14 +31,6 @@ public class AuthenticationService : IAuthenticationService
     public event EventHandler<ReturnEventArgs<bool>> AuthenticationChanged;
 
     public void OnAuthenticationChanged(ReturnEventArgs<bool> e) => AuthenticationChanged?.Invoke(this, e);
-
-    public AuthenticationService(
-        IContext context,
-        IServiceScopeFactory serviceScopeFactory)
-    {
-        _context = context;
-        _serviceScopeFactory = serviceScopeFactory;
-    }
 
     public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
     {

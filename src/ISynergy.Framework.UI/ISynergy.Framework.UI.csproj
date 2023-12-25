@@ -7,7 +7,7 @@
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Windows, Linux, Android and WebAssembly</Description>
 		<PackageTags>I-Synergy, Framework, UI, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

@@ -11,18 +11,13 @@ namespace Sample.MessageBus.Publisher;
 /// <summary>
 /// Class ApplicationAzure.
 /// </summary>
-public class ApplicationAzure
+/// <remarks>
+/// Initializes a new instance of the <see cref="ApplicationAzure"/> class.
+/// </remarks>
+/// <param name="messageBus">The message bus.</param>
+public class ApplicationAzure(IPublisherServiceBus<TestDataModel> messageBus)
 {
-    private readonly IPublisherServiceBus<TestDataModel> _messageBus;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ApplicationAzure"/> class.
-    /// </summary>
-    /// <param name="messageBus">The message bus.</param>
-    public ApplicationAzure(IPublisherServiceBus<TestDataModel> messageBus)
-    {
-        _messageBus = messageBus;
-    }
+    private readonly IPublisherServiceBus<TestDataModel> _messageBus = messageBus;
 
     /// <summary>
     /// run as an asynchronous operation.

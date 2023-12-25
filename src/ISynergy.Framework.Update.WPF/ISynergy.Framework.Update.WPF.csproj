@@ -9,7 +9,7 @@
 		<PackageId>I-Synergy.Framework.Update.WPF</PackageId>
 		<Description>I-Synergy Update Framework for WPF</Description>
 		<PackageTags>I-Synergy, Framework, Update, Windows, WPF</PackageTags>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

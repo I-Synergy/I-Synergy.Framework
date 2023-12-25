@@ -7,15 +7,11 @@ namespace Sample.MessageBus.Models;
 /// <summary>
 /// Class TestDataModel.
 /// </summary>
-public class TestDataModel : QueueMessage<string>, IQueueMessage<string>
+/// <remarks>
+/// Initializes a new instance of the <see cref="TestDataModel"/> class.
+/// </remarks>
+/// <param name="action">The action.</param>
+/// <param name="data">The data.</param>
+public class TestDataModel(QueueMessageActions action, string data) : QueueMessage<string>(action, data), IQueueMessage<string>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TestDataModel"/> class.
-    /// </summary>
-    /// <param name="action">The action.</param>
-    /// <param name="data">The data.</param>
-    public TestDataModel(QueueMessageActions action, string data)
-        : base(action, data)
-    {
-    }
 }

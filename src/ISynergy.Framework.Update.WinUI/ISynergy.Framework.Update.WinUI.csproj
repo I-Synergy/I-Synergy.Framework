@@ -3,12 +3,13 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0-windows10.0.19041;net7.0-windows10.0.19041</TargetFrameworks>
+		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.Update.WinUI</PackageId>
 		<Description>I-Synergy Update Framework for Windows</Description>
 		<PackageTags>I-Synergy, Framework, Update, Windows, WinUI, WinUI3</PackageTags>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -17,6 +18,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
 	</ItemGroup>
 
