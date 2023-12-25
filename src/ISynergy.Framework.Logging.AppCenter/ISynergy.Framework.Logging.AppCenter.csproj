@@ -8,7 +8,7 @@
 		<PackageTags>I-Synergy, Framework, Logging, AppCenter, Windows, Android, Uno</PackageTags>
 		<RootNamespace>ISynergy.Framework.Logging</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Logging.AppCenter.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 

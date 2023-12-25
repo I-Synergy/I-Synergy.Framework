@@ -3,6 +3,7 @@
 		<LangVersion>12</LangVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<DefaultLanguage>en-US</DefaultLanguage>
+		<UseRidGraph>true</UseRidGraph>
 		<Authors>Ismail Hassani</Authors>
 		<Company>International Intelligence</Company>
 		<Product>I-Synergy Framework</Product>

@@ -5,19 +5,14 @@ using System.Threading.Tasks;
 
 namespace Sample.Storage.Azure;
 
-public class Startup
+/// <summary>
+/// Initializes a new instance of the <see cref="Startup"/> class.
+/// </summary>
+/// <param name="storageService">The Storage service.</param>
+public class Startup(IStorageService storageService)
 {
-    private readonly IStorageService _storageService;
+    private readonly IStorageService _storageService = storageService;
     private readonly string _container = Guid.Parse("ECEB4346-97AD-4919-9248-3EA1012FCA47").ToString();
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Startup"/> class.
-    /// </summary>
-    /// <param name="storageService">The Storage service.</param>
-    public Startup(IStorageService storageService)
-    {
-        _storageService = storageService;
-    }
 
     /// <summary>
     /// run as an asynchronous operation.

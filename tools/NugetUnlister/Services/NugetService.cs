@@ -13,14 +13,9 @@ using System.Threading.Tasks;
 
 namespace NugetUnlister.Services;
 
-internal class NugetService : INugetService
+internal class NugetService(IOptions<NugetOptions> options) : INugetService
 {
-    private readonly NugetOptions _nugetOptions;
-
-    public NugetService(IOptions<NugetOptions> options)
-    {
-        _nugetOptions = options.Value;
-    }
+    private readonly NugetOptions _nugetOptions = options.Value;
 
     public async Task<NugetResponse> GetIndexAsync(string packageId, CancellationToken cancellationToken = default)
     {

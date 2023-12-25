@@ -12,21 +12,16 @@ namespace ISynergy.Framework.AspNetCore.Tests.Fixture;
 /// <summary>
 /// Class StartupFixture.
 /// </summary>
-public class StartupFixture
+/// <remarks>
+/// Initializes a new instance of the <see cref="StartupFixture"/> class.
+/// </remarks>
+/// <param name="configuration">The configuration.</param>
+public class StartupFixture(IConfiguration configuration)
 {
     /// <summary>
     /// The configuration
     /// </summary>
-    private IConfiguration Configuration;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StartupFixture"/> class.
-    /// </summary>
-    /// <param name="configuration">The configuration.</param>
-    public StartupFixture(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+    private IConfiguration Configuration = configuration;
 
     /// <summary>
     /// Configures the services.

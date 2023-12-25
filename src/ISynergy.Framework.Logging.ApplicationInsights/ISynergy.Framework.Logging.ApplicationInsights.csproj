@@ -8,7 +8,7 @@
 		<PackageTags>I-Synergy, Framework, Logging, ApplicationInsights, Windows, Uno</PackageTags>
 		<RootNamespace>ISynergy.Framework.Logging</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Logging.ApplicationInsights.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 

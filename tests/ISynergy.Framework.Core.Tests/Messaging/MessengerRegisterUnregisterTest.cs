@@ -770,18 +770,13 @@ public class MessengerRegisterUnregisterTest
         string GetValue();
     }
 
-    public class TestMessageImplementsIMessage : IMessage
+    public class TestMessageImplementsIMessage(string value) : IMessage
     {
         private string Value
         {
             get;
             set;
-        }
-
-        public TestMessageImplementsIMessage(string value)
-        {
-            Value = value;
-        }
+        } = value;
 
         public string GetValue()
         {

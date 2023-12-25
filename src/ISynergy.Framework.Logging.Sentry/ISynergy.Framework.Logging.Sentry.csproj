@@ -8,7 +8,7 @@
 		<PackageTags>I-Synergy, Framework, Logging, Sentry, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
 		<RootNamespace>ISynergy.Framework.Logging</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Logging.Sentry.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	

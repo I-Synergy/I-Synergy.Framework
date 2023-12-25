@@ -8,13 +8,8 @@ using System.Collections.Generic;
 
 namespace Sample.Monitor.SignalR;
 
-public class Startup : BaseStartup
+public class Startup(IWebHostEnvironment environment, IConfiguration configuration) : BaseStartup(environment, configuration)
 {
-    public Startup(IWebHostEnvironment environment, IConfiguration configuration)
-        : base(environment, configuration)
-    {
-    }
-
     public override void ConfigureServices(IServiceCollection services)
     {
         services.AddMonitorSignalR<object>(Configuration);

@@ -3,18 +3,13 @@ using ISynergy.Framework.Documents.Models;
 
 namespace Sample.Syncfusion;
 
-public class Startup
+/// <summary>
+/// Initializes a new instance of the <see cref="Startup"/> class.
+/// </summary>
+/// <param name="messageBus">The message bus.</param>
+public class Startup(IDocumentService documentService)
 {
-    private readonly IDocumentService _documentService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Startup"/> class.
-    /// </summary>
-    /// <param name="messageBus">The message bus.</param>
-    public Startup(IDocumentService documentService)
-    {
-        _documentService = documentService;
-    }
+    private readonly IDocumentService _documentService = documentService;
 
     /// <summary>
     /// run as an asynchronous operation.
