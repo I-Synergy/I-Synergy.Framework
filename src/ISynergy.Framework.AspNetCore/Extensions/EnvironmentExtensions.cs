@@ -2,8 +2,16 @@
 using Microsoft.Extensions.Hosting;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
+
 public static class EnvironmentExtensions
 {
+    public static bool IsDocker(this IWebHostEnvironment environment)
+    {
+        if (environment.IsEnvironment("Docker"))
+            return true;
+        return false;
+    }
+
     public static bool IsDocker(this IHostEnvironment environment)
     {
         if (environment.IsEnvironment("Docker"))

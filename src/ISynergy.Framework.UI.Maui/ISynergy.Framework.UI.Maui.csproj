@@ -11,7 +11,7 @@
 		<PackageId>I-Synergy.Framework.UI.Maui</PackageId>
 		<Description>I-Synergy UI Framework for .Net Maui</Description>
 		<PackageTags>I-Synergy, Framework, UI, Windows, Linux, Android, IOS, Maui</PackageTags>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

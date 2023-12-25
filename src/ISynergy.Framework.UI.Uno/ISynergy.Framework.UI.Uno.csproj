@@ -9,7 +9,7 @@
 		<PackageId>I-Synergy.Framework.UI.Uno</PackageId>
 		<Description>I-Synergy UI Framework for Uno</Description>
 		<PackageTags>I-Synergy, Framework, UI, Windows, WinUI, WinUI3, Android, IOS, Linux, Uno</PackageTags>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -20,7 +20,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
-	
+
 	<Choose>
 		<When Condition="'$(TargetFramework)'=='net8.0-windows10.0.19041' OR '$(TargetFramework)'=='net7.0-windows10.0.19041'">
 			<ItemGroup>
@@ -46,7 +46,7 @@
 			</ItemGroup>
 		</Otherwise>
 	</Choose>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
@@ -152,57 +152,27 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\ISynergy.ttf" Link="Assets\Fonts\ISynergy.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Bold.ttf" Link="Assets\Fonts\OpenDyslexic3-Bold.ttf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Regular.ttf" Link="Assets\Fonts\OpenDyslexic3-Regular.ttf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\SegMDL2.ttf" Link="Assets\Fonts\SegMDL2.ttf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoesb.ttf" Link="Assets\Fonts\segoesb.ttf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeui.ttf" Link="Assets\Fonts\segoeui.ttf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuib.ttf" Link="Assets\Fonts\segoeuib.ttf">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuil.ttf" Link="Assets\Fonts\segoeuil.ttf">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuisl.ttf" Link="Assets\Fonts\segoeuisl.ttf">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\seguisb.ttf" Link="Assets\Fonts\seguisb.ttf">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Error.png" Link="Assets\Images\Error.png">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Information.png" Link="Assets\Images\Information.png">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Question.png" Link="Assets\Images\Question.png">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Refresh.png" Link="Assets\Images\Refresh.png">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Warning.png" Link="Assets\Images\Warning.png">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\ISynergy.ttf" Link="Assets\Fonts\ISynergy.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Bold.ttf" Link="Assets\Fonts\OpenDyslexic3-Bold.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Regular.ttf" Link="Assets\Fonts\OpenDyslexic3-Regular.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\SegMDL2.ttf" Link="Assets\Fonts\SegMDL2.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoesb.ttf" Link="Assets\Fonts\segoesb.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeui.ttf" Link="Assets\Fonts\segoeui.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuib.ttf" Link="Assets\Fonts\segoeuib.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuil.ttf" Link="Assets\Fonts\segoeuil.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuisl.ttf" Link="Assets\Fonts\segoeuisl.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\seguisb.ttf" Link="Assets\Fonts\seguisb.ttf"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Error.png" Link="Assets\Images\Error.png"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Information.png" Link="Assets\Images\Information.png"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Question.png" Link="Assets\Images\Question.png"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Refresh.png" Link="Assets\Images\Refresh.png"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Warning.png" Link="Assets\Images\Warning.png"/>
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<Page Include="Controls\BladeView\BladeView.xaml">
-		  <SubType>Designer</SubType>
-		  <Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Buttons\BaseDialogButtons.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -214,12 +184,12 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Expander\Expander.xaml">
-		  <SubType>Designer</SubType>
-		  <Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
-		  <SubType>Designer</SubType>
-		  <Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\ImageBrowser\ImageBrowser.xaml">
 			<Generator>MSBuild:Compile</Generator>

@@ -5,7 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Sample.ViewModels;
 
-public class ControlsViewModel : ViewModelNavigation<object>
+/// <summary>
+/// Initializes a new instance of the <see cref="InfoViewModel"/> class.
+/// </summary>
+/// <param name="context">The context.</param>
+/// <param name="commonServices">The common services.</param>
+/// <param name="logger">The logger factory.</param>
+public class ControlsViewModel(
+    IContext context,
+    IBaseCommonServices commonServices,
+    ILogger logger) : ViewModelNavigation<object>(context, commonServices, logger)
 {
     /// <summary>
     /// Gets the title.
@@ -48,20 +57,6 @@ public class ControlsViewModel : ViewModelNavigation<object>
     {
         get => GetValue<DateTimeOffset>();
         set => SetValue(value);
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
-    public ControlsViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        ILogger logger)
-        : base(context, commonServices, logger)
-    {
     }
 
     public override Task InitializeAsync()

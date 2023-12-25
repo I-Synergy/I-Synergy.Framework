@@ -5,14 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Sample.Services;
 
-public class ExceptionHandlerService : BaseExceptionHandlerService
+public class ExceptionHandlerService(
+    IBusyService busyService,
+    IDialogService dialogService,
+    ILanguageService languageService,
+    ILogger<BaseExceptionHandlerService> logger) : BaseExceptionHandlerService(busyService, dialogService, languageService, logger)
 {
-    public ExceptionHandlerService(
-        IBusyService busyService,
-        IDialogService dialogService,
-        ILanguageService languageService,
-        ILogger<BaseExceptionHandlerService> logger)
-        : base(busyService, dialogService, languageService, logger)
-    {
-    }
 }

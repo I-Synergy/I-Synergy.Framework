@@ -7,7 +7,7 @@
 		<Description>I-Synergy Framework Update</Description>
 		<PackageTags>I-Synergy, Framework, Update</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Update.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>

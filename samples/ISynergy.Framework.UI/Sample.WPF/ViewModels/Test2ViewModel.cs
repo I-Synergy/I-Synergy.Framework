@@ -5,14 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Sample.ViewModels;
 
-public class Test2ViewModel : ViewModelDialog<object>
+public class Test2ViewModel(
+    IContext context,
+    IBaseCommonServices commonServices,
+    ILogger logger,
+    bool automaticValidation = false) : ViewModelDialog<object>(context, commonServices, logger, automaticValidation)
 {
-    public Test2ViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        ILogger logger,
-        bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
-    {
-    }
 }

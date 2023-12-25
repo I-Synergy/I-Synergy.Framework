@@ -1,12 +1,7 @@
 ﻿namespace ISynergy.Framework.Core.Messaging.Tests;
 
-public class TestMessageBase : Message, ITestMessage
+public class TestMessageBase(object sender) : Message(sender), ITestMessage
 {
-    public TestMessageBase(object sender)
-        : base(sender)
-    {
-    }
-
     public string Content
     {
         get;
