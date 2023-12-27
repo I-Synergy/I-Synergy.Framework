@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Services;
 /// <summary>
 /// Class BaseInfoService.
 /// </summary>
-public class InfoService : IInfoService
+public sealed class InfoService : IInfoService
 {
     private static readonly object _creationLock = new object();
     private static IInfoService _defaultInstance;
