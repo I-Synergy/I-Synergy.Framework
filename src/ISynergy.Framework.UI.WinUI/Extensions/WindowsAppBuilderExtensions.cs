@@ -88,9 +88,10 @@ public static class WindowsAppBuilderExtensions
         services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
         services.TryAddSingleton<IMessageService>(s => MessageService.Default);
 
-        services.TryAddSingleton<IContext, TContext>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IContext, TContext>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IExceptionHandlerService, TExceptionHandler>());
+
         services.TryAddSingleton<INavigationService, NavigationService>();
-        services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
         services.TryAddSingleton<ILocalizationService, LocalizationService>();
         services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
         services.TryAddSingleton<IConverterService, ConverterService>();
