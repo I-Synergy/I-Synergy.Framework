@@ -58,8 +58,8 @@ public class MessageService : IMessageService
     /// you must set keepTargetAlive to true to avoid side effects. </param>
     /// <param name="keepTargetAlive">If true, the target of the Action will
     /// be kept as a hard reference, which might cause a memory leak. You should only set this
-    /// parameter to true if the action is using closures. See
-    /// http://galasoft.ch/s/mvvmweakaction. </param>
+    /// parameter to true if the action is using closures.
+    /// </param>
     public virtual void Register<TMessage>(
         object recipient,
         Action<TMessage> action,
@@ -93,8 +93,8 @@ public class MessageService : IMessageService
     /// you must set keepTargetAlive to true to avoid side effects. </param>
     /// <param name="keepTargetAlive">If true, the target of the Action will
     /// be kept as a hard reference, which might cause a memory leak. You should only set this
-    /// parameter to true if the action is using closures. See
-    /// http://galasoft.ch/s/mvvmweakaction. </param>
+    /// parameter to true if the action is using closures.
+    /// </param>
     public virtual void Register<TMessage>(
         object recipient,
         object token,
@@ -138,8 +138,8 @@ public class MessageService : IMessageService
     /// you must set keepTargetAlive to true to avoid side effects. </param>
     /// <param name="keepTargetAlive">If true, the target of the Action will
     /// be kept as a hard reference, which might cause a memory leak. You should only set this
-    /// parameter to true if the action is using closures. See
-    /// http://galasoft.ch/s/mvvmweakaction. </param>
+    /// parameter to true if the action is using closures.
+    /// </param>
     public virtual void Register<TMessage>(
         object recipient,
         object token,
@@ -229,8 +229,8 @@ public class MessageService : IMessageService
     /// you must set keepTargetAlive to true to avoid side effects. </param>
     /// <param name="keepTargetAlive">If true, the target of the Action will
     /// be kept as a hard reference, which might cause a memory leak. You should only set this
-    /// parameter to true if the action is using closures. See
-    /// http://galasoft.ch/s/mvvmweakaction. </param>
+    /// parameter to true if the action is using closures.
+    /// </param>
     public virtual void Register<TMessage>(
         object recipient,
         bool receiveDerivedMessagesToo,
