@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Services;
 /// <summary>
 /// Class _languageService.
 /// </summary>
-public class LanguageService : ILanguageService
+public sealed class LanguageService : ILanguageService
 {
     private static readonly object _creationLock = new object();
     private static ILanguageService _defaultInstance;
