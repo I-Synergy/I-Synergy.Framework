@@ -89,9 +89,10 @@ public static class WPFAppBuilderExtensions
         services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
         services.TryAddSingleton<IMessageService>(s => MessageService.Default);
 
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<IContext, TContext>());
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<IExceptionHandlerService, TExceptionHandler>());
+        services.TryAddSingleton<TContext>();
+        services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
 
+        services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
         services.TryAddSingleton<INavigationService, NavigationService>();
         services.TryAddSingleton<ILocalizationService, LocalizationService>();
         services.TryAddSingleton<IConverterService, ConverterService>();
