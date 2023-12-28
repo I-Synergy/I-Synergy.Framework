@@ -87,9 +87,10 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
         appBuilder.Services.TryAddSingleton<IMessageService>(s => MessageService.Default);
 
-        appBuilder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IContext, TContext>());
-        appBuilder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IExceptionHandlerService, TExceptionHandler>());
+        appBuilder.Services.TryAddSingleton<TContext>();
+        appBuilder.Services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
 
+        appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
         appBuilder.Services.TryAddSingleton<ILocalizationService, LocalizationService>();
         appBuilder.Services.TryAddSingleton<IConverterService, ConverterService>();
