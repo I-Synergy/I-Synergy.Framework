@@ -275,9 +275,16 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         return Task.CompletedTask;
     }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
+
+        SelectedItem = default(TEntity);
+
+        Items?.Clear();
+
+        RefreshCommand?.Cancel();
+        RefreshCommand = null;
 
         AddCommand?.Cancel();
         AddCommand = null;
@@ -291,7 +298,5 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         SearchCommand = null;
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-
-        base.Dispose(disposing);
     }
 }

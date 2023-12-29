@@ -103,24 +103,15 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Closes the asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    public override void Close()
-    {
-        base.Close();
-    }
-
     public void ApplyQueryAttributes(IDictionary<string, object> query) { }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
+
+        SelectedItem = default(TEntity);
 
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-
-        base.Dispose(disposing);
     }
 }
