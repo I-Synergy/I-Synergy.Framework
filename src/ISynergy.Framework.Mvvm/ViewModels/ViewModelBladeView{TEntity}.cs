@@ -292,23 +292,31 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         return Task.CompletedTask;
     }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
+
+        SelectedItem = default(TEntity);
+
+        Items?.Clear();
+        Blades?.Clear();
 
         AddCommand?.Cancel();
         AddCommand = null;
+        
         EditCommand?.Cancel();
         EditCommand = null;
+        
         DeleteCommand?.Cancel();
         DeleteCommand = null;
+        
         RefreshCommand?.Cancel();
         RefreshCommand = null;
+        
         SearchCommand?.Cancel();
         SearchCommand = null;
+
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-
-        base.Dispose(disposing);
     }
 }

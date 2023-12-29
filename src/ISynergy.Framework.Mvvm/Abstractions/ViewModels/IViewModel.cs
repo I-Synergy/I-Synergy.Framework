@@ -64,18 +64,6 @@ public interface IViewModel : IObservableClass, ICleanup
     /// <value>The title.</value>
     string Title { get; }
     /// <summary>
-    /// Called when [deactivate asynchronous].
-    /// </summary>
-    /// <returns>Task.</returns>
-    Task OnDeactivateAsync();
-    /// <summary>
-    /// Called when [activate asynchronous].
-    /// </summary>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="isBack">if set to <c>true</c> [is back].</param>
-    /// <returns>Task.</returns>
-    Task OnActivateAsync(object parameter, bool isBack);
-    /// <summary>
     /// Initializes the asynchronous.
     /// </summary>
     /// <returns>Task.</returns>

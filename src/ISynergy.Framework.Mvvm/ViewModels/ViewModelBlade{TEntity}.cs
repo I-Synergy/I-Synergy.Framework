@@ -118,13 +118,13 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
         return Task.CompletedTask;
     }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
+
+        SelectedItem = default(TEntity);
 
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-
-        base.Dispose(disposing);
     }
 }

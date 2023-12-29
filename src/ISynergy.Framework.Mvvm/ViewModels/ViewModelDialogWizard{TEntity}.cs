@@ -163,13 +163,11 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
         }
     }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
 
         BackCommand = null;
         NextCommand = null;
-
-        base.Dispose(disposing);
     }
 }
