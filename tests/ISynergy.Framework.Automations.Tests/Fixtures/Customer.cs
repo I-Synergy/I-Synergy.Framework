@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ISynergy.Framework.Automations.Tests.Data;
+namespace ISynergy.Framework.Automations.Tests.Fixtures;
 
 public class Customer : ModelBase
 {

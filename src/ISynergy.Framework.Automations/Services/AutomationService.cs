@@ -5,11 +5,24 @@ using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Collections.Concurrent;
 
 namespace ISynergy.Framework.Automations.Services;
 
 /// <summary>
-/// Automation service.
+/// The AutomationService class is responsible for managing and executing automations. Automations are a set of conditions and actions that get triggered based on certain events.
+/// This class takes in an IAutomationManager, IOptions of AutomationOptions, and an ILogger as dependencies injected via the constructor.
+/// It has a list of Automation objects to store any loaded automations.The RefreshAutomationsAsync method will populate this list by calling the automation manager to get the latest set of automations.
+/// The main logic is in ExecuteAsync.This takes in an Automation, a value, and a CancellationTokenSource.It will first validate if all the conditions for the automation are met based on the input value by calling ValidateConditionsAsync. If the conditions pass, it will start executing the tasks in the automation one by one until complete or cancelled via the cancellation token.
+/// The key steps are:
+/// 1. Validate conditions
+/// 2. Get a queue of tasks from the automation
+/// 3. Loop through each task
+///     1. Execute task
+///     2. Check if cancellation requested
+///     3. Handle errors
+/// 4. Return result
+/// This allows the service to take a defined automation with conditions and tasks, check if it should run based on input, and then process the workflow of tasks.The background logic handles the asynchronous execution, concurrency, error handling, and cancellation.
 /// </summary>
 public class AutomationService : IAutomationService
 {
@@ -65,33 +78,30 @@ public class AutomationService : IAutomationService
     }
 
     /// <summary>
-    /// Starts executing the automation.
+    /// Gets a queue of tasks and executes them 1 by 1 until finished or cancelled by timeout.
     /// </summary>
     /// <param name="automation"></param>
     /// <param name="value"></param>
+    /// <param name="cancellationTokenSource"></param>
     /// <returns></returns>
-    public async Task<ActionResult> ExecuteAsync(Automation automation, object value)
+    public async Task<ActionResult> ExecuteAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource)
     {
         if (automation.IsActive && await ValidateConditionsAsync(automation, value))
         {
-            if (await GetTasksFromActionsAsync(automation, value) is List<Func<Task>> jobs)
+            cancellationTokenSource.CancelAfter(automation.ExecutionTimeout);
+
+            using (var queue = await GetTasksFromActionsAsync(automation, value, cancellationTokenSource))
             {
-                var cancellationTokenSource = new CancellationTokenSource();
-
-                try
+                while (queue.Count > 0)
                 {
-                    cancellationTokenSource.CancelAfter((int)automation.ExecutionTimeout.TotalMilliseconds);
+                    var nextTask = queue.Take(cancellationTokenSource.Token);
 
-                    foreach (var job in jobs)
-                    {
-                        await job
-                            .Invoke()
-                            .ContinueWith(x => _logger.LogInformation("Task completed!"), cancellationTokenSource.Token);
-                    }
-                }
-                finally
-                {
-                    cancellationTokenSource.Dispose();
+                    if (cancellationTokenSource.IsCancellationRequested)
+                        break;
+
+                    await nextTask
+                        .Invoke()
+                        .ContinueWith(x => _logger.LogInformation("Task completed!"), cancellationTokenSource.Token);
                 }
 
                 return new ActionResult(true, value);
@@ -102,30 +112,41 @@ public class AutomationService : IAutomationService
     }
 
     /// <summary>
-    /// Executes the automation and is cancelled after timeout is elapsed.
+    /// Gets a BlockingCollection queue containing all tasks for this automation.
     /// </summary>
     /// <param name="automation"></param>
     /// <param name="value"></param>
+    /// <param name="cancellationTokenSource"></param>
     /// <returns></returns>
-    private Task<List<Func<Task>>> GetTasksFromActionsAsync(Automation automation, object value)
+    private Task<BlockingCollection<Func<Task>>> GetTasksFromActionsAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource)
     {
-        var result = new List<Func<Task>>();
+        var queue = new BlockingCollection<Func<Task>>();
         var repeatCount = 0;
 
-        // Excecute all actions.
+        // Adds all tasks to the queue.
         for (int i = 0; i < automation.Actions.Count; i++)
         {
             if (automation.Actions[i] is CommandAction commandAction && commandAction.Command.CanExecute(commandAction.CommandParameter))
             {
-                result.Add(new Func<Task>(() => Task.Run(() => commandAction.Command.Execute(commandAction.CommandParameter))));
+                queue.Add(new Func<Task>(async () =>
+                {
+                    await Task.Run(() => commandAction.Command.Execute(commandAction.CommandParameter), cancellationTokenSource.Token).ConfigureAwait(false);
+                }));
             }
             else if (automation.Actions[i] is DelayAction delayAction)
             {
-                result.Add(new Func<Task>(() => Task.Delay(delayAction.Delay)));
+                queue.Add(new Func<Task>(async () =>
+                {
+                    await Task.Delay(delayAction.Delay, cancellationTokenSource.Token).ConfigureAwait(false);
+                    await Task.Yield();
+                }));
             }
             else if (automation.Actions[i] is AutomationAction automationAction)
             {
-                result.Add(new Func<Task>(() => ExecuteAsync(automationAction.Automation, value)));
+                queue.Add(new Func<Task>(async () =>
+                {
+                    await ExecuteAsync(automationAction.Automation, value, cancellationTokenSource).ConfigureAwait(false);
+                }));
             }
             else if (automation.Actions[i] is RepeatPreviousAction repeatAction && repeatAction.Count > 0)
             {
@@ -165,6 +186,8 @@ public class AutomationService : IAutomationService
             }
         }
 
-        return Task.FromResult(result);
+        queue.CompleteAdding();
+
+        return Task.FromResult(queue);
     }
 }
