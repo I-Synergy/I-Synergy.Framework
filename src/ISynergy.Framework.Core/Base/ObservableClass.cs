@@ -441,7 +441,7 @@ public abstract class ObservableClass : IObservableClass
 
             Properties?.Clear();
             Errors?.Clear();
-            
+
             ErrorsChanged -= ObservableClass_ErrorsChanged;
         }
 

@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -50,10 +49,10 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     }
 
     /// <summary>
-    /// Gets or sets the IsNew property value.
+    /// Gets or sets the IsUpdate property value.
     /// </summary>
-    /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
-    public bool IsNew
+    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
+    public bool IsUpdate
     {
         get { return GetValue<bool>(); }
         set { SetValue(value); }
@@ -97,8 +96,6 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
             }
         });
 
-        SelectedItem = TypeActivator.CreateInstance<TEntity>();
-        IsNew = true;
         SubmitCommand = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
     }
 
