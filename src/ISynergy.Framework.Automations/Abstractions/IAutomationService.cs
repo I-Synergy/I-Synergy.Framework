@@ -26,6 +26,7 @@ public interface IAutomationService
     /// </summary>
     /// <param name="automation"></param>
     /// <param name="value"></param>
+    /// <param name="cancellationTokenSource"></param>
     /// <returns></returns>
-    Task<ActionResult> ExecuteAsync(Automation automation, object value);
+    Task<ActionResult> ExecuteAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource);
 }
