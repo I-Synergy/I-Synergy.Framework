@@ -73,13 +73,13 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     }
 
     /// <summary>
-    /// Gets or sets the IsNew property value.
+    /// Gets or sets the IsUpdate property value.
     /// </summary>
-    /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
-    public bool IsNew
+    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
+    public bool IsUpdate
     {
-        get => GetValue<bool>();
-        set => SetValue(value);
+        get { return GetValue<bool>(); }
+        set { SetValue(value); }
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     public virtual void SetSelectedItem(TEntity entity)
     {
         SelectedItem = entity;
-        IsNew = false;
+        IsUpdate = true;
     }
 
     /// <summary>
@@ -303,16 +303,16 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
 
         AddCommand?.Cancel();
         AddCommand = null;
-        
+
         EditCommand?.Cancel();
         EditCommand = null;
-        
+
         DeleteCommand?.Cancel();
         DeleteCommand = null;
-        
+
         RefreshCommand?.Cancel();
         RefreshCommand = null;
-        
+
         SearchCommand?.Cancel();
         SearchCommand = null;
 
