@@ -437,6 +437,11 @@ public abstract class ObservableClass : IObservableClass
         if (disposing)
         {
             // free managed resources
+            Validator = null;
+
+            Properties?.Clear();
+            Errors?.Clear();
+
             ErrorsChanged -= ObservableClass_ErrorsChanged;
         }
 

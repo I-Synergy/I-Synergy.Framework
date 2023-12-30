@@ -239,4 +239,35 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     {
         throw new NotImplementedException();
     }
+
+    public override void Cleanup()
+    {
+        base.Cleanup();
+
+        SelectedTestItems?.Clear();
+
+        SelectSingleCommand?.Cancel();
+        SelectSingleCommand = null;
+
+        SelectMultipleCommand?.Cancel();
+        SelectMultipleCommand = null;
+
+        ShowDialogYesNo?.Cancel();
+        ShowDialogYesNo = null;
+
+        ShowDialogYesNoCancel?.Cancel();
+        ShowDialogYesNoCancel = null;
+
+        ShowDialogOk?.Cancel();
+        ShowDialogOk = null;
+
+        ShowDialogOkCancel?.Cancel();
+        ShowDialogOkCancel = null;
+
+        ShowUnitsCommand?.Cancel();
+        ShowUnitsCommand = null;
+
+        ShowTestCommand?.Cancel();
+        ShowTestCommand = null;
+    }
 }

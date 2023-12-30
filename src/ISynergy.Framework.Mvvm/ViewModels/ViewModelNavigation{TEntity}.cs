@@ -39,10 +39,10 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
     }
 
     /// <summary>
-    /// Gets or sets the IsNew property value.
+    /// Gets or sets the IsUpdate property value.
     /// </summary>
-    /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
-    public bool IsNew
+    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
+    public bool IsUpdate
     {
         get { return GetValue<bool>(); }
         set { SetValue(value); }
@@ -86,7 +86,7 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
     public virtual Task SetSelectedItemAsync(TEntity entity)
     {
         SelectedItem = entity;
-        IsNew = false;
+        IsUpdate = true;
         return Task.CompletedTask;
     }
 
@@ -103,24 +103,15 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Closes the asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    public override void Close()
-    {
-        base.Close();
-    }
-
     public void ApplyQueryAttributes(IDictionary<string, object> query) { }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
+
+        SelectedItem = default(TEntity);
 
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-
-        base.Dispose(disposing);
     }
 }

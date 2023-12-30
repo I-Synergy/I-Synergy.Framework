@@ -28,7 +28,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
     /// Gets or sets the raw items.
     /// </summary>
     /// <value>The raw items.</value>
-    private IEnumerable<TEntity> RawItems { get; set; }
+    private List<TEntity> RawItems { get; set; }
 
     /// <summary>
     /// Gets or sets the SelectionMode property value.
@@ -113,7 +113,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
         });
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
-        RawItems = items;
+        RawItems = items.ToList();
         Items = new ObservableCollection<TEntity>(items);
 
         SelectedItems = new List<object>();
@@ -175,13 +175,15 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
         return Task.CompletedTask;
     }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
+
+        RawItems?.Clear();
+        Items?.Clear();
+        SelectedItems?.Clear();
 
         RefreshCommand?.Cancel();
         RefreshCommand = null;
-
-        base.Dispose(disposing);
     }
 }
