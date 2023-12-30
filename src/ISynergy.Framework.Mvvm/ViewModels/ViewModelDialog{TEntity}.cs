@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -40,10 +39,10 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     }
 
     /// <summary>
-    /// Gets or sets the IsNew property value.
+    /// Gets or sets the IsUpdate property value.
     /// </summary>
-    /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
-    public bool IsNew
+    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
+    public bool IsUpdate
     {
         get { return GetValue<bool>(); }
         set { SetValue(value); }
@@ -77,9 +76,6 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
             }
         });
 
-        SelectedItem = TypeActivator.CreateInstance<TEntity>();
-        IsNew = true;
-
         SubmitCommand = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e));
     }
 
@@ -90,7 +86,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     public virtual Task SetSelectedItemAsync(TEntity entity)
     {
         SelectedItem = entity;
-        IsNew = false;
+        IsUpdate = true;
 
         return Task.CompletedTask;
     }
@@ -113,13 +109,13 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
 
     public void ApplyQueryAttributes(IDictionary<string, object> query) { }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
+
+        SelectedItem = default(TEntity);
 
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-
-        base.Dispose(disposing);
     }
 }

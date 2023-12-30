@@ -90,7 +90,7 @@ public static class WindowsAppBuilderExtensions
 
         services.TryAddSingleton<TContext>();
         services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
-        
+
         services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
         services.TryAddSingleton<INavigationService, NavigationService>();
         services.TryAddSingleton<ILocalizationService, LocalizationService>();

@@ -45,13 +45,13 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     }
 
     /// <summary>
-    /// Gets or sets the IsNew property value.
+    /// Gets or sets the IsUpdate property value.
     /// </summary>
-    /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
-    public bool IsNew
+    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
+    public bool IsUpdate
     {
-        get => GetValue<bool>();
-        set => SetValue(value);
+        get { return GetValue<bool>(); }
+        set { SetValue(value); }
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     public virtual Task SetSelectedItemAsync(TEntity e)
     {
         SelectedItem = e;
-        IsNew = false;
+        IsUpdate = true;
         return Task.CompletedTask;
     }
 
@@ -275,9 +275,16 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         return Task.CompletedTask;
     }
 
-    protected override void Dispose(bool disposing)
+    public override void Cleanup()
     {
-        Validator = null;
+        base.Cleanup();
+
+        SelectedItem = default(TEntity);
+
+        Items?.Clear();
+
+        RefreshCommand?.Cancel();
+        RefreshCommand = null;
 
         AddCommand?.Cancel();
         AddCommand = null;
@@ -291,7 +298,5 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         SearchCommand = null;
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-
-        base.Dispose(disposing);
     }
 }

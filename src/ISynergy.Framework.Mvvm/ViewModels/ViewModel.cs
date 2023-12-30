@@ -183,7 +183,8 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// </summary>
     public virtual void Cleanup()
     {
-
+        PropertyChanged -= OnPropertyChanged;
+        CloseCommand = null;
     }
 
     /// <summary>
@@ -203,26 +204,9 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// <returns>Task.</returns>
     public virtual void Close()
     {
+        Cleanup();
         OnClosed(EventArgs.Empty);
     }
-
-    /// <summary>
-    /// Called when [deactivate asynchronous].
-    /// </summary>
-    /// <returns>Task.</returns>
-    public virtual Task OnDeactivateAsync()
-    {
-        Cleanup();
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Called when [activate asynchronous].
-    /// </summary>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="isBack">if set to <c>true</c> [is back].</param>
-    /// <returns>Task.</returns>
-    public virtual Task OnActivateAsync(object parameter, bool isBack) => Task.CompletedTask;
 
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
@@ -230,11 +214,9 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected override void Dispose(bool disposing)
     {
-        PropertyChanged -= OnPropertyChanged;
-
-        CloseCommand = null;
-        Cleanup();
-
         base.Dispose(disposing);
+
+        if (disposing)
+            Cleanup();
     }
 }

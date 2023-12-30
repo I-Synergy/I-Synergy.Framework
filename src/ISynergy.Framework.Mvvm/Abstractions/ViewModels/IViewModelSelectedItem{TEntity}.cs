@@ -11,10 +11,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 public interface IViewModelSelectedItem<TEntity> : IViewModel
 {
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is new.
+    /// Gets or sets the IsUpdate property value.
     /// </summary>
-    /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
-    bool IsNew { get; set; }
+    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
+    bool IsUpdate { get; set; }
     /// <summary>
     /// Sets the selected item.
     /// </summary>
