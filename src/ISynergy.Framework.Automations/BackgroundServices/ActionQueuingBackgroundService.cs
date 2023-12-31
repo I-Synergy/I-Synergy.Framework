@@ -7,7 +7,12 @@ using Microsoft.Extensions.Options;
 namespace ISynergy.Framework.Automations.BackgroundServices;
 
 /// <summary>
-/// Background service where scheduled or delayed actions are monitored and executed.
+/// This class implements a background service for scheduling and executing actions.
+/// It takes in an IActionService, AutomationOptions, and an ILogger in its constructor.The IActionService provides methods for refreshing, calculating timespans, and executing actions.The AutomationOptions contains settings like the default queue refresh rate.The ILogger is used to log information.
+/// In the StartAsync method, it logs a message about starting the service, calls the IActionService to refresh the tasks, and starts a Timer to periodically call the RefreshQueue method based on the default queue refresh rate from AutomationOptions.
+/// The RefreshQueue method calls the IActionService to refresh the tasks again.It then calculates the timespan until the next upcoming task using the service.If there is an upcoming task, it starts a Timer to call the ExecuteTask method when the timespan expires.Otherwise, it stops any running timer.
+/// The ExecuteTask method simply calls the IActionService to execute the passed in IAction task that is ready to run based on its elapsed delay.
+/// So in summary, this background service periodically checks for any queued actions that are ready to execute based on their scheduled time, and runs them when ready.It uses the IActionService to handle the actual task management and execution. The background and execution timers drive the periodic refreshing and execution based on configured intervals.
 /// </summary>
 public class ActionQueuingBackgroundService : IHostedService, IDisposable
 {
