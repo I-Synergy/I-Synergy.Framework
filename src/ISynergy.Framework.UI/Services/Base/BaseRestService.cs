@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Converters;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.UI.Services.Base;
 
@@ -18,8 +16,11 @@ namespace ISynergy.Framework.UI.Services.Base;
 public abstract class BaseRestService
 {
     private readonly int _retryCount;
-    private readonly JsonSerializerOptions _options;
-
+    
+    /// <summary>
+    /// Json serializer options.
+    /// </summary>
+    protected readonly JsonSerializerOptions _jsonSerializerOptions;
     /// <summary>
     /// The context
     /// </summary>
@@ -48,6 +49,7 @@ public abstract class BaseRestService
     /// <param name="authenticationService"></param>
     /// <param name="languageService">The language service.</param>
     /// <param name="exceptionHandlerService">The exception handler service.</param>
+    /// <param name="jsonSerializerOptions"></param>
     /// <param name="configurationOptions">The configuration options.</param>
     /// <param name="retryCount"></param>
     protected BaseRestService(
@@ -55,6 +57,7 @@ public abstract class BaseRestService
         IAuthenticationService authenticationService,
         ILanguageService languageService,
         IExceptionHandlerService exceptionHandlerService,
+        JsonSerializerOptions jsonSerializerOptions,
         IOptions<ConfigurationOptions> configurationOptions,
         int retryCount = 3)
     {
@@ -63,22 +66,8 @@ public abstract class BaseRestService
         _languageService = languageService;
         _exceptionHandlerService = exceptionHandlerService;
         _configurationOptions = configurationOptions.Value;
+        _jsonSerializerOptions = jsonSerializerOptions;
         _retryCount = retryCount;
-
-        _options = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            ReadCommentHandling = JsonCommentHandling.Skip,
-            AllowTrailingCommas = true,
-            NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString,
-            ReferenceHandler = null
-        };
-
-        _options.Converters.Add(new JsonStringEnumConverter());
-        _options.Converters.Add(new IsoDateTimeJsonConverter());
-        _options.Converters.Add(new IsoDateTimeOffsetJsonConverter());
     }
 
     /// <summary>
@@ -116,7 +105,7 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
-                    return await response.Content.ReadFromJsonAsync<T>(_options, cancellationToken);
+                    return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
                 }
                 else
                 {
@@ -251,7 +240,7 @@ public abstract class BaseRestService
 
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
-                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _options)
+                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions)
                 };
 
                 var response = await client.SendAsync(request);
@@ -261,7 +250,7 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
-                    return await response.Content.ReadFromJsonAsync<T>(_options, cancellationToken);
+                    return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
                 }
                 else
                 {
@@ -302,7 +291,7 @@ public abstract class BaseRestService
 
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
-                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _options)
+                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions)
                 };
 
                 var response = await client.SendAsync(request);
@@ -354,7 +343,7 @@ public abstract class BaseRestService
 
                 var request = new HttpRequestMessage(HttpMethod.Put, url)
                 {
-                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _options)
+                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions)
                 };
 
                 var response = await client.SendAsync(request);
@@ -364,7 +353,7 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
-                    return await response.Content.ReadFromJsonAsync<T>(_options, cancellationToken);
+                    return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
                 }
                 else
                 {
@@ -410,7 +399,7 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return 0;
 
-                    return await response.Content.ReadFromJsonAsync<int>(_options, cancellationToken);
+                    return await response.Content.ReadFromJsonAsync<int>(_jsonSerializerOptions, cancellationToken);
                 }
                 else
                 {
