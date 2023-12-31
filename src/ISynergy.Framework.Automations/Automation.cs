@@ -6,7 +6,15 @@ using System.Collections.ObjectModel;
 namespace ISynergy.Framework.Automations;
 
 /// <summary>
-/// Automation class.
+/// This class is responsible for managing and executing automations. Automations are a set of conditions and actions that should happen automatically under certain circumstances.
+/// The AutomationService takes in dependencies for:
+/// - IAutomationManager: This manages getting a list of defined automations
+/// - IOptions: This provides configuration options
+/// - ILogger: This is used for logging
+/// It has a method called RefreshAutomationsAsync() which will call the IAutomationManager to get an updated list of all automations that are defined.
+/// The ValidateConditionsAsync method takes an automation and a value, and checks if all the conditions defined in that automation evaluate to true for the provided value.This determines if the automation should execute based on the conditions.
+/// The ExecuteAsync method takes an automation, a value, and a cancellation token. It will execute the series of actions defined in the automation one by one until complete or cancelled.The actions transform the provided value in some way to accomplish the purpose of the automation.
+/// Overall, this class handles getting the defined automations, evaluating if an automation should execute based on conditions, and then executing the actions of an automation if triggered.It provides the core logic to enable automations in an application.
 /// </summary>
 public class Automation : ObservableClass
 {
