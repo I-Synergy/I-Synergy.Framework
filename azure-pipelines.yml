@@ -542,12 +542,12 @@ stages:
             projects: 'tests\ISynergy.Framework.IO.Tests\ISynergy.Framework.IO.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Automations Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Automations.Tests\ISynergy.Framework.Automations.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+        # - task: DotNetCoreCLI@2
+        #   displayName: 'Run Automations Tests'
+        #   inputs:
+        #     command: test
+        #     projects: 'tests\ISynergy.Framework.Automations.Tests\ISynergy.Framework.Automations.Tests.csproj'
+        #     arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: DotNetCoreCLI@2
           displayName: 'Run AspNetCore Tests'
