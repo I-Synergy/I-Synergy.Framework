@@ -119,8 +119,8 @@ public static class MauiAppBuilderExtensions
     /// <param name="assemblyFilter">The assembly filter.</param>
     private static void RegisterAssemblies(this MauiAppBuilder appBuilder, Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
     {
+        var referencedAssemblies = mainAssembly.GetAllReferencedAssemblyNames();
         var assemblies = new List<Assembly>();
-        assemblies.Add(mainAssembly);
 
         if (assemblyFilter is not null)
             foreach (var item in mainAssembly.GetReferencedAssemblies().Where(assemblyFilter).EnsureNotNull())
