@@ -118,14 +118,14 @@ public static class WindowsAppBuilderExtensions
     /// <param name="assemblyFilter">The assembly filter.</param>
     private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
     {
+        var referencedAssemblies = mainAssembly.GetAllReferencedAssemblyNames();
         var assemblies = new List<Assembly>();
-        assemblies.Add(mainAssembly);
 
         if (assemblyFilter is not null)
-            foreach (var item in mainAssembly.GetReferencedAssemblies().Where(assemblyFilter).EnsureNotNull())
+            foreach (var item in referencedAssemblies.Where(assemblyFilter).EnsureNotNull())
                 assemblies.Add(Assembly.Load(item));
 
-        foreach (var item in mainAssembly.GetReferencedAssemblies().Where(x =>
+        foreach (var item in referencedAssemblies.Where(x =>
             x.Name.StartsWith("ISynergy.Framework.UI") ||
             x.Name.StartsWith("ISynergy.Framework.Mvvm")))
             assemblies.Add(Assembly.Load(item));
