@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -266,5 +267,75 @@ public static class ReflectionExtensions
             return (bool)result.First().GetValue(_self);
         else
             return false;
+    }
+
+    public static List<Assembly> GetAllReferencedAssemblies(this Assembly _self)
+    {
+        var queue = new Queue<AssemblyName>(_self.GetReferencedAssemblies());
+        var alreadyProcessed = new HashSet<string>() { _self.FullName };
+        var result = new List<Assembly>() { _self };
+
+        while (queue.Any())
+        {
+            var name = queue.Dequeue();
+            var fullName = name.FullName;
+            
+            if (alreadyProcessed.Contains(fullName) || fullName.StartsWith("Microsoft.") || fullName.StartsWith("System."))
+                continue;
+            
+            alreadyProcessed.Add(fullName);
+            
+            try
+            {
+                var newAssembly = Assembly.Load(name);
+                result.Add(newAssembly);
+
+                foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies())
+                    queue.Enqueue(innerAssemblyName);
+
+                Debug.WriteLine(name);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        return result;
+    }
+
+    public static AssemblyName[] GetAllReferencedAssemblyNames(this Assembly _self)
+    {
+        var queue = new Queue<AssemblyName>(_self.GetReferencedAssemblies());
+        var alreadyProcessed = new HashSet<string>() { _self.FullName };
+        var result = new List<AssemblyName>() { _self.GetName() };
+
+        while (queue.Any())
+        {
+            var name = queue.Dequeue();
+            var fullName = name.FullName;
+
+            if (alreadyProcessed.Contains(fullName) || fullName.StartsWith("Microsoft.") || fullName.StartsWith("System."))
+                continue;
+
+            alreadyProcessed.Add(fullName);
+
+            try
+            {
+                var newAssembly = Assembly.Load(name);
+                result.Add(newAssembly.GetName());
+
+                foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies())
+                    queue.Enqueue(innerAssemblyName);
+
+                Debug.WriteLine(name);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        return result.ToArray();
     }
 }
