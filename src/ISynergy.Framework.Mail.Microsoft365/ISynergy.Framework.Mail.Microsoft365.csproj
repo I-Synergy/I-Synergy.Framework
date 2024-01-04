@@ -11,7 +11,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Azure.Identity" Version="1.10.4" />
-		<PackageReference Include="Microsoft.Graph" Version="5.37.0" />
+		<PackageReference Include="Microsoft.Graph" Version="5.38.0" />
 		<PackageReference Include="System.Text.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
