@@ -78,10 +78,10 @@ public class EditableComboViewModel : ViewModelNavigation<object>
         });
     }
 
-    public override Task SubmitAsync(object e)
+    public override Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
         if (Validate())
-            return base.SubmitAsync(e);
+            return base.SubmitAsync(e, validateUnderlayingProperties);
 
         return Task.CompletedTask;
     }

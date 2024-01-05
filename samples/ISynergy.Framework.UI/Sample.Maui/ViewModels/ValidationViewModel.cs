@@ -42,7 +42,7 @@ public class ValidationViewModel : ViewModelNavigation<TestItem>
         }
     }
 
-    public override async Task SubmitAsync(TestItem e)
+    public override async Task SubmitAsync(TestItem e, bool validateUnderlayingProperties = true)
     {
         Argument.IsNotNull(SelectedItem);
         Argument.IsNotNull(SelectedItem.Description);
