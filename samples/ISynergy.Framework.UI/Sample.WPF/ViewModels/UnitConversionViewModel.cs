@@ -109,7 +109,7 @@ public class UnitConversionViewModel : ViewModelNavigation<object>
         }
     }
 
-    public override Task SubmitAsync(object e)
+    public override Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
         Output = _unitConversionService.Convert((Units)SelectedInputUnit, Input, (Units)SelectedOutputUnit);
         return Task.CompletedTask;

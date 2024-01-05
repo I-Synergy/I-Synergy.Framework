@@ -76,7 +76,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
             }
         });
 
-        SubmitCommand = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e));
+        SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e));
     }
 
     /// <summary>
@@ -95,10 +95,11 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     /// Submits the asynchronous.
     /// </summary>
     /// <param name="e">The e.</param>
+    /// <param name="validateUnderlayingProperties"></param>
     /// <returns>Task.</returns>
-    public virtual Task SubmitAsync(TEntity e)
+    public virtual Task SubmitAsync(TEntity e, bool validateUnderlayingProperties = true)
     {
-        if (Validate())
+        if (Validate(validateUnderlayingProperties))
         {
             OnSubmitted(new SubmitEventArgs<TEntity>(e));
             Close();

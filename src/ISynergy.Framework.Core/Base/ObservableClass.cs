@@ -267,7 +267,9 @@ public abstract class ObservableClass : IObservableClass
 
         if (validateUnderlayingProperties)
         {
-            foreach (var property in this.GetType().GetProperties().Where(q => q.PropertyType.GetInterfaces().Contains(typeof(IObservableClass))))
+            foreach (var property in this.GetType().GetProperties().Where(q => 
+                q.PropertyType.GetInterfaces().Contains(typeof(IObservableClass)) &&
+                !q.PropertyType.IsInterface))
             {
                 if (property.GetValue(this, null) is ObservableClass observable &&
                     !observable.Validate(validateUnderlayingProperties))

@@ -154,7 +154,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         DeleteCommand = new AsyncRelayCommand<TEntity>(DeleteAsync);
         RefreshCommand = new AsyncRelayCommand(RefreshAsync);
         SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
-        SubmitCommand = new AsyncRelayCommand<TEntity>(SubmitAsync);
+        SubmitCommand = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e));
     }
 
     /// <summary>
@@ -283,10 +283,11 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Submits the asynchronous.
     /// </summary>
     /// <param name="e">The e.</param>
+    /// <param name="validateUnderlayingProperties"></param>
     /// <returns>Task.</returns>
-    public virtual Task SubmitAsync(TEntity e)
+    public virtual Task SubmitAsync(TEntity e, bool validateUnderlayingProperties = true)
     {
-        if (Validate())
+        if (Validate(validateUnderlayingProperties))
             OnSubmitted(new SubmitEventArgs<TEntity>(e));
 
         return Task.CompletedTask;

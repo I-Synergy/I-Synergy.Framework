@@ -156,9 +156,15 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
         return Task.CompletedTask;
     }
 
-    public override Task SubmitAsync(List<TEntity> e)
+    /// <summary>
+    /// Submits selection
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="validateUnderlayingProperties"></param>
+    /// <returns></returns>
+    public override Task SubmitAsync(List<TEntity> e, bool validateUnderlayingProperties = true)
     {
-        if (Validate())
+        if (Validate(validateUnderlayingProperties))
         {
             var result = new List<TEntity>();
 
