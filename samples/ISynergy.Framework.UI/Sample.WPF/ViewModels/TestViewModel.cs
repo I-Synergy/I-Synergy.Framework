@@ -12,7 +12,7 @@ public class TestViewModel(
     ILogger logger,
     bool automaticValidation = false) : ViewModelDialog<object>(context, commonServices, logger, automaticValidation)
 {
-    public override async Task SubmitAsync(object e)
+    public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
         Test2ViewModel testVm = new Test2ViewModel(Context, BaseCommonServices, Logger);
         testVm.Submitted += TestVm_Submitted;

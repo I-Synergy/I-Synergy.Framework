@@ -73,7 +73,7 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
     /// </summary>
     /// <param name="e">if set to <c>true</c> [e].</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public override async Task SubmitAsync(bool e)
+    public override async Task SubmitAsync(bool e, bool validateUnderlayingProperties = true)
     {
         bool result = false;
 
@@ -90,6 +90,6 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
             }
         }
 
-        await base.SubmitAsync(result);
+        await base.SubmitAsync(result, validateUnderlayingProperties);
     }
 }

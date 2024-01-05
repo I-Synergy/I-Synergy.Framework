@@ -57,8 +57,9 @@ public class PincodeViewModel : ViewModelDialog<bool>
     /// Submits the asynchronous.
     /// </summary>
     /// <param name="e">if set to <c>true</c> [e].</param>
+    /// <param name="validateUnderlayingProperties"></param>
     /// <returns>Task.</returns>
-    public override Task SubmitAsync(bool e)
+    public override Task SubmitAsync(bool e, bool validateUnderlayingProperties = true)
     {
         //ToDo: Change pincode.
         if (Pincode.Equals("0000"))
@@ -70,6 +71,6 @@ public class PincodeViewModel : ViewModelDialog<bool>
             e = false;
         }
 
-        return base.SubmitAsync(e);
+        return base.SubmitAsync(e, validateUnderlayingProperties);
     }
 }
