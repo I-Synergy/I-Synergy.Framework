@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -42,6 +43,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// Gets or sets the Owner property value.
     /// </summary>
     /// <value>The owner.</value>
+    [IgnoreValidation]
     public IViewModelBladeView Owner
     {
         get { return GetValue<IViewModelBladeView>(); }
