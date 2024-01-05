@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -36,6 +37,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Gets or sets the Blades property value.
     /// </summary>
     /// <value>The blades.</value>
+    [IgnoreValidation]
     public ObservableCollection<IView> Blades
     {
         get => GetValue<ObservableCollection<IView>>();

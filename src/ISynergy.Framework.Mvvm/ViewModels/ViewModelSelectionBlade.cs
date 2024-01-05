@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -28,6 +29,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// Gets or sets the raw items.
     /// </summary>
     /// <value>The raw items.</value>
+    [IgnoreValidation]
     private List<TEntity> RawItems { get; set; }
 
     /// <summary>
