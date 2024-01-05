@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -36,6 +37,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Gets or sets the Blades property value.
     /// </summary>
     /// <value>The blades.</value>
+    [IgnoreValidation]
     public ObservableCollection<IView> Blades
     {
         get => GetValue<ObservableCollection<IView>>();
@@ -154,7 +156,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         DeleteCommand = new AsyncRelayCommand<TEntity>(DeleteAsync);
         RefreshCommand = new AsyncRelayCommand(RefreshAsync);
         SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
-        SubmitCommand = new AsyncRelayCommand<TEntity>(SubmitAsync);
+        SubmitCommand = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e));
     }
 
     /// <summary>
@@ -283,10 +285,11 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Submits the asynchronous.
     /// </summary>
     /// <param name="e">The e.</param>
+    /// <param name="validateUnderlayingProperties"></param>
     /// <returns>Task.</returns>
-    public virtual Task SubmitAsync(TEntity e)
+    public virtual Task SubmitAsync(TEntity e, bool validateUnderlayingProperties = true)
     {
-        if (Validate())
+        if (Validate(validateUnderlayingProperties))
             OnSubmitted(new SubmitEventArgs<TEntity>(e));
 
         return Task.CompletedTask;

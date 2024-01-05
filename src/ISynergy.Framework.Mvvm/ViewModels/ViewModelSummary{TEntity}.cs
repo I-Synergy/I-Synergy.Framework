@@ -266,10 +266,11 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Submits the asynchronous.
     /// </summary>
     /// <param name="e">The e.</param>
+    /// <param name="validateUnderlayingProperties"></param>
     /// <returns>Task.</returns>
-    public virtual Task SubmitAsync(TEntity e)
+    public virtual Task SubmitAsync(TEntity e, bool validateUnderlayingProperties = true)
     {
-        if (Validate())
+        if (Validate(validateUnderlayingProperties))
             OnSubmitted(new SubmitEventArgs<TEntity>(e));
 
         return Task.CompletedTask;

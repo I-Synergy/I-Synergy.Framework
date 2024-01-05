@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -28,6 +29,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// Gets or sets the raw items.
     /// </summary>
     /// <value>The raw items.</value>
+    [IgnoreValidation]
     private List<TEntity> RawItems { get; set; }
 
     /// <summary>
@@ -147,9 +149,15 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         return Task.CompletedTask;
     }
 
-    public override Task SubmitAsync(List<TEntity> e)
+    /// <summary>
+    /// Submits selection
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="validateUnderlayingProperties"></param>
+    /// <returns></returns>
+    public override Task SubmitAsync(List<TEntity> e, bool validateUnderlayingProperties = true)
     {
-        if (Validate())
+        if (Validate(validateUnderlayingProperties))
         {
             var result = new List<TEntity>();
 
