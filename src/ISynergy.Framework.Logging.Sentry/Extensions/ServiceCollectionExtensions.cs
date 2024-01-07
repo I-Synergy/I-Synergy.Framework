@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
     public static ILoggingBuilder AddSentryLogging(this ILoggingBuilder builder, IConfiguration configuration)
     {
         builder.Services.Configure<SentryOptions>(configuration.GetSection(nameof(SentryOptions)).BindWithReload);
+        builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<ILogger, Logger>();
         return builder;
     }
