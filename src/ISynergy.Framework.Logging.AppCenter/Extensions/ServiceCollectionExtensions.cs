@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
     public static ILoggingBuilder AddAppCenterLogging(this ILoggingBuilder builder, IConfiguration configuration)
     {
         builder.Services.Configure<AppCenterOptions>(configuration.GetSection(nameof(AppCenterOptions)).BindWithReload);
+        builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<ILogger, Logger>();
 
         return builder;

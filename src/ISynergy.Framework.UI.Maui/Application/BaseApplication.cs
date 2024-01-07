@@ -21,23 +21,9 @@ namespace ISynergy.Framework.UI;
 
 public abstract class BaseApplication : Application, IBaseApplication, IDisposable
 {
-    /// <summary>
-    /// Gets the ExceptionHandler service.
-    /// </summary>
     protected readonly IExceptionHandlerService _exceptionHandlerService;
-
-    /// <summary>
-    /// Gets the logger.
-    /// </summary>
-    /// <value>The logger.</value>
     protected readonly ILogger _logger;
-
-    /// <summary>
-    /// Gets the context.
-    /// </summary>
-    /// <value>The context.</value>
     protected readonly IContext _context;
-
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
@@ -53,10 +39,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected BaseApplication()
         : base()
     {
-        _logger = ServiceLocator.Default.GetInstance<ILogger>() ?? LoggerFactory.Create(builder =>
+        _logger = ServiceLocator.Default.GetInstance<ILogger>() ?? LoggerFactory.Create(config =>
         {
-            builder.AddDebug();
-            builder.SetMinimumLevel(LogLevel.Trace);
+#if DEBUG
+            config.AddDebug();
+#endif
+            config.SetMinimumLevel(LogLevel.Trace);
         }).CreateLogger(AppDomain.CurrentDomain.FriendlyName);
 
         _logger.LogInformation("Starting application");
