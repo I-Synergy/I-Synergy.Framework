@@ -45,8 +45,10 @@ public class ThemeViewModel : ViewModelDialog<Style>
         applicationSettingsService.LoadSettings();
 
         ThemeColors = new ThemeColors();
-
-        SelectedItem.Color = applicationSettingsService.Settings.Color;
-        SelectedItem.Theme = applicationSettingsService.Settings.Theme;
+        SelectedItem = new Style()
+        {
+            Color = applicationSettingsService.Settings.Color, 
+            Theme = applicationSettingsService.Settings.Theme 
+        };
     }
 }
