@@ -23,23 +23,9 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class BaseApplication : Application, IBaseApplication, IDisposable
 {
-    /// <summary>
-    /// Gets the ExceptionHandler service.
-    /// </summary>
     protected readonly IExceptionHandlerService _exceptionHandlerService;
-
-    /// <summary>
-    /// Gets the logger.
-    /// </summary>
-    /// <value>The logger.</value>
     protected readonly ILogger _logger;
-
-    /// <summary>
-    /// Gets the context.
-    /// </summary>
-    /// <value>The context.</value>
     protected readonly IContext _context;
-
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
@@ -54,10 +40,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         : base()
     {
         var host = CreateHostBuilder()
-            .ConfigureLogging(logger =>
+            .ConfigureLogging(config =>
             {
-                logger.AddDebug();
-                logger.SetMinimumLevel(LogLevel.Trace);
+#if DEBUG
+                config.AddDebug();
+#endif
+                config.SetMinimumLevel(LogLevel.Trace);
             })
             .Build();
 
