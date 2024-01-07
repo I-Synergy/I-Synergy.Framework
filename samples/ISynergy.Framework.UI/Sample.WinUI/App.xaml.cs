@@ -66,7 +66,6 @@ public sealed partial class App : BaseApplication
             })
             .ConfigureLogging((context, logging) =>
             {
-                logging.AddDebug();
                 logging.AddAppCenterLogging(context.Configuration);
                 //logging.AddSentryLogging(context.Configuration);
             });

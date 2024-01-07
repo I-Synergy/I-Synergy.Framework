@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
     public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, IConfiguration configuration)
     {
         builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
+        builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<ILogger, Logger>();
 
         return builder;
