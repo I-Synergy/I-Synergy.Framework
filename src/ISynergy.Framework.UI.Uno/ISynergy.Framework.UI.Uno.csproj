@@ -24,7 +24,7 @@
 	<Choose>
 		<When Condition="'$(TargetFramework)'=='net8.0-windows10.0.19041' OR '$(TargetFramework)'=='net7.0-windows10.0.19041'">
 			<ItemGroup>
-				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
+				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
 				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 			</ItemGroup>
 		</When>
@@ -152,21 +152,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\ISynergy.ttf" Link="Assets\Fonts\ISynergy.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Bold.ttf" Link="Assets\Fonts\OpenDyslexic3-Bold.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Regular.ttf" Link="Assets\Fonts\OpenDyslexic3-Regular.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\SegMDL2.ttf" Link="Assets\Fonts\SegMDL2.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoesb.ttf" Link="Assets\Fonts\segoesb.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeui.ttf" Link="Assets\Fonts\segoeui.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuib.ttf" Link="Assets\Fonts\segoeuib.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuil.ttf" Link="Assets\Fonts\segoeuil.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuisl.ttf" Link="Assets\Fonts\segoeuisl.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\seguisb.ttf" Link="Assets\Fonts\seguisb.ttf"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Error.png" Link="Assets\Images\Error.png"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Information.png" Link="Assets\Images\Information.png"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Question.png" Link="Assets\Images\Question.png"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Refresh.png" Link="Assets\Images\Refresh.png"/>
-		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Warning.png" Link="Assets\Images\Warning.png"/>
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\ISynergy.ttf" Link="Assets\Fonts\ISynergy.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Bold.ttf" Link="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\OpenDyslexic3-Regular.ttf" Link="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\SegMDL2.ttf" Link="Assets\Fonts\SegMDL2.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoesb.ttf" Link="Assets\Fonts\segoesb.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeui.ttf" Link="Assets\Fonts\segoeui.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuib.ttf" Link="Assets\Fonts\segoeuib.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuil.ttf" Link="Assets\Fonts\segoeuil.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\segoeuisl.ttf" Link="Assets\Fonts\segoeuisl.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Fonts\seguisb.ttf" Link="Assets\Fonts\seguisb.ttf" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Error.png" Link="Assets\Images\Error.png" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Information.png" Link="Assets\Images\Information.png" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Question.png" Link="Assets\Images\Question.png" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Refresh.png" Link="Assets\Images\Refresh.png" />
+		<EmbeddedResource Include="..\ISynergy.Framework.UI.WinUI\Assets\Images\Warning.png" Link="Assets\Images\Warning.png" />
 	</ItemGroup>
 
 	<ItemGroup>
