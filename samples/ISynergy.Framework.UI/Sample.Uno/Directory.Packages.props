@@ -8,9 +8,9 @@
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="Microsoft.Windows.Compatibility" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Windows.Compatibility" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
     <PackageVersion Include="SkiaSharp.Skottie" Version="2.88.6" />
     <PackageVersion Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.6" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
