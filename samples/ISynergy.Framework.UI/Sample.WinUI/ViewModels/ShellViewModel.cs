@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions;
 using Sample.Abstractions.Services;
 
 namespace Sample.ViewModels;
@@ -158,7 +159,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
 
     private Task OpenTreenNodeTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<TreeNodeViewModel>();
+        CommonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
 
     /// <summary>
     /// Opens the validation test asynchronous.
