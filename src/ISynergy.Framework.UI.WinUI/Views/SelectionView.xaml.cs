@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -13,7 +14,7 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 /// <seealso cref="ISynergy.Framework.UI.Controls.View" />
 /// <seealso cref="ISynergy.Framework.Mvvm.Abstractions.IView" />
-public partial class SelectionView : ISynergy.Framework.UI.Controls.View, IView
+public partial class SelectionView : ISelectionView
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionView" /> class.

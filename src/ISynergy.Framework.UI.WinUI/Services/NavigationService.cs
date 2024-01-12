@@ -170,6 +170,50 @@ public class NavigationService : INavigationService
     }
 
     /// <summary>
+    /// Opens blade with a custom defined view.
+    /// </summary>
+    /// <typeparam name="TView"></typeparam>
+    /// <param name="owner"></param>
+    /// <param name="viewmodel"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
+        where TView : IView
+    {
+        Argument.IsNotNull(owner);
+
+        if (viewmodel is IViewModelBlade bladeVm)
+        {
+            bladeVm.Owner = owner;
+            bladeVm.Closed += Viewmodel_Closed;
+
+            if (_serviceProvider.GetRequiredService(typeof(TView)) is View view)
+            {
+                view.ViewModel = viewmodel;
+
+                if (!viewmodel.IsInitialized)
+                    await viewmodel.InitializeAsync();
+
+                if (!owner.Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
+                {
+                    foreach (var blade in owner.Blades)
+                    {
+                        blade.IsEnabled = false;
+                    }
+
+                    owner.Blades.Add(view);
+                }
+
+                owner.IsPaneVisible = true;
+            }
+            else
+            {
+                throw new Exception($"Page not found: {typeof(TView)}.");
+            }
+        }
+    }
+
+    /// <summary>
     /// Handles the Closed event of the Viewmodel control.
     /// </summary>
     /// <param name="sender">The source of the event.</param>
@@ -217,8 +261,22 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <param name="navigateBack"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel =>
+    public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false)
+        where TViewModel : class, IViewModel =>
         NavigateAsync(default(TViewModel), parameter);
+
+    /// <summary>
+    /// Navigates viewmodel to a specified view.
+    /// </summary>
+    /// <typeparam name="TViewModel"></typeparam>
+    /// <typeparam name="TView"></typeparam>
+    /// <param name="parameter"></param>
+    /// <param name="navigateBack"></param>
+    /// <returns></returns>
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
+        where TViewModel : class, IViewModel
+        where TView : IView =>
+        NavigateAsync<TViewModel, TView>(default(TViewModel), parameter);
 
     /// <summary>
     /// navigate as an asynchronous operation.
@@ -264,6 +322,66 @@ public class NavigationService : INavigationService
 
                     if (!page.ViewModel.IsInitialized)
                         await page.ViewModel.InitializeAsync();
+
+                    OnBackStackChanged(EventArgs.Empty);
+                });
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Navigates viewmodel to a specified view.
+    /// </summary>
+    /// <typeparam name="TViewModel"></typeparam>
+    /// <typeparam name="TView"></typeparam>
+    /// <param name="viewModel"></param>
+    /// <param name="parameter"></param>
+    /// <param name="navigateBack"></param>
+    /// <returns></returns>
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+        where TViewModel : class, IViewModel
+        where TView : IView
+    {
+        if (_serviceProvider.GetRequiredService(typeof(TView)) is View view)
+        {
+            if (viewModel is null && _serviceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
+                viewModel = resolvedViewModel;
+
+            viewModel.Parameter = parameter;
+            view.ViewModel = viewModel;
+
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(
+                DispatcherQueuePriority.Normal,
+                async () =>
+                {
+                    switch (_themeService.Style.Theme)
+                    {
+                        case Core.Enumerations.Themes.Light:
+                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                            break;
+                        case Core.Enumerations.Themes.Dark:
+                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                            break;
+                        default:
+                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                            break;
+                    }
+
+                    // Check if actual page is the same as destination page.
+                    if (_frame.Content is View originalView)
+                    {
+                        if (originalView.GetType().Equals(view.GetType()))
+                            return;
+
+                        if (!navigateBack)
+                            _backStack.Push(originalView.ViewModel);
+                    }
+
+                    _frame.Content = view;
+
+                    if (!view.ViewModel.IsInitialized)
+                        await view.ViewModel.InitializeAsync();
 
                     OnBackStackChanged(EventArgs.Empty);
                 });
