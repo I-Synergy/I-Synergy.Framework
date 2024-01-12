@@ -1,8 +1,9 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
+using Sample.Abstractions;
 
 namespace Sample.Views;
 
-public sealed partial class TreeNodeView : ISynergy.Framework.UI.Controls.View, IView
+public sealed partial class TreeNodeView : ITreeNodeView
 {
     public TreeNodeView()
     {
