@@ -109,7 +109,7 @@ public class NavigationService : INavigationService
         var page = WPFAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
 
         if (page is null)
-            throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
+            throw new KeyNotFoundException($"Page not found: {viewModel.GetViewFullName()}.");
 
         if (_serviceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
         {
@@ -121,7 +121,7 @@ public class NavigationService : INavigationService
             return view;
         }
 
-        throw new Exception($"Instance could not be created from {viewModel.GetViewFullName()}");
+        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetViewFullName()}");
     }
 
     /// <summary>
@@ -194,7 +194,7 @@ public class NavigationService : INavigationService
             }
             else
             {
-                throw new Exception($"Page not found: {typeof(TView)}.");
+                throw new KeyNotFoundException($"Page not found: {typeof(TView)}.");
             }
         }
     }
@@ -315,7 +315,9 @@ public class NavigationService : INavigationService
             if (viewModel is null && _serviceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
                 viewModel = resolvedViewModel;
 
-            viewModel.Parameter = parameter;
+            if (viewModel is not null && parameter is not null)
+                viewModel.Parameter = parameter;
+
             view.ViewModel = viewModel;
 
             // Check if actual page is the same as destination page.

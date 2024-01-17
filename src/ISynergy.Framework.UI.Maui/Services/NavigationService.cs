@@ -98,6 +98,14 @@ public class NavigationService : INavigationService
     public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel =>
         Shell.Current.Navigation.PushViewModelAsync<TViewModel>(parameter);
 
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+        where TViewModel : class, IViewModel
+        where TView : IView => throw new NotImplementedException();
+
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
+        where TViewModel : class, IViewModel
+        where TView : IView => throw new NotImplementedException();
+
     /// <summary>
     /// Navigates to the modal viewmodel with parameters.
     /// </summary>
@@ -120,17 +128,9 @@ public class NavigationService : INavigationService
 
     public Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
 
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
-
     public Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
-        where TView : IView => 
+        where TView : IView =>
         throw new NotImplementedException();
 
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter, bool navigateBack)
-        where TViewModel : class, IViewModel
-        where TView : IView => throw new NotImplementedException();
-
-    public Task NavigateAsync<TViewModel, TView>(object parameter, bool navigateBack)
-        where TViewModel : class, IViewModel
-        where TView : IView => throw new NotImplementedException();
+    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
 }

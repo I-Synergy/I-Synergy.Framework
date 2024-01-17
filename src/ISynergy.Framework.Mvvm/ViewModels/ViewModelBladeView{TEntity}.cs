@@ -23,6 +23,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <seealso cref="IViewModelBladeView" />
 public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeView
 {
+    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
@@ -211,9 +213,9 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         }
 
         if (await BaseCommonServices.DialogService.ShowMessageAsync(
-                            string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
-                            BaseCommonServices.LanguageService.GetString("Delete"),
-                            MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
+            BaseCommonServices.LanguageService.GetString("Delete"),
+            MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             await RemoveAsync(e);
             await RefreshAsync();
@@ -240,11 +242,6 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     public virtual Task<bool> RefreshAsync() => GetItemsAsync();
 
     /// <summary>
-    /// The get items cancellation token
-    /// </summary>
-    private CancellationTokenSource GetItemsCancellationToken = new CancellationTokenSource();
-
-    /// <summary>
     /// get items as an asynchronous operation.
     /// </summary>
     /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
@@ -252,17 +249,17 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     {
         var result = false;
 
-        GetItemsCancellationToken.Cancel();
-        GetItemsCancellationToken = new CancellationTokenSource();
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource = new CancellationTokenSource();
 
         try
         {
             BaseCommonServices.BusyService.StartBusy();
 
-            Items.AddNewRange(await RetrieveItemsAsync(GetItemsCancellationToken.Token));
+            Items.AddNewRange(await RetrieveItemsAsync(_cancellationTokenSource.Token));
             result = true;
 
-            GetItemsCancellationToken.Token.ThrowIfCancellationRequested();
+            _cancellationTokenSource.Token.ThrowIfCancellationRequested();
         }
         catch (TaskCanceledException) { }
         catch (OperationCanceledException) { }
@@ -321,5 +318,17 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
 
         SubmitCommand?.Cancel();
         SubmitCommand = null;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (_cancellationTokenSource is not null)
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = null;
+        }
+
+        base.Dispose(disposing);
     }
 }
