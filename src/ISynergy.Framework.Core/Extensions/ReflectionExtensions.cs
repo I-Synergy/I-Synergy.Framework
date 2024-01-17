@@ -310,7 +310,7 @@ public static class ReflectionExtensions
         var alreadyProcessed = new HashSet<string>() { _self.FullName };
         var result = new List<AssemblyName>() { _self.GetName() };
 
-        while (queue.Any())
+        while (queue.Count > 0)
         {
             var name = queue.Dequeue();
             var fullName = name.FullName;

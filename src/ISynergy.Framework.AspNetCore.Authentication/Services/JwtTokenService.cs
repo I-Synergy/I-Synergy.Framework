@@ -38,10 +38,6 @@ public class JwtTokenService : IJwtTokenService
     /// <returns>Token.</returns>
     public Token GenerateJwtToken(TokenRequest request)
     {
-        // Use code below to generate symmetric secret key.
-        // var hmac = new HMACSHA256();
-        // var key = Convert.ToBase64String(hmac.Key);
-
         var tokenHandler = new JwtSecurityTokenHandler();
         var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricKeySecret));
         var credentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256Signature);

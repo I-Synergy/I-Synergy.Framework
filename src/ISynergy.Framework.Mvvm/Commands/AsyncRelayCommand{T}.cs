@@ -15,8 +15,11 @@ namespace ISynergy.Framework.Mvvm.Commands;
 /// A generic _command that provides a more specific version of <see cref="AsyncRelayCommand"/>.
 /// </summary>
 /// <typeparam name="T">The type of parameter being passed as input to the callbacks.</typeparam>
-public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationAwareCommand
+public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationAwareCommand, IDisposable
 {
+    private readonly List<CancellationTokenSource> _cancellationTokenSources = new List<CancellationTokenSource>();
+    private CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
+
     /// <summary>
     /// The <see cref="Func{TResult}"/> to invoke when <see cref="Execute(T)"/> is used.
     /// </summary>
@@ -38,11 +41,6 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
     private readonly AsyncRelayCommandOptions _options;
 
     private Task? _executionTask;
-
-    /// <summary>
-    /// The <see cref="CancellationTokenSource"/> instance to use to cancel <see cref="_cancelableExecute"/>.
-    /// </summary>
-    private CancellationTokenSource? _cancellationTokenSource;
 
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -278,8 +276,8 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
             {
                 // Cancel the previous operation, if one is pending
                 _cancellationTokenSource?.Cancel();
-
-                CancellationTokenSource cancellationTokenSource = _cancellationTokenSource = new();
+                var cancellationTokenSource = _cancellationTokenSource = new();
+                _cancellationTokenSources.Add(cancellationTokenSource);
 
                 // Invoke the cancelable _command delegate with a new linked token
                 executionTask = ExecutionTask = _cancelableExecute!(parameter, cancellationTokenSource.Token);
@@ -322,4 +320,57 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
             PropertyChanged?.Invoke(this, AsyncRelayCommand.IsCancellationRequestedChangedEventArgs);
         }
     }
+
+    #region IDisposable
+    // Dispose() calls Dispose(true)
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    // NOTE: Leave out the finalizer altogether if this class doesn't
+    // own unmanaged resources, but leave the other methods
+    // exactly as they are.
+    //~ObservableClass()
+    //{
+    //    // Finalizer calls Dispose(false)
+    //    Dispose(false);
+    //}
+
+    // The bulk of the clean-up code is implemented in Dispose(bool)
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    private void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (_cancellationTokenSources is not null)
+            {
+                foreach (var cancellationTokenSource in _cancellationTokenSources)
+                {
+                    cancellationTokenSource.Cancel();
+                    cancellationTokenSource.Dispose();
+                }
+
+                _cancellationTokenSources.Clear();
+            }
+
+            // free managed resources
+            if (_cancellationTokenSource is not null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
+        }
+
+        // free native resources if there are any.
+    }
+    #endregion
 }

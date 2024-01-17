@@ -13,10 +13,8 @@ namespace ISynergy.Framework.AspNetCore.MultiTenancy.Services;
 /// <seealso cref="ITenantService" />
 internal class TenantService : ITenantService
 {
-    /// <summary>
-    /// The HTTP context accessor
-    /// </summary>
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly string[] _clientRoles = new string[] { "Client" };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TenantService"/> class.
@@ -64,7 +62,7 @@ internal class TenantService : ITenantService
         var claimIdentity = new ClaimsIdentity(identity);
         claimIdentity.AddClaim(new Claim(Core.Constants.ClaimTypes.AccountIdType, tenantId.ToString()));
         claimIdentity.AddClaim(new Claim(Core.Constants.ClaimTypes.UserNameType, username));
-        var principal = new GenericPrincipal(claimIdentity, new string[] { "Client" });
+        var principal = new GenericPrincipal(claimIdentity, _clientRoles);
         _httpContextAccessor.HttpContext.User = principal;
     }
 

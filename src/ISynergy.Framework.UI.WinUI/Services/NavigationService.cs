@@ -123,7 +123,7 @@ public class NavigationService : INavigationService
         }
 
         if (page is null)
-            throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
+            throw new KeyNotFoundException($"Page not found: {viewModel.GetViewFullName()}.");
 
         if (_serviceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
         {
@@ -135,7 +135,7 @@ public class NavigationService : INavigationService
             return view;
         }
 
-        throw new Exception($"Instance could not be created from {viewModel.GetViewFullName()}");
+        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetViewFullName()}");
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ public class NavigationService : INavigationService
             }
             else
             {
-                throw new Exception($"Page not found: {typeof(TView)}.");
+                throw new KeyNotFoundException($"Page not found: {typeof(TView)}.");
             }
         }
     }
@@ -289,41 +289,14 @@ public class NavigationService : INavigationService
     /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
     public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View page)
+        if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View view)
         {
             DispatcherQueue.GetForCurrentThread().TryEnqueue(
                 DispatcherQueuePriority.Normal,
                 async () =>
                 {
-                    switch (_themeService.Style.Theme)
-                    {
-                        case Core.Enumerations.Themes.Light:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                            break;
-                        case Core.Enumerations.Themes.Dark:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                            break;
-                        default:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                            break;
-                    }
-
-                    // Check if actual page is the same as destination page.
-                    if (_frame.Content is View originalView)
-                    {
-                        if (originalView.GetType().Equals(page.GetType()))
-                            return;
-
-                        if (!navigateBack)
-                            _backStack.Push(originalView.ViewModel);
-                    }
-
-                    _frame.Content = page;
-
-                    if (!page.ViewModel.IsInitialized)
-                        await page.ViewModel.InitializeAsync();
-
-                    OnBackStackChanged(EventArgs.Empty);
+                    SetRequestedTheme();
+                    await NavigateToViewAsync(view, navigateBack);
                 });
         }
 
@@ -339,56 +312,67 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <param name="navigateBack"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
         where TViewModel : class, IViewModel
         where TView : IView
     {
         if (_serviceProvider.GetRequiredService(typeof(TView)) is View view)
         {
-            if (viewModel is null && _serviceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
-                viewModel = resolvedViewModel;
+            SetViewModelAndParameter(viewModel, parameter, view);
+            SetRequestedTheme();
+            await NavigateToViewAsync(view, navigateBack);
+        }
+    }
 
+    private void SetViewModelAndParameter<TViewModel, TView>(TViewModel viewModel, object parameter, TView view)
+        where TViewModel : class, IViewModel
+        where TView : IView
+    {
+        if (viewModel is null && _serviceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
+            viewModel = resolvedViewModel;
+
+        if (viewModel is not null && parameter is not null)
             viewModel.Parameter = parameter;
-            view.ViewModel = viewModel;
 
-            DispatcherQueue.GetForCurrentThread().TryEnqueue(
-                DispatcherQueuePriority.Normal,
-                async () =>
-                {
-                    switch (_themeService.Style.Theme)
-                    {
-                        case Core.Enumerations.Themes.Light:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                            break;
-                        case Core.Enumerations.Themes.Dark:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                            break;
-                        default:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                            break;
-                    }
+        view.ViewModel = viewModel;
+    }
 
-                    // Check if actual page is the same as destination page.
-                    if (_frame.Content is View originalView)
-                    {
-                        if (originalView.GetType().Equals(view.GetType()))
-                            return;
+    private void SetRequestedTheme()
+    {
+        switch (_themeService.Style.Theme)
+        {
+            case Core.Enumerations.Themes.Light:
+                _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                break;
+            case Core.Enumerations.Themes.Dark:
+                _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                break;
+            default:
+                _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                break;
+        }
+    }
 
-                        if (!navigateBack)
-                            _backStack.Push(originalView.ViewModel);
-                    }
+    private async Task NavigateToViewAsync(View view, bool navigateBack)
+    {
+        // Check if actual view is the same as destination view.
+        if (_frame.Content is View originalView)
+        {
+            if (originalView.GetType().Equals(view.GetType()))
+                return;
 
-                    _frame.Content = view;
-
-                    if (!view.ViewModel.IsInitialized)
-                        await view.ViewModel.InitializeAsync();
-
-                    OnBackStackChanged(EventArgs.Empty);
-                });
+            if (!navigateBack)
+                _backStack.Push(originalView.ViewModel);
         }
 
-        return Task.CompletedTask;
+        _frame.Content = view;
+
+        if (!view.ViewModel.IsInitialized)
+            await view.ViewModel.InitializeAsync();
+
+        OnBackStackChanged(EventArgs.Empty);
     }
+
 
     public Task NavigateModalAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
     {
@@ -398,18 +382,7 @@ public class NavigationService : INavigationService
                 DispatcherQueuePriority.Normal,
                 async () =>
                 {
-                    switch (_themeService.Style.Theme)
-                    {
-                        case Core.Enumerations.Themes.Light:
-                            page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                            break;
-                        case Core.Enumerations.Themes.Dark:
-                            page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                            break;
-                        default:
-                            page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                            break;
-                    }
+                    SetRequestedTheme();
 
                     baseApplication.MainWindow.Content = page;
 

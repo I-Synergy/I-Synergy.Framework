@@ -161,42 +161,39 @@ public class DialogService : IDialogService
                 break;
         }
 
-        if (await OpenDialogAsync(dialog) is ContentDialogResult result)
-        {
-            switch (buttons)
-            {
-                case MessageBoxButton.OKCancel:
-                    switch (result)
-                    {
-                        case ContentDialogResult.Primary:
-                            return MessageBoxResult.OK;
-                        default:
-                            return MessageBoxResult.Cancel;
-                    }
-                case MessageBoxButton.YesNoCancel:
-                    switch (result)
-                    {
-                        case ContentDialogResult.Primary:
-                            return MessageBoxResult.Yes;
-                        case ContentDialogResult.Secondary:
-                            return MessageBoxResult.No;
-                        default:
-                            return MessageBoxResult.Cancel;
-                    }
-                case MessageBoxButton.YesNo:
-                    switch (result)
-                    {
-                        case ContentDialogResult.Primary:
-                            return MessageBoxResult.Yes;
-                        default:
-                            return MessageBoxResult.No;
-                    }
-                default:
-                    return MessageBoxResult.OK;
-            }
-        }
+        var result = await OpenDialogAsync(dialog);
 
-        return MessageBoxResult.Cancel;
+        switch (buttons)
+        {
+            case MessageBoxButton.OKCancel:
+                switch (result)
+                {
+                    case ContentDialogResult.Primary:
+                        return MessageBoxResult.OK;
+                    default:
+                        return MessageBoxResult.Cancel;
+                }
+            case MessageBoxButton.YesNoCancel:
+                switch (result)
+                {
+                    case ContentDialogResult.Primary:
+                        return MessageBoxResult.Yes;
+                    case ContentDialogResult.Secondary:
+                        return MessageBoxResult.No;
+                    default:
+                        return MessageBoxResult.Cancel;
+                }
+            case MessageBoxButton.YesNo:
+                switch (result)
+                {
+                    case ContentDialogResult.Primary:
+                        return MessageBoxResult.Yes;
+                    default:
+                        return MessageBoxResult.No;
+                }
+            default:
+                return MessageBoxResult.OK;
+        }
     }
 
     /// <summary>

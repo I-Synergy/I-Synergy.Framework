@@ -14,6 +14,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 
 public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<TEntity>
 {
+    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
@@ -181,9 +183,9 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         }
 
         if (await BaseCommonServices.DialogService.ShowMessageAsync(
-                            string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
-                            BaseCommonServices.LanguageService.GetString("Delete"),
-                            MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
+            BaseCommonServices.LanguageService.GetString("Delete"),
+            MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             await RemoveAsync(e);
             await RefreshAsync();
@@ -210,11 +212,6 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     public virtual Task<bool> RefreshAsync() => GetItemsAsync();
 
     /// <summary>
-    /// The get items cancellation token
-    /// </summary>
-    private CancellationTokenSource GetItemsCancellationToken = new CancellationTokenSource();
-
-    /// <summary>
     /// get items as an asynchronous operation.
     /// </summary>
     /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
@@ -222,18 +219,16 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     {
         var result = false;
 
-        var cancellationToken = new CancellationTokenSource();
-
         try
         {
             BaseCommonServices.BusyService.StartBusy();
 
-            var items = await RetrieveItemsAsync(cancellationToken.Token);
+            var items = await RetrieveItemsAsync(_cancellationTokenSource.Token);
 
             Items.AddNewRange(items);
             result = true;
         }
-        catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
+        catch (TaskCanceledException) when (_cancellationTokenSource.IsCancellationRequested)
         {
             Logger.LogTrace("User canceled request.");
         }
@@ -299,5 +294,17 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         SearchCommand = null;
         SubmitCommand?.Cancel();
         SubmitCommand = null;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (_cancellationTokenSource is not null)
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = null;
+        }
+
+        base.Dispose(disposing);
     }
 }
