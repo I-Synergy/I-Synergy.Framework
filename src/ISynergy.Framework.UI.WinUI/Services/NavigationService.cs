@@ -348,7 +348,9 @@ public class NavigationService : INavigationService
             if (viewModel is null && _serviceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
                 viewModel = resolvedViewModel;
 
-            viewModel.Parameter = parameter;
+            if (viewModel is not null && parameter is not null)
+                viewModel.Parameter = parameter;
+
             view.ViewModel = viewModel;
 
             DispatcherQueue.GetForCurrentThread().TryEnqueue(
