@@ -126,11 +126,11 @@ public class NavigationService : INavigationService
         where TView : IView => 
         throw new NotImplementedException();
 
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter, bool navigateBack)
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 
-    public Task NavigateAsync<TViewModel, TView>(object parameter, bool navigateBack)
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 }
