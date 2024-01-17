@@ -13,17 +13,10 @@ internal class LanguageService : ILanguageService
     private readonly List<ResourceManager> _managers;
 
     /// <summary>
-    /// The HTTP context accessor
-    /// </summary>
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="LanguageService" /> class.
     /// </summary>
-    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    public LanguageService(IHttpContextAccessor httpContextAccessor)
+    public LanguageService()
     {
-        _httpContextAccessor = httpContextAccessor;
         _managers = new List<ResourceManager>();
     }
 
