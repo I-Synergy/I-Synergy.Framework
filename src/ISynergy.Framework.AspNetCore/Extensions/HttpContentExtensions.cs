@@ -7,6 +7,11 @@ namespace ISynergy.Framework.AspNetCore.Extensions;
 /// </summary>
 public static class HttpContentExtensions
 {
+    private static readonly JsonSerializerOptions _options = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     /// <summary>
     /// read as as an asynchronous operation.
     /// </summary>
@@ -16,9 +21,6 @@ public static class HttpContentExtensions
     public static async Task<T> ReadAsAsync<T>(this HttpContent content)
     {
         var json = await content.ReadAsStringAsync().ConfigureAwait(false);
-        return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        return JsonSerializer.Deserialize<T>(json, _options);
     }
 }
