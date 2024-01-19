@@ -172,7 +172,10 @@ public class IntegerToDoubleConverter : IValueConverter
     {
         if (value is double doubleValue)
         {
-            return System.Convert.ToInt32(doubleValue);
+            if (doubleValue is double.NaN)
+                return 0;
+            else
+                return System.Convert.ToInt32(doubleValue);
         }
 
         return 0;

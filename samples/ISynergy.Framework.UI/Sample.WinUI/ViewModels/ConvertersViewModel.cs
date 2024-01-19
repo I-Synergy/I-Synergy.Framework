@@ -80,4 +80,22 @@ public class ConvertersViewModel : ViewModelNavigation<object>
         set { SetValue(value); }
     }
 
+    /// <summary>
+    /// Gets or sets the IntegerValue property value.
+    /// </summary>
+    public int IntegerValue
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the DecimalValue property value.
+    /// </summary>
+    public decimal DecimalValue
+    {
+        get => GetValue<decimal>();
+        set => SetValue(value);
+    }
+
 }
