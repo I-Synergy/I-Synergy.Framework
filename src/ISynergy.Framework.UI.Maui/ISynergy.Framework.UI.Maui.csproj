@@ -35,8 +35,8 @@
 	<Choose>
 		<When Condition="$(TargetFramework.StartsWith('net8.0')) == true">
 			<ItemGroup>
-				<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
-				<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
+				<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
+				<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.6" />
 				<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
 				<PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.0.0" />
 			</ItemGroup>
