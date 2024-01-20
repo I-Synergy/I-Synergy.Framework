@@ -13,13 +13,10 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+using Sample.Abstractions;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Sample.ViewModels;
 
@@ -28,6 +25,7 @@ public class AuthenticationViewModel : ViewModel
     private readonly IAuthenticationService _authenticationService;
     private readonly ILocalizationService _localizationService;
     private readonly IBaseApplicationSettingsService _applicationSettingsService;
+    private readonly ICredentialLockerService _credentialLockerService;
 
     /// <summary>
     /// Gets the title.
@@ -174,6 +172,15 @@ public class AuthenticationViewModel : ViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the AutoLogin property value.
+    /// </summary>
+    public bool AutoLogin
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
     public RelayCommand ShowSignInCommand { get; private set; }
     public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand SignUpCommand { get; private set; }
@@ -185,12 +192,14 @@ public class AuthenticationViewModel : ViewModel
         ILocalizationService localizationService,
         IAuthenticationService authenticationService,
         IBaseApplicationSettingsService applicationSettingsService,
+        ICredentialLockerService credentialLockerService,
         ILogger logger,
         bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
         _authenticationService = authenticationService;
         _localizationService = localizationService;
+        _credentialLockerService = credentialLockerService;
 
         _applicationSettingsService = applicationSettingsService;
         _applicationSettingsService.LoadSettings();
@@ -274,10 +283,13 @@ public class AuthenticationViewModel : ViewModel
         if (Modules.FirstOrDefault() is Module module)
             Registration_Modules.Add(module);
 
-        if (_applicationSettingsService.Settings.Users is List<string> users)
-            Usernames = new ObservableCollection<string>(users);
+        AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
+        Usernames = new ObservableCollection<string>(await _credentialLockerService.GetUsernamesFromCredentialLockerAsync());
 
-        Username = _applicationSettingsService.Settings.DefaultUser;
+        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
+            Username = _applicationSettingsService.Settings.DefaultUser;
+        if (string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && Usernames.Count > 0)
+            Username = Usernames.FirstOrDefault();
     }
 
     /// <summary>
@@ -352,7 +364,7 @@ public class AuthenticationViewModel : ViewModel
     {
         if (Validate())
         {
-            return _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
+            return _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
         }
 
         return Task.CompletedTask;

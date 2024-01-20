@@ -13,7 +13,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions.Services;
+using Sample.Abstractions;
 using Sample.Services;
+using Sample.Models;
 using Sample.ViewModels;
 using System.Reflection;
 using HostBuilder = Microsoft.Extensions.Hosting.HostBuilder;
@@ -44,6 +46,7 @@ public sealed partial class App : BaseApplication
                 services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
 
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());

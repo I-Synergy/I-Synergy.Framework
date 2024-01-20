@@ -5,13 +5,10 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
+using Sample.Models;
 using Sample.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace Sample.ViewModels;
 
@@ -58,6 +55,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     public AsyncRelayCommand ShowDialogOkCancel { get; set; }
 
     public AsyncRelayCommand ShowUnitsCommand { get; private set; }
+    public AsyncRelayCommand ShowTestCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the selected test items.
@@ -84,7 +82,18 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
         ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
         ShowUnitsCommand = new AsyncRelayCommand(ShowUnitsAsync);
+        ShowTestCommand = new AsyncRelayCommand(ShowUnitsAsync, canExecute: () => CanExecuteTest);
     }
+
+    /// <summary>
+    /// Gets or sets the CanExecuteTest property value.
+    /// </summary>
+    public bool CanExecuteTest
+    {
+        get => GetValue<bool>();
+        private set => SetValue(value);
+    }
+
 
     private async Task ShowUnitsAsync()
     {
@@ -98,18 +107,27 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         if (sender is TestViewModel vm)
             vm.Submitted -= Vm_Submitted;
 
+        CanExecuteTest = !CanExecuteTest;
+
         await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result} selected.");
+    }
+
+    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName.Equals(nameof(CanExecuteTest)))
+        {
+            ShowTestCommand.NotifyCanExecuteChanged();
+        }
     }
 
     private async Task ShowDialogAsync(MessageBoxButton buttons)
     {
-        if (await BaseCommonServices.DialogService.ShowMessageAsync(
+        MessageBoxResult result = await BaseCommonServices.DialogService.ShowMessageAsync(
                             $"Testing {buttons} Dialog",
                             "Test",
-                            buttons) is MessageBoxResult result)
-        {
-            await BaseCommonServices.DialogService.ShowInformationAsync($"{result} selected.", "Result...");
-        }
+                            buttons);
+
+        await BaseCommonServices.DialogService.ShowInformationAsync($"{result} selected.", "Result...");
     }
 
     /// <summary>
@@ -220,5 +238,36 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     public override Task SearchAsync(object e)
     {
         throw new NotImplementedException();
+    }
+
+    public override void Cleanup()
+    {
+        base.Cleanup();
+
+        SelectedTestItems?.Clear();
+
+        SelectSingleCommand?.Cancel();
+        SelectSingleCommand = null;
+
+        SelectMultipleCommand?.Cancel();
+        SelectMultipleCommand = null;
+
+        ShowDialogYesNo?.Cancel();
+        ShowDialogYesNo = null;
+
+        ShowDialogYesNoCancel?.Cancel();
+        ShowDialogYesNoCancel = null;
+
+        ShowDialogOk?.Cancel();
+        ShowDialogOk = null;
+
+        ShowDialogOkCancel?.Cancel();
+        ShowDialogOkCancel = null;
+
+        ShowUnitsCommand?.Cancel();
+        ShowUnitsCommand = null;
+
+        ShowTestCommand?.Cancel();
+        ShowTestCommand = null;
     }
 }

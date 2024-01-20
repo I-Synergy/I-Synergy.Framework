@@ -48,6 +48,12 @@ public interface IViewModel : IObservableClass, ICleanup
     /// </summary>
     /// <value>The close _command.</value>
     RelayCommand CloseCommand { get; }
+
+    /// <summary>
+    /// /// Gets or sets the cancel command.
+    /// </summary>
+    RelayCommand CancelCommand { get; }
+
     /// <summary>
     /// Gets or sets a value indicating whether this instance can close.
     /// </summary>

@@ -74,7 +74,7 @@
                     <Button x:Name="Cancel_Button" 
                             Content="{m:LanguageResource Key=Cancel}" 
                             HorizontalAlignment="Right" 
-                            Command="{Binding CloseCommand}"
+                            Command="{Binding CancelCommand}"
                             Margin="{ThemeResource ContentDialogButton2HostMargin}"
                             MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
                             MinHeight="{ThemeResource ContentDialogButtonMinHeight}"

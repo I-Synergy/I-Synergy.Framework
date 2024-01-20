@@ -306,8 +306,8 @@ public class DialogService : IDialogService
             window.ViewModel = viewmodel;
 
             window.PrimaryButtonCommand = viewmodel.SubmitCommand;
-            window.SecondaryButtonCommand = viewmodel.CloseCommand;
-            window.CloseButtonCommand = viewmodel.CloseCommand;
+            window.SecondaryButtonCommand = viewmodel.CancelCommand;
+            window.CloseButtonCommand = viewmodel.CancelCommand;
 
             window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
             window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
