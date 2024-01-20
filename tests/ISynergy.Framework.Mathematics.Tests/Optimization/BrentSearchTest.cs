@@ -1,11 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Exceptions;
+﻿using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class BrentSearchTest
 {
@@ -70,7 +68,7 @@ public class BrentSearchTest
     {
         //  Example from http://en.wikipedia.org/wiki/Brent%27s_method
 
-        Func<double, double> f = x => (x + 3) * Math.Pow((x - 1), 2);
+        Func<double, double> f = x => (x + 3) * Math.Pow(x - 1, 2);
         double a = -4;
         double b = 4 / 3.0;
 
@@ -78,7 +76,7 @@ public class BrentSearchTest
         double actual = BrentSearch.FindRoot(f, a, b);
 
         Assert.AreEqual(expected, actual, 1e-6);
-        Assert.IsFalse(Double.IsNaN(actual));
+        Assert.IsFalse(double.IsNaN(actual));
 
         BrentSearch search = new(f, a, b);
         bool isSuccess = search.FindRoot();
@@ -96,7 +94,7 @@ public class BrentSearchTest
         //  Example from http://en.wikipedia.org/wiki/Brent%27s_method
         double value = 10;
 
-        Func<double, double> f = x => (x + 3) * Math.Pow((x - 1), 2) + value;
+        Func<double, double> f = x => (x + 3) * Math.Pow(x - 1, 2) + value;
         double a = -4;
         double b = 4 / 3.0;
 

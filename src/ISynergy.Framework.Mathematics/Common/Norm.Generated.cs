@@ -1,13 +1,6 @@
-﻿namespace ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using ISynergy.Framework.Mathematics.Distances;
-using ISynergy.Framework.Mathematics.Decompositions;
-using ISynergy.Framework.Mathematics.Common;
-
+namespace ISynergy.Framework.Mathematics.Common;
 /// <summary>
 ///   Static class Distance. Defines a set of methods defining distance measures.
 /// </summary>

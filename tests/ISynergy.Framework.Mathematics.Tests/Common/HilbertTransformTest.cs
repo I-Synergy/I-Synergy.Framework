@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Transforms;
+﻿using ISynergy.Framework.Mathematics.Transforms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 
+namespace ISynergy.Framework.Mathematics.Tests.Common;
 [TestClass]
 public class HilbertTransformTest
 {

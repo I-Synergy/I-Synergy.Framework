@@ -1,13 +1,13 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Core.Collections;
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Random;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace ISynergy.Framework.Mathematics.Tests.Collections;
 [TestClass]
 public class RedBlackTreeTest
 {
@@ -87,7 +87,7 @@ public class RedBlackTreeTest
 
     private static void run(int n)
     {
-        Random rand = Generator.Random;
+        System.Random rand = Generator.Random;
 
         RedBlackTree<int> t = new(allowDuplicates: true);
 
@@ -254,7 +254,7 @@ public class RedBlackTreeTest
 
     private static void duplicates(int n)
     {
-        Random rand = Generator.Random;
+        var rand = Generator.Random;
 
         RedBlackTree<int> t = [];
 

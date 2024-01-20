@@ -57,7 +57,9 @@
 //
 
 using ISynergy.Framework.Mathematics.Enumerations;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
+using ISynergy.Framework.Mathematics.Vectors;
 
 namespace ISynergy.Framework.Mathematics.Optimization;
 

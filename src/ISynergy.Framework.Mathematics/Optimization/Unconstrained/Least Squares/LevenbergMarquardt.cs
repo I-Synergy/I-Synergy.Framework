@@ -1,7 +1,9 @@
 ﻿using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Differentiation;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Statistics;
+using ISynergy.Framework.Mathematics.Vectors;
 
 namespace ISynergy.Framework.Mathematics.Optimization;
 

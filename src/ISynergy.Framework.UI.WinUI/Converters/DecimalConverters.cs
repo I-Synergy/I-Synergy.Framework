@@ -353,7 +353,10 @@ public class DecimalToDoubleConverter : IValueConverter
     {
         if (value is double doubleValue)
         {
-            return System.Convert.ToDecimal(doubleValue);
+            if (doubleValue is double.NaN)
+                return 0m;
+            else
+                return System.Convert.ToDecimal(doubleValue);
         }
 
         return 0m;

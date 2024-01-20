@@ -1,10 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Common;
+﻿using ISynergy.Framework.Mathematics.Common;
+using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Common;
 [TestClass]
 public class SpecialTest
 {
@@ -39,7 +38,7 @@ public class SpecialTest
         Assert.IsTrue(double.IsNaN(Special.Log1p(-32.0482175)));
         Assert.AreEqual(double.PositiveInfinity, Special.Log1p(double.PositiveInfinity));
 
-        double b = System.Math.Log(1 - 7e-32);
+        double b = Math.Log(1 - 7e-32);
         double c = Special.Log1p(7e-32);
         Assert.AreEqual(c, 7e-32);
 
@@ -181,7 +180,7 @@ public class SpecialTest
     [TestMethod]
     public void SoftmaxTest()
     {
-        Func<double, double> e = System.Math.Exp;
+        Func<double, double> e = Math.Exp;
 
         double[] x = { 1.6793491276384929E-12, 0.014072312433917435 };
         double[] expected = new[]

@@ -4,9 +4,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Sample.ViewModels;
 
@@ -114,7 +112,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
         });
     }
 
-    public override async Task SubmitAsync(object e)
+    public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
         Argument.IsNotNullOrEmpty(Test);
 

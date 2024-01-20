@@ -1,7 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Distances;
+﻿using ISynergy.Framework.Mathematics.Distances.Base;
+using ISynergy.Framework.Mathematics.Vectors;
 
-using ISynergy.Framework.Mathematics.Distances.Base;
-using System;
+namespace ISynergy.Framework.Mathematics.Distances;
 
 /// <summary>
 ///   Weighted Euclidean distance metric.

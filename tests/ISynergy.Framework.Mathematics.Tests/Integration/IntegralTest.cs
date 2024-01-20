@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Integration;
+﻿using ISynergy.Framework.Mathematics.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Integration;
 [TestClass]
 public class IntegralTest
 {
@@ -20,23 +19,23 @@ public class IntegralTest
 
         actual = TrapezoidalRule.Integrate(function1, 0, 2, 1);
         Assert.AreEqual(4.0486368718741526, actual, 1e-15);
-        Assert.IsFalse(Double.IsNaN(actual));
+        Assert.IsFalse(double.IsNaN(actual));
 
         actual = TrapezoidalRule.Integrate(function1, 0, 2, 2);
         Assert.AreEqual(3.6081715993899337, actual, 1e-15);
-        Assert.IsFalse(Double.IsNaN(actual));
+        Assert.IsFalse(double.IsNaN(actual));
 
         actual = TrapezoidalRule.Integrate(function1, 0, 2, 4);
         Assert.AreEqual(3.4971047822027077, actual, 1e-15);
-        Assert.IsFalse(Double.IsNaN(actual));
+        Assert.IsFalse(double.IsNaN(actual));
 
         actual = TrapezoidalRule.Integrate(function1, 0, 2, 8);
         Assert.AreEqual(3.4692784302833672, actual, 1e-15);
-        Assert.IsFalse(Double.IsNaN(actual));
+        Assert.IsFalse(double.IsNaN(actual));
 
         actual = TrapezoidalRule.Integrate(function1, 0, 2, 16);
         Assert.AreEqual(3.4623181105467689, actual, 1e-15);
-        Assert.IsFalse(Double.IsNaN(actual));
+        Assert.IsFalse(double.IsNaN(actual));
     }
 
     [TestMethod]
@@ -58,10 +57,10 @@ public class IntegralTest
         // from -infinite to +infinite, such as the integral of a Gaussian
         // PDF (which should evaluate to 1):
 
-        Func<double, double> g = (x) => (1 / Math.Sqrt(2 * Math.PI)) * Math.Exp(-(x * x) / 2);
+        Func<double, double> g = (x) => 1 / Math.Sqrt(2 * Math.PI) * Math.Exp(-(x * x) / 2);
 
         double iagk = InfiniteAdaptiveGaussKronrod.Integrate(g,
-            Double.NegativeInfinity, Double.PositiveInfinity); // Output should be 0.99999...
+            double.NegativeInfinity, double.PositiveInfinity); // Output should be 0.99999...
 
 
         Assert.AreEqual(1.6829414086350976, trapez); // 1.6829414086350976

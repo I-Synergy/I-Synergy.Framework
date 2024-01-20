@@ -1,11 +1,11 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class BinarySearchTest2
 {
@@ -20,7 +20,7 @@ public class BinarySearchTest2
     {
         int zeroIndex = data.ToList().FindIndex(v => v == 0);
         int index = new BinarySearch(i => data[i], 0, data.Length - 1).FindRoot();
-        Assert.AreEqual(zeroIndex, index, String.Format("For {0}", String.Join(",", data)));
+        Assert.AreEqual(zeroIndex, index, string.Format("For {0}", string.Join(",", data)));
     }
 }
 
@@ -79,7 +79,7 @@ public class BinarySearchTest
         // (x+5)^3 + 2(x+5)^2 - 10(x+5)
         Func<int, double> function = x =>
         {
-            int y = (x + 5);
+            int y = x + 5;
             return y * y * y + 2 * y * y - 10 * y;
         };
 

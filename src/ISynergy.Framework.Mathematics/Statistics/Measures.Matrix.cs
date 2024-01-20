@@ -1,7 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Statistics;
-
+﻿
 using ISynergy.Framework.Core.Ranges;
-using System;
+using ISynergy.Framework.Mathematics.Matrices;
+namespace ISynergy.Framework.Mathematics.Statistics;
 
 public static partial class Measures
 {

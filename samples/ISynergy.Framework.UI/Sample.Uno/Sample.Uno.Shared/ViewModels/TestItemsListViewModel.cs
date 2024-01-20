@@ -3,13 +3,12 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
-using System;
-using System.Collections.Generic;
+using Sample.Enumerations;
+using Sample.Models;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sample.ViewModels;
 
@@ -85,7 +84,6 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
         : base(context, commonService, logger)
     {
         CommonServices = commonService;
-
         ClearCommand = new RelayCommand(ClearItems);
 
         Query = string.Empty;
@@ -177,7 +175,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     {
         ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;
-        return CommonServices.NavigationService.OpenBladeAsync(this, selectionVM);
+        return CommonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }
 
     /// <summary>

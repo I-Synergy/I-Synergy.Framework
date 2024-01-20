@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Matrices;
 using System.Numerics;
 
 namespace ISynergy.Framework.Mathematics.Transforms;

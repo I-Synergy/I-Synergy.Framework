@@ -6,8 +6,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace Sample.ViewModels;
 
@@ -75,7 +73,7 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
     /// </summary>
     /// <param name="e">if set to <c>true</c> [e].</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public override async Task SubmitAsync(bool e)
+    public override async Task SubmitAsync(bool e, bool validateUnderlayingProperties = true)
     {
         bool result = false;
 
@@ -92,6 +90,6 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
             }
         }
 
-        await base.SubmitAsync(result);
+        await base.SubmitAsync(result, validateUnderlayingProperties);
     }
 }

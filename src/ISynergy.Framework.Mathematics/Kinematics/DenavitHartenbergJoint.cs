@@ -1,4 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Kinematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
+
+namespace ISynergy.Framework.Mathematics.Kinematics;
 
 /// <summary>
 ///     Denavit-Hartenberg Model Joint.

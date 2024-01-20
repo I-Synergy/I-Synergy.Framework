@@ -1,13 +1,12 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Differentiation;
+﻿using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class QuadraticObjectiveFunctionTest
 {
@@ -45,7 +44,7 @@ public class QuadraticObjectiveFunctionTest
             for (int i = 0; i < x.Length; i++)
             {
                 double expected = 0.5 *
-                    (x[i].Dot(quadraticTerms)).Dot(x[i])
+                    x[i].Dot(quadraticTerms).Dot(x[i])
                     + linearTerms.Dot(x[i]);
 
                 double actual = function(x[i]);
@@ -99,8 +98,8 @@ public class QuadraticObjectiveFunctionTest
             for (int i = 0; i < x.Length; i++)
             {
                 double expected = 0.5 *
-                    (x[i]
-                    .Dot(quadraticTerms))
+                    x[i]
+                    .Dot(quadraticTerms)
                     .Dot(x[i]) + linearTerms
                     .Dot(x[i]);
 
@@ -425,8 +424,8 @@ public class QuadraticObjectiveFunctionTest
             double e = expected();
 
             Assert.AreEqual(e, a, 1e-10);
-            Assert.IsFalse(Double.IsNaN(a));
-            Assert.IsFalse(Double.IsNaN(e));
+            Assert.IsFalse(double.IsNaN(a));
+            Assert.IsFalse(double.IsNaN(e));
         }
     }
 
@@ -452,8 +451,8 @@ public class QuadraticObjectiveFunctionTest
                     double e = expected();
 
                     Assert.AreEqual(e, a, 1e-10);
-                    Assert.IsFalse(Double.IsNaN(a));
-                    Assert.IsFalse(Double.IsNaN(e));
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
                 }
     }
 
@@ -479,8 +478,8 @@ public class QuadraticObjectiveFunctionTest
                     double e = expected();
 
                     Assert.AreEqual(e, a, 1e-10);
-                    Assert.IsFalse(Double.IsNaN(a));
-                    Assert.IsFalse(Double.IsNaN(e));
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
                 }
     }
 
@@ -509,8 +508,8 @@ public class QuadraticObjectiveFunctionTest
                     double e = expected1() + expected2();
 
                     Assert.AreEqual(e, a, 1e-10);
-                    Assert.IsFalse(Double.IsNaN(a));
-                    Assert.IsFalse(Double.IsNaN(e));
+                    Assert.IsFalse(double.IsNaN(a));
+                    Assert.IsFalse(double.IsNaN(e));
                 }
     }
 
@@ -575,7 +574,7 @@ public class QuadraticObjectiveFunctionTest
         //      f(x,y) = {f₁ + 2f₂}(x,y)
         // 
         // In code, we can write this:
-        QuadraticObjectiveFunction f = f1 + (2 * f2); // 8x² -4y² +10xy +6x +4y +6
+        QuadraticObjectiveFunction f = f1 + 2 * f2; // 8x² -4y² +10xy +6x +4y +6
 
         // And now we can Test our new objective function:
         double[] x = { 1, 2 };
@@ -609,7 +608,7 @@ public class QuadraticObjectiveFunctionTest
 
         QuadraticObjectiveFunction actual1 = new(string1);
         QuadraticObjectiveFunction actual2 = new(string2);
-        QuadraticObjectiveFunction actual = (weight1 * actual1) + (weight2 * actual2);
+        QuadraticObjectiveFunction actual = weight1 * actual1 + weight2 * actual2;
 
         for (int i = 0; i < 10; i++)
             for (int j = 0; j < 10; j++)
@@ -622,7 +621,7 @@ public class QuadraticObjectiveFunctionTest
                     double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
 
                     double a = actual.Function(arg);
-                    double e = (weight1 * actual1.Function(arg)) + (weight2 * actual2.Function(arg));
+                    double e = weight1 * actual1.Function(arg) + weight2 * actual2.Function(arg);
 
                     Assert.AreEqual(e, a, 1e-10);
                     Assert.IsFalse(double.IsNaN(a));

@@ -35,7 +35,7 @@
 //
 
 using ISynergy.Framework.Mathematics.Common;
-namespace ISynergy.Framework.Mathematics.Optimization;
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
 partial class BoundedBroydenFletcherGoldfarbShanno
 {

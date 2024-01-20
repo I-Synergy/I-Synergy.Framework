@@ -3,7 +3,8 @@ using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using System;
+using Sample.Enumerations;
+using Sample.Models;
 using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;

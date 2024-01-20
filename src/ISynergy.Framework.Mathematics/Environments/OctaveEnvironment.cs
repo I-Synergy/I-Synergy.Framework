@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
+using ISynergy.Framework.Mathematics.Matrices;
 using System.Reflection;
 
 namespace ISynergy.Framework.Mathematics.Environments;

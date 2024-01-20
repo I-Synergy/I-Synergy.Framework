@@ -1,11 +1,11 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class MunkresTest
 {
@@ -26,7 +26,7 @@ public class MunkresTest
         };
 
         // Create a new Hungarian algorithm
-        Munkres m = new(costMatrix);
+        var m = new Munkres(costMatrix);
 
         bool success = m.Minimize();    // solve it (should return true)
         double[] solution = m.Solution; // Solution will be 0, 1, 2
@@ -160,7 +160,7 @@ public class MunkresTest
         Assert.IsTrue(success);
         Assert.AreEqual(10, m.Value);
         Assert.IsTrue(m.starZ.IsEqual(new[] { 2, 1, 0, 3 }));
-        Assert.IsTrue(m.Solution.IsEqual(new[] { 2, 1, 0, Double.NaN }));
+        Assert.IsTrue(m.Solution.IsEqual(new[] { 2, 1, 0, double.NaN }));
     }
 
     /*
@@ -223,7 +223,7 @@ public class MunkresTest
     [TestMethod]
     public void minimize_rectangular_inf()
     {
-        double inf = Double.PositiveInfinity;
+        double inf = double.PositiveInfinity;
 
         double[][] costMatrix =
         {
@@ -241,12 +241,12 @@ public class MunkresTest
         Assert.IsTrue(success);
         Assert.AreEqual(1.5, m.Value);
         Assert.IsTrue(m.starZ.IsEqual(new[] { 0, 1, 2 }));
-        Assert.IsTrue(m.Solution.IsEqual(new[] { 0, Double.NaN, 2 }));
+        Assert.IsTrue(m.Solution.IsEqual(new[] { 0, double.NaN, 2 }));
     }
 
     public void minimize_invalid_row()
     {
-        double inf = Double.PositiveInfinity;
+        double inf = double.PositiveInfinity;
 
         double[][] costMatrix =
         {
@@ -264,7 +264,7 @@ public class MunkresTest
         Assert.IsTrue(success);
         Assert.AreEqual(1.5, m.Value);
         Assert.IsTrue(m.starZ.IsEqual(new[] { 0, 1, 2 }));
-        Assert.IsTrue(m.Solution.IsEqual(new[] { 0, Double.NaN, 2 }));
+        Assert.IsTrue(m.Solution.IsEqual(new[] { 0, double.NaN, 2 }));
     }
 
     [TestMethod]

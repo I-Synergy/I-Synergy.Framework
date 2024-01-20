@@ -1,6 +1,7 @@
 ﻿namespace ISynergy.Framework.Mathematics.Distances;
 
 using ISynergy.Framework.Mathematics.Distances.Base;
+using ISynergy.Framework.Mathematics.Matrices;
 using System;
 
 /// <summary>

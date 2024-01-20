@@ -1,10 +1,8 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
-
-using ISynergy.Framework.Mathematics;
-using System;
-using System.Collections.Generic;
+﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 using System.Collections.ObjectModel;
-using System.Linq;
+
+namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 
 /// <summary>
 ///   Linear Constraint Collection.

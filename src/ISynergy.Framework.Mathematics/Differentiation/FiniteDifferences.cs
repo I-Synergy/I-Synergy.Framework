@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Matrices;
 
 namespace ISynergy.Framework.Mathematics.Differentiation;
 
