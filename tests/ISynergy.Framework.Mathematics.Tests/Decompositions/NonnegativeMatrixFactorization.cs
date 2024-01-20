@@ -1,10 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
 [TestClass]
 public class NonnegativeMatrixFactorizationTest
 {

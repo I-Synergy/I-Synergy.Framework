@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Losses;
+﻿using ISynergy.Framework.Mathematics.Common;
+
+namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
 /// <summary>
 ///     Absolute loss, also known as L1-loss.

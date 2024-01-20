@@ -1,10 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
+using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
 [TestClass]
 public class LuDecompositionTest
 {
@@ -357,7 +357,7 @@ public class LuDecompositionTest
         LuDecomposition lu = new(value);
         Assert.AreEqual(23, lu.Determinant);
 
-        double expected = System.Math.Log(23);
+        double expected = Math.Log(23);
         double actual = lu.LogDeterminant;
         Assert.AreEqual(expected, actual);
     }

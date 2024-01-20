@@ -1,10 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+﻿using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using ISynergy.Framework.Mathematics.Random;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class BroydenFletcherGoldfarbShannoTest
 {
@@ -51,7 +51,7 @@ public class BroydenFletcherGoldfarbShannoTest
     {
         #region doc_minimize
         // Ensure that results are reproducible
-        ISynergy.Framework.Mathematics.Random.Generator.Seed = 0;
+        Generator.Seed = 0;
 
         // Suppose we would like to find the minimum of the function
         // 

@@ -1,13 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Optimization;
-using ISynergy.Framework.Mathematics.Optimization.Base;
+﻿using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
-using System;
-using System.Collections.Generic;
+using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics;
+
+namespace ISynergy.Framework.Mathematics.Optimization.Constrained;
 
 /// <summary>
 ///   Status codes for the <see cref="AugmentedLagrangian"/> 

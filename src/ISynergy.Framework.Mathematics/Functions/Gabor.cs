@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
+using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Functions;
 
@@ -56,7 +57,7 @@ public static class Gabor
     /// <summary>
     ///     2-D Gabor function.
     /// </summary>
-    public static Complex Function2D(double x, double y, double lambda, double theta,
+    public static System.Numerics.Complex Function2D(double x, double y, double lambda, double theta,
         double psi, double sigma, double gamma)
     {
         var X = +x * Math.Cos(theta) + y * Math.Sin(theta);
@@ -66,7 +67,7 @@ public static class Gabor
         var real = Math.Cos(2 * Math.PI * (X / lambda) + psi);
         var imaginary = Math.Sin(2 * Math.PI * (X / lambda) + psi);
 
-        return new Complex(envelope * real, envelope * imaginary);
+        return new System.Numerics.Complex(envelope * real, envelope * imaginary);
     }
 
     /// <summary>

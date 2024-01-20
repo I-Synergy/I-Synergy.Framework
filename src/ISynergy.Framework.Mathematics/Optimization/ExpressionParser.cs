@@ -1,8 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization;
-
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+namespace ISynergy.Framework.Mathematics.Optimization;
 
 #if !NET35
 internal static class ExpressionParser

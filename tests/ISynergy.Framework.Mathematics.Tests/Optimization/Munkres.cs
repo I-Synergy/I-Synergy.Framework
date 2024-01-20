@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Munkres;
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 
 // This is the original code from http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
 // with minimal modifications. The only included modifications aim to increase the debugability
@@ -282,7 +282,7 @@ public static class MunkresProgram
     //altering any stars, primes, or covered lines.
     private static void step_six(ref int step)
     {
-        double minval = Double.MaxValue;
+        double minval = double.MaxValue;
         find_smallest(ref minval);
         for (int r = 0; r < nrow; r++)
             for (int c = 0; c < ncol; c++)
@@ -316,8 +316,8 @@ public static class MunkresProgram
     public static void Init(double[,] C)
     {
         MunkresProgram.C = C;
-        MunkresProgram.nrow = C.GetLength(0);
-        MunkresProgram.ncol = C.GetLength(1);
+        nrow = C.GetLength(0);
+        ncol = C.GetLength(1);
         resetMaskandCovers();
 
         step = 1;

@@ -1,11 +1,12 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Differentiation;
+﻿using ISynergy.Framework.Mathematics.Differentiation;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization;
+using ISynergy.Framework.Mathematics.Tests.Optimization;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Differentiation;
 [TestClass]
 public class FiniteDifferencesTest
 {
@@ -125,7 +126,7 @@ public class FiniteDifferencesTest
             NumberOfPoints = 7
         };
 
-        Func<double[], double[][]> expectedFormula = (double[] x) =>
+        Func<double[], double[][]> expectedFormula = (x) =>
             new double[][]
             {
                 new double[] { Math.Exp(x[0] + x[1]) + 2, Math.Exp(x[0] + x[1]) + 1 },
@@ -188,7 +189,7 @@ public class FiniteDifferencesTest
             double mediae2 = 0.0;
             for (int i = 0; i <= iSizeArray - 1; i++)
             {
-                e2[i] = Math.Pow((arrayDecimalesTrabajo[i] - mu), 2);
+                e2[i] = Math.Pow(arrayDecimalesTrabajo[i] - mu, 2);
                 mediae2 = mediae2 + e2[i];
             }
 

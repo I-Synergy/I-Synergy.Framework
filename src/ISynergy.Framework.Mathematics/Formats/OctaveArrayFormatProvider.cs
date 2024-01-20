@@ -1,6 +1,7 @@
 ﻿namespace ISynergy.Framework.Mathematics.Formats;
 
 using ISynergy.Framework.Mathematics.Formats.Base;
+using ISynergy.Framework.Mathematics.Matrices;
 using System;
 using System.Globalization;
 
@@ -43,7 +44,7 @@ using System.Globalization;
 /// </code>
 /// </example>
 /// 
-/// <seealso cref="Mathematics.Matrix"/>
+/// <seealso cref="Matrix"/>
 /// <seealso cref="CSharpMatrixFormatProvider"/>
 /// 
 /// <seealso cref="CSharpJaggedMatrixFormatProvider"/>

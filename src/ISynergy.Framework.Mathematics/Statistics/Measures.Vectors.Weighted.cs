@@ -1,9 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Exceptions;
-
+using ISynergy.Framework.Mathematics.Matrices;
 namespace ISynergy.Framework.Mathematics.Statistics;
-
-using System;
-using System.Collections.Generic;
 
 static partial class Measures
 {

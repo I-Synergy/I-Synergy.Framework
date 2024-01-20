@@ -1,11 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Common;
+﻿using ISynergy.Framework.Mathematics.Common;
+using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace ISynergy.Framework.Mathematics.Tests.Common;
 [TestClass]
 public class CombinatoricsTest
 {
@@ -21,13 +20,13 @@ public class CombinatoricsTest
         // to fit on memory. For this reason, we can compute
         // values on-the-fly using foreach:
 
-        foreach (int[] combination in Combinatorics.Combinations(elements))
+        foreach (int[] combination in elements.Combinations())
         {
             // ...
         }
 
         // Or we could try to compute them all and store in an array:
-        int[][] combinations = Combinatorics.Combinations(elements).ToArray();
+        int[][] combinations = elements.Combinations().ToArray();
 
         // In either case, the result will be:
 
@@ -71,13 +70,13 @@ public class CombinatoricsTest
         // to fit on memory. For this reason, we can compute
         // values on-the-fly using foreach:
 
-        foreach (int[] combination in Combinatorics.Combinations(elements, k: 2))
+        foreach (int[] combination in elements.Combinations(k: 2))
         {
             // ...
         }
 
         // Or we could try to compute them all and store in an array:
-        int[][] combinations = Combinatorics.Combinations(elements, k: 2).ToArray();
+        int[][] combinations = elements.Combinations(k: 2).ToArray();
 
         // In either case, the result will be:
 
@@ -150,7 +149,7 @@ public class CombinatoricsTest
             new int[] { 1, 2, 1 },
         };
 
-        int[][] actual = Combinatorics.Sequences(symbols).Select(x => (int[])x.Clone()).ToArray();
+        int[][] actual = symbols.Sequences().Select(x => (int[])x.Clone()).ToArray();
 
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -189,13 +188,13 @@ public class CombinatoricsTest
         // to fit on memory. For this reason, we can compute
         // values on-the-fly using foreach:
 
-        foreach (SortedSet<int> subset in Combinatorics.Subsets(set))
+        foreach (SortedSet<int> subset in set.Subsets())
         {
             // ...
         }
 
         // Or we could try to compute them all and store in an array:
-        SortedSet<int>[] subsets = Combinatorics.Subsets(set).ToArray();
+        SortedSet<int>[] subsets = set.Subsets().ToArray();
 
         // In either case, the result will be:
 
@@ -242,13 +241,13 @@ public class CombinatoricsTest
         // to fit on memory. For this reason, we can compute
         // values on-the-fly using foreach:
 
-        foreach (SortedSet<int> subset in Combinatorics.Subsets(set, k: 2))
+        foreach (SortedSet<int> subset in set.Subsets(k: 2))
         {
             // ...
         }
 
         // Or we could try to compute them all and store in an array:
-        SortedSet<int>[] subsets = Combinatorics.Subsets(set, k: 2).ToArray();
+        SortedSet<int>[] subsets = set.Subsets(k: 2).ToArray();
 
         // In either case, the result will be:
 
@@ -356,7 +355,7 @@ public class CombinatoricsTest
 
         int[] symbols = { 2, 3, 2 };
 
-        int[][] actual = Combinatorics.TruthTable(symbols);
+        int[][] actual = symbols.TruthTable();
 
         int[][] expected =
         {

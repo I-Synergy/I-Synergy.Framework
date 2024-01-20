@@ -1,16 +1,16 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using ISynergy.Framework.Mathematics.Random;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class AugmentedLagrangianTest
 {
@@ -62,7 +62,7 @@ public class AugmentedLagrangianTest
         Assert.IsTrue(solver.Minimize());
         double minValue = solver.Value;
 
-        Assert.IsFalse(Double.IsNaN(minValue));
+        Assert.IsFalse(double.IsNaN(minValue));
         Assert.AreEqual(1, minValue, 1e-5);
         Assert.AreEqual(0, solver.Solution[0], 1e-5);
         Assert.AreEqual(0, solver.Solution[1], 1e-5);
@@ -118,9 +118,9 @@ public class AugmentedLagrangianTest
         Assert.AreEqual(1, solver.Solution[0], 1e-5);
         Assert.AreEqual(1, solver.Solution[1], 1e-5);
 
-        Assert.IsFalse(Double.IsNaN(minValue));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[0]));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[1]));
+        Assert.IsFalse(double.IsNaN(minValue));
+        Assert.IsFalse(double.IsNaN(solver.Solution[0]));
+        Assert.IsFalse(double.IsNaN(solver.Solution[1]));
     }
 
 #if !NET35
@@ -182,10 +182,10 @@ public class AugmentedLagrangianTest
         Assert.AreEqual(-2.00, solver.Solution[1], 1e-2);
         Assert.AreEqual(+1.73, solver.Solution[2], 1e-2);
 
-        Assert.IsFalse(Double.IsNaN(minValue));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[0]));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[1]));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[2]));
+        Assert.IsFalse(double.IsNaN(minValue));
+        Assert.IsFalse(double.IsNaN(solver.Solution[0]));
+        Assert.IsFalse(double.IsNaN(solver.Solution[1]));
+        Assert.IsFalse(double.IsNaN(solver.Solution[2]));
 
     }
 
@@ -254,10 +254,10 @@ public class AugmentedLagrangianTest
 
         Assert.AreEqual(1, solver.Solution[0] + solver.Solution[1], 1e-4);
 
-        Assert.IsFalse(Double.IsNaN(minValue));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[0]));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[1]));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[2]));
+        Assert.IsFalse(double.IsNaN(minValue));
+        Assert.IsFalse(double.IsNaN(solver.Solution[0]));
+        Assert.IsFalse(double.IsNaN(solver.Solution[1]));
+        Assert.IsFalse(double.IsNaN(solver.Solution[2]));
     }
 
     [TestMethod]
@@ -331,9 +331,9 @@ public class AugmentedLagrangianTest
         Assert.AreEqual(1, solver.Solution[0], 1e-6);
         Assert.AreEqual(1, solver.Solution[1], 1e-6);
 
-        Assert.IsFalse(Double.IsNaN(minValue));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[0]));
-        Assert.IsFalse(Double.IsNaN(solver.Solution[1]));
+        Assert.IsFalse(double.IsNaN(minValue));
+        Assert.IsFalse(double.IsNaN(solver.Solution[0]));
+        Assert.IsFalse(double.IsNaN(solver.Solution[1]));
     }
 
     [TestMethod]
@@ -500,7 +500,7 @@ public class AugmentedLagrangianTest
 
     private static void test2(IGradientOptimizationMethod inner)
     {
-        ISynergy.Framework.Mathematics.Random.Generator.Seed = 0;
+        Generator.Seed = 0;
 
         // maximize 2x + 3y, s.t. 2x² + 2y² <= 50
         //
@@ -734,7 +734,7 @@ public class AugmentedLagrangianTest
         NonlinearConstraint[] constraints =
         {
             new NonlinearConstraint(function,
-                constraint: x =>  (1.0 - x[0] * x[0] - 2.0 * x[1] * x[1] - 3.0 * x[2] * x[2]) >= 0,
+                constraint: x =>  1.0 - x[0] * x[0] - 2.0 * x[1] * x[1] - 3.0 * x[2] * x[2] >= 0,
                 gradient: x =>  new[] { -2.0 * x[0],  -4.0 * x[1], -6.0 * x[2] }),
             new NonlinearConstraint(function,
                 constraint: x =>  x[0] >= 0,
@@ -783,7 +783,7 @@ public class AugmentedLagrangianTest
     public void AugmentedLagrangianSolverTest02()
     {
         // Ensure that the Accord.NET random generator starts from a particular fixed seed.
-        ISynergy.Framework.Mathematics.Random.Generator.Seed = 0;
+        Generator.Seed = 0;
 
         // The minimization problem is to minimize the function (x_0 - 1)^2 + (x_1 - 2.5)^2$ subject
         // to the five constraints $x_0 - 2x_1 +2 \ge 0$, $-x_0 - 2x_1 + 6 \ge0$, $-x_0 + 2x_1 + 2\ge0$,
@@ -827,7 +827,7 @@ public class AugmentedLagrangianTest
         Assert.IsTrue(solver.Minimize());
         double minValue = solver.Value;
 
-        Assert.IsFalse(Double.IsNaN(minValue));
+        Assert.IsFalse(double.IsNaN(minValue));
 
         // According to the example, the solution is $(1.4, 1.7)$.
         Assert.AreEqual(1.4, solver.Solution[0], 1e-5);
@@ -840,7 +840,7 @@ public class AugmentedLagrangianTest
     {
 
         // Ensure that the Accord.NET random generator starts from a particular fixed seed.
-        ISynergy.Framework.Mathematics.Random.Generator.Seed = 0;
+        Generator.Seed = 0;
 
         // This problem is about minimizing $3x_0 - 4x_1$ over the elements of $[0, 1] \times[0, 1]$ summing to one.
 
@@ -882,7 +882,7 @@ public class AugmentedLagrangianTest
         Assert.IsTrue(solver.Minimize());
         double minValue = solver.Value;
 
-        Assert.IsFalse(Double.IsNaN(minValue));
+        Assert.IsFalse(double.IsNaN(minValue));
 
         // The solution is $(0.0, 1.0)$.
         Assert.AreEqual(0.0, solver.Solution[0], 1e-5);

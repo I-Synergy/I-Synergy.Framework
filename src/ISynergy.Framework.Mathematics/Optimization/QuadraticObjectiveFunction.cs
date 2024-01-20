@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using System.Globalization;
 using System.Linq.Expressions;

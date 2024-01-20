@@ -1,10 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Functions;
+﻿using ISynergy.Framework.Mathematics.Functions;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Functions;
 [TestClass]
 public class GammaTest
 {
@@ -29,9 +28,9 @@ public class GammaTest
               9.617658319073874e-01, 1.000000000000000e+00, 2.197620278392477e+00,
               7.252763452022295e+01, 2.835938400359957e+73, 1.929366760161528e+69,
               2.793175373836837e+01, 2.878852778150444e+02, 2.633998635450860e+04,
-              5.749274244634086e+184, Double.PositiveInfinity, Double.NaN,
+              5.749274244634086e+184, double.PositiveInfinity, double.NaN,
              -6.188338737526232e-68, -9.940515795403039e+00,  -9.070713053754153e+00,
-             -8.991245623853780e+00, Double.NaN, Double.PositiveInfinity, 1.701905559094028e+00
+             -8.991245623853780e+00, double.NaN, double.PositiveInfinity, 1.701905559094028e+00
 
         };
 
@@ -40,7 +39,7 @@ public class GammaTest
             double xi = x[i];
             double expectedi = expected[i];
 
-            if (Double.IsNaN(expectedi))
+            if (double.IsNaN(expectedi))
             {
                 bool thrown = false;
                 try { Gamma.Function(xi); }
@@ -50,9 +49,9 @@ public class GammaTest
             else
             {
                 double actual = Gamma.Function(xi);
-                if (Double.IsNaN(actual))
+                if (double.IsNaN(actual))
                     throw new Exception();
-                Assert.AreEqual(expectedi, actual, System.Math.Abs(expectedi) * 1e-12);
+                Assert.AreEqual(expectedi, actual, Math.Abs(expectedi) * 1e-12);
             }
         }
     }
@@ -77,9 +76,9 @@ public class GammaTest
             -3.898427592308334e-02,  0.000000000000000e+00,  7.873750832738625e-01,
              4.283967655031580e+00,  1.691310846763928e+02,  1.595355632621249e+02,
              3.329764168475224e+00,  5.662562059857142e+00,  1.017884345724507e+01,
-             4.254247307394230e+02,  6.075627024736053e+03,  Double.PositiveInfinity,
+             4.254247307394230e+02,  6.075627024736053e+03,  double.PositiveInfinity,
              -1.547531196513472e+02,  2.296618910207815e+00,  2.205050877768351e+00,
-             2.196251395487650e+00,  Double.PositiveInfinity,  5.204655969482103e+09,
+             2.196251395487650e+00,  double.PositiveInfinity,  5.204655969482103e+09,
              5.317485404177827e-01
         };
 
@@ -88,7 +87,7 @@ public class GammaTest
             double xi = x[i];
             double expectedi = expected[i];
 
-            if (Double.IsNaN(expectedi) || Double.IsInfinity(expectedi))
+            if (double.IsNaN(expectedi) || double.IsInfinity(expectedi))
             {
                 bool thrown = false;
                 try { Gamma.Function(xi); }
@@ -99,7 +98,7 @@ public class GammaTest
             {
                 double actual = Gamma.Log(xi);
 
-                Assert.AreEqual(expectedi, actual, System.Math.Abs(expectedi) * 1e-14);
+                Assert.AreEqual(expectedi, actual, Math.Abs(expectedi) * 1e-14);
             }
         }
     }

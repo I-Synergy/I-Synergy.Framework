@@ -1,9 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Core.Collections;
+﻿using ISynergy.Framework.Core.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+
+namespace ISynergy.Framework.Mathematics.Tests.Collections;
 
 [TestClass]
 public class RedBlackDictionaryTest

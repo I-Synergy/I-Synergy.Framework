@@ -1,8 +1,8 @@
 ﻿
-namespace ISynergy.Framework.Mathematics.Optimization;
 
 using System;
 using System.Collections.Generic;
+namespace ISynergy.Framework.Mathematics.Optimization;
 
 /// <summary>
 ///   Common interface for specifying objective functions.

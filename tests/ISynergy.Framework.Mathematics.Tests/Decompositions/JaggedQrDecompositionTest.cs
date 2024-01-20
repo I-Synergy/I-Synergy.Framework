@@ -1,10 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
 [TestClass]
 public class JaggedQrDecompositionTest
 {
@@ -479,7 +479,7 @@ public class JaggedQrDecompositionTest
 
     private double[][] householder(double[] a)
     {
-        double[] v = a.Divide((a[0] + Special.Sign(Norm.Euclidean(a), a[0])));
+        double[] v = a.Divide(a[0] + Special.Sign(a.Euclidean(), a[0]));
         v[0] = 1;
         double[][] H = Jagged.Identity(a.Length);
         double[][] vr = Jagged.RowVector(v);

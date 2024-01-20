@@ -4,7 +4,7 @@ using ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System.Reflection;
 
-namespace ISynergy.Framework.Mathematics;
+namespace ISynergy.Framework.Mathematics.Common;
 
 /// <summary>
 ///     Static class Distance. Defines a set of extension methods defining distance measures.

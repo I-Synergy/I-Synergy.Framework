@@ -1,5 +1,7 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
+using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 

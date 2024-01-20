@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Mathematics.Environments;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests;
+namespace ISynergy.Framework.Mathematics.Tests.Environment;
 
 [TestClass]
 public class REnvironmentTest : REnvironment
