@@ -1,9 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
+using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
 [TestClass]
 public class JaggedSingularValueDecompositionTest
 {
@@ -529,7 +529,7 @@ public class JaggedSingularValueDecompositionTest
         };
 
 
-        double[][] X = ISynergy.Framework.Mathematics.Matrix.Solve(A, B, true);
+        double[][] X = Matrix.Solve(A, B, true);
 
         double[][] expected =
         {

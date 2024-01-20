@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Matrices;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 

@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace ISynergy.Framework.Mathematics.IO;
+namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 public static partial class NpyFormat
 {

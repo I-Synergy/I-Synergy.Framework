@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mathematics.Geometry;
+﻿using ISynergy.Framework.Mathematics.Vectors;
+
+namespace ISynergy.Framework.Mathematics.Geometry;
 
 /// <summary>
 ///   3D Plane class with normal vector and distance from origin.

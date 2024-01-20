@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using System.Collections;
 
-namespace ISynergy.Framework.Mathematics;
+namespace ISynergy.Framework.Mathematics.Common;
 
 public static partial class Distance
 {

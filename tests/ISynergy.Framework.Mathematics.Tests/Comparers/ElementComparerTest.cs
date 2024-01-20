@@ -1,10 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Comparers;
+﻿using ISynergy.Framework.Mathematics.Comparers;
+using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Comparers;
 [TestClass]
 public class ElementComparerTest
 {

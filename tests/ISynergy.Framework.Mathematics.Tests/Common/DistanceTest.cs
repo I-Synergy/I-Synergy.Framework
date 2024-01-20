@@ -1,13 +1,13 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
+using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-
+namespace ISynergy.Framework.Mathematics.Tests.Common;
 [TestClass]
 public class DistanceTest
 {
@@ -194,7 +194,7 @@ public class DistanceTest
         double actual = Distance.SquareMahalanobis(x, y, pinv);
 
         Assert.AreEqual(expected, actual, 1e-6);
-        Assert.IsFalse(Double.IsNaN(actual));
+        Assert.IsFalse(double.IsNaN(actual));
     }
 
     [TestMethod]
@@ -413,7 +413,7 @@ public class DistanceTest
         Assert.IsTrue(Distance.IsMetric((int[] a, int[] b) => Distance.Manhattan(a, b)));
         Assert.IsFalse(Distance.IsMetric(Distance.Hamming));
         Assert.IsTrue(Distance.IsMetric((double[] a, double[] b) => new Minkowski(1).Distance(a, b)));
-        Assert.IsTrue(Distance.IsMetric((double[] a, double[] b) => new Levenshtein<double>().Distance(a, b)));
+        Assert.IsTrue(Distance.IsMetric((a, b) => new Levenshtein<double>().Distance(a, b)));
         Assert.IsTrue(Distance.IsMetric(Distance.Chebyshev));
         Assert.IsTrue(Distance.IsMetric(Distance.Hellinger));
 

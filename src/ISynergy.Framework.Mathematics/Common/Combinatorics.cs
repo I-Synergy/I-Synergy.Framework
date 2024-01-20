@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Vectors;
 
 namespace ISynergy.Framework.Mathematics.Common;
 

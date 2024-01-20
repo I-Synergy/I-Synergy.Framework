@@ -2,7 +2,7 @@
 using System.Collections;
 
 #if !NET35 && !NET40
-namespace ISynergy.Framework.Mathematics.IO;
+namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 /// <summary>
 ///     Provides static methods to save and load files saved in NumPy's .npz format.

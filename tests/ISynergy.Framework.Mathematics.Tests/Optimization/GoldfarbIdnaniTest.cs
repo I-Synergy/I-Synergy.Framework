@@ -1,15 +1,15 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class GoldfarbIdnaniTest
 {
@@ -462,7 +462,7 @@ public class GoldfarbIdnaniTest
         double x = 0, y = 0;
 
         // Create our objective function using a lambda expression
-        QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y);
+        QuadraticObjectiveFunction f = new(() => 2 * (x * x) - x * y + 4 * (y * y) - 5 * x - 6 * y);
 
         // Now, create the constraints
         List<LinearConstraint> constraints =
@@ -526,7 +526,7 @@ public class GoldfarbIdnaniTest
 
         double x = 0, y = 0;
 
-        QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y - 100);
+        QuadraticObjectiveFunction f = new(() => 2 * (x * x) - x * y + 4 * (y * y) - 5 * x - 6 * y - 100);
 
         List<LinearConstraint> constraints = [new LinearConstraint(f, () => x - y == 5), new LinearConstraint(f, () => x >= 10)];
 
@@ -559,7 +559,7 @@ public class GoldfarbIdnaniTest
 
         double x = 0, y = 0;
 
-        QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y + 100);
+        QuadraticObjectiveFunction f = new(() => 2 * (x * x) - x * y + 4 * (y * y) - 5 * x - 6 * y + 100);
 
         List<LinearConstraint> constraints = [new LinearConstraint(f, () => x - y == 5), new LinearConstraint(f, () => x >= 10)];
 
@@ -790,7 +790,7 @@ public class GoldfarbIdnaniTest
         double x = 0, y = 0;
 
         // http://www.wolframalpha.com/input/?i=min+x%C2%B2+%2B+2xy+%2B+y%C2%B2+-+y%2C+x+%3E%3D+1%2C+y+%3E%3D+1
-        QuadraticObjectiveFunction f = new(() => (x * x) + 2 * (x * y) + (y * y) - y);
+        QuadraticObjectiveFunction f = new(() => x * x + 2 * (x * y) + y * y - y);
 
         List<LinearConstraint> constraints = [new LinearConstraint(f, () => x >= 1), new LinearConstraint(f, () => y >= 1)];
 
@@ -849,7 +849,7 @@ public class GoldfarbIdnaniTest
 
         double x = 0, y = 0;
 
-        QuadraticObjectiveFunction f = new(() => 2 * (x * x) + (x * y) + (y * y) - 5 * y);
+        QuadraticObjectiveFunction f = new(() => 2 * (x * x) + x * y + y * y - 5 * y);
 
         List<LinearConstraint> constraints =
         [
@@ -922,7 +922,7 @@ public class GoldfarbIdnaniTest
         Assert.AreEqual(0, target.Lagrangian[3], 1e-10);
 
 
-        Assert.IsFalse(Double.IsNaN(min));
+        Assert.IsFalse(double.IsNaN(min));
 
         foreach (double v in target.Solution)
             Assert.IsFalse(double.IsNaN(v));
@@ -979,9 +979,9 @@ public class GoldfarbIdnaniTest
         // minimize 0.5x² + 0.2y² + 0.3xy s.t. 0.01x + 0.02y - 0.03 = 0 AND x + y = 100
         // http://www.wolframalpha.com/input/?i=minimize+0.5x%C2%B2+%2B+0.2y%C2%B2+%2B+0.3xy+s.t.+0.01x+%2B+0.02y+-+0.03+%3D+0+AND+x+%2B+y+%3D+100
 
-        String strObjective = "0.5x² + 0.2y² + 0.3xy";
+        string strObjective = "0.5x² + 0.2y² + 0.3xy";
 
-        String[] strConstraints =
+        string[] strConstraints =
         {
             "0.01x + 0.02y - 0.03 = 0",
             "x + y = 100"
@@ -1007,11 +1007,11 @@ public class GoldfarbIdnaniTest
 
         Assert.AreEqual(",", fr.NumberFormat.NumberDecimalSeparator);
 
-        String strObjective = 0.5.ToString(fr)
+        string strObjective = 0.5.ToString(fr)
             + "x² +" + 0.2.ToString(fr) + "y² +"
             + 0.3.ToString(fr) + "xy";
 
-        String[] strConstraints =
+        string[] strConstraints =
         {
             0.01.ToString(fr) + "x" + " + " +
             0.02.ToString(fr) + "y - " +
@@ -1035,11 +1035,11 @@ public class GoldfarbIdnaniTest
     [TestMethod]
     public void GoldfarbIdnaniParseGlobalizationTest2()
     {
-        String strObjective = 0.5.ToString(CultureInfo.InvariantCulture)
+        string strObjective = 0.5.ToString(CultureInfo.InvariantCulture)
             + "x² +" + 0.2.ToString(CultureInfo.InvariantCulture) + "y² +"
             + 0.3.ToString(CultureInfo.InvariantCulture) + "xy";
 
-        String[] strConstraints =
+        string[] strConstraints =
         {
             0.01.ToString(CultureInfo.InvariantCulture) + "x" + " + " +
             0.02.ToString(CultureInfo.InvariantCulture) + "y - " +
@@ -1065,9 +1065,9 @@ public class GoldfarbIdnaniTest
     {
         string s = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
-        String strObjective = "0" + s + "5x² + 0" + s + "2y² + 0" + s + "3xy";
+        string strObjective = "0" + s + "5x² + 0" + s + "2y² + 0" + s + "3xy";
 
-        String[] strConstraints =
+        string[] strConstraints =
         {
             "0" + s + "01x + 0" + s + "02y - 0" + s + "03 = 0",
             "x + y = 100"

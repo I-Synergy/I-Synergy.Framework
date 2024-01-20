@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using System.Collections;
 using System.Text;
 
-namespace ISynergy.Framework.Mathematics.IO;
+namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 #if !NET35 && !NET40
 /// <summary>

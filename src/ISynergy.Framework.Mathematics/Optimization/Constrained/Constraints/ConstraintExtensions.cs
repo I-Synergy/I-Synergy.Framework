@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 
-using System;
-
 /// <summary>
 /// Extension methods on the <see cref="IConstraint"/> interface.
 /// </summary>

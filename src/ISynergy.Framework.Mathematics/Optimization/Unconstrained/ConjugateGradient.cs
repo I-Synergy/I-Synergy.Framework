@@ -1,4 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Async;
+using ISynergy.Framework.Mathematics.Common;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;

@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Formats.Base;
+using ISynergy.Framework.Mathematics.Matrices;
 using System.Globalization;
 
 namespace ISynergy.Framework.Mathematics.Formats;
@@ -47,7 +48,7 @@ namespace ISynergy.Framework.Mathematics.Formats;
 ///   // matrix representation of the given string.
 /// </code>
 /// </example>
-/// <seealso cref="Mathematics.Matrix" />
+/// <seealso cref="Matrix" />
 /// <seealso cref="CSharpMatrixFormatProvider" />
 /// <seealso cref="CSharpJaggedMatrixFormatProvider" />
 /// <seealso cref="CSharpArrayFormatProvider" />

@@ -1,11 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Transforms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Numerics;
 
+namespace ISynergy.Framework.Mathematics.Tests.Common;
 [TestClass]
 public class FourierTransformTest
 {
@@ -374,7 +373,7 @@ public class FourierTransformTest
     }
 
 
-    private static double maxLogError = Double.PositiveInfinity;
+    private static double maxLogError = double.PositiveInfinity;
 
     private static double log10RmsErr(double[] xreal, double[] ximag, double[] yreal, double[] yimag)
     {
@@ -397,7 +396,7 @@ public class FourierTransformTest
 
     private static double[] randomReals(int size)
     {
-        Random random = ISynergy.Framework.Mathematics.Random.Generator.Random;
+        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         double[] result = new double[size];
         for (int i = 0; i < result.Length; i++)

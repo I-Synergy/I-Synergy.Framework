@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Convergence;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.ComponentModel;
 using System.Diagnostics;

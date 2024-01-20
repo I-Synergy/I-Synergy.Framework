@@ -1,8 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization;
-
-using ISynergy.Framework.Mathematics.Optimization.Constrained;
+﻿using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using System.Runtime.CompilerServices;
+namespace ISynergy.Framework.Mathematics.Optimization;
 
 /// <summary>
 ///   Contains classes for constrained and unconstrained optimization. Includes 

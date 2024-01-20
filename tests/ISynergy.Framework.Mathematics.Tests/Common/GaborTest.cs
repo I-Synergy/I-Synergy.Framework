@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Functions;
+﻿using ISynergy.Framework.Mathematics.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Common;
 [TestClass]
 public class GaborTest
 {
@@ -76,7 +75,7 @@ public class GaborTest
                 double e = expected[i, j];
                 double a = actual[i, j];
 
-                Assert.AreEqual(e, a, System.Math.Abs(e * 1e-10));
+                Assert.AreEqual(e, a, Math.Abs(e * 1e-10));
             }
         }
     }
