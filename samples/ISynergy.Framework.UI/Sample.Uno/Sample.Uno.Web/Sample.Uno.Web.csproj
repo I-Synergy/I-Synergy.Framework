@@ -16,6 +16,7 @@
 		-->
 		<WasmShellWebAppBasePath>/</WasmShellWebAppBasePath>
 		<RootNamespace>Sample</RootNamespace>
+		<SonarQubeExclude>True</SonarQubeExclude>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">

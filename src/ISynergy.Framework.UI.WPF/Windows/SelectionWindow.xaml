@@ -64,7 +64,7 @@
             HorizontalAlignment="Right" 
             Margin="0,4">
             <Button Content="{m:GetString Ok}" Command="{Binding SubmitCommand}" />
-            <Button Content="{m:GetString Cancel}" Command="{Binding CloseCommand}"/>
+            <Button Content="{m:GetString Cancel}" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </c:Window>

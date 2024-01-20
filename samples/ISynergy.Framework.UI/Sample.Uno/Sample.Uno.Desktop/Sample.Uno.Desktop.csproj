@@ -21,6 +21,7 @@
 
 		<!-- Bundles the WinAppSDK binaries -->
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+		<SonarQubeExclude>True</SonarQubeExclude>
 	</PropertyGroup>
 
 	<ItemGroup>

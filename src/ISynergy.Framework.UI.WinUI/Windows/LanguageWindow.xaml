@@ -11,7 +11,7 @@
     Title="{Binding Title}"
     PrimaryButtonCommand="{Binding SubmitCommand}"
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
-    SecondaryButtonCommand="{Binding CloseCommand}"
+    SecondaryButtonCommand="{Binding CancelCommand}"
     PrimaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
     SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
 

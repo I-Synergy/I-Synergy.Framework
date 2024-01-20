@@ -20,7 +20,7 @@
             MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" />
         <Button
             Content="{m:LanguageResource Key=Cancel}"
-            Command="{Binding CloseCommand}"
+            Command="{Binding CancelCommand}"
             Margin="{ThemeResource ContentDialogButton2HostMargin}"
             MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
             MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
