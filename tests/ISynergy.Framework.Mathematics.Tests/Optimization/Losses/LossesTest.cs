@@ -1,8 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Optimization.Losses;
+﻿using ISynergy.Framework.Mathematics.Optimization.Losses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace ISynergy.Framework.Mathematics.Tests.Optimization.Losses;
 [TestClass]
 public class LossesTest
 {

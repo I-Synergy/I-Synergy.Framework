@@ -1,5 +1,6 @@
 ﻿namespace ISynergy.Framework.Mathematics.Formats.Base;
 
+using ISynergy.Framework.Mathematics.Matrices;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

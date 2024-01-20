@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace ISynergy.Framework.Mathematics.Tests.Statistics;
 [TestClass]
 public class MeasuresTest
 {
@@ -19,7 +18,7 @@ public class MeasuresTest
             { 5, 3, 8, 6, 4, 4, 3, 8, 9, 0, 9, 9, 1, 9, 2 },
         };
 
-        this.series = data.ToJagged(transpose: true);
+        series = data.ToJagged(transpose: true);
     }
 
     [TestMethod]
@@ -168,7 +167,7 @@ public class MeasuresTest
         double[] expected = { e1, e2 };
 
         // Act
-        double[] ewmas = this.series.ExponentialWeightedMean(alpha);
+        double[] ewmas = series.ExponentialWeightedMean(alpha);
 
         // Assert
         Assert.IsTrue(ewmas.IsEqual(expected, Tolerance), "EWMA does not agree with expected");
@@ -188,13 +187,13 @@ public class MeasuresTest
          */
 
         // Arrange
-        double[] vec1 = this.series.GetColumn(0);
-        double[] vec2 = this.series.GetColumn(1);
+        double[] vec1 = series.GetColumn(0);
+        double[] vec2 = series.GetColumn(1);
 
         // Act
         double ewma1 = vec1.ExponentialWeightedMean(alpha);
         double ewma2 = vec2.ExponentialWeightedMean(alpha);
-        double[] ewmas = this.series.ExponentialWeightedMean(alpha);
+        double[] ewmas = series.ExponentialWeightedMean(alpha);
 
         // Assert
         Assert.AreEqual(ewmas[0], ewma1, Tolerance);
@@ -216,13 +215,13 @@ public class MeasuresTest
 
         // Arrange
         int window = 5;
-        double[] vec1 = this.series.GetColumn(0);
-        double[] vec2 = this.series.GetColumn(1);
+        double[] vec1 = series.GetColumn(0);
+        double[] vec2 = series.GetColumn(1);
 
         // Act
         double ewma1 = vec1.ExponentialWeightedMean(window, alpha);
         double ewma2 = vec2.ExponentialWeightedMean(window, alpha);
-        double[] ewmas = this.series.ExponentialWeightedMean(window, alpha);
+        double[] ewmas = series.ExponentialWeightedMean(window, alpha);
 
         // Assert
         Assert.AreEqual(ewmas[0], ewma1, Tolerance);
@@ -244,13 +243,13 @@ public class MeasuresTest
 
         // Arrange
         int window = 5;
-        double[] vec1 = this.series.GetColumn(0);
-        double[] vec2 = this.series.GetColumn(1);
+        double[] vec1 = series.GetColumn(0);
+        double[] vec2 = series.GetColumn(1);
 
         // Act
         double ewma1 = vec1.ExponentialWeightedVariance(window, alpha, unbiased: false);
         double ewma2 = vec2.ExponentialWeightedVariance(window, alpha, unbiased: false);
-        double[,] ewmas = this.series.ExponentialWeightedCovariance(window, alpha, unbiased: false);
+        double[,] ewmas = series.ExponentialWeightedCovariance(window, alpha, unbiased: false);
 
         // Assert
         Assert.AreEqual(ewmas[0, 0], ewma1, Tolerance);
@@ -271,13 +270,13 @@ public class MeasuresTest
          */
 
         // Arrange
-        double[] vec1 = this.series.GetColumn(0);
-        double[] vec2 = this.series.GetColumn(1);
+        double[] vec1 = series.GetColumn(0);
+        double[] vec2 = series.GetColumn(1);
 
         // Act
         double ewma1 = vec1.ExponentialWeightedVariance(alpha, unbiased: true);
         double ewma2 = vec2.ExponentialWeightedVariance(alpha, unbiased: true);
-        double[,] ewmas = this.series.ExponentialWeightedCovariance(alpha, unbiased: true);
+        double[,] ewmas = series.ExponentialWeightedCovariance(alpha, unbiased: true);
 
         // Assert
         Assert.AreEqual(ewmas[0, 0], ewma1, Tolerance);
@@ -299,7 +298,7 @@ public class MeasuresTest
         };
 
         // Act
-        double[,] ewmCov = this.series.ExponentialWeightedCovariance(alpha, unbiased: true);
+        double[,] ewmCov = series.ExponentialWeightedCovariance(alpha, unbiased: true);
 
         // Assert
         Assert.IsTrue(ewmCov.IsEqual(expected, Tolerance), "EWM Covariance does not agree with expected");
@@ -320,7 +319,7 @@ public class MeasuresTest
         };
 
         // Act
-        double[,] ewmCov = this.series.ExponentialWeightedCovariance(alpha, unbiased: false);
+        double[,] ewmCov = series.ExponentialWeightedCovariance(alpha, unbiased: false);
 
         // Assert
         Assert.IsTrue(ewmCov.IsEqual(expected, Tolerance), "EWM Covariance does not agree with expected");

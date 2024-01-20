@@ -1,4 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Kinematics;
+﻿using ISynergy.Framework.Mathematics.Vectors;
+using ISynergy.Framework.Mathematics.Matrices;
+
+namespace ISynergy.Framework.Mathematics.Kinematics;
 
 /// <summary>
 ///     Denavit Hartenberg matrix (commonly referred as T).

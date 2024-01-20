@@ -63,6 +63,11 @@ public abstract class ViewModel : ObservableClass, IViewModel
     public RelayCommand CloseCommand { get; protected set; }
 
     /// <summary>
+    /// /// Gets or sets the cancel command.
+    /// </summary>
+    public RelayCommand CancelCommand { get; protected set; }
+
+    /// <summary>
     /// Gets or sets the Title property value.
     /// </summary>
     /// <value>The title.</value>
@@ -122,6 +127,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
         IsInitialized = false;
 
         CloseCommand = new RelayCommand(Close);
+        CancelCommand = new RelayCommand(Cancel);
     }
 
     /// <summary>
@@ -185,6 +191,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     {
         PropertyChanged -= OnPropertyChanged;
         CloseCommand = null;
+        CancelCommand = null;
     }
 
     /// <summary>

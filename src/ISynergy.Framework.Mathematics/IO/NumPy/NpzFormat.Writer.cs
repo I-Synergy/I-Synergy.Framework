@@ -1,7 +1,7 @@
 ﻿using System.IO.Compression;
 
 #if !NET35 && !NET40
-namespace ISynergy.Framework.Mathematics.IO;
+namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 public static partial class NpzFormat
 {

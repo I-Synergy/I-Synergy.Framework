@@ -1,8 +1,8 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Base;
-
+﻿
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using System;
+namespace ISynergy.Framework.Mathematics.Optimization.Base;
 
 /// <summary>
 ///   Common interface for function optimization methods.

@@ -1,8 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace ISynergy.Framework.Mathematics.Tests.Common;
 [TestClass]
 public class ReducedRowEchelonFormTest
 {

@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Convergence;
+﻿using ISynergy.Framework.Mathematics.Convergence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Convergence;
 [TestClass]
 public class RelativeConvergenceTest
 {
@@ -101,21 +100,21 @@ public class RelativeConvergenceTest
         Assert.AreEqual(0.001, criteria.OldValue, 1e-10);
         Assert.IsFalse(criteria.HasConverged);
 
-        criteria.NewValue = criteria.NewValue - (criteria.NewValue * 1e-3);
+        criteria.NewValue = criteria.NewValue - criteria.NewValue * 1e-3;
         Assert.AreEqual(1e-9, criteria.Delta, 1e-10);
         Assert.AreEqual(1e-3, criteria.RelativeDelta, 1e-10);
         Assert.AreEqual(9.9899999999999988E-07, criteria.NewValue, 1e-10);
         Assert.AreEqual(1E-06, criteria.OldValue, 1e-10);
         Assert.IsFalse(criteria.HasConverged);
 
-        criteria.NewValue = criteria.NewValue - (criteria.NewValue * 1e-5);
+        criteria.NewValue = criteria.NewValue - criteria.NewValue * 1e-5;
         Assert.AreEqual(9.999999999E-11, criteria.Delta, 1e-10);
         Assert.AreEqual(1e-5, criteria.RelativeDelta, 1e-10);
         Assert.AreEqual(9.9899000999999985E-07, criteria.NewValue, 1e-10);
         Assert.AreEqual(9.9899999999999988E-07, criteria.OldValue, 1e-10);
         Assert.IsFalse(criteria.HasConverged);
 
-        criteria.NewValue = criteria.NewValue - (criteria.NewValue * 1e-6);
+        criteria.NewValue = criteria.NewValue - criteria.NewValue * 1e-6;
         Assert.AreEqual(9.999999999E-11, criteria.Delta, 1e-10);
         Assert.AreEqual(1.0000000000115289E-06, criteria.RelativeDelta, 1e-10);
         Assert.AreEqual(9.9898901100998984E-07, criteria.NewValue, 1e-10);

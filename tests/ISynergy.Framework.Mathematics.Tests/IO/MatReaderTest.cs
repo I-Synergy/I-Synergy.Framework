@@ -1,11 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.IO.Mat;
+﻿using ISynergy.Framework.Mathematics.IO.Mat;
+using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 
+namespace ISynergy.Framework.Mathematics.Tests.IO;
 [TestClass]
 public class MatReaderTest
 {
@@ -223,7 +222,7 @@ public class MatReaderTest
         MatNode node = reader["arr"];
         long[,] value = node.Value as long[,];
 
-        System.Int64[,] expected =
+        long[,] expected =
         {
             { 0, -1 },
         };
@@ -275,9 +274,9 @@ public class MatReaderTest
         MatNode node = reader["arr"];
         ulong[,] value = node.Value as ulong[,];
 
-        System.UInt64[,] expected =
+        ulong[,] expected =
         {
-            { 0, unchecked ((System.UInt64)(-1)) },
+            { 0, unchecked ((ulong)-1) },
         };
 
         Assert.IsTrue(expected.IsEqual(value));

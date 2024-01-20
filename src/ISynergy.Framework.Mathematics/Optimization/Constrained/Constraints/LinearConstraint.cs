@@ -1,14 +1,11 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Exceptions;
-using ISynergy.Framework.Mathematics.Optimization;
-using System;
-using System.Collections.Generic;
+﻿using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
+namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 /// <summary>
 ///   Constraint type.
 /// </summary>

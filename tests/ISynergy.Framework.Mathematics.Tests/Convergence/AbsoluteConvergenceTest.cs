@@ -1,9 +1,8 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Convergence;
+﻿using ISynergy.Framework.Mathematics.Convergence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Convergence;
 [TestClass]
 public class AbsoluteConvergenceTest
 {

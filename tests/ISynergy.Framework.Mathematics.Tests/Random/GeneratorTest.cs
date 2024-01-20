@@ -1,7 +1,6 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Random;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ISynergy.Framework.Mathematics.Tests.Random;
 [TestClass]
 public class GeneratorTest
 {
@@ -209,7 +209,7 @@ public class GeneratorTest
 
     private static ParameterizedThreadStart thread(int cols, bool reset, double[][] l)
     {
-        return (object obj) =>
+        return (obj) =>
         {
             int j = (int)obj;
             if (reset)

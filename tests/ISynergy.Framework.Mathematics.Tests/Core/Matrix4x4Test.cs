@@ -1,7 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace ISynergy.Framework.Mathematics.Tests;
+namespace ISynergy.Framework.Mathematics.Tests.Core;
 
 [TestClass]
 public class Matrix4x4Test
@@ -169,11 +171,11 @@ public class Matrix4x4Test
     [DataRow(-180)]
     public void CreateRotationYTest(float angle)
     {
-        float radians = (float)(angle * System.Math.PI / 180);
+        float radians = (float)(angle * Math.PI / 180);
         Matrix4x4 matrix = Matrix4x4.CreateRotationY(radians);
 
-        float sin = (float)System.Math.Sin(radians);
-        float cos = (float)System.Math.Cos(radians);
+        float sin = (float)Math.Sin(radians);
+        float cos = (float)Math.Cos(radians);
 
         float[] expectedArray = new float[16]
         {
@@ -197,11 +199,11 @@ public class Matrix4x4Test
     [DataRow(-180)]
     public void CreateRotationXTest(float angle)
     {
-        float radians = (float)(angle * System.Math.PI / 180);
+        float radians = (float)(angle * Math.PI / 180);
         Matrix4x4 matrix = Matrix4x4.CreateRotationX(radians);
 
-        float sin = (float)System.Math.Sin(radians);
-        float cos = (float)System.Math.Cos(radians);
+        float sin = (float)Math.Sin(radians);
+        float cos = (float)Math.Cos(radians);
 
         float[] expectedArray = new float[16]
         {
@@ -225,11 +227,11 @@ public class Matrix4x4Test
     [DataRow(-180)]
     public void CreateRotationZTest(float angle)
     {
-        float radians = (float)(angle * System.Math.PI / 180);
+        float radians = (float)(angle * Math.PI / 180);
         Matrix4x4 matrix = Matrix4x4.CreateRotationZ(radians);
 
-        float sin = (float)System.Math.Sin(radians);
-        float cos = (float)System.Math.Cos(radians);
+        float sin = (float)Math.Sin(radians);
+        float cos = (float)Math.Cos(radians);
 
         float[] expectedArray = new float[16]
         {
@@ -253,9 +255,9 @@ public class Matrix4x4Test
     [DataRow(-180, -30, -60)]
     public void CreateFromYawPitchRollTest(float yaw, float pitch, float roll)
     {
-        float radiansYaw = (float)(yaw * System.Math.PI / 180);
-        float radiansPitch = (float)(pitch * System.Math.PI / 180);
-        float radiansRoll = (float)(roll * System.Math.PI / 180);
+        float radiansYaw = (float)(yaw * Math.PI / 180);
+        float radiansPitch = (float)(pitch * Math.PI / 180);
+        float radiansRoll = (float)(roll * Math.PI / 180);
 
         Matrix4x4 matrix = Matrix4x4.CreateFromYawPitchRoll(radiansYaw, radiansPitch, radiansRoll);
 
@@ -263,7 +265,7 @@ public class Matrix4x4Test
         Matrix4x4 yMatrix = Matrix4x4.CreateRotationY(radiansYaw);
         Matrix4x4 zMatrix = Matrix4x4.CreateRotationZ(radiansRoll);
 
-        Matrix4x4 rotationMatrix = (yMatrix * xMatrix) * zMatrix;
+        Matrix4x4 rotationMatrix = yMatrix * xMatrix * zMatrix;
 
         CompareMatrixWithArray(matrix, rotationMatrix.ToArray());
     }
@@ -276,9 +278,9 @@ public class Matrix4x4Test
     [DataRow(-30, -60, -90)]
     public void ExtractYawPitchRollTest(float yaw, float pitch, float roll)
     {
-        float radiansYaw = (float)(yaw * System.Math.PI / 180);
-        float radiansPitch = (float)(pitch * System.Math.PI / 180);
-        float radiansRoll = (float)(roll * System.Math.PI / 180);
+        float radiansYaw = (float)(yaw * Math.PI / 180);
+        float radiansPitch = (float)(pitch * Math.PI / 180);
+        float radiansRoll = (float)(roll * Math.PI / 180);
 
         Matrix4x4 matrix = Matrix4x4.CreateFromYawPitchRoll(radiansYaw, radiansPitch, radiansRoll);
 
@@ -409,26 +411,26 @@ public class Matrix4x4Test
     private bool ApproximateEquals(Matrix4x4 matrix1, Matrix4x4 matrix2)
     {
         // TODO: better algorithm should be put into the framework actually
-        return (
-            (System.Math.Abs(matrix1.V00 - matrix2.V00) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V01 - matrix2.V01) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V02 - matrix2.V02) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V03 - matrix2.V03) <= Epsilon) &&
+        return
+            Math.Abs(matrix1.V00 - matrix2.V00) <= Epsilon &&
+            Math.Abs(matrix1.V01 - matrix2.V01) <= Epsilon &&
+            Math.Abs(matrix1.V02 - matrix2.V02) <= Epsilon &&
+            Math.Abs(matrix1.V03 - matrix2.V03) <= Epsilon &&
 
-            (System.Math.Abs(matrix1.V10 - matrix2.V10) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V11 - matrix2.V11) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V12 - matrix2.V12) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V13 - matrix2.V13) <= Epsilon) &&
+            Math.Abs(matrix1.V10 - matrix2.V10) <= Epsilon &&
+            Math.Abs(matrix1.V11 - matrix2.V11) <= Epsilon &&
+            Math.Abs(matrix1.V12 - matrix2.V12) <= Epsilon &&
+            Math.Abs(matrix1.V13 - matrix2.V13) <= Epsilon &&
 
-            (System.Math.Abs(matrix1.V20 - matrix2.V20) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V21 - matrix2.V21) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V22 - matrix2.V22) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V23 - matrix2.V23) <= Epsilon) &&
+            Math.Abs(matrix1.V20 - matrix2.V20) <= Epsilon &&
+            Math.Abs(matrix1.V21 - matrix2.V21) <= Epsilon &&
+            Math.Abs(matrix1.V22 - matrix2.V22) <= Epsilon &&
+            Math.Abs(matrix1.V23 - matrix2.V23) <= Epsilon &&
 
-            (System.Math.Abs(matrix1.V30 - matrix2.V30) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V31 - matrix2.V31) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V32 - matrix2.V32) <= Epsilon) &&
-            (System.Math.Abs(matrix1.V33 - matrix2.V33) <= Epsilon)
-        );
+            Math.Abs(matrix1.V30 - matrix2.V30) <= Epsilon &&
+            Math.Abs(matrix1.V31 - matrix2.V31) <= Epsilon &&
+            Math.Abs(matrix1.V32 - matrix2.V32) <= Epsilon &&
+            Math.Abs(matrix1.V33 - matrix2.V33) <= Epsilon
+        ;
     }
 }

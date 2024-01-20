@@ -1,11 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics.Optimization;
+﻿using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class CobylaTest
 {
@@ -424,7 +423,7 @@ public class CobylaTest
     [TestMethod]
     public void ConstructorTest7()
     {
-        ISynergy.Framework.Mathematics.Random.Generator.Seed = 0;
+        Mathematics.Random.Generator.Seed = 0;
 
         // This problem is taken from Fletcher's book Practical Methods of
         // Optimization and has the equation number (14.4.2).
@@ -451,7 +450,7 @@ public class CobylaTest
         double expectedMinimum = function.Function(cobyla.Solution);
         Assert.AreEqual(expectedMinimum, minimum);
 
-        Assert.IsTrue(ISynergy.Framework.Mathematics.Random.Generator.HasBeenAccessed);
+        Assert.IsTrue(Mathematics.Random.Generator.HasBeenAccessed);
     }
 
     [TestMethod]

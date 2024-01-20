@@ -1,10 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Optimization;
+﻿using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 
+namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
 public class LinearConstraintTest
 {

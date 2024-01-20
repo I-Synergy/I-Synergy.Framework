@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests;
+namespace ISynergy.Framework.Mathematics.Tests.Common;
 
 [TestClass]
 public class SparseTest

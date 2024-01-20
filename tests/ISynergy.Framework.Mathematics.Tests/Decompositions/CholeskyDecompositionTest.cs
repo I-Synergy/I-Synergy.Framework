@@ -1,10 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Tests;
-
-using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
+using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
+namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
 [TestClass]
 public class CholeskyDecompositionTest
 {
@@ -445,7 +445,7 @@ public class CholeskyDecompositionTest
         Assert.AreEqual(2232, chol.Determinant, 1e-12);
         Assert.IsTrue(chol.IsPositiveDefinite);
 
-        double expected = System.Math.Log(2232);
+        double expected = Math.Log(2232);
         double actual = chol.LogDeterminant;
 
         Assert.AreEqual(expected, actual, 1e-10);

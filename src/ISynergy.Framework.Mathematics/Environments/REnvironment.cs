@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mathematics.Environments;
+﻿using ISynergy.Framework.Mathematics.Matrices;
+
+namespace ISynergy.Framework.Mathematics.Environments;
 
 /// <summary>
 ///   GNU R algorithm environment. Work in progress.
