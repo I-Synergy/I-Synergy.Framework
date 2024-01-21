@@ -6,31 +6,35 @@
 public enum ImageFormats
 {
     /// <summary>
-    /// The BMP
+    /// BMP
     /// </summary>
     bmp,
     /// <summary>
-    /// The GIF
+    /// GIF
     /// </summary>
     gif,
     /// <summary>
-    /// The JPG
+    /// JPG
     /// </summary>
     jpg,
     /// <summary>
-    /// The JPG xr
+    /// JPG xr
     /// </summary>
     jpgXr,
     /// <summary>
-    /// The tiff
+    /// tiff
     /// </summary>
     tiff,
     /// <summary>
-    /// The heif
+    /// heif
     /// </summary>
     heif,
     /// <summary>
-    /// The PNG
+    /// PNG
     /// </summary>
-    png
+    png,
+    /// <summary>
+    /// WebP
+    /// </summary>
+    webp
 }

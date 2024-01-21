@@ -132,9 +132,6 @@
 		<Using Include="ISynergy.Framework.UI.Controls.Window">
 			<Alias>Window</Alias>
 		</Using>
-		<Using Include="ISynergy.Framework.UI.Models.Result">
-			<Alias>Result</Alias>
-		</Using>
 		<Using Include="Microsoft.UI.Xaml.Application">
 			<Alias>Application</Alias>
 		</Using>

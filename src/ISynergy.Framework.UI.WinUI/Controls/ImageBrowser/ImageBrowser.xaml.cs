@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using Microsoft.UI.Xaml;
@@ -72,7 +73,7 @@ public sealed partial class ImageBrowser : UserControl
         if (ServiceLocator.Default.GetInstance<ILanguageService>() is ILanguageService languageService &&
             ServiceLocator.Default.GetInstance<IFileService<FileResult>>() is IFileService<FileResult> fileService)
         {
-            var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png");
+            var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp") ;
 
             if (result is not null && result.Count > 0)
             {
@@ -119,17 +120,13 @@ public sealed partial class ImageBrowser : UserControl
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     private async void Button_Paste_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ServiceLocator.Default.GetInstance<IClipboardService>() is IClipboardService clipboardService)
+        if (ServiceLocator.Default.GetInstance<IClipboardService>() is IClipboardService clipboardService && 
+            await clipboardService.GetImageFromClipboardAsync() is ImageResult imageResult)
         {
-            var result = await clipboardService.GetByteArrayFromClipboardImageAsync(Framework.Core.Enumerations.ImageFormats.png);
-
-            if (result is not null)
-            {
-                FileBytes = result;
-                ContentType = "image/png";
-                FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
-                DateTime = System.DateTime.Now;
-            }
+            FileBytes = imageResult.FileBytes;
+            ContentType = imageResult.ContentType;
+            FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
+            DateTime = System.DateTime.Now;
         }
     }
 }
