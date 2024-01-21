@@ -184,12 +184,23 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>
-    /// <exception cref="Result.Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
+    /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
     private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
         throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
 
     #region IDisposable
     // Dispose() calls Dispose(true)
+
+#if IOS || MACCATALYST
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public new void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+#else
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
@@ -198,6 +209,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         Dispose(true);
         GC.SuppressFinalize(this);
     }
+#endif
 
     // NOTE: Leave out the finalizer altogether if this class doesn't
     // own unmanaged resources, but leave the other methods
@@ -209,6 +221,26 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     //}
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
+#if IOS || MACCATALYST
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected new virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // free managed resources
+            _authenticationService.AuthenticationChanged -= AuthenticationChanged;
+            AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+        }
+
+        // free native resources if there are any.
+        base.Dispose(disposing);
+    }
+#else
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
     /// </summary>
@@ -226,5 +258,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         // free native resources if there are any.
     }
+#endif
     #endregion
 }

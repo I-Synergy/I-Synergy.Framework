@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Orientation = Microsoft.UI.Xaml.Controls.Orientation;
 
 namespace ISynergy.Framework.UI.Controls;
 

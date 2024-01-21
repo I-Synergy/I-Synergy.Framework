@@ -79,7 +79,6 @@ stages:
              src\ISynergy.Framework.Logging.ApplicationInsights\ISynergy.Framework.Logging.ApplicationInsights.csproj
              src\ISynergy.Framework.Logging.Sentry\ISynergy.Framework.Logging.Sentry.csproj
              src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
-             src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj
              src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj
              src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj
              src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj
@@ -415,13 +414,6 @@ stages:
             arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Build Uno UI Project'
-          inputs:
-            command: 'build'
-            projects: 'src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj'
-            arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true'
-
-        - task: DotNetCoreCLI@2
           displayName: 'Build Maui UI Project'
           inputs:
             command: 'build'
@@ -495,6 +487,13 @@ stages:
           inputs:
             command: 'custom'
             arguments: 'sign $(Build.ArtifactStagingDirectory)\*.nupkg -CertificatePath "$(Agent.WorkFolder)\_temp\intelligence-online.pfx" -CertificatePassword "$(CertPassword)" -Timestamper "$(TimestampUrl)"'
+
+        - task: NuGetCommand@2
+          displayName: 'Sign Nuget symbol packages'
+          inputs:
+            command: 'custom'
+            arguments: 'sign $(Build.ArtifactStagingDirectory)\*.snupkg -CertificatePath "$(Agent.WorkFolder)\_temp\intelligence-online.pfx" -CertificatePassword "$(CertPassword)" -Timestamper "$(TimestampUrl)"'
+
 
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Artifacts'
