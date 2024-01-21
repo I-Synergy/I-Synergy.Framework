@@ -5,7 +5,6 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
-using ISynergy.Framework.UI.Models;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Globalization;
@@ -175,7 +174,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>
-    /// <exception cref="Result.Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
+    /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
     private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
         throw new Exception($"Failed to load {e.Uri}: {e.Exception}");
 

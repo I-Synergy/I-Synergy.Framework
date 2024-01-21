@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Converters;
 using System.IO;
@@ -82,47 +82,20 @@ public class ClipboardService : IClipboardService
         return Task.FromResult<object>(null);
     }
 
-    /// <summary>
-    /// Gets the byte array from clipboard image asynchronous.
-    /// </summary>
-    /// <returns>Task&lt;System.Byte[]&gt;.</returns>
-    public async Task<byte[]> GetByteArrayFromClipboardImageAsync(ImageFormats format)
+    public async Task<ImageResult> GetImageFromClipboardAsync()
     {
-        var result = Array.Empty<byte>();
-
         if (await GetBitmapSourceFromClipboardAsync() is ImageSource imageSource)
         {
-            BitmapEncoder encoder = null;
-
-            switch (format)
-            {
-                case ImageFormats.bmp:
-                    encoder = new BmpBitmapEncoder();
-                    break;
-                case ImageFormats.gif:
-                    encoder = new GifBitmapEncoder();
-                    break;
-                case ImageFormats.jpg:
-                    encoder = new JpegBitmapEncoder();
-                    break;
-                case ImageFormats.png:
-                    encoder = new PngBitmapEncoder();
-                    break;
-                case ImageFormats.tiff:
-                    encoder = new TiffBitmapEncoder();
-                    break;
-                default: throw new ArgumentOutOfRangeException(nameof(format));
-            }
-
+            var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create((BitmapSource)imageSource));
 
             using (var stream = new MemoryStream())
             {
                 encoder.Save(stream);
-                result = stream.ToArray();
+                return new ImageResult(stream.ToArray(), "image/png");
             }
         }
 
-        return result;
+        return null;
     }
 }
