@@ -29,6 +29,10 @@ public static class HtmlHelperExtensions
         {
             return "image/png";
         }
+        else if (path.EndsWith(".WEBP", StringComparison.OrdinalIgnoreCase))
+        {
+            return "image/webp";
+        }
 
         throw new ArgumentException("Unknown file type");
     }
