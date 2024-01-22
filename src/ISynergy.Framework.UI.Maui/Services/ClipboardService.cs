@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services;
@@ -8,22 +8,8 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class ClipboardService : IClipboardService
 {
-    /// <summary>
-    /// Gets the bitmap source from clipboard asynchronous.
-    /// </summary>
-    /// <returns>Task&lt;System.Object&gt;.</returns>
-    public Task<object> GetBitmapSourceFromClipboardAsync()
+    public Task<ImageResult> GetImageFromClipboardAsync()
     {
-        return Task.FromResult<object>(null);
-    }
-
-    /// <summary>
-    /// Gets the byte array from clipboard image asynchronous.
-    /// </summary>
-    /// <returns>Task&lt;System.Byte[]&gt;.</returns>
-    public Task<byte[]> GetByteArrayFromClipboardImageAsync(ImageFormats format)
-    {
-        byte[] result = null;
-        return Task.FromResult(result);
+        return Task.FromResult<ImageResult>(null);
     }
 }

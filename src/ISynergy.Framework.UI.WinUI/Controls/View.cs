@@ -31,6 +31,8 @@ public abstract partial class View : Page, IView
 
     #region IDisposable
     // Dispose() calls Dispose(true)
+#if WINDOWS
+    // Dispose() calls Dispose(true)
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
@@ -39,6 +41,17 @@ public abstract partial class View : Page, IView
         Dispose(true);
         GC.SuppressFinalize(this);
     }
+#else
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public new void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+        base.Dispose();
+    }
+#endif
 
     // NOTE: Leave out the finalizer altogether if this class doesn't
     // own unmanaged resources, but leave the other methods
@@ -50,6 +63,26 @@ public abstract partial class View : Page, IView
     //}
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
+
+#if IOS || MACCATALYST || ANDROID
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected virtual new void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // free managed resources
+            ViewModel?.Dispose();
+            ViewModel = null;
+        }
+
+        // free native resources if there are any.
+
+        base.Dispose(disposing);
+    }
+#else
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
     /// </summary>
@@ -65,5 +98,6 @@ public abstract partial class View : Page, IView
 
         // free native resources if there are any.
     }
+#endif
     #endregion
 }

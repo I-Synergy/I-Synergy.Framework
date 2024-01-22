@@ -14,7 +14,7 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 /// <seealso cref="ISynergy.Framework.UI.Controls.View" />
 /// <seealso cref="ISynergy.Framework.Mvvm.Abstractions.IView" />
-public partial class SelectionView : ISelectionView
+public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelectionView
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionView" /> class.
