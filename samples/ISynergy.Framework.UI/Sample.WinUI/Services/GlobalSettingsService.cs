@@ -7,18 +7,18 @@ namespace Sample.Services;
 /// <summary>
 /// Class SettingsService.
 /// </summary>
-public class SettingsService : ISettingsService<Setting>
+public class GlobalSettingsService : IGlobalSettingsService
 {
     /// <summary>
     /// Gets the settings.
     /// </summary>
     /// <value>The settings.</value>
-    public Setting Settings { get; private set; }
+    public GlobalSettings Settings { get; private set; }
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public SettingsService()
+    public GlobalSettingsService()
     {
     }
 
@@ -26,7 +26,7 @@ public class SettingsService : ISettingsService<Setting>
     /// Updates the settings.
     /// </summary>
     /// <param name="e">The e.</param>
-    public void UpdateSettings(Setting e)
+    public void UpdateSettings(GlobalSettings e)
     {
         Settings = e;
     }
@@ -48,15 +48,23 @@ public class SettingsService : ISettingsService<Setting>
     /// </summary>
     public Task GetSettingsAsync(CancellationToken cancellationToken = default)
     {
-        Settings = new Setting();
+        Settings = new GlobalSettings();
         return Task.CompletedTask;
     }
 
-    public Task<int> AddOrUpdateSettingsAsync(Setting e, CancellationToken cancellationToken = default)
+    public Task<int> AddOrUpdateSettingsAsync(GlobalSettings e, CancellationToken cancellationToken = default)
     {
         // Update settings
         return Task.FromResult(1);
     }
+
+    public Task LoadSettingsAsync(CancellationToken cancellationToken = default)
+    {
+        Settings = new GlobalSettings();
+        return Task.CompletedTask;
+    }
+
+    public void ClearSettings() => Settings = null;
 
     /// <summary>
     /// Gets a value indicating whether this instance is first run.
