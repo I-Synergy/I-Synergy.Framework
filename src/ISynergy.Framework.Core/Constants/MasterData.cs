@@ -25,6 +25,7 @@ public static class MasterData
         new FileType(6, "JPEG Image", ".jpg", true, "image/jpeg"),
         new FileType(7, "JPEG Image", ".jpeg", true, "image/jpeg"),
         new FileType(8, "PNG Image", ".png", true, "image/png"),
-        new FileType(9, "GIF Image", ".gif", true, "image/gif")
+        new FileType(9, "GIF Image", ".gif", true, "image/gif"),
+        new FileType(10, "WebP Image", ".webp", true, "image/webp")
     }.AsReadOnly();
 }

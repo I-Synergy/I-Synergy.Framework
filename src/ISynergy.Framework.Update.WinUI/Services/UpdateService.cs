@@ -1,7 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Update.Abstractions.Services;
+
+#if WINDOWS
 using Windows.Services.Store;
+#endif
 
 namespace ISynergy.Framework.Update.Services;
 
@@ -34,6 +37,7 @@ internal class UpdateService : IUpdateService
         _dialogService = dialogService;
     }
 
+#if WINDOWS
     /// <summary>
     /// The context
     /// </summary>
@@ -159,6 +163,7 @@ internal class UpdateService : IUpdateService
         }
     }
 
+    
     /// <summary>
     /// Helper method for handling the scenario where a mandatory package update fails to
     /// download or install. Add code to this method to perform whatever actions you want
@@ -170,4 +175,16 @@ internal class UpdateService : IUpdateService
         return _dialogService.ShowErrorAsync(
                     _languageService.GetString("WarningMandatoryUpdateFailed"));
     }
+#else
+    /// <summary>
+    /// check for update as an asynchronous operation.
+    /// </summary>
+    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    public Task<bool> CheckForUpdateAsync() => Task.FromResult(false);
+
+    /// <summary>
+    /// download and install update as an asynchronous operation.
+    /// </summary>
+    public Task DownloadAndInstallUpdateAsync() => Task.CompletedTask;
+#endif
 }

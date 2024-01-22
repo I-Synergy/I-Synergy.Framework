@@ -68,6 +68,19 @@ public partial class LayoutTransformControl : Control
         }
     }
 
+#if IOS || MACCATALYST
+    /// <summary>
+    /// Gets or sets the Transform of the LayoutTransformControl.
+    /// </summary>
+    /// <remarks>
+    /// Corresponds to UIElement.RenderTransform.
+    /// </remarks>
+    public new Transform Transform
+    {
+        get { return (Transform)GetValue(TransformProperty); }
+        set { SetValue(TransformProperty, value); }
+    }
+#else
     /// <summary>
     /// Gets or sets the Transform of the LayoutTransformControl.
     /// </summary>
@@ -79,6 +92,7 @@ public partial class LayoutTransformControl : Control
         get { return (Transform)GetValue(TransformProperty); }
         set { SetValue(TransformProperty, value); }
     }
+#endif
 
     /// <summary>
     /// Identifies the TransformProperty dependency property.
@@ -366,7 +380,7 @@ public partial class LayoutTransformControl : Control
 
             if (transformGroup != null)
             {
-                var groupMatrix = Matrix.Identity;
+                var groupMatrix = Microsoft.UI.Xaml.Media.Matrix.Identity;
 
                 foreach (var child in transformGroup.Children)
                 {
@@ -416,7 +430,7 @@ public partial class LayoutTransformControl : Control
         }
 
         // Fall back to no-op transformation
-        return Matrix.Identity;
+        return Microsoft.UI.Xaml.Media.Matrix.Identity;
     }
 
     /// <summary>
