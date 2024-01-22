@@ -192,9 +192,9 @@ public static class WindowsAppBuilderExtensions
                     && q.Name != nameof(IViewModel));
 
             if (abstraction is not null && !viewmodel.IsGenericType)
-                services.TryAddScoped(abstraction, viewmodel);
+                services.TryAddTransient(abstraction, viewmodel);
 
-            services.TryAddScoped(viewmodel);
+            services.TryAddTransient(viewmodel);
         }
 
         foreach (var view in ViewTypes.Distinct())
