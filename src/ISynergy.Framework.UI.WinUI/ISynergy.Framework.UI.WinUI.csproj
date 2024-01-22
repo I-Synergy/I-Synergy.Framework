@@ -32,7 +32,7 @@
 		<Otherwise>
 			<ItemGroup>
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.4.2" />
-				<PackageReference Include="Uno.WinUI" Version="5.0.150" />
+				<PackageReference Include="Uno.WinUI" Version="5.0.151" />
 			</ItemGroup>
 
 			<ItemGroup>
