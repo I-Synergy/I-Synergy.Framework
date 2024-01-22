@@ -21,6 +21,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="Views\SettingsView.xaml" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -80,5 +81,11 @@
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Views\SettingsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 </Project>

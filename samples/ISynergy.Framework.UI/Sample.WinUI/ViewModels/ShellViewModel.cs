@@ -235,6 +235,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, HelpCommand));
         SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
         SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
+        SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
         SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, LoginCommand));
     }
 
@@ -242,5 +243,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Opens the settings asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    protected override Task OpenSettingsAsync() => throw new NotImplementedException();
+    protected override Task OpenSettingsAsync() =>
+        BaseCommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
 }
