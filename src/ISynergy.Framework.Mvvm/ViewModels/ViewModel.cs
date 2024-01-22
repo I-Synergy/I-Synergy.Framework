@@ -60,12 +60,12 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Gets or sets the close command.
     /// </summary>
     /// <value>The close command.</value>
-    public RelayCommand CloseCommand { get; protected set; }
+    public AsyncRelayCommand CloseCommand { get; protected set; }
 
     /// <summary>
     /// /// Gets or sets the cancel command.
     /// </summary>
-    public RelayCommand CancelCommand { get; protected set; }
+    public AsyncRelayCommand CancelCommand { get; protected set; }
 
     /// <summary>
     /// Gets or sets the Title property value.
@@ -126,8 +126,8 @@ public abstract class ViewModel : ObservableClass, IViewModel
         PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
 
-        CloseCommand = new RelayCommand(Close);
-        CancelCommand = new RelayCommand(Cancel);
+        CloseCommand = new AsyncRelayCommand(CloseAsync);
+        CancelCommand = new AsyncRelayCommand(CancelAsync);
     }
 
     /// <summary>
@@ -198,21 +198,22 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Cancels the synchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    public virtual void Cancel()
+    public virtual Task CancelAsync()
     {
         IsCancelled = true;
         OnCancelled(EventArgs.Empty);
-        Close();
+        return CloseAsync();
     }
 
     /// <summary>
     /// Closes the synchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    public virtual void Close()
+    public virtual Task CloseAsync()
     {
         Cleanup();
         OnClosed(EventArgs.Empty);
+        return Task.CompletedTask;
     }
 
     /// <summary>

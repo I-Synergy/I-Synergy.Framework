@@ -155,7 +155,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// <param name="e"></param>
     /// <param name="validateUnderlayingProperties"></param>
     /// <returns></returns>
-    public override Task SubmitAsync(List<TEntity> e, bool validateUnderlayingProperties = true)
+    public override async Task SubmitAsync(List<TEntity> e, bool validateUnderlayingProperties = true)
     {
         if (Validate(validateUnderlayingProperties))
         {
@@ -168,10 +168,8 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
             }
 
             OnSubmitted(new SubmitEventArgs<List<TEntity>>(result));
-            Close();
+            await CloseAsync();
         }
-
-        return Task.CompletedTask;
     }
 
     public override void Cleanup()
