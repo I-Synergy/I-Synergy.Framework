@@ -97,15 +97,13 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     /// <param name="e">The e.</param>
     /// <param name="validateUnderlayingProperties"></param>
     /// <returns>Task.</returns>
-    public virtual Task SubmitAsync(TEntity e, bool validateUnderlayingProperties = true)
+    public virtual async Task SubmitAsync(TEntity e, bool validateUnderlayingProperties = true)
     {
         if (Validate(validateUnderlayingProperties))
         {
             OnSubmitted(new SubmitEventArgs<TEntity>(e));
-            Close();
+            await CloseAsync();
         }
-
-        return Task.CompletedTask;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query) { }

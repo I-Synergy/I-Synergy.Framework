@@ -21,6 +21,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="Views\SettingsView.xaml" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -40,9 +41,9 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="24.1.46" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="24.1.46" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="24.1.46" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="24.1.47" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="24.1.47" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="24.1.47" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -80,5 +81,11 @@
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Views\SettingsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 </Project>

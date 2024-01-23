@@ -195,9 +195,9 @@ public static class MauiAppBuilderExtensions
                     && q.Name != nameof(IViewModel));
 
             if (abstraction is not null && !viewmodel.IsGenericType && abstraction != typeof(IQueryAttributable))
-                appBuilder.Services.TryAddScoped(abstraction, viewmodel);
+                appBuilder.Services.TryAddTransient(abstraction, viewmodel);
 
-            appBuilder.Services.TryAddScoped(viewmodel);
+            appBuilder.Services.TryAddTransient(viewmodel);
         }
 
         foreach (var view in ViewTypes.Distinct())

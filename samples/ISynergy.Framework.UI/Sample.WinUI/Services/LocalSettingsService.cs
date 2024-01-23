@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace Sample.Services;
 
-public class AppSettingsService : IBaseApplicationSettingsService
+public class LocalSettingsService : IBaseApplicationSettingsService
 {
     private const string _fileName = "settings.json";
 
@@ -17,14 +17,14 @@ public class AppSettingsService : IBaseApplicationSettingsService
     /// <summary>
     /// Settings used globally.
     /// </summary>
-    private ApplicationSetting _settings;
+    private LocalSettings _settings;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AppSettingsService"/> class.
+    /// Initializes a new instance of the <see cref="LocalSettingsService"/> class.
     /// </summary>
-    public AppSettingsService()
+    public LocalSettingsService()
     {
-        _settings = new ApplicationSetting();
+        _settings = new LocalSettings();
         _settingsFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             "I-Synergy Framework UI Sample",
@@ -44,7 +44,7 @@ public class AppSettingsService : IBaseApplicationSettingsService
                 SaveSettings();
 
             string json = File.ReadAllText(file);
-            _settings = JsonSerializer.Deserialize<ApplicationSetting>(json);
+            _settings = JsonSerializer.Deserialize<LocalSettings>(json);
         }
         catch (JsonException)
         {
@@ -52,7 +52,7 @@ public class AppSettingsService : IBaseApplicationSettingsService
         }
         catch (FileNotFoundException)
         {
-            _settings = new ApplicationSetting();
+            _settings = new LocalSettings();
         }
     }
 

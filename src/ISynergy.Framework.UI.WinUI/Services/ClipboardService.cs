@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using System.Drawing.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
 
@@ -19,11 +20,20 @@ public class ClipboardService : IClipboardService
     {
         var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
 
-        if (dataPackageView.Contains(StandardDataFormats.Bitmap) && 
+        if (dataPackageView.Contains(StandardDataFormats.Bitmap) &&
             await dataPackageView.GetBitmapAsync() is RandomAccessStreamReference imageReceived)
         {
             using var imageStream = await imageReceived.OpenReadAsync();
-            return new ImageResult(imageStream.AsStreamForRead().ToByteArray(), imageStream.ContentType);
+            var image = await imageStream.AsStreamForRead().ToByteArrayAsync();
+
+#if HAS_UNO
+            return new ImageResult(image.ToImageBytes(100, ImageFormat.Png), "image/png");
+#else
+            if (imageStream.ContentType == "image/bmp")
+                return new ImageResult(image.ToImageBytes(100, ImageFormat.Png), "image/png");
+            else
+                return new ImageResult(image, imageStream.ContentType);
+#endif
         }
 
         return null;
