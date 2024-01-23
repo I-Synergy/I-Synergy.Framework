@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace Sample.Models;
 
-public class ApplicationSetting : IBaseApplicationSettings
+public class LocalSettings : IBaseApplicationSettings
 {
     public Languages Language { get; set; } = Languages.English;
     public bool IsFullscreen { get; set; }
@@ -19,7 +19,7 @@ public class ApplicationSetting : IBaseApplicationSettings
     public bool IsAdvanced { get; set; }
     public byte[] Wallpaper { get; set; } = Array.Empty<byte>();
 
-    public ApplicationSetting()
+    public LocalSettings()
     {
         Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
         {

@@ -1,27 +1,32 @@
-﻿namespace Sample.Abstractions.Services;
+﻿using Sample.Models;
+
+namespace Sample.Abstractions.Services;
 
 /// <summary>
 /// Interface ISettingsService
 /// </summary>
-public interface ISettingsService<TSettings>
-    where TSettings : class
+public interface IGlobalSettingsService
 {
     /// <summary>
     /// Gets the settings.
     /// </summary>
     /// <value>The settings.</value>
-    TSettings Settings { get; }
+    GlobalSettings Settings { get; }
     /// <summary>
     /// Updates the settings.
     /// </summary>
     /// <param name="e">The e.</param>
     /// <param name="cancellationToken"></param>
-    Task<int> AddOrUpdateSettingsAsync(TSettings e, CancellationToken cancellationToken = default);
+    Task<int> AddOrUpdateSettingsAsync(GlobalSettings e, CancellationToken cancellationToken = default);
     /// <summary>
     /// Loads the settings asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    Task GetSettingsAsync(CancellationToken cancellationToken = default);
+    Task LoadSettingsAsync(CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Clears the settings.
+    /// </summary>
+    void ClearSettings();
     /// <summary>
     /// Gets the setting.
     /// </summary>

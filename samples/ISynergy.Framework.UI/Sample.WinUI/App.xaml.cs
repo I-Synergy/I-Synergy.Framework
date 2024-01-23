@@ -56,8 +56,8 @@ public sealed partial class App : BaseApplication
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, LocalSettingsService>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<IGlobalSettingsService, GlobalSettingsService>());
 
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
