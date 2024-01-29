@@ -45,46 +45,8 @@ stages:
           displayName: 'Set Assembly Manifest Data v2'
           inputs:
             FileNames: |
-             src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj
-             src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj
-             src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj
-             src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj
-             src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj
-             src\ISynergy.Framework.AspNetCore.Globalization\ISynergy.Framework.AspNetCore.Globalization.csproj
-             src\ISynergy.Framework.AspNetCore.MultiTenancy\ISynergy.Framework.AspNetCore.MultiTenancy.csproj
-             src\ISynergy.Framework.AspNetCore.Proxy\ISynergy.Framework.AspNetCore.Proxy.csproj
-             src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
-             src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj
-             src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj
-             src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj
-             src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj
-             src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj
-             src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj
-             src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj
-             src\ISynergy.Framework.Documents\ISynergy.Framework.Documents.csproj
-             src\ISynergy.Framework.Documents.Syncfusion\ISynergy.Framework.Documents.Syncfusion.csproj
-             src\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj
-             src\ISynergy.Framework.Mail.Microsoft365\ISynergy.Framework.Mail.Microsoft365.csproj
-             src\ISynergy.Framework.Mail.SendGrid\ISynergy.Framework.Mail.SendGrid.csproj
-             src\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj
-             src\ISynergy.Framework.Monitoring.Client\ISynergy.Framework.Monitoring.Client.csproj
-             src\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj
-             src\ISynergy.Framework.Monitoring.SignalR\ISynergy.Framework.Monitoring.SignalR.csproj
-             src\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj
-             src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj
-             src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj
-             src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
-             src\ISynergy.Framework.Logging\ISynergy.Framework.Logging.csproj
-             src\ISynergy.Framework.Logging.AppCenter\ISynergy.Framework.Logging.AppCenter.csproj
-             src\ISynergy.Framework.Logging.ApplicationInsights\ISynergy.Framework.Logging.ApplicationInsights.csproj
-             src\ISynergy.Framework.Logging.Sentry\ISynergy.Framework.Logging.Sentry.csproj
-             src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
-             src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj
-             src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj
-             src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj
-             src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj
-             src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj
-             src\ISynergy.Framework.Update.WPF\ISynergy.Framework.Update.WPF.csproj
+              src/**/*.csproj
+              tests/**/*.csproj
             InsertAttributes: true
             WriteBOM: true
             GeneratePackageOnBuild: true
@@ -523,9 +485,7 @@ stages:
         - task: UseDotNet@2
           inputs:
             packageType: 'sdk'
-            version: 8.0.x
-            useGlobalJson: false
-            includePreviewVersions: true
+            useGlobalJson: true
 
         - task: DotNetCoreCLI@2
           displayName: 'Run Core Tests'
