@@ -29,7 +29,7 @@
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.WinUI" Version="5.0.151" />
+				<PackageReference Include="Uno.WinUI" Version="5.0.152" />
 			</ItemGroup>
 
 			<ItemGroup>
