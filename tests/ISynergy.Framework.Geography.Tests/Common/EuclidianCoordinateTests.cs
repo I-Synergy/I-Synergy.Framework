@@ -58,10 +58,10 @@ public class EuclidianCoordinateTests
         Assert.AreEqual(e1, e2);
     }
 
-    /// <summary>
-    /// Defines the test method TestEquals2.
-    /// </summary>
-    /// [TestMethod]
+    ///// <summary>
+    ///// Defines the test method TestEquals2.
+    ///// </summary>
+    ///// [TestMethod]
     //public void TestEquals2()
     //{
     //    var e1 = new EuclidianCoordinate(projection, -3, -4);

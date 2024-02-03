@@ -1,1 +1,1 @@
-# I-Synergy Framework UI WinUI
+# I-Synergy Framework UI Uno

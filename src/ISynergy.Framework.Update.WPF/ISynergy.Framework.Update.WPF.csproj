@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\project.props" />
-
 	<PropertyGroup>
-		<TargetFrameworks>net472;net48;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -17,8 +15,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Net.Http" Version="4.3.4" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+		<PackageReference Include="System.Net.Http"  />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"  />
 	</ItemGroup>
 	
 	<ItemGroup>

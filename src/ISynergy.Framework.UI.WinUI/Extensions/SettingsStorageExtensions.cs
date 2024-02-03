@@ -23,14 +23,6 @@ public static class SettingsStorageExtensions
     private static string GetJsonFileName(string name) => $"{name}.{_jsonExtension}";
 
     /// <summary>
-    /// Determines whether [is roaming storage available] [the specified application data].
-    /// </summary>
-    /// <param name="appData">The application data.</param>
-    /// <returns><c>true</c> if [is roaming storage available] [the specified application data]; otherwise, <c>false</c>.</returns>
-    public static bool IsRoamingStorageAvailable(this ApplicationData appData) =>
-        appData.RoamingStorageQuota == 0;
-
-    /// <summary>
     /// save as an asynchronous operation.
     /// </summary>
     /// <typeparam name="T"></typeparam>

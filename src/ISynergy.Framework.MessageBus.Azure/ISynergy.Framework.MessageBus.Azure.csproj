@@ -1,17 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\project.props" />
     
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
         <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
-        <Description>I-Synergy Framework Azure MessageBus for .net Standard 2.0, .net 6.0, .net 7.0 and .net 8.0</Description>
+        <Description>I-Synergy Framework Azure MessageBus for .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.MessageBus.Azure.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.2" />
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="Azure.Messaging.ServiceBus"  />
+        <PackageReference Include="Microsoft.CSharp"  />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />

@@ -45,9 +45,9 @@ Your project file should be something like this:
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="I-Synergy.Framework.Synchronization.Sqlite" Version="0.6.0" />
-        <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.2" />
-        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlcipher" Version="2.0.4" />
+        <PackageReference Include="I-Synergy.Framework.Synchronization.Sqlite"  />
+        <PackageReference Include="Microsoft.Data.Sqlite.Core"  />
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlcipher"  />
     </ItemGroup>
 </Project>
 ```

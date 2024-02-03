@@ -1,10 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\project.props" />
-
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Financial</PackageId>
-        <Description>I-Synergy Financial Framework for .net Standard 2.0, .net 6.0, .net 7.0 and .net 8.0</Description>
+        <Description>I-Synergy Financial Framework for .net 8.0</Description>
         <PackageTags>I-Synergy, Financial, Framework</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.Financial.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

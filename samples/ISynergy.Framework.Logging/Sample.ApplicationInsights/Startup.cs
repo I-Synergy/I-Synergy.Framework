@@ -6,7 +6,7 @@ public class Startup(ILogger logger)
 {
     private readonly ILogger _logger = logger;
 
-    // <summary>
+    /// <summary>
     /// run as an asynchronous operation.
     /// </summary>
     public void Run()

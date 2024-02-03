@@ -21,6 +21,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Docfx.App" Version="2.75.2" />
+	  <PackageReference Include="Docfx.App"  />
 	</ItemGroup>
 </Project>

@@ -139,9 +139,9 @@ public class BenchMark
         });
     }
 
-    /// <summary>
-    /// Binaries the formatter.
-    /// </summary>
+    ///// <summary>
+    ///// Binaries the formatter.
+    ///// </summary>
     //[Benchmark]
     //public void BinaryFormatter()
     //{
