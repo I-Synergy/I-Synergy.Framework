@@ -61,7 +61,7 @@ public sealed partial class ImageBrowser : UserControl
     /// </summary>
     public ImageBrowser()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
     /// <summary>

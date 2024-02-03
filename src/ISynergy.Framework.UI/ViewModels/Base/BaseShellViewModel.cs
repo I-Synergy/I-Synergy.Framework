@@ -302,7 +302,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private void ThemeVM_Submitted(object sender, SubmitEventArgs<Style> e)
+    private async void ThemeVM_Submitted(object sender, SubmitEventArgs<Style> e)
     {
         if (sender is ThemeViewModel vm)
             vm.Submitted -= ThemeVM_Submitted;
@@ -313,6 +313,16 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             _applicationSettingsService.Settings.Color = style.Color;
             _applicationSettingsService.SaveSettings();
             _themeService.SetStyle();
+
+            if (await BaseCommonServices.DialogService.ShowMessageAsync(
+                    BaseCommonServices.LanguageService.GetString("WarningColorChange") +
+                    Environment.NewLine +
+                    BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                    BaseCommonServices.LanguageService.GetString("TitleQuestion"),
+                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                await RestartApplicationAsync();
+            }
         }
     }
 
@@ -330,8 +340,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <summary>
     /// restart application as an asynchronous operation.
     /// </summary>
-    protected virtual Task RestartApplicationAsync() =>
-        BaseCommonServices.DialogService.ShowInformationAsync("Please restart the application.");
+    protected abstract Task RestartApplicationAsync();
 
     protected override void Dispose(bool disposing)
     {

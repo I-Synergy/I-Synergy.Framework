@@ -8,7 +8,6 @@ namespace ISynergy.Framework.IO.Tests;
 
 /// <summary>
 /// Class FileWatcherExTests.
-/// Implements the <see cref="IClassFixture{FileWatcherExFixture}" />
 /// </summary>
 public class FileWatcherExTests
 {
