@@ -27,6 +27,7 @@ public sealed class Context : ObservableClass, IContext
     /// Initializes a new instance of the <see cref="Context" /> class.
     /// </summary>
     /// <param name="configurationOptions">The configuration options.</param>
+    /// <param name="serviceScopeFactory"></param>
     public Context(
         IOptions<ConfigurationOptions> configurationOptions,
         IServiceScopeFactory serviceScopeFactory)

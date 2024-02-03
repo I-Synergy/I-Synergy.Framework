@@ -57,7 +57,7 @@ public class Logger : BaseLogger
         {
             SentrySdk.ConfigureScope(scope =>
             {
-                scope.User = new User
+                scope.User = new SentryUser
                 {
                     Username = profile.Username,
                     Id = profile.UserId.ToString(),

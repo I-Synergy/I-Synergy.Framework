@@ -71,23 +71,46 @@ public class ThemeService : IThemeService
         {
             case Themes.Light:
                 if (RootTheme != ElementTheme.Light)
+                {
+#if WINDOWS
                     RootTheme = ElementTheme.Light;
+#else
+                    Uno.UI.ApplicationHelper.RequestedCustomTheme = nameof(ApplicationTheme.Light);
+#endif
+                }
+
                 break;
             case Themes.Dark:
                 if (RootTheme != ElementTheme.Dark)
+                {
+#if WINDOWS
                     RootTheme = ElementTheme.Dark;
+#else
+                    Uno.UI.ApplicationHelper.RequestedCustomTheme = nameof(ApplicationTheme.Dark);
+#endif
+                }
+
                 break;
             default:
                 if (RootTheme != ElementTheme.Default)
+                {
+#if WINDOWS
                     RootTheme = ElementTheme.Default;
+#else
+                    Uno.UI.ApplicationHelper.RequestedCustomTheme = nameof(ApplicationTheme.Dark);
+#endif
+                }
+
                 break;
         }
 
+#if WINDOWS
         foreach (var window in WindowHelper.ActiveWindows)
         {
             if (window.Content is FrameworkElement rootElement)
                 SetTitlebar(window);
         }
+#endif
     }
 
     /// <summary>
@@ -167,12 +190,13 @@ public class ThemeService : IThemeService
         }
     }
 
+#if WINDOWS
     /// <summary>
     /// Setups the titlebar.
     /// </summary>
-    public void SetTitlebar(Microsoft.UI.Xaml.Window window)
+    private void SetTitlebar(Microsoft.UI.Xaml.Window window)
     {
-#if WINDOWS
+
         var appWindow = WindowHelper.GetAppWindow(window);
 
         var iconPath = Path.Combine(System.AppContext.BaseDirectory, "icon.ico");
@@ -202,6 +226,6 @@ public class ThemeService : IThemeService
             appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.LightGray;
         }
-#endif
     }
+#endif
 }

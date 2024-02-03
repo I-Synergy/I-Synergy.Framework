@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\project.props" />
-
 	<PropertyGroup>
-		<TargetFrameworks>net472;net48;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -16,9 +14,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf"  />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json"  />
+		<PackageReference Include="Microsoft.Extensions.Hosting"  />
 	</ItemGroup>
 
 	<ItemGroup>

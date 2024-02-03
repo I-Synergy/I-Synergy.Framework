@@ -4,6 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<RootNamespace>ISynergy.Framework.MessageBus.Performance</RootNamespace>
 		<CodeAnalysisRuleSet>ISynergy.Framework.MessageBus.Performance.ruleset</CodeAnalysisRuleSet>
+		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -11,9 +12,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
-		<PackageReference Include="lz4net" Version="1.0.15.93" />
-		<PackageReference Include="MessagePack" Version="2.5.140" />
+		<PackageReference Include="BenchmarkDotNet"  />
+		<PackageReference Include="lz4net"  />
+		<PackageReference Include="MessagePack"  />
 	</ItemGroup>
 
 	<ItemGroup>

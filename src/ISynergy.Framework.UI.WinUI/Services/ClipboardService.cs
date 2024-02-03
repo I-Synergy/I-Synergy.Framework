@@ -16,6 +16,7 @@ public class ClipboardService : IClipboardService
     /// Gets image (bytes and content type) from clipboard.
     /// </summary>
     /// <returns></returns>
+#if WINDOWS
     public async Task<ImageResult> GetImageFromClipboardAsync()
     {
         var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
@@ -26,16 +27,18 @@ public class ClipboardService : IClipboardService
             using var imageStream = await imageReceived.OpenReadAsync();
             var image = await imageStream.AsStreamForRead().ToByteArrayAsync();
 
-#if HAS_UNO
-            return new ImageResult(image.ToImageBytes(100, ImageFormat.Png), "image/png");
-#else
             if (imageStream.ContentType == "image/bmp")
                 return new ImageResult(image.ToImageBytes(100, ImageFormat.Png), "image/png");
             else
                 return new ImageResult(image, imageStream.ContentType);
-#endif
         }
 
         return null;
     }
+#else
+    public Task<ImageResult> GetImageFromClipboardAsync()
+    {
+        throw new NotImplementedException();
+    }
+#endif
 }

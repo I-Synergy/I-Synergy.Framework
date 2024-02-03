@@ -6,7 +6,6 @@ namespace Sample.Syncfusion;
 /// <summary>
 /// Initializes a new instance of the <see cref="Startup"/> class.
 /// </summary>
-/// <param name="messageBus">The message bus.</param>
 public class Startup(IDocumentService documentService)
 {
     private readonly IDocumentService _documentService = documentService;

@@ -34,8 +34,10 @@ public class DownloadFileService : IDownloadFileService
     {
         if (await _fileService.SaveFileAsync(folder, filename, file) is FileResult savedFile)
         {
+#if WINDOWS
             var storageFile = await StorageFile.GetFileFromPathAsync(savedFile.FilePath);
             await Launcher.LaunchFileAsync(storageFile);
+#endif
         }
     }
 }

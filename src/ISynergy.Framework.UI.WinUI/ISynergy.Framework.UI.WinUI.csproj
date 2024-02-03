@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\project.props" />
-
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-windows10.0.19041;net7.0;net7.0-ios;net7.0-maccatalyst;net7.0-android</TargetFrameworks>
-		<TargetFrameworks>$(TargetFrameworks);net8.0-windows10.0.19041;net8.0;net8.0-ios;net8.0-maccatalyst;net8.0-android</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true'">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks>$(TargetFrameworks);net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
+		<AssemblyName>ISynergy.Framework.UI.WinUI</AssemblyName>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI.WinUI</PackageId>
-		<Description>I-Synergy UI Framework for WinUI and Uno</Description>
+		<Description>I-Synergy UI Framework for WinUI</Description>
 		<PackageTags>I-Synergy, Framework, UI, Windows, WinUI, WinUI3, Uno</PackageTags>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -17,22 +16,52 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<UnoRuntimeProjectReference Include="ISynergy.Framework.UI.WinUI.Skia.csproj" />
+		<UnoRuntimeProjectReference Include="ISynergy.Framework.UI.WinUI.Wasm.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="buildTransitive\**">
+			<PackagePath>buildTransitive</PackagePath>
+			<Pack>true</Pack>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="buildTransitive\I-Synergy.Framework.UI.WinUI.props" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" />
+		<PackageReference Include="Uno.WinUI" />
 	</ItemGroup>
 
 	<Choose>
-		<When Condition="'$(TargetFramework)'=='net8.0-windows10.0.19041' OR '$(TargetFramework)'=='net7.0-windows10.0.19041'">
+		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
 			<ItemGroup>
-				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
-				<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+				<PackageReference Include="Microsoft.WindowsAppSDK" />
+				<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
+				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" />
+			</ItemGroup>
+			<ItemGroup>
+				<!--
+				If you encounter this error message:
+
+				error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
+				Please update to a newer .NET SDK in order to reference this assembly.
+
+				This means that the two packages below must be aligned with the "build" version number of
+				the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
+				must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
+				-->
+				<!-- <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
+				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" /> -->
 			</ItemGroup>
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.4.2" />
-				<PackageReference Include="Uno.WinUI" Version="5.0.152" />
+				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" />
 			</ItemGroup>
 
 			<ItemGroup>
@@ -70,40 +99,26 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<UpToDateCheckInput Remove="Controls\Buttons\BaseDialogButtons.xaml" />
-		<UpToDateCheckInput Remove="Controls\Console\Console.xaml" />
-		<UpToDateCheckInput Remove="Controls\ErrorPresenter\ErrorPresenter.xaml" />
-		<UpToDateCheckInput Remove="Controls\ImageBrowser\ImageBrowser.xaml" />
-		<UpToDateCheckInput Remove="Controls\ImageView\ImageView.xaml" />
-		<UpToDateCheckInput Remove="Controls\Menu\BaseMenu.xaml" />
-		<UpToDateCheckInput Remove="Controls\Tiles\Tile.xaml" />
-		<UpToDateCheckInput Remove="Views\SelectionView.xaml" />
-		<UpToDateCheckInput Remove="Windows\LanguageWindow.xaml" />
-		<UpToDateCheckInput Remove="Windows\NoteWindow.xaml" />
-		<UpToDateCheckInput Remove="Windows\ThemeWindow.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="Assets\Fonts\ISynergy.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\SegMDL2.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\segoesb.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\segoeui.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\segoeuib.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\segoeuil.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\segoeuisl.ttf" />
-	  <EmbeddedResource Include="Assets\Fonts\seguisb.ttf" />
-	  <EmbeddedResource Include="Assets\Images\Error.png" />
-	  <EmbeddedResource Include="Assets\Images\Information.png" />
-	  <EmbeddedResource Include="Assets\Images\Question.png" />
-	  <EmbeddedResource Include="Assets\Images\Refresh.png" />
-	  <EmbeddedResource Include="Assets\Images\Warning.png" />
+		<EmbeddedResource Include="Assets\Fonts\ISynergy.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\SegMDL2.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\segoesb.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\segoeui.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\segoeuib.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\segoeuil.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\segoeuisl.ttf" />
+		<EmbeddedResource Include="Assets\Fonts\seguisb.ttf" />
+		<EmbeddedResource Include="Assets\Images\Error.png" />
+		<EmbeddedResource Include="Assets\Images\Information.png" />
+		<EmbeddedResource Include="Assets\Images\Question.png" />
+		<EmbeddedResource Include="Assets\Images\Refresh.png" />
+		<EmbeddedResource Include="Assets\Images\Warning.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Page Include="Controls\BladeView\BladeView.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Buttons\BaseDialogButtons.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -115,10 +130,10 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Expander\Expander.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\ImageBrowser\ImageBrowser.xaml">
 			<Generator>MSBuild:Compile</Generator>

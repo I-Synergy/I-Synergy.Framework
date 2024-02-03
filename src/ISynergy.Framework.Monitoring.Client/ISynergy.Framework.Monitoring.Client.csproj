@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Monitoring.Client</PackageId>
 		<Description>I-Synergy Framework SignalR Monitoring Client for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, Client, SignalR</PackageTags>
@@ -11,7 +10,7 @@
     </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client"  />
 	</ItemGroup>
 
 	<ItemGroup>
