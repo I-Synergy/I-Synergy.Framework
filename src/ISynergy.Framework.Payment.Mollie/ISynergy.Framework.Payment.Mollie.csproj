@@ -1,6 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\project.props" />
-
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Payment.Mollie</PackageId>

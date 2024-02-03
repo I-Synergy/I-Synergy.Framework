@@ -136,7 +136,7 @@ public partial class BladeView : ItemsControl
     /// </summary>
     public BladeView()
     {
-        this.InitializeComponent();
+        InitializeComponent();
 
         Items.VectorChanged += ItemsVectorChanged;
         Loaded += (sender, e) => AdjustBladeItemSize();

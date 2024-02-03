@@ -186,7 +186,9 @@ public class FileService : IFileService<FileResult>
             {
                 foreach (var file in files)
                 {
+#if WINDOWS
                     StorageApplicationPermissions.FutureAccessList.Add(file);
+#endif
 
                     result.Add(new FileResult(
                         file.Path,
@@ -199,7 +201,9 @@ public class FileService : IFileService<FileResult>
         {
             if (await picker.PickSingleFileAsync() is StorageFile file)
             {
+#if WINDOWS
                 StorageApplicationPermissions.FutureAccessList.Add(file);
+#endif
 
                 result.Add(new FileResult(
                     file.Path,
@@ -217,6 +221,7 @@ public class FileService : IFileService<FileResult>
     /// storage.
     /// </summary>
     /// <param name="fileToOpen">relative filename of file to open</param>
+#if WINDOWS
     public async Task OpenFileAsync(string fileToOpen)
     {
         try
@@ -233,4 +238,7 @@ public class FileService : IFileService<FileResult>
             // ignore exceptions
         }
     }
+#else
+    public Task OpenFileAsync(string fileToOpen) => throw new NotImplementedException();
+#endif
 }
