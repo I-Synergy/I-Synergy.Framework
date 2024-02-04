@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<Choose>
-		<When Condition="'$(TargetFramework)'=='net8.0-windows10.0.19041'">
+		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
 			<ItemGroup>
 				<PackageReference Include="Microsoft.WindowsAppSDK"  />
 				<PackageReference Include="Microsoft.Windows.SDK.BuildTools"  />
