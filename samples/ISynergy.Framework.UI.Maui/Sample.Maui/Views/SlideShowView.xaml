@@ -5,6 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Sample.Views.SlideShowView"
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+    x:DataType="viewmodels:SlideShowViewModel"
     Title="SlideShowView">
 
     <c:View.Resources>

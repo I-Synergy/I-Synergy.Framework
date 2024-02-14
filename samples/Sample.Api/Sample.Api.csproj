@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <CodeAnalysisRuleSet>Sample.Api.ruleset</CodeAnalysisRuleSet>
-    </PropertyGroup>
-    <ItemGroup>
-      <PackageReference Include="NSwag.AspNetCore"  />
-    </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<CodeAnalysisRuleSet>Sample.Api.ruleset</CodeAnalysisRuleSet>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="NSwag.AspNetCore"  />
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
+	</ItemGroup>
 
 
 </Project>

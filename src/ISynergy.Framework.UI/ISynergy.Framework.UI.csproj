@@ -32,8 +32,4 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Models\" />
-	</ItemGroup>
 </Project>

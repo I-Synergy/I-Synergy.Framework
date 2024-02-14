@@ -5,6 +5,8 @@
         x:Class="Sample.Views.SignUpView"
         xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
         xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
+        xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+        x:DataType="viewmodels:SignUpViewModel"
         Shell.FlyoutBehavior="Disabled"
         Shell.NavBarIsVisible="False"
         Title="{Binding Title}">

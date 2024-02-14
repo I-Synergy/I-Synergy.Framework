@@ -6,6 +6,7 @@
 		<Nullable>disable</Nullable>
 		<RootNamespace>Sample</RootNamespace>
 		<AssemblyOriginatorKeyFile>..\..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
+		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>

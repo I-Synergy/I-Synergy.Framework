@@ -6,6 +6,8 @@
           xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
           xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
           xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
+          xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
+          x:DataType="viewmodels:LanguageViewModel"
           x:Class="ISynergy.Framework.UI.Windows.LanguageWindow"
           Title="{Binding Title}">
 
