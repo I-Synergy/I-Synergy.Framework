@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Models;
+﻿using ISynergy.Framework.Core.Models;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;

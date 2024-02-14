@@ -8,7 +8,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:c="using:ISynergy.Framework.UI.Controls"
 	xmlns:Converters="using:ISynergy.Framework.UI.Converters"
-	xmlns:models="using:ISynergy.Framework.UI.Models"
+	xmlns:models="using:ISynergy.Framework.Core.Models"
 	xmlns:FrameworkNavigation="using:ISynergy.Framework.UI.Navigation"
 	xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:i="using:Microsoft.Xaml.Interactivity"

@@ -1,15 +1,14 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Models;
-using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 
 namespace Sample.ViewModels;
 
@@ -113,7 +112,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         : base(context, commonServices, settingsService, authenticationService, logger, themeService, localizationService)
     {
         CommonServices = commonServices;
-        CommonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
         SettingsService = settingsService;
 
         Title = commonServices.InfoService.ProductName;
@@ -129,19 +127,36 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         TreeNodeTestCommand = new AsyncRelayCommand(OpenTreenNodeTestAsync);
         ChartCommand = new AsyncRelayCommand(OpenChartTestAsync);
 
-        PopulateNavItems();
+        PopulateNavigationMenuItems();
     }
 
-    private void NavigationService_BackStackChanged(object sender, EventArgs e)
+    private void PopulateNavigationMenuItems()
     {
-        if (CommonServices.NavigationService.CanGoBack)
+        PrimaryItems.Clear();
+        SecondaryItems.Clear();
+
+        if (Context.IsAuthenticated)
         {
-            IsBackEnabled = true;
+            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _themeService.Style.Color, DisplayCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _themeService.Style.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _themeService.Style.Color, ConverterCommand));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _themeService.Style.Color, SelectionTestCommand));
+            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _themeService.Style.Color, ListViewTestCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _themeService.Style.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _themeService.Style.Color, TreeNodeTestCommand));
+            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _themeService.Style.Color, ChartCommand));
+
+            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
+            SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
         }
-        else
-        {
-            IsBackEnabled = false;
-        }
+
+        SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, LoginCommand));
+
+        if (Context.IsAuthenticated && PrimaryItems.Count > 0 && PrimaryItems.First() is NavigationItem navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
+            navigationItem.Command.Execute(navigationItem.CommandParameter);
     }
 
     protected override async Task SignOutAsync()
@@ -215,30 +230,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <returns>Task.</returns>
     private Task OpenSelectionTestAsync() =>
        CommonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
-
-    /// <summary>
-    /// Populates the nav items.
-    /// </summary>
-    protected override void PopulateNavItems()
-    {
-        PrimaryItems.Clear();
-        PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _themeService.Style.Color, DisplayCommand));
-        PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, InfoCommand));
-        PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _themeService.Style.Color, BrowseCommand));
-        PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _themeService.Style.Color, ConverterCommand));
-        PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _themeService.Style.Color, SelectionTestCommand));
-        PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _themeService.Style.Color, ListViewTestCommand));
-        PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _themeService.Style.Color, ValidationTestCommand));
-        PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _themeService.Style.Color, TreeNodeTestCommand));
-        PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _themeService.Style.Color, ChartCommand));
-
-        SecondaryItems.Clear();
-        SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, HelpCommand));
-        SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
-        SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
-        SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
-        SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, LoginCommand));
-    }
 
     /// <summary>
     /// Opens the settings asynchronous.

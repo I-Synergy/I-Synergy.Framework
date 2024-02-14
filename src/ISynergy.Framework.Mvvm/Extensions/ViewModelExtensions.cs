@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.Mvvm.Extensions;
@@ -59,9 +60,33 @@ public static class ViewModelExtensions
         return result;
     }
 
-    public static string GetViewFullName(this Type type) =>
-        type.Name.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.View);
+    public static string GetRelatedView(this Type type) 
+    {
+        var result = type.Name;
 
-    public static string GetViewFullName(this IViewModel viewModel) =>
-        viewModel.GetType().GetViewFullName();
+        if (type.IsInterface && result.StartsWith("I"))
+            result = result.Substring(1, result.Length - 1);
+
+        result = result.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.View);
+
+        return result;
+    }
+
+    public static string GetRelatedView(this IViewModel viewModel) =>
+        viewModel.GetType().GetRelatedView();
+
+    public static string GetRelatedViewModel(this Type type)
+    {
+        var result = type.Name;
+
+        if (type.IsInterface && result.StartsWith("I"))
+            result = result.Substring(1, result.Length - 1);
+
+        result = result.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
+
+        return result;
+    }
+    
+    public static string GetRelatedViewModel(this IView view) =>
+        view.GetType().GetRelatedViewModel();
 }

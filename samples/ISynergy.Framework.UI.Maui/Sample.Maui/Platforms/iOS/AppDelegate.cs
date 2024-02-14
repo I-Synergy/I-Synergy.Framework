@@ -1,9 +1,9 @@
 ﻿using Foundation;
 
-namespace Sample.Platforms.iOS;
+namespace Sample;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {
-    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+    protected override MauiApp CreateMauiApp() => MauiProgram.Default.CreateMauiAppAsync().GetAwaiter().GetResult();
 }

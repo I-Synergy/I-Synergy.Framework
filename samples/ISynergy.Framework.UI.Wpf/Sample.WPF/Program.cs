@@ -12,7 +12,6 @@ using Microsoft.Extensions.Hosting;
 using NugetUnlister;
 using NugetUnlister.Extensions;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
 using System.Reflection;
@@ -40,8 +39,8 @@ public static class Program
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, LocalSettingsService>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<GlobalSettings>, GlobalSettingsService>());
 
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());

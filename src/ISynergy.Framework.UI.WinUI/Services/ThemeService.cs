@@ -72,33 +72,24 @@ public class ThemeService : IThemeService
             case Themes.Light:
                 if (RootTheme != ElementTheme.Light)
                 {
-#if WINDOWS
+                    Application.Current.RequestedTheme = ApplicationTheme.Light;
                     RootTheme = ElementTheme.Light;
-#else
-                    Uno.UI.ApplicationHelper.RequestedCustomTheme = nameof(ApplicationTheme.Light);
-#endif
                 }
 
                 break;
             case Themes.Dark:
                 if (RootTheme != ElementTheme.Dark)
                 {
-#if WINDOWS
+                    Application.Current.RequestedTheme = ApplicationTheme.Dark;
                     RootTheme = ElementTheme.Dark;
-#else
-                    Uno.UI.ApplicationHelper.RequestedCustomTheme = nameof(ApplicationTheme.Dark);
-#endif
                 }
 
                 break;
             default:
                 if (RootTheme != ElementTheme.Default)
                 {
-#if WINDOWS
+                    Application.Current.RequestedTheme = ApplicationTheme.Dark;
                     RootTheme = ElementTheme.Default;
-#else
-                    Uno.UI.ApplicationHelper.RequestedCustomTheme = nameof(ApplicationTheme.Dark);
-#endif
                 }
 
                 break;

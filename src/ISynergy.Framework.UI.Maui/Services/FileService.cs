@@ -1,4 +1,7 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Extensions;
+using FileResult = ISynergy.Framework.Mvvm.Models.FileResult;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -21,9 +24,18 @@ internal class FileService : IFileService<FileResult>
             };
 
             if (multiple)
-                result.AddRange(await FilePicker.Default.PickMultipleAsync(pickOptions));
+            {
+                var files = await FilePicker.Default.PickMultipleAsync(pickOptions);
+                foreach (var file in files.EnsureNotNull())
+                {
+                    result.Add(file.ToFileResult());
+                }
+            }
             else
-                result.Add(await FilePicker.Default.PickAsync(pickOptions));
+            {
+                var file = await FilePicker.Default.PickAsync(pickOptions);
+                result.Add(file.ToFileResult());
+            }
 
             return result;
         }
@@ -39,10 +51,7 @@ internal class FileService : IFileService<FileResult>
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result)
         {
-            using var stream = await result.First().OpenReadAsync();
-            using var memoryStream = new MemoryStream();
-            stream.CopyTo(memoryStream);
-            return memoryStream.ToArray();
+            return result.First().File;
         }
 
         return null;

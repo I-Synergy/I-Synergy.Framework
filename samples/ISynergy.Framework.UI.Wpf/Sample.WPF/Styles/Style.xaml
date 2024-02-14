@@ -14,6 +14,13 @@
 
     <FontFamily x:Key="fontawesome">/assets/fonts/#Font Awesome 6 Pro Light</FontFamily>
 
+    <Color x:Key="SystemAccentColor">#FF2688C5</Color>
+    <Color x:Key="SystemAccentColorGreen">#ff45e63d</Color>
+    <Color x:Key="SystemAccentColorRed">#ffe63d3d</Color>
+
+    <SolidColorBrush x:Key="SystemAccentBrush" Color="{DynamicResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="SystemAccentBrushGreen" Color="{DynamicResource SystemAccentColorGreen}" />
+    <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{DynamicResource SystemAccentColorRed}" />
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF2688C5"/>
 
     <Style x:Key="FocusVisual">
@@ -325,5 +332,14 @@
                 <Setter Property="behaviors:AutoFocusBehavior.AutoFocusable" Value="True"/>
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="DefaultDialogButtonStyle" TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="35" />
+        <Setter Property="MinWidth" Value="110" />
     </Style>
 </ResourceDictionary>

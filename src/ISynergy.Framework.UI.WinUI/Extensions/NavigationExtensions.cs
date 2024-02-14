@@ -37,10 +37,10 @@ public static class NavigationExtensions
 
         viewModel.Parameter = parameter;
 
-        var page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
+        var page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetRelatedView()));
 
         if (page is null)
-            throw new Exception($"Page not found: {viewModel.GetViewFullName()}.");
+            throw new Exception($"Page not found: {viewModel.GetRelatedView()}.");
 
         if (ServiceLocator.Default.GetInstance(page) is View resolvedPage)
         {
@@ -48,6 +48,6 @@ public static class NavigationExtensions
             return resolvedPage;
         }
 
-        throw new FileNotFoundException($"Cannot create or navigate to page: {viewModel.GetViewFullName()}.");
+        throw new FileNotFoundException($"Cannot create or navigate to page: {viewModel.GetRelatedView()}.");
     }
 }

@@ -80,10 +80,22 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Finishing initialization of application");
     }
 
-    protected abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
+    /// <summary>
+    /// Handles the authentication changed event.   
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
 
+    /// <summary>
+    /// Creates the host builder.
+    /// </summary>
+    /// <returns></returns>
     protected abstract IHostBuilder CreateHostBuilder();
 
+    /// <summary>
+    /// Sets the global exception handler.
+    /// </summary>
     protected virtual void SetGlobalExceptionHandler()
     {
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
@@ -91,11 +103,21 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
     }
 
+    /// <summary>
+    /// Handles the first chance exception event.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         Debug.WriteLine(e.Exception.Message);
     }
 
+    /// <summary>
+    /// Handles the unobserved task exception event.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
@@ -106,6 +128,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         e.SetObserved();
     }
 
+    /// <summary>
+    /// Handles the unhandled exception event.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
@@ -115,6 +142,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
                 _logger.LogCritical(exception, exception.Message);
     }
 
+    /// <summary>
+    /// Initializes the application.
+    /// </summary>
     public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
     /// <summary>

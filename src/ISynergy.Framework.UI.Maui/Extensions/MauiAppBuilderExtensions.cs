@@ -8,6 +8,8 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Extensions;
+using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
@@ -16,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using FileResult = ISynergy.Framework.Mvvm.Models.FileResult;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -25,25 +28,19 @@ public static class MauiAppBuilderExtensions
     /// Gets the shellView model types.
     /// </summary>
     /// <value>The shellView model types.</value>
-    public static List<Type> ViewModelTypes { get; private set; }
+    public static IEnumerable<Type> ViewModelTypes { get; private set; }
 
     /// <summary>
     /// Gets the shellView types.
     /// </summary>
     /// <value>The shellView types.</value>
-    public static List<Type> ViewTypes { get; private set; }
+    public static IEnumerable<Type> ViewTypes { get; private set; }
 
     /// <summary>
     /// Gets the window types.
     /// </summary>
     /// <value>The window types.</value>
-    public static List<Type> WindowTypes { get; private set; }
-
-    /// <summary>
-    /// Bootstrapper types
-    /// </summary>
-    /// <value>The bootstrapper types.</value>
-    public static List<Type> BootstrapperTypes { get; private set; }
+    public static IEnumerable<Type> WindowTypes { get; private set; }
 
     /// <summary>
     /// 
@@ -108,7 +105,17 @@ public static class MauiAppBuilderExtensions
 
         return appBuilder
             .UseMauiCommunityToolkit()
-            .UseMauiCommunityToolkitMarkup();
+            .UseMauiCommunityToolkitMarkup()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("ISynergy.ttf", "ISynergy");
+                fonts.AddFont("OpenDyslexic3-Bold.ttf", "OpenDyslexic3-Bold");
+                fonts.AddFont("OpenDyslexic3-Regular.ttf", "OpenDyslexic3-Regular");
+                fonts.AddFont("SegMDL2.ttf", "SegoeMdl2");
+                fonts.AddFont("segoeui.ttf", "SegoeUI");
+            });
     }
 
     /// <summary>
@@ -139,99 +146,45 @@ public static class MauiAppBuilderExtensions
     /// </summary>
     /// <param name="appBuilder"></param>
     /// <param name="assemblies">The assemblies.</param>
-    private static void RegisterAssemblies(this MauiAppBuilder appBuilder, List<Assembly> assemblies)
+    private static void RegisterAssemblies(this MauiAppBuilder appBuilder, IEnumerable<Assembly> assemblies)
     {
-        ViewTypes = new List<Type>();
-        WindowTypes = new List<Type>();
-        ViewModelTypes = new List<Type>();
-        BootstrapperTypes = new List<Type>();
+        ViewTypes = assemblies.ToViewTypes();
+        WindowTypes = assemblies.ToWindowTypes();
+        ViewModelTypes = assemblies.ToViewModelTypes();
 
-        foreach (var assembly in assemblies)
+        appBuilder.Services.RegisterViewModels(ViewModelTypes);
+        appBuilder.Services.RegisterViews(ViewTypes);
+        appBuilder.Services.RegisterWindows(WindowTypes);
+
+        appBuilder.Services.RegisterViewModelRoutes(ViewTypes);
+    }
+
+    private static void RegisterViewModelRoutes(this IServiceCollection services, IEnumerable<Type> views)
+    {
+        foreach (var view in views.Distinct())
         {
-            ViewModelTypes.AddRange(assembly.GetTypes()
-                .Where(q =>
-                    q.GetInterface(nameof(IViewModel), false) is not null
-                    && !q.Name.Equals(GenericConstants.ShellViewModel)
-                    && (q.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(q.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
-                    && q.Name != GenericConstants.ViewModel
-                    && !q.IsAbstract
-                    && !q.IsInterface)
-                .ToList());
-
-            ViewTypes.AddRange(assembly.GetTypes()
-                .Where(q =>
-                    q.GetInterfaces().Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
-                    && !q.Name.Equals(GenericConstants.ShellView)
-                    && (q.Name.EndsWith(GenericConstants.View) || q.Name.EndsWith(GenericConstants.Page))
-                    && q.Name != GenericConstants.View
-                    && q.Name != GenericConstants.Page
-                    && !q.IsAbstract
-                    && !q.IsInterface)
-                .ToList());
-
-            WindowTypes.AddRange(assembly.GetTypes()
-                .Where(q =>
-                    q.GetInterfaces().Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
-                    && q.Name.EndsWith(GenericConstants.Window)
-                    && q.Name != GenericConstants.Window
-                    && !q.IsAbstract
-                    && !q.IsInterface)
-                .ToList());
-
-            BootstrapperTypes.AddRange(assembly.GetTypes()
-                .Where(q =>
-                    q.GetInterface(nameof(IBootstrap), false) is not null
-                    && !q.IsAbstract
-                    && !q.IsInterface)
-                .ToList());
+            if (ViewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is Type viewmodel)
+                services.RegisterViewModelRoute(viewmodel, view);
         }
+    }
 
-        foreach (var viewmodel in ViewModelTypes.Distinct())
-        {
-            var abstraction = viewmodel
-                .GetInterfaces()
-                .FirstOrDefault(q =>
-                    q.GetInterfaces().Contains(typeof(IViewModel))
-                    && q.Name != nameof(IViewModel));
+    private static void RegisterViewModelRoute(this IServiceCollection services, Type viewmodel, Type view)
+    {
+        var abstraction = viewmodel
+            .GetInterfaces()
+            .FirstOrDefault(q =>
+                q.GetInterfaces().Contains(typeof(IViewModel))
+                && !q.Name.StartsWith(nameof(IViewModel)));
 
-            if (abstraction is not null && !viewmodel.IsGenericType && abstraction != typeof(IQueryAttributable))
-                appBuilder.Services.TryAddTransient(abstraction, viewmodel);
+        services.RegisterRoute(viewmodel, abstraction, view);
+    }
 
-            appBuilder.Services.TryAddTransient(viewmodel);
-        }
+    private static void RegisterRoute(this IServiceCollection services, Type type, Type abstraction, Type view)
+    {
+        if (abstraction is not null)
+            Routing.RegisterRoute(abstraction.Name, view);
 
-        foreach (var view in ViewTypes.Distinct())
-        {
-            var abstraction = view
-                .GetInterfaces()
-                .FirstOrDefault(q =>
-                    q.GetInterfaces().Contains(typeof(IView))
-                    && q.Name != nameof(IView));
-
-            if (abstraction is not null)
-                appBuilder.Services.TryAddTransient(abstraction, view);
-
-            appBuilder.Services.TryAddTransient(view);
-        }
-
-        foreach (var window in WindowTypes.Distinct())
-        {
-            var abstraction = window
-                .GetInterfaces()
-                .FirstOrDefault(q =>
-                    q.GetInterfaces().Contains(typeof(IWindow))
-                    && q.Name != nameof(IWindow));
-
-            if (abstraction is not null)
-                appBuilder.Services.TryAddTransient(abstraction, window);
-
-            appBuilder.Services.TryAddTransient(window);
-        }
-
-        foreach (var bootstrapper in BootstrapperTypes.Distinct())
-        {
-            appBuilder.Services.TryAddSingleton(bootstrapper);
-        }
+        Routing.RegisterRoute(type.Name, view);
     }
 
     /// <summary>

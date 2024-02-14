@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
@@ -9,7 +8,6 @@ using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
-using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -20,9 +18,7 @@ namespace ISynergy.Framework.UI.Services;
 /// <seealso cref="INavigationService" />
 public class NavigationService : INavigationService
 {
-    private readonly IContext _context;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IThemeService _themeService;
 
     public event EventHandler BackStackChanged;
 
@@ -40,7 +36,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Navigation backstack.
     /// </summary>
-    private Stack<object> _backStack = new Stack<object>();
+    private readonly Stack<object> _backStack = new Stack<object>();
 
     /// <summary>
     /// Gets or sets the frame.
@@ -64,31 +60,26 @@ public class NavigationService : INavigationService
     /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
     public bool CanGoForward => _frame.CanGoForward;
 
+    public bool CanGoBackModal => throw new NotImplementedException();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
-    /// <param name="context"></param>
     /// <param name="serviceProvider"></param>
-    /// <param name="themeService"></param>
-    public NavigationService(
-        IContext context,
-        IServiceProvider serviceProvider,
-        IThemeService themeService)
+    public NavigationService(IServiceProvider serviceProvider)
     {
-        _context = context;
         _serviceProvider = serviceProvider;
-        _themeService = themeService;
     }
 
     /// <summary>
     /// Goes the back.
     /// </summary>
-    public async Task GoBackAsync()
+    public Task GoBackAsync()
     {
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
-        {
-            await NavigateAsync(viewModel, navigateBack: true);
-        }
+            return NavigateAsync(viewModel, navigateBack: true);
+        
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -119,11 +110,11 @@ public class NavigationService : INavigationService
         }
         else
         {
-            page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
+            page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetRelatedView()));
         }
 
         if (page is null)
-            throw new KeyNotFoundException($"Page not found: {viewModel.GetViewFullName()}.");
+            throw new KeyNotFoundException($"Page not found: {viewModel.GetRelatedView()}.");
 
         if (_serviceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
         {
@@ -135,7 +126,7 @@ public class NavigationService : INavigationService
             return view;
         }
 
-        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetViewFullName()}");
+        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetRelatedView()}");
     }
 
     /// <summary>
@@ -276,7 +267,7 @@ public class NavigationService : INavigationService
     public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
         where TViewModel : class, IViewModel
         where TView : IView =>
-        NavigateAsync<TViewModel, TView>(default(TViewModel), parameter);
+        NavigateAsync<TViewModel, TView>(default, parameter);
 
     /// <summary>
     /// navigate as an asynchronous operation.
@@ -289,25 +280,12 @@ public class NavigationService : INavigationService
     /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
     public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View page)
+        if (NavigationExtensions.CreatePage(viewModel, parameter) is View page)
         {
             DispatcherQueue.GetForCurrentThread().TryEnqueue(
                 DispatcherQueuePriority.Normal,
                 async () =>
                 {
-                    switch (_themeService.Style.Theme)
-                    {
-                        case Core.Enumerations.Themes.Light:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                            break;
-                        case Core.Enumerations.Themes.Dark:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                            break;
-                        default:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                            break;
-                    }
-
                     // Check if actual page is the same as destination page.
                     if (_frame.Content is View originalView)
                     {
@@ -357,19 +335,6 @@ public class NavigationService : INavigationService
                 DispatcherQueuePriority.Normal,
                 async () =>
                 {
-                    switch (_themeService.Style.Theme)
-                    {
-                        case Core.Enumerations.Themes.Light:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                            break;
-                        case Core.Enumerations.Themes.Dark:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                            break;
-                        default:
-                            _frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                            break;
-                    }
-
                     // Check if actual page is the same as destination page.
                     if (_frame.Content is View originalView)
                     {
@@ -392,7 +357,7 @@ public class NavigationService : INavigationService
         return Task.CompletedTask;
     }
 
-    public Task NavigateModalAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
+    public Task NavigateModalAsync<TViewModel>(object parameter = null, bool isRoot = false) where TViewModel : class, IViewModel
     {
         if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page && Application.Current is BaseApplication baseApplication)
         {
@@ -400,19 +365,6 @@ public class NavigationService : INavigationService
                 DispatcherQueuePriority.Normal,
                 async () =>
                 {
-                    switch (_themeService.Style.Theme)
-                    {
-                        case Core.Enumerations.Themes.Light:
-                            page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                            break;
-                        case Core.Enumerations.Themes.Dark:
-                            page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                            break;
-                        default:
-                            page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                            break;
-                    }
-
                     baseApplication.MainWindow.Content = page;
 
                     if (!page.ViewModel.IsInitialized)
