@@ -79,7 +79,7 @@ public class NavigationService : INavigationService
     {
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
         {
-            await NavigateAsync(viewModel, navigateBack: true);
+            await NavigateAsync(viewModel, absolute: true);
         }
     }
 
@@ -242,9 +242,9 @@ public class NavigationService : INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false)
+    public Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel =>
         NavigateAsync(default(TViewModel), parameter);
 
@@ -254,9 +254,9 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TView"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView =>
         NavigateAsync<TViewModel, TView>(default(TViewModel), parameter);
@@ -267,10 +267,10 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter">The parameter.</param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns>Task&lt;IView&gt;.</returns>
     /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
     {
         if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View page)
@@ -281,7 +281,7 @@ public class NavigationService : INavigationService
                 if (originalView.GetType().Equals(page.GetType()))
                     return;
 
-                if (!navigateBack)
+                if (!absolute)
                     _backStack.Push(originalView.ViewModel);
             }
 
@@ -301,9 +301,9 @@ public class NavigationService : INavigationService
     /// <typeparam name="TView"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel,TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+    public async Task NavigateAsync<TViewModel,TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView
     {
@@ -323,7 +323,7 @@ public class NavigationService : INavigationService
                 if (originalView.GetType().Equals(view.GetType()))
                     return;
 
-                if (!navigateBack)
+                if (!absolute)
                     _backStack.Push(originalView.ViewModel);
             }
 
@@ -336,7 +336,7 @@ public class NavigationService : INavigationService
         }
     }
 
-    public Task NavigateModalAsync<TViewModel>(object parameter = null, bool isRoot = false) where TViewModel : class, IViewModel
+    public Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
     {
         if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page && Application.Current is BaseApplication baseApplication)
         {

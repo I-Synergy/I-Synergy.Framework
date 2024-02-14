@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Models;
 
-namespace Sample.Shared.Models;
+namespace Sample.Models;
 
 /// <summary>
 /// Class Profile.

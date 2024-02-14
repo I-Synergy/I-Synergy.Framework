@@ -119,12 +119,12 @@ public class NavigationService : INavigationService
     public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
 
     [Obsolete("Not supported!", true)]
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 
     [Obsolete("Not supported!", true)]
-    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 

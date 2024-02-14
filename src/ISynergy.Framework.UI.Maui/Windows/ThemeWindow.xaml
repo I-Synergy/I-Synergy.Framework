@@ -7,6 +7,8 @@
           xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
           x:Class="ISynergy.Framework.UI.Windows.ThemeWindow"
           xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
+          xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
+          x:DataType="viewmodels:ThemeViewModel"
           Title="{Binding Title}">
 
     <ContentView 
