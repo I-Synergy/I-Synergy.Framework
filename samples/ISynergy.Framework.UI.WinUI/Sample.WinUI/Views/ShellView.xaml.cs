@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
+using ISynergy.Framework.UI.Services;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Sample.Views;
@@ -20,7 +21,9 @@ public sealed partial class ShellView : View, IShellView
         InitializeComponent();
 
         _navigationService = navigationService;
-        _navigationService.Frame = ContentRootFrame;
+
+        if (_navigationService is NavigationService service)
+            service.Frame = ContentRootFrame;
     }
 
     private async void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => await _navigationService?.GoBackAsync();

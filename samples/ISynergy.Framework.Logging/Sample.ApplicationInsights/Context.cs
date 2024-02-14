@@ -2,9 +2,11 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Sample.ApplicationInsights.Options;
+using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace Sample;
@@ -34,6 +36,9 @@ public sealed class Context : ObservableClass, IContext
     {
         _configurationOptions = configurationOptions.Value;
 
+        PrimaryItems = new ObservableCollection<NavigationItem>();
+        SecondaryItems = new ObservableCollection<NavigationItem>();
+
         CurrencyCode = "EURO";
         CurrencySymbol = "€";
         ScopedServices = serviceScopeFactory.CreateScope();
@@ -46,6 +51,27 @@ public sealed class Context : ObservableClass, IContext
     {
         get => GetValue<IServiceScope>();
         set => SetValue(value);
+    }
+
+
+    /// <summary>
+    /// Gets or sets the PrimaryItems property value.
+    /// </summary>
+    /// <value>The primary items.</value>
+    public ObservableCollection<NavigationItem> PrimaryItems
+    {
+        get => GetValue<ObservableCollection<NavigationItem>>();
+        private set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the SecondaryItems property value.
+    /// </summary>
+    /// <value>The primary items.</value>
+    public ObservableCollection<NavigationItem> SecondaryItems
+    {
+        get => GetValue<ObservableCollection<NavigationItem>>();
+        private set => SetValue(value);
     }
 
     /// <summary>

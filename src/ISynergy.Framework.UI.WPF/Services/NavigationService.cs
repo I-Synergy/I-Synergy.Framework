@@ -20,7 +20,6 @@ namespace ISynergy.Framework.UI.Services;
 /// <seealso cref="Mvvm.Abstractions.Services.INavigationService" />
 public class NavigationService : INavigationService
 {
-    private readonly IContext _context;
     private readonly IServiceProvider _serviceProvider;
 
     public event EventHandler BackStackChanged;
@@ -62,16 +61,14 @@ public class NavigationService : INavigationService
     /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
     public bool CanGoForward => _frame.CanGoForward;
 
+    public bool CanGoBackModal => throw new NotImplementedException();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
-    /// <param name="context"></param>
     /// <param name="serviceProvider"></param>
-    public NavigationService(
-        IContext context,
-        IServiceProvider serviceProvider)
+    public NavigationService(IServiceProvider serviceProvider)
     {
-        _context = context;
         _serviceProvider = serviceProvider;
     }
 
@@ -106,10 +103,10 @@ public class NavigationService : INavigationService
     /// <exception cref="ArgumentException">Instance could not be created from {viewModelKey}</exception>
     private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
-        var page = WPFAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
+        var page = WPFAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetRelatedView()));
 
         if (page is null)
-            throw new KeyNotFoundException($"Page not found: {viewModel.GetViewFullName()}.");
+            throw new KeyNotFoundException($"Page not found: {viewModel.GetRelatedView()}.");
 
         if (_serviceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
         {
@@ -121,7 +118,7 @@ public class NavigationService : INavigationService
             return view;
         }
 
-        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetViewFullName()}");
+        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetRelatedView()}");
     }
 
     /// <summary>
@@ -339,7 +336,7 @@ public class NavigationService : INavigationService
         }
     }
 
-    public Task NavigateModalAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
+    public Task NavigateModalAsync<TViewModel>(object parameter = null, bool isRoot = false) where TViewModel : class, IViewModel
     {
         if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page && Application.Current is BaseApplication baseApplication)
         {
@@ -360,5 +357,10 @@ public class NavigationService : INavigationService
         _backStack.Clear();
         OnBackStackChanged(EventArgs.Empty);
         return Task.CompletedTask;
+    }
+
+    public Task GoBackModalAsync()
+    {
+        throw new NotImplementedException();
     }
 }

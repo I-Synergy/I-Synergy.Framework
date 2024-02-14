@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-windows10.0.19041;net8.0;net8.0-ios;net8.0-maccatalyst;net8.0-android</TargetFrameworks>
+		<TargetFramework>net8.0-windows10.0.19041</TargetFramework>
 		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.Update.WinUI</PackageId>
@@ -11,36 +11,14 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection"  />
+		<PackageReference Include="Microsoft.WindowsAppSDK"  />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools"  />
 	</ItemGroup>
-
-	<Choose>
-		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-			<ItemGroup>
-				<PackageReference Include="Microsoft.WindowsAppSDK"  />
-				<PackageReference Include="Microsoft.Windows.SDK.BuildTools"  />
-			</ItemGroup>
-		</When>
-		<Otherwise>
-			<ItemGroup>
-				<PackageReference Include="Uno.WinUI"  />
-			</ItemGroup>
-
-			<ItemGroup>
-				<Content Include="Assets\**" />
-				<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-				<Compile Update="**\*.xaml.cs">
-					<DependentUpon>%(Filename)</DependentUpon>
-				</Compile>
-			</ItemGroup>
-			<ItemGroup>
-				<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-			</ItemGroup>
-		</Otherwise>
-	</Choose>
 	
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

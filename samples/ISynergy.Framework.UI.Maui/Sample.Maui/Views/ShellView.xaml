@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Sample.Views.ShellView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    xmlns:views="clr-namespace:Sample.Views"
+    x:DataType="viewmodels:ShellViewModel"
+    Shell.FlyoutBehavior="Flyout">
+    
+    <!--<Shell.FlyoutContentTemplate>
+        <DataTemplate>
+            <StackLayout>
+                <ListView
+                    SeparatorVisibility="None"
+                    HasUnevenRows="true"
+                    ItemsSource="{Binding Context.PrimaryItems}"
+                    ItemTemplate="{StaticResource ShellMenuItemTemplate}"/>
+            </StackLayout>
+        </DataTemplate>
+    </Shell.FlyoutContentTemplate>
+
+    <Shell.FlyoutFooterTemplate>
+        <DataTemplate>
+            <StackLayout>
+                <ListView
+                    SeparatorVisibility="None"
+                    HasUnevenRows="true"
+                    ItemsSource="{Binding SecondaryItems}"
+                    ItemTemplate="{StaticResource ShellMenuItemTemplate}"/>
+            </StackLayout>
+        </DataTemplate>
+    </Shell.FlyoutFooterTemplate>-->
+
+    <!--<ShellItem Route="SignInViewModel" FlyoutItemIsVisible="True">
+    <ShellContent ContentTemplate="{DataTemplate views:SignInView}"/>
+</ShellItem>-->
+
+<ShellItem Route="InfoViewModel" Title="Information">
+    <ShellContent ContentTemplate="{DataTemplate views:InfoView}"/>
+</ShellItem>
+
+<ShellItem Route="SlideShowViewModel" Title="Slideshow">
+    <ShellContent ContentTemplate="{DataTemplate views:SlideShowView}"/>
+</ShellItem>
+
+<MenuFlyoutItem Text="{m:GetString Help}" Command="{Binding HelpCommand}">
+    <MenuFlyoutItem.IconImageSource>
+        <FontImageSource Glyph="{StaticResource help}" FontFamily="fontawesome" Color="{AppThemeBinding Light={DynamicResource Gray600}, Dark={DynamicResource Gray300}}" />
+    </MenuFlyoutItem.IconImageSource>
+</MenuFlyoutItem>
+<MenuFlyoutItem Text="{m:GetString Language}" Command="{Binding LanguageCommand}">
+    <MenuFlyoutItem.IconImageSource>
+        <FontImageSource Glyph="{StaticResource language}" FontFamily="fontawesome" Color="{AppThemeBinding Light={DynamicResource Gray600}, Dark={DynamicResource Gray300}}" />
+    </MenuFlyoutItem.IconImageSource>
+</MenuFlyoutItem>
+<MenuFlyoutItem Text="{m:GetString Theme}" Command="{Binding ColorCommand}">
+    <MenuFlyoutItem.IconImageSource>
+        <FontImageSource Glyph="{StaticResource theme}" FontFamily="fontawesome" Color="{AppThemeBinding Light={DynamicResource Gray600}, Dark={DynamicResource Gray300}}" />
+    </MenuFlyoutItem.IconImageSource>
+</MenuFlyoutItem>
+<MenuFlyoutItem Text="{m:GetString Settings}" Command="{Binding SettingsCommand}">
+    <MenuFlyoutItem.IconImageSource>
+        <FontImageSource Glyph="{StaticResource settings}" FontFamily="fontawesome" Color="{AppThemeBinding Light={DynamicResource Gray600}, Dark={DynamicResource Gray300}}" />
+    </MenuFlyoutItem.IconImageSource>
+</MenuFlyoutItem>
+
+<Shell.FlyoutFooter>
+    <StackLayout HorizontalOptions="Center">
+        <Button Text="{m:GetString SignOut}" Command="{Binding LoginCommand}">
+            <Button.ImageSource>
+                <FontImageSource
+                    Glyph="{StaticResource signin}" 
+                    Size="16" 
+                    FontFamily="fontawesome" 
+                    Color="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Primary}}" />
+            </Button.ImageSource>
+        </Button>
+        <Label Text="{Binding BaseCommonServices.InfoService.Title}" Margin="10" />
+    </StackLayout>
+</Shell.FlyoutFooter>
+
+    <!--<Label Text="{Binding BaseCommonServices.InfoService.Title}" Margin="10" HorizontalTextAlignment="Center" />-->
+</Shell>

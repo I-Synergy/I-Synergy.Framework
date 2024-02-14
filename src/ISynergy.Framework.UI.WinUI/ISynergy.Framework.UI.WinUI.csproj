@@ -1,81 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true'">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
-		<TargetFrameworks>$(TargetFrameworks);net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<AssemblyName>ISynergy.Framework.UI.WinUI</AssemblyName>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI.WinUI</PackageId>
 		<Description>I-Synergy UI Framework for WinUI</Description>
-		<PackageTags>I-Synergy, Framework, UI, Windows, WinUI, WinUI3, Uno</PackageTags>
+		<PackageTags>I-Synergy, Framework, UI, Windows, WinUI, WinUI3</PackageTags>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<UnoRuntimeProjectReference Include="ISynergy.Framework.UI.WinUI.Skia.csproj" />
-		<UnoRuntimeProjectReference Include="ISynergy.Framework.UI.WinUI.Wasm.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="buildTransitive\**">
-			<PackagePath>buildTransitive</PackagePath>
-			<Pack>true</Pack>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Remove="buildTransitive\I-Synergy.Framework.UI.WinUI.props" />
-	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
-		<PackageReference Include="Uno.WinUI" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" />
 	</ItemGroup>
-
-	<Choose>
-		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-			<ItemGroup>
-				<PackageReference Include="Microsoft.WindowsAppSDK" />
-				<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" />
-			</ItemGroup>
-			<ItemGroup>
-				<!--
-				If you encounter this error message:
-
-				error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
-				Please update to a newer .NET SDK in order to reference this assembly.
-
-				This means that the two packages below must be aligned with the "build" version number of
-				the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
-				must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
-				-->
-				<!-- <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
-				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" /> -->
-			</ItemGroup>
-		</When>
-		<Otherwise>
-			<ItemGroup>
-				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" />
-			</ItemGroup>
-
-			<ItemGroup>
-				<Content Include="Assets\**" />
-				<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-				<Compile Update="**\*.xaml.cs">
-					<DependentUpon>%(Filename)</DependentUpon>
-				</Compile>
-			</ItemGroup>
-			<ItemGroup>
-				<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-			</ItemGroup>
-		</Otherwise>
-	</Choose>
 
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />

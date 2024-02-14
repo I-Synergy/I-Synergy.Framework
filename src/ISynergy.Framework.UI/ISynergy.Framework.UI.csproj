@@ -15,10 +15,10 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="NodaTime"  />
-		<PackageReference Include="System.Net.Http.Json"  />
-		<PackageReference Include="Microsoft.Extensions.Logging"  />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug"  />
+		<PackageReference Include="NodaTime" />
+		<PackageReference Include="System.Net.Http.Json" />
+		<PackageReference Include="Microsoft.Extensions.Logging" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -31,5 +31,9 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Models\" />
 	</ItemGroup>
 </Project>

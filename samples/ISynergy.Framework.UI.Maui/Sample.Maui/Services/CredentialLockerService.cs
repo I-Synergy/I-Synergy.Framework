@@ -10,12 +10,11 @@ internal class CredentialLockerService : ICredentialLockerService
 {
     private const string _resource = "Sample";
 
-
+#if WINDOWS
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
         string result = string.Empty;
 
-#if WINDOWS
         try
         {
             PasswordVault vault = new PasswordVault();
@@ -28,10 +27,6 @@ internal class CredentialLockerService : ICredentialLockerService
         {
             result = null;
         }
-#else
-        if (SecureStorage.Default.GetAsync("username").GetAwaiter().GetResult() == username)
-            result = SecureStorage.Default.GetAsync("password").GetAwaiter().GetResult();
-#endif
 
         return Task.FromResult(result);
     }
@@ -40,7 +35,6 @@ internal class CredentialLockerService : ICredentialLockerService
     {
         List<string> result = new List<string>();
 
-#if WINDOWS
         try
         {
             PasswordVault vault = new PasswordVault();
@@ -51,16 +45,12 @@ internal class CredentialLockerService : ICredentialLockerService
         {
             result = null;
         }
-#else
-        result.Add(SecureStorage.Default.GetAsync("username").GetAwaiter().GetResult());
-#endif
 
         return Task.FromResult(result);
     }
 
     public async Task AddCredentialToCredentialLockerAsync(string username, string password)
     {
-#if WINDOWS
         PasswordVault vault = new PasswordVault();
         string oldPassword = await GetPasswordFromCredentialLockerAsync(username);
 
@@ -77,15 +67,10 @@ internal class CredentialLockerService : ICredentialLockerService
                 // Do nothing here...
             }
         }
-#else
-        await SecureStorage.Default.SetAsync("username", username);
-        await SecureStorage.Default.SetAsync("password", password);
-#endif
     }
 
     public Task RemoveCredentialFromCredentialLockerAsync(string username)
     {
-#if WINDOWS
         try
         {
             PasswordVault vault = new PasswordVault();
@@ -100,11 +85,38 @@ internal class CredentialLockerService : ICredentialLockerService
             // Do nothing here.
             // Credentials are not found.
         }
-#else
-        SecureStorage.Default.Remove("username");
-        SecureStorage.Default.Remove("password");
-#endif
 
         return Task.CompletedTask;
     }
+#else
+    public async Task<string> GetPasswordFromCredentialLockerAsync(string username)
+    {
+        string result = string.Empty;
+
+        if (await SecureStorage.Default.GetAsync("username") == username)
+            result = await SecureStorage.Default.GetAsync("password");
+
+        return result;
+    }
+
+    public async Task<List<string>> GetUsernamesFromCredentialLockerAsync()
+    {
+        List<string> result = new List<string>();
+        result.Add(await SecureStorage.Default.GetAsync("username"));
+        return result;
+    }
+
+    public async Task AddCredentialToCredentialLockerAsync(string username, string password)
+    {
+        await SecureStorage.Default.SetAsync("username", username);
+        await SecureStorage.Default.SetAsync("password", password);
+    }
+
+    public Task RemoveCredentialFromCredentialLockerAsync(string username)
+    {
+        SecureStorage.Default.Remove("username");
+        SecureStorage.Default.Remove("password");
+        return Task.CompletedTask;
+    }
+#endif
 }

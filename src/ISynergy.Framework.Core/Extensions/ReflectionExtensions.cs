@@ -254,19 +254,41 @@ public static class ReflectionExtensions
     /// <summary>
     /// Gets the identity value.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="_self">The self.</param>
+    /// <param name="_self"></param>
     /// <returns>System.Object.</returns>
-    public static bool IsFreeApplication<T>(this T _self) where T : class
+    public static bool IsFreeApplication(this Type _self)
     {
-        var result = _self.GetType().GetProperties().Where(
-                e => e.IsDefined(typeof(FreeAttribute))
-            );
-
-        if (result.Any())
-            return (bool)result.First().GetValue(_self);
+        if (Attribute.GetCustomAttribute(_self, typeof(FreeAttribute)) is FreeAttribute attribute)
+            return attribute.IsFree;
         else
             return false;
+    }
+
+    /// <summary>
+    /// Check if class has singleton attribute.    
+    /// </summary>
+    /// <param name="_self"></param>
+    /// <returns></returns>
+    public static bool IsSingleton(this Type _self)
+    {
+        if (Attribute.GetCustomAttribute(_self, typeof(SingletonAttribute)) is SingletonAttribute attribute)
+            return attribute.IsSingleton;
+        else
+            return false;
+    }
+
+    /// <summary>
+    /// Check if class has scoped attribute.    
+    /// </summary>
+    /// <param name="_self"></param>
+    /// <returns></returns>
+    public static bool IsScoped(this Type _self)
+    {
+        if (Attribute.GetCustomAttribute(_self, typeof(ScopedAttribute)) is ScopedAttribute attribute)
+            return attribute.IsScoped;
+        else
+            return false;
+
     }
 
     public static List<Assembly> GetAllReferencedAssemblies(this Assembly _self)

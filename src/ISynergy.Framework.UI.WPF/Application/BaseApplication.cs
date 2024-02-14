@@ -65,8 +65,16 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Finishing initialization of application");
     }
 
+    /// <summary>
+    /// Handles the authentication changed event.   
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     public abstract void AuthenticationChanged(object sender, Core.Events.ReturnEventArgs<bool> e);
 
+    /// <summary>
+    /// Sets the global exception handler.
+    /// </summary>
     protected virtual void SetGlobalExceptionHandler()
     {
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
@@ -75,6 +83,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
     }
 
+    /// <summary>
+    /// Handles the dispatcher unhandled exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
@@ -85,11 +98,21 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         e.Handled = true;
     }
 
+    /// <summary>
+    /// Handles the first chance exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         Debug.WriteLine(e.Exception.Message);
     }
 
+    /// <summary>
+    /// Handles the unobserved task exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
@@ -100,6 +123,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         e.SetObserved();
     }
 
+    /// <summary>
+    /// Handles the unhandled exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
@@ -109,8 +137,23 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
                 _logger.LogCritical(exception, exception.Message);
     }
 
+    /// <summary>
+    /// Initializes the application asynchronously.
+    /// </summary>
     public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
+    /// <summary>
+    /// LoadAssembly the application.
+    /// </summary>
+    /// <example>
+    /// <code>
+    ///     await base.InitializeApplicationAsync();
+    ///     // wait 5 seconds before showing the main window...
+    ///     await Task.Delay(5000);
+    ///     await ServiceLocator.Default.GetInstance{INavigationService}().ReplaceMainWindowAsync{IShellView}();
+    /// </code>
+    /// </example>
+    /// <returns></returns>
     public virtual Task InitializeApplicationAsync()
     {
         var culture = CultureInfo.CurrentCulture;

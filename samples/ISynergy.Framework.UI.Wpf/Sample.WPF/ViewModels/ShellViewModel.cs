@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -10,11 +11,10 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
-using Sample.Abstractions.Services;
+using Sample.Abstractions;
 using Sample.Models;
 using System.Collections.ObjectModel;
 
@@ -139,7 +139,30 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             new TestItem { Id = 5, Description = "Test 5" }
         ];
 
-        PopulateNavItems();
+        PopulateNavigationMenuItems();
+    }
+
+    private void PopulateNavigationMenuItems()
+    {
+        PrimaryItems.Clear();
+
+        if (Context.IsAuthenticated)
+        {
+            PrimaryItems.Add(new NavigationItem("Info", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", (Application.Current.Resources["search"] as string).ToPath(), _themeService.Style.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _themeService.Style.Color, EditableComboCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _themeService.Style.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _themeService.Style.Color, UnitConversionCommand));
+            PrimaryItems.Add(new NavigationItem("Select single item", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectSingleCommand));
+            PrimaryItems.Add(new NavigationItem("Select multiple items", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectMultipleCommand));
+            PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, NugetUnlisterCommand));
+            PrimaryItems.Add(new NavigationItem("Show toast message", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, ShowToastMessageCommand));
+        }
+
+        PrimaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _themeService.Style.Color, LoginCommand));
+
+        if (Context.IsAuthenticated && PrimaryItems.Count > 0 && PrimaryItems.First() is NavigationItem navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
+            navigationItem.Command.Execute(navigationItem.CommandParameter);
     }
 
     private Task ShowToastMessageAsync()
@@ -225,24 +248,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is List<FileResult> files && files.Count > 0)
             await CommonServices.DialogService.ShowInformationAsync($"File '{files.First().FileName}' is selected.");
-    }
-
-    /// <summary>
-    /// Populates the nav items.
-    /// </summary>
-    protected override void PopulateNavItems()
-    {
-        PrimaryItems.Clear();
-        PrimaryItems.Add(new NavigationItem("Info", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, InfoCommand));
-        PrimaryItems.Add(new NavigationItem("Browse", (Application.Current.Resources["search"] as string).ToPath(), _themeService.Style.Color, BrowseCommand));
-        PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _themeService.Style.Color, EditableComboCommand));
-        PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _themeService.Style.Color, ValidationTestCommand));
-        PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _themeService.Style.Color, UnitConversionCommand));
-        PrimaryItems.Add(new NavigationItem("Select single item", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectSingleCommand));
-        PrimaryItems.Add(new NavigationItem("Select multiple items", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectMultipleCommand));
-        PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, NugetUnlisterCommand));
-        PrimaryItems.Add(new NavigationItem("Show toast message", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, ShowToastMessageCommand));
-        PrimaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _themeService.Style.Color, LoginCommand));
     }
 
     /// <summary>

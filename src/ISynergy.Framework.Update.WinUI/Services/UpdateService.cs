@@ -37,7 +37,6 @@ internal class UpdateService : IUpdateService
         _dialogService = dialogService;
     }
 
-#if WINDOWS
     /// <summary>
     /// The context
     /// </summary>
@@ -175,16 +174,4 @@ internal class UpdateService : IUpdateService
         return _dialogService.ShowErrorAsync(
                     _languageService.GetString("WarningMandatoryUpdateFailed"));
     }
-#else
-    /// <summary>
-    /// check for update as an asynchronous operation.
-    /// </summary>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-    public Task<bool> CheckForUpdateAsync() => Task.FromResult(false);
-
-    /// <summary>
-    /// download and install update as an asynchronous operation.
-    /// </summary>
-    public Task DownloadAndInstallUpdateAsync() => Task.CompletedTask;
-#endif
 }

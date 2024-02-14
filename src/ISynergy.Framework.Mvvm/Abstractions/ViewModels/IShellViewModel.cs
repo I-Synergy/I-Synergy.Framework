@@ -13,5 +13,5 @@ public interface IShellViewModel : IViewModel
     /// Gets or sets the settings _command.
     /// </summary>
     /// <value>The settings _command.</value>
-    AsyncRelayCommand SettingsCommand { get; }
+    static AsyncRelayCommand SettingsCommand { get; }
 }

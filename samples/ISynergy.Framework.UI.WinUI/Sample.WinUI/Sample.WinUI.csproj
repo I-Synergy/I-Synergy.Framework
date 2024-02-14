@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
-		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
 		<RootNamespace>Sample</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;arm64</Platforms>
@@ -22,7 +23,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
-	  <None Remove="Views\SettingsView.xaml" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -39,13 +39,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json"  />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug"  />
-		<PackageReference Include="Microsoft.WindowsAppSDK"  />
-		<PackageReference Include="Syncfusion.Chart.WinUI"  />
-		<PackageReference Include="Syncfusion.Editors.WinUI"  />
-		<PackageReference Include="Syncfusion.Gauge.WinUI"  />
 		<Manifest Include="$(ApplicationManifest)" />
+
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -55,6 +56,7 @@
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj" />
+		<ProjectReference Include="..\..\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -68,25 +70,5 @@
 	   package has not yet been restored -->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="Properties\Resources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Resources.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Update="Properties\Resources.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Views\SettingsView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
 	</ItemGroup>
 </Project>
