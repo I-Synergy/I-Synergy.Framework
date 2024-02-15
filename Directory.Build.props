@@ -73,7 +73,6 @@
 		  <PropertyGroup>
 			<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 			<SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
-			<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		  </PropertyGroup>
 		</When>
 	  </Choose>

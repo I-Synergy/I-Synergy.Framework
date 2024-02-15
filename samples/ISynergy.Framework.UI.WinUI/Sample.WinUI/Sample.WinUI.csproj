@@ -19,6 +19,7 @@
 		<DefaultLanguage>en</DefaultLanguage>
 		<AssemblyOriginatorKeyFile>..\..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 		<IsPackable>false</IsPackable>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
