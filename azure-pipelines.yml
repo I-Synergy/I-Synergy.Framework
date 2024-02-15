@@ -275,7 +275,7 @@ stages:
   - stage: Release
     displayName: 'Release'
     dependsOn: TestStage
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    condition: succeeded()
     jobs:
     - job: ArtifactsJob
       displayName: 'Get Nuget artifacts'
