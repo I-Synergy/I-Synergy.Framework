@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
