@@ -41,7 +41,7 @@
 
     <Shell.FlyoutFooter>
         <StackLayout HorizontalOptions="Center">
-            <Button Text="{m:GetString SignOut}" Command="{Binding LoginCommand}">
+            <Button Text="{m:GetString SignOut}" Command="{Binding SignInCommand}">
                 <Button.ImageSource>
                     <FontImageSource
                     Glyph="{StaticResource signin}" 

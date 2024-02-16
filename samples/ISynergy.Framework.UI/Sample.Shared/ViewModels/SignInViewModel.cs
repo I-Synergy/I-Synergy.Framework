@@ -63,8 +63,8 @@ public class SignInViewModel : ViewModel
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand LoginCommand { get; private set; }
-    public AsyncRelayCommand RegisterCommand { get; private set; }
+    public AsyncRelayCommand SignInCommand { get; private set; }
+    public AsyncRelayCommand SignUpCommand { get; private set; }
 
     public SignInViewModel(
         IContext context,
@@ -81,8 +81,8 @@ public class SignInViewModel : ViewModel
         _applicationSettingsService = applicationSettingsService;
         _applicationSettingsService.LoadSettings();
 
-        LoginCommand = new AsyncRelayCommand(SignInAsync);
-        RegisterCommand = new AsyncRelayCommand(SignUpAsync);
+        SignInCommand = new AsyncRelayCommand(SignInAsync);
+        SignUpCommand = new AsyncRelayCommand(SignUpAsync);
 
         Validator = new Action<IObservableClass>(_ =>
         {
@@ -110,7 +110,7 @@ public class SignInViewModel : ViewModel
     }
 
     private Task SignUpAsync() =>
-        BaseCommonServices.NavigationService.NavigateAsync<SignUpViewModel>();
+        BaseCommonServices.NavigationService.NavigateModalAsync<SignUpViewModel>(absolute: true);
 
     /// <summary>
     /// Forgots the password asynchronous.
@@ -151,10 +151,10 @@ public class SignInViewModel : ViewModel
 
     protected override void Dispose(bool disposing)
     {
-        LoginCommand?.Cancel();
-        LoginCommand = null;
-        RegisterCommand?.Cancel();
-        RegisterCommand = null;
+        SignInCommand?.Cancel();
+        SignInCommand = null;
+        SignUpCommand?.Cancel();
+        SignUpCommand = null;
 
         base.Dispose(disposing);
     }
