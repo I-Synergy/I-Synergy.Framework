@@ -37,7 +37,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the login command.
     /// </summary>
     /// <value>The login command.</value>
-    public AsyncRelayCommand LoginCommand { get; private set; }
+    public AsyncRelayCommand SignInCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the language command.
@@ -148,7 +148,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         _localizationService = LocalizationService;
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
-        LoginCommand = new AsyncRelayCommand(SignOutAsync);
+        SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
         ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
@@ -344,8 +344,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         RestartUpdateCommand?.Cancel();
         RestartUpdateCommand = null;
-        LoginCommand?.Cancel();
-        LoginCommand = null;
+        SignInCommand?.Cancel();
+        SignInCommand = null;
         LanguageCommand?.Cancel();
         LanguageCommand = null;
         ColorCommand?.Cancel();

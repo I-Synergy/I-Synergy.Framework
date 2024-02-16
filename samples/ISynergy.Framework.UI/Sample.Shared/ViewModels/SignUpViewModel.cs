@@ -134,9 +134,9 @@ public class SignUpViewModel : ViewModel
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand RegisterCommand { get; private set; }
+    public AsyncRelayCommand SignUpCommand { get; private set; }
     public AsyncRelayCommand ValidateMailCommand { get; private set; }
-    public AsyncRelayCommand LoginCommand { get; private set; }
+    public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand SelectModulesCommand { get; private set; }
 
     public SignUpViewModel(
@@ -198,9 +198,9 @@ public class SignUpViewModel : ViewModel
                 AddValidationError(nameof(SelectedCountry), commonServices.LanguageService.GetString("WarningNoCountrySelected"));
         });
 
-        RegisterCommand = new AsyncRelayCommand(RegisterAsync);
+        SignUpCommand = new AsyncRelayCommand(SignUpAsync);
         ValidateMailCommand = new AsyncRelayCommand(ValidateMailAsync);
-        LoginCommand = new AsyncRelayCommand(SignInAsync);
+        SignInCommand = new AsyncRelayCommand(SignInAsync);
         SelectModulesCommand = new AsyncRelayCommand(SelectModulesAsync);
 
         ArePickersAvailable = false;
@@ -257,7 +257,7 @@ public class SignUpViewModel : ViewModel
     }
 
     private Task SignInAsync() =>
-        BaseCommonServices.NavigationService.GoBackAsync();
+        BaseCommonServices.NavigationService.NavigateModalAsync<SignInViewModel>(absolute: true);
 
     public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
@@ -280,7 +280,7 @@ public class SignUpViewModel : ViewModel
         }
     }
 
-    private async Task RegisterAsync()
+    private async Task SignUpAsync()
     {
         if (Validate())
         {

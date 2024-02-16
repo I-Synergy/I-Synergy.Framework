@@ -159,7 +159,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             PrimaryItems.Add(new NavigationItem("Show toast message", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, ShowToastMessageCommand));
         }
 
-        PrimaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _themeService.Style.Color, LoginCommand));
+        PrimaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _themeService.Style.Color, SignInCommand));
     }
 
     private Task ShowToastMessageAsync()
