@@ -4,11 +4,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
 public interface INavigationService
 {
-    bool CanGoBack { get; }
-    bool CanGoForward { get; }
+    event EventHandler BackStackChanged;
 
+    bool CanGoBack { get; }
     Task GoBackAsync();
-    Task GoForwardAsync();
 
     Task CleanBackStackAsync();
 
