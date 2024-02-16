@@ -8,7 +8,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:c="using:ISynergy.Framework.UI.Controls"
 	xmlns:Converters="using:ISynergy.Framework.UI.Converters"
-	xmlns:models="using:ISynergy.Framework.UI.Models"
+	xmlns:models="using:ISynergy.Framework.Core.Models"
 	xmlns:FrameworkNavigation="using:ISynergy.Framework.UI.Navigation"
 	xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:i="using:Microsoft.Xaml.Interactivity"
@@ -16,7 +16,8 @@
 
 	<c:View.Resources>
 		<Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
-		<Converters:BooleanToStringConverter x:Key="BooleanToStringConverter" True="Logoff" False="Login" />
+        <Converters:NavigationViewBackButtonVisibleConverter x:Key="NavigationViewBackButtonVisibleConverter"/>
+        <Converters:BooleanToStringConverter x:Key="BooleanToStringConverter" True="Logoff" False="Login" />
 
         <FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
 			<FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
@@ -55,8 +56,8 @@
 						FooterMenuItemsSource="{Binding SecondaryItems}"
 						MenuItemTemplateSelector="{StaticResource ItemSelector}"
 						IsSettingsVisible="False"
-                        IsBackButtonVisible="Auto"
-						IsBackEnabled="{Binding IsBackEnabled}"
+                        IsBackButtonVisible="{Binding IsBackEnabled, Mode=OneWay, Converter={StaticResource NavigationViewBackButtonVisibleConverter}}"
+						IsBackEnabled="{Binding IsBackEnabled, Mode=OneWay}"
                         BackRequested="RootNavigationView_BackRequested"
 						PaneDisplayMode="Left"
 						IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}">

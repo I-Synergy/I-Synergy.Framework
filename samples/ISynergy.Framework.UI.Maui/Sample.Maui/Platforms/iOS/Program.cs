@@ -1,8 +1,8 @@
-﻿using UIKit;
+﻿using ObjCRuntime;
+using UIKit;
 
-namespace Sample.Platforms.iOS;
-
-public class Program
+namespace Sample;
+public static class Program
 {
     // This is the main entry point of the application.
     static void Main(string[] args)

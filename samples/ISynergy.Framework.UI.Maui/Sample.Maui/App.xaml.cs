@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Services;
-using ISynergy.Framework.UI.ViewModels;
 using Sample.Abstractions;
 using Sample.ViewModels;
 using System.Runtime.ExceptionServices;
@@ -37,29 +35,23 @@ public partial class App : BaseApplication
         }
 
         if (navigateToAuthentication)
-            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+            await _navigationService.NavigateModalAsync<SignInViewModel>(absolute: true);
     }
-
-    public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() => new List<ResourceDictionary>()
-    {
-        new Styles.Colors(),
-        new Styles.Style()
-    };
 
     public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
     {
-        if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
-        {
-            if (e.Value)
-            {
-                await navigationService.NavigateModalAsync<AppShellViewModel>();
-            }
-            else
-            {
-                await navigationService.NavigateModalAsync<AuthenticationViewModel>();
-            }
-        }
+        if (e.Value)
+            await _navigationService.NavigateModalAsync<IShellViewModel>(absolute: true);
+        else
+            await _navigationService.NavigateModalAsync<SignInViewModel>(absolute: true);
     }
+
+    public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() => new List<ResourceDictionary>
+    {
+        new Sample.Resources.Styles.Colors(),
+        new Sample.Resources.Styles.Style(),
+        new Sample.Resources.Styles.Images()
+    };
 
     protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
     {

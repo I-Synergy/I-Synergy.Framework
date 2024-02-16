@@ -4,21 +4,11 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
 public interface INavigationService
 {
-    /// <summary>
-    /// Event handler when backstack is changed.
-    /// </summary>
     event EventHandler BackStackChanged;
 
-    /// <summary>
-    /// Frame to navigate.
-    /// </summary>
-    object Frame { get; set; }
-
     bool CanGoBack { get; }
-    bool CanGoForward { get; }
-
     Task GoBackAsync();
-    Task GoForwardAsync();
+
     Task CleanBackStackAsync();
 
     /// <summary>
@@ -27,9 +17,9 @@ public interface INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+    Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel;
 
     /// <summary>
@@ -39,9 +29,9 @@ public interface INavigationService
     /// <typeparam name="TView"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+    Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView;
 
@@ -50,9 +40,9 @@ public interface INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false)
+    Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel;
 
     /// <summary>
@@ -61,9 +51,9 @@ public interface INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TView"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
+    Task NavigateAsync<TViewModel, TView>(object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView;
 
@@ -72,8 +62,9 @@ public interface INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateModalAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel;
+    Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel;
 
     /// <summary>
     /// Opens blade with a view retrieved from DI.

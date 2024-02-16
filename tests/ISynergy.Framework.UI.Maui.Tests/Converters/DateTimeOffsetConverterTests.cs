@@ -18,7 +18,7 @@ public class DateTimeOffsetConverterTests
         Assert.AreEqual(dateTimeOffset.TimeOfDay, result);
     }
 
-    /// Create a unit test for <see cref="DateTimeOffsetConverter.TimeSpanToDateTimeOffset(TimeSpan)"/> method.
+    /// Create a unit test for <see cref="DateTimeOffsetConverter.TimeSpanToDateTimeOffset(DateTimeOffset, TimeSpan)"/> method.
     [TestMethod]
     public void TimeSpanToDateTimeOffsetTest()
     {

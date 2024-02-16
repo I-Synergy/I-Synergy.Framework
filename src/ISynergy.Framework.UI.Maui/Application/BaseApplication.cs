@@ -28,6 +28,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IBaseApplicationSettingsService _applicationSettingsService;
+    protected readonly INavigationService _navigationService;
 
     private Task Initialize { get; set; }
 
@@ -69,6 +70,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Setting up theming service.");
         _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
 
+        _logger.LogInformation("Setting up navigation service.");
+        _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
+
         _logger.LogInformation("Setting up exception handler service.");
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
@@ -87,12 +91,19 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Starting initialization of application");
         InitializeApplication();
-
         _logger.LogInformation("Finishing initialization of application");
     }
 
+    /// <summary>
+    /// Handles the authentication changed event.   
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     public abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
 
+    /// <summary>
+    /// Sets the global exception handler.
+    /// </summary>
     protected virtual void SetGlobalExceptionHandler()
     {
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
@@ -100,11 +111,21 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
     }
 
+    /// <summary>
+    /// Handles the first chance exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         Debug.WriteLine(e.Exception.Message);
     }
 
+    /// <summary>
+    /// Handles the unobserved task exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
@@ -115,6 +136,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         e.SetObserved();
     }
 
+    /// <summary>
+    /// Handles the unhandled exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected virtual void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
@@ -124,6 +150,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
                 _logger.LogCritical(exception, exception.Message);
     }
 
+    /// <summary>
+    /// Initializes the application asynchronously.
+    /// </summary>
     public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
     /// <summary>

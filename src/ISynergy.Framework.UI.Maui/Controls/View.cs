@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls;
@@ -6,6 +7,8 @@ namespace ISynergy.Framework.UI.Controls;
 public abstract class View : ContentPage, IView
 {
     private IViewModel _viewModel;
+
+    protected IContext Context { get; private set; }
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
@@ -27,6 +30,18 @@ public abstract class View : ContentPage, IView
     /// </summary>
     protected View()
     {
+        Loaded += View_Loaded;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the view class.
+    /// </summary>
+    /// <param name="context"></param>
+    protected View(IContext context)
+        : this()
+    {
+        Argument.IsNotNull(context);
+        Context = context;
     }
 
     /// <summary>
@@ -35,12 +50,29 @@ public abstract class View : ContentPage, IView
     /// <param name="context"></param>
     /// <param name="viewModelType"></param>
     protected View(IContext context, Type viewModelType)
-        : this()
+    : this(context)
     {
+        Argument.IsNotNull(viewModelType);
         ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService(viewModelType) as IViewModel;
-        Loaded += View_Loaded;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the view class.
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="viewModel"></param>
+    protected View(IContext context, IViewModel viewModel)
+    : this(context)
+    {
+        Argument.IsNotNull(viewModel);
+        ViewModel = viewModel;
+    }
+
+    /// <summary>
+    /// Handles event when loaded.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void View_Loaded(object sender, EventArgs e)
     {
         if (ViewModel is not null)
@@ -74,10 +106,10 @@ public abstract class View : ContentPage, IView
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        Loaded -= View_Loaded;
-
         if (disposing)
         {
+            Loaded -= View_Loaded;
+
             // free managed resources
             ViewModel?.Dispose();
             ViewModel = null;

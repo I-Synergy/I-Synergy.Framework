@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using ISynergy.Framework.UI.Extensions;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -417,10 +418,7 @@ public class UriToImageSourceConverter : IValueConverter
         if (string.IsNullOrEmpty(value?.ToString()))
             return null;
 
-        return new Image()
-        {
-            Source = new Uri(value as string)
-        };
+        return ImageSource.FromUri(new Uri(value as string));
     }
 
     /// <summary>
@@ -470,6 +468,39 @@ public class StringToColorBrushConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class StringToGeometryConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringToGeometryConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value?.ToString().ToGeometry();
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The language.</param>
+    /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {

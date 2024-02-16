@@ -1,15 +1,14 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Models;
-using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 
 namespace Sample.ViewModels;
 
@@ -18,6 +17,8 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
+    private readonly INavigationService _navigationService;
+
     /// <summary>
     /// Gets or sets the Version property value.
     /// </summary>
@@ -33,8 +34,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     public bool IsBackEnabled
     {
-        get => GetValue<bool>();
-        set => SetValue(value);
+        get => _navigationService.CanGoBack;
     }
 
     /// <summary>
@@ -42,6 +42,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <value>The common services.</value>
     public ICommonServices CommonServices { get; }
+
     public IBaseApplicationSettingsService SettingsService { get; }
 
     /// <summary>
@@ -97,6 +98,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="navigationService"></param>
     /// <param name="settingsService">The settings services.</param>
     /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
@@ -105,6 +107,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     public ShellViewModel(
         IContext context,
         ICommonServices commonServices,
+        INavigationService navigationService,
         IBaseApplicationSettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
@@ -113,8 +116,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         : base(context, commonServices, settingsService, authenticationService, logger, themeService, localizationService)
     {
         CommonServices = commonServices;
-        CommonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
         SettingsService = settingsService;
+
+        _navigationService = navigationService;
+        _navigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
 
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
@@ -129,19 +134,35 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         TreeNodeTestCommand = new AsyncRelayCommand(OpenTreenNodeTestAsync);
         ChartCommand = new AsyncRelayCommand(OpenChartTestAsync);
 
-        PopulateNavItems();
+        PopulateNavigationMenuItems();
     }
 
-    private void NavigationService_BackStackChanged(object sender, EventArgs e)
+    private void PopulateNavigationMenuItems()
     {
-        if (CommonServices.NavigationService.CanGoBack)
+        PrimaryItems.Clear();
+        SecondaryItems.Clear();
+
+        if (Context.IsAuthenticated)
         {
-            IsBackEnabled = true;
+            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _themeService.Style.Color, DisplayCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _themeService.Style.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _themeService.Style.Color, ConverterCommand));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _themeService.Style.Color, SelectionTestCommand));
+            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _themeService.Style.Color, ListViewTestCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _themeService.Style.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _themeService.Style.Color, TreeNodeTestCommand));
+            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _themeService.Style.Color, ChartCommand));
+
+            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
+            SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
         }
-        else
-        {
-            IsBackEnabled = false;
-        }
+
+        SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, SignInCommand));
+
+        
     }
 
     protected override async Task SignOutAsync()
@@ -152,36 +173,36 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             _applicationSettingsService.SaveSettings();
         }
 
-        await CommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+        await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
 
     private Task OpenChartTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
+        _navigationService.NavigateAsync<ChartsViewModel>();
 
     private Task OpenTreenNodeTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
+        _navigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
 
     /// <summary>
     /// Opens the validation test asynchronous.
     /// </summary>
     /// <returns></returns>
     private Task OpenValidationTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<ValidationViewModel>();
+        _navigationService.NavigateAsync<ValidationViewModel>();
 
     /// <summary>
     /// Opens the ListView test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenListViewTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
+        _navigationService.NavigateAsync<TestItemsListViewModel>();
 
     /// <summary>
     /// Opens the converters asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenConvertersAsync() =>
-        CommonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
+        _navigationService.NavigateAsync<ConvertersViewModel>();
 
     /// <summary>
     /// browse file as an asynchronous operation.
@@ -192,7 +213,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
         if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is List<FileResult> files && files.Count > 0)
-            await CommonServices.DialogService.ShowInformationAsync($"File '{files.First().FileName}' is selected.");
+            await CommonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
     /// <summary>
@@ -200,45 +221,21 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenInfoAsync() =>
-        CommonServices.NavigationService.NavigateAsync<InfoViewModel>();
+        _navigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
     /// Opens the display asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenDisplayAsync() =>
-        CommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
+        _navigationService.NavigateAsync<SlideShowViewModel>();
 
     /// <summary>
     /// Opens the selection test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenSelectionTestAsync() =>
-       CommonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
-
-    /// <summary>
-    /// Populates the nav items.
-    /// </summary>
-    protected override void PopulateNavItems()
-    {
-        PrimaryItems.Clear();
-        PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _themeService.Style.Color, DisplayCommand));
-        PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, InfoCommand));
-        PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _themeService.Style.Color, BrowseCommand));
-        PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _themeService.Style.Color, ConverterCommand));
-        PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _themeService.Style.Color, SelectionTestCommand));
-        PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _themeService.Style.Color, ListViewTestCommand));
-        PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _themeService.Style.Color, ValidationTestCommand));
-        PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _themeService.Style.Color, TreeNodeTestCommand));
-        PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _themeService.Style.Color, ChartCommand));
-
-        SecondaryItems.Clear();
-        SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, HelpCommand));
-        SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
-        SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
-        SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
-        SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, LoginCommand));
-    }
+       _navigationService.NavigateAsync<SelectionTestViewModel>();
 
     /// <summary>
     /// Opens the settings asynchronous.

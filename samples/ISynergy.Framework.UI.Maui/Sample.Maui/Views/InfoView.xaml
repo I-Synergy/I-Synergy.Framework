@@ -3,9 +3,11 @@
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+    x:DataType="viewmodels:InfoViewModel"
     x:Class="Sample.Views.InfoView"
     Title="InfoView">
-    
+
     <Grid>
         <VerticalStackLayout Margin="10" Spacing="10">
             <Label Text="Company name" />
@@ -14,8 +16,8 @@
             <Label Text="Product name" />
             <Entry Text="{Binding ProductName}" IsReadOnly="True"/>
 
-            <Label Text="Version"/>
-            <!--<Entry Text="{Binding Version}" IsReadOnly="True"/>-->
+            <!--<Label Text="Version"/>
+            <Entry Text="{Binding Version}" IsReadOnly="True"/>-->
 
             <Label Text="Copyrights"/>
             <Entry Text="{Binding Copyrights}" IsReadOnly="True"/>

@@ -2,6 +2,7 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -18,39 +19,13 @@ public class NavigationService : INavigationService
     public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
 
     /// <summary>
-    /// The frame.
-    /// </summary>
-    private Frame _frame;
-
-    /// <summary>
-    /// Navigation backstack.
-    /// </summary>
-    private Stack<object> _backStack = new Stack<object>();
-
-    /// <summary>
-    /// Gets or sets the frame.
-    /// </summary>
-    /// <value>The frame.</value>
-    public object Frame
-    {
-        get => _frame;
-        set => _frame = (Frame)value;
-    }
-
-    /// <summary>
     /// Gets a value indicating whether this instance can go back.
     /// </summary>
     /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-    public bool CanGoBack => _backStack.Count > 0 ? true : false;
+    public bool CanGoBack => Application.Current.MainPage.Navigation.NavigationStack.Count > 1 ? true : false;
 
     /// <summary>
-    /// Gets a value indicating whether this instance can go forward.
-    /// </summary>
-    /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
-    public bool CanGoForward => true;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DialogService"/> class.
+    /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="context"></param>
     public NavigationService(IContext context)
@@ -59,33 +34,26 @@ public class NavigationService : INavigationService
     }
 
     /// <summary>
-    /// Goes the back.
-    /// </summary>
-    public async Task GoBackAsync()
-    {
-        if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
-        {
-            await NavigateAsync(viewModel, navigateBack: true);
-        }
-    }
-
-    /// <summary>
-    /// Goes the forward.
-    /// </summary>
-    public Task GoForwardAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
     /// Navigates to a specified viewmodel asynchronous.
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel =>
-        NavigateAsync(default(TViewModel), parameter);
+    public async Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
+    {
+        var url = typeof(TViewModel).Name;
+
+        if (parameter is Dictionary<string, string> parameters)
+            url = QueryHelpers.AddQueryString(url, parameters);
+
+        if (absolute)
+            url = $"//{url}";
+
+        await Shell.Current.GoToAsync(url);
+
+        OnBackStackChanged(EventArgs.Empty);
+    }
 
     /// <summary>
     /// Navigates to the viewmodel with parameters.
@@ -93,44 +61,87 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false) where TViewModel : class, IViewModel =>
-        Shell.Current.Navigation.PushViewModelAsync<TViewModel>(parameter);
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false) where TViewModel : class, IViewModel 
+    {
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is IView page)
+        {
+            if (absolute)
+                Application.Current.MainPage = new NavigationPage((Page)page);
+            else
+                await Application.Current.MainPage.Navigation.PushAsync((Page)page, true);
 
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
-        where TViewModel : class, IViewModel
-        where TView : IView => throw new NotImplementedException();
+            if (!page.ViewModel.IsInitialized)
+                await page.ViewModel.InitializeAsync();
 
-    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
-        where TViewModel : class, IViewModel
-        where TView : IView => throw new NotImplementedException();
+            OnBackStackChanged(EventArgs.Empty);
+        }
+    }
 
     /// <summary>
     /// Navigates to the modal viewmodel with parameters.
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public async Task NavigateModalAsync<TViewModel>(object parameter = null)
+    public async Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false)
          where TViewModel : class, IViewModel
     {
-        var page = await NavigationExtensions.CreatePage<TViewModel>(parameter);
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Application.Current.MainPage = page);
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is IView page)
+        {
+            if (absolute)
+                Application.Current.MainPage = (Page)page;
+            else
+                await Application.Current.MainPage.Navigation.PushModalAsync((Page)page, true);
+
+            if (!page.ViewModel.IsInitialized)
+                await page.ViewModel.InitializeAsync();
+        }
     }
 
-    public Task CleanBackStackAsync()
+    public async Task CleanBackStackAsync()
     {
-        _backStack.Clear();
+        await Shell.Current.Navigation.PopToRootAsync();
         OnBackStackChanged(EventArgs.Empty);
-        return Task.CompletedTask;
+    }
+        
+
+    /// <summary>
+    /// Goes the back.
+    /// </summary>
+    public async Task GoBackAsync()
+    {
+        if (CanGoBack)
+            await Shell.Current.GoToAsync("..");
+
+        OnBackStackChanged(EventArgs.Empty);
     }
 
+    #region NotImplemented
+    [Obsolete("Not supported!", true)]
     public Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
 
+    [Obsolete("Not supported!", true)]
     public Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
         where TView : IView =>
         throw new NotImplementedException();
 
+    [Obsolete("Not supported!", true)]
     public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
+
+    [Obsolete("Not supported!", true)]
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
+        where TViewModel : class, IViewModel
+        where TView : IView => throw new NotImplementedException();
+
+    [Obsolete("Not supported!", true)]
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool absolute = false)
+        where TViewModel : class, IViewModel
+        where TView : IView => throw new NotImplementedException();
+
+    [Obsolete("Not supported!", true)]
+    public Task GoForwardAsync() => throw new NotImplementedException();
+    #endregion
 }

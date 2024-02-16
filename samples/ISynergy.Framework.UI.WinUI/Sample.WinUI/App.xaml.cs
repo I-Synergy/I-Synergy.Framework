@@ -2,22 +2,20 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Windows.AppLifecycle;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
@@ -57,7 +55,7 @@ public sealed partial class App : BaseApplication
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, LocalSettingsService>());
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<IGlobalSettingsService, GlobalSettingsService>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<GlobalSettings>, GlobalSettingsService>());
 
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
@@ -66,7 +64,7 @@ public sealed partial class App : BaseApplication
             })
             .ConfigureLogging((context, logging) =>
             {
-                logging.AddAppCenterLogging(context.Configuration);
+                //logging.AddAppCenterLogging(context.Configuration);
                 //logging.AddSentryLogging(context.Configuration);
             });
     }
@@ -94,24 +92,24 @@ public sealed partial class App : BaseApplication
             ServiceLocator.Default.GetInstance<IBusyService>().EndBusy();
         }
 
-        //var activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
-        //if (activatedEventArgs.Kind == ExtendedActivationKind.Launch)
-        //{
-        //    await HandleLaunchActivationAsync(activatedEventArgs.Data as Windows.ApplicationModel.Activation.LaunchActivatedEventArgs);
-        //}
-        //else if (activatedEventArgs.Kind == ExtendedActivationKind.Protocol)
-        //{
-        //    await HandleProtocolActivationAsync(activatedEventArgs.Data as ProtocolActivatedEventArgs);
-        //}
-        //else if (Environment.GetCommandLineArgs().Length > 1)
-        //{
-        //    foreach (var arg in Environment.GetCommandLineArgs())
-        //        await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(arg, "Environment");
-        //}
-        //else
-        //{
-        //    await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
-        //}
+        var activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+        if (activatedEventArgs.Kind == ExtendedActivationKind.Launch)
+        {
+            await HandleLaunchActivationAsync(activatedEventArgs.Data as Windows.ApplicationModel.Activation.LaunchActivatedEventArgs);
+        }
+        else if (activatedEventArgs.Kind == ExtendedActivationKind.Protocol)
+        {
+            await HandleProtocolActivationAsync(activatedEventArgs.Data as ProtocolActivatedEventArgs);
+        }
+        else if (Environment.GetCommandLineArgs().Length > 1)
+        {
+            foreach (var arg in Environment.GetCommandLineArgs())
+                await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(arg, "Environment");
+        }
+        else
+        {
+            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+        }
 
         bool navigateToAuthentication = true;
 
@@ -128,24 +126,17 @@ public sealed partial class App : BaseApplication
         }
 
         if (navigateToAuthentication)
-            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
-    protected override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+    public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
     {
-        if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
-        {
-            await navigationService.CleanBackStackAsync();
+        await _navigationService.CleanBackStackAsync();
 
-            if (e.Value)
-            {
-                await navigationService.NavigateModalAsync<ShellViewModel>();
-            }
-            else
-            {
-                await navigationService.NavigateModalAsync<AuthenticationViewModel>();
-            }
-        }
+        if (e.Value)
+            await _navigationService.NavigateModalAsync<IShellViewModel>();
+        else
+            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
     private async Task HandleProtocolActivationAsync(ProtocolActivatedEventArgs e)
