@@ -19,7 +19,6 @@ namespace ISynergy.Framework.UI.Services;
 public class DialogService : IDialogService
 {
     private readonly ILanguageService _languageService;
-    private readonly IServiceProvider _serviceProvider;
     private readonly IContext _context;
     private readonly IDispatcherService _dispatcherService;
 
@@ -27,17 +26,14 @@ public class DialogService : IDialogService
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="serviceProvider"></param>
     /// <param name="dispatcherService"></param>
     /// <param name="languageService">The language service.</param>
     public DialogService(
         IContext context,
-        IServiceProvider serviceProvider,
         ILanguageService languageService,
         IDispatcherService dispatcherService)
     {
         _context = context;
-        _serviceProvider = serviceProvider;
         _languageService = languageService;
         _dispatcherService = dispatcherService;
     }
@@ -168,14 +164,9 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        var scope = _serviceProvider.CreateScope();
-        var viewmodel = (IViewModelDialog<TEntity>)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel));
-
-        if (scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-        {
-            dialog.Unloaded += (sender, e) => scope.Dispose();
+        if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
-        }
     }
 
     /// <summary>
@@ -190,14 +181,10 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        var scope = _serviceProvider.CreateScope();
-        var viewmodel = (IViewModelDialog<TEntity>)_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel));
-
-        await viewmodel.SetSelectedItemAsync(e);
-
-        if (scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+        if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
         {
-            dialog.Unloaded += (sender, e) => scope.Dispose();
+            await viewmodel.SetSelectedItemAsync(e);
             await CreateDialogAsync(dialog, viewmodel);
         }
     }
@@ -211,13 +198,8 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
-        var scope = _serviceProvider.CreateScope();
-
-        if (scope.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
-        {
-            dialog.Unloaded += (sender, e) => scope.Dispose();
+        if (_context.ScopedServices.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
-        }
     }
 
     /// <summary>
@@ -229,13 +211,8 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
-        var scope = _serviceProvider.CreateScope();
-
-        if (scope.ServiceProvider.GetRequiredService(type) is Window dialog)
-        {
-            dialog.Unloaded += (sender, e) => scope.Dispose();
+        if (_context.ScopedServices.ServiceProvider.GetRequiredService(type) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
-        }
     }
 
     public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
