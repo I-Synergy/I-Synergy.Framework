@@ -110,7 +110,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
         {
             _commonServices.BusyService.StartBusy();
 
-            if (_localSettingsService.Settings is LocalSettings localSetting)
+            if (_localSettingsService.Settings is LocalSettings)
             {
                 _localSettingsService.SaveSettings();
             }

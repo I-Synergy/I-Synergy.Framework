@@ -247,7 +247,7 @@ public class SignUpViewModel : ViewModel
 
             SelectedModules =
             [
-                Modules.First()
+                Modules[0]
             ];
 
             Countries = countries.OrderBy(o => o.CountryISO).ToList();

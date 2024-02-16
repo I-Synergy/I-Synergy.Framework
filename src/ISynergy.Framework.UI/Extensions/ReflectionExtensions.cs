@@ -37,7 +37,7 @@ public static class ReflectionExtensions
     {
         foreach (var assembly in assemblies)
             foreach (var type in assembly.GetTypes())
-                if (type.GetInterfaces().Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
+                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
                     && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
                     && type.Name != GenericConstants.View
                     && type.Name != GenericConstants.Page
@@ -55,7 +55,7 @@ public static class ReflectionExtensions
     {
         foreach (var assembly in assemblies)
             foreach (var type in assembly.GetTypes())
-                if (type.GetInterfaces().Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
+                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
                     && type.Name.EndsWith(GenericConstants.Window)
                     && type.Name != GenericConstants.Window
                     && !type.IsAbstract
@@ -81,11 +81,9 @@ public static class ReflectionExtensions
     /// <param name="window"></param>
     public static void RegisterWindow(this IServiceCollection services, Type window)
     {
-        var abstraction = window
-            .GetInterfaces()
-            .FirstOrDefault(q =>
-                q.GetInterfaces().Contains(typeof(IWindow))
-                && !q.Name.StartsWith(nameof(IWindow)));
+        var abstraction = Array.Find(
+            window.GetInterfaces(),
+            q => q.GetInterfaces().Contains(typeof(IWindow)) && !q.Name.StartsWith(nameof(IWindow)));
 
         services.Register(window, abstraction);
     }
@@ -108,11 +106,9 @@ public static class ReflectionExtensions
     /// <param name="view"></param>
     public static void RegisterView(this IServiceCollection services, Type view)
     {
-        var abstraction = view
-            .GetInterfaces()
-            .FirstOrDefault(q =>
-                q.GetInterfaces().Contains(typeof(IView))
-                && !q.Name.StartsWith(nameof(IView)));
+        var abstraction = Array.Find(
+            view.GetInterfaces(),
+            q => q.GetInterfaces().Contains(typeof(IView)) && !q.Name.StartsWith(nameof(IView)));
 
         services.Register(view, abstraction);
     }
@@ -135,11 +131,9 @@ public static class ReflectionExtensions
     /// <param name="viewmodel"></param>
     public static void RegisterViewModel(this IServiceCollection services, Type viewmodel)
     {
-        var abstraction = viewmodel
-            .GetInterfaces()
-            .FirstOrDefault(q =>
-                q.GetInterfaces().Contains(typeof(IViewModel))
-                && !q.Name.StartsWith(nameof(IViewModel)));
+        var abstraction = Array.Find(
+            viewmodel.GetInterfaces(),
+            q => q.GetInterfaces().Contains(typeof(IViewModel)) && !q.Name.StartsWith(nameof(IViewModel)));
 
         services.Register(viewmodel, abstraction);
     }

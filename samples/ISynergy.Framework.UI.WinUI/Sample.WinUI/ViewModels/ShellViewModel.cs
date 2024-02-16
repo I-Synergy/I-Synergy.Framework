@@ -34,7 +34,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     public bool IsBackEnabled
     {
-        get => CommonServices.NavigationService.CanGoBack;
+        get => _navigationService.CanGoBack;
     }
 
     /// <summary>
@@ -42,6 +42,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <value>The common services.</value>
     public ICommonServices CommonServices { get; }
+
     public IBaseApplicationSettingsService SettingsService { get; }
 
     /// <summary>
@@ -161,8 +162,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, SignInCommand));
 
-        //if (Context.IsAuthenticated && PrimaryItems.Count > 0 && PrimaryItems.First() is NavigationItem navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
-        //    navigationItem.Command.Execute(navigationItem.CommandParameter);
+        
     }
 
     protected override async Task SignOutAsync()
@@ -173,36 +173,36 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             _applicationSettingsService.SaveSettings();
         }
 
-        await CommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+        await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
 
     private Task OpenChartTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
+        _navigationService.NavigateAsync<ChartsViewModel>();
 
     private Task OpenTreenNodeTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
+        _navigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
 
     /// <summary>
     /// Opens the validation test asynchronous.
     /// </summary>
     /// <returns></returns>
     private Task OpenValidationTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<ValidationViewModel>();
+        _navigationService.NavigateAsync<ValidationViewModel>();
 
     /// <summary>
     /// Opens the ListView test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenListViewTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
+        _navigationService.NavigateAsync<TestItemsListViewModel>();
 
     /// <summary>
     /// Opens the converters asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenConvertersAsync() =>
-        CommonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
+        _navigationService.NavigateAsync<ConvertersViewModel>();
 
     /// <summary>
     /// browse file as an asynchronous operation.
@@ -213,7 +213,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
         if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is List<FileResult> files && files.Count > 0)
-            await CommonServices.DialogService.ShowInformationAsync($"File '{files.First().FileName}' is selected.");
+            await CommonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
     /// <summary>
@@ -221,21 +221,21 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenInfoAsync() =>
-        CommonServices.NavigationService.NavigateAsync<InfoViewModel>();
+        _navigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
     /// Opens the display asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenDisplayAsync() =>
-        CommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
+        _navigationService.NavigateAsync<SlideShowViewModel>();
 
     /// <summary>
     /// Opens the selection test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenSelectionTestAsync() =>
-       CommonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
+       _navigationService.NavigateAsync<SelectionTestViewModel>();
 
     /// <summary>
     /// Opens the settings asynchronous.

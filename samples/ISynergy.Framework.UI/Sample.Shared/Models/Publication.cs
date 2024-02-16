@@ -3,7 +3,7 @@ using Sample.Enumerations;
 
 namespace Sample.Models;
 
-public class Publication : TreeNode<Guid, PublicationItem>, IDisposable
+public class Publication : TreeNode<Guid, PublicationItem>
 {
     /// <summary>
     /// Gets or sets the PublicationId property value.

@@ -1,14 +1,9 @@
 ﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Services;
 using Sample.Abstractions;
 using Sample.ViewModels;
-using Sample.Views;
 using System.Runtime.ExceptionServices;
 
 namespace Sample;

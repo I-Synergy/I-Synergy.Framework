@@ -8,9 +8,9 @@ namespace Sample.Services;
 
 internal class CredentialLockerService : ICredentialLockerService
 {
+#if WINDOWS
     private const string _resource = "Sample";
 
-#if WINDOWS
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
         string result = string.Empty;

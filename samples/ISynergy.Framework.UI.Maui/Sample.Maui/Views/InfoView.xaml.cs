@@ -7,11 +7,6 @@ namespace Sample.Views;
 [Singleton(true)]
 public partial class InfoView
 {
-    //public InfoView()
-    //{
-    //    InitializeComponent();
-    //}
-
     public InfoView(IContext context, InfoViewModel viewModel)
        : base(context, viewModel)
     {

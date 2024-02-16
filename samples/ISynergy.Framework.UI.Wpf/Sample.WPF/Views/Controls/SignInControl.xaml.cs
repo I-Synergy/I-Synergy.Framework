@@ -20,10 +20,7 @@ public partial class SignInControl : UserControl
     /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
     private void TextBox_Password_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Enter)
-        {
-            if (DataContext is AuthenticationViewModel viewModel)
-                viewModel.SignInCommand.Execute(null);
-        }
+        if (e.Key == Key.Enter && DataContext is AuthenticationViewModel viewModel)
+            viewModel.SignInCommand.Execute(null);
     }
 }

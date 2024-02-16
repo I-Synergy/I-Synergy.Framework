@@ -25,12 +25,6 @@ public class NavigationService : INavigationService
     public bool CanGoBack => Application.Current.MainPage.Navigation.NavigationStack.Count > 1 ? true : false;
 
     /// <summary>
-    /// Gets a value indicating whether this instance can go forward.
-    /// </summary>
-    /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
-    public bool CanGoForward => false;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="context"></param>
@@ -50,7 +44,7 @@ public class NavigationService : INavigationService
     {
         var url = typeof(TViewModel).Name;
 
-        if (parameter is not null && parameter is Dictionary<string, string> parameters)
+        if (parameter is Dictionary<string, string> parameters)
             url = QueryHelpers.AddQueryString(url, parameters);
 
         if (absolute)

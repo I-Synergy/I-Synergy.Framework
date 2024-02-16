@@ -33,7 +33,7 @@ public static class NavigationExtensions
         var page = MauiAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(typeof(TViewModel).GetRelatedView()));
 
         if (page is null)
-            throw new Exception($"Page not found: {typeof(TViewModel).GetRelatedView()}.");
+            throw new KeyNotFoundException($"Page not found: {typeof(TViewModel).GetRelatedView()}.");
 
         if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is IView resolvedPage)
         {
@@ -83,25 +83,4 @@ public static class NavigationExtensions
         if (!Application.Current.MainPage.GetType().Name.Equals(page.GetType().Name))
             await navigation.PushModalAsync((Page)page, true);
     }
-
-    ///// <summary>
-    ///// Navigates to the viewmodel.
-    ///// </summary>
-    ///// <typeparam name="TViewModel"></typeparam>
-    ///// <param name="shell"></param>
-    ///// <param name="context"></param>
-    ///// <param name="viewModel"></param>
-    ///// <param name="parameter"></param>
-    ///// <returns></returns>
-    //public static async Task GoToViewModelAsync<TViewModel>(this Shell shell, IServiceProvider context, TViewModel viewModel, object parameter = null)
-    //    where TViewModel : class, IViewModel
-    //{
-    //    if (Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault() is IDisposable disposable)
-    //        disposable.Dispose();
-
-    //    var page = CreatePage<TViewModel>(context, viewModel, parameter);
-
-    //    if (!shell.CurrentPage.GetType().Name.Equals(page.GetType().Name))
-    //        await shell.GoToAsync($"//{page.GetType().Name}");
-    //}
 }

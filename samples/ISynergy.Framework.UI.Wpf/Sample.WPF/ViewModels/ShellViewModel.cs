@@ -244,7 +244,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
         if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is List<FileResult> files && files.Count > 0)
-            await CommonServices.DialogService.ShowInformationAsync($"File '{files.First().FileName}' is selected.");
+            await CommonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
     /// <summary>
