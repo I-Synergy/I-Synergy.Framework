@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
@@ -7,7 +8,15 @@ namespace ISynergy.Framework.UI.Services;
 
 public class NavigationService : INavigationService
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IContext _context;
+
+    public event EventHandler BackStackChanged;
+
+    /// <summary>
+    /// Handles the <see cref="E:BackStackChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
 
     /// <summary>
     /// Gets a value indicating whether this instance can go back.
@@ -24,10 +33,10 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
-    /// <param name="serviceProvider"></param>
-    public NavigationService(IServiceProvider serviceProvider)
+    /// <param name="context"></param>
+    public NavigationService(IContext context)
     {
-        _serviceProvider = serviceProvider;
+        _context = context;
     }
 
     /// <summary>
@@ -37,7 +46,7 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <param name="absolute"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
+    public async Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
     {
         var url = typeof(TViewModel).Name;
 
@@ -47,7 +56,9 @@ public class NavigationService : INavigationService
         if (absolute)
             url = $"//{url}";
 
-        return Shell.Current.GoToAsync(url);
+        await Shell.Current.GoToAsync(url);
+
+        OnBackStackChanged(EventArgs.Empty);
     }
 
     /// <summary>
@@ -60,7 +71,7 @@ public class NavigationService : INavigationService
     /// <returns></returns>
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false) where TViewModel : class, IViewModel 
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_serviceProvider, parameter) is IView page)
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is IView page)
         {
             if (absolute)
                 Application.Current.MainPage = new NavigationPage((Page)page);
@@ -69,6 +80,8 @@ public class NavigationService : INavigationService
 
             if (!page.ViewModel.IsInitialized)
                 await page.ViewModel.InitializeAsync();
+
+            OnBackStackChanged(EventArgs.Empty);
         }
     }
 
@@ -82,7 +95,7 @@ public class NavigationService : INavigationService
     public async Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false)
          where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_serviceProvider, parameter) is IView page)
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is IView page)
         {
             if (absolute)
                 Application.Current.MainPage = (Page)page;
@@ -94,8 +107,12 @@ public class NavigationService : INavigationService
         }
     }
 
-    public Task CleanBackStackAsync() =>
-        Shell.Current.Navigation.PopToRootAsync();
+    public async Task CleanBackStackAsync()
+    {
+        await Shell.Current.Navigation.PopToRootAsync();
+        OnBackStackChanged(EventArgs.Empty);
+    }
+        
 
     /// <summary>
     /// Goes the back.
@@ -104,6 +121,8 @@ public class NavigationService : INavigationService
     {
         if (CanGoBack)
             await Shell.Current.GoToAsync("..");
+
+        OnBackStackChanged(EventArgs.Empty);
     }
 
     #region NotImplemented
