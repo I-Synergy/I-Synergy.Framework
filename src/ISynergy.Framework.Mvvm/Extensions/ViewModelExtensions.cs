@@ -64,7 +64,7 @@ public static class ViewModelExtensions
     {
         var result = type.Name;
 
-        if (type.IsInterface && result.StartsWith("I"))
+        if (type.IsInterface && result.StartsWith('I'))
             result = result.Substring(1, result.Length - 1);
 
         result = result.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.View);
@@ -79,7 +79,7 @@ public static class ViewModelExtensions
     {
         var result = type.Name;
 
-        if (type.IsInterface && result.StartsWith("I"))
+        if (type.IsInterface && result.StartsWith('I'))
             result = result.Substring(1, result.Length - 1);
 
         result = result.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);

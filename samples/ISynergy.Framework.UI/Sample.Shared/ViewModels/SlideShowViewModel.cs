@@ -99,7 +99,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         {
             if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
             {
-                SelectedItem = Items.First();
+                SelectedItem = Items[0];
             }
             else if (SelectedItem.Index < Items.Count - 1)
             {

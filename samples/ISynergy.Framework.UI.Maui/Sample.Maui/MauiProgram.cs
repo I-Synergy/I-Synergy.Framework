@@ -40,8 +40,6 @@ public class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
 
-        Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
-
         IConfigurationRoot config = new ConfigurationBuilder()
             .AddJsonStream(await FileSystem.OpenAppPackageFileAsync("appsettings.json"))
             .Build();

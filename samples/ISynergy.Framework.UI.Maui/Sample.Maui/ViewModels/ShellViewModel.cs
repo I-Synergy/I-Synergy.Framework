@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -62,36 +61,6 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
     public AsyncRelayCommand BrowseCommand { get; private set; }
 
     /// <summary>
-    /// Gets or sets the converter command.
-    /// </summary>
-    /// <value>The converter command.</value>
-    public AsyncRelayCommand ConverterCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the selection test command.
-    /// </summary>
-    /// <value>The selection test command.</value>
-    public AsyncRelayCommand SelectionTestCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the ListView test command.
-    /// </summary>
-    /// <value>The ListView test command.</value>
-    public AsyncRelayCommand ListViewTestCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the Validation test command.
-    /// </summary>
-    public AsyncRelayCommand ValidationTestCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the TreeNode test command.
-    /// </summary>
-    public AsyncRelayCommand TreeNodeTestCommand { get; private set; }
-
-    public AsyncRelayCommand ChartCommand { get; private set; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="context">The context.</param>
@@ -120,12 +89,6 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
         DisplayCommand = new AsyncRelayCommand(OpenDisplayAsync);
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
         BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
-        //ConverterCommand = new AsyncRelayCommand(OpenConvertersAsync);
-        //SelectionTestCommand = new AsyncRelayCommand(OpenSelectionTestAsync);
-        //ListViewTestCommand = new AsyncRelayCommand(OpenListViewTestAsync);
-        //ValidationTestCommand = new AsyncRelayCommand(OpenValidationTestAsync);
-        //TreeNodeTestCommand = new AsyncRelayCommand(OpenTreenNodeTestAsync);
-        //ChartCommand = new AsyncRelayCommand(OpenChartTestAsync);
     }
 
     protected override async Task SignOutAsync()
@@ -139,34 +102,6 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 
-
-    //private Task OpenChartTestAsync() =>
-    //    CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
-
-    //private Task OpenTreenNodeTestAsync() =>
-    //    CommonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
-
-    ///// <summary>
-    ///// Opens the validation test asynchronous.
-    ///// </summary>
-    ///// <returns></returns>
-    //private Task OpenValidationTestAsync() =>
-    //    CommonServices.NavigationService.NavigateAsync<ValidationViewModel>();
-
-    ///// <summary>
-    ///// Opens the ListView test asynchronous.
-    ///// </summary>
-    ///// <returns>Task.</returns>
-    //private Task OpenListViewTestAsync() =>
-    //    CommonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
-
-    ///// <summary>
-    ///// Opens the converters asynchronous.
-    ///// </summary>
-    ///// <returns>Task.</returns>
-    //private Task OpenConvertersAsync() =>
-    //    CommonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
-
     /// <summary>
     /// browse file as an asynchronous operation.
     /// </summary>
@@ -176,7 +111,7 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
         if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is List<FileResult> files && files.Count > 0)
-            await CommonServices.DialogService.ShowInformationAsync($"File '{files.First().FileName}' is selected.");
+            await CommonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
     /// <summary>
@@ -192,13 +127,6 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <returns>Task.</returns>
     private Task OpenDisplayAsync() =>
         CommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
-
-    ///// <summary>
-    ///// Opens the selection test asynchronous.
-    ///// </summary>
-    ///// <returns>Task.</returns>
-    //private Task OpenSelectionTestAsync() =>
-    //   CommonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
 
     /// <summary>
     /// Opens the settings asynchronous.

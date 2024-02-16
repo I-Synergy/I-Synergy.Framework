@@ -210,7 +210,7 @@ internal class DialogService : IDialogService
 
                 await Application.Current.MainPage.Navigation.PopModalAsync();
 
-                viewmodel?.Dispose();
+                viewmodel.Dispose();
                 viewmodel = null;
 
                 window?.Dispose();

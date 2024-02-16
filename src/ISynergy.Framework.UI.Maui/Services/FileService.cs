@@ -51,7 +51,7 @@ internal class FileService : IFileService<FileResult>
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result)
         {
-            return result.First().File;
+            return result[0].File;
         }
 
         return null;

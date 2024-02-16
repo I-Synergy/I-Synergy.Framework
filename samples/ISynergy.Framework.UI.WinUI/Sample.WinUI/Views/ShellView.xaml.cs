@@ -1,7 +1,12 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Sample.ViewModels;
+
 
 namespace Sample.Views;
 

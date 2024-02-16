@@ -39,7 +39,7 @@ public static class NavigationExtensions
         var page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetRelatedView()));
 
         if (page is null)
-            throw new Exception($"Page not found: {viewModel.GetRelatedView()}.");
+            throw new KeyNotFoundException($"Page not found: {viewModel.GetRelatedView()}.");
 
         if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is View resolvedPage)
         {
