@@ -17,6 +17,8 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
+    private readonly INavigationService _navigationService;
+
     /// <summary>
     /// Gets or sets the Version property value.
     /// </summary>
@@ -32,8 +34,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     public bool IsBackEnabled
     {
-        get => GetValue<bool>();
-        set => SetValue(value);
+        get => CommonServices.NavigationService.CanGoBack;
     }
 
     /// <summary>
@@ -96,6 +97,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="navigationService"></param>
     /// <param name="settingsService">The settings services.</param>
     /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
@@ -104,6 +106,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     public ShellViewModel(
         IContext context,
         ICommonServices commonServices,
+        INavigationService navigationService,
         IBaseApplicationSettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
@@ -113,6 +116,9 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         CommonServices = commonServices;
         SettingsService = settingsService;
+
+        _navigationService = navigationService;
+        _navigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
 
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
@@ -155,8 +161,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, LoginCommand));
 
-        if (Context.IsAuthenticated && PrimaryItems.Count > 0 && PrimaryItems.First() is NavigationItem navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
-            navigationItem.Command.Execute(navigationItem.CommandParameter);
+        //if (Context.IsAuthenticated && PrimaryItems.Count > 0 && PrimaryItems.First() is NavigationItem navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
+        //    navigationItem.Command.Execute(navigationItem.CommandParameter);
     }
 
     protected override async Task SignOutAsync()

@@ -153,6 +153,23 @@ public sealed class BooleanToVisibilityConverter : BooleanConverter<Visibility>
 }
 
 /// <summary>
+/// Class BooleanToVisibilityConverter.
+/// Implements the <see cref="BooleanConverter{Visibility}" />
+/// </summary>
+/// <seealso cref="BooleanConverter{Visibility}" />
+public sealed class NavigationViewBackButtonVisibleConverter : BooleanConverter<NavigationViewBackButtonVisible>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BooleanToVisibilityConverter"/> class.
+    /// </summary>
+    public NavigationViewBackButtonVisibleConverter()
+        : base(NavigationViewBackButtonVisible.Visible, NavigationViewBackButtonVisible.Collapsed)
+    {
+    }
+}
+
+
+/// <summary>
 /// Class NullToBooleanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
