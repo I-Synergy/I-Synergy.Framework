@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<CodeAnalysisRuleSet>ISynergy.Framework.ruleset</CodeAnalysisRuleSet>
+		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>

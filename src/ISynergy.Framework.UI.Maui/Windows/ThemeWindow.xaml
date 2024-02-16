@@ -7,27 +7,40 @@
           xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
           x:Class="ISynergy.Framework.UI.Windows.ThemeWindow"
           xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
+          xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
+          x:DataType="viewmodels:ThemeViewModel"
           Title="{Binding Title}">
 
     <ContentView 
         ControlTemplate="{DynamicResource DefaultDialogTemplate}"
         WidthRequest="400"
-        HeightRequest="500">
+        HeightRequest="510">
         
         <ContentView.Resources>
             <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
         </ContentView.Resources>
         
         <VerticalStackLayout>
-            <HorizontalStackLayout HorizontalOptions="Center">
-                <RadioButton GroupName="Theme" Content="{m:GetString Light}" IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Light}}"/>
-                <RadioButton GroupName="Theme" Content="{m:GetString Dark}" IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Dark}}"/>
-            </HorizontalStackLayout>
+            <Grid ColumnDefinitions="*,*" WidthRequest="300" HorizontalOptions="EndAndExpand" >
+                <RadioButton
+                    GroupName="Theme"
+                    Grid.Column="0"
+                    HorizontalOptions="EndAndExpand"
+                    Content="{m:GetString Light}" 
+                    IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Light}}"/>
+                <RadioButton 
+                    GroupName="Theme"
+                    Grid.Column="1"
+                    HorizontalOptions="StartAndExpand"
+                    Content="{m:GetString Dark}" 
+                    IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Dark}}"/>
+            </Grid>
 
-            <CollectionView ItemsSource="{Binding ThemeColors.Colors}"
-                            SelectedItem="{Binding SelectedItem.Color}"
-                            SelectionMode="Single"
-                            HorizontalOptions="Center">
+            <CollectionView
+                ItemsSource="{Binding ThemeColors.Colors}"
+                SelectedItem="{Binding SelectedItem.Color}"
+                SelectionMode="Single"
+                HorizontalOptions="Center">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout
                         Orientation="Vertical" 
@@ -35,10 +48,15 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Ellipse Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
-                                 WidthRequest="32"
-                                 HeightRequest="32"
-                                 ToolTipProperties.Text="{Binding}"/>
+                        <Grid>
+                            <Ellipse
+                                Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                WidthRequest="32"
+                                HeightRequest="32"
+                                ToolTipProperties.Text="{Binding}"/>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

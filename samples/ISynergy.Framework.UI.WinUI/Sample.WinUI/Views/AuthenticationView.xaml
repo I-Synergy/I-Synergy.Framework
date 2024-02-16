@@ -35,17 +35,17 @@
 
             <Grid Grid.Column="1" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="{m:LanguageResource Key= Register_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <TextBlock Text="{m:LanguageResource Key= Register_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <TextBlock Text="{m:LanguageResource Key= SignupTitle}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <TextBlock Text="{m:LanguageResource Key= SignupText}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
                     <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" Style="{StaticResource DefaultDialogButtonStyle}"/>
                 </StackPanel>
             </Grid>
 
             <Grid Grid.Column="3" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="{m:LanguageResource Key= Login_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <TextBlock Text="{m:LanguageResource Key= Login_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=Login}" Margin ="5,20,5,5" HorizontalAlignment="Right" Style="{StaticResource DefaultDialogButtonStyle}"/>
+                    <TextBlock Text="{m:LanguageResource Key= LoginTitle}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <TextBlock Text="{m:LanguageResource Key= LoginText}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=SignIn}" Margin ="5,20,5,5" HorizontalAlignment="Right" Style="{StaticResource DefaultDialogButtonStyle}"/>
                 </StackPanel>
             </Grid>
 

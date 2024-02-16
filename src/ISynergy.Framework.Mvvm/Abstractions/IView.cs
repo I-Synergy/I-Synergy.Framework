@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions;
 /// <summary>
 /// Interface IView
 /// </summary>
-public interface IView
+public interface IView : IDisposable
 {
     /// <summary>
     /// Gets or sets the data context.

@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -12,7 +13,6 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
-using ISynergy.Framework.UI.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
@@ -37,7 +37,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the login command.
     /// </summary>
     /// <value>The login command.</value>
-    public AsyncRelayCommand LoginCommand { get; private set; }
+    public AsyncRelayCommand SignInCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the language command.
@@ -95,6 +95,27 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     protected readonly ILocalizationService _localizationService;
 
+
+    /// <summary>
+    /// Gets or sets the PrimaryItems property value.
+    /// </summary>
+    /// <value>The primary items.</value>
+    public ObservableCollection<NavigationItem> PrimaryItems
+    {
+        get => GetValue<ObservableCollection<NavigationItem>>();
+        private set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the SecondaryItems property value.
+    /// </summary>
+    /// <value>The primary items.</value>
+    public ObservableCollection<NavigationItem> SecondaryItems
+    {
+        get => GetValue<ObservableCollection<NavigationItem>>();
+        private set => SetValue(value);
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
@@ -115,6 +136,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         ILocalizationService LocalizationService)
         : base(context, commonServices, logger)
     {
+
+        PrimaryItems = new ObservableCollection<NavigationItem>();
+        SecondaryItems = new ObservableCollection<NavigationItem>();
+
         _applicationSettingsService = applicationSettingsService;
         _applicationSettingsService.LoadSettings();
 
@@ -122,12 +147,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         _themeService = themeService;
         _localizationService = LocalizationService;
 
-        PrimaryItems = new ObservableCollection<NavigationItem>();
-        SecondaryItems = new ObservableCollection<NavigationItem>();
-
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
-
-        LoginCommand = new AsyncRelayCommand(SignOutAsync);
+        SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
         ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
@@ -148,36 +169,11 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected virtual Task SignOutAsync() => _authenticationService.SignOutAsync();
 
     /// <summary>
-    /// Populates the nav items.
-    /// </summary>
-    protected abstract void PopulateNavItems();
-
-    /// <summary>
     /// Shows the dialog restart after update asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     protected Task ShowDialogRestartAfterUpdateAsync() =>
         BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("UpdateRestart"));
-
-    /// <summary>
-    /// Gets or sets the PrimaryItems property value.
-    /// </summary>
-    /// <value>The primary items.</value>
-    public ObservableCollection<NavigationItem> PrimaryItems
-    {
-        get => GetValue<ObservableCollection<NavigationItem>>();
-        set => SetValue(value);
-    }
-
-    /// <summary>
-    /// Gets or sets the SecondaryItems property value.
-    /// </summary>
-    /// <value>The primary items.</value>
-    public ObservableCollection<NavigationItem> SecondaryItems
-    {
-        get => GetValue<ObservableCollection<NavigationItem>>();
-        set => SetValue(value);
-    }
 
     /// <summary>
     /// Gets or sets the LastSelectedItem property value.
@@ -348,8 +344,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         RestartUpdateCommand?.Cancel();
         RestartUpdateCommand = null;
-        LoginCommand?.Cancel();
-        LoginCommand = null;
+        SignInCommand?.Cancel();
+        SignInCommand = null;
         LanguageCommand?.Cancel();
         LanguageCommand = null;
         ColorCommand?.Cancel();

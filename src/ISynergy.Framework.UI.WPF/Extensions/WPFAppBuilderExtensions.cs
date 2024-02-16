@@ -27,25 +27,19 @@ public static class WPFAppBuilderExtensions
     /// Gets the shellView model types.
     /// </summary>
     /// <value>The shellView model types.</value>
-    public static List<Type> ViewModelTypes { get; private set; }
+    public static IEnumerable<Type> ViewModelTypes { get; private set; }
 
     /// <summary>
     /// Gets the shellView types.
     /// </summary>
     /// <value>The shellView types.</value>
-    public static List<Type> ViewTypes { get; private set; }
+    public static IEnumerable<Type> ViewTypes { get; private set; }
 
     /// <summary>
     /// Gets the window types.
     /// </summary>
     /// <value>The window types.</value>
-    public static List<Type> WindowTypes { get; private set; }
-
-    /// <summary>
-    /// Bootstrapper types
-    /// </summary>
-    /// <value>The bootstrapper types.</value>
-    public static List<Type> BootstrapperTypes { get; private set; }
+    public static IEnumerable<Type> WindowTypes { get; private set; }
 
     /// <summary>
     /// 
@@ -140,96 +134,14 @@ public static class WPFAppBuilderExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="assemblies">The assemblies.</param>
-    private static void RegisterAssemblies(this IServiceCollection services, List<Assembly> assemblies)
+    private static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
-        ViewTypes = new List<Type>();
-        WindowTypes = new List<Type>();
-        ViewModelTypes = new List<Type>();
-        BootstrapperTypes = new List<Type>();
+        ViewTypes = assemblies.ToViewTypes();
+        WindowTypes = assemblies.ToWindowTypes();
+        ViewModelTypes = assemblies.ToViewModelTypes();
 
-        foreach (var assembly in assemblies)
-        {
-            ViewModelTypes.AddRange(assembly.GetTypes()
-                .Where(q =>
-                    q.GetInterface(nameof(IViewModel), false) is not null
-                    && (q.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(q.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
-                    && q.Name != GenericConstants.ViewModel
-                    && !q.IsAbstract
-                    && !q.IsInterface)
-                .ToList());
-
-            ViewTypes.AddRange(assembly.GetTypes()
-                .Where(q =>
-                    q.GetInterfaces().Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
-                    && (q.Name.EndsWith(GenericConstants.View) || q.Name.EndsWith(GenericConstants.Page))
-                    && q.Name != GenericConstants.View
-                    && q.Name != GenericConstants.Page
-                    && !q.IsAbstract
-                    && !q.IsInterface)
-                .ToList());
-
-            WindowTypes.AddRange(assembly.GetTypes()
-                .Where(q =>
-                    q.GetInterfaces().Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
-                    && q.Name.EndsWith(GenericConstants.Window)
-                    && q.Name != GenericConstants.Window
-                    && !q.IsAbstract
-                    && !q.IsInterface)
-                .ToList());
-
-            BootstrapperTypes.AddRange(assembly.GetTypes()
-                .Where(q =>
-                    q.GetInterface(nameof(IBootstrap), false) is not null
-                    && !q.IsAbstract
-                    && !q.IsInterface)
-                .ToList());
-        }
-
-        foreach (var viewmodel in ViewModelTypes.Distinct())
-        {
-            var abstraction = viewmodel
-                .GetInterfaces()
-                .FirstOrDefault(q =>
-                    q.GetInterfaces().Contains(typeof(IViewModel))
-                    && q.Name != nameof(IViewModel));
-
-            if (abstraction is not null && !viewmodel.IsGenericType)
-                services.TryAddTransient(abstraction, viewmodel);
-
-            services.TryAddTransient(viewmodel);
-        }
-
-        foreach (var view in ViewTypes.Distinct())
-        {
-            var abstraction = view
-                .GetInterfaces()
-                .FirstOrDefault(q =>
-                    q.GetInterfaces().Contains(typeof(IView))
-                    && q.Name != nameof(IView));
-
-            if (abstraction is not null)
-                services.TryAddTransient(abstraction, view);
-
-            services.TryAddTransient(view);
-        }
-
-        foreach (var window in WindowTypes.Distinct())
-        {
-            var abstraction = window
-                .GetInterfaces()
-                .FirstOrDefault(q =>
-                    q.GetInterfaces().Contains(typeof(IWindow))
-                    && q.Name != nameof(IWindow));
-
-            if (abstraction is not null)
-                services.TryAddTransient(abstraction, window);
-
-            services.TryAddTransient(window);
-        }
-
-        foreach (var bootstrapper in BootstrapperTypes.Distinct())
-        {
-            services.TryAddSingleton(bootstrapper);
-        }
+        services.RegisterViewModels(ViewModelTypes);
+        services.RegisterViews(ViewTypes);
+        services.RegisterWindows(WindowTypes);
     }
 }

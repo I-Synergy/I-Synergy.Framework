@@ -1,7 +1,9 @@
 ﻿<?xml version = "1.0" encoding = "UTF-8" ?>
-<c:BaseApplication xmlns:c="clr-namespace:ISynergy.Framework.UI;assembly=ISynergy.Framework.UI.Maui"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Sample"
-             x:Class="Sample.App">
+<c:BaseApplication 
+    xmlns:c="clr-namespace:ISynergy.Framework.UI;assembly=ISynergy.Framework.UI.Maui"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Sample"
+    x:Class="Sample.App">
+    
 </c:BaseApplication>

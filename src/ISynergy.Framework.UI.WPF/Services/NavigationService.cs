@@ -21,7 +21,6 @@ namespace ISynergy.Framework.UI.Services;
 public class NavigationService : INavigationService
 {
     private readonly IContext _context;
-    private readonly IServiceProvider _serviceProvider;
 
     public event EventHandler BackStackChanged;
 
@@ -32,47 +31,23 @@ public class NavigationService : INavigationService
     public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
 
     /// <summary>
-    /// The frame
-    /// </summary>
-    private Frame _frame;
-
-    /// <summary>
     /// Navigation backstack.
     /// </summary>
     private Stack<object> _backStack = new Stack<object>();
-
-    /// <summary>
-    /// Gets or sets the frame.
-    /// </summary>
-    /// <value>The frame.</value>
-    public object Frame
-    {
-        get => _frame ??= (Frame)Application.Current.MainWindow.Content;
-        set => _frame = (Frame)value;
-    }
 
     /// <summary>
     /// Gets a value indicating whether this instance can go back.
     /// </summary>
     /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
     public bool CanGoBack => _backStack.Count > 0 ? true : false;
-    /// <summary>
-    /// Gets a value indicating whether this instance can go forward.
-    /// </summary>
-    /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
-    public bool CanGoForward => _frame.CanGoForward;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="serviceProvider"></param>
-    public NavigationService(
-        IContext context,
-        IServiceProvider serviceProvider)
+    public NavigationService(IContext context)
     {
         _context = context;
-        _serviceProvider = serviceProvider;
     }
 
     /// <summary>
@@ -81,20 +56,7 @@ public class NavigationService : INavigationService
     public async Task GoBackAsync()
     {
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
-        {
-            await NavigateAsync(viewModel, navigateBack: true);
-        }
-    }
-
-    /// <summary>
-    /// Goes the forward.
-    /// </summary>
-    public Task GoForwardAsync()
-    {
-        if (_frame.CanGoForward)
-            _frame.GoForward();
-
-        return Task.CompletedTask;
+            await NavigateAsync(viewModel, absolute: true);
     }
 
     /// <summary>
@@ -106,12 +68,12 @@ public class NavigationService : INavigationService
     /// <exception cref="ArgumentException">Instance could not be created from {viewModelKey}</exception>
     private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
-        var page = WPFAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetViewFullName()));
+        var page = WPFAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetRelatedView()));
 
         if (page is null)
-            throw new KeyNotFoundException($"Page not found: {viewModel.GetViewFullName()}.");
+            throw new KeyNotFoundException($"Page not found: {viewModel.GetRelatedView()}.");
 
-        if (_serviceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
+        if (_context.ScopedServices.ServiceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
         {
             view.ViewModel = viewModel;
 
@@ -121,7 +83,7 @@ public class NavigationService : INavigationService
             return view;
         }
 
-        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetViewFullName()}");
+        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetRelatedView()}");
     }
 
     /// <summary>
@@ -173,7 +135,7 @@ public class NavigationService : INavigationService
             bladeVm.Owner = owner;
             bladeVm.Closed += Viewmodel_Closed;
 
-            if (_serviceProvider.GetRequiredService(typeof(TView)) is View view)
+            if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View view)
             {
                 view.ViewModel = viewmodel;
 
@@ -245,9 +207,9 @@ public class NavigationService : INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object parameter = null, bool navigateBack = false)
+    public Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel =>
         NavigateAsync(default(TViewModel), parameter);
 
@@ -257,9 +219,9 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TView"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool navigateBack = false)
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView =>
         NavigateAsync<TViewModel, TView>(default(TViewModel), parameter);
@@ -270,25 +232,27 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter">The parameter.</param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns>Task&lt;IView&gt;.</returns>
     /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is View page)
+        if (Application.Current.MainWindow.Content is DependencyObject dependencyObject && 
+            dependencyObject.FindChild<Frame>() is Frame frame &&
+            NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is View page)
         {
             // Check if actual page is the same as destination page.
-            if (_frame.Content is View originalView)
+            if (frame.Content is View originalView)
             {
                 if (originalView.GetType().Equals(page.GetType()))
                     return;
 
-                if (!navigateBack)
+                if (!absolute)
                     _backStack.Push(originalView.ViewModel);
             }
 
-            _frame.Content = page;
+            frame.Content = page;
 
             if (!page.ViewModel.IsInitialized)
                 await page.ViewModel.InitializeAsync();
@@ -304,55 +268,52 @@ public class NavigationService : INavigationService
     /// <typeparam name="TView"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
-    /// <param name="navigateBack"></param>
+    /// <param name="absolute"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel,TView>(TViewModel viewModel, object parameter = null, bool navigateBack = false)
+    public async Task NavigateAsync<TViewModel,TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView
     {
-        if (_serviceProvider.GetRequiredService(typeof(TView)) is View view)
+        if (Application.Current.MainWindow.Content is DependencyObject dependencyObject &&
+            dependencyObject.FindChild<Frame>() is Frame frame &&
+            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
         {
-            if (viewModel is null && _serviceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
+            if (viewModel is null && _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
                 viewModel = resolvedViewModel;
 
             if (viewModel is not null && parameter is not null)
                 viewModel.Parameter = parameter;
 
-            view.ViewModel = viewModel;
+            page.ViewModel = viewModel;
 
             // Check if actual page is the same as destination page.
-            if (_frame.Content is View originalView)
+            if (frame.Content is View originalView)
             {
-                if (originalView.GetType().Equals(view.GetType()))
+                if (originalView.GetType().Equals(page.GetType()))
                     return;
 
-                if (!navigateBack)
+                if (!absolute)
                     _backStack.Push(originalView.ViewModel);
             }
 
-            _frame.Content = view;
+            frame.Content = page;
 
-            if (!view.ViewModel.IsInitialized)
-                await view.ViewModel.InitializeAsync();
+            if (!page.ViewModel.IsInitialized)
+                await page.ViewModel.InitializeAsync();
 
             OnBackStackChanged(EventArgs.Empty);
         }
     }
 
-    public Task NavigateModalAsync<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
+    public async Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(parameter) is View page && Application.Current is BaseApplication baseApplication)
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is View page && Application.Current is BaseApplication baseApplication)
         {
-            Application.Current.Dispatcher.Invoke(async () =>
-            {
-                baseApplication.MainWindow.Content = page;
+            baseApplication.MainWindow.Content = page;
 
-                if (!page.ViewModel.IsInitialized)
-                    await page.ViewModel.InitializeAsync();
-            });
+            if (!page.ViewModel.IsInitialized)
+                await page.ViewModel.InitializeAsync();
         }
-
-        return Task.CompletedTask;
     }
 
     public Task CleanBackStackAsync()
@@ -360,5 +321,10 @@ public class NavigationService : INavigationService
         _backStack.Clear();
         OnBackStackChanged(EventArgs.Empty);
         return Task.CompletedTask;
+    }
+
+    public Task GoBackModalAsync()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,0 +1,8 @@
+﻿{
+  "profiles": {
+    "Sample.WinUI": {
+      "commandName": "MsixPackage",
+      "commandLineArgs": "?environment=local&country=nl"
+    }
+  }
+}

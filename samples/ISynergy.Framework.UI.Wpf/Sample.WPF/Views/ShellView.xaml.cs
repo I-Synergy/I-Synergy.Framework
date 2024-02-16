@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Views;
+﻿using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using Syncfusion.UI.Xaml.NavigationDrawer;
 
@@ -17,12 +15,11 @@ public partial class ShellView : View, IShellView
     public ShellView()
     {
         InitializeComponent();
-        ServiceLocator.Default.GetInstance<INavigationService>().Frame = ContentRootFrame;
     }
 
     private void NavigationView_ItemClicked(object sender, NavigationItemClickedEventArgs e)
     {
-        if (e.Item.DataContext is ISynergy.Framework.UI.Models.NavigationItem navigationItem &&
+        if (e.Item.DataContext is ISynergy.Framework.Core.Models.NavigationItem navigationItem &&
             navigationItem.Command.CanExecute(navigationItem.CommandParameter))
             navigationItem.Command.Execute(navigationItem.CommandParameter);
     }

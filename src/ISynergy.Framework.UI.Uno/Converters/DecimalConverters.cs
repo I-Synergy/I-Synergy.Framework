@@ -1,0 +1,364 @@
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
+
+namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Class DecimalToVisibilityConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DecimalToVisibilityConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if ((decimal)value == 0 || value is null)
+        {
+            return Visibility.Collapsed;
+        }
+        else
+        {
+            return Visibility.Visible;
+        }
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DecimalEqualsConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DecimalEqualsConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        decimal.TryParse(parameter.ToString(), out var limit);
+        decimal.TryParse(value.ToString(), out var test);
+
+        if (test == limit)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DecimalLesserThenConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DecimalLesserThenConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        decimal.TryParse(parameter.ToString(), out var limit);
+        decimal.TryParse(value.ToString(), out var test);
+
+        if (test < limit)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DecimalGreaterThenConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DecimalGreaterThenConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        decimal.TryParse(parameter.ToString(), out var limit);
+        decimal.TryParse(value.ToString(), out var test);
+
+        if (test > limit)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DecimalEqualsOrLesserThenConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DecimalEqualsOrLesserThenConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        decimal.TryParse(parameter.ToString(), out var limit);
+        decimal.TryParse(value.ToString(), out var test);
+
+        if (test <= limit)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DecimalEqualsOrGreaterThenConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DecimalEqualsOrGreaterThenConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        decimal.TryParse(parameter.ToString(), out var limit);
+        decimal.TryParse(value.ToString(), out var test);
+
+        if (test >= limit)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Class DecimalToStringConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DecimalToStringConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value is decimal @decimal)
+        {
+            if (parameter is not null)
+            {
+                return string.Format((string)parameter, value);
+            }
+
+            return @decimal.ToString();
+        }
+
+        if (parameter is not null)
+        {
+            return string.Format((string)parameter, (decimal)0);
+        }
+
+        return "0";
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        if (decimal.TryParse(value.ToString(), out var result))
+        {
+            return result;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+}
+
+/// <summary>
+/// Class DecimalToDoubleConverter.
+/// Implements the <see cref="IValueConverter" />
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class DecimalToDoubleConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value is decimal decimalValue)
+        {
+            return System.Convert.ToDouble(decimalValue);
+        }
+
+        return 0d;
+    }
+
+    /// <summary>
+    /// Converts the back.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>System.Object.</returns>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        if (value is double doubleValue)
+        {
+            if (doubleValue is double.NaN)
+                return 0m;
+            else
+                return System.Convert.ToDecimal(doubleValue);
+        }
+
+        return 0m;
+    }
+}

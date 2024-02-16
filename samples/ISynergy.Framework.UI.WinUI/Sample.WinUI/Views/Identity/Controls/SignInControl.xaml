@@ -9,7 +9,7 @@
 
     <Grid>
         <StackPanel Margin="2,10" VerticalAlignment="Center">
-            <TextBlock Text="{m:LanguageResource Key=Login}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" />
+            <TextBlock Text="{m:LanguageResource Key=SignIn}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" />
 
             <AutoSuggestBox 
                 x:Name="TextBox_Username" 
@@ -31,11 +31,11 @@
                 KeyDown="TextBox_Password_KeyDown"/>
 
             <CheckBox Content="{m:LanguageResource Key=Remember}" IsChecked="{Binding AutoLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <HyperlinkButton x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{m:LanguageResource Key=Password_Forgot}" Command="{Binding ForgotPasswordCommand}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
+            <HyperlinkButton x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{m:LanguageResource Key=PasswordForgot}" Command="{Binding ForgotPasswordCommand}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
             <TextBlock x:Name="TextBox_CapsLockOn" Text="{m:LanguageResource Key=Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
 
             <Button x:Name="Button_Submit" 
-                    Content="{m:LanguageResource Key=Login}" 
+                    Content="{m:LanguageResource Key=SignIn}" 
                     Margin ="5,25" 
                     HorizontalAlignment="Right" 
                     Command="{Binding SignInCommand}"

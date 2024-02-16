@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        x:Class="Sample.Views.SignUpView"
+        xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+        xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
+        xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+        x:DataType="viewmodels:SignUpViewModel"
+        Shell.FlyoutBehavior="Disabled"
+        Shell.NavBarIsVisible="False"
+        Title="{Binding Title}">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
+    <Grid HorizontalOptions="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Image
+            Grid.Row="0"
+            Grid.Column="1"
+            Source="dotnet_bot.png"
+            SemanticProperties.Description="Logo"
+            Margin="10"
+            WidthRequest="400"
+            VerticalOptions="Start"
+            HorizontalOptions="Center"/>
+
+        <VerticalStackLayout
+            Spacing="5" 
+            Grid.Row="1" 
+            Grid.Column="1">
+            <Label
+                Text="{m:GetString SignupTitle}"
+                SemanticProperties.HeadingLevel="Level1"
+                HorizontalOptions="Center"
+                FontSize="24" 
+                FontAttributes="Bold" 
+                TextColor="{DynamicResource Primary}"
+                LineBreakMode="WordWrap" />
+
+            <Label
+                Text="{m:GetString SignupText}"
+                SemanticProperties.HeadingLevel="Level2"
+                HorizontalOptions="Center"
+                TextColor="{DynamicResource Primary}"
+                LineBreakMode="WordWrap"/>
+        </VerticalStackLayout>
+
+        <ScrollView 
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="0,20">
+            <VerticalStackLayout
+                Spacing="10"
+                VerticalOptions="Center"
+                MaximumWidthRequest="250">
+                <Entry Text="{Binding Name}" Placeholder="{m:GetString Fullname}"/>
+                <Entry Text="{Binding Mail}" Placeholder="{m:GetString EmailAddress}" Keyboard="Email">
+                    <Entry.Behaviors>
+                        <behaviors:UserStoppedTypingBehavior 
+                            Command="{Binding ValidateMailCommand}" 
+                            StoppedTypingTimeThreshold="2500"
+                            MinimumLengthThreshold="3"
+                            ShouldDismissKeyboardAutomatically="True"/>
+                    </Entry.Behaviors>
+                </Entry>
+
+                <Entry Text="{Binding Password}" Placeholder="{m:GetString Password}" IsPassword="True"/>
+                <Entry Text="{Binding PasswordCheck}" Placeholder="{m:GetString PasswordRetype}" IsPassword="True" />
+
+                <Picker Title="{m:GetString Modules}" ItemsSource="{Binding Modules}" SelectedItem="{Binding SelectedModules}" ItemDisplayBinding="{Binding Description}" IsEnabled="{Binding ArePickersAvailable}"/>
+                <Picker Title="{m:GetString Country}" ItemsSource="{Binding Countries}" SelectedItem="{Binding SelectedCountry}" ItemDisplayBinding="{Binding CountryISO}" IsEnabled="{Binding ArePickersAvailable}"/>
+                <Picker Title="{m:GetString TimeZone}" ItemsSource="{Binding TimeZones}" SelectedItem="{Binding SelectedTimeZone}" IsEnabled="{Binding ArePickersAvailable}"/>
+
+                <Button Text="{m:GetString Register}" Command="{Binding SignUpCommand}" HorizontalOptions="Center" IsEnabled="{Binding ArePickersAvailable}"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <StackLayout
+            Grid.Row="3"
+            Grid.Column="1"
+            Orientation="Horizontal" 
+            Spacing="5" 
+            HorizontalOptions="Center" 
+            Margin="30" 
+            VerticalOptions="End">
+            <Label Text="{m:GetString LoginAccount}" TextColor="{DynamicResource Gray600}"/>
+            <Label Text="{m:GetString SignInHere}" TextColor="{DynamicResource Primary}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SignInCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+        </StackLayout>
+
+        <c:ErrorPresenter
+            Grid.Row="0" 
+            Grid.RowSpan="4"
+            Grid.Column="1"
+            VerticalOptions="Start"/>
+    </Grid>
+</c:View>
