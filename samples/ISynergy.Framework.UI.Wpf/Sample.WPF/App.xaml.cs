@@ -1,11 +1,7 @@
 ﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Services;
 using Sample.Abstractions;
 using Sample.ViewModels;
 using System.Windows;
@@ -41,19 +37,16 @@ public partial class App : BaseApplication
         }
 
         if (navigateToAuthentication)
-            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
+            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
     public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
     {
-        if (ServiceLocator.Default.GetInstance<INavigationService>() is NavigationService navigationService)
-        {
-            await navigationService.CleanBackStackAsync();
+        await _navigationService.CleanBackStackAsync();
 
-            if (e.Value)
-                await navigationService.NavigateModalAsync<IShellViewModel>();
-            else
-                await navigationService.NavigateModalAsync<AuthenticationViewModel>();
-        }
+        if (e.Value)
+            await _navigationService.NavigateModalAsync<IShellViewModel>();
+        else
+            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 }

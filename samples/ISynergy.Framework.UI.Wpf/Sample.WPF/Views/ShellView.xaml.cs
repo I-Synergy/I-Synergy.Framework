@@ -1,7 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Views;
+﻿using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
-using ISynergy.Framework.UI.Services;
 using Syncfusion.UI.Xaml.NavigationDrawer;
 
 namespace Sample.Views;
@@ -11,19 +9,12 @@ namespace Sample.Views;
 /// </summary>
 public partial class ShellView : View, IShellView
 {
-    private readonly INavigationService _navigationService;
-
     /// <summary>
     /// Default constructor to initialize the view
     /// </summary>
-    public ShellView(INavigationService navigationService)
+    public ShellView()
     {
         InitializeComponent();
-
-        _navigationService = navigationService;
-
-        if (_navigationService is NavigationService service)
-            service.Frame = ContentRootFrame;
     }
 
     private void NavigationView_ItemClicked(object sender, NavigationItemClickedEventArgs e)

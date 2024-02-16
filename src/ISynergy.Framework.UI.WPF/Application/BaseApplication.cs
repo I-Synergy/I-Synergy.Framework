@@ -26,6 +26,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IBaseApplicationSettingsService _applicationSettingsService;
+    protected readonly INavigationService _navigationService;
 
     private Task Initialize { get; set; }
 
@@ -42,26 +43,40 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
         AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
+        _logger.LogInformation("Setting up global exception handler.");
         SetGlobalExceptionHandler();
 
+        _logger.LogInformation("Setting up context.");
         _context = ServiceLocator.Default.GetInstance<IContext>();
+
+        _logger.LogInformation("Setting up authentication service.");
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
+
+        _logger.LogInformation("Setting up theming service.");
         _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
+
+        _logger.LogInformation("Setting up navigation service.");
+        _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
+
+        _logger.LogInformation("Setting up exception handler service.");
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
+        _logger.LogInformation("Setting up application settings service.");
         _applicationSettingsService = ServiceLocator.Default.GetInstance<IBaseApplicationSettingsService>();
         _applicationSettingsService.LoadSettings();
 
+        _logger.LogInformation("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
 
         if (_applicationSettingsService.Settings is not null)
             _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
 
+        _logger.LogInformation("Setting style.");
+        _themeService.SetStyle();
+
         _logger.LogInformation("Starting initialization of application");
-
         InitializeApplication();
-
         _logger.LogInformation("Finishing initialization of application");
     }
 
@@ -203,9 +218,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         }
 
         rootFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
-
-        _logger.LogInformation("Loading theme");
-        _themeService.SetStyle();
 
         MainWindow.Title = InfoService.Default.Title ?? string.Empty;
         MainWindow.Show();
