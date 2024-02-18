@@ -1,8 +1,8 @@
-using System;
+using ISynergy.Framework.Core.Base;
 
 namespace Sample.Api;
 
-public class WeatherForecast
+public record WeatherForecast : RecordBase
 {
     public DateTime Date { get; set; }
 
