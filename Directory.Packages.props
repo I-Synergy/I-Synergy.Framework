@@ -11,7 +11,7 @@
     <PackageVersion Include="CommunityToolkit.Maui.Markup" Version="4.0.0" />
     <PackageVersion Include="CompareNETObjects" Version="4.83.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
-    <PackageVersion Include="Docfx.App" Version="2.75.2" />
+    <PackageVersion Include="Docfx.App" Version="2.75.3" />
     <PackageVersion Include="DYMO.Connect.SDK" Version="1.4.4.21" />
     <PackageVersion Include="lz4net" Version="1.0.15.93" />
     <PackageVersion Include="Mapster" Version="7.4.0" />

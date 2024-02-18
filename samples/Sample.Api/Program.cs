@@ -1,6 +1,4 @@
 using ISynergy.Framework.Core.Converters;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -32,11 +30,19 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddEndpointsApiExplorer();
 
+        builder.Services.AddOpenApiDocument();
+
         var app = builder.Build();
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
         app.MapControllers();
+
+        app.UseOpenApi();
+        app.UseSwaggerUi();
+
+        //app.UseOpenApi();
+        //app.UseReDoc();
 
         app.Run();
     }
