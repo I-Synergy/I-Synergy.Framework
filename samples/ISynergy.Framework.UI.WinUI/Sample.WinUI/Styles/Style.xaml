@@ -3,39 +3,40 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
     xmlns:formatters="using:ISynergy.Framework.UI.Formatters"
-    xmlns:Converters="using:ISynergy.Framework.UI.Converters">
+    xmlns:converters="using:ISynergy.Framework.UI.Converters"
+    xmlns:ui="using:Windows.UI">
 
-    <Color x:Key="SystemAccentColorGreen">#ff45e63d</Color>
-    <Color x:Key="SystemAccentColorRed">#ffe63d3d</Color>
+    <ui:Color x:Key="SystemAccentColorGreen">#ff45e63d</ui:Color>
+    <ui:Color x:Key="SystemAccentColorRed">#ffe63d3d</ui:Color>
 
     <SolidColorBrush x:Key="SystemAccentBrush" Color="{ThemeResource SystemAccentColor}" />
     <SolidColorBrush x:Key="SystemAccentBrushGreen" Color="{ThemeResource SystemAccentColorGreen}" />
     <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{ThemeResource SystemAccentColorRed}" />
 
-    <Converters:StringToGeometryConverter x:Key="StringToGeometryConverter"/>
-    <Converters:CurrencyConverter x:Key="CurrencyConverter" />
-    <Converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter"/>
-    <Converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
-    <Converters:EnumToStringConverter x:Key="EnumToStringConverter" />
-    <Converters:StringFormatConverter x:Key="StringFormatConverter" />
-    <Converters:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
-    <Converters:StringToIntegerConverter x:Key="StringToIntegerConverter"/>
-    <Converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
-    <Converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
-    <Converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
-    <Converters:StringToEnabledConverter x:Key="StringToEnabledConverter"/>
-    <Converters:DateTimeOffsetToLocalDateTimeOffsetConverter x:Key="DateTimeOffsetToLocalDateTimeOffsetConverter" />
-    <Converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter" />
-    <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-    <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
-    <Converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
-    <Converters:BooleanToVisibilityConverter x:Key="IsEditableToVisibilityConverter" True="Visible" False="Collapsed" />
-    <Converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-    <Converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters"/>
-    <Converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter"/>
-    <Converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter"/>
-    <Converters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
-    <Converters:IntegerToDoubleConverter x:Key="IntegerToDoubleConverter"/>
+    <converters:StringToGeometryConverter x:Key="StringToGeometryConverter"/>
+    <converters:CurrencyConverter x:Key="CurrencyConverter" />
+    <converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter"/>
+    <converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
+    <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
+    <converters:StringFormatConverter x:Key="StringFormatConverter" />
+    <converters:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
+    <converters:StringToIntegerConverter x:Key="StringToIntegerConverter"/>
+    <converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
+    <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
+    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+    <converters:StringToEnabledConverter x:Key="StringToEnabledConverter"/>
+    <converters:DateTimeOffsetToLocalDateTimeOffsetConverter x:Key="DateTimeOffsetToLocalDateTimeOffsetConverter" />
+    <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter" />
+    <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
+    <converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
+    <converters:BooleanToVisibilityConverter x:Key="IsEditableToVisibilityConverter" True="Visible" False="Collapsed" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters"/>
+    <converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter"/>
+    <converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter"/>
+    <converters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
+    <converters:IntegerToDoubleConverter x:Key="IntegerToDoubleConverter"/>
 
     <formatters:DecimalFormatter x:Key="2DecimalFormatter" Decimals="2"/>
     <formatters:DecimalFormatter x:Key="1DecimalFormatter" Decimals="1"/>
