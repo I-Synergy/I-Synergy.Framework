@@ -119,10 +119,10 @@ public class Property<T> : IProperty<T>
     /// <summary>
     /// Sets the specified storage.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TT"></typeparam>
     /// <param name="storage">The storage.</param>
     /// <param name="value">The value.</param>
-    private static void Set<T>(ref T storage, T value)
+    private static void Set<TT>(ref TT storage, TT value)
     {
         if (!Equals(storage, value))
             storage = value;

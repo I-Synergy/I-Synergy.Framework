@@ -194,7 +194,7 @@ public class NavigationService : INavigationService
                 {
                     if (owner.Blades.Count < 1)
                         owner.IsPaneVisible = false;
-                    else if (owner.Blades.Last() is { } blade)
+                    else if (owner.Blades[owner.Blades.Count() - 1] is { } blade)
                         blade.IsEnabled = true;
                 }
             }
