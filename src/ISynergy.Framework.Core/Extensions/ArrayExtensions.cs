@@ -13,12 +13,7 @@ public static class ArrayExtensions
     /// <returns></returns>
     private static double[] ToDoubleArray<T>(this T[] array)
     {
-        var result = new List<double>();
-
-        foreach (var item in array)
-            result.Add(Convert.ToDouble(array));
-
-        return result.ToArray();
+        return array.Select(item => Convert.ToDouble(array)).ToArray();
     }
 
     /// <summary>
@@ -103,10 +98,7 @@ public static class ArrayExtensions
                 return array.Length * rest;
             }
 
-            var sum = 0;
-            for (var i = 0; i < array.Length; i++)
-                sum += GetTotalLength(array.GetValue(i) as Array, deep);
-            return sum;
+            return array.Cast<object>().Select((t, i) => GetTotalLength(array.GetValue(i) as Array, deep)).Sum();
         }
 
         return array.Length;

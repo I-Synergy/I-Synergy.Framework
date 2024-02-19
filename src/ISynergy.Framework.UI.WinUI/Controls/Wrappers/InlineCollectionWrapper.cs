@@ -63,10 +63,7 @@ public class InlineCollectionWrapper : IList<Inline>
     /// <inheritdoc />
     public IEnumerator<Inline> GetEnumerator()
     {
-        foreach (var inline in _collection)
-        {
-            yield return inline;
-        }
+        return _collection.GetEnumerator();
     }
 
     /// <inheritdoc />

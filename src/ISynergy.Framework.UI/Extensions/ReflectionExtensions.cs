@@ -18,14 +18,11 @@ public static class ReflectionExtensions
     /// <returns></returns>
     public static IEnumerable<Type> ToViewModelTypes(this IEnumerable<Assembly> assemblies)
     {
-        foreach (var assembly in assemblies)
-            foreach (var type in assembly.GetTypes())
-                if (type.GetInterface(nameof(IViewModel), false) is not null
-                    && (type.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(type.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
-                    && type.Name != GenericConstants.ViewModel
-                    && !type.IsAbstract
-                    && !type.IsInterface)
-                    yield return type;
+        return from assembly in assemblies from type in assembly.GetTypes() where type.GetInterface(nameof(IViewModel), false) is not null
+            && (type.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(type.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+            && type.Name != GenericConstants.ViewModel
+            && !type.IsAbstract
+            && !type.IsInterface select type;
     }
 
     /// <summary>
@@ -35,15 +32,12 @@ public static class ReflectionExtensions
     /// <returns></returns>
     public static IEnumerable<Type> ToViewTypes(this IEnumerable<Assembly> assemblies)
     {
-        foreach (var assembly in assemblies)
-            foreach (var type in assembly.GetTypes())
-                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
-                    && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
-                    && type.Name != GenericConstants.View
-                    && type.Name != GenericConstants.Page
-                    && !type.IsAbstract
-                    && !type.IsInterface)
-                    yield return type;
+        return from assembly in assemblies from type in assembly.GetTypes() where Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
+            && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
+            && type.Name != GenericConstants.View
+            && type.Name != GenericConstants.Page
+            && !type.IsAbstract
+            && !type.IsInterface select type;
     }
 
     /// <summary>
@@ -53,14 +47,11 @@ public static class ReflectionExtensions
     /// <returns></returns>
     public static IEnumerable<Type> ToWindowTypes(this IEnumerable<Assembly> assemblies)
     {
-        foreach (var assembly in assemblies)
-            foreach (var type in assembly.GetTypes())
-                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
-                    && type.Name.EndsWith(GenericConstants.Window)
-                    && type.Name != GenericConstants.Window
-                    && !type.IsAbstract
-                    && !type.IsInterface)
-                    yield return type;
+        return from assembly in assemblies from type in assembly.GetTypes() where Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
+            && type.Name.EndsWith(GenericConstants.Window)
+            && type.Name != GenericConstants.Window
+            && !type.IsAbstract
+            && !type.IsInterface select type;
     }
 
     /// <summary>

@@ -26,10 +26,7 @@ internal class FileService : IFileService<FileResult>
             if (multiple)
             {
                 var files = await FilePicker.Default.PickMultipleAsync(pickOptions);
-                foreach (var file in files.EnsureNotNull())
-                {
-                    result.Add(file.ToFileResult());
-                }
+                result.AddRange(files.EnsureNotNull().Select(file => file.ToFileResult()));
             }
             else
             {

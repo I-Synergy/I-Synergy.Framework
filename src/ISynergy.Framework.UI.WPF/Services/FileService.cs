@@ -66,14 +66,7 @@ public class FileService : IFileService<FileResult>
 
         if (dialogResult)
         {
-            foreach (var file in fileDialog.FileNames)
-            {
-                result.Add(new FileResult(
-                    file,
-                    Path.GetFileName(file),
-                    () => File.OpenRead(file)
-                ));
-            }
+            result.AddRange(fileDialog.FileNames.Select(file => new FileResult(file, Path.GetFileName(file), () => File.OpenRead(file))));
         }
 
         return Task.FromResult(result);

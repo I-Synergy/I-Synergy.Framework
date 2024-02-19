@@ -31,15 +31,9 @@ internal class NugetService(IOptions<NugetOptions> options) : INugetService
 
     public async Task<List<PackageVersion>> ListVersionAsync(string packageId, CancellationToken cancellationToken = default)
     {
-        List<PackageVersion> result = new List<PackageVersion>();
         NugetResponse response = await GetIndexAsync(packageId, cancellationToken);
 
-        foreach (string version in response.Versions)
-        {
-            result.Add(new PackageVersion(packageId, version, true));
-        }
-
-        return result;
+        return response.Versions.Select(version => new PackageVersion(packageId, version, true)).ToList();
     }
 
     public Task UnlistPackageAsync(string packageId, string version, CancellationToken cancellationToken = default)

@@ -79,9 +79,7 @@ public class EnumToArrayConverter : IValueConverter
     {
         var list = new List<KeyValuePair<int, string>>();
 
-        if (value is Enum)
-            foreach (Enum item in Enum.GetValues(value.GetType()))
-                list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), item.GetLocalizedDescription()));
+        if (value is Enum) list.AddRange(from Enum item in Enum.GetValues(value.GetType()) select new KeyValuePair<int, string>(System.Convert.ToInt32(item), item.GetLocalizedDescription()));
 
         return list;
     }
