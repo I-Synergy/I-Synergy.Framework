@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Mathematics.Common;
 

@@ -3,7 +3,7 @@
 /// <summary>
 /// Class TokenRequest.
 /// </summary>
-public class TokenRequest
+public record TokenRequest
 {
     /// <summary>
     /// Gets the username.

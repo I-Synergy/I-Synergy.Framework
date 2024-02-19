@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
 

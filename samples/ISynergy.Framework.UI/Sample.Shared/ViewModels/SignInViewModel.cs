@@ -11,7 +11,6 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
-using Sample.ViewModels;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 

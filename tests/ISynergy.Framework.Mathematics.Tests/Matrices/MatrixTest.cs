@@ -7,10 +7,7 @@ using ISynergy.Framework.Mathematics.Formats;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace ISynergy.Framework.Mathematics.Tests;
 public partial class MatrixTest

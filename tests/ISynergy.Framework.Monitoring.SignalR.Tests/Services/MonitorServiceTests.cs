@@ -3,7 +3,6 @@ using ISynergy.Framework.Monitoring.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Monitoring.Services.Tests;
 

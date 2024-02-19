@@ -9,29 +9,21 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 /// Implements the <see cref="ModelBase" />
 /// </summary>
 /// <seealso cref="ModelBase" />
-public class Role : ModelBase
+public record Role : RecordBase
 {
     /// <summary>
     /// Gets or sets the Id property value.
     /// </summary>
     /// <value>The identifier.</value>
     [Required]
-    public Guid Id
-    {
-        get { return GetValue<Guid>(); }
-        set { SetValue(value); }
-    }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Gets or sets the Name property value.
     /// </summary>
     /// <value>The name.</value>
     [Required]
-    public string Name
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the description.

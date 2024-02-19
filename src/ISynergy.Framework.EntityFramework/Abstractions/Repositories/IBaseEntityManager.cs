@@ -18,7 +18,7 @@ public interface IBaseEntityManager
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     Task<int> AddItemAsync<TEntity, TSource>(TSource e, CancellationToken cancellationToken = default)
         where TEntity : EntityBase, new()
-        where TSource : ModelBase, new();
+        where TSource : RecordBase, new();
 
     /// <summary>
     /// Adds the update item asynchronous.
@@ -30,7 +30,7 @@ public interface IBaseEntityManager
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     Task<int> AddUpdateItemAsync<TEntity, TSource>(TSource e, CancellationToken cancellationToken = default)
         where TEntity : EntityBase, new()
-        where TSource : ModelBase, new();
+        where TSource : RecordBase, new();
 
     /// <summary>
     /// Existses the asynchronous.
@@ -76,5 +76,5 @@ public interface IBaseEntityManager
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     Task<int> UpdateItemAsync<TEntity, TSource>(TSource e, CancellationToken cancellationToken = default)
         where TEntity : EntityBase, new()
-        where TSource : ModelBase, new();
+        where TSource : RecordBase, new();
 }

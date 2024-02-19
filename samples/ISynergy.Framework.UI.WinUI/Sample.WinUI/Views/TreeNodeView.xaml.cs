@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
-using Sample.Abstractions;
+﻿using Sample.Abstractions;
 
 namespace Sample.Views;
 

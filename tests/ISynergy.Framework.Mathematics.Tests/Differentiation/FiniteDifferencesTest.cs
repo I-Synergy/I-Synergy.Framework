@@ -4,7 +4,6 @@ using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Tests.Optimization;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Differentiation;
 [TestClass]

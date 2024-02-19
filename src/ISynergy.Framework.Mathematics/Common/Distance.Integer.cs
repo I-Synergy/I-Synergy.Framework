@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Distances;
 
 namespace ISynergy.Framework.Mathematics.Common;

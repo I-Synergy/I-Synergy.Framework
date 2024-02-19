@@ -1,10 +1,6 @@
 ﻿using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Enumerations;
 using Sample.MessageBus.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sample.MessageBus.Publisher;
 

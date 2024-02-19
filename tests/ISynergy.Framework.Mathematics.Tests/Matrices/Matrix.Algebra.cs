@@ -1,9 +1,7 @@
 ﻿
 using ISynergy.Framework.Mathematics.Formats;
 using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Globalization;
 
 namespace ISynergy.Framework.Mathematics.Tests;

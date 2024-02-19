@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Core.Models;
 /// <summary>
 /// Class Token.
 /// </summary>
-public class Token
+public record Token
 {
     /// <summary>
     /// Gets or sets the access token.
