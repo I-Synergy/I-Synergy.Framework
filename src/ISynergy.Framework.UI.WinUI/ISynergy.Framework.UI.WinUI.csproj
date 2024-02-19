@@ -16,8 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pri" Pack="true"
-			PackagePath="lib/$(TargetFramework.TrimEnd('.0'))/" />
+		<None Include="bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pri" Pack="true" PackagePath="lib/$(TargetFramework.TrimEnd('.0'))/" />
 	</ItemGroup>
 
 	<ItemGroup>

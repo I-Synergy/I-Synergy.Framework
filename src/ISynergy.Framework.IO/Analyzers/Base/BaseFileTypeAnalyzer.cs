@@ -260,7 +260,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     private static bool IsAscii(byte[] input)
     {
         const byte maxAscii = 0x7F;
-        return input.All(b => b <= maxAscii);
+        return Array.TrueForAll(input, b => b <= maxAscii);
     }
 
     /// <summary>

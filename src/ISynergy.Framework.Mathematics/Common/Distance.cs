@@ -91,7 +91,7 @@ public static partial class Distance
                     if (methodInfo.Name == "BitwiseHamming")
                         return new Hamming() as IDistance<T>;
 
-                return (IDistance<T>)Activator.CreateInstance(t, []);
+                return (IDistance<T>)Activator.CreateInstance(t);
             }
         }
 

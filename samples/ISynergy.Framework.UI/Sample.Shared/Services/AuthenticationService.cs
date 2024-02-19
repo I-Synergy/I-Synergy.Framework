@@ -78,7 +78,7 @@ public class AuthenticationService : IAuthenticationService
 
         if (remember)
         {
-            if (_applicationSettingsService.Settings.IsAutoLogin == false ||
+            if (!_applicationSettingsService.Settings.IsAutoLogin ||
                 _applicationSettingsService.Settings.DefaultUser != username)
             {
                 _applicationSettingsService.Settings.IsAutoLogin = true;
