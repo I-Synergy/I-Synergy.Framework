@@ -479,19 +479,17 @@ public static class MaskValidator
                 textBox.Text = displayText;
                 return;
             }
+
+            var textboxInitialValue = textBox.Text;
+            textBox.Text = displayText;
+            SetTextBoxValue(textboxInitialValue, textBox, escapedMask, escapedChars, representationDictionary, placeHolderValue[0], 0);
+
+            if (_control is null)
+                textBox.SetValue(OldTextProperty, textBox.Text);
             else
-            {
-                var textboxInitialValue = textBox.Text;
-                textBox.Text = displayText;
-                SetTextBoxValue(textboxInitialValue, textBox, escapedMask, escapedChars, representationDictionary, placeHolderValue[0], 0);
+                _control.SetValue(OldTextProperty, textBox.Text);
 
-                if (_control is null)
-                    textBox.SetValue(OldTextProperty, textBox.Text);
-                else
-                    _control.SetValue(OldTextProperty, textBox.Text);
-
-                return;
-            }
+            return;
         }
 
         if (!isDeleteOrBackspace)

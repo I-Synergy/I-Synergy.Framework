@@ -200,26 +200,24 @@ public static partial class Elementwise
                         {
                             ptrR[i] = true; continue;
                         }
-                        else if (Double.IsNaN(A) && Double.IsNaN(B))
+
+                        if (Double.IsNaN(A) && Double.IsNaN(B))
                         {
                             ptrR[i] = true; continue;
                         }
-                        else if (Double.IsNaN(A) ^ Double.IsNaN(B))
+                        if (Double.IsNaN(A) ^ Double.IsNaN(B))
                         {
                             ptrR[i] = false; continue;
                         }
-                        else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                        if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
                         {
                             ptrR[i] = false; continue;
                         }
-                        else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                        if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                         {
                             ptrR[i] = false; continue;
                         }
-                        else
-                        {
-                            ptrR[i] = (Math.Abs(A - B) <= atol);
-                        }
+                        ptrR[i] = (Math.Abs(A - B) <= atol);
                     }
                 }
                 else
@@ -233,22 +231,20 @@ public static partial class Elementwise
                         {
                             ptrR[i] = true; continue;
                         }
-                        else if (Double.IsNaN(A) ^ Double.IsNaN(B))
+
+                        if (Double.IsNaN(A) ^ Double.IsNaN(B))
                         {
                             ptrR[i] = false; continue;
                         }
-                        else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                        if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
                         {
                             ptrR[i] = false; continue;
                         }
-                        else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                        if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                         {
                             ptrR[i] = false; continue;
                         }
-                        else
-                        {
-                            ptrR[i] = (A == B); continue;
-                        }
+                        ptrR[i] = (A == B); continue;
                     }
                 }
             }

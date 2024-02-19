@@ -86,10 +86,10 @@ public struct Matrix3x3
     /// 
     public float[] ToArray()
     {
-        return new float[]
-        {
+        return
+        [
             V00, V01, V02, V10, V11, V12, V20, V21, V22
-        };
+        ];
     }
 
     /// <summary>

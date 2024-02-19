@@ -133,7 +133,7 @@ public static class DispatcherQueueExtensions
         {
             try
             {
-                if (function() is Task awaitableResult)
+                if (function() is { } awaitableResult)
                 {
                     return awaitableResult;
                 }
@@ -154,7 +154,7 @@ public static class DispatcherQueueExtensions
             {
                 try
                 {
-                    if (function() is Task awaitableResult)
+                    if (function() is { } awaitableResult)
                     {
                         await awaitableResult.ConfigureAwait(false);
 
@@ -196,7 +196,7 @@ public static class DispatcherQueueExtensions
         {
             try
             {
-                if (function() is Task<T> awaitableResult)
+                if (function() is { } awaitableResult)
                 {
                     return awaitableResult;
                 }
@@ -217,7 +217,7 @@ public static class DispatcherQueueExtensions
             {
                 try
                 {
-                    if (function() is Task<T> awaitableResult)
+                    if (function() is { } awaitableResult)
                     {
                         var result = await awaitableResult.ConfigureAwait(false);
 

@@ -33,7 +33,7 @@ internal class CredentialLockerService : ICredentialLockerService
 
     public Task<List<string>> GetUsernamesFromCredentialLockerAsync()
     {
-        List<string> result = new List<string>();
+        List<string> result = [];
 
         try
         {
@@ -101,8 +101,10 @@ internal class CredentialLockerService : ICredentialLockerService
 
     public async Task<List<string>> GetUsernamesFromCredentialLockerAsync()
     {
-        List<string> result = new List<string>();
-        result.Add(await SecureStorage.Default.GetAsync("username"));
+        List<string> result =
+        [
+            await SecureStorage.Default.GetAsync("username")
+        ];
         return result;
     }
 

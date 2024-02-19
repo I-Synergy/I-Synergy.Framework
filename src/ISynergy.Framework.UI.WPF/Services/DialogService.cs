@@ -86,21 +86,19 @@ public class DialogService : IDialogService
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
                 _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
-        else if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
+
+        if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
                 _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
-        else if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
+        if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
                 _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
-        else
-        {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
-        }
+        return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
+            _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
     }
 
     /// <summary>

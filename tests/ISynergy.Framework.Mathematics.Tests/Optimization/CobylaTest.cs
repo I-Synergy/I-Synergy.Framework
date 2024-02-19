@@ -2,7 +2,6 @@
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
@@ -36,9 +35,9 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(function, x => 1.0 - x[0] * x[0] - x[1] * x[1])
-        };
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -73,10 +72,10 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(function, x =>  x[0] * x[0] + x[1] * x[1],
                 ConstraintType.LesserThanOrEqualTo, 1.0)
-        };
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -104,9 +103,9 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= 1.0)
-        };
+        ];
 
         test_body(function, constraints);
     }
@@ -139,9 +138,9 @@ public class CobylaTest
         double a = 1.0;
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= a)
-        };
+        ];
 
         test_body(function, constraints);
     }
@@ -161,9 +160,9 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(2, x => x[0] * x[1]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(2, x =>  x[0] * x[0] + x[1] * x[1] <= PropertyTest)
-        };
+        ];
 
         test_body(function, constraints);
     }
@@ -194,10 +193,10 @@ public class CobylaTest
 
     private static NonlinearConstraint[] create_constraints(double a)
     {
-        return new[]
-        {
+        return
+        [
             new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= a)
-        };
+        ];
     }
 
     [TestMethod]
@@ -207,9 +206,9 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(3, x => x[0] * x[1] * x[2]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(3, x =>  1.0 - x[0] * x[0] - 2.0 * x[1] * x[1] - 3.0 * x[2] * x[2])
-        };
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -223,9 +222,9 @@ public class CobylaTest
         double sqrthalf = Math.Sqrt(0.5);
 
         double[] expected =
-        {
+        [
             1.0 / Math.Sqrt(3.0), 1.0 / Math.Sqrt(6.0), -1.0 / 3.0
-        };
+        ];
 
 
         for (int i = 0; i < expected.Length; i++)
@@ -286,10 +285,10 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0]),
-            new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1]),
-        };
+            new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1])
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -314,10 +313,10 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0] >= 0),
-            new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1] >= 0),
-        };
+            new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1] >= 0)
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -344,10 +343,10 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0] >= 0),
-            new NonlinearConstraint(2, x =>  -x[0] * x[0] - x[1] * x[1] >= -1.0),
-        };
+            new NonlinearConstraint(2, x =>  -x[0] * x[0] - x[1] * x[1] >= -1.0)
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -372,10 +371,10 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(2, x =>  -(x[1] - x[0] * x[0]) <= 0),
-            new NonlinearConstraint(2, x =>  -(-x[0] * x[0] - x[1] * x[1]) <= 1.0),
-        };
+            new NonlinearConstraint(2, x =>  -(-x[0] * x[0] - x[1] * x[1]) <= 1.0)
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -402,10 +401,10 @@ public class CobylaTest
             NonlinearObjectiveFunction function = new(2, x => -x[0] - x[1]);
 
             NonlinearConstraint[] constraints =
-            {
+            [
                 new NonlinearConstraint(2, x =>  x[1] - x[0] * x[0]),
-                new NonlinearConstraint(4, x =>  1.0 - x[0] * x[0] - x[1] * x[1]),
-            };
+                new NonlinearConstraint(4, x =>  1.0 - x[0] * x[0] - x[1] * x[1])
+            ];
 
             Cobyla cobyla = new(function, constraints);
 
@@ -430,11 +429,11 @@ public class CobylaTest
         NonlinearObjectiveFunction function = new(3, x => x[2]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(3, x=> 5.0 * x[0] - x[1] + x[2]),
             new NonlinearConstraint(3, x =>  x[2] - x[0] * x[0] - x[1] * x[1] - 4.0 * x[1]),
-            new NonlinearConstraint(3, x =>  x[2] - 5.0 * x[0] - x[1]),
-        };
+            new NonlinearConstraint(3, x =>  x[2] - 5.0 * x[0] - x[1])
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -465,16 +464,16 @@ public class CobylaTest
             - 21.0 * x[2] + 7.0 * x[3]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(4, x=> 8.0 - x[0] * x[0]
-                - x[1] * x[1] - x[2] * x[2] - x[3] * x[3] - x[0] + x[1] - x[2] + x[3]),
+                                               - x[1] * x[1] - x[2] * x[2] - x[3] * x[3] - x[0] + x[1] - x[2] + x[3]),
 
             new NonlinearConstraint(4, x => 10.0 - x[0] * x[0]
                 - 2.0 * x[1] * x[1] - x[2] * x[2] - 2.0 * x[3] * x[3] + x[0] + x[3]),
 
             new NonlinearConstraint(4, x => 5.0 - 2.0 * x[0] * x[0]
                 - x[1] * x[1] - x[2] * x[2] - 2.0 * x[0] + x[1] + x[3])
-        };
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -483,9 +482,9 @@ public class CobylaTest
         double[] solution = cobyla.Solution;
 
         double[] expected =
-        {
+        [
             0.0, 1.0, 2.0, -1.0
-        };
+        ];
 
         for (int i = 0; i < expected.Length; i++)
             Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-4);
@@ -508,14 +507,14 @@ public class CobylaTest
             4.0 * x[5] * x[6] - 10.0 * x[5] - 8.0 * x[6]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(7, x => 127.0 - 2.0 * x[0] * x[0] - 3.0 * Math.Pow(x[1], 4.0)
-                - x[2] - 4.0 * x[3] * x[3] - 5.0 * x[4]),
+                                            - x[2] - 4.0 * x[3] * x[3] - 5.0 * x[4]),
             new NonlinearConstraint(7, x => 282.0 - 7.0 * x[0] - 3.0 * x[1] - 10.0 * x[2] * x[2] - x[3] + x[4]),
             new NonlinearConstraint(7, x => 196.0 - 23.0 * x[0] - x[1] * x[1] - 6.0 * x[5] * x[5] + 8.0 * x[6]),
             new NonlinearConstraint(7, x => -4.0 * x[0] * x[0] - x[1] * x[1] + 3.0 * x[0] * x[1]
                 - 2.0 * x[2] * x[2] - 5.0 * x[5] + 11.0 * x[6])
-        };
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -524,9 +523,9 @@ public class CobylaTest
         double[] solution = cobyla.Solution;
 
         double[] expected =
-        {
+        [
             2.330499, 1.951372, -0.4775414, 4.365726, -0.624487, 1.038131, 1.594227
-        };
+        ];
 
         for (int i = 0; i < expected.Length; i++)
             Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-4);
@@ -548,7 +547,7 @@ public class CobylaTest
             - x[4] * x[8] + x[4] * x[7] - x[5] * x[6]));
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(9, x => 1.0 - x[2] * x[2] - x[3] * x[3]),
             new NonlinearConstraint(9, x =>  1.0 - x[8] * x[8]),
             new NonlinearConstraint(9, x =>  1.0 - x[4] * x[4] - x[5] * x[5]),
@@ -562,8 +561,8 @@ public class CobylaTest
             new NonlinearConstraint(9, x =>  x[2] * x[8]),
             new NonlinearConstraint(9, x =>  -x[4] * x[8]),
             new NonlinearConstraint(9, x =>  x[4] * x[7] - x[5] * x[6]),
-            new NonlinearConstraint(9, x =>  x[8]),
-        };
+            new NonlinearConstraint(9, x =>  x[8])
+        ];
 
         Cobyla cobyla = new(function, constraints);
 
@@ -575,9 +574,9 @@ public class CobylaTest
         double[] solution = cobyla.Solution;
 
         double[] expected =
-        {
+        [
             0.688341, 0.725387, -0.284033, 0.958814, 0.688341, 0.725387, -0.284033, 0.958814, 0.0
-        };
+        ];
 
         for (int i = 0; i < expected.Length; i++)
             Assert.AreEqual(expected[i], cobyla.Solution[i], 1e-2);

@@ -43,9 +43,7 @@ public static class Banking
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 }

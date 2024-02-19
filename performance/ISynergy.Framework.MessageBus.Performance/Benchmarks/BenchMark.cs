@@ -2,10 +2,7 @@
 using ISynergy.Framework.MessageBus.Performance.Models;
 using MessagePack;
 using MessagePack.Resolvers;
-using System;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.MessageBus.Performance.Benchmarks;
 
@@ -21,13 +18,13 @@ public class BenchMark
     /// Gets or sets the model.
     /// </summary>
     /// <value>The model.</value>
-    public TestModel Model { get; set; }
+    private TestModel _model { get; set; }
 
     /// <summary>
     /// The file name
     /// </summary>
     [Params("file.docx", "file.pdf", "file.jpg", "file.json", "file.xlsx", "file.zip")]
-    public string fileName;
+    private string _fileName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BenchMark"/> class.
@@ -72,7 +69,7 @@ public class BenchMark
     //[GlobalSetup]
     //public async Task GlobalSetup()
     //{
-    //    var file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", fileName));
+    //    var file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", _fileName));
     //    var bytes = SerializeToByteArray(GetTestObject(file));
 
     //    using MemoryStream memoryStream = new MemoryStream();
@@ -91,8 +88,8 @@ public class BenchMark
     [GlobalSetup]
     public async Task GlobalSetup()
     {
-        byte[] file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", fileName));
-        Model = GetTestObject(file);
+        byte[] file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", _fileName));
+        _model = GetTestObject(file);
     }
 
     //private byte[] SerializeToByteArray(object obj)
@@ -132,7 +129,7 @@ public class BenchMark
     [Benchmark(Baseline = true)]
     public void Json()
     {
-        string result = JsonSerializer.Serialize(Model);
+        string result = JsonSerializer.Serialize(_model);
         JsonSerializer.Deserialize<TestModel>(result, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
@@ -150,7 +147,7 @@ public class BenchMark
     //    using (MemoryStream ms = new MemoryStream())
     //    {
     //        BinaryFormatter serializer = new BinaryFormatter();
-    //        serializer.Serialize(ms, Model);
+    //        serializer.Serialize(ms, _model);
     //        result = ms.ToArray();
     //    }
 
@@ -174,7 +171,7 @@ public class BenchMark
     //        using (BsonDataWriter writer = new BsonDataWriter(ms))
     //        {
     //            JsonSerializer serializer = new JsonSerializer();
-    //            serializer.Serialize(writer, Model);
+    //            serializer.Serialize(writer, _model);
     //        }
 
     //        result = ms.ToArray();
@@ -196,7 +193,7 @@ public class BenchMark
     [Benchmark]
     public void MessagePack()
     {
-        byte[] result = MessagePackSerializer.Serialize(Model, _options);
+        byte[] result = MessagePackSerializer.Serialize(_model, _options);
         MessagePackSerializer.Deserialize<TestModel>(result, _options);
     }
 }

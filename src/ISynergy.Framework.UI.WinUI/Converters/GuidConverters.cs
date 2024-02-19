@@ -24,10 +24,8 @@ public class GuidToInversedVisibilityConverter : IValueConverter
         {
             return Visibility.Collapsed;
         }
-        else
-        {
-            return Visibility.Visible;
-        }
+
+        return Visibility.Visible;
     }
 
     /// <summary>
@@ -66,10 +64,8 @@ public class GuidToVisibilityConverter : IValueConverter
         {
             return Visibility.Visible;
         }
-        else
-        {
-            return Visibility.Collapsed;
-        }
+
+        return Visibility.Collapsed;
     }
 
     /// <summary>

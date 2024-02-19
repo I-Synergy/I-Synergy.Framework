@@ -2,14 +2,8 @@
 using NugetUnlister.Abstractions;
 using NugetUnlister.Models;
 using NugetUnlister.Options;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace NugetUnlister.Services;
 
@@ -31,21 +25,15 @@ internal class NugetService(IOptions<NugetOptions> options) : INugetService
 
             return await response.Content.ReadFromJsonAsync<NugetResponse>(cancellationToken: cancellationToken);
         }
-        else
-            return default;
+
+        return default;
     }
 
     public async Task<List<PackageVersion>> ListVersionAsync(string packageId, CancellationToken cancellationToken = default)
     {
-        List<PackageVersion> result = new List<PackageVersion>();
         NugetResponse response = await GetIndexAsync(packageId, cancellationToken);
 
-        foreach (string version in response.Versions)
-        {
-            result.Add(new PackageVersion(packageId, version, true));
-        }
-
-        return result;
+        return response.Versions.Select(version => new PackageVersion(packageId, version, true)).ToList();
     }
 
     public Task UnlistPackageAsync(string packageId, string version, CancellationToken cancellationToken = default)

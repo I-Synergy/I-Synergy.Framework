@@ -27,7 +27,7 @@ public class LocalizationService : ILocalizationService
 
     public List<string> GetTimeZoneIds(string iso2country)
     {
-        if (TzdbDateTimeZoneSource.Default is TzdbDateTimeZoneSource source)
+        if (TzdbDateTimeZoneSource.Default is { } source)
         {
             var locations = source.ZoneLocations?
                 .Where(key => key.CountryCode.Equals(iso2country.ToUpper()));

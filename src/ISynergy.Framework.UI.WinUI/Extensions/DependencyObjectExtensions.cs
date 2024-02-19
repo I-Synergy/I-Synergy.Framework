@@ -46,10 +46,8 @@ public static class DependencyObjectExtensions
         {
             return parent;
         }
-        else
-        {
-            return FindParent<T>(parentObject);
-        }
+
+        return FindParent<T>(parentObject);
     }
 
     /// <summary>
@@ -75,10 +73,8 @@ public static class DependencyObjectExtensions
                 child = current;
                 break;
             }
-            else
-            {
-                child = current.GetVisualChildByName<FrameworkElement>(name);
-            }
+
+            child = current.GetVisualChildByName<FrameworkElement>(name);
         }
 
         return child as T;

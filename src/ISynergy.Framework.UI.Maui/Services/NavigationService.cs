@@ -65,7 +65,7 @@ public class NavigationService : INavigationService
     /// <returns></returns>
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false) where TViewModel : class, IViewModel 
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is IView page)
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page)
         {
             if (absolute)
                 Application.Current.MainPage = new NavigationPage((Page)page);
@@ -89,7 +89,7 @@ public class NavigationService : INavigationService
     public async Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false)
          where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is IView page)
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page)
         {
             if (absolute)
                 Application.Current.MainPage = (Page)page;

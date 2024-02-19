@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Convergence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Convergence;
 [TestClass]

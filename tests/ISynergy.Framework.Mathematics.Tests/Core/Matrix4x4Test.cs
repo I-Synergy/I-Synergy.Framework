@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Core;
 
@@ -177,13 +176,13 @@ public class Matrix4x4Test
         float sin = (float)Math.Sin(radians);
         float cos = (float)Math.Cos(radians);
 
-        float[] expectedArray = new float[16]
-        {
+        float[] expectedArray =
+        [
             cos, 0, sin, 0,
             0, 1, 0, 0,
             -sin, 0, cos, 0,
             0, 0, 0, 1
-        };
+        ];
 
         CompareMatrixWithArray(matrix, expectedArray);
     }
@@ -205,13 +204,13 @@ public class Matrix4x4Test
         float sin = (float)Math.Sin(radians);
         float cos = (float)Math.Cos(radians);
 
-        float[] expectedArray = new float[16]
-        {
+        float[] expectedArray =
+        [
             1, 0, 0, 0,
             0, cos, -sin, 0,
             0, sin, cos, 0,
             0, 0, 0, 1
-        };
+        ];
 
         CompareMatrixWithArray(matrix, expectedArray);
     }
@@ -233,13 +232,13 @@ public class Matrix4x4Test
         float sin = (float)Math.Sin(radians);
         float cos = (float)Math.Cos(radians);
 
-        float[] expectedArray = new float[16]
-        {
+        float[] expectedArray =
+        [
             cos, -sin, 0, 0,
             sin, cos, 0, 0,
             0, 0, 1, 0,
-            0, 0, 0, 1,
-        };
+            0, 0, 0, 1
+        ];
 
         CompareMatrixWithArray(matrix, expectedArray);
     }
@@ -303,7 +302,7 @@ public class Matrix4x4Test
         Vector4 diagonal = new(v00, v11, v22, v33);
         Matrix4x4 matrix = Matrix4x4.CreateDiagonal(diagonal);
 
-        float[] expectedArray = new float[16] { v00, 0, 0, 0, 0, v11, 0, 0, 0, 0, v22, 0, 0, 0, 0, v33 };
+        float[] expectedArray = [v00, 0, 0, 0, 0, v11, 0, 0, 0, 0, v22, 0, 0, 0, 0, v33];
 
         CompareMatrixWithArray(matrix, expectedArray);
     }

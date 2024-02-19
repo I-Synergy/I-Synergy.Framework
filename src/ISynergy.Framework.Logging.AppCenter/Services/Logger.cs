@@ -52,7 +52,7 @@ public class Logger : BaseLogger
     {
         var metrics = new Dictionary<string, string>();
 
-        if (_context.IsAuthenticated && _context.Profile is IProfile profile)
+        if (_context.IsAuthenticated && _context.Profile is { } profile)
         {
             Microsoft.AppCenter.AppCenter.SetUserId(profile.Username);
             Microsoft.AppCenter.AppCenter.SetCountryCode(profile.CountryCode);

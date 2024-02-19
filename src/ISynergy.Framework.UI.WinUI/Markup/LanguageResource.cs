@@ -31,9 +31,7 @@ public class LanguageResource : MarkupExtension
         {
             return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
         }
-        else
-        {
-            return $"[{Key}]";
-        }
+
+        return $"[{Key}]";
     }
 }

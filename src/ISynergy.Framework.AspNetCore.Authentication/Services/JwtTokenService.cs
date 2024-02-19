@@ -106,10 +106,8 @@ public class JwtTokenService : IJwtTokenService
         {
             return principal;
         }
-        else
-        {
-            throw new SecurityTokenExpiredException();
-        }
+
+        throw new SecurityTokenExpiredException();
     }
 
     /// <summary>

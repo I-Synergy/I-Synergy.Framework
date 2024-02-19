@@ -35,18 +35,18 @@ public class NormTest
 
 
         double[] expected =
-        {
+        [
             21.9634, 2.6525
-        };
+        ];
 
         double[] actual = a.Euclidean(1);
         Assert.IsTrue(expected.IsEqual(actual, 0.001));
 
 
         double[] expected2 =
-        {
+        [
             15.4457, 2.6047, 15.6229
-        };
+        ];
 
         double[] actual2 = a.Euclidean(0);
         Assert.IsTrue(expected2.IsEqual(actual2, 0.001));

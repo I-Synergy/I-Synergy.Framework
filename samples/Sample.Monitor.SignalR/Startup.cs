@@ -1,10 +1,5 @@
 ﻿using ISynergy.Framework.AspNetCore.Startup;
 using ISynergy.Framework.Monitoring.Extensions;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 namespace Sample.Monitor.SignalR;
 

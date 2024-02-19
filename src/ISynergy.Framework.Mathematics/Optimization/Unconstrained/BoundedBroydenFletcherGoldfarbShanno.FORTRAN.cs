@@ -275,11 +275,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             int _cg_tmp = Case;
             if (_cg_tmp == 1)
                 goto L20;
-            else if (_cg_tmp == 2)
+            if (_cg_tmp == 2)
                 goto L50;
-            else if (_cg_tmp == 3)
+            if (_cg_tmp == 3)
                 goto L80;
-            else if (_cg_tmp == 4)
+            if (_cg_tmp == 4)
                 goto L110;
         }
 
@@ -1150,7 +1150,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             goto L777;
             // to repeat the loop for unsearched intervals. 
         }
-        else if (bnded)
+
+        if (bnded)
         {
             f1 = 0.0;
             f2 = 0.0;
@@ -1161,7 +1162,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             dtm = (-((f1 / f2)));
         }
 
-    // 
+        // 
     // c------------------- the end of the loop -------------------------------
     // 
     L888:
@@ -1548,34 +1549,32 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             task = "FG";
             goto L1000;
         }
+
+        // 
+        // Restore local variables.
+        // 
+        if ((isave[(1 - (1)) + _isave_offset] == 1))
+        {
+            brackt = true;
+        }
         else
         {
-            // 
-            // Restore local variables.
-            // 
-            if ((isave[(1 - (1)) + _isave_offset] == 1))
-            {
-                brackt = true;
-            }
-            else
-            {
-                brackt = false;
-            }
-            stage = isave[(2 - (1)) + _isave_offset];
-            ginit = dsave[(1 - (1)) + _dsave_offset];
-            gtest = dsave[(2 - (1)) + _dsave_offset];
-            gx = dsave[(3 - (1)) + _dsave_offset];
-            gy = dsave[(4 - (1)) + _dsave_offset];
-            finit = dsave[(5 - (1)) + _dsave_offset];
-            fx = dsave[(6 - (1)) + _dsave_offset];
-            fy = dsave[(7 - (1)) + _dsave_offset];
-            stx = dsave[(8 - (1)) + _dsave_offset];
-            sty = dsave[(9 - (1)) + _dsave_offset];
-            stmin = dsave[(10 - (1)) + _dsave_offset];
-            stmax = dsave[(11 - (1)) + _dsave_offset];
-            width = dsave[(12 - (1)) + _dsave_offset];
-            width1 = dsave[(13 - (1)) + _dsave_offset];
+            brackt = false;
         }
+        stage = isave[(2 - (1)) + _isave_offset];
+        ginit = dsave[(1 - (1)) + _dsave_offset];
+        gtest = dsave[(2 - (1)) + _dsave_offset];
+        gx = dsave[(3 - (1)) + _dsave_offset];
+        gy = dsave[(4 - (1)) + _dsave_offset];
+        finit = dsave[(5 - (1)) + _dsave_offset];
+        fx = dsave[(6 - (1)) + _dsave_offset];
+        fy = dsave[(7 - (1)) + _dsave_offset];
+        stx = dsave[(8 - (1)) + _dsave_offset];
+        sty = dsave[(9 - (1)) + _dsave_offset];
+        stmin = dsave[(10 - (1)) + _dsave_offset];
+        stmax = dsave[(11 - (1)) + _dsave_offset];
+        width = dsave[(12 - (1)) + _dsave_offset];
+        width1 = dsave[(13 - (1)) + _dsave_offset];
 
         // 
         // c     If psi(stp) <= 0 and f'(stp) >= 0 for some step, then the
@@ -3840,58 +3839,54 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
                 goto L999;
             }
-            else
+
+            // refresh the lbfgs memory and restart the iteration.
+            if ((iprint >= 1))
             {
-                // refresh the lbfgs memory and restart the iteration.
-                if ((iprint >= 1))
-                {
-                    // DISPLAY: Bad direction in the line search;'
-                    //          refresh the lbfgs memory and restart the iteration.
-                }
-
-                if ((info == 0))
-                {
-                    nfgv = (nfgv - 1);
-                }
-
-                info = 0;
-                col = 0;
-                head = 1;
-                theta = 1.0;
-                iupdat = 0;
-                updatd = false;
-                task = "RESTART_FROM_LNSRCH";
-                goto L222;
+                // DISPLAY: Bad direction in the line search;'
+                //          refresh the lbfgs memory and restart the iteration.
             }
+
+            if ((info == 0))
+            {
+                nfgv = (nfgv - 1);
+            }
+
+            info = 0;
+            col = 0;
+            head = 1;
+            theta = 1.0;
+            iupdat = 0;
+            updatd = false;
+            task = "RESTART_FROM_LNSRCH";
+            goto L222;
         }
-        else if ((task.StartsWith("FG_LN", StringComparison.OrdinalIgnoreCase)))
+
+        if ((task.StartsWith("FG_LN", StringComparison.OrdinalIgnoreCase)))
         {
             // return to the driver for calculating f and g; reenter at 666.
             goto L1000;
         }
-        else
-        {
-            // calculate and print out the quantities related to the new X.
+        // calculate and print out the quantities related to the new X.
 
-            iter = (iter + 1);
+        iter = (iter + 1);
 
-            // 
-            // Compute the infinity norm of the projected (-)gradient.
-            // 
-            projgr(n, l, _l_offset, u, _u_offset, nbd, _nbd_offset,
-                x, _x_offset, g, _g_offset, ref sbgnrm);
+        // 
+        // Compute the infinity norm of the projected (-)gradient.
+        // 
+        projgr(n, l, _l_offset, u, _u_offset, nbd, _nbd_offset,
+            x, _x_offset, g, _g_offset, ref sbgnrm);
 
-            // 
-            // Print iteration information.
-            // 
-            /* Prn2lb.prn2lb(n, x, _x_offset, f, g, _g_offset, iprint, itfile,
+        // 
+        // Print iteration information.
+        // 
+        /* Prn2lb.prn2lb(n, x, _x_offset, f, g, _g_offset, iprint, itfile,
                 iter, nfgv, nact, sbgnrm, nseg, ref word,
                 iword, iback, stp, xstep); */
 
-            goto L1000;
-        }
+        goto L1000;
 
-    L777:
+        L777:
 
         // 
         // c     Test for termination.

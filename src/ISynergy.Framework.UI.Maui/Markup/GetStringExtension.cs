@@ -36,10 +36,8 @@ public class GetStringExtension : IMarkupExtension<string>
         {
             return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
         }
-        else
-        {
-            return $"[{Key}]";
-        }
+
+        return $"[{Key}]";
     }
 
     object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) =>

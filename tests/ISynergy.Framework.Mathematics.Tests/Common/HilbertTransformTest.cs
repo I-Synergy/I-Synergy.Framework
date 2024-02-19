@@ -10,7 +10,7 @@ public class HilbertTransformTest
     [TestMethod]
     public void FHTTest()
     {
-        Complex[] original = { (Complex)1, (Complex)2, (Complex)3, (Complex)4 };
+        Complex[] original = [(Complex)1, (Complex)2, (Complex)3, (Complex)4];
         Complex[] actual = (Complex[])original.Clone();
 
         HilbertTransform.FHT(actual, FourierTransform.Direction.Forward);
@@ -36,7 +36,7 @@ public class HilbertTransformTest
     [TestMethod]
     public void FHTTest2()
     {
-        double[] original = { -1.0, -0.8, -0.2, -0.1, 0.1, 0.2, 0.8, 1.0 };
+        double[] original = [-1.0, -0.8, -0.2, -0.1, 0.1, 0.2, 0.8, 1.0];
 
         double[] actual = (double[])original.Clone();
 

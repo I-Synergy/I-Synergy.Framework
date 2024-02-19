@@ -3,9 +3,6 @@ using ISynergy.Framework.IO.Events;
 using ISynergy.Framework.IO.Models;
 using ISynergy.Framework.IO.Models.Tests;
 using ISynergy.Framework.IO.Watchers;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace ISynergy.Framework.IO.Tests.Fixtures;
 
@@ -62,10 +59,8 @@ public class FileWatcherExFixture
 
             return true;
         }
-        else
-        {
-            throw new FileNotFoundException("The folder (or file) specified does not exist.", fileOrFolderToWatch);
-        }
+
+        throw new FileNotFoundException("The folder (or file) specified does not exist.", fileOrFolderToWatch);
     }
 
     /// <summary>

@@ -63,11 +63,11 @@ public static partial class Matrix
         {
             var m = new T[array.Length][];
             for (var i = 0; i < array.Length; i++)
-                m[i] = new[] { array[i] };
+                m[i] = [array[i]];
             return m;
         }
 
-        return new[] { array };
+        return [array];
     }
 
     /// <summary>

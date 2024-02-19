@@ -110,7 +110,7 @@ public struct Ellipsoid : IEquatable<Ellipsoid>
     /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
     public override int GetHashCode()
     {
-        double[] xy = { SemiMajorAxis, SemiMajorAxis };
+        double[] xy = [SemiMajorAxis, SemiMajorAxis];
         return xy.GetHashCode();
     }
 

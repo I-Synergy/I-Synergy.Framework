@@ -188,7 +188,8 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                 p.Value = item.Value;
                 return;
             }
-            else if (cmp <= 0)
+
+            if (cmp <= 0)
             {
                 // k <= p.k
                 if (p.Left is not null)
@@ -396,7 +397,8 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
 
                         goto deleteblack;
                     }
-                    else if (mp.Color == RedBlackTreeNodeType.Red
+
+                    if (mp.Color == RedBlackTreeNodeType.Red
                         && s.Color == RedBlackTreeNodeType.Black
                         && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
                         && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
@@ -409,8 +411,8 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     else
                     {
                         if (m == mp.Left && s.Color == RedBlackTreeNodeType.Black
-                            && (s.Left is not null && s.Left.Color == RedBlackTreeNodeType.Red)
-                            && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
+                                         && (s.Left is not null && s.Left.Color == RedBlackTreeNodeType.Red)
+                                         && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                         {
                             s.Color = RedBlackTreeNodeType.Red;
                             s.Left.Color = RedBlackTreeNodeType.Black;
@@ -420,8 +422,8 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                             s = m == mp.Left ? mp.Right : mp.Left;
                         }
                         else if (m == mp.Right && s.Color == RedBlackTreeNodeType.Black
-                            && (s.Right is not null && s.Right.Color == RedBlackTreeNodeType.Red)
-                            && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black))
+                                               && (s.Right is not null && s.Right.Color == RedBlackTreeNodeType.Red)
+                                               && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black))
                         {
                             s.Color = RedBlackTreeNodeType.Red;
                             s.Right.Color = RedBlackTreeNodeType.Black;
@@ -530,10 +532,8 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     node = node.Left;
                     continue;
                 }
-                else
-                {
-                    lastNode = null;
-                }
+
+                lastNode = null;
             }
 
             if (lastNode == node.Left)
@@ -546,10 +546,8 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     node = node.Right;
                     continue;
                 }
-                else
-                {
-                    lastNode = null;
-                }
+
+                lastNode = null;
             }
 
             if (lastNode == node.Right)
@@ -665,10 +663,9 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     return r;
                 return node;
             }
-            else // if (p.k > k)
-            {
-                node = node.Left;
-            }
+
+            // if (p.k > k)
+            node = node.Left;
         }
 
         return null; // k < everything in subtree
@@ -719,10 +716,9 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     return r;
                 return node;
             }
-            else // if (p.k >= k)
-            {
-                node = node.Left;
-            }
+
+            // if (p.k >= k)
+            node = node.Left;
         }
         return null; // k <= everything in subtree
     }
@@ -770,10 +766,9 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     return l;
                 return node;
             }
-            else // if (p.k <= k)
-            {
-                node = node.Right;
-            }
+
+            // if (p.k <= k)
+            node = node.Right;
         }
 
         return null; // k >= everything in subtree

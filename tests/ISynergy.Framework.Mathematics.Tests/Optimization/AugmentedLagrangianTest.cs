@@ -7,8 +7,6 @@ using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
@@ -30,11 +28,11 @@ public class AugmentedLagrangianTest
 
             function: (x) => 100 * Math.Pow(x[1] - x[0] * x[0], 2) + Math.Pow(1 - x[0], 2),
 
-            gradient: (x) => new[]
-            {
+            gradient: (x) =>
+            [
                 2.0 * (200.0 * x[0]*x[0]*x[0] - 200.0 * x[0] * x[1] + x[0] - 1), // df/dx
                 200 * (x[1] - x[0]*x[0])                                         // df/dy
-            }
+            ]
 
         );
 
@@ -44,14 +42,14 @@ public class AugmentedLagrangianTest
             new NonlinearConstraint(f,
 
                 function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
+                gradient: (x) => [1.0, 0.0],
 
                 shouldBe: ConstraintType.LesserThanOrEqualTo, value: 0
             ),
             new NonlinearConstraint(f,
 
                 function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
+                gradient: (x) => [0.0, 1.0],
 
                 shouldBe: ConstraintType.LesserThanOrEqualTo, value: 0
             ),
@@ -82,11 +80,11 @@ public class AugmentedLagrangianTest
 
             function: (x) => 100 * Math.Pow(x[1] - x[0] * x[0], 2) + Math.Pow(1 - x[0], 2),
 
-            gradient: (x) => new[]
-            {
+            gradient: (x) =>
+            [
                 2.0 * (200.0 * Math.Pow(x[0], 3) - 200.0 * x[0] * x[1] + x[0] - 1), // df/dx
                 200 * (x[1] - x[0]*x[0])                                            // df/dy
-            }
+            ]
 
         );
 
@@ -96,14 +94,14 @@ public class AugmentedLagrangianTest
             new NonlinearConstraint(f,
 
                 function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
+                gradient: (x) => [1.0, 0.0],
 
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0
             ),
             new NonlinearConstraint(f,
 
                 function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
+                gradient: (x) => [0.0, 1.0],
 
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0
             ),
@@ -357,11 +355,11 @@ public class AugmentedLagrangianTest
             function: (x) => 100 * Math.Pow(x[1] - x[0] * x[0], 2) + Math.Pow(1 - x[0], 2),
 
             // And this is the vector gradient for the same function:
-            gradient: (x) => new[]
-            {
+            gradient: (x) =>
+            [
                 2 * (200 * Math.Pow(x[0], 3) - 200 * x[0] * x[1] + x[0] - 1), // df/dx = 2(200x³-200xy+x-1)
                 200 * (x[1] - x[0]*x[0])                                      // df/dy = 200(y-x²)
-            }
+            ]
         );
 
         // As before, we state the constraints. However, to illustrate the flexibility
@@ -421,7 +419,7 @@ public class AugmentedLagrangianTest
         //      x' * i     = 1
         // lower_bound < x < upper_bound
 
-        double[] c = { 2, 3 };
+        double[] c = [2, 3];
         double[,] A = { { 2, 0 }, { 0, 2 } };
         double k = 50;
 
@@ -437,7 +435,7 @@ public class AugmentedLagrangianTest
             for (int j = 0; j < 10; j++)
             {
                 double expected = i * 2 + j * 3;
-                double actual = objective.Function(new double[] { i, j });
+                double actual = objective.Function([i, j]);
                 Assert.AreEqual(expected, actual);
             }
         }
@@ -452,7 +450,7 @@ public class AugmentedLagrangianTest
             ),
             new NonlinearConstraint(objective,
                 function: (x) => x.Sum(),
-                gradient: (x) => new[] { 1.0, 1.0 },
+                gradient: (x) => [1.0, 1.0],
                 shouldBe: ConstraintType.EqualTo, value: 1
             ),
         ];
@@ -464,7 +462,7 @@ public class AugmentedLagrangianTest
             for (int j = 0; j < 10; j++)
             {
                 double expected = i * (2 * i + 0 * j) + j * (0 * i + 2 * j);
-                double actual = constraints[0].Function(new double[] { i, j });
+                double actual = constraints[0].Function([i, j]);
                 Assert.AreEqual(expected, actual);
             }
         }
@@ -476,7 +474,7 @@ public class AugmentedLagrangianTest
             for (int j = 0; j < 10; j++)
             {
                 double expected = i + j;
-                double actual = constraints[1].Function(new double[] { i, j });
+                double actual = constraints[1].Function([i, j]);
                 Assert.AreEqual(expected, actual);
             }
         }
@@ -513,7 +511,7 @@ public class AugmentedLagrangianTest
         //      x' * i     = 1
         // lower_bound < x < upper_bound
 
-        double[] c = { 2, 3 };
+        double[] c = [2, 3];
         double[,] A = { { 2, 0 }, { 0, 2 } };
         double k = 50;
 
@@ -529,7 +527,7 @@ public class AugmentedLagrangianTest
             for (int j = 0; j < 10; j++)
             {
                 double expected = i * 2 + j * 3;
-                double actual = objective.Function(new double[] { i, j });
+                double actual = objective.Function([i, j]);
                 Assert.AreEqual(expected, actual);
             }
         }
@@ -550,7 +548,7 @@ public class AugmentedLagrangianTest
         {
             for (int j = 0; j < 10; j++)
             {
-                double[] input = new double[] { i, j };
+                double[] input = [i, j];
 
                 double expected = i * (2 * i + 0 * j) + j * (0 * i + 2 * j);
                 double actual = constraints[0].Function(input);
@@ -583,17 +581,17 @@ public class AugmentedLagrangianTest
 
         NonlinearObjectiveFunction function = new(2,
             function: x => x[0] * x[1],
-            gradient: x => new[] { x[1], x[0] });
+            gradient: x => [x[1], x[0]]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(function,
                 function: x => 1.0 - x[0] * x[0] - x[1] * x[1],
-                gradient: x => new [] { -2 * x[0], -2 * x[1]}),
+                gradient: x => [-2 * x[0], -2 * x[1]]),
             new NonlinearConstraint(function,
                 function: x => x[0],
-                gradient: x => new [] { 1.0, 0.0}),
-        };
+                gradient: x => [1.0, 0.0])
+        ];
 
         ConjugateGradient target = new(2);
         target.Tolerance = 0;
@@ -628,23 +626,23 @@ public class AugmentedLagrangianTest
         // Easy three dimensional minimization in ellipsoid.
         NonlinearObjectiveFunction function = new(3,
             function: x => x[0] * x[1] * x[2],
-            gradient: x => new[] { x[1] * x[2], x[0] * x[2], x[0] * x[1] });
+            gradient: x => [x[1] * x[2], x[0] * x[2], x[0] * x[1]]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(3,
                 function: x =>  1.0 - x[0] * x[0] - 2.0 * x[1] * x[1] - 3.0 * x[2] * x[2],
-                gradient: x =>  new[] { -2.0 * x[0],  -4.0 * x[1], -6.0 * x[2] }),
+                gradient: x => [-2.0 * x[0],  -4.0 * x[1], -6.0 * x[2]]),
             new NonlinearConstraint(3,
                 function: x =>  x[0],
-                gradient: x =>  new[] { 1.0, 0, 0 }),
+                gradient: x => [1.0, 0, 0]),
             new NonlinearConstraint(3,
                 function: x =>  x[1],
-                gradient: x =>  new[] { 0, 1.0, 0 }),
+                gradient: x => [0, 1.0, 0]),
             new NonlinearConstraint(3,
                 function: x =>  -x[2],
-                gradient: x =>  new[] { 0, 0, -1.0 }),
-        };
+                gradient: x => [0, 0, -1.0])
+        ];
 
         for (int i = 0; i < constraints.Length; i++)
         {
@@ -665,9 +663,9 @@ public class AugmentedLagrangianTest
         double[] solution = solver.Solution;
 
         double[] expected =
-        {
+        [
             1.0 / Math.Sqrt(3.0), 1.0 / Math.Sqrt(6.0), -1.0 / 3.0
-        };
+        ];
 
 
         for (int i = 0; i < expected.Length; i++)
@@ -729,23 +727,23 @@ public class AugmentedLagrangianTest
         // Easy three dimensional minimization in ellipsoid.
         NonlinearObjectiveFunction function = new(3,
             function: x => x[0] * x[1] * x[2],
-            gradient: x => new[] { x[1] * x[2], x[0] * x[2], x[0] * x[1] });
+            gradient: x => [x[1] * x[2], x[0] * x[2], x[0] * x[1]]);
 
         NonlinearConstraint[] constraints =
-        {
+        [
             new NonlinearConstraint(function,
                 constraint: x =>  1.0 - x[0] * x[0] - 2.0 * x[1] * x[1] - 3.0 * x[2] * x[2] >= 0,
-                gradient: x =>  new[] { -2.0 * x[0],  -4.0 * x[1], -6.0 * x[2] }),
+                gradient: x => [-2.0 * x[0],  -4.0 * x[1], -6.0 * x[2]]),
             new NonlinearConstraint(function,
                 constraint: x =>  x[0] >= 0,
-                gradient: x =>  new[] { 1.0, 0, 0 }),
+                gradient: x => [1.0, 0, 0]),
             new NonlinearConstraint(function,
                 constraint: x =>  x[1] >= 0,
-                gradient: x =>  new[] { 0, 1.0, 0 }),
+                gradient: x => [0, 1.0, 0]),
             new NonlinearConstraint(function,
                 constraint: x =>  -x[2] >= 0,
-                gradient: x =>  new[] { 0, 0, -1.0 }),
-        };
+                gradient: x => [0, 0, -1.0])
+        ];
 
         for (int i = 0; i < constraints.Length; i++)
         {
@@ -766,9 +764,9 @@ public class AugmentedLagrangianTest
         double[] solution = solver.Solution;
 
         double[] expected =
-        {
+        [
             1.0 / Math.Sqrt(3.0), 1.0 / Math.Sqrt(6.0), -1.0 / 3.0
-        };
+        ];
 
 
         for (int i = 0; i < expected.Length; i++)
@@ -791,34 +789,34 @@ public class AugmentedLagrangianTest
 
         NonlinearObjectiveFunction f = new(2,
             function: (x) => (x[0] - 1.0) * (x[0] - 1.0) + (x[1] - 2.5) * (x[1] - 2.5),
-            gradient: (x) => new[] { 2.0 * (x[0] - 1.0), 2.0 * (x[1] - 2.5) });
+            gradient: (x) => [2.0 * (x[0] - 1.0), 2.0 * (x[1] - 2.5)]);
 
         List<NonlinearConstraint> constraints =
         [
             // Add the constraint $x_1 - 2x_2 + 2 \ge0$.
             new NonlinearConstraint(f,
                 function: (x) => x[0] - 2.0 * x[1] + 2.0,
-                gradient: (x) => new[] { 1.0, -2.0 },
+                gradient: (x) => [1.0, -2.0],
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
             // Add the constraint $-x_0 - 2x_1 + 6 \ge 0$.
             new NonlinearConstraint(f,
                 function: (x) => -x[0] - 2.0 * x[1] + 6.0,
-                gradient: (x) => new[] { -1.0, -2.0 },
+                gradient: (x) => [-1.0, -2.0],
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
             // Add the constraint $-x_0 + 2x_1 + 2 \ge 0$.
             new NonlinearConstraint(f,
                 function: (x) => -x[0] + 2.0 * x[1] + 2.0,
-                gradient: (x) => new[] { -1.0, 2.0 },
+                gradient: (x) => [-1.0, 2.0],
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
             // Add the constraint $x_0  \ge 0$.
             new NonlinearConstraint(f,
                 function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
+                gradient: (x) => [1.0, 0.0],
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
             // Add the constraint $x_1  \ge 0$.
             new NonlinearConstraint(f,
                 function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
+                gradient: (x) => [0.0, 1.0],
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
         ];
 
@@ -846,34 +844,34 @@ public class AugmentedLagrangianTest
 
         NonlinearObjectiveFunction f = new(2,
             function: (x) => 3.0 * x[0] - 4.0 * x[1],
-            gradient: (x) => new[] { 3.0, -4.0 });
+            gradient: (x) => [3.0, -4.0]);
 
         List<NonlinearConstraint> constraints =
         [
             // Add the constraint $x_0 \ge 0$.
             new NonlinearConstraint(f,
                 function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
+                gradient: (x) => [1.0, 0.0],
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
             // Add the constraint $x_0 \le 1$.
             new NonlinearConstraint(f,
                 function: (x) => x[0],
-                gradient: (x) => new[] { 1.0, 0.0 },
+                gradient: (x) => [1.0, 0.0],
                 shouldBe: ConstraintType.LesserThanOrEqualTo, value: 1),
             // Add the constraint $x_1 \ge 0$.
             new NonlinearConstraint(f,
                 function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
+                gradient: (x) => [0.0, 1.0],
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0),
             // Add the constraint $x_1 \le 1$.
             new NonlinearConstraint(f,
                 function: (x) => x[1],
-                gradient: (x) => new[] { 0.0, 1.0 },
+                gradient: (x) => [0.0, 1.0],
                 shouldBe: ConstraintType.LesserThanOrEqualTo, value: 1),
             // Add the constraint $x_0 + x_1 = 1$.
             new NonlinearConstraint(f,
                 function: (x) => x[0] + x[1],
-                gradient: (x) => new[] { 1.0, 1.0 },
+                gradient: (x) => [1.0, 1.0],
                 shouldBe: ConstraintType.EqualTo, value: 1),
         ];
 

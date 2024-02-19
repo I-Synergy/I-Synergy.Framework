@@ -141,7 +141,7 @@ public class EuclidianCoordinate : IEquatable<EuclidianCoordinate>
     /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
     public override int GetHashCode()
     {
-        double[] xy = { X, Y, Projection.ReferenceGlobe.SemiMajorAxis, Projection.ReferenceGlobe.Flattening };
+        double[] xy = [X, Y, Projection.ReferenceGlobe.SemiMajorAxis, Projection.ReferenceGlobe.Flattening];
         return xy.GetHashCode();
     }
 }

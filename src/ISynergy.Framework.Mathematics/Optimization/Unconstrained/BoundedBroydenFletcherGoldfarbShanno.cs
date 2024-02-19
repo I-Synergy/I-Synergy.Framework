@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Async;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;

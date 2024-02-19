@@ -409,11 +409,9 @@ public static class Beta
             y = Incomplete(a, b, x);
             goto ihalve;
         }
-        else
-        {
-            nflg = false;
-            dithresh = 1.0e-4;
-        }
+
+        nflg = false;
+        dithresh = 1.0e-4;
 
         /* approximation to inverse function */
 

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Base;
-using System;
 
 namespace ISynergy.Framework.Core.Fixtures;
 

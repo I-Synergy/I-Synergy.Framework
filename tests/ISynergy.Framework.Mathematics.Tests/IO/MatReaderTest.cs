@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.IO.Mat;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.IO;
 
 namespace ISynergy.Framework.Mathematics.Tests.IO;
 [TestClass]

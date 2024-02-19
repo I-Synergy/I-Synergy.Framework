@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.Core.Data.Tests.TestClasses;

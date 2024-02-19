@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics.Tests.Optimization;
+﻿namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 
 // This is the original code from http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
 // with minimal modifications. The only included modifications aim to increase the debugability

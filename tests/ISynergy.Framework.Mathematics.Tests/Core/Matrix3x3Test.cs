@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Core;
 
@@ -148,10 +147,10 @@ public class Matrix3x3Test
         float sin = (float)Math.Sin(radians);
         float cos = (float)Math.Cos(radians);
 
-        float[] expectedArray = new float[9]
-        {
+        float[] expectedArray =
+        [
             cos, 0, sin, 0, 1, 0, -sin, 0, cos
-        };
+        ];
 
         CompareMatrixWithArray(matrix, expectedArray);
     }
@@ -173,10 +172,10 @@ public class Matrix3x3Test
         float sin = (float)Math.Sin(radians);
         float cos = (float)Math.Cos(radians);
 
-        float[] expectedArray = new float[9]
-        {
+        float[] expectedArray =
+        [
             1, 0, 0, 0, cos, -sin, 0, sin, cos
-        };
+        ];
 
         CompareMatrixWithArray(matrix, expectedArray);
     }
@@ -198,10 +197,10 @@ public class Matrix3x3Test
         float sin = (float)Math.Sin(radians);
         float cos = (float)Math.Cos(radians);
 
-        float[] expectedArray = new float[9]
-        {
+        float[] expectedArray =
+        [
             cos, -sin, 0, sin, cos, 0, 0, 0, 1
-        };
+        ];
 
         CompareMatrixWithArray(matrix, expectedArray);
     }
@@ -265,7 +264,7 @@ public class Matrix3x3Test
         Vector3 diagonal = new(v00, v11, v22);
         Matrix3x3 matrix = Matrix3x3.CreateDiagonal(diagonal);
 
-        float[] expectedArray = new float[9] { v00, 0, 0, 0, v11, 0, 0, 0, v22 };
+        float[] expectedArray = [v00, 0, 0, 0, v11, 0, 0, 0, v22];
 
         CompareMatrixWithArray(matrix, expectedArray);
     }

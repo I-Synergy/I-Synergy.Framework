@@ -367,14 +367,8 @@ public partial class LayoutTransformControl : Control
             if (transformGroup != null)
             {
                 // Fully qualifying the type is required on Android 
-                var groupMatrix = Microsoft.UI.Xaml.Media.Matrix.Identity;
 
-                foreach (var child in transformGroup.Children)
-                {
-                    groupMatrix = groupMatrix.Multiply(GetTransformMatrix(child));
-                }
-
-                return groupMatrix;
+                return transformGroup.Children.Aggregate(Microsoft.UI.Xaml.Media.Matrix.Identity, (current, child) => current.Multiply(GetTransformMatrix(child)));
             }
 
             // Process the RotateTransform

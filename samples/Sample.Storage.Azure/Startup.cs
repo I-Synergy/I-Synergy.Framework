@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.Storage.Abstractions.Services;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Sample.Storage.Azure;
 
@@ -11,7 +8,6 @@ namespace Sample.Storage.Azure;
 /// <param name="storageService">The Storage service.</param>
 public class Startup(IStorageService storageService)
 {
-    private readonly IStorageService _storageService = storageService;
     private readonly string _container = Guid.Parse("ECEB4346-97AD-4919-9248-3EA1012FCA47").ToString();
 
     /// <summary>
@@ -61,22 +57,22 @@ public class Startup(IStorageService storageService)
         // Open the file and upload its data
         byte[] file = await File.ReadAllBytesAsync(path);
 
-        return await _storageService.UploadFileAsync(_container, file, "text/plain", fileName, "");
+        return await storageService.UploadFileAsync(_container, file, "text/plain", fileName, "");
     }
 
     public Task<byte[]> DownloadAsync(string fileName)
     {
-        return _storageService.DownloadFileAsync(_container, fileName, "");
+        return storageService.DownloadFileAsync(_container, fileName, "");
     }
 
     public Task<Uri> UpdateAsync(byte[] fileBytes, string fileName)
     {
-        return _storageService.UpdateFileAsync(_container, fileBytes, "text/plain", fileName, "");
+        return storageService.UpdateFileAsync(_container, fileBytes, "text/plain", fileName, "");
     }
 
     public Task<bool> RemoveAsync(string fileName)
     {
-        return _storageService.RemoveFileAsync(_container, fileName, "");
+        return storageService.RemoveFileAsync(_container, fileName, "");
     }
 
     /// <summary>

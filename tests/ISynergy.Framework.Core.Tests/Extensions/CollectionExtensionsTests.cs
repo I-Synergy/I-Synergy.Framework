@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Core.Extensions.Tests;

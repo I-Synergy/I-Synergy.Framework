@@ -26,10 +26,7 @@ internal class FileService : IFileService<FileResult>
             if (multiple)
             {
                 var files = await FilePicker.Default.PickMultipleAsync(pickOptions);
-                foreach (var file in files.EnsureNotNull())
-                {
-                    result.Add(file.ToFileResult());
-                }
+                result.AddRange(files.EnsureNotNull().Select(file => file.ToFileResult()));
             }
             else
             {
@@ -49,7 +46,7 @@ internal class FileService : IFileService<FileResult>
 
     public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
     {
-        if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result)
+        if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
         {
             return result[0].File;
         }

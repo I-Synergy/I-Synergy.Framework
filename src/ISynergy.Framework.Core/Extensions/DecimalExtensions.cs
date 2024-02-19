@@ -16,9 +16,7 @@ public static class DecimalExtensions
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 }

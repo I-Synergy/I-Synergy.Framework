@@ -401,7 +401,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
             throw new ArgumentOutOfRangeException(Properties.Resources.GEODETIC_PATH_MIN_2);
 
         if (start == end || numberOfPoints == 2)
-            return new[] { start, end };
+            return [start, end];
 
         var curve = CalculateGeodeticCurve(start, end);
         var stepWidth = curve.EllipsoidalDistance / (numberOfPoints - 1);

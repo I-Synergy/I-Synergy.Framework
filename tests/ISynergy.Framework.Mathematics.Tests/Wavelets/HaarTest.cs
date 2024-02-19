@@ -78,9 +78,9 @@ public class HaarTest
     [TestMethod]
     public void IWTTest()
     {
-        double[] original = { 1, 2, 3, 4 };
-        double[] data = { 1, 2, 3, 4 };
-        double[] expected = { 2.1213, 4.9497, -0.7071, -0.7071 };
+        double[] original = [1, 2, 3, 4];
+        double[] data = [1, 2, 3, 4];
+        double[] expected = [2.1213, 4.9497, -0.7071, -0.7071];
 
         Haar.FWT(data);
 

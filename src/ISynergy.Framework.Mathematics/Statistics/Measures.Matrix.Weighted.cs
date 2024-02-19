@@ -1136,7 +1136,8 @@ public static partial class Measures
 
                 return sum / (weightSum - (squareSum / weightSum));
             }
-            else if (weightType == WeightType.Fraction)
+
+            if (weightType == WeightType.Fraction)
             {
                 /*
                 if (Math.Abs(weightSum - 1.0) >= 1e-8)
@@ -1148,7 +1149,7 @@ public static partial class Measures
 
                 return sum / (weightSum - (squareSum / weightSum));
             }
-            else if (weightType == WeightType.Repetition)
+            if (weightType == WeightType.Repetition)
             {
                 return sum / (weightSum - (squareSum / weightSum));
             }

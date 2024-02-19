@@ -36,7 +36,7 @@ public sealed partial class SignUpControl : UserControl
 
     private void ComboBox_Modules_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        if (DataContext is AuthenticationViewModel viewModel && viewModel.Modules.FirstOrDefault() is Module module)
+        if (DataContext is AuthenticationViewModel viewModel && viewModel.Modules.FirstOrDefault() is { } module)
         {
             ComboBox_Modules.SelectedItems.Add(module);
         }

@@ -22,8 +22,7 @@ public class NullToVisibilityConverter : IValueConverter
     {
         if (value is null)
             return Visibility.Collapsed;
-        else
-            return Visibility.Visible;
+        return Visibility.Visible;
     }
 
     /// <summary>
@@ -62,10 +61,8 @@ public class NullToInversedVisibilityConverter : IValueConverter
         {
             return Visibility.Collapsed;
         }
-        else
-        {
-            return Visibility.Visible;
-        }
+
+        return Visibility.Visible;
     }
 
     /// <summary>

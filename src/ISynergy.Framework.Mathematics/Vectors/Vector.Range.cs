@@ -53,7 +53,7 @@ public static partial class Vector
     public static int[] Range(int a, int b, int stepSize)
     {
         if (a == b)
-            return new int[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
@@ -153,7 +153,7 @@ public static partial class Vector
     public static double[] Range(double a, double b)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         double[] r;
 
@@ -196,7 +196,7 @@ public static partial class Vector
     public static int[] Range(int a, int b)
     {
         if (a == b)
-            return new int[] { };
+            return [];
 
         int[] r;
 
@@ -304,7 +304,7 @@ public static partial class Vector
     public static double[] Range(double a, double b, int stepSize)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
@@ -449,7 +449,7 @@ public static partial class Vector
     public static double[] Range(double a, double b, double stepSize)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
@@ -594,7 +594,7 @@ public static partial class Vector
     public static double[] Range(double a, double b, short stepSize)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
@@ -739,7 +739,7 @@ public static partial class Vector
     public static double[] Range(double a, double b, byte stepSize)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
@@ -884,7 +884,7 @@ public static partial class Vector
     public static double[] Range(double a, double b, sbyte stepSize)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
@@ -1029,7 +1029,7 @@ public static partial class Vector
     public static double[] Range(double a, double b, long stepSize)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
@@ -1174,7 +1174,7 @@ public static partial class Vector
     public static double[] Range(double a, double b, ulong stepSize)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
@@ -1319,7 +1319,7 @@ public static partial class Vector
     public static double[] Range(double a, double b, ushort stepSize)
     {
         if (a == b)
-            return new double[] { };
+            return [];
 
         if (stepSize == 0)
             throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");

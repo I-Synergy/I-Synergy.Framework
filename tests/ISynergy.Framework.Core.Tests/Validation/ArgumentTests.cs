@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Validation.Tests;
 

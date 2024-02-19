@@ -282,7 +282,7 @@ public class AuthenticationViewModel : ViewModel
 
         Modules = await _authenticationService.GetModulesAsync();
 
-        if (Modules.FirstOrDefault() is Module module)
+        if (Modules.FirstOrDefault() is { } module)
             Registration_Modules.Add(module);
 
         AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;

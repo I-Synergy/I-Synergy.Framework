@@ -18,10 +18,8 @@ public static class DateTimeConverter
         {
             return new TimeSpan(0);
         }
-        else
-        {
-            return dt - dt.Date;
-        }
+
+        return dt - dt.Date;
     }
 
     /// <summary>
@@ -127,10 +125,9 @@ public class DateTimeToDateTimeOffsetConverter : IValueConverter
         {
             if (dt.Offset.Equals(TimeSpan.Zero))
                 return dt.UtcDateTime;
-            else if (dt.Offset.Equals(TimeZoneInfo.Local.GetUtcOffset(dt.DateTime)))
+            if (dt.Offset.Equals(TimeZoneInfo.Local.GetUtcOffset(dt.DateTime)))
                 return DateTime.SpecifyKind(dt.DateTime, DateTimeKind.Local);
-            else
-                return dt.DateTime;
+            return dt.DateTime;
         }
 
         return DateTime.Now;

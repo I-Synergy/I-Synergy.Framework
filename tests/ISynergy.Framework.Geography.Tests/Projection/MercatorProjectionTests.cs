@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Geography.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Geography.Projection.Tests;
 

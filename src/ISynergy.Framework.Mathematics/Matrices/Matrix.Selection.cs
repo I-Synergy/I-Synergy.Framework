@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Comparers;
-using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -113,7 +112,7 @@ public static partial class Matrix
 
         var sets = new HashSet<T>[cols];
         for (var i = 0; i < sets.Length; i++)
-            sets[i] = new HashSet<T>();
+            sets[i] = [];
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < cols; j++)
@@ -142,7 +141,7 @@ public static partial class Matrix
         var sets = new HashSet<T>[cols];
 
         for (var i = 0; i < sets.Length; i++)
-            sets[i] = new HashSet<T>();
+            sets[i] = [];
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < cols; j++)
@@ -1117,7 +1116,7 @@ public static partial class Matrix
             if (func(data[i]))
             {
                 if (firstOnly)
-                    return new[] { i };
+                    return [i];
                 idx.Add(i);
             }
 
@@ -1153,8 +1152,8 @@ public static partial class Matrix
                 if (func(data[i, j]))
                 {
                     if (firstOnly)
-                        return new[] { new[] { i, j } };
-                    idx.Add(new[] { i, j });
+                        return [[i, j]];
+                    idx.Add([i, j]);
                 }
 
         return idx.ToArray();

@@ -140,13 +140,12 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <returns><c>true</c> if the specified file content is type; otherwise, <c>false</c>.</returns>
     public bool IsType(byte[] fileContent, string extensionAliasOrMimeType)
     {
-        foreach (var fileTypeInfo in AvailableTypes.Where(t =>
-            t.Extension.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
-            t.MimeType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
-            t.Aliases is not null && t.Aliases.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase)))
+        if (AvailableTypes.Where(t =>
+                t.Extension.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
+                t.MimeType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
+                t.Aliases is not null && t.Aliases.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase)).Any(fileTypeInfo => IsMatchingType(fileContent, fileTypeInfo)))
         {
-            if (IsMatchingType(fileContent, fileTypeInfo))
-                return true;
+            return true;
         }
 
         if (extensionAliasOrMimeType.Equals("txt", StringComparison.OrdinalIgnoreCase) ||
@@ -261,12 +260,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     private static bool IsAscii(byte[] input)
     {
         const byte maxAscii = 0x7F;
-        foreach (var b in input)
-        {
-            if (b > maxAscii)
-                return false;
-        }
-        return true;
+        return Array.TrueForAll(input, b => b <= maxAscii);
     }
 
     /// <summary>

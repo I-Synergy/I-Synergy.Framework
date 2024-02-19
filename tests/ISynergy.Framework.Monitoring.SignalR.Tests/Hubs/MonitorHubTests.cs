@@ -2,9 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using ClaimTypes = ISynergy.Framework.Core.Constants.ClaimTypes;
 
 

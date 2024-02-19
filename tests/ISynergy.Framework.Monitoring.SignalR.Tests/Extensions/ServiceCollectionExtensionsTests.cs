@@ -3,7 +3,6 @@ using ISynergy.Framework.Monitoring.Hubs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Monitoring.Extensions.Tests;
 

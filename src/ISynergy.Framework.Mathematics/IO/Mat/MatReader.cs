@@ -1,7 +1,6 @@
 ﻿namespace ISynergy.Framework.Mathematics.IO.Mat;
 
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.IO;

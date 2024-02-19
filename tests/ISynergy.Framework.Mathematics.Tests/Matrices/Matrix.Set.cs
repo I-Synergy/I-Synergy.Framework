@@ -80,7 +80,7 @@ public partial class MatrixTest
         };
         CollectionAssert.AreEqual(expected, m);
 
-        m.Set(42d, new[] { 2 }, new[] { 3 });
+        m.Set(42d, [2], [3]);
         expected = new double[,]
         {
              { 10, 10, 2, 3 },
@@ -131,7 +131,7 @@ public partial class MatrixTest
         CollectionAssert.AreEqual(expected, m);
 
         m = Vector.Interval(0, 12).Reshape(3, 4);
-        m.Set(42d, new[] { -1 }, new[] { -2 });
+        m.Set(42d, [-1], [-2]);
         expected = new double[,]
         {
             { 0, 1, 2, 3 },
@@ -171,24 +171,24 @@ public partial class MatrixTest
         int[] expected;
 
         m.Set(42, -1);
-        expected = new int[]
-        {
+        expected =
+        [
             0, 1, 2, 3, 42
-        };
+        ];
         CollectionAssert.AreEqual(expected, m);
 
         m.Set(10, 0);
-        expected = new int[]
-        {
+        expected =
+        [
             10, 1, 2, 3, 42
-        };
+        ];
         CollectionAssert.AreEqual(expected, m);
 
-        m.Set(42, new[] { 4, 2 });
-        expected = new int[]
-        {
+        m.Set(42, [4, 2]);
+        expected =
+        [
             10, 1, 42, 3, 42
-        };
+        ];
         CollectionAssert.AreEqual(expected, m);
     }
 

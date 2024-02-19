@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
-using System.Runtime.CompilerServices;
+
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 /// <summary>
@@ -167,7 +167,7 @@ public static partial class Measures
     /// 
     public static double Quartiles(this double[] values, out NumericRange range, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
     {
-        double[] result = Quantiles(values, type: type, probabilities: new[] { 0.25, 0.5, 0.75 }, alreadySorted: alreadySorted, inPlace: inPlace);
+        double[] result = Quantiles(values, type: type, probabilities: [0.25, 0.5, 0.75], alreadySorted: alreadySorted, inPlace: inPlace);
         range = new NumericRange(result[0], result[2]);
         return result[1];
     }
@@ -188,7 +188,7 @@ public static partial class Measures
     /// 
     public static double Quartiles(this double[] values, out double q1, out double q3, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
     {
-        double[] result = Quantiles(values, type: type, probabilities: new[] { 0.25, 0.5, 0.75 }, alreadySorted: alreadySorted, inPlace: inPlace);
+        double[] result = Quantiles(values, type: type, probabilities: [0.25, 0.5, 0.75], alreadySorted: alreadySorted, inPlace: inPlace);
         q1 = result[0];
         q3 = result[2];
         return result[1];
@@ -242,7 +242,7 @@ public static partial class Measures
     /// 
     public static double Quantile(this double[] values, double probabilities, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
     {
-        return Quantiles(values, new double[] { probabilities }, alreadySorted: alreadySorted, type: type, inPlace: inPlace)[0];
+        return Quantiles(values, [probabilities], alreadySorted: alreadySorted, type: type, inPlace: inPlace)[0];
     }
 
     /// <summary>

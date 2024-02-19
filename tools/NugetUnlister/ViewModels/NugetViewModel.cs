@@ -7,10 +7,7 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.Abstractions;
 using NugetUnlister.Models;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NugetUnlister.ViewModels;
 

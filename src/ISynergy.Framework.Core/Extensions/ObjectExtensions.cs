@@ -73,8 +73,8 @@ public static class ObjectExtensions
 
         if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
-            MethodInfo setter = type.GetMethod("op_Implicit", new[] { inputType });
-            return setter.Invoke(null, new object[] { value });
+            MethodInfo setter = type.GetMethod("op_Implicit", [inputType]);
+            return setter.Invoke(null, [value]);
         }
 
         var methods = new List<MethodInfo>();
@@ -89,7 +89,7 @@ public static class ObjectExtensions
                 {
                     ParameterInfo[] p = m.GetParameters();
                     if (p.Length == 1 && p[0].ParameterType.IsInstanceOfType(value))
-                        return m.Invoke(null, new[] { value });
+                        return m.Invoke(null, [value]);
                 }
             }
         }

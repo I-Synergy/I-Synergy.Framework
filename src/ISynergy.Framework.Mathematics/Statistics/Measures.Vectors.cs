@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Exceptions;
-using System.Runtime.CompilerServices;
+
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 /// <summary>
@@ -554,11 +554,9 @@ public static partial class Measures
             // Sample variance
             return variance / (values.Length - 1);
         }
-        else
-        {
-            // Population variance
-            return variance / values.Length;
-        }
+
+        // Population variance
+        return variance / values.Length;
     }
 
     /// <summary>
@@ -610,11 +608,9 @@ public static partial class Measures
             // Sample variance
             return variance / (values.Length - 1);
         }
-        else
-        {
-            // Population variance
-            return variance / values.Length;
-        }
+
+        // Population variance
+        return variance / values.Length;
     }
 
     /// <summary>
@@ -1000,11 +996,9 @@ public static partial class Measures
             // Sample variance
             return covariance / (vector1.Length - 1);
         }
-        else
-        {
-            // Population variance
-            return covariance / vector1.Length;
-        }
+
+        // Population variance
+        return covariance / vector1.Length;
     }
 
     /// <summary>
@@ -1154,10 +1148,8 @@ public static partial class Measures
 
             return a * b - 3 * c;
         }
-        else
-        {
-            return m4 / (m2 * m2) - 3;
-        }
+
+        return m4 / (m2 * m2) - 3;
     }
 
     /// <summary>

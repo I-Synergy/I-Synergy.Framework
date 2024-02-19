@@ -23,10 +23,8 @@ public class GuidToInversedIsVisibleConverter : IValueConverter
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     /// <summary>
@@ -65,10 +63,8 @@ public class GuidToIsVisibleConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>

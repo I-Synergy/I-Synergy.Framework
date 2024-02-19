@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Sample.Api.Controllers;
 
@@ -10,10 +6,10 @@ namespace Sample.Api.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController(ILogger<WeatherForecastController> logger) : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
+    private static readonly string[] Summaries =
+    [
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+    ];
 
     private readonly ILogger<WeatherForecastController> _logger = logger;
 

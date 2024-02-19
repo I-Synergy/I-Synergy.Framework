@@ -9,7 +9,7 @@ public static class DelayAction
         if (dispatcher == null)
             dispatcher = Dispatcher.CurrentDispatcher;
 
-        Timer[] timer = { null };
+        Timer[] timer = [null];
         timer[0] = new Timer(obj =>
         {
             dispatcher.Invoke(action);

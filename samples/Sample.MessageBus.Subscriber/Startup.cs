@@ -1,8 +1,5 @@
 ﻿using ISynergy.Framework.MessageBus.Abstractions;
 using Sample.MessageBus.Models;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sample.MessageBus.Subscriber;
 
@@ -15,8 +12,6 @@ namespace Sample.MessageBus.Subscriber;
 /// <param name="messageBus">The message bus.</param>
 public class Startup(ISubscriberServiceBus<TestDataModel> messageBus)
 {
-    private readonly ISubscriberServiceBus<TestDataModel> _messageBus = messageBus;
-
     /// <summary>
     /// run as an asynchronous operation.
     /// </summary>
@@ -24,10 +19,10 @@ public class Startup(ISubscriberServiceBus<TestDataModel> messageBus)
     {
         Console.WriteLine("Azure implementation started...");
 
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
 
         Task allReceives = Task.WhenAll(
-            _messageBus.SubscribeToMessageBusAsync(cancellationTokenSource.Token));
+            messageBus.SubscribeToMessageBusAsync(cancellationTokenSource.Token));
 
         Console.WriteLine("Receiving messages...");
         Console.WriteLine("Wait for a minute or press any key to end the processing");
@@ -38,7 +33,7 @@ public class Startup(ISubscriberServiceBus<TestDataModel> messageBus)
                 Task.Delay(TimeSpan.FromSeconds(60))
             ).ContinueWith(async (t) =>
             {
-                await _messageBus.UnSubscribeFromMessageBusAsync();
+                await messageBus.UnSubscribeFromMessageBusAsync();
                 cancellationTokenSource.Cancel();
             }),
             allReceives);

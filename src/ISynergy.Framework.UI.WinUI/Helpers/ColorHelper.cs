@@ -72,7 +72,8 @@ public static class ColorHelper
 
             return new SolidColorBrush(Color.FromArgb(a, r, g, b));
         }
-        else if (hex.Length == 8)
+
+        if (hex.Length == 8)
         {
             var a = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
             var r = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
@@ -81,10 +82,7 @@ public static class ColorHelper
 
             return new SolidColorBrush(Color.FromArgb(a, r, g, b));
         }
-        else
-        {
-            throw new InvalidCastException("string is not an hex color code.");
-        }
+        throw new InvalidCastException("string is not an hex color code.");
     }
 
     /// <summary>
@@ -106,7 +104,8 @@ public static class ColorHelper
 
             return Color.FromArgb(a, r, g, b);
         }
-        else if (hex.Length == 8)
+
+        if (hex.Length == 8)
         {
             var a = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
             var r = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
@@ -115,9 +114,6 @@ public static class ColorHelper
 
             return Color.FromArgb(a, r, g, b);
         }
-        else
-        {
-            throw new InvalidCastException("string is not an hex color code.");
-        }
+        throw new InvalidCastException("string is not an hex color code.");
     }
 }
