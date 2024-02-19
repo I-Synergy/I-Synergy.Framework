@@ -65,10 +65,8 @@ public class StringToBooleanConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -85,10 +83,8 @@ public class StringToBooleanConverter : IValueConverter
         {
             return parameter.ToString();
         }
-        else
-        {
-            return string.Empty;
-        }
+
+        return string.Empty;
     }
 }
 
@@ -113,10 +109,8 @@ public class StringToIsVisibleConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -155,10 +149,8 @@ public class StringToEnabledConverter : IValueConverter
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     /// <summary>
@@ -197,10 +189,8 @@ public class StringToInvertEnabledConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -239,10 +229,8 @@ public class StringToDecimalConverter : IValueConverter
         {
             return result;
         }
-        else
-        {
-            return 0m;
-        }
+
+        return 0m;
     }
 
     /// <summary>
@@ -282,10 +270,8 @@ public class StringToDoubleConverter : IValueConverter
         {
             return result;
         }
-        else
-        {
-            return 0d;
-        }
+
+        return 0d;
     }
 
     /// <summary>
@@ -325,10 +311,8 @@ public class StringToIntegerConverter : IValueConverter
         {
             return result;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 
     /// <summary>

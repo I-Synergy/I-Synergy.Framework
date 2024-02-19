@@ -91,7 +91,7 @@ public class FileService : IFileService<FileResult>
         // Support full .NET filters (like "Text files|*.txt") as well
         if (filter.Contains("|"))
         {
-            var splittedFilters = filter.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            var splittedFilters = filter.Split(["|"], StringSplitOptions.RemoveEmptyEntries);
             if (splittedFilters.Length == 2)
             {
                 fileFilter = splittedFilters[1].Trim();
@@ -126,7 +126,7 @@ public class FileService : IFileService<FileResult>
     /// <returns>System.Byte[].</returns>
     public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
     {
-        if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result)
+        if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
             return result.First().File;
 
         return null;
@@ -182,7 +182,7 @@ public class FileService : IFileService<FileResult>
 
         if (multiple)
         {
-            if (await picker.PickMultipleFilesAsync() is IReadOnlyList<StorageFile> files)
+            if (await picker.PickMultipleFilesAsync() is { } files)
             {
                 foreach (var file in files)
                 {
@@ -199,7 +199,7 @@ public class FileService : IFileService<FileResult>
         }
         else
         {
-            if (await picker.PickSingleFileAsync() is StorageFile file)
+            if (await picker.PickSingleFileAsync() is { } file)
             {
 #if WINDOWS
                 StorageApplicationPermissions.FutureAccessList.Add(file);
@@ -226,7 +226,7 @@ public class FileService : IFileService<FileResult>
     {
         try
         {
-            if (await ApplicationData.Current.LocalFolder.GetFileAsync(fileToOpen) is StorageFile file)
+            if (await ApplicationData.Current.LocalFolder.GetFileAsync(fileToOpen) is { } file)
                 await Launcher.LaunchFileAsync(file);
         }
         catch (FileNotFoundException)

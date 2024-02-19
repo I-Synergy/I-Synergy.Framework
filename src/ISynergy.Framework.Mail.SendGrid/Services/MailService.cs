@@ -60,7 +60,7 @@ internal class MailService : IMailService
             if (emailMessage.SendCopy)
             {
                 if (personalization.Bccs is null)
-                    personalization.Bccs = new List<EmailAddress>();
+                    personalization.Bccs = [];
 
                 personalization.Bccs.Add(new EmailAddress(emailMessage.EmailAddressFrom));
             }
@@ -72,7 +72,7 @@ internal class MailService : IMailService
                 From = new EmailAddress(emailMessage.EmailAddressFrom),
                 PlainTextContent = emailMessage.Message,
                 HtmlContent = emailMessage.Message,
-                Personalizations = new List<Personalization> { personalization }
+                Personalizations = [personalization]
             };
 
             var response = await client.SendEmailAsync(msg).ConfigureAwait(false);

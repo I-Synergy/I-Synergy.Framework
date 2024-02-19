@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 /// UserInfo model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public class Profile : IProfile
+public record Profile : IProfile
 {
     public Profile(
         Token token,

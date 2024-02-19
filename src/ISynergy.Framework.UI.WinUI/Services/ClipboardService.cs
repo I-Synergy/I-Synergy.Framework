@@ -22,15 +22,14 @@ public class ClipboardService : IClipboardService
         var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
 
         if (dataPackageView.Contains(StandardDataFormats.Bitmap) &&
-            await dataPackageView.GetBitmapAsync() is RandomAccessStreamReference imageReceived)
+            await dataPackageView.GetBitmapAsync() is { } imageReceived)
         {
             using var imageStream = await imageReceived.OpenReadAsync();
             var image = await imageStream.AsStreamForRead().ToByteArrayAsync();
 
             if (imageStream.ContentType == "image/bmp")
                 return new ImageResult(image.ToImageBytes(100, ImageFormat.Png), "image/png");
-            else
-                return new ImageResult(image, imageStream.ContentType);
+            return new ImageResult(image, imageStream.ContentType);
         }
 
         return null;

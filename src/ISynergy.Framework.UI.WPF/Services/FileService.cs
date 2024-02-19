@@ -66,14 +66,7 @@ public class FileService : IFileService<FileResult>
 
         if (dialogResult)
         {
-            foreach (var file in fileDialog.FileNames)
-            {
-                result.Add(new FileResult(
-                    file,
-                    Path.GetFileName(file),
-                    () => File.OpenRead(file)
-                ));
-            }
+            result.AddRange(fileDialog.FileNames.Select(file => new FileResult(file, Path.GetFileName(file), () => File.OpenRead(file))));
         }
 
         return Task.FromResult(result);
@@ -81,7 +74,7 @@ public class FileService : IFileService<FileResult>
 
     public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
     {
-        if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result)
+        if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
             return result.First().File;
 
         return null;

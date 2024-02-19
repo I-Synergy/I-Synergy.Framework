@@ -44,7 +44,7 @@ public class CameraService : ICameraService
         captureUI.PhotoSettings.MaxResolution = CameraCaptureUIMaxPhotoResolution.MediumXga;
         captureUI.PhotoSettings.AllowCropping = false;
 
-        if (await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo) is StorageFile photo)
+        if (await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo) is { } photo)
         {
             var prop = await photo.GetBasicPropertiesAsync();
 
@@ -55,10 +55,8 @@ public class CameraService : ICameraService
                     photo.DisplayName,
                     () => photo.OpenStreamForReadAsync().GetAwaiter().GetResult());
             }
-            else
-            {
-                await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("Warning_Document_SizeTooBig"), $"{maxFileSize} bytes"));
-            }
+
+            await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("Warning_Document_SizeTooBig"), $"{maxFileSize} bytes"));
         }
 
         return null;

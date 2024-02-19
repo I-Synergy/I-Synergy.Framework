@@ -2,8 +2,6 @@
 using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Linq;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
@@ -33,7 +31,7 @@ public class BinarySearchTest
 
     public BinarySearchTest()
     {
-        elements = new double[] { 5.2, 2.7, 8, 6.1, 21, 9, -1, 2, 0 };
+        elements = [5.2, 2.7, 8, 6.1, 21, 9, -1, 2, 0];
         idx = Vector.Range(0, elements.Length);
 
         Array.Sort(elements, idx);

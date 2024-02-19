@@ -53,7 +53,7 @@ public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // TO
     /// 
     public TNode[] Children
     {
-        get { return new[] { Left, Right }; }
+        get { return [Left, Right]; }
         set
         {
             if (value.Length != 2)

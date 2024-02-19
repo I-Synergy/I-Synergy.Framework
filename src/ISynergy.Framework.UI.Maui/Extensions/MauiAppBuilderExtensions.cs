@@ -2,14 +2,11 @@ using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Markup;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
@@ -17,7 +14,6 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using FileResult = ISynergy.Framework.Mvvm.Models.FileResult;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -163,7 +159,7 @@ public static class MauiAppBuilderExtensions
     {
         foreach (var view in views.Distinct())
         {
-            if (ViewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is Type viewmodel)
+            if (ViewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is { } viewmodel)
                 services.RegisterViewModelRoute(viewmodel, view);
         }
     }

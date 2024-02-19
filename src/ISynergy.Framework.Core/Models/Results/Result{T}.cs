@@ -13,7 +13,7 @@ public class Result<T> : Result, IResult<T>
 
     public new static Result<T> Fail() => new() { Succeeded = false };
 
-    public new static Result<T> Fail(string message) => new() { Succeeded = false, Messages = new List<string> { message } };
+    public new static Result<T> Fail(string message) => new() { Succeeded = false, Messages = [message] };
 
     public new static Result<T> Fail(List<string> messages) => new() { Succeeded = false, Messages = messages };
 
@@ -25,11 +25,13 @@ public class Result<T> : Result, IResult<T>
 
     public new static Result<T> Success() => new() { Succeeded = true };
 
-    public new static Result<T> Success(string message) => new() { Succeeded = true, Messages = new List<string> { message } };
+    public new static Result<T> Success(string message) => new() { Succeeded = true, Messages = [message] };
 
     public static Result<T> Success(T data) => new() { Succeeded = true, Data = data };
 
-    public static Result<T> Success(T data, string message) => new() { Succeeded = true, Data = data, Messages = new List<string> { message } };
+    public static Result<T> Success(T data, string message) => new() { Succeeded = true, Data = data, Messages =
+        [message]
+    };
 
     public static Result<T> Success(T data, List<string> messages) => new() { Succeeded = true, Data = data, Messages = messages };
 

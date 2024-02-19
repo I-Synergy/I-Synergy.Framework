@@ -82,7 +82,7 @@ public static class Classes
                     }
                 }
 
-                groupings.Add(new int[] { group, positives, negatives });
+                groupings.Add([group, positives, negatives]);
             }
         }
 
@@ -168,15 +168,15 @@ public static class Classes
         if (positives.Length != negatives.Length)
             throw new DimensionMismatchException("negatives", "The array of negative labels must have the same length as the data.");
 
-        List<int[]> rows = new List<int[]>();
+        List<int[]> rows = [];
 
         for (var i = 0; i < data.Length; i++)
         {
             for (var j = 0; j < positives[i]; j++)
-                rows.Add(new int[] { data[i], 1 });
+                rows.Add([data[i], 1]);
 
             for (var j = 0; j < negatives[i]; j++)
-                rows.Add(new int[] { data[i], 0 });
+                rows.Add([data[i], 0]);
         }
 
         return rows.ToArray();
@@ -198,15 +198,15 @@ public static class Classes
     /// 
     public static int[][] Expand(this int[][] data, int labelColumn, int positiveColumn, int negativeColumn)
     {
-        List<int[]> rows = new List<int[]>();
+        List<int[]> rows = [];
 
         for (var i = 0; i < data.Length; i++)
         {
             for (var j = 0; j < data[i][positiveColumn]; j++)
-                rows.Add(new int[] { data[i][labelColumn], 1 });
+                rows.Add([data[i][labelColumn], 1]);
 
             for (var j = 0; j < data[i][negativeColumn]; j++)
-                rows.Add(new int[] { data[i][labelColumn], 0 });
+                rows.Add([data[i][labelColumn], 0]);
         }
 
         return rows.ToArray();
@@ -268,7 +268,7 @@ public static class Classes
     /// 
     public static int[] Random(int samples, double proportion)
     {
-        return Random(samples, new[] { proportion, 1.0 - proportion });
+        return Random(samples, [proportion, 1.0 - proportion]);
     }
 
     /// <summary>
@@ -299,7 +299,7 @@ public static class Classes
     {
         var buckets = new List<Tuple<int, int>>[classes];
         for (var i = 0; i < buckets.Length; i++)
-            buckets[i] = new List<Tuple<int, int>>();
+            buckets[i] = [];
 
         for (var i = 0; i < labels.Length; i++)
             buckets[labels[i]].Add(Tuple.Create(i, labels[i]));
@@ -309,7 +309,7 @@ public static class Classes
 
         var partitions = new List<Tuple<int, int>>[categories];
         for (var i = 0; i < partitions.Length; i++)
-            partitions[i] = new List<Tuple<int, int>>();
+            partitions[i] = [];
 
         // We are going to take samples from the buckets and assign to 
         // groups. For this, we will be following the buckets in order,
@@ -383,8 +383,8 @@ public static class Classes
         int firstGroupPositives = (int)((positiveCount / 2.0) * proportion);
         int firstGroupNegatives = (int)((negativeCount / 2.0) * proportion);
 
-        List<int> training = new List<int>();
-        List<int> testing = new List<int>();
+        List<int> training = [];
+        List<int> testing = [];
 
         // Put positives and negatives into training
         for (var j = 0; j < firstGroupNegatives; j++)

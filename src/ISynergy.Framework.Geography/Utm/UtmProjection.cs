@@ -176,10 +176,8 @@ public class UtmProjection : MercatorProjection
             meridianConvergence = gamma;
             return new GlobalCoordinates(Angle.RadToDeg(phi), Angle.RadToDeg(lambda));
         }
-        else
-        {
-            throw new ArgumentException(Properties.Resources.NO_UTM_COORDINATE);
-        }
+
+        throw new ArgumentException(Properties.Resources.NO_UTM_COORDINATE);
     }
 
     /// <summary>
@@ -251,24 +249,24 @@ public class UtmProjection : MercatorProjection
             var n3 = n2 * N;
             var n4 = n3 * N;
             A = ellipsoid.SemiMajorAxis / (1.0 + N) * (1.0 + n2 / 4.0 + n4 / 64.0);
-            Alpha = new[]
-            {
+            Alpha =
+            [
                 N*0.5 - 2.0*n2/3.0 + 5.0*n3/16.0,
                 13.0*n2/48.0 - 0.6*n3,
                 61.0*n3/240.0
-            };
-            Beta = new[]
-            {
+            ];
+            Beta =
+            [
                 N*0.5 - 2.0*n2/3.0 + 37.0*n3/96.0,
                 n2/48.0 + n3/15.0,
                 17.0*n3/480.0
-            };
-            Delta = new[]
-            {
+            ];
+            Delta =
+            [
                 2.0*N - 2.0*n2/3.0 - 2.0*n3,
                 7.0*n2/3.0 - 1.6*n3,
                 56.0*n3/15.0
-            };
+            ];
         }
     }
 

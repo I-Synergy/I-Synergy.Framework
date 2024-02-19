@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Geography.Utm.Tests;
 
@@ -306,7 +305,7 @@ public class UtmGridTests
     {
         UtmGrid g = new(utm, 32, 'U');
 
-        if (g.Origin is UtmCoordinate o)
+        if (g.Origin is { } o)
         {
             Assert.AreEqual(o.Projection, utm);
             Assert.AreEqual("32U", o.Grid.ToString());

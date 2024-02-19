@@ -57,11 +57,12 @@ public sealed class UserThemeResources
         {
             return new Uri(LightResourcesPath);
         }
-        else if (resourceId == DarkResourcesPathKeyName && !string.IsNullOrEmpty(DarkResourcesPath))
+
+        if (resourceId == DarkResourcesPathKeyName && !string.IsNullOrEmpty(DarkResourcesPath))
         {
             return new Uri(DarkResourcesPath);
         }
-        else if (resourceId == HighContrastResourcesPathKeyName && !string.IsNullOrEmpty(HighContrastResourcesPath))
+        if (resourceId == HighContrastResourcesPathKeyName && !string.IsNullOrEmpty(HighContrastResourcesPath))
         {
             return new Uri(HighContrastResourcesPath);
         }

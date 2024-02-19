@@ -15,27 +15,9 @@ public static class CompareUtility
     /// <returns>List&lt;System.String&gt;.</returns>
     public static List<string> CompareObject(object source, object destination)
     {
-        var result = new List<string>();
-
         var oType = source.GetType();
 
-        foreach (var oProperty in oType.GetProperties().EnsureNotNull())
-        {
-            var oOldValue = oProperty.GetValue(source, null);
-            var oNewValue = oProperty.GetValue(destination, null);
-
-            // this will handle the scenario where either value is null
-            if (!Equals(oOldValue, oNewValue))
-            {
-                // Handle the display values when the underlying value is null
-                var sOldValue = oOldValue is null ? "null" : oOldValue.ToString();
-                var sNewValue = oNewValue is null ? "null" : oNewValue.ToString();
-
-                result.Add("Property " + oProperty.Name + " was: " + sOldValue + "; is: " + sNewValue);
-            }
-        }
-
-        return result;
+        return (from oProperty in oType.GetProperties().EnsureNotNull() let oOldValue = oProperty.GetValue(source, null) let oNewValue = oProperty.GetValue(destination, null) where !Equals(oOldValue, oNewValue) let sOldValue = oOldValue is null ? "null" : oOldValue.ToString() let sNewValue = oNewValue is null ? "null" : oNewValue.ToString() select "Property " + oProperty.Name + " was: " + sOldValue + "; is: " + sNewValue).ToList();
     }
 
     /// <summary>

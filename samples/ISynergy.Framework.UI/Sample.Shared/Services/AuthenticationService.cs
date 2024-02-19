@@ -54,7 +54,7 @@ public class AuthenticationService : IAuthenticationService
         throw new NotImplementedException();
     }
 
-    public Task AuthenticateWithRefreshTokenAsync(string refreshtoken, CancellationToken cancellationToken = default)
+    public Task AuthenticateWithRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
     }
@@ -70,15 +70,15 @@ public class AuthenticationService : IAuthenticationService
             Guid.NewGuid(),
             username,
             "admin@demo.com",
-            new List<string> { "Administrator" },
-            new List<string>(),
+            ["Administrator"],
+            [],
             DateTimeOffset.Now.AddDays(7),
             1,
             DateTime.Now.AddHours(24));
 
         if (remember)
         {
-            if (_applicationSettingsService.Settings.IsAutoLogin != remember ||
+            if (!_applicationSettingsService.Settings.IsAutoLogin ||
                 _applicationSettingsService.Settings.DefaultUser != username)
             {
                 _applicationSettingsService.Settings.IsAutoLogin = true;

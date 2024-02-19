@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Common;
 [TestClass]
@@ -182,12 +181,12 @@ public class SpecialTest
     {
         Func<double, double> e = Math.Exp;
 
-        double[] x = { 1.6793491276384929E-12, 0.014072312433917435 };
-        double[] expected = new[]
-        {
+        double[] x = [1.6793491276384929E-12, 0.014072312433917435];
+        double[] expected =
+        [
             e(x[0] - Special.LogSum(x[0], x[1])),
             e(x[1] - Special.LogSum(x[0], x[1]))
-        };
+        ];
 
         double[] actual = Special.Softmax(x);
 

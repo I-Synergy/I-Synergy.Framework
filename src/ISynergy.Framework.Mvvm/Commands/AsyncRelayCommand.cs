@@ -301,7 +301,7 @@ public sealed class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCo
     /// <inheritdoc/>
     public void Cancel()
     {
-        if (_cancellationTokenSource is CancellationTokenSource { IsCancellationRequested: false } cancellationTokenSource)
+        if (_cancellationTokenSource is { IsCancellationRequested: false } cancellationTokenSource)
         {
             cancellationTokenSource.Cancel();
 

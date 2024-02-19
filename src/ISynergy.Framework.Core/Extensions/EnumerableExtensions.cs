@@ -18,15 +18,7 @@ public static class EnumerableExtensions
     /// <returns>Whether the two specified values have any flags in common.</returns>
     public static bool HasAny(this Enum value, Enum desiredFlags)
     {
-        foreach (var flag in desiredFlags.GetIndividualFlags().EnsureNotNull())
-        {
-            if (value.HasFlag(flag))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return desiredFlags.GetIndividualFlags().EnsureNotNull().Any(flag => value.HasFlag(flag));
     }
 
     /// <summary>

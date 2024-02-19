@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Vectors;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,11 +37,11 @@ public class JaggedQrDecompositionTest
     public void QrDecompositionConstructorTest()
     {
         double[][] value =
-        {
-           new double[] {  2, -1,  0 },
-           new double[] { -1,  2, -1 },
-           new double[] {  0, -1,  2 }
-        };
+        [
+            [2, -1,  0],
+            [-1,  2, -1],
+            [0, -1,  2]
+        ];
 
 
         JaggedQrDecomposition target = new(value);
@@ -55,7 +54,7 @@ public class JaggedQrDecompositionTest
 
         // Linear system solving
         double[][] B = Matrix.ColumnVector(new double[] { 1, 2, 3 }).ToJagged();
-        double[][] expected = Matrix.ColumnVector(new double[] { 2.5, 4.0, 3.5 }).ToJagged();
+        double[][] expected = Matrix.ColumnVector([2.5, 4.0, 3.5]).ToJagged();
         double[][] actual = target.Solve(B);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
@@ -65,11 +64,11 @@ public class JaggedQrDecompositionTest
     public void QrDecompositionConstructorTest2()
     {
         double[][] value =
-        {
-           new double[] {  1 },
-           new double[] {  2 },
-           new double[] {  3 }
-        };
+        [
+            [1],
+            [2],
+            [3]
+        ];
 
 
         JaggedQrDecomposition target = new(value);
@@ -83,7 +82,7 @@ public class JaggedQrDecompositionTest
 
         // Linear system solving
         double[][] B = Matrix.ColumnVector(new double[] { 4, 5, 6 }).ToJagged();
-        double[][] expected = Jagged.ColumnVector(new double[] { 2.285714285714286 });
+        double[][] expected = Jagged.ColumnVector([2.285714285714286]);
         double[][] actual = target.Solve(B);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
@@ -120,11 +119,11 @@ public class JaggedQrDecompositionTest
     public void full_decomposition()
     {
         double[][] value =
-        {
-           new double[] { 1 },
-           new double[] { 2 },
-           new double[] { 3 }
-        };
+        [
+            [1],
+            [2],
+            [3]
+        ];
 
 
         JaggedQrDecomposition target = new(value, economy: false);
@@ -138,7 +137,7 @@ public class JaggedQrDecompositionTest
 
         // Linear system solving
         double[][] B = Matrix.ColumnVector(new double[] { 4, 5, 6 }).ToJagged();
-        double[][] expected = Jagged.ColumnVector(new double[] { 2.285714285714286 });
+        double[][] expected = Jagged.ColumnVector([2.285714285714286]);
         double[][] actual = target.Solve(B);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
 
@@ -150,18 +149,18 @@ public class JaggedQrDecompositionTest
     public void InverseTest()
     {
         double[][] value =
-        {
-           new double[] {  2, -1,  0 },
-           new double[] { -1,  2, -1 },
-           new double[] {  0, -1,  2 }
-        };
+        [
+            [2, -1,  0],
+            [-1,  2, -1],
+            [0, -1,  2]
+        ];
 
         double[][] expected =
-        {
-            new double[] { 0.7500,    0.5000,    0.2500},
-            new double[] { 0.5000,    1.0000,    0.5000},
-            new double[] { 0.2500,    0.5000,    0.7500},
-        };
+        [
+            [0.7500,    0.5000,    0.2500],
+            [0.5000,    1.0000,    0.5000],
+            [0.2500,    0.5000,    0.7500]
+        ];
 
 
         JaggedQrDecomposition target = new(value);
@@ -180,15 +179,15 @@ public class JaggedQrDecompositionTest
     public void SolveTest()
     {
         double[][] value =
-        {
-           new double[] {  2, -1,  0 },
-           new double[] { -1,  2, -1 },
-           new double[] {  0, -1,  2 }
-        };
+        [
+            [2, -1,  0],
+            [-1,  2, -1],
+            [0, -1,  2]
+        ];
 
-        double[] b = { 1, 2, 3 };
+        double[] b = [1, 2, 3];
 
-        double[] expected = { 2.5000, 4.0000, 3.5000 };
+        double[] expected = [2.5000, 4.0000, 3.5000];
 
         JaggedQrDecomposition target = new(value);
         double[] actual = target.Solve(b);
@@ -204,33 +203,33 @@ public class JaggedQrDecompositionTest
         // http://www.math.auckland.ac.nz/~sharp/370/qr-solving.pdf
 
         double[][] value =
-        {
-            new double[] { 1,           0,           0 },
-            new double[] { 1,           7,          49 },
-            new double[] { 1,          14,         196 },
-            new double[] { 1,          21,         441 },
-            new double[] { 1,          28,         784 },
-            new double[] { 1,          35,        1225 },
-        };
+        [
+            [1,           0,           0],
+            [1,           7,          49],
+            [1,          14,         196],
+            [1,          21,         441],
+            [1,          28,         784],
+            [1,          35,        1225]
+        ];
 
         // Matrices
         {
             double[][] b =
-            {
-                new double[] { 4 },
-                new double[] { 1 },
-                new double[] { 0 },
-                new double[] { 0 },
-                new double[] { 2 },
-                new double[] { 5 },
-            };
+            [
+                [4],
+                [1],
+                [0],
+                [0],
+                [2],
+                [5]
+            ];
 
             double[][] expected =
-            {
-                new double[] { 3.9286  },
-                new double[] { -0.5031 },
-                new double[] { 0.0153  },
-            };
+            [
+                [3.9286],
+                [-0.5031],
+                [0.0153]
+            ];
 
             JaggedQrDecomposition target = new(value);
             double[][] actual = target.Solve(b);
@@ -241,8 +240,8 @@ public class JaggedQrDecompositionTest
 
         // Vectors
         {
-            double[] b = { 4, 1, 0, 0, 2, 5 };
-            double[] expected = { 3.9286, -0.5031, 0.0153 };
+            double[] b = [4, 1, 0, 0, 2, 5];
+            double[] expected = [3.9286, -0.5031, 0.0153];
 
             JaggedQrDecomposition target = new(value);
             double[] actual = target.Solve(b);
@@ -258,33 +257,33 @@ public class JaggedQrDecompositionTest
         // http://www.math.auckland.ac.nz/~sharp/370/qr-solving.pdf
 
         double[][] value =
-        {
-            new double[] { 1,           0,           0 },
-            new double[] { 1,           7,          49 },
-            new double[] { 1,          14,         196 },
-            new double[] { 1,          21,         441 },
-            new double[] { 1,          28,         784 },
-            new double[] { 1,          35,        1225 },
-        };
+        [
+            [1,           0,           0],
+            [1,           7,          49],
+            [1,          14,         196],
+            [1,          21,         441],
+            [1,          28,         784],
+            [1,          35,        1225]
+        ];
 
         // Matrices
         {
             double[][] b =
-            {
-                new double[] { 4 },
-                new double[] { 1 },
-                new double[] { 0 },
-                new double[] { 0 },
-                new double[] { 2 },
-                new double[] { 5 },
-            };
+            [
+                [4],
+                [1],
+                [0],
+                [0],
+                [2],
+                [5]
+            ];
 
             double[][] expected =
-            {
-                new double[] { 3.9286  },
-                new double[] { -0.5031 },
-                new double[] { 0.0153  },
-            };
+            [
+                [3.9286],
+                [-0.5031],
+                [0.0153]
+            ];
 
             JaggedQrDecomposition target = new(value, economy: false);
             double[][] actual = target.Solve(b);
@@ -295,8 +294,8 @@ public class JaggedQrDecompositionTest
 
         // Vectors
         {
-            double[] b = { 4, 1, 0, 0, 2, 5 };
-            double[] expected = { 3.9286, -0.5031, 0.0153 };
+            double[] b = [4, 1, 0, 0, 2, 5];
+            double[] expected = [3.9286, -0.5031, 0.0153];
 
             JaggedQrDecomposition target = new(value, economy: false);
             double[] actual = target.Solve(b);
@@ -310,53 +309,53 @@ public class JaggedQrDecompositionTest
     public void SolveTest3()
     {
         double[][] value =
-        {
-            new double[] { 41.9, 29.1, 1 },
-            new double[] { 43.4, 29.3, 1 },
-            new double[] { 43.9, 29.5, 0 },
-            new double[] { 44.5, 29.7, 0 },
-            new double[] { 47.3, 29.9, 0 },
-            new double[] { 47.5, 30.3, 0 },
-            new double[] { 47.9, 30.5, 0 },
-            new double[] { 50.2, 30.7, 0 },
-            new double[] { 52.8, 30.8, 0 },
-            new double[] { 53.2, 30.9, 0 },
-            new double[] { 56.7, 31.5, 0 },
-            new double[] { 57.0, 31.7, 0 },
-            new double[] { 63.5, 31.9, 0 },
-            new double[] { 65.3, 32.0, 0 },
-            new double[] { 71.1, 32.1, 0 },
-            new double[] { 77.0, 32.5, 0 },
-            new double[] { 77.8, 32.9, 0 }
-        };
+        [
+            [41.9, 29.1, 1],
+            [43.4, 29.3, 1],
+            [43.9, 29.5, 0],
+            [44.5, 29.7, 0],
+            [47.3, 29.9, 0],
+            [47.5, 30.3, 0],
+            [47.9, 30.5, 0],
+            [50.2, 30.7, 0],
+            [52.8, 30.8, 0],
+            [53.2, 30.9, 0],
+            [56.7, 31.5, 0],
+            [57.0, 31.7, 0],
+            [63.5, 31.9, 0],
+            [65.3, 32.0, 0],
+            [71.1, 32.1, 0],
+            [77.0, 32.5, 0],
+            [77.8, 32.9, 0]
+        ];
 
         double[][] b =
-        {
-            new double[] { 251.3 },
-            new double[] { 251.3 },
-            new double[] { 248.3 },
-            new double[] { 267.5 },
-            new double[] { 273.0 },
-            new double[] { 276.5 },
-            new double[] { 270.3 },
-            new double[] { 274.9 },
-            new double[] { 285.0 },
-            new double[] { 290.0 },
-            new double[] { 297.0 },
-            new double[] { 302.5 },
-            new double[] { 304.5 },
-            new double[] { 309.3 },
-            new double[] { 321.7 },
-            new double[] { 330.7 },
-            new double[] { 349.0 }
-        };
+        [
+            [251.3],
+            [251.3],
+            [248.3],
+            [267.5],
+            [273.0],
+            [276.5],
+            [270.3],
+            [274.9],
+            [285.0],
+            [290.0],
+            [297.0],
+            [302.5],
+            [304.5],
+            [309.3],
+            [321.7],
+            [330.7],
+            [349.0]
+        ];
 
         double[][] expected =
-        {
-            new double[] { 1.7315235669547167  },
-            new double[] { 6.25142110500275 },
-            new double[] { -5.0909763966987178  },
-        };
+        [
+            [1.7315235669547167],
+            [6.25142110500275],
+            [-5.0909763966987178]
+        ];
 
         JaggedQrDecomposition target = new(value);
         double[][] actual = target.Solve(b);
@@ -391,25 +390,25 @@ public class JaggedQrDecompositionTest
     public void InverseTest1()
     {
         double[][] value =
-        {
-            new double[] { 41.9, 29.1, 1 },
-            new double[] { 43.4, 29.3, 1 },
-            new double[] { 43.9, 29.5, 0 },
-            new double[] { 44.5, 29.7, 0 },
-            new double[] { 47.3, 29.9, 0 },
-            new double[] { 47.5, 30.3, 0 },
-            new double[] { 47.9, 30.5, 0 },
-            new double[] { 50.2, 30.7, 0 },
-            new double[] { 52.8, 30.8, 0 },
-            new double[] { 53.2, 30.9, 0 },
-            new double[] { 56.7, 31.5, 0 },
-            new double[] { 57.0, 31.7, 0 },
-            new double[] { 63.5, 31.9, 0 },
-            new double[] { 65.3, 32.0, 0 },
-            new double[] { 71.1, 32.1, 0 },
-            new double[] { 77.0, 32.5, 0 },
-            new double[] { 77.8, 32.9, 0 }
-        };
+        [
+            [41.9, 29.1, 1],
+            [43.4, 29.3, 1],
+            [43.9, 29.5, 0],
+            [44.5, 29.7, 0],
+            [47.3, 29.9, 0],
+            [47.5, 30.3, 0],
+            [47.9, 30.5, 0],
+            [50.2, 30.7, 0],
+            [52.8, 30.8, 0],
+            [53.2, 30.9, 0],
+            [56.7, 31.5, 0],
+            [57.0, 31.7, 0],
+            [63.5, 31.9, 0],
+            [65.3, 32.0, 0],
+            [71.1, 32.1, 0],
+            [77.0, 32.5, 0],
+            [77.8, 32.9, 0]
+        ];
 
         double[][] expected = new JaggedSingularValueDecomposition(value,
             computeLeftSingularVectors: true,
@@ -430,25 +429,25 @@ public class JaggedQrDecompositionTest
     public void SolveTransposeTest()
     {
         double[][] a =
-        {
-            new double[] { 2, 1, 4 },
-            new double[] { 6, 2, 2 },
-            new double[] { 0, 1, 6 },
-        };
+        [
+            [2, 1, 4],
+            [6, 2, 2],
+            [0, 1, 6]
+        ];
 
         double[][] b =
-        {
-            new double[] { 1, 0, 7 },
-            new double[] { 5, 2, 1 },
-            new double[] { 1, 5, 2 },
-        };
+        [
+            [1, 0, 7],
+            [5, 2, 1],
+            [1, 5, 2]
+        ];
 
         double[][] expected =
-        {
-             new double[] { 0.5062,    0.2813,    0.0875 },
-             new double[] { 0.1375,    1.1875,   -0.0750 },
-             new double[] { 0.8063,   -0.2188,    0.2875 },
-        };
+        [
+            [0.5062,    0.2813,    0.0875],
+            [0.1375,    1.1875,   -0.0750],
+            [0.8063,   -0.2188,    0.2875]
+        ];
 
         double[][] actual = new JaggedQrDecomposition(b, true).SolveTranspose(a);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.001));
@@ -497,18 +496,18 @@ public class JaggedQrDecompositionTest
         decompose(ref m, out q);
 
         double[][] expectedM =
-        {
-            new double[] { -3.7416573867739404 },
-            new double[] { 0 },
-            new double[] { 0 },
-        };
+        [
+            [-3.7416573867739404],
+            [0],
+            [0]
+        ];
 
         double[][] expectedQ =
-        {
-            new double[] { -0.26726124191242406, -0.53452248382484868, -0.80178372573727308 },
-            new double[] { -0.53452248382484868, 0.77454192058843829, -0.33818711911734262 },
-            new double[] { -0.80178372573727308, -0.33818711911734262, 0.4927193213239861 },
-        };
+        [
+            [-0.26726124191242406, -0.53452248382484868, -0.80178372573727308],
+            [-0.53452248382484868, 0.77454192058843829, -0.33818711911734262],
+            [-0.80178372573727308, -0.33818711911734262, 0.4927193213239861]
+        ];
 
         Assert.IsTrue(expectedM.IsEqual(m, 1e-6));
         Assert.IsTrue(expectedQ.IsEqual(q, 1e-6));
@@ -518,20 +517,20 @@ public class JaggedQrDecompositionTest
     public void solve_for_diagonal()
     {
         double[][] value =
-        {
-           new double[] {  2, -1,  0 },
-           new double[] { -1,  2, -1 },
-           new double[] {  0, -1,  2 }
-        };
+        [
+            [2, -1,  0],
+            [-1,  2, -1],
+            [0, -1,  2]
+        ];
 
-        double[] b = { 1, 2, 3 };
+        double[] b = [1, 2, 3];
 
         double[][] expected =
-        {
-            new double[] { 0.75, 1, 0.75 },
-            new double[] { 0.50, 2, 1.50 },
-            new double[] { 0.25, 1, 2.25 }
-        };
+        [
+            [0.75, 1, 0.75],
+            [0.50, 2, 1.50],
+            [0.25, 1, 2.25]
+        ];
 
         JaggedQrDecomposition target = new(value);
         double[][] actual = target.SolveForDiagonal(b);

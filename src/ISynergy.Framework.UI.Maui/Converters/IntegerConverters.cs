@@ -23,10 +23,8 @@ public class IntegerToIsVisibleConverter : IValueConverter
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     /// <summary>
@@ -65,10 +63,8 @@ public class ZeroIntegerToIsVisibleConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -107,10 +103,8 @@ public class IntegerToStringConverter : IValueConverter
         {
             return value.ToString();
         }
-        else
-        {
-            return "0";
-        }
+
+        return "0";
     }
 
     /// <summary>

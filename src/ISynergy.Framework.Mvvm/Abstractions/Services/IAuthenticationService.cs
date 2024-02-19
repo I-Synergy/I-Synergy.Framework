@@ -39,7 +39,7 @@ public interface IAuthenticationService
     /// <summary>
     /// authenticate with refresh token as an asynchronous operation.
     /// </summary>
-    /// <param name="refreshtoken">The refreshtoken.</param>
+    /// <param name="refreshToken">The refreshToken.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     /// In the previous betas, OpenIddict used a non-configurable mode codenamed "rolling tokens": every time a refresh token was sent as part of a grant_type=refresh_token
@@ -50,7 +50,7 @@ public interface IAuthenticationService
     /// when handling the second request.
     /// The previous default behavior is still supported but is now an opt-in option. To enable it, call _options.UseRollingTokens() from the OpenIddict configuration
     /// delegate, in ConfigureServices().
-    Task AuthenticateWithRefreshTokenAsync(string refreshtoken, CancellationToken cancellationToken = default);
+    Task AuthenticateWithRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// authenticate with API key as an asynchronous operation.

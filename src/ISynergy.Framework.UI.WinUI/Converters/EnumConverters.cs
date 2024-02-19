@@ -89,10 +89,7 @@ public class EnumToArrayConverter : IValueConverter
 
         if (value is Enum)
         {
-            foreach (Enum item in Enum.GetValues(value.GetType()))
-            {
-                list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
-            }
+            list.AddRange(from Enum item in Enum.GetValues(value.GetType()) select new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
         }
 
         return list;
@@ -146,7 +143,7 @@ public class EnumToStringConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is Type type && type.IsEnum)
+        if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is { } type && type.IsEnum)
             return (Enum.Parse(type, value.ToString()) as Enum).GetLocalizedDescription();
 
         return (Enum.Parse(value.GetType(), value.ToString()) as Enum).GetLocalizedDescription();

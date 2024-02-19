@@ -32,7 +32,7 @@ public class DownloadFileService : IDownloadFileService
     /// <param name="filename">The filename.</param>
     public async Task DownloadFileAsync(string folder, string filename, byte[] file)
     {
-        if (await _fileService.SaveFileAsync(folder, filename, file) is FileResult savedFile)
+        if (await _fileService.SaveFileAsync(folder, filename, file) is { } savedFile)
         {
 #if WINDOWS
             var storageFile = await StorageFile.GetFileFromPathAsync(savedFile.FilePath);

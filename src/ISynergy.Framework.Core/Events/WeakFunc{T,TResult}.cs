@@ -133,10 +133,9 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
             {
                 return (TResult)Method.Invoke(
                     funcTarget,
-                    new object[]
-                    {
+                    [
                         parameter
-                    });
+                    ]);
             }
         }
 

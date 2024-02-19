@@ -23,10 +23,8 @@ public class ZeroDoubleToIsVisibleConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -65,10 +63,8 @@ public class DoubleToIsVisibleConverter : IValueConverter
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     /// <summary>

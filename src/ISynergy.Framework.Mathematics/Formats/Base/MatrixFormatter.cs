@@ -41,11 +41,9 @@ public class MatrixFormatter : ICustomFormatter
         {
             return Format(format, obj, provider);
         }
-        else
-        {
-            // No, it has not. Try to provide standard formatting for the type
-            return handleOtherFormats(format, arg, CultureInfo.CurrentCulture);
-        }
+
+        // No, it has not. Try to provide standard formatting for the type
+        return handleOtherFormats(format, arg, CultureInfo.CurrentCulture);
     }
 
     #region Static methods for output formatting
@@ -233,7 +231,8 @@ public class MatrixFormatter : ICustomFormatter
             {
                 return obj.ToString(format, culture);
             }
-            else if (arg is not null)
+
+            if (arg is not null)
             {
                 return arg.ToString();
             }
@@ -265,8 +264,8 @@ public class MatrixFormatter : ICustomFormatter
         str = str.Remove(str.Length - provider.ParseMatrixEnd.Length, provider.ParseMatrixEnd.Length);
 
         // Now split rows
-        string[] strRows = str.Split(new string[] { provider.ParseRowDelimiter }, StringSplitOptions.RemoveEmptyEntries);
-        List<double[]> rows = new List<double[]>();
+        string[] strRows = str.Split([provider.ParseRowDelimiter], StringSplitOptions.RemoveEmptyEntries);
+        List<double[]> rows = [];
 
         foreach (string strRow in strRows)
         {
@@ -279,8 +278,8 @@ public class MatrixFormatter : ICustomFormatter
                 row = row.Remove(row.Length - provider.ParseRowEnd.Length, provider.ParseRowEnd.Length);
 
             // Now split rows values
-            string[] strCols = row.Split(new string[] { provider.ParseColDelimiter }, StringSplitOptions.RemoveEmptyEntries);
-            List<double> values = new List<double>();
+            string[] strCols = row.Split([provider.ParseColDelimiter], StringSplitOptions.RemoveEmptyEntries);
+            List<double> values = [];
 
             foreach (string strCol in strCols)
             {

@@ -107,10 +107,8 @@ public abstract class BaseRestService
 
                     return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
                 }
-                else
-                {
-                    return default(T);
-                }
+
+                return default(T);
 
             }
         }
@@ -154,10 +152,8 @@ public abstract class BaseRestService
 
                     return await response.Content.ReadAsStringAsync();
                 }
-                else
-                {
-                    return default;
-                }
+
+                return default;
             }
         }
 
@@ -200,10 +196,8 @@ public abstract class BaseRestService
 
                     return await response.Content.ReadAsByteArrayAsync();
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
         }
 
@@ -252,10 +246,8 @@ public abstract class BaseRestService
 
                     return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
                 }
-                else
-                {
-                    return default(T);
-                }
+
+                return default(T);
             }
         }
 
@@ -303,10 +295,8 @@ public abstract class BaseRestService
 
                     return await response.Content.ReadAsByteArrayAsync();
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
         }
 
@@ -355,10 +345,8 @@ public abstract class BaseRestService
 
                     return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
                 }
-                else
-                {
-                    return default(T);
-                }
+
+                return default(T);
             }
         }
 
@@ -401,10 +389,8 @@ public abstract class BaseRestService
 
                     return await response.Content.ReadFromJsonAsync<int>(_jsonSerializerOptions, cancellationToken);
                 }
-                else
-                {
-                    return 0;
-                }
+
+                return 0;
             }
         }
 

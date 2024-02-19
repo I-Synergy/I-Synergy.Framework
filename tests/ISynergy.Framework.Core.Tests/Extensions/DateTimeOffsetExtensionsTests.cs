@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Constants;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Globalization;
 
 namespace ISynergy.Framework.Core.Extensions.Tests;

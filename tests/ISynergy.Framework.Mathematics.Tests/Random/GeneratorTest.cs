@@ -3,10 +3,6 @@ using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mathematics.Tests.Random;
 [TestClass]
@@ -88,19 +84,19 @@ public class GeneratorTest
     {
         Generator.Seed = 0;
         int[] actual = random(3);
-        int[] expected = new int[] { 1559595546, 1755192844, 1649316166 };
+        int[] expected = [1559595546, 1755192844, 1649316166];
         string str = actual.ToCSharp();
         Assert.IsTrue(expected.IsEqual(actual));
 
         Generator.Seed = -1;
         actual = random(3);
-        expected = new int[] { 534011718, 237820880, 1002897798 };
+        expected = [534011718, 237820880, 1002897798];
         str = actual.ToCSharp();
         Assert.IsTrue(expected.IsEqual(actual));
 
         Generator.Seed = 1;
         actual = random(3);
-        expected = new int[] { 607892308, 1910784178, 911229122 };
+        expected = [607892308, 1910784178, 911229122];
         str = actual.ToCSharp();
         Assert.IsTrue(expected.IsEqual(actual));
     }

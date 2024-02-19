@@ -200,10 +200,8 @@ public static class DateTimeOffsetExtensions
         {
             return new DateTimeOffset(self.Year, 7, 1, 0, 0, 0, 0, self.Offset);
         }
-        else
-        {
-            return new DateTimeOffset(self.Year, 10, 1, 0, 0, 0, 0, self.Offset);
-        }
+
+        return new DateTimeOffset(self.Year, 10, 1, 0, 0, 0, 0, self.Offset);
     }
 
     /// <summary>
@@ -230,10 +228,8 @@ public static class DateTimeOffsetExtensions
         {
             return new DateTimeOffset(self.Year, 9, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
         }
-        else
-        {
-            return new DateTimeOffset(self.Year, 12, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
-        }
+
+        return new DateTimeOffset(self.Year, 12, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
     }
 
     /// <summary>
@@ -270,21 +266,14 @@ public static class DateTimeOffsetExtensions
     /// Gets the possible time zones.
     /// </summary>
     /// <param name="self">The self.</param>
-    /// <param name="seperator">The seperator.</param>
+    /// <param name="separator">The separator.</param>
     /// <returns>System.String.</returns>
-    public static string GetPossibleTimeZones(this DateTimeOffset self, string seperator = ", ")
+    public static string GetPossibleTimeZones(this DateTimeOffset self, string separator = ", ")
     {
         var offset = self.Offset;
         var timeZones = TimeZoneInfo.GetSystemTimeZones();
-        var result = new List<string>();
-
-        foreach (var timeZone in timeZones)
-        {
-            if (timeZone.GetUtcOffset(self.DateTime).Equals(offset))
-                result.Add(timeZone.DisplayName);
-        }
-
-        return string.Join(seperator, result);
+        var result = (from timeZone in timeZones where timeZone.GetUtcOffset(self.DateTime).Equals(offset) select timeZone.DisplayName).ToList();
+        return string.Join(separator, result);
     }
 
     /// <summary>

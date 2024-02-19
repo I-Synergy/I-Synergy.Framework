@@ -24,8 +24,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First().Name;
-        else
-            return null;
+        return null;
     }
 
     /// <summary>
@@ -42,8 +41,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First().GetValue(_self);
-        else
-            return null;
+        return null;
     }
 
     /// <summary>
@@ -63,8 +61,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return (TResult)result.First().GetValue(_self);
-        else
-            return default(TResult);
+        return default(TResult);
     }
 
     /// <summary>
@@ -91,8 +88,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First();
-        else
-            return null;
+        return null;
     }
 
     /// <summary>
@@ -129,8 +125,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First().Name;
-        else
-            return null;
+        return null;
     }
 
     /// <summary>
@@ -146,8 +141,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First().PropertyType;
-        else
-            return typeof(object);
+        return typeof(object);
     }
 
     /// <summary>
@@ -235,8 +229,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First().GetValue(_self).ToString();
-        else
-            return string.Empty;
+        return string.Empty;
     }
 
     public static bool HasParentIdentityProperty<T>() where T : class =>
@@ -260,8 +253,7 @@ public static class ReflectionExtensions
     {
         if (Attribute.GetCustomAttribute(_self, typeof(FreeAttribute)) is FreeAttribute attribute)
             return attribute.IsFree;
-        else
-            return false;
+        return false;
     }
 
     /// <summary>
@@ -273,8 +265,7 @@ public static class ReflectionExtensions
     {
         if (Attribute.GetCustomAttribute(_self, typeof(SingletonAttribute)) is SingletonAttribute attribute)
             return attribute.IsSingleton;
-        else
-            return false;
+        return false;
     }
 
     /// <summary>
@@ -286,8 +277,7 @@ public static class ReflectionExtensions
     {
         if (Attribute.GetCustomAttribute(_self, typeof(ScopedAttribute)) is ScopedAttribute attribute)
             return attribute.IsScoped;
-        else
-            return false;
+        return false;
 
     }
 

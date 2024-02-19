@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Base;
 /// BaseEntity model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public class EntityBase : ClassBase, IEntityBase
+public abstract class EntityBase : ClassBase, IEntityBase
 {
     /// <summary>
     /// Gets or sets the memo.
@@ -38,7 +38,7 @@ public class EntityBase : ClassBase, IEntityBase
     /// <summary>
     /// Initializes a new instance of the <see cref="EntityBase"/> class.
     /// </summary>
-    public EntityBase()
+    protected EntityBase()
     {
         CreatedBy = string.Empty;
     }

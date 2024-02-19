@@ -20,19 +20,19 @@ public class Property<T> : IProperty<T>
     /// <summary>
     /// The is original set
     /// </summary>
-    private bool _IsOriginalSet = false;
+    private bool _isOriginalSet = false;
     /// <summary>
     /// The is dirty
     /// </summary>
-    private bool _IsDirty = true;
+    private bool _isDirty = true;
     /// <summary>
     /// The value
     /// </summary>
-    private T _Value = default;
+    private T _value = default;
     /// <summary>
     /// The original value
     /// </summary>
-    private T _OriginalValue = default;
+    private T _originalValue = default;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Property{T}"/> class.
@@ -62,8 +62,8 @@ public class Property<T> : IProperty<T>
     [JsonIgnore]
     public bool IsDirty
     {
-        get { return _IsDirty; }
-        private set { Set(ref _IsDirty, value); }
+        get { return _isDirty; }
+        private set { Set(ref _isDirty, value); }
     }
 
     /// <summary>
@@ -78,13 +78,13 @@ public class Property<T> : IProperty<T>
     /// <value>The value.</value>
     public T Value
     {
-        get { return _Value; }
+        get { return _value; }
         set
         {
             if (!IsOriginalSet)
                 OriginalValue = value;
 
-            Set(ref _Value, value);
+            Set(ref _value, value);
             IsDirty = true;
             ValueChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -97,8 +97,8 @@ public class Property<T> : IProperty<T>
     [JsonIgnore]
     public bool IsOriginalSet
     {
-        get { return _IsOriginalSet; }
-        private set { Set(ref _IsOriginalSet, value); }
+        get { return _isOriginalSet; }
+        private set { Set(ref _isOriginalSet, value); }
     }
 
     /// <summary>
@@ -108,21 +108,21 @@ public class Property<T> : IProperty<T>
     [JsonIgnore]
     public T OriginalValue
     {
-        get { return _OriginalValue; }
+        get { return _originalValue; }
         set
         {
             IsOriginalSet = true;
-            Set(ref _OriginalValue, value);
+            Set(ref _originalValue, value);
         }
     }
 
     /// <summary>
     /// Sets the specified storage.
     /// </summary>
-    /// <typeparam name="V"></typeparam>
+    /// <typeparam name="TT"></typeparam>
     /// <param name="storage">The storage.</param>
     /// <param name="value">The value.</param>
-    private static void Set<V>(ref V storage, V value)
+    private static void Set<TT>(ref TT storage, TT value)
     {
         if (!Equals(storage, value))
             storage = value;

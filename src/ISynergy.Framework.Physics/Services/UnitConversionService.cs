@@ -62,7 +62,7 @@ public partial class UnitConversionService : IUnitConversionService
             return s.FormulaConvert(value);
 
         // if both units are non-SI units and have an intersecting SI unit
-        else if (source is Unit s2 && target is Unit t2 && t2.UnitTypes.Intersect(s2.UnitTypes).Any())
+        if (source is Unit s2 && target is Unit t2 && t2.UnitTypes.Intersect(s2.UnitTypes).Any())
         {
             //Get SI unit of source
             var sourceSI = Units
@@ -96,8 +96,8 @@ public partial class UnitConversionService : IUnitConversionService
         if (targetSymbol.Equals(sourceSymbol))
             return value;
 
-        if (Units.Where(q => q.Symbol.Equals(sourceSymbol)).Single() is IUnit source &&
-            Units.Where(q => q.Symbol.Equals(targetSymbol)).Single() is IUnit target)
+        if (Units.Where(q => q.Symbol.Equals(sourceSymbol)).Single() is { } source &&
+            Units.Where(q => q.Symbol.Equals(targetSymbol)).Single() is { } target)
             return Convert(source, value, target);
 
         throw new ArgumentException("Converter failed to get the corresponding units.");
@@ -119,8 +119,8 @@ public partial class UnitConversionService : IUnitConversionService
         if (targetUnit.Equals(sourceUnit))
             return value;
 
-        if (Units.Where(q => q.Symbol.Equals(sourceUnit.GetSymbol())).Single() is IUnit source &&
-            Units.Where(q => q.Symbol.Equals(targetUnit.GetSymbol())).Single() is IUnit target)
+        if (Units.Where(q => q.Symbol.Equals(sourceUnit.GetSymbol())).Single() is { } source &&
+            Units.Where(q => q.Symbol.Equals(targetUnit.GetSymbol())).Single() is { } target)
             return Convert(source, value, target);
 
         throw new ArgumentException("Converter failed to get the corresponding units.");

@@ -21,15 +21,16 @@ public static class HtmlHelperExtensions
         {
             return "image/jpeg";
         }
-        else if (path.EndsWith(".GIF", StringComparison.OrdinalIgnoreCase))
+
+        if (path.EndsWith(".GIF", StringComparison.OrdinalIgnoreCase))
         {
             return "image/gif";
         }
-        else if (path.EndsWith(".PNG", StringComparison.OrdinalIgnoreCase))
+        if (path.EndsWith(".PNG", StringComparison.OrdinalIgnoreCase))
         {
             return "image/png";
         }
-        else if (path.EndsWith(".WEBP", StringComparison.OrdinalIgnoreCase))
+        if (path.EndsWith(".WEBP", StringComparison.OrdinalIgnoreCase))
         {
             return "image/webp";
         }
@@ -52,23 +53,19 @@ public static class HtmlHelperExtensions
         {
             return ConvertArrayToHtmlString(image, GetFileContentType(extension), attributes);
         }
-        else
+
+        var contentType = GetFileContentType(path);
+
+        if (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
         {
-            var contentType = GetFileContentType(path);
+            using var stream = env.WebRootFileProvider.GetFileInfo(path).CreateReadStream();
+            var array = new byte[stream.Length];
+            stream.Read(array, 0, array.Length);
 
-            if (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
-            {
-                using var stream = env.WebRootFileProvider.GetFileInfo(path).CreateReadStream();
-                var array = new byte[stream.Length];
-                stream.Read(array, 0, array.Length);
-
-                return ConvertArrayToHtmlString(array, contentType, attributes);
-            }
-            else
-            {
-                return new HtmlString(string.Empty);
-            }
+            return ConvertArrayToHtmlString(array, contentType, attributes);
         }
+
+        return new HtmlString(string.Empty);
     }
 
     /// <summary>

@@ -883,7 +883,8 @@ public static partial class Matrix
             }
 
         }
-        else if (atol > 0)
+
+        if (atol > 0)
         {
             {
                 var A = a;
@@ -906,23 +907,19 @@ public static partial class Matrix
             }
 
         }
-        else
         {
-            {
-                var A = a;
-                var B = b;
-                if (Double.IsNaN(A) && Double.IsNaN(B))
-                    return true;
-                if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                    return false;
-                if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                    return false;
-                if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                    return false;
-                if (A != B)
-                    return false;
-            }
-
+            var A = a;
+            var B = b;
+            if (Double.IsNaN(A) && Double.IsNaN(B))
+                return true;
+            if (Double.IsNaN(A) ^ Double.IsNaN(B))
+                return false;
+            if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                return false;
+            if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                return false;
+            if (A != B)
+                return false;
         }
 
         return true;

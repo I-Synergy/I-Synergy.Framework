@@ -66,7 +66,7 @@ public class Logger : BaseLogger
     {
         var metrics = new Dictionary<string, string>();
 
-        if (_context.IsAuthenticated && _context.Profile is IProfile profile)
+        if (_context.IsAuthenticated && _context.Profile is { } profile)
         {
             metrics.Add(nameof(profile.Username), profile.Username);
             metrics.Add(nameof(profile.UserId), profile.UserId.ToString());
@@ -85,7 +85,7 @@ public class Logger : BaseLogger
     /// </summary>
     private void SetUserProfile()
     {
-        if (_context.IsAuthenticated && _context.Profile is IProfile profile)
+        if (_context.IsAuthenticated && _context.Profile is { } profile)
         {
             _client.Context.User.Id = profile.Username;
             _client.Context.User.AccountId = profile.AccountDescription;

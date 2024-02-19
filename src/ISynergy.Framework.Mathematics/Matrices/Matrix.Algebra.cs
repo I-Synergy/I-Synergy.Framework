@@ -344,6 +344,6 @@ public static partial class Matrix
     /// </summary>
     public static T[][] Cartesian<T>(this T[] sequence1, T[] sequence2)
     {
-        return Cartesian(new[] { sequence1, sequence2 });
+        return Cartesian([sequence1, sequence2]);
     }
 }

@@ -55,8 +55,8 @@ public class ActionService : IActionService
             if (upcomingTask is ScheduledAction scheduledAction)
                 return (scheduledAction.ExecutionTime - DateTimeOffset.Now, scheduledAction);
 
-            else if (upcomingTask is DelayAction delayAction &&
-                await _manager.GetTimePreviousCompletedTaskAsync(delayAction.AutomationId) is DateTimeOffset previousCompletedDateTime)
+            if (upcomingTask is DelayAction delayAction &&
+                await _manager.GetTimePreviousCompletedTaskAsync(delayAction.AutomationId) is { } previousCompletedDateTime)
                 return (previousCompletedDateTime.Add(delayAction.Delay) - DateTimeOffset.Now, delayAction);
         }
 
@@ -70,7 +70,7 @@ public class ActionService : IActionService
     /// <returns></returns>
     public async Task ExcecuteActionAsync(IAction action)
     {
-        if (action.ToTask() is Func<Task> job)
+        if (action.ToTask() is { } job)
             await job
                 .Invoke()
                 .ContinueWith(async x =>

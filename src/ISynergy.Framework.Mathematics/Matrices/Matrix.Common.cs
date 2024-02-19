@@ -457,18 +457,16 @@ public static partial class Matrix
         var typeA = objA.GetType();
         var typeB = objB.GetType();
 
-        var equals = typeof(Matrix).GetMethod("IsEqual", new[]
-        {
+        var equals = typeof(Matrix).GetMethod("IsEqual", [
             typeA, typeB, typeof(double), typeof(double)
-        });
+        ]);
 
-        var _this = typeof(Matrix).GetMethod("IsEqual", new[]
-        {
+        var _this = typeof(Matrix).GetMethod("IsEqual", [
             typeof(Array), typeof(Array), typeof(double), typeof(double)
-        });
+        ]);
 
         if (equals != _this)
-            return (bool)equals.Invoke(null, new object[] { objA, objB, atol, rtol });
+            return (bool)equals.Invoke(null, [objA, objB, atol, rtol]);
 
         // Base case: arrays contain elements of same nature (both arrays, or both values)
         if (typeA.GetElementType().IsArray == typeB.GetElementType().IsArray)

@@ -93,11 +93,11 @@ internal class DocumentService : IDocumentService
 
         try
         {
-            if (documentRequest.Template is byte[] templateBytes && templateBytes.ToMemoryStream() is MemoryStream stream)
+            if (documentRequest.Template is { } templateBytes && templateBytes.ToMemoryStream() is { } stream)
             {
                 using (document = new WordDocument(stream, Syncfusion.DocIO.FormatType.Docx))
                 {
-                    if (documentRequest.Stationery is byte[] imageArray && imageArray.Length > 0)
+                    if (documentRequest.Stationery is { } imageArray && imageArray.Length > 0)
                     {
                         //Adds picture watermark to the document.
                         var section = document.Sections[0];

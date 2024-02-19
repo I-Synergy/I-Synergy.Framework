@@ -40,9 +40,7 @@ public static class ImageHelperExtensions
 
             return new HtmlString(img);
         }
-        else
-        {
-            return new HtmlString(string.Empty);
-        }
+
+        return new HtmlString(string.Empty);
     }
 }

@@ -2,9 +2,7 @@
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization;
-using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
@@ -21,7 +19,7 @@ public class QuadraticObjectiveFunctionTest
             {  3, 6, 9 },
         };
 
-        double[] linearTerms = { 1, 2, 3 };
+        double[] linearTerms = [1, 2, 3];
 
         QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
 
@@ -31,13 +29,13 @@ public class QuadraticObjectiveFunctionTest
         FiniteDifferences fd = new(3, function);
 
         double[][] x =
-        {
-            new double[] { 1, 2, 3 },
-            new double[] { 3, 1, 4 },
-            new double[] { -6 , 5, 9 },
-            new double[] { 31, 25, 246 },
-            new double[] { -0.102, 0, 10 },
-        };
+        [
+            [1, 2, 3],
+            [3, 1, 4],
+            [-6 , 5, 9],
+            [31, 25, 246],
+            [-0.102, 0, 10]
+        ];
 
 
         { // Function Test
@@ -75,7 +73,7 @@ public class QuadraticObjectiveFunctionTest
             {  0, 0, 0 },
         };
 
-        double[] linearTerms = { 1, 2, 3 };
+        double[] linearTerms = [1, 2, 3];
 
         QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
 
@@ -85,13 +83,13 @@ public class QuadraticObjectiveFunctionTest
         FiniteDifferences fd = new(3, function);
 
         double[][] x =
-        {
-            new double[] { 1, 2, 3 },
-            new double[] { 3, 1, 4 },
-            new double[] { -6 , 5, 9 },
-            new double[] { 31, 25, 246 },
-            new double[] { -0.102, 0, 10 },
-        };
+        [
+            [1, 2, 3],
+            [3, 1, 4],
+            [-6 , 5, 9],
+            [31, 25, 246],
+            [-0.102, 0, 10]
+        ];
 
 
         { // Function Test
@@ -131,7 +129,7 @@ public class QuadraticObjectiveFunctionTest
             {  1, 2, 6 },
         };
 
-        double[] linearTerms = { 0, 0, 0 };
+        double[] linearTerms = [0, 0, 0];
 
         QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
 
@@ -141,13 +139,13 @@ public class QuadraticObjectiveFunctionTest
         FiniteDifferences fd = new(3, function);
 
         double[][] x =
-        {
-            new double[] { 1, 2, 3 },
-            new double[] { 3, 1, 4 },
-            new double[] { -6 , 5, 9 },
-            new double[] { 31, 25, 246 },
-            new double[] { -0.102, 0, 10 },
-        };
+        [
+            [1, 2, 3],
+            [3, 1, 4],
+            [-6 , 5, 9],
+            [31, 25, 246],
+            [-0.102, 0, 10]
+        ];
 
         { // Gradient Test
             for (int i = 0; i < x.Length; i++)
@@ -171,7 +169,7 @@ public class QuadraticObjectiveFunctionTest
             {  1, 0, 1 },
         };
 
-        double[] linearTerms = { 0, 0, 0 };
+        double[] linearTerms = [0, 0, 0];
 
         QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
 
@@ -181,13 +179,13 @@ public class QuadraticObjectiveFunctionTest
         FiniteDifferences fd = new(3, function);
 
         double[][] x =
-        {
-            new double[] { 1, 2, 3 },
-            new double[] { 3, 1, 4 },
-            new double[] { -6 , 5, 9 },
-            new double[] { 31, 25, 246 },
-            new double[] { -0.102, 0, 10 },
-        };
+        [
+            [1, 2, 3],
+            [3, 1, 4],
+            [-6 , 5, 9],
+            [31, 25, 246],
+            [-0.102, 0, 10]
+        ];
 
         { // Gradient Test
             for (int i = 0; i < x.Length; i++)
@@ -217,7 +215,7 @@ public class QuadraticObjectiveFunctionTest
                 x = (i - 5) / 10.0;
                 y = (j - 5) / 10.0;
 
-                double a = actual.Function(new[] { x, y });
+                double a = actual.Function([x, y]);
                 double e = expected();
 
                 Assert.AreEqual(e, a, 1e-10);
@@ -247,7 +245,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = expected();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -270,7 +268,7 @@ public class QuadraticObjectiveFunctionTest
         {
             x = (i - 5) / 10.0;
 
-            double a = actual.Function(new[] { x });
+            double a = actual.Function([x]);
             double e = expected();
 
             Assert.AreEqual(e, a, 1e-10);
@@ -299,7 +297,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = expected();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -327,8 +325,8 @@ public class QuadraticObjectiveFunctionTest
         QuadraticObjectiveFunction g5 = new(() => 2 * x * x - 5);
 
 
-        QuadraticObjectiveFunction[] f = { f1, f2, f3, f4, f5 };
-        QuadraticObjectiveFunction[] g = { g1, g2, g3, g4, g5 };
+        QuadraticObjectiveFunction[] f = [f1, f2, f3, f4, f5];
+        QuadraticObjectiveFunction[] g = [g1, g2, g3, g4, g5];
 
         for (int l = 0; l < f.Length; l++)
         {
@@ -371,7 +369,7 @@ public class QuadraticObjectiveFunctionTest
                 x = (i - 5) / 10.0;
                 y = (j - 5) / 10.0;
 
-                double a = actual.Function(new[] { x, y });
+                double a = actual.Function([x, y]);
                 double e = expected();
 
                 Assert.AreEqual(e, a, 1e-10);
@@ -399,7 +397,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = expected();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -420,7 +418,7 @@ public class QuadraticObjectiveFunctionTest
         {
             x = (i - 5) / 10.0;
 
-            double a = actual.Function(new[] { x });
+            double a = actual.Function([x]);
             double e = expected();
 
             Assert.AreEqual(e, a, 1e-10);
@@ -447,7 +445,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = expected();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -474,7 +472,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = expected();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -504,7 +502,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = expected1() + expected2();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -577,7 +575,7 @@ public class QuadraticObjectiveFunctionTest
         QuadraticObjectiveFunction f = f1 + 2 * f2; // 8x² -4y² +10xy +6x +4y +6
 
         // And now we can Test our new objective function:
-        double[] x = { 1, 2 };
+        double[] x = [1, 2];
 
         double result1 = f1.Function(x);
         double result2 = f2.Function(x);
@@ -689,7 +687,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = scalar * expected1();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -751,7 +749,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = -expected1();
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -779,7 +777,7 @@ public class QuadraticObjectiveFunctionTest
                     y = (j - 5) / 10.0;
                     z = (k - 5) / 10.0;
 
-                    double a = actual.Function(new[] { x, y, z });
+                    double a = actual.Function([x, y, z]);
                     double e = expected1() / 5;
 
                     Assert.AreEqual(e, a, 1e-10);
@@ -804,7 +802,7 @@ public class QuadraticObjectiveFunctionTest
             {  1, 2, 6 },
         };
 
-        double[] linearTerms = { 0, 2, 0 };
+        double[] linearTerms = [0, 2, 0];
 
         Assert.ThrowsException<NonSymmetricMatrixException>(() =>
         {
@@ -822,7 +820,7 @@ public class QuadraticObjectiveFunctionTest
 
         QuadraticObjectiveFunction correct = new("-2x² + xy - y² - 3yx");
 
-        double[] arg = { 3, 7 };
+        double[] arg = [3, 7];
 
         double result1 = f1.Function(arg);
         double result2 = f2.Function(arg);

@@ -138,7 +138,7 @@ public static partial class NpyFormat
     {
         // The first 6 bytes are a magic string: exactly "x93NUMPY"
 
-        char[] magic = { 'N', 'U', 'M', 'P', 'Y' };
+        char[] magic = ['N', 'U', 'M', 'P', 'Y'];
         writer.Write((byte)147);
         writer.Write(magic);
         writer.Write((byte)1); // major

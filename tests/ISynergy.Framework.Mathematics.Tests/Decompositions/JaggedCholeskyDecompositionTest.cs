@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
 [TestClass]
@@ -97,7 +95,7 @@ public class JaggedCholeskyDecompositionTest
 
         double[][] B = Jagged.ColumnVector(new double[] { 1, 2, 3 });
 
-        double[][] expected = Jagged.ColumnVector(new double[] { 2.5, 4.0, 3.5 });
+        double[][] expected = Jagged.ColumnVector([2.5, 4.0, 3.5]);
 
         double[][] actual = chol.Solve(B);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
@@ -123,9 +121,9 @@ public class JaggedCholeskyDecompositionTest
         JaggedCholeskyDecomposition chol = new(value.ToJagged());
         double[][] L = chol.LeftTriangularFactor;
 
-        double[] B = new double[] { 1, 2, 3 };
+        double[] B = [1, 2, 3];
 
-        double[] expected = new double[] { 2.5, 4.0, 3.5 };
+        double[] expected = [2.5, 4.0, 3.5];
         double[] actual = chol.Solve(B);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
@@ -181,9 +179,9 @@ public class JaggedCholeskyDecompositionTest
         JaggedCholeskyDecomposition chol = new(value.ToJagged(), true);
         double[][] L = chol.LeftTriangularFactor;
 
-        double[] B = new double[] { 1, 2, 3, 4 };
+        double[] B = [1, 2, 3, 4];
 
-        double[] expected = { 5, 13, 16, -8 };
+        double[] expected = [5, 13, 16, -8];
         double[] actual = chol.Solve(B);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));

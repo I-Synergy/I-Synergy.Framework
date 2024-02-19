@@ -3,7 +3,7 @@
 /// <summary>
 /// Class FileType.
 /// </summary>
-public sealed class FileType
+public sealed record FileType
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FileType" /> class.

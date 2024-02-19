@@ -77,7 +77,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <summary>
     /// The watchers
     /// </summary>
-    protected readonly List<TWatcher> _watchers = new List<TWatcher>();
+    protected readonly List<TWatcher> _watchers = [];
 
     /// <summary>
     /// The watcher information
@@ -136,7 +136,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
         // Attributes.
         if (changedWatcher && HandleNotifyFilter(filter))
         {
-            watcher = (TWatcher)Activator.CreateInstance(typeof(TWatcher), new object[] { _watcherInfo.WatchPath });
+            watcher = (TWatcher)Activator.CreateInstance(typeof(TWatcher), [_watcherInfo.WatchPath]);
             watcher.IncludeSubdirectories = _watcherInfo.IncludeSubFolders;
             watcher.Filter = _watcherInfo.FileFilter;
             watcher.NotifyFilter = filter;
@@ -179,7 +179,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
                 _watcherInfo.WatchForError ||
                 _watcherInfo.WatchForDisposed)
         {
-            watcher = (TWatcher)Activator.CreateInstance(typeof(TWatcher), new object[] { _watcherInfo.WatchPath });
+            watcher = (TWatcher)Activator.CreateInstance(typeof(TWatcher), [_watcherInfo.WatchPath]);
             watcher.IncludeSubdirectories = _watcherInfo.IncludeSubFolders;
             watcher.Filter = _watcherInfo.FileFilter;
             watcher.InternalBufferSize = bufferSize;
@@ -212,7 +212,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
     private void watcher_ChangedAttribute(object sender, FileSystemEventArgs e) =>
-        EventChangedAttribute(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.Attributes }));
+        EventChangedAttribute(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.Attributes));
 
     /// <summary>
     /// Handles the ChangedCreationTime event of the watcher control.
@@ -220,7 +220,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
     private void watcher_ChangedCreationTime(object sender, FileSystemEventArgs e) =>
-        EventChangedCreationTime(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.CreationTime }));
+        EventChangedCreationTime(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.CreationTime));
 
     /// <summary>
     /// Handles the ChangedDirectoryName event of the watcher control.
@@ -228,7 +228,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
     private void watcher_ChangedDirectoryName(object sender, FileSystemEventArgs e) =>
-        EventChangedDirectoryName(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.DirectoryName }));
+        EventChangedDirectoryName(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.DirectoryName));
 
     /// <summary>
     /// Handles the ChangedFileName event of the watcher control.
@@ -236,7 +236,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
     private void watcher_ChangedFileName(object sender, FileSystemEventArgs e) =>
-        EventChangedFileName(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.FileName }));
+        EventChangedFileName(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.FileName));
 
     /// <summary>
     /// Handles the ChangedLastAccess event of the watcher control.
@@ -244,7 +244,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
     private void watcher_ChangedLastAccess(object sender, FileSystemEventArgs e) =>
-        EventChangedLastAccess(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.LastAccess }));
+        EventChangedLastAccess(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.LastAccess));
 
     /// <summary>
     /// Handles the ChangedLastWrite event of the watcher control.
@@ -252,7 +252,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
     private void watcher_ChangedLastWrite(object sender, FileSystemEventArgs e) =>
-        EventChangedLastWrite(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.LastWrite }));
+        EventChangedLastWrite(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.LastWrite));
 
     /// <summary>
     /// Handles the ChangedSecurity event of the watcher control.
@@ -260,7 +260,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
     private void watcher_ChangedSecurity(object sender, FileSystemEventArgs e) =>
-        EventChangedSecurity(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.Security }));
+        EventChangedSecurity(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.Security));
 
     /// <summary>
     /// Handles the ChangedSize event of the watcher control.
@@ -268,7 +268,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
     private void watcher_ChangedSize(object sender, FileSystemEventArgs e) =>
-        EventChangedSize(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.Size }));
+        EventChangedSize(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem, NotifyFilters.Size));
 
     /// <summary>
     /// Handles the Disposed event of the watcher control.
@@ -276,7 +276,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void watcher_Disposed(object sender, EventArgs e) =>
-        EventDisposed(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.StandardEvent }));
+        EventDisposed(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.StandardEvent));
 
     /// <summary>
     /// Handles the Error event of the watcher control.
@@ -284,7 +284,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="ErrorEventArgs"/> instance containing the event data.</param>
     private void watcher_Error(object sender, ErrorEventArgs e) =>
-        EventError(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.Error }));
+        EventError(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.Error));
 
     /// <summary>
     /// Handles the Renamed event of the watcher control.
@@ -292,7 +292,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="RenamedEventArgs"/> instance containing the event data.</param>
     private void watcher_Renamed(object sender, RenamedEventArgs e) =>
-        EventRenamed(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.Renamed }));
+        EventRenamed(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.Renamed));
 
     /// <summary>
     /// Handles the CreatedDeleted event of the watcher control.
@@ -304,10 +304,10 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
         switch (e.ChangeType)
         {
             case WatcherChangeTypes.Created:
-                EventCreated(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem }));
+                EventCreated(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem));
                 break;
             case WatcherChangeTypes.Deleted:
-                EventDeleted(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), new object[] { sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem }));
+                EventDeleted(this, (TWatcherEventArgs)Activator.CreateInstance(typeof(TWatcherEventArgs), sender as FileSystemWatcher, e, FileWatcherArgumentTypes.FileSystem));
                 break;
         }
     }

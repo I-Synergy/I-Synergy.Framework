@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
@@ -129,7 +128,7 @@ public class NelderMeadTest
         };
 
         // This values are relevant for my RealWorld(TM) scenario
-        double[] init = new double[] { 0.5, 0 };
+        double[] init = [0.5, 0];
 
         NelderMead nm = new(2, eval);
 

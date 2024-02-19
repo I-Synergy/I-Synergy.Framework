@@ -28,6 +28,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// The logger
     /// </summary>
     protected readonly ILogger _logger;
+
     /// <summary>
     /// The context
     /// </summary>
@@ -97,8 +98,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
                 .SelectMany(t => t.GetNavigations())
                 .Distinct();
 
-            foreach (var property in navigations)
-                query = query.Include(property.Name);
+            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
 
             var result = await query
                 .SingleOrDefaultAsync(predicate, cancellationToken)
@@ -124,7 +124,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
         where TModel : ModelBase, new()
         where TId : struct
     {
-        if (await GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false) is TEntity result)
+        if (await GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false) is { } result)
             return result.Adapt<TModel>();
 
         return null;
@@ -140,7 +140,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     public async Task<int> AddItemAsync<TEntity, TModel>(TModel e, CancellationToken cancellationToken = default)
         where TEntity : EntityBase, new()
-        where TModel : ModelBase, new()
+        where TModel : RecordBase, new()
     {
         Argument.IsNotNull(e);
 
@@ -165,7 +165,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <returns>System.Int32.</returns>
     public async Task<int> UpdateItemAsync<TEntity, TModel>(TModel e, CancellationToken cancellationToken = default)
         where TEntity : EntityBase, new()
-        where TModel : ModelBase, new()
+        where TModel : RecordBase, new()
     {
         Argument.IsNotNull(e);
 
@@ -193,8 +193,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
                 .SelectMany(t => t.GetNavigations())
                 .Distinct();
 
-            foreach (var property in navigations)
-                query = query.Include(property.Name);
+            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
 
             var target = await query
                 .SingleOrDefaultAsync(predicate, cancellationToken)
@@ -229,7 +228,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <returns>System.Int32.</returns>
     public async Task<int> AddUpdateItemAsync<TEntity, TModel>(TModel e, CancellationToken cancellationToken = default)
         where TEntity : EntityBase, new()
-        where TModel : ModelBase, new()
+        where TModel : RecordBase, new()
     {
         Argument.IsNotNull(e);
 
@@ -257,8 +256,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
                 .SelectMany(t => t.GetNavigations())
                 .Distinct();
 
-            foreach (var property in navigations)
-                query = query.Include(property.Name);
+            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
 
             var target = await query
                 .SingleOrDefaultAsync(predicate, cancellationToken)
@@ -351,11 +349,11 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// Handles the database update exception.
     /// </summary>
     /// <param name="exception">The exception.</param>
-    public virtual void HandleDatabaseUpdateException(Exception exception) { }
+    protected virtual void HandleDatabaseUpdateException(Exception exception) { }
 
     /// <summary>
     /// Handles the database concurrency exception.
     /// </summary>
     /// <param name="exception">The exception.</param>
-    public virtual void HandleDatabaseConcurrencyException(Exception exception) { }
+    protected virtual void HandleDatabaseConcurrencyException(Exception exception) { }
 }

@@ -17,7 +17,7 @@ public static class ByteArrayExtensions
     {
         return ImageSource.FromStream(() =>
         {
-            if (_self.ToMemoryStream() is MemoryStream stream)
+            if (_self.ToMemoryStream() is { } stream)
                 return stream;
 
             return null;

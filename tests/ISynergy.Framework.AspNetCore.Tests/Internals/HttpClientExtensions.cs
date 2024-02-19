@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Tests.Internals;
 

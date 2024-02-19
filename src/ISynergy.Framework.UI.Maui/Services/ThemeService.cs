@@ -54,7 +54,7 @@ public class ThemeService : IThemeService
         Application.AccentColor = Color.FromArgb(Style.Color);
 
         // Add custom resourcedictionaries from code.
-        if (Application.Current is BaseApplication application && application.Resources?.MergedDictionaries is ICollection<ResourceDictionary> dictionary)
+        if (Application.Current is BaseApplication application && application.Resources?.MergedDictionaries is { } dictionary)
         {
             application.Resources.Clear();
 

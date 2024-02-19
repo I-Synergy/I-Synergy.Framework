@@ -165,22 +165,20 @@ public static class Bessel
                 + y * (99447.43394 + y * (376.9991397 + y * 1.0))));
             return ans1 / ans2;
         }
-        else
-        {
-            double z = 8.0 / ax;
-            double xx = ax - 2.356194491;
-            y = z * z;
 
-            ans1 = 1.0 + y * (0.183105e-2 + y * (-0.3516396496e-4
-                + y * (0.2457520174e-5 + y * -0.240337019e-6)));
-            ans2 = 0.04687499995 + y * (-0.2002690873e-3
-                + y * (0.8449199096e-5 + y * (-0.88228987e-6
-                + y * 0.105787412e-6)));
-            double ans = Math.Sqrt(0.636619772 / ax) *
-                (Math.Cos(xx) * ans1 - z * Math.Sin(xx) * ans2);
-            if (x < 0.0) ans = -ans;
-            return ans;
-        }
+        double z = 8.0 / ax;
+        double xx = ax - 2.356194491;
+        y = z * z;
+
+        ans1 = 1.0 + y * (0.183105e-2 + y * (-0.3516396496e-4
+                                             + y * (0.2457520174e-5 + y * -0.240337019e-6)));
+        ans2 = 0.04687499995 + y * (-0.2002690873e-3
+                                    + y * (0.8449199096e-5 + y * (-0.88228987e-6
+                                                                  + y * 0.105787412e-6)));
+        double ans = Math.Sqrt(0.636619772 / ax) *
+                     (Math.Cos(xx) * ans1 - z * Math.Sin(xx) * ans2);
+        if (x < 0.0) ans = -ans;
+        return ans;
     }
 
     /// <summary>
@@ -206,7 +204,7 @@ public static class Bessel
 
         ax = Math.Abs(x);
         if (ax == 0.0) return 0.0;
-        else if (ax > n)
+        if (ax > n)
         {
             tox = 2.0 / ax;
             bjm = J0(ax);

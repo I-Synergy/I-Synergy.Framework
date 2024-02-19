@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Data;
 
 namespace ISynergy.Framework.Mathematics.Tests;
@@ -16,7 +15,7 @@ public partial class MatrixTest
             { 5, 6 },
         };
 
-        string[] columnNames = { "A", "B", };
+        string[] columnNames = ["A", "B"];
         DataTable actual = Matrix.ToTable(matrix, columnNames);
 
         Assert.AreEqual("A", actual.Columns[0].ColumnName);
@@ -99,11 +98,11 @@ public partial class MatrixTest
         #endregion
 
         double[][] ea =
-        {
-            new[] { 0.3, 0.1 },
-            new[] { 4.2, 1.4 },
-            new[] { 7.3, 8.7 },
-        };
+        [
+            [0.3, 0.1],
+            [4.2, 1.4],
+            [7.3, 8.7]
+        ];
 
         for (int i = 0; i < a.GetLength()[0]; i++)
             for (int j = 0; j < a.GetLength()[1]; j++)
@@ -130,11 +129,11 @@ public partial class MatrixTest
     public void ToTableTest2()
     {
         double[][] matrix =
-        {
-            new double[] { 1, 2 },
-            new double[] { 3, 4 },
-            new double[] { 5, 6 },
-        };
+        [
+            [1, 2],
+            [3, 4],
+            [5, 6]
+        ];
 
         DataTable actual = Matrix.ToTable(matrix);
 
@@ -159,12 +158,12 @@ public partial class MatrixTest
 
         double[][] actual = table.ToJagged(System.Globalization.CultureInfo.InvariantCulture);
         double[][] expected =
-        {
-            new double[] { 1, 1 },
-            new double[] { 1, 0 },
-            new double[] { 0, 1 },
-            new double[] { 0, 0 },
-        };
+        [
+            [1, 1],
+            [1, 0],
+            [0, 1],
+            [0, 0]
+        ];
 
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -173,32 +172,28 @@ public partial class MatrixTest
     public void FromJaggedToMultidimensional()
     {
         // Declare a jagged matrix that we would like to convert to multi-dimensional
-        int[][][] jagged = new[]
-        {
-            new[]
-            {
-                new[] { 1, 2, 3 },
-                new[] { 4, 5, 6 }
-            },
+        int[][][] jagged =
+        [
+            [
+                [1, 2, 3],
+                [4, 5, 6]
+            ],
 
-            new[]
-            {
-                new[] { 7, 8, 9 },
-                new[] { 10, 11, 12 }
-            },
+            [
+                [7, 8, 9],
+                [10, 11, 12]
+            ],
 
-            new[]
-            {
-                new[] { 13, 14, 15 },
-                new[] { 16, 17, 18 }
-            },
+            [
+                [13, 14, 15],
+                [16, 17, 18]
+            ],
 
-            new[]
-            {
-                new[] { 19, 20, 21 },
-                new[] { 22, 23, 24 }
-            }
-        };
+            [
+                [19, 20, 21],
+                [22, 23, 24]
+            ]
+        ];
 
         // Test #1: Transform jagged matrix to a unidimensional vector. The extension method called DeepFlatten is available at:
         // https://github.com/accord-net/framework/blob/a195ce7afbd2fd2ae143a82f5214a08e2a1a2a07/Sources/ISynergy.Framework.Mathematics/Matrix/Matrix.Common.cs#L1636
@@ -299,10 +294,10 @@ public partial class MatrixTest
         // Let's say we would like to convert  the following 
         // matrix of strings to a matrix of double values:
         string[][] from =
-        {
-            new[] { "0", "1", "2" },
-            new[] { "3", "4", "5" },
-        };
+        [
+            ["0", "1", "2"],
+            ["3", "4", "5"]
+        ];
 
         // Using a convertor:
         double[][] a = Jagged.Convert(from, Double.Parse);
@@ -389,10 +384,10 @@ public partial class MatrixTest
     public void JaggedFromAnyToDouble()
     {
         string[][] from =
-        {
-            new[] { "0", "1", "2" },
-            new[] { "3", "4", "5" },
-        };
+        [
+            ["0", "1", "2"],
+            ["3", "4", "5"]
+        ];
 
         test(from, from.ToDouble());
         test(from.ToSingle(), from.ToDouble());
@@ -404,7 +399,7 @@ public partial class MatrixTest
     [TestMethod]
     public void VectorFromAnyToDouble()
     {
-        string[] from = { "0", "1", "2" };
+        string[] from = ["0", "1", "2"];
 
         test(from, from.ToDouble());
         test(from.ToSingle(), from.ToDouble());

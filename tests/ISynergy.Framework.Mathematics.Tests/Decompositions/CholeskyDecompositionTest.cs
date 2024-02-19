@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
 [TestClass]
@@ -97,7 +95,7 @@ public class CholeskyDecompositionTest
 
         double[,] B = Matrix.ColumnVector(new double[] { 1, 2, 3 });
 
-        double[,] expected = Matrix.ColumnVector(new double[] { 2.5, 4.0, 3.5 });
+        double[,] expected = Matrix.ColumnVector([2.5, 4.0, 3.5]);
 
         double[,] actual = chol.Solve(B);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
@@ -124,9 +122,9 @@ public class CholeskyDecompositionTest
         Assert.IsTrue(chol.IsPositiveDefinite);
         double[,] L = chol.LeftTriangularFactor;
 
-        double[] B = new double[] { 1, 2, 3 };
+        double[] B = [1, 2, 3];
 
-        double[] expected = new double[] { 2.5, 4.0, 3.5 };
+        double[] expected = [2.5, 4.0, 3.5];
         double[] actual = chol.Solve(B);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
@@ -182,9 +180,9 @@ public class CholeskyDecompositionTest
         CholeskyDecomposition chol = new(value, true);
         double[,] L = chol.LeftTriangularFactor;
 
-        double[] B = new double[] { 1, 2, 3, 4 };
+        double[] B = [1, 2, 3, 4];
 
-        double[] expected = { 5, 13, 16, -8 };
+        double[] expected = [5, 13, 16, -8];
         double[] actual = chol.Solve(B);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
@@ -237,11 +235,11 @@ public class CholeskyDecompositionTest
         double[,] L = chol.LeftTriangularFactor;
 
         float[][] expected =
-        {
-            new float[] { 0.750f, 0.500f, 0.250f },
-            new float[] { 0.500f, 1.000f, 0.500f },
-            new float[] { 0.250f, 0.500f, 0.750f },
-        };
+        [
+            [0.750f, 0.500f, 0.250f],
+            [0.500f, 1.000f, 0.500f],
+            [0.250f, 0.500f, 0.750f]
+        ];
 
         double[,] actual = chol.Inverse();
         Assert.IsTrue(actual.IsEqual(expected, 1e-6));

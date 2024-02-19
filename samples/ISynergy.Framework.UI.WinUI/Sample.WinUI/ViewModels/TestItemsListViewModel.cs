@@ -6,7 +6,6 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 using Sample.Enumerations;
 using Sample.Models;
 using System.Collections.ObjectModel;

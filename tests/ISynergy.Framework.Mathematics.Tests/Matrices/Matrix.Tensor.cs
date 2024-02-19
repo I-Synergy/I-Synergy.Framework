@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections;
 
 namespace ISynergy.Framework.Mathematics.Tests.Matrices;
@@ -251,7 +250,7 @@ public partial class MatrixTensor
 
 
         {
-            double[,] r = (double[,])x.Get(dimension: 0, indices: new[] { 0, 1 });
+            double[,] r = (double[,])x.Get(dimension: 0, indices: [0, 1]);
 
             double[,] expected =
             {
@@ -263,7 +262,7 @@ public partial class MatrixTensor
         }
 
         {
-            double[,] r = (double[,])x.Get(dimension: 0, indices: new[] { 1, 2, 3 });
+            double[,] r = (double[,])x.Get(dimension: 0, indices: [1, 2, 3]);
 
             double[,] expected =
             {
@@ -276,7 +275,7 @@ public partial class MatrixTensor
         }
 
         {
-            double[,] r = (double[,])x.Get(dimension: 0, indices: new[] { 9, 6, 3, 2 });
+            double[,] r = (double[,])x.Get(dimension: 0, indices: [9, 6, 3, 2]);
 
             double[,] expected =
             {

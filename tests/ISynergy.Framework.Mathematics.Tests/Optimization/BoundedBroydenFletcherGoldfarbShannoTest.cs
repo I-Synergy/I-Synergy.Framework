@@ -2,7 +2,6 @@
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]
@@ -15,11 +14,11 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
         Func<double[], double> f = rosenbrockFunction;
         Func<double[], double[]> g = rosenbrockGradient;
 
-        Assert.AreEqual(104, f(new[] { -1.0, 2.0 }));
+        Assert.AreEqual(104, f([-1.0, 2.0]));
 
 
         int n = 2; // number of variables
-        double[] initial = { -1.2, 1 };
+        double[] initial = [-1.2, 1];
 
         BoundedBroydenFletcherGoldfarbShanno lbfgs = new(n, f, g);
         lbfgs.GradientTolerance = 1e-10;
@@ -69,14 +68,14 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
         //   g(x,y)  =  { del f / del x, del f / del y }
         // 
 
-        Func<double[], double[]> g = (x) => new double[]
-        {
+        Func<double[], double[]> g = (x) =>
+        [
             // df/dx = {-2 e^(-    (x-1)^2) (x-1)}
             2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
 
             // df/dy = {-  e^(-1/2 (y-2)^2) (y-2)}
             Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2)) * (x[1] - 2)
-        };
+        ];
 
         // Finally, we can create the L-BFGS solver, passing the functions as arguments
         BoundedBroydenFletcherGoldfarbShanno lbfgs = new(numberOfVariables: 2, function: f, gradient: g);
@@ -117,7 +116,7 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
         double f0 = -2 * b - 400 * x[0] * a;
         double f1 = 200 * a;
 
-        return new[] { f0, f1 };
+        return [f0, f1];
     }
 
     private static void createTestFunction(out Func<double[], double> f, out Func<double[], double[]> g)
@@ -125,11 +124,11 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
         // min f(x, y) = -exp(-(x-1)^2) - exp(-0.5*(y-2)^2)
         f = (x) => -Math.Exp(-Math.Pow(x[0] - 1, 2)) - Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2));
 
-        g = (x) => new[]
-        {
+        g = (x) =>
+        [
             2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
             Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2)) * (x[1] - 2)
-        };
+        ];
     }
 
     [TestMethod]
@@ -183,7 +182,7 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
         Func<double[], double> function = // min f(x) = 10 * (x+1)^2 + y^2
             x => 10.0 * Math.Pow(x[0] + 1.0, 2.0) + Math.Pow(x[1], 2.0);
 
-        Func<double[], double[]> gradient = x => new[] { 20 * (x[0] + 1), 2 * x[1] };
+        Func<double[], double[]> gradient = x => [20 * (x[0] + 1), 2 * x[1]];
 
         BoundedBroydenFletcherGoldfarbShanno target = new(2)
         {
@@ -246,14 +245,14 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
         f = (x) =>
                        -Math.Exp(-Math.Pow(x[0] - 1, 2)) - Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2));
 
-        g = (x) => new double[]
-        {
+        g = (x) =>
+        [
             // df/dx = {-2 e^(-    (x-1)^2) (x-1)}
             2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
 
             // df/dy = {-  e^(-1/2 (y-2)^2) (y-2)}
             Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2)) * (x[1] - 2)
-        };
+        ];
     }
 
 

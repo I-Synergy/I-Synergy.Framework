@@ -2,7 +2,6 @@
 using ISynergy.Framework.Physics.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Linq;
 
 namespace ISynergy.Framework.Physics.Services.Tests;
 

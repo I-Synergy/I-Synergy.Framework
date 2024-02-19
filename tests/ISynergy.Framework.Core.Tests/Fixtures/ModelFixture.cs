@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Base;
-using System;
 
 namespace ISynergy.Framework.Core.Fixtures;
 
@@ -46,13 +45,6 @@ public class ModelFixture<T> : ModelBase, IDisposable
     /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
     public override string ToString()
     {
-        if (Value is null)
-        {
-            return string.Empty;
-        }
-        else
-        {
-            return Value.ToString();
-        }
+        return Value is null ? string.Empty : Value.ToString();
     }
 }

@@ -14,7 +14,7 @@ partial class MatrixTest
             { 5, 2, 1 }
         };
 
-        double[] b = { 5, 8 };
+        double[] b = [5, 8];
 
         double[,] expected = Matrix.Dot(a.Transpose(), Matrix.Diagonal(b));
         double[,] actual = Matrix.TransposeAndDotWithDiagonal(a, b);
@@ -82,14 +82,14 @@ partial class MatrixTest
     [TestMethod]
     public void MultiplyVectorMatrixTest()
     {
-        double[] a = { 1.000, 2.000, 3.000 };
+        double[] a = [1.000, 2.000, 3.000];
         double[,] b =
         {
             { 2.000, 1.000, 5.000, 2.000 },
             { 2.000, 1.000, 2.000, 2.000 },
             { 1.000, 1.000, 1.000, 1.000 },
          };
-        double[] expected = { 9.000, 6.000, 12.000, 9.000 };
+        double[] expected = [9.000, 6.000, 12.000, 9.000];
 
         double[] actual = Matrix.Dot(a, b);
         Assert.IsTrue(actual.IsEqual(expected));
@@ -134,8 +134,8 @@ partial class MatrixTest
             { 5, 5, 5 },
         };
 
-        double[] b = new double[] { 2, 3, 1 };
-        double[] expected = new double[] { 24, 30 };
+        double[] b = [2, 3, 1];
+        double[] expected = [24, 30];
         double[] actual;
         actual = Matrix.Dot(a, b);
 
@@ -448,10 +448,10 @@ partial class MatrixTest
     [TestMethod]
     public void KroneckerVectorTest()
     {
-        double[] a = { 3, 1 };
-        double[] b = { 4, 7, 2 };
+        double[] a = [3, 1];
+        double[] b = [4, 7, 2];
 
-        double[] expected = { 12, 21, 6, 4, 7, 2 };
+        double[] expected = [12, 21, 6, 4, 7, 2];
         double[] result = Vector.Random(a.Length * b.Length);
 
         double[] actual1 = a.Kronecker(b);
@@ -513,11 +513,11 @@ partial class MatrixTest
     [TestMethod]
     public void CrossProductTest()
     {
-        double[] u = { 3, -3, 1 };
-        double[] v = { 4, +9, 2 };
+        double[] u = [3, -3, 1];
+        double[] v = [4, +9, 2];
         double[] r = Vector.Zeros(3);
 
-        double[] expected = { -15, -2, 39 };
+        double[] expected = [-15, -2, 39];
         double[] actual = Matrix.Cross(u, v, r);
 
         Assert.IsTrue(expected.IsEqual(actual));

@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Mathematics;
-using ISynergy.Framework.Mathematics.Vectors;
+﻿using ISynergy.Framework.Mathematics.Vectors;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -127,10 +126,10 @@ public struct Matrix4x4
     /// 
     public float[] ToArray()
     {
-        return new float[]
-        {
+        return
+        [
             V00, V01, V02, V03, V10, V11, V12, V13, V20, V21, V22, V23, V30, V31, V32, V33
-        };
+        ];
     }
 
     /// <summary>

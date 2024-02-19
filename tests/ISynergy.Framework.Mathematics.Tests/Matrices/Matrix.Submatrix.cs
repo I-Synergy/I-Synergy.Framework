@@ -23,7 +23,7 @@ public partial class MatrixTest
           { 3.000, 3.000, 3.000 }
         };
 
-        double[,] actual = Matrix.Get(value, new int[] { 0, 2 });
+        double[,] actual = Matrix.Get(value, [0, 2]);
 
         Assert.IsTrue(Matrix.IsEqual(actual, expected));
     }
@@ -46,10 +46,10 @@ public partial class MatrixTest
 
         double[,] actual;
 
-        actual = Matrix.Get(value, new int[] { 0, 2 });
+        actual = Matrix.Get(value, [0, 2]);
         Assert.IsTrue(Matrix.IsEqual(actual, expected));
 
-        actual = Matrix.Get(value, new int[] { 0, 2 }, null);
+        actual = Matrix.Get(value, [0, 2], null);
         Assert.IsTrue(Matrix.IsEqual(actual, expected));
 
         actual = Matrix.Submatrix(value, null, null);
@@ -60,22 +60,22 @@ public partial class MatrixTest
     public void SubmatrixTest()
     {
         double[][] data =
-        {
-            new double[] { 1, 2, 3 },
-            new double[] { 4, 5, 6 },
-            new double[] { 7, 8, 9 },
-        };
+        [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ];
 
-        int[] rowIndexes = { 1, 2 };
+        int[] rowIndexes = [1, 2];
         int j0 = 0;
         int j1 = 1;
 
         double[][] expected =
-        {
+        [
             //new double[] { 1, 2, 3 },
-            new double[] { 4, 5/*, 6*/ },
-            new double[] { 7, 8/*, 9*/ },
-        };
+            [4, 5/*, 6*/],
+            [7, 8/*, 9*/]
+        ];
 
         double[][] actual = Matrix.Get(data, rowIndexes, j0, j1);
 
@@ -84,11 +84,11 @@ public partial class MatrixTest
                 Assert.AreEqual(expected[i][j], actual[i][j]);
 
         double[][] expected2 =
-        {
-            new double[] { 1, 2/*, 3*/ },
-            new double[] { 4, 5/*, 6*/ },
-            new double[] { 7, 8/*, 9*/ },
-        };
+        [
+            [1, 2/*, 3*/],
+            [4, 5/*, 6*/],
+            [7, 8/*, 9*/]
+        ];
 
         double[][] actual2 = Matrix.Get(data, null, j0, j1);
 
@@ -113,7 +113,7 @@ public partial class MatrixTest
             {        3.000, 3.000 }
         };
 
-        int[] rowIndexes = { 0, 2 };
+        int[] rowIndexes = [0, 2];
         int j0 = 1;
         int j1 = 2;
 
@@ -140,8 +140,8 @@ public partial class MatrixTest
     [TestMethod]
     public void SubgroupTest2()
     {
-        double[] value = { 1, 2, 3, 4, 5, 6, 7 };
-        int[] idx = { 0, 0, 0, 5, 5, 5, 5 };
+        double[] value = [1, 2, 3, 4, 5, 6, 7];
+        int[] idx = [0, 0, 0, 5, 5, 5, 5];
 
 
         double[][] groups = value.Subgroups(idx);
@@ -163,8 +163,8 @@ public partial class MatrixTest
     [TestMethod]
     public void SubgroupTest3()
     {
-        double[] value = { 1, 2, 3, 4, 5, 6, 7 };
-        int[] idx = { 0, 0, 0, 4, 4, 4, 4 };
+        double[] value = [1, 2, 3, 4, 5, 6, 7];
+        int[] idx = [0, 0, 0, 4, 4, 4, 4];
 
 
         double[][] groups = value.Subgroups(idx, 5);
