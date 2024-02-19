@@ -59,8 +59,8 @@ public class SettingsViewModel : ViewModelNavigation<object>
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
 
-        COMPorts = new ObservableCollection<string>()
-        {
+        COMPorts =
+        [
             "COM1",
             "COM2",
             "COM3",
@@ -69,7 +69,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
             "COM6",
             "COM7",
             "COM8"
-        };
+        ];
     }
 
     public override async Task InitializeAsync()
@@ -87,7 +87,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
             if (_localSettingsService.Settings is LocalSettings localSetting)
                 LocalSettings = localSetting;
 
-            if (_globalSettingsService.Settings is GlobalSettings globalSetting)
+            if (_globalSettingsService.Settings is { } globalSetting)
                 GlobalSettings = globalSetting;
 
             IsInitialized = true;
@@ -113,7 +113,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
                 _localSettingsService.SaveSettings();
             }
 
-            if (_globalSettingsService.Settings is GlobalSettings globalSetting)
+            if (_globalSettingsService.Settings is { } globalSetting)
             {
 
                 await _globalSettingsService.AddOrUpdateSettingsAsync(globalSetting);

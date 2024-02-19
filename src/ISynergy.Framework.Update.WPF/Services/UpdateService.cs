@@ -125,10 +125,8 @@ internal class UpdateService : IUpdateService
 
             return false;
         }
-        else
-        {
-            throw new Exception(_languageService.GetString("CouldNotRetrieveVersionInformation"));
-        }
+
+        throw new Exception(_languageService.GetString("CouldNotRetrieveVersionInformation"));
     }
 
     protected async Task GetUpdateAsync(int applicationId)

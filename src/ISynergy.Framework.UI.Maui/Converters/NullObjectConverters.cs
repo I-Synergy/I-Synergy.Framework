@@ -21,8 +21,7 @@ public class NullToIsVisibleConverter : IValueConverter
     {
         if (value is null)
             return false;
-        else
-            return true;
+        return true;
     }
 
     /// <summary>
@@ -61,10 +60,8 @@ public class NullToInversedIsVisibleConverter : IValueConverter
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     /// <summary>

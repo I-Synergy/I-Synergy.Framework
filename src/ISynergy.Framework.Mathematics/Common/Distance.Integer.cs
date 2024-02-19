@@ -13,7 +13,7 @@ public static partial class Distance
     public static bool IsMetric(Func<int[], int[], double> value)
     {
         // Direct test
-        var z = value(new[] { 1 }, new[] { 1 });
+        var z = value([1], [1]);
         if (z > 2 || z < 0)
             return false;
 

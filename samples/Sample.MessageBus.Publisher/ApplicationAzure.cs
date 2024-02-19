@@ -13,8 +13,6 @@ namespace Sample.MessageBus.Publisher;
 /// <param name="messageBus">The message bus.</param>
 public class ApplicationAzure(IPublisherServiceBus<TestDataModel> messageBus)
 {
-    private readonly IPublisherServiceBus<TestDataModel> _messageBus = messageBus;
-
     /// <summary>
     /// run as an asynchronous operation.
     /// </summary>
@@ -23,7 +21,7 @@ public class ApplicationAzure(IPublisherServiceBus<TestDataModel> messageBus)
         Console.WriteLine("Azure implementation started...");
 
         Guid sessionId = Guid.NewGuid();
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
         List<Task> publishTasks = [];
 
         for (int i = 0; i < 10; i++)
@@ -32,7 +30,7 @@ public class ApplicationAzure(IPublisherServiceBus<TestDataModel> messageBus)
 
             Console.WriteLine($"Sending message with id: {id}");
 
-            publishTasks.Add(_messageBus.SendMessageAsync(new TestDataModel(QueueMessageActions.Add, $"Message {i} with id: {i}"), sessionId));
+            publishTasks.Add(messageBus.SendMessageAsync(new TestDataModel(QueueMessageActions.Add, $"Message {i} with id: {i}"), sessionId));
         }
 
         Task allPublishes = Task.WhenAll(publishTasks);
@@ -44,7 +42,7 @@ public class ApplicationAzure(IPublisherServiceBus<TestDataModel> messageBus)
             Task.WhenAny(
                 Task.Run(Console.ReadKey),
                 Task.Delay(TimeSpan.FromSeconds(10))
-            ).ContinueWith((t) => cancellationTokenSource.Cancel()),
+            ).ContinueWith((t) => cancellationTokenSource?.Cancel()),
             allPublishes);
     }
 }

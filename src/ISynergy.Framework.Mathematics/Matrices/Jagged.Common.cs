@@ -213,7 +213,7 @@ public static partial class Matrix
     {
         result = new T[rowVector.Length][];
         for (var i = 0; i < rowVector.Length; i++)
-            result[i] = new[] { rowVector[i] };
+            result[i] = [rowVector[i]];
         return result;
     }
 
@@ -226,7 +226,7 @@ public static partial class Matrix
     public static T[][] Transpose<T>(this T[] rowVector, T[][] result)
     {
         for (var i = 0; i < rowVector.Length; i++)
-            result[i] = new[] { rowVector[i] };
+            result[i] = [rowVector[i]];
         return result;
     }
 
@@ -265,7 +265,7 @@ public static partial class Matrix
     /// <returns>The number of columns in the matrix.</returns>
     public static int Columns<T>(this IEnumerable<T[]> matrix)
     {
-        return matrix.FirstOrDefault() is T[] result ? result.Length : 0;
+        return matrix.FirstOrDefault() is { } result ? result.Length : 0;
     }
 
     /// <summary>

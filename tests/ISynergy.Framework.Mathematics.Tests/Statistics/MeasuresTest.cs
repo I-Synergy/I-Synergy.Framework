@@ -107,9 +107,9 @@ public class MeasuresTest
         First, create a vector with the oldest data at the start and the most
         recent data at the end of the vector. */
         double[] timeSeries =
-        {
+        [
             2, 2, 1, 3, 5, 6, 4, 2, 7, 8, 9, 2, 3, 4, 5, 6, 7
-        };
+        ];
 
         // The window size determines how many observations to include in the 
         // calculation. If no window is specified, the entire dataset is used. 
@@ -137,9 +137,9 @@ public class MeasuresTest
         First, create a vector with the oldest data at the start and the most
         recent data at the end of the vector. */
         double[] timeSeries =
-        {
+        [
             2, 2, 1, 3, 5, 6, 4, 2, 7, 8, 9, 2, 3, 4, 5, 6, 7
-        };
+        ];
 
         // The window size determines how many observations to include in the 
         // calculation. If no window is specified, the entire dataset is used. 
@@ -164,7 +164,7 @@ public class MeasuresTest
     public void EwmaTest(double alpha, double e1, double e2)
     {
         // Arrange
-        double[] expected = { e1, e2 };
+        double[] expected = [e1, e2];
 
         // Act
         double[] ewmas = series.ExponentialWeightedMean(alpha);

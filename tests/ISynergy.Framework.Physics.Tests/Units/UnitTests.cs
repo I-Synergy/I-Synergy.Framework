@@ -33,7 +33,7 @@ public class UnitTests
     [TestMethod()]
     public void UnitValidConstructorTest()
     {
-        Unit unit = new(Enumerations.Units.minute, new UnitTypes[] { UnitTypes.Time }, e => e * 100, e => e / 100);
+        Unit unit = new(Enumerations.Units.minute, [UnitTypes.Time], e => e * 100, e => e / 100);
         Assert.IsNotNull(unit);
     }
 }

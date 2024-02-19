@@ -15,7 +15,7 @@ public class GoldfarbIdnaniTest
     public void RunTest()
     {
         double[,] D = Matrix.Identity(3);
-        double[] d = { 0, 5, 0 };
+        double[] d = [0, 5, 0];
 
         double[,] A =
         {
@@ -25,11 +25,11 @@ public class GoldfarbIdnaniTest
         };
 
 
-        double[] b = { -8, 2, 0 };
+        double[] b = [-8, 2, 0];
 
         GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
 
-        double[] expectedSolution = { 0.4761905, 1.0476190, 2.0952381 };
+        double[] expectedSolution = [0.4761905, 1.0476190, 2.0952381];
         double expected = -2.380952;
         Assert.IsTrue(target.Minimize());
         double actual = target.Value;
@@ -57,7 +57,7 @@ public class GoldfarbIdnaniTest
     public void RunTest1()
     {
         double[,] D = Matrix.Identity(3);
-        double[] d = { 1, 5, 3 };
+        double[] d = [1, 5, 3];
 
         double[,] A =
         {
@@ -67,7 +67,7 @@ public class GoldfarbIdnaniTest
         };
 
 
-        double[] b = { -8, 2, 0 };
+        double[] b = [-8, 2, 0];
 
         GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
 
@@ -109,7 +109,7 @@ public class GoldfarbIdnaniTest
             { 0, 8 }, // 4y²
         };
 
-        double[] d = { -8, -16 };
+        double[] d = [-8, -16];
 
 
         double[,] A =
@@ -118,7 +118,7 @@ public class GoldfarbIdnaniTest
             { 1, 0 }, // x
         };
 
-        double[] b = { 5, 3 };
+        double[] b = [5, 3];
 
 
         GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
@@ -157,7 +157,7 @@ public class GoldfarbIdnaniTest
             {  1, -2, 12 },
         };
 
-        double[] d = { 1, 5, 3 };
+        double[] d = [1, 5, 3];
 
         double[,] A =
         {
@@ -167,7 +167,7 @@ public class GoldfarbIdnaniTest
         };
 
 
-        double[] b = { -8, 4, -1 };
+        double[] b = [-8, 4, -1];
 
         GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
 
@@ -210,7 +210,7 @@ public class GoldfarbIdnaniTest
             { -1,  3,  5 },
         };
 
-        double[] d = { -2, +35, +47 };
+        double[] d = [-2, +35, +47];
 
 
         double[,] A =
@@ -220,7 +220,7 @@ public class GoldfarbIdnaniTest
             { 0, 0, 0 },
         };
 
-        double[] b = { 0, 0, 0 };
+        double[] b = [0, 0, 0];
 
 
         GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
@@ -271,7 +271,7 @@ public class GoldfarbIdnaniTest
             { -1, 1,  0, 0,  0, 0,  0, 0,  0, 0,  0, 1 },
         };
 
-        double[] bva = { 1, 1, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0 };
+        double[] bva = [1, 1, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0];
 
         int meq = 2;
 
@@ -299,7 +299,7 @@ public class GoldfarbIdnaniTest
     public void GoldfarbIdnaniConstructorTest1()
     {
         double[,] D = Matrix.Identity(3);
-        double[] d = { 0, 5, 0 };
+        double[] d = [0, 5, 0];
 
         double[,] A =
         {
@@ -308,7 +308,7 @@ public class GoldfarbIdnaniTest
             {  0, -2, 1 },
         };
 
-        double[] b = { -8, 2, 0 };
+        double[] b = [-8, 2, 0];
 
         List<LinearConstraint> constraints =
         [
@@ -351,7 +351,7 @@ public class GoldfarbIdnaniTest
 
         // Accordingly, our vector of linear terms is given by:
 
-        double[] d = { -5 /*x*/, -6 /*y*/ }; // -5x -6y
+        double[] d = [-5 /*x*/, -6 /*y*/]; // -5x -6y
 
         // We have now to express our constraints. We can do it
         // either by directly specifying a matrix A in which each
@@ -366,10 +366,10 @@ public class GoldfarbIdnaniTest
         };
 
         double[] b =
-        {
-             5, // (a) ... should be equal to 5.
-            10, // (b) ... should be greater than or equal to 10.
-        };
+        [
+            5, // (a) ... should be equal to 5.
+            10 // (b) ... should be greater than or equal to 10.
+        ];
 
         // Equalities must always come first, and in this case
         // we have to specify how many of the constraints are
@@ -387,7 +387,7 @@ public class GoldfarbIdnaniTest
                 // x is the first variable, thus located at
                 // index 0. We are specifying that x >= 10:
 
-                VariablesAtIndices = new[] { 0 }, // index 0 (x)
+                VariablesAtIndices = [0], // index 0 (x)
                 ShouldBe = ConstraintType.GreaterThanOrEqualTo,
                 Value = 10
             },
@@ -401,8 +401,8 @@ public class GoldfarbIdnaniTest
                 // times 1 plus the variable at position 1 times -1 
                 // should be equal to 5.
 
-                VariablesAtIndices = new int[] { 0, 1 }, // index 0 (x) and index 1 (y)
-                CombinedAs = new double[] { 1, -1 }, // when combined as x - y
+                VariablesAtIndices = [0, 1], // index 0 (x) and index 1 (y)
+                CombinedAs = [1, -1], // when combined as x - y
                 ShouldBe = ConstraintType.EqualTo,
                 Value = 5
             }
@@ -491,10 +491,10 @@ public class GoldfarbIdnaniTest
         };
 
         double[] b =
-        {
-             5,
-            10,
-        };
+        [
+            5,
+            10
+        ];
 
         Assert.IsTrue(A.IsEqual(solver.ConstraintMatrix));
         Assert.IsTrue(b.IsEqual(solver.ConstraintValues));
@@ -506,7 +506,7 @@ public class GoldfarbIdnaniTest
             {   -1,  +4*2 },
         };
 
-        double[] d = { -5, -6 };
+        double[] d = [-5, -6];
 
 
         double[,] actualQ = f.QuadraticTerms;
@@ -535,7 +535,7 @@ public class GoldfarbIdnaniTest
             {   -1,  +4*2 },
         };
 
-        double[] d = { -5, -6 };
+        double[] d = [-5, -6];
 
         double[,] actualQ = f.QuadraticTerms;
         double[] actuald = f.LinearTerms;
@@ -568,7 +568,7 @@ public class GoldfarbIdnaniTest
             {   -1,  +4*2 },
         };
 
-        double[] d = { -5, -6 };
+        double[] d = [-5, -6];
 
         double[,] actualQ = f.QuadraticTerms;
         double[] actuald = f.LinearTerms;
@@ -607,10 +607,10 @@ public class GoldfarbIdnaniTest
         };
 
         double[] b =
-        {
-             5,
-            10,
-        };
+        [
+            5,
+            10
+        ];
 
         Assert.IsTrue(A.IsEqual(target.ConstraintMatrix));
         Assert.IsTrue(b.IsEqual(target.ConstraintValues));
@@ -621,7 +621,7 @@ public class GoldfarbIdnaniTest
             {   -1,  +4*2 },
         };
 
-        double[] d = { -5, -6 };
+        double[] d = [-5, -6];
 
 
         double[,] actualQ = f.QuadraticTerms;
@@ -729,10 +729,10 @@ public class GoldfarbIdnaniTest
         };
 
         double[] b =
-        {
-             1,
-             1,
-        };
+        [
+            1,
+             1
+        ];
 
         Assert.IsTrue(A.IsEqual(target.ConstraintMatrix));
         Assert.IsTrue(b.IsEqual(target.ConstraintValues));
@@ -743,7 +743,7 @@ public class GoldfarbIdnaniTest
             { 2, 6 },
         };
 
-        double[] d = { 0, -1 };
+        double[] d = [0, -1];
 
 
         double[,] actualQ = f.QuadraticTerms;
@@ -801,10 +801,10 @@ public class GoldfarbIdnaniTest
         };
 
         double[] b =
-        {
-             1,
-             1,
-        };
+        [
+            1,
+             1
+        ];
 
         Assert.IsTrue(A.IsEqual(target.ConstraintMatrix));
         Assert.IsTrue(b.IsEqual(target.ConstraintValues));
@@ -815,7 +815,7 @@ public class GoldfarbIdnaniTest
             { 2, 2 },
         };
 
-        double[] d = { 0, -1 };
+        double[] d = [0, -1];
 
 
         double[,] actualQ = f.QuadraticTerms;
@@ -868,9 +868,9 @@ public class GoldfarbIdnaniTest
         };
 
         double[] expectedb =
-        {
+        [
             -2, 0, 0, 0
-        };
+        ];
 
         double[,] expectedQ =
         {
@@ -879,9 +879,9 @@ public class GoldfarbIdnaniTest
         };
 
         double[] expectedd =
-        {
+        [
             0, -5
-        };
+        ];
 
         // Tested against R's QuadProg package
         /*
@@ -979,10 +979,10 @@ public class GoldfarbIdnaniTest
         string strObjective = "0.5x² + 0.2y² + 0.3xy";
 
         string[] strConstraints =
-        {
+        [
             "0.01x + 0.02y - 0.03 = 0",
             "x + y = 100"
-        };
+        ];
 
         QuadraticObjectiveFunction function = new(strObjective);
         LinearConstraintCollection cst = [];
@@ -1009,12 +1009,12 @@ public class GoldfarbIdnaniTest
             + 0.3.ToString(fr) + "xy";
 
         string[] strConstraints =
-        {
+        [
             0.01.ToString(fr) + "x" + " + " +
             0.02.ToString(fr) + "y - " +
             0.03.ToString(fr) + " = 0",
             "x + y = 100"
-        };
+        ];
 
         QuadraticObjectiveFunction function = new(strObjective, fr);
         LinearConstraintCollection cst = [];
@@ -1037,12 +1037,12 @@ public class GoldfarbIdnaniTest
             + 0.3.ToString(CultureInfo.InvariantCulture) + "xy";
 
         string[] strConstraints =
-        {
+        [
             0.01.ToString(CultureInfo.InvariantCulture) + "x" + " + " +
             0.02.ToString(CultureInfo.InvariantCulture) + "y - " +
             0.03.ToString(CultureInfo.InvariantCulture) + " = 0",
             "x + y = 100"
-        };
+        ];
 
         QuadraticObjectiveFunction function = new(strObjective);
         LinearConstraintCollection cst = [];
@@ -1065,10 +1065,10 @@ public class GoldfarbIdnaniTest
         string strObjective = "0" + s + "5x² + 0" + s + "2y² + 0" + s + "3xy";
 
         string[] strConstraints =
-        {
+        [
             "0" + s + "01x + 0" + s + "02y - 0" + s + "03 = 0",
             "x + y = 100"
-        };
+        ];
 
         // Now we can start creating our function:
         QuadraticObjectiveFunction function = new(strObjective, CultureInfo.CurrentCulture);
@@ -1103,7 +1103,7 @@ public class GoldfarbIdnaniTest
 
         Assert.IsTrue(Q.IsPositiveDefinite());
 
-        double[] d = { 0, 0, 0, 0 };
+        double[] d = [0, 0, 0, 0];
 
         QuadraticObjectiveFunction f = new(Q, d, "a", "b", "c", "d");
 
@@ -1121,8 +1121,8 @@ public class GoldfarbIdnaniTest
 
         Assert.AreEqual(1, constraints[6].CombinedAs[0]);
         Assert.AreEqual(0.5, constraints[6].Value);
-        Assert.AreEqual(0.1, constraints[6].GetViolation(new double[] { 0.6 }), 1e-10);
-        Assert.AreEqual(-0.1, constraints[6].GetViolation(new double[] { 0.4 }), 1e-10);
+        Assert.AreEqual(0.1, constraints[6].GetViolation([0.6]), 1e-10);
+        Assert.AreEqual(-0.1, constraints[6].GetViolation([0.4]), 1e-10);
 
         bool psd = Q.IsPositiveDefinite();
 
@@ -1141,7 +1141,7 @@ public class GoldfarbIdnaniTest
         Assert.IsTrue(solver.Minimize());
         double minValue = solver.Value;
 
-        double[] expected = { 0.50000000000000, 0.30967169476486, 0.19032830523514, 0 };
+        double[] expected = [0.50000000000000, 0.30967169476486, 0.19032830523514, 0];
         double[] actual = solver.Solution;
 
         for (int i = 0; i < constraints.Count; i++)
@@ -1177,7 +1177,7 @@ public class GoldfarbIdnaniTest
 
         Assert.IsTrue(Q.IsPositiveDefinite());
 
-        double[] d = { 0, 0, 0, 0 };
+        double[] d = [0, 0, 0, 0];
 
         QuadraticObjectiveFunction f = new(Q, d, "a", "b", "c", "d");
 
@@ -1195,8 +1195,8 @@ public class GoldfarbIdnaniTest
 
         Assert.AreEqual(-1, constraints[6].CombinedAs[0]);
         Assert.AreEqual(-0.5, constraints[6].Value);
-        Assert.AreEqual(0.1, constraints[6].GetViolation(new double[] { 0.6 }), 1e-10);
-        Assert.AreEqual(-0.1, constraints[6].GetViolation(new double[] { 0.4 }), 1e-10);
+        Assert.AreEqual(0.1, constraints[6].GetViolation([0.6]), 1e-10);
+        Assert.AreEqual(-0.1, constraints[6].GetViolation([0.4]), 1e-10);
 
         bool psd = Q.IsPositiveDefinite();
 
@@ -1211,7 +1211,7 @@ public class GoldfarbIdnaniTest
         Assert.IsTrue(solver.Minimize());
         double minValue = solver.Value;
 
-        double[] expected = { 0.50000000000000, 0.30967169476486, 0.19032830523514, 0 };
+        double[] expected = [0.50000000000000, 0.30967169476486, 0.19032830523514, 0];
         double[] actual = solver.Solution;
 
         for (int i = 0; i < constraints.Count; i++)
@@ -1256,16 +1256,16 @@ public class GoldfarbIdnaniTest
         double actualSol = value;
 
         double[] expected =
-        {
+        [
             0.74083116998144, // 2
             0.14799651298617, // 13
-            0.11117231703249, // 14
-        };
+            0.11117231703249 // 14
+        ];
 
         double[] actual =
-        {
+        [
             soln[1], soln[12], soln[13]
-        };
+        ];
 
         Assert.AreEqual(expectedSol, actualSol, 1e-8);
         for (int i = 0; i < expected.Length; i++)
@@ -1302,16 +1302,16 @@ public class GoldfarbIdnaniTest
         double actualSol = value;
 
         double[] expected =
-        {
+        [
             0.41144782323407, // 2
             0.27310552838116, // 13
-            0.31544664838498, // 14
-        };
+            0.31544664838498 // 14
+        ];
 
         double[] actual =
-        {
+        [
             soln[1], soln[12], soln[13]
-        };
+        ];
 
         Assert.AreEqual(expectedSol, actualSol, 1e-8);
 
@@ -1349,19 +1349,19 @@ public class GoldfarbIdnaniTest
         double actualSol = value;
 
         double[] expected =
-        {
+        [
             0.4, // 2
             0.0016271524831373, // 4
             0, // 5
             0, // 13
             0, // 14
             0.59837284751680053 // 19     
-        };
+        ];
 
         double[] actual =
-        {
+        [
             soln[1], soln[3], soln[4], soln[12], soln[13], soln[18]
-        };
+        ];
 
         Assert.AreEqual(expectedSol, actualSol, 1e-8);
         for (int i = 0; i < expected.Length; i++)
@@ -1371,8 +1371,8 @@ public class GoldfarbIdnaniTest
     [TestMethod]
     public void GoldfarbIdnani3()
     {
-        double[] bvec = { 1, 0, -1, 0, -1, 0, -1, 0, -1 };
-        double[] dvec = { -0.00090022881750228, -0.0011623872153178, -0.0012785347920969, -0.0014757189594252 };
+        double[] bvec = [1, 0, -1, 0, -1, 0, -1, 0, -1];
+        double[] dvec = [-0.00090022881750228, -0.0011623872153178, -0.0012785347920969, -0.0014757189594252];
 
         double[,] DMat = new double[4, 4];
         DMat[0, 0] = 0.00073558149743370;
@@ -1431,7 +1431,7 @@ public class GoldfarbIdnaniTest
         Assert.AreEqual(-0.00079179497009427, value, 1e-6);
 
         double[] lagrangian = gfI.Lagrangian;
-        double[] expected = { 0.0003730054618697, 0.00016053620578588, 0, 0, 0, 0.000060343913971918, 0, 0, 0 };
+        double[] expected = [0.0003730054618697, 0.00016053620578588, 0, 0, 0, 0.000060343913971918, 0, 0, 0];
         for (int i = 0; i < lagrangian.Length; i++)
             Assert.AreEqual(expected[i], lagrangian[i], 1e-4);
     }
@@ -1440,7 +1440,7 @@ public class GoldfarbIdnaniTest
     {
         string[] str = File.ReadAllLines(path);
 
-        char[] sep = new char[] { ',' };
+        char[] sep = [','];
         string[] parts = str[0].Split(sep, StringSplitOptions.RemoveEmptyEntries);
         double[,] v = new double[str.Length, parts.Length];
 
@@ -1462,7 +1462,7 @@ public class GoldfarbIdnaniTest
     private double[] readVectorFile(string path)
     {
         string[] str = File.ReadAllLines(path);
-        char[] sep = new char[] { ',' };
+        char[] sep = [','];
         double[] v = new double[str.Length];
         string[] parts = str[0].Split(sep);
         for (int i = 0; i < str.Length; i++)
@@ -1487,7 +1487,7 @@ public class GoldfarbIdnaniTest
         int m = 44;
 
         double[] b =
-        {
+        [
             703.999,
             -704.001,
             1267.999,
@@ -1514,7 +1514,7 @@ public class GoldfarbIdnaniTest
             -0.001, -0.001, -0.001, -0.001, -0.001,
             -0.001, -0.001, -0.001, -0.001, -0.001,
             -0.001, -0.001, -0.001, -0.001
-        };
+        ];
 
         double[,] A = Matrix.Create(m, n,
              1.0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1616,9 +1616,9 @@ public class GoldfarbIdnaniTest
         };
 
         double[] b =
-        {
+        [
             4,5,1,-7,-1,-2,0,0,0,0,0,0
-        };
+        ];
 
         double[,] Q =
         {
@@ -1631,9 +1631,9 @@ public class GoldfarbIdnaniTest
         };
 
         double[] d =
-        {
+        [
             10,10,30,20,30,20
-        };
+        ];
 
         GoldfarbIdnani target = new(Q, d, A, b, 3);
         double tolerance = 0.001;

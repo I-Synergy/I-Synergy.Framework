@@ -200,10 +200,8 @@ public static class DateTimeOffsetExtensions
         {
             return new DateTimeOffset(self.Year, 7, 1, 0, 0, 0, 0, self.Offset);
         }
-        else
-        {
-            return new DateTimeOffset(self.Year, 10, 1, 0, 0, 0, 0, self.Offset);
-        }
+
+        return new DateTimeOffset(self.Year, 10, 1, 0, 0, 0, 0, self.Offset);
     }
 
     /// <summary>
@@ -230,10 +228,8 @@ public static class DateTimeOffsetExtensions
         {
             return new DateTimeOffset(self.Year, 9, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
         }
-        else
-        {
-            return new DateTimeOffset(self.Year, 12, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
-        }
+
+        return new DateTimeOffset(self.Year, 12, 1, 0, 0, 0, 0, self.Offset).AddMonths(1).AddTicks(-1);
     }
 
     /// <summary>

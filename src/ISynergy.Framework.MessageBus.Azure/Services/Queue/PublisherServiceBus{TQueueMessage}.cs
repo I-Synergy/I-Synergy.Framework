@@ -54,7 +54,7 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// <exception cref="ArgumentException">Entity should be type of IQueueMessage{TModel} instead of {queueMessage.GetType().FullName}</exception>
     public virtual async Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId)
     {
-        if (queueMessage is TQueueMessage model)
+        if (queueMessage is { } model)
         {
             await using var client = new ServiceBusClient(_option.ConnectionString);
             var sender = client.CreateSender(_option.QueueName);

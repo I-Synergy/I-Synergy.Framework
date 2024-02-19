@@ -59,7 +59,7 @@ public partial class MatrixTest
     [TestMethod]
     public void IsEqualTest3()
     {
-        double[] a = { 1, 1, 1 };
+        double[] a = [1, 1, 1];
         double x = 1;
         bool expected = true;
         bool actual;
@@ -127,7 +127,7 @@ public partial class MatrixTest
     [TestMethod]
     public void ColumnVectorTest()
     {
-        double[] values = { 1, 2, 3 };
+        double[] values = [1, 2, 3];
         double[,] expected = {
                                { 1 },
                                { 2 },
@@ -141,7 +141,7 @@ public partial class MatrixTest
     [TestMethod]
     public void RowVectorTest()
     {
-        double[] values = { 1, 2, 3 };
+        double[] values = [1, 2, 3];
         double[,] expected = {
                                 { 1, 2, 3 },
                              };
@@ -193,7 +193,7 @@ public partial class MatrixTest
         double from = 0;
         double to = 10;
         int steps = 11;
-        double[] expected = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        double[] expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         double[] actual = Vector.Interval(from, to, steps);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
@@ -231,7 +231,7 @@ public partial class MatrixTest
         double from = 10;
         double to = 0;
         int steps = 11;
-        double[] expected = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        double[] expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         double[] actual = Vector.Interval(from, to, steps);
 
         Assert.IsTrue(Matrix.IsEqual(expected.Reverse().ToArray(), actual));
@@ -242,7 +242,7 @@ public partial class MatrixTest
     {
         int from = -2;
         int to = 4;
-        double[] expected = { -2, -1, 0, 1, 2, 3, 4 };
+        double[] expected = [-2, -1, 0, 1, 2, 3, 4];
         double[] actual = Vector.Interval(from, to);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
@@ -254,7 +254,7 @@ public partial class MatrixTest
         double from = -1;
         double to = 1;
         double stepSize = 0.2;
-        double[] expected = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
+        double[] expected = [-1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
         double[] actual = Vector.Interval(from, to, stepSize);
         double[] round = Matrix.Round(actual, 15);
         Assert.IsTrue(Matrix.IsEqual(expected, round));
@@ -266,7 +266,7 @@ public partial class MatrixTest
         double from = 1;
         double to = -1;
         double stepSize = 0.2;
-        double[] expected = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
+        double[] expected = [-1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
         double[] actual = Vector.Interval(from, to, stepSize);
         Assert.IsTrue(Matrix.IsEqual(expected.Reverse().ToArray(), Matrix.Round(actual, 15)));
     }
@@ -276,7 +276,7 @@ public partial class MatrixTest
     {
         int from = -1;
         int to = 6;
-        double[] expected = { -1, 0, 1, 2, 3, 4, 5 };
+        double[] expected = [-1, 0, 1, 2, 3, 4, 5];
         double[] actual = Vector.Indices(from, to);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -286,7 +286,7 @@ public partial class MatrixTest
     {
         int from = 6;
         int to = -1;
-        double[] expected = { 5, 4, 3, 2, 1, 0, -1 };
+        double[] expected = [5, 4, 3, 2, 1, 0, -1];
         double[] actual = Vector.Indices(from, to);
         bool result = Matrix.IsEqual(expected, actual);
         Assert.IsTrue(result);
@@ -297,9 +297,9 @@ public partial class MatrixTest
     [TestMethod]
     public void ElementwiseMultiplyTest()
     {
-        double[] a = { 5, 2, 1 };
-        double[] b = { 5, 1, 2 };
-        double[] expected = { 25, 2, 2 };
+        double[] a = [5, 2, 1];
+        double[] b = [5, 1, 2];
+        double[] expected = [25, 2, 2];
         double[] actual = Elementwise.Multiply(a, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -307,9 +307,9 @@ public partial class MatrixTest
     [TestMethod]
     public void ElementwiseDivideTest2()
     {
-        double[] a = { 5, 2, 1 };
-        double[] b = { 5, 1, 2 };
-        double[] expected = { 1, 2, 0.5 };
+        double[] a = [5, 2, 1];
+        double[] b = [5, 1, 2];
+        double[] expected = [1, 2, 0.5];
         double[] actual = Elementwise.Divide(a, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -348,7 +348,7 @@ public partial class MatrixTest
             { 4, 5, 6 }
         };
 
-        double[] b = { 1, 2 };
+        double[] b = [1, 2];
         int dimension = 1;
         double[,] expected =
         {
@@ -360,7 +360,7 @@ public partial class MatrixTest
         double[,] actual = Elementwise.Divide(a, b, (VectorType)dimension);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
 
-        b = new double[] { 1, 2, 3 };
+        b = [1, 2, 3];
         dimension = 0;
         expected = new double[,]
         {
@@ -420,9 +420,9 @@ public partial class MatrixTest
     [TestMethod]
     public void ElementwisePowerTest()
     {
-        double[] x = { 1, 2, 3 };
+        double[] x = [1, 2, 3];
         double y = 2;
-        double[] expected = { 1, 4, 9 };
+        double[] expected = [1, 4, 9];
         double[] actual = Elementwise.Pow(x, y);
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -430,9 +430,9 @@ public partial class MatrixTest
     [TestMethod]
     public void ElementwiseMultiplyTest3()
     {
-        double[] a = { 0.20, 1.65 };
-        double[] b = { -0.72, 0.00 };
-        double[] expected = { -0.1440, 0 };
+        double[] a = [0.20, 1.65];
+        double[] b = [-0.72, 0.00];
+        double[] expected = [-0.1440, 0];
         double[] actual = Elementwise.Multiply(a, b);
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -491,22 +491,22 @@ public partial class MatrixTest
     public void AddTest1()
     {
         double[][] a =
-        {
-            new double[] { 2, 5, -1 },
-            new double[] { 5, 0,  2 },
-        };
+        [
+            [2, 5, -1],
+            [5, 0,  2]
+        ];
 
         double[][] b =
-        {
-            new double[] {  1, 5, 1 },
-            new double[] { -5, 2, 2 },
-        };
+        [
+            [1, 5, 1],
+            [-5, 2, 2]
+        ];
 
         double[][] expected =
-        {
-            new double[] {  3, 10, 0 },
-            new double[] {  0,  2, 4 },
-        };
+        [
+            [3, 10, 0],
+            [0,  2, 4]
+        ];
 
         double[][] actual = Elementwise.Add(a, b);
 
@@ -541,16 +541,16 @@ public partial class MatrixTest
     public void AddToDiagTest2()
     {
         double[][] a =
-        {
-            new double[] { 2, 5, -1 },
-            new double[] { 5, 0,  2 },
-        };
+        [
+            [2, 5, -1],
+            [5, 0,  2]
+        ];
 
         double[][] expected =
-        {
-            new double[] {  3, 5, -1 },
-            new double[] {  5, 1,  2 },
-        };
+        [
+            [3, 5, -1],
+            [5, 1,  2]
+        ];
 
         double[][] actual = Elementwise.AddToDiagonal(a, 1.0);
 
@@ -573,7 +573,7 @@ public partial class MatrixTest
             { 1,  5, 1 },
             { 0, -2, 1 },
         };
-        double[] b = { 1, 2 };
+        double[] b = [1, 2];
         int dimension = 1;
 
         double[,] expected =
@@ -586,7 +586,7 @@ public partial class MatrixTest
         CollectionAssert.AreEqual(expected, actual);
 
 
-        b = new double[] { 4, 1, 2 };
+        b = [4, 1, 2];
         dimension = 0;
 
         expected = new double[,]
@@ -627,10 +627,10 @@ public partial class MatrixTest
     [TestMethod]
     public void ElementwiseMultiplyTest5()
     {
-        double[] a = { 2, 1, 6, 1 };
-        double[] b = { 5, 1, 2, 0 };
+        double[] a = [2, 1, 6, 1];
+        double[] b = [5, 1, 2, 0];
 
-        double[] expected = { 10, 1, 12, 0 };
+        double[] expected = [10, 1, 12, 0];
         double[] actual = Elementwise.Multiply(a, b);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
@@ -640,7 +640,7 @@ public partial class MatrixTest
     public void AddMatrixAndVectorTest()
     {
         double[,] a = Matrix.Create(3, 5, 0.0);
-        double[] v = { 1, 2, 3, 4, 5 };
+        double[] v = [1, 2, 3, 4, 5];
         double[,] actual;
 
 
@@ -656,7 +656,7 @@ public partial class MatrixTest
 
 
         double[,] b = Matrix.Create(5, 4, 0.0);
-        double[] u = { 1, 2, 3, 4, 5 };
+        double[] u = [1, 2, 3, 4, 5];
 
         double[,] expected2 =
         {
@@ -727,8 +727,8 @@ public partial class MatrixTest
         double[,] iactual = Elementwise.Abs(ivalue);
         Assert.IsTrue(iactual.IsEqual(iexpected));
 
-        double[] avalue = { -1, 2 };
-        double[] aexpected = { 1, 2 };
+        double[] avalue = [-1, 2];
+        double[] aexpected = [1, 2];
 
         double[] aactual = Matrix.Abs(avalue);
         Assert.IsTrue(aactual.IsEqual(aexpected));
@@ -760,7 +760,7 @@ public partial class MatrixTest
         // https://github.com/accord-net/framework/issues/927
         int rows = 100;
         double[,] matrix = Matrix.Zeros(rows: rows, columns: 3);
-        double[] vec = { 1, 2, 3 }; // this is a row-vector with the same length as the number of columns
+        double[] vec = [1, 2, 3]; // this is a row-vector with the same length as the number of columns
 
         double[,] broadcasted1 = matrix.Add(vec, dimension: 0);
         double[,] broadcasted2 = matrix.Add(vec, dimension: VectorType.RowVector);
@@ -785,7 +785,7 @@ public partial class MatrixTest
     [TestMethod]
     public void ToMatrixTest()
     {
-        double[] array = { 1, 5, 2 };
+        double[] array = [1, 5, 2];
         double[,] expected = { { 1, 5, 2 } };
         double[,] actual = Matrix.ToMatrix(array);
         CollectionAssert.AreEqual(expected, actual);
@@ -807,15 +807,15 @@ public partial class MatrixTest
         double[] expected;
         double[] actual;
 
-        expected = new double[] { 4.20, -3.14, 21 };
+        expected = [4.20, -3.14, 21];
         actual = table.Columns["Double"].ToArray();
         CollectionAssert.AreEqual(expected, actual);
 
-        expected = new double[] { 42, -17, 0 };
+        expected = [42, -17, 0];
         actual = table.Columns["Integer"].ToArray();
         CollectionAssert.AreEqual(expected, actual);
 
-        expected = new double[] { 1, 0, 0 };
+        expected = [1, 0, 0];
         actual = table.Columns["Boolean"].ToArray();
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -833,11 +833,11 @@ public partial class MatrixTest
         table.Rows.Add(21.00, 0, false);
 
         double[][] expected =
-        {
-            new double[] {  4.20,  42, 1 },
-            new double[] { -3.14, -17, 0 },
-            new double[] { 21.00,   0, 0 },
-        };
+        [
+            [4.20,  42, 1],
+            [-3.14, -17, 0],
+            [21.00,   0, 0]
+        ];
 
         double[][] actual = table.ToJagged();
 
@@ -846,7 +846,7 @@ public partial class MatrixTest
                 Assert.AreEqual(expected[i][j], actual[i][j]);
 
 
-        string[] expectedNames = { "Double", "Integer", "Boolean" };
+        string[] expectedNames = ["Double", "Integer", "Boolean"];
         string[] actualNames;
 
         table.ToJagged(out actualNames);
@@ -878,7 +878,7 @@ public partial class MatrixTest
         CollectionAssert.AreEqual(expected, actual);
 
 
-        string[] expectedNames = { "Double", "Integer", "Boolean" };
+        string[] expectedNames = ["Double", "Integer", "Boolean"];
         string[] actualNames;
 
         table.ToMatrix(out actualNames);
@@ -911,8 +911,8 @@ public partial class MatrixTest
     [TestMethod]
     public void ProductsTest1()
     {
-        double[] u = { 1, 6, 3 };
-        double[] v = { 9, 4, 2 };
+        double[] u = [1, 6, 3];
+        double[] v = [9, 4, 2];
 
         // products
         double inner = Matrix.Dot(u, v);    // 39.0
@@ -943,9 +943,9 @@ public partial class MatrixTest
         double[] log = u.Log();   // { 0, 1.79, 1.09 }
         double[] cos = u.Apply(Math.Cos); // { 0.54, 0.96, -0.989 }
 
-        Assert.IsTrue(abs.IsEqual(new double[] { 1, 6, 3 }));
-        Assert.IsTrue(log.IsEqual(new double[] { 0, 1.79, 1.09 }, 1e-2));
-        Assert.IsTrue(cos.IsEqual(new double[] { 0.54, 0.96, -0.989 }, 1e-2));
+        Assert.IsTrue(abs.IsEqual([1, 6, 3]));
+        Assert.IsTrue(log.IsEqual([0, 1.79, 1.09], 1e-2));
+        Assert.IsTrue(cos.IsEqual([0.54, 0.96, -0.989], 1e-2));
 
         double[,] m =
         {
@@ -976,7 +976,7 @@ public partial class MatrixTest
             { 5, 6, 7, 8 }
         };
 
-        double[] expected0 = { 6, 8, 10, 12 };
+        double[] expected0 = [6, 8, 10, 12];
 
         double[] actual = Matrix.Sum(value, 0);
         Assert.IsTrue(expected0.IsEqual(actual));
@@ -984,7 +984,7 @@ public partial class MatrixTest
         double[] actual0 = Matrix.Sum(value, 0);
         Assert.IsTrue(expected0.IsEqual(actual0));
 
-        double[] expected1 = { 10, 26 };
+        double[] expected1 = [10, 26];
         double[] actual1 = Matrix.Sum(value, 1);
         Assert.IsTrue(expected1.IsEqual(actual1));
 
@@ -993,7 +993,7 @@ public partial class MatrixTest
     [TestMethod]
     public void SumTest1()
     {
-        double[] value = { 1, 2, 3 };
+        double[] value = [1, 2, 3];
         double expected = 6;
         double actual = Matrix.Sum(value);
         Assert.AreEqual(expected, actual);
@@ -1011,7 +1011,7 @@ public partial class MatrixTest
         double[] expected;
         double[] actual;
 
-        expected = new double[] { 7, 5, 1 };
+        expected = [7, 5, 1];
 
         actual = Matrix.Sum(value, 0);
         CollectionAssert.AreEqual(expected, actual);
@@ -1019,7 +1019,7 @@ public partial class MatrixTest
         actual = Matrix.Sum(value, 0);
         CollectionAssert.AreEqual(expected, actual);
 
-        expected = new double[] { 6, 7 };
+        expected = [6, 7];
         actual = Matrix.Sum(value, 1);
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -1036,7 +1036,7 @@ public partial class MatrixTest
         double[] expected;
         double[] actual;
 
-        expected = new double[] { 8, 5.1, 1.7 };
+        expected = [8, 5.1, 1.7];
 
         actual = Matrix.Sum(value, 0);
         Assert.IsTrue(expected.IsEqual(actual, 0.000000001));
@@ -1044,7 +1044,7 @@ public partial class MatrixTest
         actual = Matrix.Sum(value, 0);
         Assert.IsTrue(expected.IsEqual(actual, 0.000000001));
 
-        expected = new double[] { 6.3, 8.5 };
+        expected = [6.3, 8.5];
         actual = Matrix.Sum(value, 1);
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -1052,7 +1052,7 @@ public partial class MatrixTest
     [TestMethod]
     public void SumTest5()
     {
-        int[] value = { 9, -2, 1 };
+        int[] value = [9, -2, 1];
         int expected = 8;
         int actual = Matrix.Sum(value);
         Assert.AreEqual(expected, actual);
@@ -1061,7 +1061,7 @@ public partial class MatrixTest
     [TestMethod]
     public void SumTest6()
     {
-        double[] value = { 9.2, -2, 1 };
+        double[] value = [9.2, -2, 1];
         double expected = 8.2;
         double actual = Matrix.Sum(value);
         Assert.AreEqual(expected, actual);
@@ -1070,8 +1070,8 @@ public partial class MatrixTest
     [TestMethod]
     public void CumulativeSumTest()
     {
-        double[] expected1 = { 1, 3, 6, 10, 15 };
-        double[] actual1 = Matrix.CumulativeSum(new double[] { 1, 2, 3, 4, 5 });
+        double[] expected1 = [1, 3, 6, 10, 15];
+        double[] actual1 = Matrix.CumulativeSum([1, 2, 3, 4, 5]);
 
         Assert.IsTrue(actual1.IsEqual(expected1));
 
@@ -1083,20 +1083,20 @@ public partial class MatrixTest
 
         double[][] actual2 = A.ToJagged().CumulativeSum(1);
         double[][] expected2 =
-        {
-            new double[] { 1, 2, 3 },
-            new double[] { 5, 7, 9 }
-        };
+        [
+            [1, 2, 3],
+            [5, 7, 9]
+        ];
 
         Assert.IsTrue(actual2.IsEqual(expected2));
 
         double[][] actual3 = A.ToJagged().CumulativeSum(0);
         double[][] expected3 =
-        {
-            new double[] {1,  4 },
-            new double[] {3,  9 },
-            new double[] {6, 15 }
-        };
+        [
+            [1,  4],
+            [3,  9],
+            [6, 15]
+        ];
 
         Assert.IsTrue(actual3.IsEqual(expected3));
     }
@@ -1104,7 +1104,7 @@ public partial class MatrixTest
     [TestMethod]
     public void ProductTest()
     {
-        double[] value = { -1, 2.4, 7 };
+        double[] value = [-1, 2.4, 7];
         double expected = -16.8;
         double actual = Matrix.Product(value);
         Assert.AreEqual(expected, actual, 0.00001);
@@ -1116,7 +1116,7 @@ public partial class MatrixTest
     public void CombineTest()
     {
         int[][,] matrices =
-        {
+        [
             new int[,]
             {
                   {0, 1}
@@ -1132,7 +1132,7 @@ public partial class MatrixTest
             {
                   {0, 2}
             }
-        };
+        ];
 
 
         int[,] expected =
@@ -1154,12 +1154,10 @@ public partial class MatrixTest
     {
         double[][] vectors = new double[][]
         {
-            new double[] { 0, 1, 2 },
-            new double[] { 3, 4, },
-            new double[] { 5, 6, 7, 8, 9},
+            [0, 1, 2], [3, 4], [5, 6, 7, 8, 9],
         };
 
-        double[] expected = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        double[] expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
         double[] actual = Matrix.Concatenate(vectors);
 
@@ -1170,10 +1168,10 @@ public partial class MatrixTest
     [TestMethod]
     public void CombineTest3()
     {
-        double[] a1 = new double[] { 1, 2 };
-        double[] a2 = new double[] { 3, 4, 5 };
+        double[] a1 = [1, 2];
+        double[] a2 = [3, 4, 5];
 
-        double[] expected = new double[] { 1, 2, 3, 4, 5 };
+        double[] expected = [1, 2, 3, 4, 5];
         double[] actual = Matrix.Concatenate(a1, a2);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
@@ -1182,10 +1180,10 @@ public partial class MatrixTest
     [TestMethod]
     public void CombineTest4()
     {
-        double[] a1 = new double[] { 1, 2 };
+        double[] a1 = [1, 2];
         double a2 = 3;
 
-        double[] expected = new double[] { 1, 2, 3 };
+        double[] expected = [1, 2, 3];
         double[] actual = Matrix.Concatenate(a1, a2);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
@@ -1195,25 +1193,25 @@ public partial class MatrixTest
     public void ConcatenateTest2()
     {
         double[][] a =
-        {
-            new double[] { 1, 2 },
-            new double[] { 6, 7 },
-            new double[] { 11, 12 },
-        };
+        [
+            [1, 2],
+            [6, 7],
+            [11, 12]
+        ];
 
         double[][] b =
-        {
-            new double[] {  3,  4,  5 },
-            new double[] {  8,  9, 10 },
-            new double[] { 13, 14, 15 },
-        };
+        [
+            [3,  4,  5],
+            [8,  9, 10],
+            [13, 14, 15]
+        ];
 
         double[][] expected =
-        {
-            new double[] {  1,  2,  3,  4,  5 },
-            new double[] {  6,  7,  8,  9, 10 },
-            new double[] { 11, 12, 13, 14, 15 },
-        };
+        [
+            [1,  2,  3,  4,  5],
+            [6,  7,  8,  9, 10],
+            [11, 12, 13, 14, 15]
+        ];
 
         {
             double[][] actual = Matrix.Concatenate(a, b);
@@ -1240,7 +1238,7 @@ public partial class MatrixTest
             { 1, 1 }
         };
 
-        double[,] actual = Matrix.Stack(new[] { A, B });
+        double[,] actual = Matrix.Stack([A, B]);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -1250,8 +1248,8 @@ public partial class MatrixTest
     [TestMethod]
     public void OuterProductTest()
     {
-        double[] a = { 1, 2, 3, 4 };
-        double[] b = { 1, 2, 3, 4 };
+        double[] a = [1, 2, 3, 4];
+        double[] b = [1, 2, 3, 4];
         double[,] expected =
         {
             { 1.000,  2.000,  3.000,  4.000 },
@@ -1267,8 +1265,8 @@ public partial class MatrixTest
     [TestMethod]
     public void OuterProductTestDifferentOverloads()
     {
-        double[] a = { 1, 2, 3 };
-        double[] b = { 4, 5 };
+        double[] a = [1, 2, 3];
+        double[] b = [4, 5];
 
         double[,] expected = new double[,]
         {
@@ -1293,10 +1291,10 @@ public partial class MatrixTest
     public void CartesianProductTest()
     {
         int[][] sequences =
-        {
-            new int[] { 1, 2, 3},
-            new int[] { 4, 5, 6},
-        };
+        [
+            [1, 2, 3],
+            [4, 5, 6]
+        ];
 
         int[][] actual = Matrix.Cartesian(sequences);
 
@@ -1306,15 +1304,15 @@ public partial class MatrixTest
 
         int[][] points = list.ToArray();
 
-        Assert.IsTrue(points[0].IsEqual(new int[] { 1, 4 }));
-        Assert.IsTrue(points[1].IsEqual(new int[] { 1, 5 }));
-        Assert.IsTrue(points[2].IsEqual(new int[] { 1, 6 }));
-        Assert.IsTrue(points[3].IsEqual(new int[] { 2, 4 }));
-        Assert.IsTrue(points[4].IsEqual(new int[] { 2, 5 }));
-        Assert.IsTrue(points[5].IsEqual(new int[] { 2, 6 }));
-        Assert.IsTrue(points[6].IsEqual(new int[] { 3, 4 }));
-        Assert.IsTrue(points[7].IsEqual(new int[] { 3, 5 }));
-        Assert.IsTrue(points[8].IsEqual(new int[] { 3, 6 }));
+        Assert.IsTrue(points[0].IsEqual([1, 4]));
+        Assert.IsTrue(points[1].IsEqual([1, 5]));
+        Assert.IsTrue(points[2].IsEqual([1, 6]));
+        Assert.IsTrue(points[3].IsEqual([2, 4]));
+        Assert.IsTrue(points[4].IsEqual([2, 5]));
+        Assert.IsTrue(points[5].IsEqual([2, 6]));
+        Assert.IsTrue(points[6].IsEqual([3, 4]));
+        Assert.IsTrue(points[7].IsEqual([3, 5]));
+        Assert.IsTrue(points[8].IsEqual([3, 6]));
 
     }
 
@@ -1322,22 +1320,22 @@ public partial class MatrixTest
     public void CartesianProductTest2()
     {
         int[][] sequences =
-        {
-            new int[] { 1, 2, 3},
-            new int[] { 4, 5, 6},
-        };
+        [
+            [1, 2, 3],
+            [4, 5, 6]
+        ];
 
         int[][] points = Matrix.Cartesian(sequences);
 
-        Assert.IsTrue(points[0].IsEqual(new int[] { 1, 4 }));
-        Assert.IsTrue(points[1].IsEqual(new int[] { 1, 5 }));
-        Assert.IsTrue(points[2].IsEqual(new int[] { 1, 6 }));
-        Assert.IsTrue(points[3].IsEqual(new int[] { 2, 4 }));
-        Assert.IsTrue(points[4].IsEqual(new int[] { 2, 5 }));
-        Assert.IsTrue(points[5].IsEqual(new int[] { 2, 6 }));
-        Assert.IsTrue(points[6].IsEqual(new int[] { 3, 4 }));
-        Assert.IsTrue(points[7].IsEqual(new int[] { 3, 5 }));
-        Assert.IsTrue(points[8].IsEqual(new int[] { 3, 6 }));
+        Assert.IsTrue(points[0].IsEqual([1, 4]));
+        Assert.IsTrue(points[1].IsEqual([1, 5]));
+        Assert.IsTrue(points[2].IsEqual([1, 6]));
+        Assert.IsTrue(points[3].IsEqual([2, 4]));
+        Assert.IsTrue(points[4].IsEqual([2, 5]));
+        Assert.IsTrue(points[5].IsEqual([2, 6]));
+        Assert.IsTrue(points[6].IsEqual([3, 4]));
+        Assert.IsTrue(points[7].IsEqual([3, 5]));
+        Assert.IsTrue(points[8].IsEqual([3, 6]));
 
     }
 
@@ -1345,22 +1343,22 @@ public partial class MatrixTest
     public void CartesianProductTest3()
     {
         int[][] sequences =
-        {
-            new int[] { 1, 2, 3},
-            new int[] { 4, 5, 6},
-        };
+        [
+            [1, 2, 3],
+            [4, 5, 6]
+        ];
 
         int[][] points = sequences[0].Cartesian(sequences[1]);
 
-        Assert.IsTrue(points[0].IsEqual(new int[] { 1, 4 }));
-        Assert.IsTrue(points[1].IsEqual(new int[] { 1, 5 }));
-        Assert.IsTrue(points[2].IsEqual(new int[] { 1, 6 }));
-        Assert.IsTrue(points[3].IsEqual(new int[] { 2, 4 }));
-        Assert.IsTrue(points[4].IsEqual(new int[] { 2, 5 }));
-        Assert.IsTrue(points[5].IsEqual(new int[] { 2, 6 }));
-        Assert.IsTrue(points[6].IsEqual(new int[] { 3, 4 }));
-        Assert.IsTrue(points[7].IsEqual(new int[] { 3, 5 }));
-        Assert.IsTrue(points[8].IsEqual(new int[] { 3, 6 }));
+        Assert.IsTrue(points[0].IsEqual([1, 4]));
+        Assert.IsTrue(points[1].IsEqual([1, 5]));
+        Assert.IsTrue(points[2].IsEqual([1, 6]));
+        Assert.IsTrue(points[3].IsEqual([2, 4]));
+        Assert.IsTrue(points[4].IsEqual([2, 5]));
+        Assert.IsTrue(points[5].IsEqual([2, 6]));
+        Assert.IsTrue(points[6].IsEqual([3, 4]));
+        Assert.IsTrue(points[7].IsEqual([3, 5]));
+        Assert.IsTrue(points[8].IsEqual([3, 6]));
 
     }
     #endregion
@@ -1615,14 +1613,14 @@ public partial class MatrixTest
            {  0, -1,  3 }
         };
 
-        double[] rhs = { 5, 0, 1 };
+        double[] rhs = [5, 0, 1];
 
         double[] expected =
-        {
+        [
             1.6522,
             0.5652,
-            0.5217,
-        };
+            0.5217
+        ];
 
         double[] actual = Matrix.Solve(value, rhs);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
@@ -1641,9 +1639,9 @@ public partial class MatrixTest
            {  0, -1,  2 }
         };
 
-        double[] b = { 1, 2, 3 };
+        double[] b = [1, 2, 3];
 
-        double[] expected = { 2.5000, 4.0000, 3.5000 };
+        double[] expected = [2.5000, 4.0000, 3.5000];
 
         double[] actual = Matrix.Solve(value, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
@@ -1670,7 +1668,7 @@ public partial class MatrixTest
     [TestMethod]
     public void NullTest2()
     {
-        double[] value = new double[] { 1, 2, 3 };
+        double[] value = [1, 2, 3];
 
         double[,] expected =
         {
@@ -1692,11 +1690,11 @@ public partial class MatrixTest
     [TestMethod]
     public void FindTest2()
     {
-        double[] value = new double[] { 1, 2, 3 };
+        double[] value = [1, 2, 3];
 
         int[] expected =
-        {
-        };
+        [
+        ];
 
         int[] actual = Matrix.Find(value, x => x < 0);
 
@@ -1813,7 +1811,7 @@ public partial class MatrixTest
             { 5,     1,     1 }
         };
 
-        double[] b = { 2, 6, 1 };
+        double[] b = [2, 6, 1];
         double[,] result = new double[6, 3];
         Matrix.DivideByDiagonal(a, b, result);
 
@@ -1950,10 +1948,10 @@ public partial class MatrixTest
     public void PositiveDefiniteJaggedTest()
     {
         double[][] m =
-        {
-            new double[] { 2, 2 },
-            new double[] { 2, 2 },
-        };
+        [
+            [2, 2],
+            [2, 2]
+        ];
 
         bool expected = false;
         bool actual = Matrix.IsPositiveDefinite(m);
@@ -1964,11 +1962,11 @@ public partial class MatrixTest
     public void PositiveDefiniteJaggedTest2()
     {
         double[][] m =
-        {
-            new double[] {  2, -1,  0 },
-            new double[] { -1,  2, -1 },
-            new double[] {  0, -1,  2 },
-        };
+        [
+            [2, -1,  0],
+            [-1,  2, -1],
+            [0, -1,  2]
+        ];
 
         bool expected = true;
         bool actual = Matrix.IsPositiveDefinite(m);
@@ -2033,10 +2031,10 @@ public partial class MatrixTest
     public void IsSymmetricTest_jagged()
     {
         double[][] matrix =
-        {
-            new[] { 1, 2.00000005 },
-            new[] { 2.0000003, 4 }
-        };
+        [
+            [1, 2.00000005],
+            [2.0000003, 4]
+        ];
 
         Assert.IsFalse(Matrix.IsSymmetric(matrix, atol: 1e-10));
         Assert.IsTrue(Matrix.IsSymmetric(matrix, atol: 1e-3));
@@ -2045,7 +2043,7 @@ public partial class MatrixTest
     [TestMethod]
     public void MaxMinTest1()
     {
-        double[] a = { 5 };
+        double[] a = [5];
 
         int imax;
         int imin;
@@ -2073,8 +2071,8 @@ public partial class MatrixTest
         // Max
         int dimension = 1;
         int[] imax = null;
-        int[] imaxExpected = new int[] { 2, 0, 3 };
-        double[] expected = new double[] { 3, 9, 11 };
+        int[] imaxExpected = [2, 0, 3];
+        double[] expected = [3, 9, 11];
         double[] actual;
         actual = Matrix.Max(matrix, dimension, out imax);
 
@@ -2083,8 +2081,8 @@ public partial class MatrixTest
 
 
         dimension = 0;
-        imaxExpected = new int[] { 1, 2, 2, 2 };
-        expected = new double[] { 9, 4, 4, 11 };
+        imaxExpected = [1, 2, 2, 2];
+        expected = [9, 4, 4, 11];
 
         actual = Matrix.Max(matrix, dimension, out imax);
 
@@ -2095,8 +2093,8 @@ public partial class MatrixTest
         // Min
         dimension = 1;
         int[] imin = null;
-        int[] iminExpected = new int[] { 0, 1, 0 };
-        expected = new double[] { 0, 1, 2 };
+        int[] iminExpected = [0, 1, 0];
+        expected = [0, 1, 2];
         actual = Matrix.Min(matrix, dimension, out imin);
 
         Assert.IsTrue(Matrix.IsEqual(iminExpected, imin));
@@ -2104,8 +2102,8 @@ public partial class MatrixTest
 
 
         dimension = 0;
-        iminExpected = new int[] { 0, 0, 0, 0 };
-        expected = new double[] { 0, 1, 3, 1 };
+        iminExpected = [0, 0, 0, 0];
+        expected = [0, 1, 3, 1];
         actual = Matrix.Min(matrix, dimension, out imin);
 
         Assert.IsTrue(Matrix.IsEqual(iminExpected, imin));
@@ -2153,25 +2151,25 @@ public partial class MatrixTest
     public void UpperTriangularTest2()
     {
         double[][] U =
-        {
-            new double[] { 1, 2, 1, },
-            new double[] { 0, 2, 1, },
-            new double[] { 0, 0, 1, },
-        };
+        [
+            [1, 2, 1],
+            [0, 2, 1],
+            [0, 0, 1]
+        ];
 
         double[][] L =
-        {
-            new double[] { 1, 0, 0, },
-            new double[] { 5, 2, 0, },
-            new double[] { 2, 1, 1, },
-        };
+        [
+            [1, 0, 0],
+            [5, 2, 0],
+            [2, 1, 1]
+        ];
 
         double[][] D =
-        {
-            new double[] { 1, 0, 0, },
-            new double[] { 0, 2, 0, },
-            new double[] { 0, 0, 0, },
-        };
+        [
+            [1, 0, 0],
+            [0, 2, 0],
+            [0, 0, 0]
+        ];
 
         Assert.IsTrue(U.IsUpperTriangular());
         Assert.IsFalse(U.IsLowerTriangular());
@@ -2257,7 +2255,7 @@ public partial class MatrixTest
     [TestMethod]
     public void TransposeTest()
     {
-        int[] value = { 1, 5, 2 };
+        int[] value = [1, 5, 2];
         int[,] expected =
         {
             { 1 },
@@ -2328,7 +2326,7 @@ public partial class MatrixTest
             { 7, 5, 1, 2, 8 },
         };
 
-        double[,] actual = a.Transpose(new int[] { 1, 0 });
+        double[,] actual = a.Transpose([1, 0]);
         double[,] expected = a.Transpose();
 
         Assert.IsTrue(actual.IsEqual(expected));
@@ -2339,11 +2337,11 @@ public partial class MatrixTest
     [TestMethod]
     public void ApplyTest()
     {
-        double[] data = { 42, 1, -5 };
+        double[] data = [42, 1, -5];
         Func<double, double> func = x => x - x;
 
         double[] actual;
-        double[] expected = { 0, 0, 0 };
+        double[] expected = [0, 0, 0];
 
         actual = Matrix.Apply(data, func);
         CollectionAssert.AreEqual(expected, actual);
@@ -2387,11 +2385,11 @@ public partial class MatrixTest
     [TestMethod]
     public void ApplyTest3()
     {
-        double[] data = { 42, 1, -5 };
+        double[] data = [42, 1, -5];
         Func<double, int> func = x => (int)(x - x);
 
         int[] actual;
-        int[] expected = { 0, 0, 0 };
+        int[] expected = [0, 0, 0];
 
         actual = Matrix.Apply(data, func);
         CollectionAssert.AreEqual(expected, actual);
@@ -2447,17 +2445,17 @@ public partial class MatrixTest
     [TestMethod]
     public void ApplyTest5()
     {
-        int[] matrix = { 1, 2, 3 };
+        int[] matrix = [1, 2, 3];
 
         Func<int, int, string> func =
             (x, i) => "Element at (" + i + ") is " + x;
 
         string[] expected =
-        {
+        [
             "Element at (0) is 1",
             "Element at (1) is 2",
-            "Element at (2) is 3",
-        };
+            "Element at (2) is 3"
+        ];
 
         string[] actual = Matrix.Apply(matrix, func);
 
@@ -2467,10 +2465,10 @@ public partial class MatrixTest
     [TestMethod]
     public void ApplyInPlaceTest()
     {
-        float[] vector = { 1, 2, 3 };
+        float[] vector = [1, 2, 3];
         Func<float, int, float> func = (x, i) => x + i;
         Matrix.Apply(vector, func, vector);
-        float[] expected = { 1, 3, 5 };
+        float[] expected = [1, 3, 5];
 
         Assert.IsTrue(expected.IsEqual(vector));
     }
@@ -2481,8 +2479,8 @@ public partial class MatrixTest
     [TestMethod]
     public void CeilingTest1()
     {
-        double[] vector = { 0.1, 0.5, 1.5 };
-        double[] expected = { 1.0, 1.0, 2.0 };
+        double[] vector = [0.1, 0.5, 1.5];
+        double[] expected = [1.0, 1.0, 2.0];
         double[] actual = Matrix.Ceiling(vector);
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -2511,8 +2509,8 @@ public partial class MatrixTest
     [TestMethod]
     public void FloorTest1()
     {
-        double[] vector = { 0.1, 0.5, 1.5 };
-        double[] expected = { 0.0, 0.0, 1.0 };
+        double[] vector = [0.1, 0.5, 1.5];
+        double[] expected = [0.0, 0.0, 1.0];
         double[] actual = Matrix.Floor(vector);
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -2581,31 +2579,31 @@ public partial class MatrixTest
     public void ExpandTest()
     {
         double[][] data =
-        {
-           new double[] { 0, 0 },
-           new double[] { 0, 1 },
-           new double[] { 1, 0 },
-           new double[] { 1, 1 }
-        };
+        [
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [1, 1]
+        ];
 
         int[] count =
-        {
+        [
             2,
             1,
             3,
             1
-        };
+        ];
 
         double[][] expected =
-        {
-            new double[] { 0, 0 },
-            new double[] { 0, 0 }, // 2
-            new double[] { 0, 1 }, // 1
-            new double[] { 1, 0 },
-            new double[] { 1, 0 },
-            new double[] { 1, 0 }, // 3
-            new double[] { 1, 1 }, // 1
-        };
+        [
+            [0, 0],
+            [0, 0], // 2
+            [0, 1], // 1
+            [1, 0],
+            [1, 0],
+            [1, 0], // 3
+            [1, 1] // 1
+        ];
 
         double[][] actual = Matrix.Expand(data, count);
 
@@ -2668,10 +2666,10 @@ public partial class MatrixTest
         Func<double, bool> func = x => x == 0;
         bool firstOnly = false;
         int[][] expected =
-        {
-            new int[] { 0, 2 },
-            new int[] { 1, 1 },
-        };
+        [
+            [0, 2],
+            [1, 1]
+        ];
 
         int[][] actual = Matrix.Find(data, func, firstOnly);
 
@@ -2689,7 +2687,7 @@ public partial class MatrixTest
             {  0,  2, 4 },
         };
 
-        double[] column = { 1, 1 };
+        double[] column = [1, 1];
 
         double[,] expected =
         {
@@ -2705,7 +2703,7 @@ public partial class MatrixTest
     public void InsertRowTest()
     {
         double[,] I = Matrix.Identity(3);
-        double[] row = Vector.Create(3, new[] { 1.0, 1.0, 1.0 });
+        double[] row = Vector.Create(3, [1.0, 1.0, 1.0]);
 
         double[,] expected;
         double[,] actual;
@@ -2801,11 +2799,11 @@ public partial class MatrixTest
     public void InsertRowTest5()
     {
         double[][] a =
-        {
-           new double[] { 100.00, 27.56, 33.89},
-           new double[] { 27.56, 100.00, 24.76},
-           new double[] { 33.89, 24.76, 100.00}
-         };
+        [
+            [100.00, 27.56, 33.89],
+            [27.56, 100.00, 24.76],
+            [33.89, 24.76, 100.00]
+        ];
 
         Assert.AreEqual(3, a.Length);
         Assert.AreEqual(3, a[0].Length);
@@ -2873,11 +2871,11 @@ public partial class MatrixTest
     public void InsertRowTest4()
     {
         double[][] a =
-        {
-           new double[] { 100.00, 27.56, 33.89},
-           new double[] { 27.56, 100.00, 24.76},
-           new double[] { 33.89, 24.76, 100.00}
-         };
+        [
+            [100.00, 27.56, 33.89],
+            [27.56, 100.00, 24.76],
+            [33.89, 24.76, 100.00]
+        ];
 
         Assert.AreEqual(3, a.Length);
         Assert.AreEqual(3, a[0].Length);
@@ -2906,21 +2904,21 @@ public partial class MatrixTest
     [TestMethod]
     public void ConvolveTest()
     {
-        double[] a = { 3, 4, 5 };
-        double[] kernel = { 2, 1 };
-        double[] expected = { 6, 11, 14, 5 };
+        double[] a = [3, 4, 5];
+        double[] kernel = [2, 1];
+        double[] expected = [6, 11, 14, 5];
         double[] actual = Matrix.Convolve(a, kernel);
         CollectionAssert.AreEqual(expected, actual);
 
-        a = new double[] { 1, 2, 3, 4 };
-        kernel = new double[] { 1, 2, 1 };
-        expected = new double[] { 1, 4, 8, 12, 11, 4 };
+        a = [1, 2, 3, 4];
+        kernel = [1, 2, 1];
+        expected = [1, 4, 8, 12, 11, 4];
         actual = Matrix.Convolve(a, kernel);
         CollectionAssert.AreEqual(expected, actual);
 
-        a = new double[] { 1, 2, 3, 4 };
-        kernel = new double[] { 0, 1, 0 };
-        expected = new double[] { 0, 1, 2, 3, 4, 0 };
+        a = [1, 2, 3, 4];
+        kernel = [0, 1, 0];
+        expected = [0, 1, 2, 3, 4, 0];
         actual = Matrix.Convolve(a, kernel);
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -2928,33 +2926,33 @@ public partial class MatrixTest
     [TestMethod]
     public void ConvolveTest2()
     {
-        double[] a = { 3, 4, 5 };
-        double[] kernel = { 2, 1 };
-        double[] expected = { 6, 11, 14 };
+        double[] a = [3, 4, 5];
+        double[] kernel = [2, 1];
+        double[] expected = [6, 11, 14];
         double[] actual = Matrix.Convolve(a, kernel, true);
         CollectionAssert.AreEqual(expected, actual);
 
-        a = new double[] { 1, 2, 3, 4 };
-        kernel = new double[] { 1, 2, 1 };
-        expected = new double[] { 4, 8, 12, 11 };
+        a = [1, 2, 3, 4];
+        kernel = [1, 2, 1];
+        expected = [4, 8, 12, 11];
         actual = Matrix.Convolve(a, kernel, true);
         CollectionAssert.AreEqual(expected, actual);
 
-        a = new double[] { 1, 2, 3, 4 };
-        kernel = new double[] { 0, 1, 0 };
-        expected = new double[] { 1, 2, 3, 4 };
+        a = [1, 2, 3, 4];
+        kernel = [0, 1, 0];
+        expected = [1, 2, 3, 4];
         actual = Matrix.Convolve(a, kernel, true);
         CollectionAssert.AreEqual(expected, actual);
 
-        a = new double[] { 1, 2, 3, 4, 5, 6, 7 };
-        kernel = new double[] { 0, 1, 0 };
-        expected = new double[] { 1, 2, 3, 4, 5, 6, 7 };
+        a = [1, 2, 3, 4, 5, 6, 7];
+        kernel = [0, 1, 0];
+        expected = [1, 2, 3, 4, 5, 6, 7];
         actual = Matrix.Convolve(a, kernel, true);
         CollectionAssert.AreEqual(expected, actual);
 
-        a = new double[] { 1, 2 };
-        kernel = new double[] { 0, 1, 0 };
-        expected = new double[] { 1, 2 };
+        a = [1, 2];
+        kernel = [0, 1, 0];
+        expected = [1, 2];
         actual = Matrix.Convolve(a, kernel, true);
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -2989,11 +2987,11 @@ public partial class MatrixTest
     [TestMethod]
     public void TensorProductTest2()
     {
-        double[] a = { 1, 2 };
+        double[] a = [1, 2];
 
-        double[] b = { 4, 5, 6 };
+        double[] b = [4, 5, 6];
 
-        double[] expected = { 4, 5, 6, 8, 10, 12 };
+        double[] expected = [4, 5, 6, 8, 10, 12];
 
         double[] actual = Matrix.Kronecker(a, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
@@ -3011,7 +3009,7 @@ public partial class MatrixTest
             { 3, 4 },
         };
 
-        double[] vector = { 5, 6 };
+        double[] vector = [5, 6];
 
         double[,] expected =
         {
@@ -3035,37 +3033,37 @@ public partial class MatrixTest
         double rowSteps = 0.5f;
         double colSteps = 0.5f;
         double[][] expected =
-        {
-            new double[] { -1.0, -1.0 },
-            new double[] { -1.0, -0.5 },
-            new double[] { -1.0,  0.0 },
-            new double[] { -1.0,  0.5 },
-            new double[] { -1.0,  1.0 },
+        [
+            [-1.0, -1.0],
+            [-1.0, -0.5],
+            [-1.0,  0.0],
+            [-1.0,  0.5],
+            [-1.0,  1.0],
 
-            new double[] { -0.5, -1.0 },
-            new double[] { -0.5, -0.5 },
-            new double[] { -0.5,  0.0 },
-            new double[] { -0.5,  0.5 },
-            new double[] { -0.5,  1.0 },
+            [-0.5, -1.0],
+            [-0.5, -0.5],
+            [-0.5,  0.0],
+            [-0.5,  0.5],
+            [-0.5,  1.0],
 
-            new double[] {  0.0, -1.0 },
-            new double[] {  0.0, -0.5 },
-            new double[] {  0.0,  0.0 },
-            new double[] {  0.0,  0.5 },
-            new double[] {  0.0,  1.0 },
+            [0.0, -1.0],
+            [0.0, -0.5],
+            [0.0,  0.0],
+            [0.0,  0.5],
+            [0.0,  1.0],
 
-            new double[] {  0.5, -1.0 },
-            new double[] {  0.5, -0.5 },
-            new double[] {  0.5,  0.0 },
-            new double[] {  0.5,  0.5 },
-            new double[] {  0.5,  1.0 },
+            [0.5, -1.0],
+            [0.5, -0.5],
+            [0.5,  0.0],
+            [0.5,  0.5],
+            [0.5,  1.0],
 
-            new double[] {  1.0, -1.0 },
-            new double[] {  1.0, -0.5 },
-            new double[] {  1.0,  0.0 },
-            new double[] {  1.0,  0.5 },
-            new double[] {  1.0,  1.0 },
-        };
+            [1.0, -1.0],
+            [1.0, -0.5],
+            [1.0,  0.0],
+            [1.0,  0.5],
+            [1.0,  1.0]
+        ];
 
         double[][] actual = Matrix.Mesh(rowRange, colRange, rowSteps, colSteps);
 
@@ -3081,8 +3079,8 @@ public partial class MatrixTest
         // between two vector of points. For example, let's
         // suppose we have the values:
         //
-        double[] a = { 0, 1 };
-        double[] b = { 0, 1 };
+        double[] a = [0, 1];
+        double[] b = [0, 1];
 
         // We can create a grid as
         double[][] grid = a.Mesh(b);
@@ -3090,12 +3088,12 @@ public partial class MatrixTest
         // result will be:
         //
         double[][] expected =
-        {
-            new double[] { 0, 0 },
-            new double[] { 0, 1 },
-            new double[] { 1, 0 },
-            new double[] { 1, 1 },
-        };
+        [
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [1, 1]
+        ];
 
         Assert.IsTrue(expected.IsEqual(grid));
     }
@@ -3146,8 +3144,8 @@ public partial class MatrixTest
         // vector of points. For example, let's suppose we have
         // the values:
         //
-        double[] a = { 1, 2, 3 };
-        double[] b = { 4, 5, 6 };
+        double[] a = [1, 2, 3];
+        double[] b = [4, 5, 6];
 
         // We can create a grid
         Tuple<double[,], double[,]> grid = a.MeshGrid(b);
@@ -3202,7 +3200,7 @@ public partial class MatrixTest
     public void ConcatenateTest1()
     {
         double[][,] matrices =
-        {
+        [
             new double[,]
             {
                 { 0, 1 },
@@ -3213,8 +3211,8 @@ public partial class MatrixTest
             {
                 { 4, 5 },
                 { 6, 7 },
-            },
-        };
+            }
+        ];
 
 
         double[,] expected =
@@ -3439,11 +3437,11 @@ public partial class MatrixTest
                 { 5, 6 },
             };
 
-            double[] rightSide = { 7, 8, 9 };
+            double[] rightSide = [7, 8, 9];
 
             Assert.IsTrue(matrix.GetLength(0) > matrix.GetLength(1));
 
-            double[] expected = { -6, 6.5 };
+            double[] expected = [-6, 6.5];
 
             double[] actual = Matrix.Solve(matrix, rightSide);
 
@@ -3458,12 +3456,12 @@ public partial class MatrixTest
                 { 4, 5, 6 },
             };
 
-            double[] rightSide = { 7, 8 };
+            double[] rightSide = [7, 8];
 
             Assert.IsTrue(matrix.GetLength(0) < matrix.GetLength(1));
 
 
-            double[] expected = { -55 / 18.0, 1 / 9.0, 59 / 18.0 };
+            double[] expected = [-55 / 18.0, 1 / 9.0, 59 / 18.0];
 
             double[] actual = Matrix.Solve(matrix, rightSide);
 
@@ -3488,14 +3486,14 @@ public partial class MatrixTest
             };
 
             // Define a right side vector b:
-            double[] rightSide = { 1, 2, 3 };
+            double[] rightSide = [1, 2, 3];
 
             // Solve the linear system Ax = b by finding x:
             double[] x = Matrix.Solve(matrix, rightSide, leastSquares: true);
 
             // The answer should be { -1/18, 2/18, 5/18 }.
 
-            double[] expected = { -1 / 18.0, 2 / 18.0, 5 / 18.0 };
+            double[] expected = [-1 / 18.0, 2 / 18.0, 5 / 18.0];
             Assert.IsTrue(matrix.IsSingular());
             Assert.IsTrue(expected.IsEqual(x, 1e-10));
         }
@@ -3522,7 +3520,7 @@ public partial class MatrixTest
     [TestMethod]
     public void TopBottomTest()
     {
-        double[] values = { 9, 3, 6, 3, 1, 8, 4, 1, 8, 4, 4, 1, 0, -2, 4 };
+        double[] values = [9, 3, 6, 3, 1, 8, 4, 1, 8, 4, 4, 1, 0, -2, 4];
 
         {
             int[] idx = values.Top(5);
@@ -3624,7 +3622,7 @@ public partial class MatrixTest
     [TestMethod]
     public void find_test_1()
     {
-        int[] a = { 5, 1, 10, 5 };
+        int[] a = [5, 1, 10, 5];
         CollectionAssert.AreEqual(new[] { 0, 3 }, a.Find(x => x == 5));
         Assert.AreEqual(1, a.Find(x => x == 1)[0]);
         Assert.AreEqual(2, a.Find(x => x == 10)[0]);
@@ -3636,7 +3634,7 @@ public partial class MatrixTest
     [TestMethod]
     public void first_test()
     {
-        int[] a = { 5, 1, 10 };
+        int[] a = [5, 1, 10];
         Assert.AreEqual(0, a.First(x => x == 5));
         Assert.AreEqual(1, a.First(x => x == 1));
         Assert.AreEqual(2, a.First(x => x == 10));
@@ -3648,7 +3646,7 @@ public partial class MatrixTest
     [TestMethod]
     public void first_or_default_test()
     {
-        int[] a = { 5, 1, 10 };
+        int[] a = [5, 1, 10];
         Assert.AreEqual(0, a.FirstOrNull(x => x == 5));
         Assert.AreEqual(1, a.FirstOrNull(x => x == 1));
         Assert.AreEqual(2, a.FirstOrNull(x => x == 10));

@@ -59,10 +59,8 @@ public class FileWatcherExFixture
 
             return true;
         }
-        else
-        {
-            throw new FileNotFoundException("The folder (or file) specified does not exist.", fileOrFolderToWatch);
-        }
+
+        throw new FileNotFoundException("The folder (or file) specified does not exist.", fileOrFolderToWatch);
     }
 
     /// <summary>

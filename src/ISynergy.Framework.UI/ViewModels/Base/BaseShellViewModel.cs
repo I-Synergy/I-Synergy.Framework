@@ -302,7 +302,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         if (sender is ThemeViewModel vm)
             vm.Submitted -= ThemeVM_Submitted;
 
-        if (e.Result is Style style)
+        if (e.Result is { } style)
         {
             _applicationSettingsService.Settings.Theme = style.Theme;
             _applicationSettingsService.Settings.Color = style.Color;

@@ -38,10 +38,8 @@ public class TimeSpanToStringConverter : IValueConverter
 
             return result.ToString();
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     /// <summary>

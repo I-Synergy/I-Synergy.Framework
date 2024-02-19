@@ -17,14 +17,12 @@ public static class Percentage
         {
             return ((actualAmount - previousAmount) / (previousAmount / 100)) / 100;
         }
-        else if (actualAmount == previousAmount)
+
+        if (actualAmount == previousAmount)
         {
             return 0;
         }
-        else
-        {
-            return 1;
-        }
+        return 1;
     }
 
     /// <summary>
@@ -50,13 +48,11 @@ public static class Percentage
         {
             return ((salesPrice - purchasePrice) / (purchasePrice / 100)) / 100;
         }
-        else if (salesPrice == purchasePrice)
+
+        if (salesPrice == purchasePrice)
         {
             return 0;
         }
-        else
-        {
-            return 1;
-        }
+        return 1;
     }
 }

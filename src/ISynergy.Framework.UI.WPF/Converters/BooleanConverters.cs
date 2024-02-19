@@ -112,10 +112,8 @@ public abstract class BooleanConverter<T> : IValueConverter
         {
             return False;
         }
-        else
-        {
-            return System.Convert.ToBoolean(value) ? True : False;
-        }
+
+        return System.Convert.ToBoolean(value) ? True : False;
     }
 
     /// <summary>

@@ -25,10 +25,8 @@ public static class DateTimeOffsetConverter
         {
             return new TimeSpan(0);
         }
-        else
-        {
-            return dt - dt.Date;
-        }
+
+        return dt - dt.Date;
     }
 
     /// <summary>
@@ -245,7 +243,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 
             var offset = TimeZoneInfo.Local.BaseUtcOffset;
 
-            if (ServiceLocator.Default.GetInstance<IContext>() is IContext context)
+            if (ServiceLocator.Default.GetInstance<IContext>() is { } context)
             {
                 offset = context.TimeZone.BaseUtcOffset;
             }

@@ -333,10 +333,8 @@ public static class DateTimeExtensions
         {
             return new DateTime(self.Year, 7, 1, 0, 0, 0, 0);
         }
-        else
-        {
-            return new DateTime(self.Year, 10, 1, 0, 0, 0, 0);
-        }
+
+        return new DateTime(self.Year, 10, 1, 0, 0, 0, 0);
     }
 
     /// <summary>
@@ -363,9 +361,7 @@ public static class DateTimeExtensions
         {
             return new DateTime(self.Year, 9, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
         }
-        else
-        {
-            return new DateTime(self.Year, 12, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
-        }
+
+        return new DateTime(self.Year, 12, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
     }
 }

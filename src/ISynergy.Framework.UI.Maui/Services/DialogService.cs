@@ -73,21 +73,19 @@ internal class DialogService : IDialogService
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
                 _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
-        else if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
+
+        if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
                 _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
-        else if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
+        if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
                 _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
-        else
-        {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
-        }
+        return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
+            _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
     }
 
     /// <summary>
@@ -108,8 +106,7 @@ internal class DialogService : IDialogService
                     _languageService.GetString("Ok"),
                     _languageService.GetString("Cancel")))
                     return MessageBoxResult.OK;
-                else
-                    return MessageBoxResult.Cancel;
+                return MessageBoxResult.Cancel;
             case MessageBoxButton.YesNo:
                 if (await Application.Current.MainPage.DisplayAlert(
                     title,
@@ -117,8 +114,7 @@ internal class DialogService : IDialogService
                     _languageService.GetString("Yes"),
                     _languageService.GetString("No")))
                     return MessageBoxResult.Yes;
-                else
-                    return MessageBoxResult.No;
+                return MessageBoxResult.No;
             default:
                 await Application.Current.MainPage.DisplayAlert(
                     title,

@@ -79,8 +79,7 @@ public class MatrixFormatTest
 
         expected = new double[][]
         {
-            new double[] { 1, 2 },
-            new double[] { 3, 4 },
+            [1, 2], [3, 4],
         };
 
 
@@ -153,10 +152,10 @@ public class MatrixFormatTest
     public void ToStringTest2()
     {
         double[][] matrix =
-        {
-            new double[] { 1, 2 },
-            new double[] { 3, 4 },
-        };
+        [
+            [1, 2],
+            [3, 4]
+        ];
 
         string expected, actual;
 
@@ -243,10 +242,10 @@ public class MatrixFormatTest
     public void StringFormat2()
     {
         double[][] matrix =
-        {
-            new double[] { 1, 2 },
-            new double[] { 3, 4 },
-        };
+        [
+            [1, 2],
+            [3, 4]
+        ];
 
         string expected, actual;
 
@@ -272,7 +271,7 @@ public class MatrixFormatTest
     [TestMethod]
     public void ToStringTest3()
     {
-        double[] x = { 1, 2, 3 };
+        double[] x = [1, 2, 3];
 
         string str;
 

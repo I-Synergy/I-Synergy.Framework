@@ -77,7 +77,7 @@ public class QrDecompositionTest
 
         // Linear system solving
         double[,] B = Matrix.ColumnVector(new double[] { 1, 2, 3 });
-        double[,] expected = Matrix.ColumnVector(new double[] { 2.5, 4.0, 3.5 });
+        double[,] expected = Matrix.ColumnVector([2.5, 4.0, 3.5]);
         double[,] actual = target.Solve(B);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
@@ -145,9 +145,9 @@ public class QrDecompositionTest
            {  0, -1,  2 }
         };
 
-        double[] b = { 1, 2, 3 };
+        double[] b = [1, 2, 3];
 
-        double[] expected = { 2.5000, 4.0000, 3.5000 };
+        double[] expected = [2.5000, 4.0000, 3.5000];
 
         QrDecomposition target = new(value);
         double[] actual = target.Solve(b);
@@ -206,8 +206,8 @@ public class QrDecompositionTest
 
         // Vectors
         {
-            double[] b = { 4, 1, 0, 0, 2, 5 };
-            double[] expected = { 3.9286, -0.5031, 0.0153 };
+            double[] b = [4, 1, 0, 0, 2, 5];
+            double[] expected = [3.9286, -0.5031, 0.0153];
 
             QrDecomposition target = new(value);
             double[] actual = target.Solve(b);

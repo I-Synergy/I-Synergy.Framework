@@ -50,13 +50,13 @@ public class SparseTest
         string actual;
         Sparse<double> d;
 
-        v = new double[] { 1, 2, 3, 0, 0, 6 };
+        v = [1, 2, 3, 0, 0, 6];
         d = Sparse.FromDense(v);
 
         actual = d.ToString();
         Assert.AreEqual("1:1 2:2 3:3 6:6", actual);
 
-        v = new double[] { 0, 0, 2, 3, 0, 0, 6 };
+        v = [0, 0, 2, 3, 0, 0, 6];
         d = Sparse.FromDense(v);
 
         actual = d.ToString();
@@ -71,39 +71,39 @@ public class SparseTest
         Sparse<double> expected;
         string s;
 
-        v = new double[] { 1, 2, 3, 0, 0, 6 };
+        v = [1, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s);
         CollectionAssert.AreEqual(expected, actual);
 
-        v = new double[] { 0, 2, 3, 0, 0, 6 };
+        v = [0, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s);
         CollectionAssert.AreEqual(expected, actual);
 
 
-        v = new double[] { 1, 2, 3, 0, 0, 6 };
+        v = [1, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s, insertValueAtBeginning: 0);
         CollectionAssert.AreEqual(expected, actual);
 
-        v = new double[] { 0, 2, 3, 0, 0, 6 };
+        v = [0, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s, insertValueAtBeginning: 0);
         CollectionAssert.AreEqual(expected, actual);
 
-        v = new double[] { 1, 2, 3, 0, 0, 6 };
+        v = [1, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s, insertValueAtBeginning: 1);
         expected = Sparse.Parse("1:1 2:1 3:2 4:3 7:6");
         CollectionAssert.AreEqual(expected, actual);
 
-        v = new double[] { 0, 2, 3, 0, 0, 6 };
+        v = [0, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s, insertValueAtBeginning: 42);

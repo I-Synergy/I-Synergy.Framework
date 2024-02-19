@@ -72,7 +72,7 @@ public abstract class GlobalMercatorProjection : MercatorProjection
     public double[] GlobalCoordinatesToXy(GlobalCoordinates coordinates)
     {
         var e = ToEuclidian(coordinates);
-        return new[] { e.X, e.Y };
+        return [e.X, e.Y];
     }
 
     /// <summary>
@@ -151,7 +151,7 @@ public abstract class GlobalMercatorProjection : MercatorProjection
             throw new ArgumentOutOfRangeException(Properties.Resources.GEODETIC_PATH_MIN_2);
 
         if (start == end || numberOfPoints == 2)
-            return new[] { start, end };
+            return [start, end];
 
         var cStart = ToEuclidian(start);
         var cEnd = ToEuclidian(end);

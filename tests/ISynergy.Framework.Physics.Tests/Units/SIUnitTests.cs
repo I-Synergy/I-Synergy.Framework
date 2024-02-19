@@ -33,7 +33,7 @@ public class SIUnitTests
     [TestMethod()]
     public void BaseUnitValidConstructorTest()
     {
-        SIUnit unit = new(Enumerations.Units.second, new UnitTypes[] { UnitTypes.Time });
+        SIUnit unit = new(Enumerations.Units.second, [UnitTypes.Time]);
         Assert.IsNotNull(unit);
     }
 }

@@ -142,7 +142,7 @@ public class ThemeService : IThemeService
             {
                 if (themeDictionary.Value is ColorPaletteResources)
                     return themeDictionary.Value as ColorPaletteResources;
-                else if (themeDictionary.Value is ResourceDictionary targetDictionary)
+                if (themeDictionary.Value is ResourceDictionary targetDictionary)
                     foreach (var mergedDictionary in targetDictionary.MergedDictionaries)
                     {
                         if (mergedDictionary is ColorPaletteResources)

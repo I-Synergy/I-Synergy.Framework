@@ -22,10 +22,7 @@ public sealed class LanguageService : ILanguageService
     /// </summary>
     public LanguageService()
     {
-        _managers = new List<ResourceManager>
-        {
-            new ResourceManager(typeof(ISynergy.Framework.Core.Properties.Resources))
-        };
+        _managers = [new ResourceManager(typeof(ISynergy.Framework.Core.Properties.Resources))];
     }
 
     /// <summary>

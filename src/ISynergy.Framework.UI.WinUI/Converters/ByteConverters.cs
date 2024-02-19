@@ -25,10 +25,8 @@ public class BytesToImageSourceConverter : IValueConverter
         {
             return bytes.ToImageSource();
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     /// <summary>

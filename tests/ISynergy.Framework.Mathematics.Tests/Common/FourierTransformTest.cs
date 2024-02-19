@@ -13,7 +13,7 @@ public class FourierTransformTest
     {
         #region doc_dft
         // Example from http://www.robots.ox.ac.uk/~sjrob/Teaching/SP/l7.pdf
-        Complex[] input = new Complex[] { 8, 4, 8, 0 };
+        Complex[] input = [8, 4, 8, 0];
         FourierTransform2.DFT(input, FourierTransform.Direction.Forward);
         Complex[] output = input; // the output will be { 20, -4j, 12, 4j }
 
@@ -41,9 +41,7 @@ public class FourierTransformTest
         // Suppose we would like to transform the matrix
         Complex[][] input = new Complex[][]
         {
-            new Complex[] { 1, 4, 8, 0 },
-            new Complex[] { 0, 4, 5, 0 },
-            new Complex[] { 0, 0, 8, 0 },
+            [1, 4, 8, 0], [0, 4, 5, 0], [0, 0, 8, 0],
         };
 
         // We can forward it to the time domain using the Fourier transform
@@ -53,17 +51,14 @@ public class FourierTransformTest
         double[][] re = input.Re(); // The real part of the output will be:
         double[][] expectedRe = new double[][]
         {
-            new double[] { 30.0, -20.0,    14.0,    -20.0    },
-            new double[] {  4.5,  -3.9641,  0.4999,   2.9641 },
-            new double[] {  4.5,   2.9641,  0.5000,  -3.9641 }
+            [30.0, -20.0,    14.0,    -20.0], [4.5,  -3.9641,  0.4999,   2.9641], [4.5,   2.9641,  0.5000,  -3.9641]
         };
 
         double[][] im = input.Im(); // The imaginary part of the output will be:
         double[][] expectedIm = new double[][]
         {
-            new double[] {  0,      -8,        0,        7.9999 },
-            new double[] { -0.8660, -4.5980,   6.0621,  -0.5980 },
-            new double[] {  0.8660,  0.5980,  -6.0621,   4.5980 }
+            [0,      -8,        0,        7.9999], [-0.8660, -4.5980,   6.0621,  -0.5980], [0.8660,  0.5980,  -6.0621,   4.5980
+            ]
         };
 
         // We can recover the initial matrix using the backward transform:
@@ -77,9 +72,7 @@ public class FourierTransformTest
         Assert.IsTrue(im.IsEqual(expectedIm, 1e-3));
         Complex[][] expected = new Complex[][]
         {
-            new Complex[] { 1, 4, 8, 0 },
-            new Complex[] { 0, 4, 5, 0 },
-            new Complex[] { 0, 0, 8, 0 },
+            [1, 4, 8, 0], [0, 4, 5, 0], [0, 0, 8, 0],
         };
 
         Assert.IsTrue(input.Re().IsEqual(expected.Re(), 1e-3));
@@ -91,7 +84,7 @@ public class FourierTransformTest
     {
         #region doc_fft
         // Example from http://www.robots.ox.ac.uk/~sjrob/Teaching/SP/l7.pdf
-        Complex[] input = new Complex[] { 8, 4, 8, 0 };
+        Complex[] input = [8, 4, 8, 0];
         FourierTransform2.FFT(input, FourierTransform.Direction.Forward);
         Complex[] output = input; // the output will be { 20, -4j, 12, 4j }
 
@@ -119,9 +112,7 @@ public class FourierTransformTest
         // Suppose we would like to transform the matrix
         Complex[][] input = new Complex[][]
         {
-            new Complex[] { 1, 4, 8, 0 },
-            new Complex[] { 0, 4, 5, 0 },
-            new Complex[] { 0, 0, 8, 0 },
+            [1, 4, 8, 0], [0, 4, 5, 0], [0, 0, 8, 0],
         };
 
         // We can forward it to the time domain using the Fourier transform
@@ -131,17 +122,13 @@ public class FourierTransformTest
         double[][] re = input.Re(); // The real part of the output will be:
         double[][] expectedRe = new double[][]
         {
-            new double[] {  30, -20,      14,      -20     },
-            new double[] { 4.5,  -3.9641,  0.4999,  2.9641 },
-            new double[] { 4.5,   2.9641,  0.5000, -3.9641 },
+            [30, -20,      14,      -20], [4.5,  -3.9641,  0.4999,  2.9641], [4.5,   2.9641,  0.5000, -3.9641],
         };
 
         double[][] im = input.Im(); // The imaginary part of the output will be:
         double[][] expectedIm = new double[][]
         {
-            new double[] {  0,      -8,       0,       8      },
-            new double[] { -0.8660, -4.5980,  6.0621, -0.5980 },
-            new double[] {  0.8660,  0.5980, -6.0621,  4.5980 }
+            [0,      -8,       0,       8], [-0.8660, -4.5980,  6.0621, -0.5980], [0.8660,  0.5980, -6.0621,  4.5980]
         };
 
         // We can recover the initial matrix using the backward transform:
@@ -155,9 +142,7 @@ public class FourierTransformTest
         Assert.IsTrue(im.IsEqual(expectedIm, 1e-3));
         Complex[][] expected = new Complex[][]
         {
-            new Complex[] { 1, 4, 8, 0 },
-            new Complex[] { 0, 4, 5, 0 },
-            new Complex[] { 0, 0, 8, 0 },
+            [1, 4, 8, 0], [0, 4, 5, 0], [0, 0, 8, 0],
         };
 
         Assert.IsTrue(input.Re().IsEqual(expected.Re(), 1e-3));
@@ -171,12 +156,12 @@ public class FourierTransformTest
         // https://github.com/accord-net/framework/issues/878
 
         // Should not throw (throws now):
-        Complex[][] input = new[]
-        {
-            new[] { Complex.Zero, Complex.Zero },
-            new[] { Complex.Zero, Complex.Zero },
-            new[] { Complex.Zero, Complex.Zero },
-        };
+        Complex[][] input =
+        [
+            [Complex.Zero, Complex.Zero],
+            [Complex.Zero, Complex.Zero],
+            [Complex.Zero, Complex.Zero]
+        ];
 
         FourierTransform2.DFT2(input, FourierTransform.Direction.Forward);
 
@@ -184,11 +169,11 @@ public class FourierTransformTest
         Assert.AreEqual(2, input.Columns());
 
         // Also should not throw (symmetric check, doesn't throw now):
-        Complex[][] input2 = new[]
-        {
-            new[] { Complex.Zero, Complex.Zero, Complex.Zero },
-            new[] { Complex.Zero, Complex.Zero, Complex.Zero },
-        };
+        Complex[][] input2 =
+        [
+            [Complex.Zero, Complex.Zero, Complex.Zero],
+            [Complex.Zero, Complex.Zero, Complex.Zero]
+        ];
 
         FourierTransform2.DFT2(input2, FourierTransform.Direction.Forward);
 

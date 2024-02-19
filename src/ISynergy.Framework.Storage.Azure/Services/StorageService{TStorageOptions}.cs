@@ -52,7 +52,7 @@ internal class StorageService<TStorageOptions> : IStorageService
         var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
 
-        if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
+        if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
             await blobClient.UploadAsync(
                     new MemoryStream(fileBytes),
@@ -87,7 +87,7 @@ internal class StorageService<TStorageOptions> : IStorageService
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
         var stream = new MemoryStream();
 
-        if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
+        if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
             await blobClient
                 .DownloadToAsync(stream, cancellationToken)
@@ -118,7 +118,7 @@ internal class StorageService<TStorageOptions> : IStorageService
         var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
 
-        if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
+        if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
             await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -154,7 +154,7 @@ internal class StorageService<TStorageOptions> : IStorageService
         var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
 
-        if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
+        if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
             return await blobClient.DeleteIfExistsAsync()
                 .ConfigureAwait(false);

@@ -30,14 +30,14 @@ public static class TreeTraversal
 
         while (queue.Count != 0)
         {
-            if (queue.Dequeue() is TNode current)
+            if (queue.Dequeue() is { } current)
             {
                 yield return current;
 
-                if (current.Left is TNode leftNode)
+                if (current.Left is { } leftNode)
                     queue.Enqueue(leftNode);
 
-                if (current.Right is TNode rightNode)
+                if (current.Right is { } rightNode)
                     queue.Enqueue(rightNode);
             }
         }
@@ -178,14 +178,14 @@ public static class TreeTraversal
 
         while (stack.Count != 0)
         {
-            if (stack.Pop() is TNode current)
+            if (stack.Pop() is { } current)
             {
                 yield return current;
 
-                if (current.Left is TNode leftNode)
+                if (current.Left is { } leftNode)
                     stack.Push(leftNode);
 
-                if (current.Right is TNode rightNode)
+                if (current.Right is { } rightNode)
                     stack.Push(rightNode);
             }
         }

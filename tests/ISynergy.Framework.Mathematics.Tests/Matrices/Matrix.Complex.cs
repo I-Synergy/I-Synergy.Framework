@@ -10,8 +10,9 @@ public class ComplexMatrixTest
     [TestMethod]
     public void AbsTest()
     {
-        Complex[] x = { new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1) };
-        Complex[] expected = { new Complex(Math.Sqrt(26), 0), new Complex(Math.Sqrt(5), 0), new Complex(Math.Sqrt(26), 0) };
+        Complex[] x = [new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1)];
+        Complex[] expected = [new Complex(Math.Sqrt(26), 0), new Complex(Math.Sqrt(5), 0), new Complex(Math.Sqrt(26), 0)
+        ];
         Complex[] actual = x.Abs();
         Assert.IsTrue(expected.IsEqual(actual, 1e-5));
     }
@@ -19,8 +20,8 @@ public class ComplexMatrixTest
     [TestMethod]
     public void ImTest()
     {
-        Complex[] x = { new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1) };
-        double[] expected = { 5, -1, 1 };
+        Complex[] x = [new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1)];
+        double[] expected = [5, -1, 1];
         double[] actual = x.Im();
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -28,8 +29,8 @@ public class ComplexMatrixTest
     [TestMethod]
     public void MagnitudeTest()
     {
-        Complex[] x = { new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1) };
-        double[] expected = { Math.Sqrt(26), Math.Sqrt(5), Math.Sqrt(26) };
+        Complex[] x = [new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1)];
+        double[] expected = [Math.Sqrt(26), Math.Sqrt(5), Math.Sqrt(26)];
         double[] actual = x.Magnitude();
 
         Assert.IsTrue(expected.IsEqual(actual, 1e-12));
@@ -38,9 +39,9 @@ public class ComplexMatrixTest
     [TestMethod]
     public void MultiplyTest()
     {
-        Complex[] a = { new Complex(7, 5), new Complex(2, -3), new Complex(-5, 1) };
-        Complex[] b = { new Complex(1, 5), new Complex(8, -1), new Complex(-4, 8) };
-        Complex[] expected = { new Complex(-18, 40), new Complex(13, -26), new Complex(12, -44) };
+        Complex[] a = [new Complex(7, 5), new Complex(2, -3), new Complex(-5, 1)];
+        Complex[] b = [new Complex(1, 5), new Complex(8, -1), new Complex(-4, 8)];
+        Complex[] expected = [new Complex(-18, 40), new Complex(13, -26), new Complex(12, -44)];
         Complex[] actual = a.Multiply(b);
 
         Assert.IsTrue(expected.IsEqual(actual));
@@ -49,8 +50,8 @@ public class ComplexMatrixTest
     [TestMethod]
     public void PhaseTest()
     {
-        Complex[] x = { new Complex(0, 5), new Complex(2, 0), new Complex(-5, 1) };
-        double[] expected = { 1, Math.Sqrt(5), Math.Sqrt(26) };
+        Complex[] x = [new Complex(0, 5), new Complex(2, 0), new Complex(-5, 1)];
+        double[] expected = [1, Math.Sqrt(5), Math.Sqrt(26)];
         double[] actual = x.Phase();
 
         for (int i = 0; i < x.Length; i++)
@@ -61,8 +62,8 @@ public class ComplexMatrixTest
     [TestMethod]
     public void ReTest()
     {
-        Complex[] x = { new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1) };
-        double[] expected = { 1, 2, -5 };
+        Complex[] x = [new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1)];
+        double[] expected = [1, 2, -5];
         double[] actual = x.Re();
 
         Assert.IsTrue(expected.IsEqual(actual));
@@ -71,7 +72,7 @@ public class ComplexMatrixTest
     [TestMethod]
     public void SumTest()
     {
-        Complex[] x = { new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1) };
+        Complex[] x = [new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1)];
         Complex expected = new(-2, 5);
         Complex actual = x.Sum();
 
@@ -81,7 +82,7 @@ public class ComplexMatrixTest
     [TestMethod]
     public void ToArrayTest()
     {
-        Complex[] c = { new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1) };
+        Complex[] c = [new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1)];
         double[,] expected =
         {
             {  1, 5  },

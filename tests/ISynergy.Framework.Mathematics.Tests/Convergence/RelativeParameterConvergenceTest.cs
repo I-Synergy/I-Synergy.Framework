@@ -30,7 +30,7 @@ public class RelativeParameterConvergenceTest
         RelativeParameterConvergence criteria = new(iterations: 0, tolerance: 0.1);
 
         int progress = 1;
-        double[] parameters = { 12345.6, 952.12, 1925.1 };
+        double[] parameters = [12345.6, 952.12, 1925.1];
 
         do
         {

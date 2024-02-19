@@ -25,7 +25,7 @@ public partial class ShellView : Shell, IShellView
 
         if (ViewModel is ShellViewModel viewModel && viewModel.Context.IsAuthenticated)
         {
-            if (viewModel.PrimaryItems.Count > 0 && viewModel.PrimaryItems.First() is NavigationItem navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
+            if (viewModel.PrimaryItems.Count > 0 && viewModel.PrimaryItems.First() is { } navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
                 navigationItem.Command.Execute(navigationItem.CommandParameter);
         }
     }

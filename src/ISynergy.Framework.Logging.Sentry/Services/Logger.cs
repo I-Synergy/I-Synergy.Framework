@@ -52,7 +52,7 @@ public class Logger : BaseLogger
     /// </summary>
     private void SetUserProfile()
     {
-        if (_context.IsAuthenticated && _context.Profile is IProfile profile)
+        if (_context.IsAuthenticated && _context.Profile is { } profile)
         {
             SentrySdk.ConfigureScope(scope =>
             {
@@ -95,7 +95,7 @@ public class Logger : BaseLogger
     {
         var metrics = new Dictionary<string, object>();
 
-        if (_context.IsAuthenticated && _context.Profile is IProfile profile)
+        if (_context.IsAuthenticated && _context.Profile is { } profile)
         {
             metrics.Add(nameof(profile.Username), profile.Username);
             metrics.Add(nameof(profile.UserId), profile.UserId.ToString());

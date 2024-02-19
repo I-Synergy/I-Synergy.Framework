@@ -24,10 +24,8 @@ public class IntegerToVisibilityConverter : IValueConverter
         {
             return Visibility.Collapsed;
         }
-        else
-        {
-            return Visibility.Visible;
-        }
+
+        return Visibility.Visible;
     }
 
     /// <summary>
@@ -66,10 +64,8 @@ public class ZeroIntegerToVisibilityConverter : IValueConverter
         {
             return Visibility.Visible;
         }
-        else
-        {
-            return Visibility.Collapsed;
-        }
+
+        return Visibility.Collapsed;
     }
 
     /// <summary>
@@ -108,10 +104,8 @@ public class IntegerToStringConverter : IValueConverter
         {
             return value.ToString();
         }
-        else
-        {
-            return "0";
-        }
+
+        return "0";
     }
 
     /// <summary>
@@ -174,8 +168,7 @@ public class IntegerToDoubleConverter : IValueConverter
         {
             if (doubleValue is double.NaN)
                 return 0;
-            else
-                return System.Convert.ToInt32(doubleValue);
+            return System.Convert.ToInt32(doubleValue);
         }
 
         return 0;

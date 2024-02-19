@@ -94,7 +94,7 @@ public sealed partial class ImageView : UserControl
     {
         var control = (ImageView)dependencyObject;
 
-        if ((ImageSource)dependencyPropertyChangedEventArgs.NewValue is ImageSource newSource)
+        if ((ImageSource)dependencyPropertyChangedEventArgs.NewValue is { } newSource)
         {
             var image = (BitmapImage)newSource;
 

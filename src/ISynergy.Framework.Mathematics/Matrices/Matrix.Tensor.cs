@@ -27,7 +27,7 @@ public static partial class Matrix
     {
         var dimensions = array.GetLength().Where(x => x != 1).ToArray();
         if (dimensions.Length == 0)
-            dimensions = new[] { 1 };
+            dimensions = [1];
 
         Array res;
         if (array.IsJagged())
@@ -183,10 +183,10 @@ public static partial class Matrix
         length = length.RemoveAt(dimension);
         var rows = end - start;
         if (length.Length == 0)
-            length = new[]
-            {
+            length =
+            [
                 rows
-            };
+            ];
 
         var type = source.GetInnerMostType();
         var r = Array.CreateInstance(type, length);

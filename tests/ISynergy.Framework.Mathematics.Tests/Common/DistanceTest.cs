@@ -26,16 +26,16 @@ public class DistanceTest
         double[] x, y;
         double actual, expected;
 
-        x = new double[] { 2, 4, 1 };
-        y = new double[] { 0, 0, 0 };
+        x = [2, 4, 1];
+        y = [0, 0, 0];
 
         expected = 2.07735368677415;
         actual = Distance.Mahalanobis(x, y, cov.Inverse());
         Assert.AreEqual(expected, actual, 1e-10);
 
 
-        x = new double[] { 7, 5, 1 };
-        y = new double[] { 1, 0.52, -79 };
+        x = [7, 5, 1];
+        y = [1, 0.52, -79];
 
         expected = 277.8828871106366;
         actual = Distance.Mahalanobis(x, y, cov.Inverse());
@@ -66,8 +66,8 @@ public class DistanceTest
         double[,] pinv = svd.Inverse();
         Assert.IsTrue(inv.IsEqual(pinv, 1e-6));
 
-        x = new double[] { 2, 4, 1 };
-        y = new double[] { 0, 0, 0 };
+        x = [2, 4, 1];
+        y = [0, 0, 0];
 
         {
             double[] bla = cov.Solve(x);
@@ -88,8 +88,8 @@ public class DistanceTest
         Assert.AreEqual(expected, actual, 1e-6);
 
 
-        x = new double[] { 7, 5, 1 };
-        y = new double[] { 1, 0.52, -79 };
+        x = [7, 5, 1];
+        y = [1, 0.52, -79];
 
         expected = 277.8828871106366;
         actual = Distance.Mahalanobis(x, y, inv);
@@ -104,32 +104,32 @@ public class DistanceTest
         double[] x, y;
         double expected, actual;
 
-        x = new double[] { 2, 4, 1 };
-        y = new double[] { 0, 0, 0 };
+        x = [2, 4, 1];
+        y = [0, 0, 0];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
         Assert.AreEqual(expected, actual);
 
-        x = new double[] { 0.1, 0.12, -1 };
-        y = new double[] { 195, 0, 2912 };
+        x = [0.1, 0.12, -1];
+        y = [195, 0, 2912];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
         Assert.AreEqual(expected, actual);
 
-        x = new double[] { -2, -4, -1 };
-        y = new double[] { -2, -4, -1 };
+        x = [-2, -4, -1];
+        y = [-2, -4, -1];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
         Assert.AreEqual(expected, actual);
 
-        x = new double[] { 2, 4, 1 };
-        y = new double[] { 0, -7.2, 4.6 };
+        x = [2, 4, 1];
+        y = [0, -7.2, 4.6];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
         Assert.AreEqual(expected, actual);
 
-        x = new double[] { -2, 4, 1 };
-        y = new double[] { 0, -0.1, 4.2 };
+        x = [-2, 4, 1];
+        y = [0, -0.1, 4.2];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
         Assert.AreEqual(expected, actual);
@@ -141,32 +141,32 @@ public class DistanceTest
         double[] x, y;
         double expected, actual;
 
-        x = new double[] { 2, 4, 1 };
-        y = new double[] { 0, 0, 0 };
+        x = [2, 4, 1];
+        y = [0, 0, 0];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
 
-        x = new double[] { 0.1, 0.12, -1 };
-        y = new double[] { 195, 0, 2912 };
+        x = [0.1, 0.12, -1];
+        y = [195, 0, 2912];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
 
-        x = new double[] { -2, -4, -1 };
-        y = new double[] { -2, -4, -1 };
+        x = [-2, -4, -1];
+        y = [-2, -4, -1];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
 
-        x = new double[] { 2, 4, 1 };
-        y = new double[] { 0, -7.2, 4.6 };
+        x = [2, 4, 1];
+        y = [0, -7.2, 4.6];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
 
-        x = new double[] { -2, 4, 1 };
-        y = new double[] { 0, -0.1, 4.2 };
+        x = [-2, 4, 1];
+        y = [0, -0.1, 4.2];
         expected = Distance.Euclidean(x, y);
         actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
@@ -175,8 +175,8 @@ public class DistanceTest
     [TestMethod]
     public void MahalanobisTest6()
     {
-        double[] x = { -1, 0, 0 };
-        double[] y = { 0, 0, 0 };
+        double[] x = [-1, 0, 0];
+        double[] y = [0, 0, 0];
 
         double[,] covX =
         {
@@ -201,8 +201,8 @@ public class DistanceTest
         #region doc_mahalanobis_3
         // Let's say we would like to compute the Mahalanobis
         // distance between the two vectors x and y below:
-        double[] x = { 2, 5, 1 };
-        double[] y = { 4, 2, 2 };
+        double[] x = [2, 5, 1];
+        double[] y = [4, 2, 2];
 
         // Using the covariance
         double[,] covariance =
@@ -250,8 +250,8 @@ public class DistanceTest
         #region doc_square_mahalanobis_3
         // Let's say we would like to compute the Squared 
         // Mahalanobis distance between the vectors below:
-        double[] x = { 2, 5, 1 };
-        double[] y = { 4, 2, 2 };
+        double[] x = [2, 5, 1];
+        double[] y = [4, 2, 2];
 
         // Using the covariance
         double[,] covariance =
@@ -296,8 +296,8 @@ public class DistanceTest
     [TestMethod]
     public void ManhattanTest()
     {
-        double[] x = { 3, 6 };
-        double[] y = { 0, 0 };
+        double[] x = [3, 6];
+        double[] y = [0, 0];
         double expected = 9;
         double actual = Distance.Manhattan(x, y);
         Assert.AreEqual(expected, actual);
@@ -306,8 +306,8 @@ public class DistanceTest
     [TestMethod]
     public void EuclideanTest()
     {
-        double[] x = new double[] { 2, 4, 1 };
-        double[] y = new double[] { 0, 0, 0 };
+        double[] x = [2, 4, 1];
+        double[] y = [0, 0, 0];
         double expected = 4.58257569495584;
         double actual = Distance.Euclidean(x, y);
         Assert.AreEqual(expected, actual);
@@ -317,10 +317,10 @@ public class DistanceTest
     public void EuclideanTest2()
     {
         Assert.AreEqual(Distance.Euclidean(2, 4, 0, 1),
-            Distance.Euclidean(new double[] { 2, 4 }, new double[] { 0, 1 }));
+            Distance.Euclidean([2, 4], new double[] { 0, 1 }));
 
         Assert.AreEqual(Distance.SquareEuclidean(2, 4, 0, 1),
-            Distance.SquareEuclidean(new double[] { 2, 4 }, new double[] { 0, 1 }));
+            Distance.SquareEuclidean([2, 4], new double[] { 0, 1 }));
     }
 
     [TestMethod]
@@ -351,7 +351,7 @@ public class DistanceTest
         double a = Distance.Euclidean(x1, y1, x2, y2); // should be ~3.9824615503479754
 
         // This is equivalent to 
-        double b = Distance.Euclidean(new[] { x1, y1 }, new[] { x2, y2 });
+        double b = Distance.Euclidean([x1, y1], new[] { x2, y2 });
         #endregion
 
         Assert.AreEqual(3.9824615503479754, a, 1e-10);
@@ -365,11 +365,11 @@ public class DistanceTest
     {
         #region doc_cosine_2
         // The Cosine distance between (0, 2, 4) and (2, 5, 1) can be directly computed as:
-        double a = Distance.Cosine(new[] { 0.0, 2.0, 4.0 }, new[] { 2.0, 5.0, 1.0 }); // ~0.42845239335059182d
+        double a = Distance.Cosine([0.0, 2.0, 4.0], [2.0, 5.0, 1.0]); // ~0.42845239335059182d
 
         // Or could also be computed by instantiating the Cosine class beforehand as:
         Cosine cos = new();
-        double b = cos.Distance(new[] { 0.0, 2.0, 4.0 }, new[] { 2.0, 5.0, 1.0 }); // ~0.42845239335059182d
+        double b = cos.Distance([0.0, 2.0, 4.0], [2.0, 5.0, 1.0]); // ~0.42845239335059182d
         #endregion
 
         Assert.AreEqual(0.42845239335059182d, a, 1e-10);
@@ -391,16 +391,16 @@ public class DistanceTest
         Assert.AreEqual(0, Distance.Levenshtein(null, ""));
         Assert.AreEqual(5, Distance.Levenshtein("apple", "banana"));
 
-        Assert.AreEqual(0, Distance.Levenshtein(new int[] { }, new int[] { }));
-        Assert.AreEqual(1, Distance.Levenshtein(new int[] { }, new int[] { 1 }));
-        Assert.AreEqual(1, Distance.Levenshtein(new int[] { 1 }, new int[] { }));
-        Assert.AreEqual(0, Distance.Levenshtein(new int[] { 1 }, new int[] { 1 }));
+        Assert.AreEqual(0, Distance.Levenshtein([], new int[] { }));
+        Assert.AreEqual(1, Distance.Levenshtein([], [1]));
+        Assert.AreEqual(1, Distance.Levenshtein([1], []));
+        Assert.AreEqual(0, Distance.Levenshtein([1], [1]));
         Assert.AreEqual(0, Distance.Levenshtein(null, null));
-        Assert.AreEqual(1, Distance.Levenshtein(null, new int[] { 1 }));
-        Assert.AreEqual(1, Distance.Levenshtein(new int[] { 1 }, null));
+        Assert.AreEqual(1, Distance.Levenshtein(null, [1]));
+        Assert.AreEqual(1, Distance.Levenshtein([1], null));
         Assert.AreEqual(0, Distance.Levenshtein(new int[] { }, null));
         Assert.AreEqual(0, Distance.Levenshtein(null, new int[] { }));
-        Assert.AreEqual(5, Distance.Levenshtein(new int[] { 1, 2, 2, 3, 4 }, new int[] { 5, 1, 6, 1, 6, 1 }));
+        Assert.AreEqual(5, Distance.Levenshtein([1, 2, 2, 3, 4], [5, 1, 6, 1, 6, 1]));
     }
 
     [TestMethod]
@@ -465,8 +465,8 @@ public class DistanceTest
         // implements the IDistance interface for this same distance, such that you 
         // could pass it to some other method in the framework:
 
-        double[] x = new double[] { 2, 4, 1 };
-        double[] y = new double[] { 0, 0, 0 };
+        double[] x = [2, 4, 1];
+        double[] y = [0, 0, 0];
 
         double a = Distance.Euclidean(x, y); // should be 4.58257569495584
 

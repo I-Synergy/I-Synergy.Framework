@@ -18,7 +18,7 @@ public static partial class Distance
     public static bool IsMetric(Func<double[], double[], double> value)
     {
         // Direct test
-        var z = value(new[] { 1.0 }, new[] { 1.0 });
+        var z = value([1.0], [1.0]);
         if (z > 2 || z < 0)
             return false;
         var a = new double[1];
@@ -91,7 +91,7 @@ public static partial class Distance
                     if (methodInfo.Name == "BitwiseHamming")
                         return new Hamming() as IDistance<T>;
 
-                return (IDistance<T>)Activator.CreateInstance(t, new object[] { });
+                return (IDistance<T>)Activator.CreateInstance(t, []);
             }
         }
 

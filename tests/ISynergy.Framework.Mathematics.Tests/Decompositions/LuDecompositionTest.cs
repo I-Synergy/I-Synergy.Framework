@@ -42,14 +42,14 @@ public class LuDecompositionTest
            {  0, -1,  3 }
         };
 
-        double[] rhs = { 5, 0, 1 };
+        double[] rhs = [5, 0, 1];
 
         double[] expected =
-        {
+        [
             1.6522,
             0.5652,
-            0.5217,
-        };
+            0.5217
+        ];
 
         LuDecomposition target = new(value);
         double[] actual = target.Solve(rhs);
@@ -157,9 +157,9 @@ public class LuDecompositionTest
             { 1.6, 4.2 },
         };
 
-        double[] rhs = { 6.1, 4.3 };
+        double[] rhs = [6.1, 4.3];
 
-        double[] expected = { 3.1839, -0.1891 };
+        double[] expected = [3.1839, -0.1891];
 
         LuDecomposition target1 = new(value);
         JaggedLuDecomposition target2 = new(value.ToJagged());
@@ -178,9 +178,9 @@ public class LuDecompositionTest
             { 2.1, 5.1 },
         };
 
-        double[] rhs = { 6.1, 4.3, 2.1 };
+        double[] rhs = [6.1, 4.3, 2.1];
 
-        double[] expected = { 3.1839, -0.1891 };
+        double[] expected = [3.1839, -0.1891];
 
         LuDecomposition target = new(value);
 

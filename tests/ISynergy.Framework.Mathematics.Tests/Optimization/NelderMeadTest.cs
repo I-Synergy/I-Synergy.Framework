@@ -128,7 +128,7 @@ public class NelderMeadTest
         };
 
         // This values are relevant for my RealWorld(TM) scenario
-        double[] init = new double[] { 0.5, 0 };
+        double[] init = [0.5, 0];
 
         NelderMead nm = new(2, eval);
 

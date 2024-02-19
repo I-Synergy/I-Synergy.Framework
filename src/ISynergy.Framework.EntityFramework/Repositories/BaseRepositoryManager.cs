@@ -124,7 +124,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
         where TModel : ModelBase, new()
         where TId : struct
     {
-        if (await GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false) is TEntity result)
+        if (await GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false) is { } result)
             return result.Adapt<TModel>();
 
         return null;

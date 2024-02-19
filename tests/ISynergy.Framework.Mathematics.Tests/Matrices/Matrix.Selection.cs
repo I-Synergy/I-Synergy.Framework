@@ -12,26 +12,26 @@ public partial class MatrixTest
     [TestMethod]
     public void partition_success()
     {
-        int[] a = { 2, 7, 3, 5, 4 };
+        int[] a = [2, 7, 3, 5, 4];
         int pivot = Sort.Partition(a, 0, a.Length);
-        Assert.IsTrue(a.IsEqual(new[] { 2, 3, 4, 5, 7 }));
+        Assert.IsTrue(a.IsEqual([2, 3, 4, 5, 7]));
         // Assert.IsTrue(a.IsEqual(new[] { 2, 3, 7, 5, 4 }));
 
-        a = new int[] { 7, 6, 5, 4, 3, 2, 1, 0 };
+        a = [7, 6, 5, 4, 3, 2, 1, 0];
         pivot = Sort.Partition(a, 0, a.Length);
-        Assert.IsTrue(a.IsEqual(new[] { 0, 3, 2, 1, 4, 5, 7, 6 }));
+        Assert.IsTrue(a.IsEqual([0, 3, 2, 1, 4, 5, 7, 6]));
         // Assert.IsTrue(a.IsEqual(new[] { 0, 2, 3, 1, 4, 6, 5, 7 }));
 
-        a = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+        a = [0, 1, 2, 3, 4, 5, 6, 7];
         Sort.Partition(a, 0, a.Length);
-        Assert.IsTrue(a.IsEqual(new[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
+        Assert.IsTrue(a.IsEqual([0, 1, 2, 3, 4, 5, 6, 7]));
 
-        a = new int[] { 2, 7, 3, 4, 5, 6, 1, 8 };
+        a = [2, 7, 3, 4, 5, 6, 1, 8];
         double expected = (int)Measures.Median(a.Submatrix(4, 7));
         int actual = Sort.Partition(a, 4, 7);
         Assert.AreEqual(actual, expected);
         //Assert.IsTrue(a.IsEqual(new[] { 2, 7, 3, 4, 5, 1, 6, 8 }));
-        Assert.IsTrue(a.IsEqual(new[] { 2, 7, 3, 4, 1, 5, 6, 8 }));
+        Assert.IsTrue(a.IsEqual([2, 7, 3, 4, 1, 5, 6, 8]));
     }
 
 
@@ -40,9 +40,9 @@ public partial class MatrixTest
     public void nth_element_0()
     {
         // http://www.codecogs.com/library/computing/stl/algorithms/sorting/nth_element.php
-        int[] a = { 10, 2, 6, 11, 9, 3, 4, 12, 8, 7, 1, 5 };
+        int[] a = [10, 2, 6, 11, 9, 3, 4, 12, 8, 7, 1, 5];
         Sort.NthElement(a, 0, a.Length, 6);
-        int[] expected = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+        int[] expected = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         Assert.IsTrue(a.IsEqual(expected));
     }
 
@@ -146,7 +146,7 @@ public partial class MatrixTest
     {
         // Example from http://en.cppreference.com/w/cpp/algorithm/nth_element
 
-        double[] a = { 5, 6, 4, 3, 2, 6, 7, 9, 3 };
+        double[] a = [5, 6, 4, 3, 2, 6, 7, 9, 3];
 
         Sort.NthElement(a, 0, a.Length, a.Length / 2);
         double median = a[a.Length / 2];
@@ -162,9 +162,9 @@ public partial class MatrixTest
     {
         // Example from http://www.tenouk.com/cpluscodesnippet/cplusstlvectoralgorithmnth_element.html
 
-        double[] a = { 0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 25 };
+        double[] a = [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 25];
         Sort.NthElement(a, 0, a.Length, 3);
-        double[] expected = { 0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 25 };
+        double[] expected = [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 25];
         Assert.IsTrue(a.IsEqual(expected));
 
         Func<double, double, int> greater = (double elem1, double elem2) =>
@@ -177,12 +177,12 @@ public partial class MatrixTest
         };
 
         Sort.NthElement(a, 0, a.Length, 4, greater);
-        expected = new double[] { 25, 24, 23, 22, 21, 20, 15, 14, 13, 12, 11, 10, 5, 4, 3, 2, 1, 0 };
+        expected = [25, 24, 23, 22, 21, 20, 15, 14, 13, 12, 11, 10, 5, 4, 3, 2, 1, 0];
         Assert.IsTrue(a.IsEqual(expected));
 
         Vector.Shuffle(a);
         Sort.NthElement(a, 0, a.Length, 4, greater);
-        expected = new double[] { 25, 24, 23, 22, 21, 20, 15, 14, 13, 12, 11, 10, 5, 4, 3, 2, 1, 0 };
+        expected = [25, 24, 23, 22, 21, 20, 15, 14, 13, 12, 11, 10, 5, 4, 3, 2, 1, 0];
         Assert.IsTrue(a.IsEqual(expected));
     }
 
@@ -191,12 +191,15 @@ public partial class MatrixTest
     {
         // Example from https://github.com/accord-net/framework/issues/865
 
-        double[][] data = {
-            new double[] { 18, 31, 25, 2, 22, 13, 37, 1, 4, 7, 6, 45, 10, 24, 23, 49, 27, 9, 35,
+        double[][] data =
+        [
+            [
+                18, 31, 25, 2, 22, 13, 37, 1, 4, 7, 6, 45, 10, 24, 23, 49, 27, 9, 35,
               14, 34, 33, 41, 42, 20, 43, 3, 48, 15, 39, 11, 38, 46, 17, 40, 16,
-              50, 29, 19, 47, 12, 28, 32, 8, 30, 26, 5, 44, 36, 21 },
-            new double[] { 18,14,1,15,4,32,10,26,38,9,24,16,31,20,25,30,22,6,28,21,33,17,5,35,2,13,36,8,29,7 }
-        };
+              50, 29, 19, 47, 12, 28, 32, 8, 30, 26, 5, 44, 36, 21
+            ],
+            [18,14,1,15,4,32,10,26,38,9,24,16,31,20,25,30,22,6,28,21,33,17,5,35,2,13,36,8,29,7]
+        ];
 
         foreach (double[] v in data)
         {
@@ -316,16 +319,16 @@ public partial class MatrixTest
     [TestMethod]
     public void insertion_sort_std()
     {
-        int[] idx = { 5, 1, 2, 3, 4, 0 };
+        int[] idx = [5, 1, 2, 3, 4, 0];
         double[][] points =
-        {
-            new double[] { 2, 3 },
-            new double[] { 5, 4 },
-            new double[] { 9, 6 },
-            new double[] { 4, 7 },
-            new double[] { 8, 1 },
-            new double[] { 7, 2 },
-        };
+        [
+            [2, 3],
+            [5, 4],
+            [9, 6],
+            [4, 7],
+            [8, 1],
+            [7, 2]
+        ];
 
         List<Tuple<double, double>> comparisons = [];
         double[] e = points[idx[0]];
@@ -343,7 +346,7 @@ public partial class MatrixTest
               n: 2,
               compare: comparer);
 
-        int[] expected = { 5, 4, 1, 2, 3, 0 };
+        int[] expected = [5, 4, 1, 2, 3, 0];
         Assert.IsTrue(idx.IsEqual(expected));
         Assert.AreEqual(5, comparisons.Count);
 
@@ -465,7 +468,7 @@ public partial class MatrixTest
     [TestMethod]
     public void vector_get()
     {
-        int[] a = { 2, 7, 3, 5, 4 };
+        int[] a = [2, 7, 3, 5, 4];
 
         CollectionAssert.AreEqual(new[] { 7, 3 }, a.Get(1, 3));
         CollectionAssert.AreEqual(new[] { 4 }, a.Get(-1, 0));
@@ -502,15 +505,16 @@ public partial class MatrixTest
     public void jagged_get()
     {
         int[][] a =
-        {
-            new[] { 2, 7, 3, 5, 4 },
-            new[] { 1, 2, 6, 8, 9 }
-        };
+        [
+            [2, 7, 3, 5, 4],
+            [1, 2, 6, 8, 9]
+        ];
 
         int[][] actual;
 
         actual = a.Get(0, 2, 1, 3);
-        Assert.IsTrue(new[] { new[] { 7, 3 },
+        Assert.IsTrue(new[] {
+            [7, 3],
                                 new[] { 2, 6 } }.IsEqual(actual));
 
         actual = a.Get(0, -1, -1, 0);
@@ -541,7 +545,7 @@ public partial class MatrixTest
             { 1, 0, 1 },
         };
 
-        double[] v = { -3, 1, 0.42 };
+        double[] v = [-3, 1, 0.42];
 
         // Let's say we would like to sort the columns of the matrix 
         // according to the value of the elements in the row vector:

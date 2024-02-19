@@ -15,9 +15,9 @@ public partial class VectorTest
         double[] u = Vector.Create(5, 1.0);
         int[] w = Vector.Create(1, 2, 3);
 
-        Assert.IsTrue(v.IsEqual(new[] { 0, 0, 0, 0, 0 }));
+        Assert.IsTrue(v.IsEqual([0, 0, 0, 0, 0]));
         Assert.IsTrue(u.IsEqual(new[] { 1, 1, 1, 1, 1 }));
-        Assert.IsTrue(w.IsEqual(new[] { 1, 2, 3 }));
+        Assert.IsTrue(w.IsEqual([1, 2, 3]));
     }
 
     [TestMethod]
@@ -25,7 +25,7 @@ public partial class VectorTest
     {
         double[] v = Vector.Ones(5);
         int[] idx = v.GetIndices();
-        Assert.IsTrue(idx.IsEqual(new[] { 0, 1, 2, 3, 4 }));
+        Assert.IsTrue(idx.IsEqual([0, 1, 2, 3, 4]));
     }
 
     [TestMethod]

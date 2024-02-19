@@ -14,7 +14,7 @@ namespace ISynergy.Framework.AspNetCore.MultiTenancy.Services;
 internal class TenantService : ITenantService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly string[] _clientRoles = new string[] { "Client" };
+    private readonly string[] _clientRoles = ["Client"];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TenantService"/> class.

@@ -223,7 +223,7 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
         temp = new double[l];
         QD = new double[l];
         for (var k = 0; k < QD.Length; k++)
-            QD[k] = Q(k, new[] { k }, 1, temp)[0];
+            QD[k] = Q(k, [k], 1, temp)[0];
 
         var Q_i = new double[l];
         var Q_j = new double[l];

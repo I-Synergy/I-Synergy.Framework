@@ -159,7 +159,7 @@ public static class MauiAppBuilderExtensions
     {
         foreach (var view in views.Distinct())
         {
-            if (ViewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is Type viewmodel)
+            if (ViewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is { } viewmodel)
                 services.RegisterViewModelRoute(viewmodel, view);
         }
     }

@@ -162,11 +162,9 @@ public static class StringExtensions
             // no number was found at the and so we simply add the summand as string
             return self + summand;
         }
-        else
-        {
-            var num = long.Parse(numberString) + summand;
-            return self.Substring(0, codePos) + num.ToString();
-        }
+
+        var num = long.Parse(numberString) + summand;
+        return self.Substring(0, codePos) + num.ToString();
     }
 
     /// <summary>
@@ -243,8 +241,7 @@ public static class StringExtensions
 
         if (self.LastCharAt(-1) == '\n' && self.LastCharAt(-2) == '\r')
             return self.Substring(0, self.Length - 2);
-        else
-            return self.Substring(0, self.Length - 1);
+        return self.Substring(0, self.Length - 1);
     }
 
     /// <summary>
@@ -321,8 +318,7 @@ public static class StringExtensions
     {
         if (self.Length >= 1)
             return self.Remove(self.Length - 1, 1);
-        else
-            return self;
+        return self;
     }
 
     /// <summary>

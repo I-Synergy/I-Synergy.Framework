@@ -78,18 +78,19 @@ internal static class ExpressionParser
             ConstantExpression indexExpression = Expression.Constant(index);
             return Expression.ArrayAccess(parameter, indexExpression);
         }
-        else if (eb is not null) // binary expression
+
+        if (eb is not null) // binary expression
         {
             var left = Replace(parameter, eb.Left, variables);
             var right = Replace(parameter, eb.Right, variables);
             return eb.Update(left, eb.Conversion, right);
         }
-        else if (eu is not null) // unary expression
+        if (eu is not null) // unary expression
         {
             var op = Replace(parameter, eu.Operand, variables);
             return eu.Update(op);
         }
-        else if (ec is not null) // call expression
+        if (ec is not null) // call expression
         {
             List<Expression> args = new List<Expression>();
 
@@ -98,7 +99,7 @@ internal static class ExpressionParser
 
             return ec.Update(ec.Object, args);
         }
-        else if (ea is not null) // new array expression
+        if (ea is not null) // new array expression
         {
             List<Expression> values = new List<Expression>();
 
@@ -107,10 +108,7 @@ internal static class ExpressionParser
 
             return ea.Update(values);
         }
-        else
-        {
-            return expr;
-        }
+        return expr;
     }
 }
 #endif

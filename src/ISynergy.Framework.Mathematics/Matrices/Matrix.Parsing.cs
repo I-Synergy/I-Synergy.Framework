@@ -102,10 +102,8 @@ public static partial class Matrix
         {
             return ToString(matrix, Environment.NewLine, provider);
         }
-        else
-        {
-            return ToString(matrix, null, provider);
-        }
+
+        return ToString(matrix, null, provider);
     }
 
     /// <summary>
