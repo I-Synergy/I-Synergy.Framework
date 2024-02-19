@@ -121,7 +121,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <returns>A Task&lt;TModel&gt; representing the asynchronous operation.</returns>
     public virtual async Task<TModel> GetItemByIdAsync<TEntity, TModel, TId>(TId id, CancellationToken cancellationToken = default)
         where TEntity : EntityBase, new()
-        where TModel : ModelBase, new()
+        where TModel : RecordBase, new()
         where TId : struct
     {
         if (await GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false) is { } result)
