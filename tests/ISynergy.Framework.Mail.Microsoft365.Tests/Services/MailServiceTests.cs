@@ -3,7 +3,6 @@ using ISynergy.Framework.Mail.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Threading.Tasks;
 using OptionsX = Microsoft.Extensions.Options.Options;
 
 namespace ISynergy.Framework.Mail.Services.Tests;

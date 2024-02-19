@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.MessageBus.Models;
-using System;
 
 namespace Sample.MessageBus.Subscriber;
 

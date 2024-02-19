@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Vectors;
 using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]

@@ -4,7 +4,6 @@ using ISynergy.Framework.Logging.Base;
 using ISynergy.Framework.Logging.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Sentry;
 
 namespace ISynergy.Framework.Logging.Services;
 

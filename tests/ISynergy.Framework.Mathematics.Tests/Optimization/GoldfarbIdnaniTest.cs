@@ -4,10 +4,7 @@ using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]

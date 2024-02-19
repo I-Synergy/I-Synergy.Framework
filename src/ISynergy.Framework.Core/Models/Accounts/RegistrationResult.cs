@@ -3,7 +3,7 @@
 /// <summary>
 /// Class RegistrationResult.
 /// </summary>
-public class RegistrationResult
+public record RegistrationResult
 {
     /// <summary>
     /// Gets the user identifier.

@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Base;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Automations.Tests.Fixtures;
 
@@ -52,13 +50,7 @@ public class Customer : ModelBase
         Blocked
     }
 
-    public List<string> Actions { get; set; }
-
-    public Customer()
-    {
-        Actions = ["Block", "Activate", "Add", "Delete"];
-
-    }
+    public List<string> Actions { get; set; } = ["Block", "Activate", "Add", "Delete"];
 
     public void Register()
     {

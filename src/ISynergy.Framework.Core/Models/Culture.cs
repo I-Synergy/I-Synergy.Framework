@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models;
 /// Culture model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public class Culture : ModelBase
+public record Culture : RecordBase
 {
     /// <summary>
     /// Gets or sets the CultureId property value.
@@ -16,33 +16,21 @@ public class Culture : ModelBase
     /// <value>The culture identifier.</value>
     [Identity]
     [Required]
-    public int CultureId
-    {
-        get { return GetValue<int>(); }
-        set { SetValue(value); }
-    }
+    public int CultureId { get; set; }
 
     /// <summary>
     /// Gets or sets the CountryId property value.
     /// </summary>
     /// <value>The country identifier.</value>
     [Required]
-    public int CountryId
-    {
-        get { return GetValue<int>(); }
-        set { SetValue(value); }
-    }
+    public int CountryId { get; set; }
 
     /// <summary>
     /// Gets or sets the Language property value.
     /// </summary>
     /// <value>The language.</value>
     [Required]
-    public string Language
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string Language { get; set; }
 
     /// <summary>
     /// Gets or sets the TwoLetterLanguageCode property value.
@@ -50,11 +38,7 @@ public class Culture : ModelBase
     /// <value>The two letter language code.</value>
     [StringLength(5)]
     [Required]
-    public string TwoLetterLanguageCode
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string TwoLetterLanguageCode { get; set; }
 
     /// <summary>
     /// Gets or sets the ThreeLetterLanguageCode property value.
@@ -62,20 +46,12 @@ public class Culture : ModelBase
     /// <value>The three letter language code.</value>
     [StringLength(5)]
     [Required]
-    public string ThreeLetterLanguageCode
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string ThreeLetterLanguageCode { get; set; }
 
     /// <summary>
     /// Gets or sets the CultureInfoCode property value.
     /// </summary>
     /// <value>The culture information code.</value>
     [Required]
-    public string CultureInfoCode
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string CultureInfoCode { get; set; }
 }

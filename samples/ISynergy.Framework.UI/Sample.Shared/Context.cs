@@ -3,12 +3,10 @@ using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Sample.Options;
 using System.Globalization;
-using System.Collections.ObjectModel;
 
 namespace Sample;
 

@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;

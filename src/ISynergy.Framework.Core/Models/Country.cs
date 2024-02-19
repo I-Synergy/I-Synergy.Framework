@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models;
 /// Country model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public class Country : ModelBase
+public record Country : RecordBase
 {
     /// <summary>
     /// Gets or sets the CountryId property value.
@@ -16,11 +16,7 @@ public class Country : ModelBase
     /// <value>The country identifier.</value>
     [Identity]
     [Required]
-    public int CountryId
-    {
-        get { return GetValue<int>(); }
-        set { SetValue(value); }
-    }
+    public int CountryId { get; set; }
 
     /// <summary>
     /// Gets or sets the ISO2Code property value.
@@ -28,11 +24,7 @@ public class Country : ModelBase
     /// <value>The ISO2 code.</value>
     [Required]
     [StringLength(2)]
-    public string ISO2Code
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string ISO2Code { get; set; }
 
     /// <summary>
     /// Gets or sets the CountryISO property value.
@@ -40,11 +32,7 @@ public class Country : ModelBase
     /// <value>The country iso.</value>
     [Required]
     [StringLength(255)]
-    public string CountryISO
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string CountryISO { get; set; }
 
     /// <summary>
     /// Gets or sets the CountryPrefix property value.
@@ -52,40 +40,24 @@ public class Country : ModelBase
     /// <value>The country prefix.</value>
     [Required]
     [StringLength(128)]
-    public string CountryPrefix
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string CountryPrefix { get; set; }
 
     /// <summary>
     /// Gets or sets the IsEU property value.
     /// </summary>
     /// <value><c>true</c> if this instance is eu; otherwise, <c>false</c>.</value>
     [Required]
-    public bool IsEU
-    {
-        get { return GetValue<bool>(); }
-        set { SetValue(value); }
-    }
+    public bool IsEU { get; set; }
 
     /// <summary>
     /// Gets or sets the cultures.
     /// </summary>
     /// <value>The cultures.</value>
-    public List<Culture> Cultures
-    {
-        get { return GetValue<List<Culture>>(); }
-        set { SetValue(value); }
-    }
+    public List<Culture> Cultures { get; set; }
 
     /// <summary>
     /// Gets or sets the Currency property value.
     /// </summary>
     /// <value>The currency.</value>
-    public Currency Currency
-    {
-        get { return GetValue<Currency>(); }
-        set { SetValue(value); }
-    }
+    public Currency Currency { get; set; }
 }

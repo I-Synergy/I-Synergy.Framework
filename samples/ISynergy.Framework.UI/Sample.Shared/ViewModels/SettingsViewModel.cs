@@ -1,10 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 using Sample.Models;
 using System.Collections.ObjectModel;
 

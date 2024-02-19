@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Models.Tests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mvvm.Extensions.Tests;
 

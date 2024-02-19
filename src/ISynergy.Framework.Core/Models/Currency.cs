@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models;
 /// Currency model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public class Currency : ModelBase
+public record Currency : RecordBase
 {
     /// <summary>
     /// Gets or sets the CurrencyId property value.
@@ -16,11 +16,7 @@ public class Currency : ModelBase
     /// <value>The currency identifier.</value>
     [Identity]
     [Required]
-    public int CurrencyId
-    {
-        get { return GetValue<int>(); }
-        set { SetValue(value); }
-    }
+    public int CurrencyId { get; set; }
 
     /// <summary>
     /// Gets or sets the Code property value.
@@ -28,11 +24,7 @@ public class Currency : ModelBase
     /// <value>The code.</value>
     [Required]
     [StringLength(3)]
-    public string Code
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string Code { get; set; }
 
     /// <summary>
     /// Gets or sets the Description property value.
@@ -40,11 +32,7 @@ public class Currency : ModelBase
     /// <value>The description.</value>
     [Required]
     [StringLength(255)]
-    public string Description
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string Description { get; set; }
 
     /// <summary>
     /// Gets or sets the Currency_Symbol property value.
@@ -52,31 +40,19 @@ public class Currency : ModelBase
     /// <value>The currency symbol.</value>
     [Required]
     [StringLength(3)]
-    public string CurrencySymbol
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string CurrencySymbol { get; set; }
 
     /// <summary>
     /// Gets or sets the Rate property value.
     /// </summary>
     /// <value>The rate.</value>
     [Required]
-    public decimal Rate
-    {
-        get { return GetValue<decimal>(); }
-        set { SetValue(value); }
-    }
+    public decimal Rate { get; set; }
 
     /// <summary>
     /// Gets or sets the Rate_Date property value.
     /// </summary>
     /// <value>The rate date.</value>
     [Required]
-    public DateTimeOffset RateDate
-    {
-        get { return GetValue<DateTimeOffset>(); }
-        set { SetValue(value); }
-    }
+    public DateTimeOffset RateDate { get; set; }
 }

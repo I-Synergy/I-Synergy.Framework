@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Tests.Fixture;
 
@@ -21,7 +20,7 @@ public class StartupFixture(IConfiguration configuration)
     /// <summary>
     /// The configuration
     /// </summary>
-    private IConfiguration Configuration = configuration;
+    private readonly IConfiguration _configuration = configuration;
 
     /// <summary>
     /// Configures the services.
@@ -30,7 +29,7 @@ public class StartupFixture(IConfiguration configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddOptions();
-        services.Configure<MaxConcurrentRequestsOptions>(Configuration.GetSection(nameof(MaxConcurrentRequestsOptions)).Bind);
+        services.Configure<MaxConcurrentRequestsOptions>(_configuration.GetSection(nameof(MaxConcurrentRequestsOptions)).Bind);
     }
 
     /// <summary>

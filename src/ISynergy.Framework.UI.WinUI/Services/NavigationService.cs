@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;

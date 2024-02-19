@@ -2,8 +2,6 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using ISynergy.Framework.Core.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Linq;
 
 namespace ISynergy.Framework.Core.Data.Tests;
 

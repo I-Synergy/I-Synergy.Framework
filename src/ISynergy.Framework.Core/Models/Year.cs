@@ -3,7 +3,7 @@
 /// <summary>
 /// Class Year.
 /// </summary>
-public class Year
+public record Year
 {
     /// <summary>
     /// Gets or sets the value.

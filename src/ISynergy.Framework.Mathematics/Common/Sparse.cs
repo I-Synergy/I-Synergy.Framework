@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mathematics;
-
-namespace ISynergy.Framework.Mathematics.Common;
+﻿namespace ISynergy.Framework.Mathematics.Common;
 
 /// <summary>
 ///   Extension methods for <see cref="Sparse{T}">sparse vectors</see>.

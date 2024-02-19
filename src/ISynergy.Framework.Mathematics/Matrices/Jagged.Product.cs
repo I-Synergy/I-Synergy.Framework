@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Vectors;
-
-namespace ISynergy.Framework.Mathematics.Matrices;
+﻿namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Jagged
 {

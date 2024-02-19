@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Vectors;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

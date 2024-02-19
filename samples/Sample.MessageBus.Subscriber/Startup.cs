@@ -1,8 +1,5 @@
 ﻿using ISynergy.Framework.MessageBus.Abstractions;
 using Sample.MessageBus.Models;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sample.MessageBus.Subscriber;
 

@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Tests.Enumerations;
-using System;
 
 namespace ISynergy.Framework.Core.Tests.Data;
 

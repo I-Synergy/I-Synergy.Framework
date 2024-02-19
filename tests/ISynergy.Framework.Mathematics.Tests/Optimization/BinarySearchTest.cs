@@ -2,8 +2,6 @@
 using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Linq;
 
 namespace ISynergy.Framework.Mathematics.Tests.Optimization;
 [TestClass]

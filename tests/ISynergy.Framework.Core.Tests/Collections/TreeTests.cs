@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Tests.Data;
 using ISynergy.Framework.Core.Tests.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace ISynergy.Framework.Core.Collections.Tests;
 

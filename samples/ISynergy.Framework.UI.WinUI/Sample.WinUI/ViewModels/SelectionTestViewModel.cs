@@ -5,7 +5,6 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Views;
 using System.Collections.ObjectModel;
