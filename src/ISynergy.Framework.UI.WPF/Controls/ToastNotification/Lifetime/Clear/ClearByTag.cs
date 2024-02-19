@@ -22,10 +22,8 @@ public class ClearByTag : IClearStrategy
                 {
                     return ReferenceEquals(_tag, null);
                 }
-                else
-                {
-                    return otherTag.Equals(_tag);
-                }
+
+                return otherTag.Equals(_tag);
             })
             .ToList();
 

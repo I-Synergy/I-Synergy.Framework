@@ -25,10 +25,8 @@ public class ResourceNameToGeometryConverter : IValueConverter
         {
             return (Geometry)XamlReader.Load($"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>{Application.Current.Resources[parameter]}</Geometry>");
         }
-        else
-        {
-            return (Geometry)XamlReader.Load("<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'></Geometry>");
-        }
+
+        return (Geometry)XamlReader.Load("<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'></Geometry>");
     }
 
     /// <summary>
@@ -67,10 +65,8 @@ public class ResourceNameToStringConverter : IValueConverter
         {
             return Application.Current.Resources[parameter] as string;
         }
-        else
-        {
-            return string.Empty;
-        }
+
+        return string.Empty;
     }
 
     /// <summary>

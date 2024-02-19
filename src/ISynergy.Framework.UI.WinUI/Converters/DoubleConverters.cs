@@ -24,10 +24,8 @@ public class ZeroDoubleToVisibilityConverter : IValueConverter
         {
             return Visibility.Visible;
         }
-        else
-        {
-            return Visibility.Collapsed;
-        }
+
+        return Visibility.Collapsed;
     }
 
     /// <summary>

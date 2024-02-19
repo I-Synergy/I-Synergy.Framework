@@ -204,7 +204,7 @@ public class NavigationService : INavigationService
                 {
                     if (owner.Blades.Count < 1)
                         owner.IsPaneVisible = false;
-                    else if (owner.Blades.Last() is IView blade)
+                    else if (owner.Blades.Last() is { } blade)
                         blade.IsEnabled = true;
                 }
             }
@@ -248,8 +248,8 @@ public class NavigationService : INavigationService
     {
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
-            dependencyObject.FindDescendant<Frame>() is Frame frame &&
-            NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is View page)
+            dependencyObject.FindDescendant<Frame>() is { } frame &&
+            NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
         {
             // Check if actual page is the same as destination page.
             if (frame.Content is View originalView)
@@ -285,7 +285,7 @@ public class NavigationService : INavigationService
     {
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
-            dependencyObject.FindDescendant<Frame>() is Frame frame &&
+            dependencyObject.FindDescendant<Frame>() is { } frame &&
             _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
         {
             if (viewModel is null && _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
@@ -317,7 +317,7 @@ public class NavigationService : INavigationService
 
     public async Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is View page &&
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page &&
             Application.Current is BaseApplication baseApplication)
         {
             baseApplication.MainWindow.Content = page;

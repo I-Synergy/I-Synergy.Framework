@@ -32,10 +32,10 @@ public class JaggedEigenvalueDecompositionTest
     {
         // Symmetric Test
         double[][] A =
-        {
-            new double[] { 4, 2 },
-            new double[] { 2, 4 }
-        };
+        [
+            [4, 2],
+            [2, 4]
+        ];
 
         JaggedEigenvalueDecomposition target = new(A);
 
@@ -43,16 +43,16 @@ public class JaggedEigenvalueDecompositionTest
         double[][] Q = target.Eigenvectors;
 
         double[][] expectedD =
-        {
-            new double[] { 2, 0 },
-            new double[] { 0, 6 }
-        };
+        [
+            [2, 0],
+            [0, 6]
+        ];
 
         double[][] expectedQ =
-        {
-           new double[] {  0.7071, 0.7071 },
-           new double[] { -0.7071, 0.7071 }
-        };
+        [
+            [0.7071, 0.7071],
+            [-0.7071, 0.7071]
+        ];
 
 
         Assert.IsTrue(Matrix.IsEqual(expectedD, D, 0.00001));
@@ -75,22 +75,22 @@ public class JaggedEigenvalueDecompositionTest
     {
         // Asymmetric Test
         double[][] A =
-        {
-            new double[] {  5, 2, 1 },
-            new double[] {  1, 4, 1 },
-            new double[] { -1, 2, 3 }
-        };
+        [
+            [5, 2, 1],
+            [1, 4, 1],
+            [-1, 2, 3]
+        ];
 
         JaggedEigenvalueDecomposition target = new(A);
         double[][] D = target.DiagonalMatrix;
         double[][] Q = target.Eigenvectors;
 
         double[][] expectedD =
-        {
-            new double[] { 6, 0, 0 },
-            new double[] { 0, 4, 0 },
-            new double[] { 0, 0, 2 }
-        };
+        [
+            [6, 0, 0],
+            [0, 4, 0],
+            [0, 0, 2]
+        ];
 
         // Decomposition identity
         double[][] actualA = Matrix.Dot(Matrix.Dot(Q, D), Q.Inverse());

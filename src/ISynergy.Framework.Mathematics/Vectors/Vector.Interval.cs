@@ -44,10 +44,10 @@ public static partial class Vector
             throw new ArgumentOutOfRangeException("steps", "The number of steps must be positive.");
 
         if (steps == 0)
-            return new double[] { };
+            return [];
 
         if (steps == 1)
-            return new double[] { a };
+            return [a];
 
         if (a == b)
             return Vector.Create(size: steps, value: (double)a);
@@ -119,10 +119,10 @@ public static partial class Vector
             throw new ArgumentOutOfRangeException("steps", "The number of steps must be positive.");
 
         if (steps == 0)
-            return new double[] { };
+            return [];
 
         if (steps == 1)
-            return new double[] { a };
+            return [a];
 
         if (a == b)
             return Vector.Create(size: steps, value: a);
@@ -181,7 +181,7 @@ public static partial class Vector
     public static double[] Interval(double a, double b, double stepSize)
     {
         if (a == b)
-            return new[] { a };
+            return [a];
 
         double[] r;
 

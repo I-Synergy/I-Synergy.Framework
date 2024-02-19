@@ -48,7 +48,7 @@ public class AuthenticationProvider : IAuthenticationProvider
     {
         if (authorizationTag is not null && Context.Profile is not null)
         {
-            var roles = authorizationTag.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            var roles = authorizationTag.Split([";"], StringSplitOptions.RemoveEmptyEntries);
 
             if (Context.Profile.Roles.Intersect(roles).Any()) return true;
         }

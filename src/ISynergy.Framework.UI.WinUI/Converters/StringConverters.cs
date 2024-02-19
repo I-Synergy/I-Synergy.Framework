@@ -69,10 +69,8 @@ public class StringToBooleanConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -89,10 +87,8 @@ public class StringToBooleanConverter : IValueConverter
         {
             return parameter.ToString();
         }
-        else
-        {
-            return string.Empty;
-        }
+
+        return string.Empty;
     }
 }
 
@@ -117,10 +113,8 @@ public class StringToVisibilityConverter : IValueConverter
         {
             return Visibility.Visible;
         }
-        else
-        {
-            return Visibility.Collapsed;
-        }
+
+        return Visibility.Collapsed;
     }
 
     /// <summary>
@@ -159,10 +153,8 @@ public class StringToEnabledConverter : IValueConverter
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     /// <summary>
@@ -201,10 +193,8 @@ public class StringToInvertEnabledConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -245,10 +235,8 @@ public class StringToGeometryConverter : IValueConverter
                     "<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>"
                     + value + "</Geometry>");
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     /// <summary>
@@ -287,10 +275,8 @@ public class StringToDecimalConverter : IValueConverter
         {
             return result;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 
     /// <summary>
@@ -328,10 +314,8 @@ public class StringToIntegerConverter : IValueConverter
         {
             return result;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 
     /// <summary>

@@ -20,8 +20,8 @@ public class MonteCarloIntegralTest
         Func<double, double, double> H =
             (x, y) => x * x + y * y <= 1 ? 1 : 0;
 
-        double[] from = { -1, -1 };
-        double[] to = { +1, +1 };
+        double[] from = [-1, -1];
+        double[] to = [+1, +1];
 
         int samples = 1000000;
 

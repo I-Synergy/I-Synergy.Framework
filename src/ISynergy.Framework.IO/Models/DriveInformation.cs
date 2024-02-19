@@ -27,7 +27,7 @@ public static class DriveInformation
             return true;
 
         // Get just the drive letter for WMI call
-        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive)
+        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is { } drive)
             return drive.TotalFreeSpace > fileSize;
 
         return false;
@@ -50,7 +50,7 @@ public static class DriveInformation
             return true;
 
         // Get just the drive letter for WMI call
-        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive && drive.DriveType == DriveType.Network)
+        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is { } drive && drive.DriveType == DriveType.Network)
             return true;
 
         return false;
@@ -96,7 +96,7 @@ public static class DriveInformation
             return Directory.GetDirectoryRoot(path);
 
         // Get just the drive letter for WMI call
-        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive && drive.DriveType == DriveType.Network)
+        if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is { } drive && drive.DriveType == DriveType.Network)
             return drive.RootDirectory.ToString();
 
         return GetDriveName(path);
@@ -126,9 +126,7 @@ public static class DriveInformation
         {
             return path; // Local drive, no resolving occurred
         }
-        else
-        {
-            return path.Replace(GetDriveName(path), rootPath);
-        }
+
+        return path.Replace(GetDriveName(path), rootPath);
     }
 }

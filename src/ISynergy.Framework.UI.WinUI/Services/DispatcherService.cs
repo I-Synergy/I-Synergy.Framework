@@ -12,10 +12,9 @@ public class DispatcherService : IDispatcherService
     {
         get
         {
-            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
+            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is { } dispatcherQueue)
                 return dispatcherQueue;
-            else
-                return DispatcherQueue.GetForCurrentThread();
+            return DispatcherQueue.GetForCurrentThread();
         }
     }
 
@@ -26,9 +25,9 @@ public class DispatcherService : IDispatcherService
     /// <returns></returns>
     public bool Invoke(Action action)
     {
-        if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
+        if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is { } dispatcherQueue)
             return dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => action());
-        else if (DispatcherQueue.GetForCurrentThread() is DispatcherQueue dispatcher)
+        if (DispatcherQueue.GetForCurrentThread() is { } dispatcher)
             return dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () => action());
         return false;
     }

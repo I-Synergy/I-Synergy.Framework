@@ -21,10 +21,8 @@ public static class DateTimeOffsetConverter
         {
             return new TimeSpan(0);
         }
-        else
-        {
-            return dt - dt.Date;
-        }
+
+        return dt - dt.Date;
     }
 
     /// <summary>

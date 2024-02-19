@@ -20,7 +20,7 @@ public partial class MatrixTest
 
         int[] middle = Matrix.Reshape(start);
 
-        int[] array = { 1, 3, 5, 2, 4, 6 };
+        int[] array = [1, 3, 5, 2, 4, 6];
         Assert.IsTrue(Matrix.IsEqual(array, middle));
 
         int rows = 3;
@@ -53,12 +53,12 @@ public partial class MatrixTest
         };
 
         int dimension = 1;
-        double[] expected = { 1, 2, 3, 4, 5, 6 };
+        double[] expected = [1, 2, 3, 4, 5, 6];
         double[] actual = Matrix.Reshape(array, (MatrixOrder)dimension);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
 
         dimension = 0;
-        expected = new double[] { 1, 4, 2, 5, 3, 6 };
+        expected = [1, 4, 2, 5, 3, 6];
         actual = Matrix.Reshape(array, (MatrixOrder)dimension);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -67,19 +67,19 @@ public partial class MatrixTest
     public void ReshapeTest2()
     {
         double[][] array =
-        {
-            new double[] { 1, 2, 3 },
-            new double[] { 4, 5, 6 }
-        };
+        [
+            [1, 2, 3],
+            [4, 5, 6]
+        ];
 
         {
-            double[] expected = { 1, 2, 3, 4, 5, 6 };
+            double[] expected = [1, 2, 3, 4, 5, 6];
             double[] actual = Matrix.Reshape(array, (MatrixOrder)1);
             Assert.IsTrue(expected.IsEqual(actual));
         }
 
         {
-            double[] expected = { 1, 4, 2, 5, 3, 6 };
+            double[] expected = [1, 4, 2, 5, 3, 6];
             double[] actual = Matrix.Reshape(array, 0);
             Assert.IsTrue(expected.IsEqual(actual));
         }
@@ -89,25 +89,25 @@ public partial class MatrixTest
     public void ReshapeTest3()
     {
         double[][] array =
-        {
-            new double[] { 1, 2 },
-            new double[] { 3, 4, 5, 6 }
-        };
+        [
+            [1, 2],
+            [3, 4, 5, 6]
+        ];
 
         {
-            double[] expected = { 1, 2, 3, 4, 5, 6 };
+            double[] expected = [1, 2, 3, 4, 5, 6];
             double[] actual = Matrix.Reshape(array);
             Assert.IsTrue(expected.IsEqual(actual));
         }
 
         {
-            double[] expected = { 1, 2, 3, 4, 5, 6 };
+            double[] expected = [1, 2, 3, 4, 5, 6];
             double[] actual = Matrix.Reshape(array, (MatrixOrder)1);
             Assert.IsTrue(expected.IsEqual(actual));
         }
 
         {
-            double[] expected = { 1, 3, 2, 4, 5, 6 };
+            double[] expected = [1, 3, 2, 4, 5, 6];
             double[] actual = Matrix.Reshape(array, 0);
             Assert.IsTrue(expected.IsEqual(actual));
         }

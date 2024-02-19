@@ -17,8 +17,7 @@ public static class TypeExtensions
     {
         if (includeInherited || _self.BaseType is null)
             return _self.GetInterfaces();
-        else
-            return _self.GetInterfaces().Except(_self.BaseType.GetInterfaces());
+        return _self.GetInterfaces().Except(_self.BaseType.GetInterfaces());
     }
 
     /// <summary>

@@ -203,8 +203,8 @@ public class AlphanumericStringComparer : IComparer
                 }
                 else
                 {
-                    var st1ZeroCount = str1[i].ToString().Trim().Length - str1[i].ToString().TrimStart(new char[] { '0' }).Length;
-                    var st2ZeroCount = str2[i].ToString().Trim().Length - str2[i].ToString().TrimStart(new char[] { '0' }).Length;
+                    var st1ZeroCount = str1[i].ToString().Trim().Length - str1[i].ToString().TrimStart(['0']).Length;
+                    var st2ZeroCount = str2[i].ToString().Trim().Length - str2[i].ToString().TrimStart(['0']).Length;
 
                     if (st1ZeroCount > st2ZeroCount)
                         result = -1;
@@ -221,8 +221,7 @@ public class AlphanumericStringComparer : IComparer
 
             if (result == 0)
                 continue;
-            else
-                break;
+            break;
         }
 
         return result;

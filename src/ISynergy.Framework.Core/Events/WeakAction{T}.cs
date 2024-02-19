@@ -131,10 +131,9 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
             {
                 Method.Invoke(
                     actionTarget,
-                    new object[]
-                    {
+                    [
                         parameter
-                    });
+                    ]);
             }
         }
     }

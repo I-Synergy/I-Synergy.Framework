@@ -23,10 +23,8 @@ public class DecimalToIsVisibleConverter : IValueConverter
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     /// <summary>
@@ -65,10 +63,8 @@ public class ZeroDecimalToIsVisibleConverter : IValueConverter
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -325,10 +321,8 @@ public class DecimalToStringConverter : IValueConverter
         {
             return result;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 }
 

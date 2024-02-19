@@ -20,7 +20,7 @@ internal class LabelPrinterService : ILabelPrinterService
         DymoSDK.App.Init();
 
         _label = DymoLabel.Instance;
-        _twinTurboRolls = new List<string>() { "Auto", "Left", "Right" };
+        _twinTurboRolls = ["Auto", "Left", "Right"];
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ internal class LabelPrinterService : ILabelPrinterService
     public async Task PrintLabelAsync(string content, int copies = 1)
     {
         var printers = await DymoPrinter.Instance.GetPrinters();
-        if (printers.Any() && printers.First() is IPrinter printer)
+        if (printers.Any() && printers.First() is { } printer)
         {
             // Send to print.
             if (printer.Name.Contains("Twin Turbo"))

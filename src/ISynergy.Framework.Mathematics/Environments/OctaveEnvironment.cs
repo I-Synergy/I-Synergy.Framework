@@ -144,7 +144,7 @@ public abstract class OctaveEnvironment
     /// <summary>Random vector.</summary>
     protected static mat rand(int n, int m) { return Matrix.Random(n, m); }
     /// <summary>Size of a matrix.</summary>
-    protected static double[] size(double[,] m) { return new double[] { m.GetLength(0), m.GetLength(1) }; }
+    protected static double[] size(double[,] m) { return [m.GetLength(0), m.GetLength(1)]; }
     /// <summary>Rank of a matrix.</summary>
     protected static int rank(double[,] m) { return new SingularValueDecomposition(m).Rank; }
     /// <summary>Matrix sum vector.</summary>
@@ -217,10 +217,7 @@ public abstract class OctaveEnvironment
     protected List<mat> svd(double[,] m)
     {
         var svd = new SingularValueDecomposition(m, true, true, true);
-        return new List<mat>
-        {
-            svd.LeftSingularVectors, svd.DiagonalMatrix, svd.RightSingularVectors
-        };
+        return [svd.LeftSingularVectors, svd.DiagonalMatrix, svd.RightSingularVectors];
     }
 
     #endregion

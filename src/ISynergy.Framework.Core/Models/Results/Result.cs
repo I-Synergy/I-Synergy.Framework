@@ -6,13 +6,13 @@ public class Result : IResult
 {
     public Result() { }
 
-    public List<string> Messages { get; set; } = new List<string>();
+    public List<string> Messages { get; set; } = [];
 
     public bool Succeeded { get; set; }
 
     public static IResult Fail() => new Result { Succeeded = false };
 
-    public static IResult Fail(string message) => new Result { Succeeded = false, Messages = new List<string> { message } };
+    public static IResult Fail(string message) => new Result { Succeeded = false, Messages = [message] };
 
     public static IResult Fail(List<string> messages) => new Result { Succeeded = false, Messages = messages };
 
@@ -24,7 +24,7 @@ public class Result : IResult
 
     public static IResult Success() => new Result { Succeeded = true };
 
-    public static IResult Success(string message) => new Result { Succeeded = true, Messages = new List<string> { message } };
+    public static IResult Success(string message) => new Result { Succeeded = true, Messages = [message] };
 
     public static Task<IResult> SuccessAsync() => Task.FromResult(Success());
 

@@ -41,14 +41,14 @@ public class LinearConstraintTest
 
         LinearConstraint lc3 = new(numberOfVariables: 2)
         {
-            CombinedAs = new double[] { 3, 5 },
+            CombinedAs = [3, 5],
             ShouldBe = ConstraintType.LesserThanOrEqualTo,
             Value = 7
         };
 
         // Then, we can check whether a constraint is violated and, if so,
         // by how much.
-        double[] vector = { -2, 3 };
+        double[] vector = [-2, 3];
 
         if (lc1.IsViolated(vector))
         {
@@ -74,23 +74,23 @@ public class LinearConstraintTest
     {
         QuadraticObjectiveFunction f = new("a + b = 0");
 
-        LinearConstraint[] constraints1 = new[]
-        {
+        LinearConstraint[] constraints1 =
+        [
             new LinearConstraint(f, "0.0732 * a + 0.0799 * b = 0.098"),
             new LinearConstraint(f, "a + b = 1"),
             new LinearConstraint(f, "a >= 0"),
             new LinearConstraint(f, "b >= 0"),
             new LinearConstraint(f, "a >= 0.5")
-        };
+        ];
 
-        LinearConstraint[] constraints2 = new[]
-        {
+        LinearConstraint[] constraints2 =
+        [
             new LinearConstraint(f, "0.0732 * a + 0.0799 * b - 0.098 = 0"),
             new LinearConstraint(f, "a + b -2 = -1"),
             new LinearConstraint(f, "-a <= 0"),
             new LinearConstraint(f, "-b <= 0"),
             new LinearConstraint(f, "-a + 0.5 <= 0")
-        };
+        ];
 
         for (int i = 0; i < constraints1.Length; i++)
         {
@@ -101,7 +101,7 @@ public class LinearConstraintTest
             {
                 for (double b = -10; b < 10; b += 0.1)
                 {
-                    double[] x = { a, b };
+                    double[] x = [a, b];
                     double actual = c1.GetViolation(x);
                     double expected = c2.GetViolation(x);
                     Assert.AreEqual(expected, actual);
@@ -123,8 +123,8 @@ public class LinearConstraintTest
         Assert.AreEqual(1, f.LinearTerms[0]);
         Assert.AreEqual(1, f.LinearTerms[1]);
 
-        LinearConstraint[] constraints1 = new[]
-        {
+        LinearConstraint[] constraints1 =
+        [
             new LinearConstraint(f, () => 0.0732 * a + 0.0799 * b == 0.098),
             new LinearConstraint(f, () => a + b == 1),
             new LinearConstraint(f, () => a >= 0),
@@ -132,10 +132,10 @@ public class LinearConstraintTest
             new LinearConstraint(f, () => a >= 0.5),
             new LinearConstraint(f, () => 1 + a >= -5),
             new LinearConstraint(f, () => -1 + a <= -5)
-        };
+        ];
 
-        LinearConstraint[] constraints2 = new[]
-        {
+        LinearConstraint[] constraints2 =
+        [
             new LinearConstraint(f, () => 0.0732 * a + 0.0799 * b - 0.098 == 0),
             new LinearConstraint(f, () => a + b -2 == -1),
             new LinearConstraint(f, () => -a + 1 <= +1),
@@ -143,7 +143,7 @@ public class LinearConstraintTest
             new LinearConstraint(f, () => -a + 0.5 <= 0),
             new LinearConstraint(f, () => a + 1 >= -5),
             new LinearConstraint(f, () => a - 1 <= -5)
-        };
+        ];
 
         Assert.AreEqual(0.098, constraints1[0].Value);
         Assert.AreEqual(0.098, constraints2[0].Value);
@@ -163,7 +163,7 @@ public class LinearConstraintTest
             {
                 for (b = -10; b < 10; b += 0.1)
                 {
-                    double[] x = { a, b };
+                    double[] x = [a, b];
                     double actual = c1.GetViolation(x);
                     double expected = c2.GetViolation(x);
                     Assert.AreEqual(expected, actual);
@@ -176,14 +176,14 @@ public class LinearConstraintTest
     public void TestGradientWithIndices()
     {
         // Arrange1
-        int[] indices1 = { 2, 4, 6 };
-        int[] indices2 = { 0, 4, 6 };
-        double[] combinedAs1 = { 2, 3, 4 };
-        double[] combinedAs2 = { 9, 5, 1 };
+        int[] indices1 = [2, 4, 6];
+        int[] indices2 = [0, 4, 6];
+        double[] combinedAs1 = [2, 3, 4];
+        double[] combinedAs2 = [9, 5, 1];
         double[] x = Vector.Random(8);
-        double[] expected1 = { 0, 0, 2, 0, 3, 0, 4, 0 };
-        double[] expected2 = { 0, 0, 9, 0, 5, 0, 1, 0 };
-        double[] expected3 = { 9, 0, 0, 0, 5, 0, 1, 0 };
+        double[] expected1 = [0, 0, 2, 0, 3, 0, 4, 0];
+        double[] expected2 = [0, 0, 9, 0, 5, 0, 1, 0];
+        double[] expected3 = [9, 0, 0, 0, 5, 0, 1, 0];
 
         LinearConstraint linearConstraint = new(indices1.Length)
         {
@@ -222,8 +222,8 @@ public class LinearConstraintTest
     public void TestGradientWithoutIndices()
     {
         // Arrange1
-        double[] combinedAs1 = { 2, 3, 4, 5, 6 };
-        double[] combinedAs2 = { 9, 5, 1, 5, 8 };
+        double[] combinedAs1 = [2, 3, 4, 5, 6];
+        double[] combinedAs2 = [9, 5, 1, 5, 8];
         double[] x = Vector.Random(5);
 
         LinearConstraint linearConstraint = new(combinedAs1)

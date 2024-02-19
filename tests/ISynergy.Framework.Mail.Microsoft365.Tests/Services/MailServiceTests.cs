@@ -20,7 +20,7 @@ public class MailServiceTests
         _mailOptions.TenantId = "";
         _mailOptions.Sender = "Support Test";
         _mailOptions.EmailAddress = "support@i-synergy.nl";
-        _mailOptions.Scopes = new string[] { "https://graph.microsoft.com/.default" };
+        _mailOptions.Scopes = ["https://graph.microsoft.com/.default"];
     }
 
     [TestMethod()]

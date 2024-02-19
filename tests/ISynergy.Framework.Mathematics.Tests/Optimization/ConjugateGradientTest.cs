@@ -12,11 +12,11 @@ public class ConjugateGradientTest
         Func<double[], double> f = BroydenFletcherGoldfarbShannoTest.rosenbrockFunction;
         Func<double[], double[]> g = BroydenFletcherGoldfarbShannoTest.rosenbrockGradient;
 
-        Assert.AreEqual(104, f(new[] { -1.0, 2.0 }));
+        Assert.AreEqual(104, f([-1.0, 2.0]));
 
 
         int n = 2; // number of variables
-        double[] initial = { -1.2, 1 };
+        double[] initial = [-1.2, 1];
 
         ConjugateGradient cg = new(n, f, g);
         cg.Method = ConjugateGradientMethod.FletcherReeves;
@@ -53,11 +53,11 @@ public class ConjugateGradientTest
         Func<double[], double> f = BroydenFletcherGoldfarbShannoTest.rosenbrockFunction;
         Func<double[], double[]> g = BroydenFletcherGoldfarbShannoTest.rosenbrockGradient;
 
-        Assert.AreEqual(104, f(new[] { -1.0, 2.0 }));
+        Assert.AreEqual(104, f([-1.0, 2.0]));
 
 
         int n = 2; // number of variables
-        double[] initial = { -1.2, 1 };
+        double[] initial = [-1.2, 1];
 
         ConjugateGradient cg = new(n, f, g);
         cg.Method = ConjugateGradientMethod.PolakRibiere;
@@ -94,11 +94,11 @@ public class ConjugateGradientTest
         Func<double[], double> f = BroydenFletcherGoldfarbShannoTest.rosenbrockFunction;
         Func<double[], double[]> g = BroydenFletcherGoldfarbShannoTest.rosenbrockGradient;
 
-        Assert.AreEqual(104, f(new[] { -1.0, 2.0 }));
+        Assert.AreEqual(104, f([-1.0, 2.0]));
 
 
         int n = 2; // number of variables
-        double[] initial = { -1.2, 1 };
+        double[] initial = [-1.2, 1];
 
         ConjugateGradient cg = new(n, f, g);
         cg.Method = ConjugateGradientMethod.PositivePolakRibiere;

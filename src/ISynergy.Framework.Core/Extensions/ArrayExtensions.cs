@@ -127,7 +127,7 @@ public static class ArrayExtensions
     public static int[] GetLength(this Array array, bool deep = true, bool max = false)
     {
         if (array is null)
-            return new[] { -1 };
+            return [-1];
         if (array.Rank == 0)
             return new int[0];
 

@@ -273,7 +273,7 @@ public class GlobalMesh
 
         if (distance == 0)
         {
-            return new List<long> { meshNumber };
+            return [meshNumber];
         }
 
         var center = Projection.FromEuclidian(CenterOf(meshNumber));

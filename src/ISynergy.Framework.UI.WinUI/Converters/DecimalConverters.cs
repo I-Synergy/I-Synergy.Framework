@@ -24,10 +24,8 @@ public class DecimalToVisibilityConverter : IValueConverter
         {
             return Visibility.Collapsed;
         }
-        else
-        {
-            return Visibility.Visible;
-        }
+
+        return Visibility.Visible;
     }
 
     /// <summary>
@@ -309,10 +307,8 @@ public class DecimalToStringConverter : IValueConverter
         {
             return result;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 }
 
@@ -355,8 +351,7 @@ public class DecimalToDoubleConverter : IValueConverter
         {
             if (doubleValue is double.NaN)
                 return 0m;
-            else
-                return System.Convert.ToDecimal(doubleValue);
+            return System.Convert.ToDecimal(doubleValue);
         }
 
         return 0m;

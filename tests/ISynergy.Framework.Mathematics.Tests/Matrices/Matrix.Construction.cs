@@ -25,10 +25,10 @@ public partial class MatrixTest
         }
 
         int[][][] expected =
-        {
-            new int[][] { new[] { 0 }, new[] { 1 }, new[] { 2 } },
-            new int[][] { new[] { 1 }, new[] { 2 }, new[] { 3 } }
-        };
+        [
+            new int[][] { [0], [1], [2] },
+            new int[][] { [1], [2], [3] }
+        ];
 
         Assert.IsTrue(expected.IsEqual(jagged));
     }
@@ -57,21 +57,21 @@ public partial class MatrixTest
     public void EnumerateJaggedTest()
     {
         int[][][] input =
-        {
-            new int[][] { new[] { 0 }, new[] { 1 }, new[] { 2 } },
-            new int[][] { new[] { 1 }, new[] { 2 }, new[] { 3 } }
-        };
+        [
+            new int[][] { [0], [1], [2] },
+            new int[][] { [1], [2], [3] }
+        ];
 
-        int[] expected = { 0, 1, 2, 1, 2, 3 };
+        int[] expected = [0, 1, 2, 1, 2, 3];
 
         List<int> actual = [];
-        foreach (object obj in Jagged.Enumerate(input, new int[] { 2, 3, 1 }))
+        foreach (object obj in Jagged.Enumerate(input, [2, 3, 1]))
             actual.Add((int)obj);
 
         Assert.IsTrue(expected.IsEqual(actual.ToArray()));
 
         actual.Clear();
-        foreach (int obj in Jagged.Enumerate<int>(input, new int[] { 2, 3, 1 }))
+        foreach (int obj in Jagged.Enumerate<int>(input, [2, 3, 1]))
             actual.Add(obj);
 
         Assert.IsTrue(expected.IsEqual(actual.ToArray()));
@@ -81,21 +81,21 @@ public partial class MatrixTest
     public void EnumerateJaggedTest2()
     {
         int[][] input =
-        {
-            new int[] { 0, 1, 2 },
-            new int[] { 1, 2, 3 }
-        };
+        [
+            [0, 1, 2],
+            [1, 2, 3]
+        ];
 
-        int[] expected = { 0, 1, 2, 1, 2, 3 };
+        int[] expected = [0, 1, 2, 1, 2, 3];
 
         List<int> actual = [];
-        foreach (object obj in Jagged.Enumerate(input, new int[] { 2 }))
+        foreach (object obj in Jagged.Enumerate(input, [2]))
             actual.AddRange((int[])obj);
 
         Assert.IsTrue(expected.IsEqual(actual.ToArray()));
 
         actual.Clear();
-        foreach (int[] obj in Jagged.Enumerate<int[]>(input, new int[] { 2 }))
+        foreach (int[] obj in Jagged.Enumerate<int[]>(input, [2]))
             actual.AddRange(obj);
 
         Assert.IsTrue(expected.IsEqual(actual.ToArray()));
@@ -105,12 +105,12 @@ public partial class MatrixTest
     public void EnumerateJaggedNoShapeTest()
     {
         int[][][] input =
-        {
-            new int[][] { new[] { 0 }, new[] { 1 }, new[] { 2 } },
-            new int[][] { new[] { 1 }, new[] { 2 }, new[] { 3 } }
-        };
+        [
+            new int[][] { [0], [1], [2] },
+            new int[][] { [1], [2], [3] }
+        ];
 
-        int[] expected = { 0, 1, 2, 1, 2, 3 };
+        int[] expected = [0, 1, 2, 1, 2, 3];
 
         List<int> actual = [];
         foreach (object obj in Jagged.Enumerate(input))
@@ -129,21 +129,21 @@ public partial class MatrixTest
     public void EnumerateJaggedVariableLengthTest()
     {
         int[][][] input =
-        {
-            new int[][] { new[] { 0 }, new[] { 1 } },
-            new int[][] { new[] { 9 }, new int[] { }, new[] { 3 } }
-        };
+        [
+            new int[][] { [0], [1] },
+            new int[][] { [9], [], [3] }
+        ];
 
-        int[] expected = { 0, 1, 0, 9, 0, 3 };
+        int[] expected = [0, 1, 0, 9, 0, 3];
 
         List<int> actual = [];
-        foreach (object obj in Jagged.Enumerate(input, new int[] { 2, 3, 1 }))
+        foreach (object obj in Jagged.Enumerate(input, [2, 3, 1]))
             actual.Add(obj is null ? 0 : (int)obj);
 
         Assert.IsTrue(expected.IsEqual(actual.ToArray()));
 
         actual.Clear();
-        foreach (int obj in Jagged.Enumerate<int>(input, new int[] { 2, 3, 1 }))
+        foreach (int obj in Jagged.Enumerate<int>(input, [2, 3, 1]))
             actual.Add(obj);
 
         Assert.IsTrue(expected.IsEqual(actual.ToArray()));

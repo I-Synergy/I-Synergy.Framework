@@ -456,7 +456,8 @@ public class LinearConstraint : IConstraint
             terms[term] = 1;
             return term;
         }
-        else if (eb is not null) // binary expression
+
+        if (eb is not null) // binary expression
         {
             if (expr.NodeType == ExpressionType.Multiply)
             {
@@ -475,9 +476,11 @@ public class LinearConstraint : IConstraint
 
                     return term;
                 }
-                else throw new FormatException("Unexpected expression.");
+
+                throw new FormatException("Unexpected expression.");
             }
-            else if (expr.NodeType == ExpressionType.Add)
+
+            if (expr.NodeType == ExpressionType.Add)
             {
                 // This could be an expression + term, a term + expression or an expression + expression
                 BinaryExpression lb = eb.Left as BinaryExpression;

@@ -58,20 +58,20 @@ public class CommonToolsTest
         double toMax = 100;
 
         double[][] x =
-        {
-            new double[] { -1.0,  1.0 },
-            new double[] { -0.2,  0.0 },
-            new double[] { -0.6,  0.0 },
-            new double[] {  0.0, -1.0 },
-        };
+        [
+            [-1.0,  1.0],
+            [-0.2,  0.0],
+            [-0.6,  0.0],
+            [0.0, -1.0]
+        ];
 
         double[][] expected =
-        {
-            new double[] {    0, 100 },
-            new double[] {   80,  50 },
-            new double[] {   40,  50 },
-            new double[] {  100,   0 },
-        };
+        [
+            [0, 100],
+            [80,  50],
+            [40,  50],
+            [100,   0]
+        ];
 
         double[] min = Matrix.Min(x, 0);
         double[] max = Matrix.Max(x, 0);

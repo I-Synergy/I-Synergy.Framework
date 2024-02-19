@@ -227,7 +227,7 @@ public struct Vector4
     /// 
     public float[] ToArray()
     {
-        return new float[4] { X, Y, Z, W };
+        return [X, Y, Z, W];
     }
 
     /// <summary>

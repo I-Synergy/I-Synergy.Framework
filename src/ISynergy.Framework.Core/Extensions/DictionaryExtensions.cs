@@ -27,7 +27,7 @@ public static class DictionaryExtensions
             var setEquals = typeof(TValue).GetMethod("SetEquals");
             foreach (var k in aKeys)
             {
-                if (!(bool)setEquals.Invoke(a[k], new object[] { b[k] }))
+                if (!(bool)setEquals.Invoke(a[k], [b[k]]))
                     return false;
             }
         }

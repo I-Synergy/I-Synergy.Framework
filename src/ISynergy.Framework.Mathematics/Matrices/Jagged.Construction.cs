@@ -620,7 +620,7 @@ public static partial class Jagged
     {
         T[][] column = new T[values.Length][];
         for (var i = 0; i < column.Length; i++)
-            column[i] = new[] { values[i] };
+            column[i] = [values[i]];
 
         return column;
     }

@@ -126,14 +126,15 @@ public abstract class ObservableClass : IObservableClass
                 return false;
             }
 
-            if (propertiesToCheck.Where(q => q.Name.Equals(property.Name)).SingleOrDefault() is PropertyInfo propertyInfo)
+            if (propertiesToCheck.SingleOrDefault(q => q.Name.Equals(property.Name)) is { } propertyInfo)
             {
                 if ((property.GetValue(this) is null && propertyInfo.GetValue(obj) is not null) ||
                     (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is null))
                 {
                     return false;
                 }
-                else if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this).Equals(propertyInfo.GetValue(obj)))
+
+                if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this).Equals(propertyInfo.GetValue(obj)))
                 {
                     return false;
                 }
@@ -179,10 +180,10 @@ public abstract class ObservableClass : IObservableClass
     /// <returns>T.</returns>
     protected T GetValue<T>([CallerMemberName] string propertyName = null)
     {
-        if (!Properties.ContainsKey(propertyName))
+        if (propertyName != null && !Properties.ContainsKey(propertyName))
             Properties.Add(propertyName, new Property<T>(propertyName));
 
-        if (Properties[propertyName] is IProperty<T> property)
+        if (propertyName != null && Properties[propertyName] is IProperty<T> property)
             return property.Value;
 
         return default;
@@ -196,10 +197,10 @@ public abstract class ObservableClass : IObservableClass
     /// <param name="propertyName">Name of the property.</param>
     protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
     {
-        if (!Properties.ContainsKey(propertyName))
+        if (propertyName != null && !Properties.ContainsKey(propertyName))
             Properties.Add(propertyName, new Property<T>(propertyName));
 
-        if (Properties[propertyName] is IProperty<T> property)
+        if (propertyName != null && Properties[propertyName] is IProperty<T> property)
         {
             var previous = property.Value;
 
@@ -224,10 +225,10 @@ public abstract class ObservableClass : IObservableClass
     /// <param name="propertyName">Name of the property.</param>
     protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
-        if (!Properties.ContainsKey(propertyName))
+        if (propertyName != null && !Properties.ContainsKey(propertyName))
             Properties.Add(propertyName, new Property<T>(propertyName));
 
-        if (Properties[propertyName] is IProperty<T> property)
+        if (propertyName != null && Properties[propertyName] is IProperty<T> property)
         {
             var previous = field;
 
@@ -318,7 +319,7 @@ public abstract class ObservableClass : IObservableClass
     [DataTableIgnore]
     [XmlIgnore]
     [Display(AutoGenerateField = false)]
-    public ObservableCollection<KeyValuePair<string, string>> Errors { get; } = new ObservableCollection<KeyValuePair<string, string>>();
+    public ObservableCollection<KeyValuePair<string, string>> Errors { get; } = [];
 
     [JsonIgnore]
     [DataTableIgnore]
@@ -340,7 +341,7 @@ public abstract class ObservableClass : IObservableClass
     {
         get
         {
-            if (Errors.Any(a => a.Key.Equals(propertyName)))
+            if (!string.IsNullOrEmpty(propertyName) && Errors.Any(a => a.Key.Equals(propertyName)))
                 return Errors
                     .FirstOrDefault(q => q.Key.Equals(propertyName))
                     .Value ?? propertyName;
@@ -353,7 +354,7 @@ public abstract class ObservableClass : IObservableClass
 
     public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-    public virtual void OnErrorsChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnErrorsChanged([CallerMemberName] string propertyName = null)
     {
         ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
     }
@@ -369,15 +370,11 @@ public abstract class ObservableClass : IObservableClass
                     .Select(s => s.Value)
                     .ToList();
             }
-            else
-            {
-                return Enumerable.Empty<string>();
-            }
+
+            return Enumerable.Empty<string>();
         }
-        else
-        {
-            return Errors.SelectMany(m => m.Value.ToList()).ToList();
-        }
+
+        return Errors.SelectMany(m => m.Value.ToList()).ToList();
     }
 
     [JsonIgnore]

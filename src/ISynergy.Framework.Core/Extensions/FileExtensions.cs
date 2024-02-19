@@ -43,9 +43,7 @@ public static class FileExtensions
     {
         var result = MasterData
             .FileTypes
-            .Where(q =>
-                q.Extension.Equals(Path.GetExtension(self)))
-            .SingleOrDefault();
+            .SingleOrDefault(q => q.Extension.Equals(Path.GetExtension(self)));
 
         if (result is not null)
         {

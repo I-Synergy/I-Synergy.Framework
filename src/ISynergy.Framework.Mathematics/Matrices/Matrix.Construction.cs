@@ -882,7 +882,7 @@ public static partial class Matrix
     public static int[] GetLength(this Array array, bool deep = true, bool max = false)
     {
         if (array is null)
-            return new[] { -1 };
+            return [-1];
         if (array.Rank == 0)
             return new int[0];
 
@@ -1236,7 +1236,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Concatenate<T>(this T[,] a, T[,] b)
     {
-        return Concatenate(new[] { a, b });
+        return Concatenate([a, b]);
     }
 
     /// <summary>
@@ -1244,7 +1244,7 @@ public static partial class Matrix
     /// </summary>
     public static T[][] Concatenate<T>(this T[][] a, T[][] b)
     {
-        return Concatenate(new[] { a, b });
+        return Concatenate([a, b]);
     }
 
     /// <summary>
@@ -1337,7 +1337,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Stack<T>(this T[] a, T[] b)
     {
-        return Stack(new[] { a, b });
+        return Stack([a, b]);
     }
 
     /// <summary>
@@ -1345,7 +1345,7 @@ public static partial class Matrix
     /// </summary>
     public static T[][] Stack<T>(this T[][] a, T[][] b)
     {
-        return Stack(new[] { a, b });
+        return Stack([a, b]);
     }
 
     /// <summary>

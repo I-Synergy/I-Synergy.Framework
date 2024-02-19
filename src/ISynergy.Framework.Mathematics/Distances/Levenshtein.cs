@@ -56,11 +56,9 @@ public struct Levenshtein : IMetric<string>, ICloneable
                 return 0;
             return y.Length;
         }
-        else
-        {
-            if (y is null || y.Length == 0)
-                return x.Length;
-        }
+
+        if (y is null || y.Length == 0)
+            return x.Length;
 
         int[,] d = new int[x.Length + 1, y.Length + 1];
 

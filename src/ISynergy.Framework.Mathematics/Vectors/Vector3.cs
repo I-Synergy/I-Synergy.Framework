@@ -163,7 +163,7 @@ public struct Vector3
     /// 
     public float[] ToArray()
     {
-        return new float[3] { X, Y, Z };
+        return [X, Y, Z];
     }
 
     /// <summary>

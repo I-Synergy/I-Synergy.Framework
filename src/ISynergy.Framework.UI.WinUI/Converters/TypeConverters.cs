@@ -34,15 +34,16 @@ internal static class TypeConverters
             {
                 return value;
             }
-            else if (string.Equals(destinationTypeFullName, typeof(bool).FullName, StringComparison.Ordinal))
+
+            if (string.Equals(destinationTypeFullName, typeof(bool).FullName, StringComparison.Ordinal))
             {
                 return bool.Parse(value);
             }
-            else if (string.Equals(destinationTypeFullName, typeof(int).FullName, StringComparison.Ordinal))
+            if (string.Equals(destinationTypeFullName, typeof(int).FullName, StringComparison.Ordinal))
             {
                 return int.Parse(value, CultureInfo.InvariantCulture);
             }
-            else if (string.Equals(destinationTypeFullName, typeof(double).FullName, StringComparison.Ordinal))
+            if (string.Equals(destinationTypeFullName, typeof(double).FullName, StringComparison.Ordinal))
             {
                 return double.Parse(value, CultureInfo.InvariantCulture);
             }

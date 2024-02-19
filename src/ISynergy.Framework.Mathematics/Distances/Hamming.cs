@@ -132,7 +132,7 @@ public struct Hamming : IMetric<byte[]>, IMetric<string>, IDistance<double[]>, I
         return sum;
     }
     private readonly static byte[] lookup =
-    {
+    [
         0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
         1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
         1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
@@ -148,8 +148,8 @@ public struct Hamming : IMetric<byte[]>, IMetric<string>, IDistance<double[]>, I
         2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
         3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
         3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-        4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8,
-    };
+        4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+    ];
     /// <summary>
     /// Creates a new object that is a copy of the current instance.
     /// </summary>

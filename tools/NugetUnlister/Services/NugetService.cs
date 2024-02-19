@@ -25,8 +25,8 @@ internal class NugetService(IOptions<NugetOptions> options) : INugetService
 
             return await response.Content.ReadFromJsonAsync<NugetResponse>(cancellationToken: cancellationToken);
         }
-        else
-            return default;
+
+        return default;
     }
 
     public async Task<List<PackageVersion>> ListVersionAsync(string packageId, CancellationToken cancellationToken = default)

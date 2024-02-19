@@ -16,7 +16,7 @@ public class FiniteDifferencesTest
         int numberOfParameters = 2;
         FiniteDifferences target = new(numberOfParameters);
 
-        double[] inputs = { -1, 0.4 };
+        double[] inputs = [-1, 0.4];
 
         target.Function = BroydenFletcherGoldfarbShannoTest.rosenbrockFunction;
 
@@ -38,11 +38,11 @@ public class FiniteDifferencesTest
             Order = 3,
         };
 
-        double[] inputs = { -1, 0.4 };
+        double[] inputs = [-1, 0.4];
 
         target.Function = BroydenFletcherGoldfarbShannoTest.rosenbrockFunction;
 
-        double[] expected = { -2400, 0 };
+        double[] expected = [-2400, 0];
         double[] actual = target.Gradient(inputs);
 
         Assert.IsTrue(expected.IsEqual(actual, 1e-5));
@@ -63,7 +63,7 @@ public class FiniteDifferencesTest
         FiniteDifferences calculator = new(2, function);
 
         // Evaluate the gradient function at the point (2, -1)
-        double[] result = calculator.Gradient(new double[] { 2, -1 }); // answer is (4, 1)
+        double[] result = calculator.Gradient([2, -1]); // answer is (4, 1)
         #endregion
 
         Assert.AreEqual(4, result[0], 1e-10);
@@ -84,14 +84,14 @@ public class FiniteDifferencesTest
         FiniteDifferences calculator = new(2, function);
 
         // Evaluate the gradient function at the point (2, -1)
-        double[][] result = calculator.Hessian(new[] { 2.0, -1.0 }); // answer is [(2, 0), (0, 0)]
+        double[][] result = calculator.Hessian([2.0, -1.0]); // answer is [(2, 0), (0, 0)]
         #endregion
 
         double[][] expected =
-        {
-            new double[] { 2, 0 },
-            new double[] { 0, 0 },
-        };
+        [
+            [2, 0],
+            [0, 0]
+        ];
 
         Assert.IsTrue(result.IsEqual(expected, 1e-8));
     }
@@ -103,12 +103,12 @@ public class FiniteDifferencesTest
 
         FiniteDifferences calculator = new(2, function);
 
-        double[][] result = calculator.Hessian(new[] { 2.0, -1.0 });
+        double[][] result = calculator.Hessian([2.0, -1.0]);
         double[][] expected =
-        {
-            new double[] { 2, 1 },
-            new double[] { 1, 0 },
-        };
+        [
+            [2, 1],
+            [1, 0]
+        ];
 
         Assert.IsTrue(result.IsEqual(expected, 1e-8));
     }
@@ -128,8 +128,8 @@ public class FiniteDifferencesTest
         Func<double[], double[][]> expectedFormula = (x) =>
             new double[][]
             {
-                new double[] { Math.Exp(x[0] + x[1]) + 2, Math.Exp(x[0] + x[1]) + 1 },
-                new double[] { Math.Exp(x[0] + x[1]) + 1, Math.Exp(x[0] + x[1]) - 1.0 / Math.Pow(x[1], 2) },
+                [Math.Exp(x[0] + x[1]) + 2, Math.Exp(x[0] + x[1]) + 1], [Math.Exp(x[0] + x[1]) + 1, Math.Exp(x[0] + x[1]) - 1.0 / Math.Pow(x[1], 2)
+                ],
             };
 
 
@@ -137,7 +137,7 @@ public class FiniteDifferencesTest
         {
             for (double j = 1; j < 10; j++)
             {
-                double[] value = new double[] { i, j };
+                double[] value = [i, j];
                 double[][] actual = calculator.Hessian(value);
                 double[][] expected = expectedFormula(value);
 
@@ -172,12 +172,13 @@ public class FiniteDifferencesTest
     [TestMethod]
     public void gh_853()
     {
-        double[] aParam = { 1.790978, 9.408872E-05, 0.9888748, 1E-08 };
+        double[] aParam = [1.790978, 9.408872E-05, 0.9888748, 1E-08];
 
         Func<double[], double> funcionObjetivoLBFGS = x =>
         {
             int iSizeArray = 10;
-            double[] arrayDecimalesTrabajo = { 2.2227, 2.2188, 2.2144, 2.204, 2.2006, 2.2053, 2.2053, 2.2035, 2.1969, 2.2033 };
+            double[] arrayDecimalesTrabajo = [2.2227, 2.2188, 2.2144, 2.204, 2.2006, 2.2053, 2.2053, 2.2035, 2.1969, 2.2033
+            ];
 
             double mu = x[0];
             double omega = x[1];
