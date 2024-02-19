@@ -28,6 +28,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// The logger
     /// </summary>
     protected readonly ILogger _logger;
+
     /// <summary>
     /// The context
     /// </summary>
@@ -97,8 +98,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
                 .SelectMany(t => t.GetNavigations())
                 .Distinct();
 
-            foreach (var property in navigations)
-                query = query.Include(property.Name);
+            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
 
             var result = await query
                 .SingleOrDefaultAsync(predicate, cancellationToken)
@@ -193,8 +193,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
                 .SelectMany(t => t.GetNavigations())
                 .Distinct();
 
-            foreach (var property in navigations)
-                query = query.Include(property.Name);
+            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
 
             var target = await query
                 .SingleOrDefaultAsync(predicate, cancellationToken)
@@ -257,8 +256,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
                 .SelectMany(t => t.GetNavigations())
                 .Distinct();
 
-            foreach (var property in navigations)
-                query = query.Include(property.Name);
+            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
 
             var target = await query
                 .SingleOrDefaultAsync(predicate, cancellationToken)

@@ -156,13 +156,7 @@ public abstract class BaseDataContext : DbContext
 
         var andAlsoExprBase = (Expression<Func<BaseTenantEntity, bool>>)(_ => true);
         var andAlsoExpr = ReplacingExpressionVisitor.Replace(andAlsoExprBase.Parameters.Single(), newParam, andAlsoExprBase.Body);
-
-        foreach (var expressionBase in andAlsoExpressions.EnsureNotNull())
-        {
-            var expression = ReplacingExpressionVisitor.Replace(expressionBase.Parameters.Single(), newParam, expressionBase.Body);
-            andAlsoExpr = Expression.AndAlso(andAlsoExpr, expression);
-        }
-
+        andAlsoExpr = andAlsoExpressions.EnsureNotNull().Select(expressionBase => ReplacingExpressionVisitor.Replace(expressionBase.Parameters.Single(), newParam, expressionBase.Body)).Aggregate(andAlsoExpr, (current, expression) => Expression.AndAlso(current, expression));
         return Expression.Lambda(andAlsoExpr, newParam);
     }
 

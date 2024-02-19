@@ -35,10 +35,7 @@ public class EnumCollection : MarkupExtension
 
         if (EnumType.IsEnum)
         {
-            foreach (Enum item in Enum.GetValues(EnumType))
-            {
-                list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
-            }
+            list.AddRange(from Enum item in Enum.GetValues(EnumType) select new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
         }
 
         return list;
