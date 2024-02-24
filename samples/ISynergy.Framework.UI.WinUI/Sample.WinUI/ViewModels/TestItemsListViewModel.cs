@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
@@ -9,6 +10,7 @@ using Sample.Abstractions;
 using Sample.Enumerations;
 using Sample.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace Sample.ViewModels;
 
@@ -174,7 +176,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     public override Task AddAsync()
     {
         ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
-        selectionVM.Submitted += SelectionVM_Submitted;
+        selectionVM.Submitted += new WeakEventHandler<SubmitEventArgs<List<TestItem>>>(SelectionVM_Submitted).Handler;
         return CommonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }
 

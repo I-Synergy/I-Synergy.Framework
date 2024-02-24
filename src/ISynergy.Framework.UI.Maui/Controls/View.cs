@@ -1,6 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls;
 
@@ -30,7 +32,7 @@ public abstract class View : ContentPage, IView
     /// </summary>
     protected View()
     {
-        Loaded += View_Loaded;
+        Loaded += new WeakEventHandler<EventArgs>(View_Loaded).Handler;
     }
 
     /// <summary>
@@ -108,8 +110,6 @@ public abstract class View : ContentPage, IView
     {
         if (disposing)
         {
-            Loaded -= View_Loaded;
-
             // free managed resources
             ViewModel?.Dispose();
             ViewModel = null;

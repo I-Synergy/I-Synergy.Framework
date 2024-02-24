@@ -1,9 +1,12 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel;
+using System.Timers;
 
 namespace Sample.ViewModels;
 
@@ -96,7 +99,7 @@ public class InfoViewModel : ViewModelNavigation<object>
     private void StartTimer()
     {
         System.Timers.Timer timer = new(5000);
-        timer.Elapsed += Timer_Elapsed;
+        timer.Elapsed += new WeakEventHandler<ElapsedEventArgs>(Timer_Elapsed).Handler;
         BaseCommonServices.BusyService.StartBusy();
         timer.Enabled = true;
         timer.AutoReset = true;

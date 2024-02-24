@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -163,7 +164,7 @@ public abstract class ObservableClass : IObservableClass
     protected ObservableClass(bool automaticValidationTrigger = false)
     {
         AutomaticValidationTrigger = automaticValidationTrigger;
-        ErrorsChanged += ObservableClass_ErrorsChanged;
+        ErrorsChanged += new WeakEventHandler<DataErrorsChangedEventArgs>(ObservableClass_ErrorsChanged).Handler;
     }
 
     private void ObservableClass_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
@@ -438,8 +439,6 @@ public abstract class ObservableClass : IObservableClass
 
             Properties?.Clear();
             Errors?.Clear();
-
-            ErrorsChanged -= ObservableClass_ErrorsChanged;
         }
 
         // free native resources if there are any.

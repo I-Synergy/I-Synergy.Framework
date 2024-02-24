@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using ISynergy.Framework.Core.Events;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -33,14 +34,14 @@ public class ProcessInterface : IDisposable
         //  Configure the output worker.
         OutputWorker.WorkerReportsProgress = true;
         OutputWorker.WorkerSupportsCancellation = true;
-        OutputWorker.DoWork += OutputWorker_DoWork;
-        OutputWorker.ProgressChanged += OutputWorker_ProgressChanged;
+        OutputWorker.DoWork += new WeakEventHandler<DoWorkEventArgs>(OutputWorker_DoWork).Handler;
+        OutputWorker.ProgressChanged += new WeakEventHandler<ProgressChangedEventArgs>(OutputWorker_ProgressChanged).Handler;
 
         //  Configure the error worker.
         ErrorWorker.WorkerReportsProgress = true;
         ErrorWorker.WorkerSupportsCancellation = true;
-        ErrorWorker.DoWork += ErrorWorker_DoWork;
-        ErrorWorker.ProgressChanged += ErrorWorker_ProgressChanged;
+        ErrorWorker.DoWork += new WeakEventHandler<DoWorkEventArgs>(ErrorWorker_DoWork).Handler;
+        ErrorWorker.ProgressChanged += new WeakEventHandler<ProgressChangedEventArgs>(ErrorWorker_ProgressChanged).Handler;
     }
 
     /// <summary>
@@ -157,7 +158,7 @@ public class ProcessInterface : IDisposable
             StartInfo = processStartInfo
         };
 
-        Process.Exited += CurrentProcess_Exited;
+        Process.Exited += new WeakEventHandler<EventArgs>(CurrentProcess_Exited).Handler;
 
         //  Start the process.
         try
@@ -369,11 +370,6 @@ public class ProcessInterface : IDisposable
     {
         if (disposing)
         {
-            OutputWorker.DoWork -= OutputWorker_DoWork;
-            OutputWorker.ProgressChanged -= OutputWorker_ProgressChanged;
-            ErrorWorker.DoWork -= ErrorWorker_DoWork;
-            ErrorWorker.ProgressChanged -= ErrorWorker_ProgressChanged;
-
             if (OutputWorker is not null)
             {
                 OutputWorker.Dispose();

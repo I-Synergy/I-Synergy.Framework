@@ -1,8 +1,10 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Collections;
 
@@ -82,8 +84,7 @@ public class TreeNode<TKey, TModel> : ObservableClass
     /// </summary>
     public TreeNode()
     {
-        PropertyChanged += TreeNode_PropertyChanged;
-
+        PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(TreeNode_PropertyChanged).Handler;
         IsSelected = false;
         DisposeTraversal = UpDownTraversalTypes.BottomUp;
         Parent = null;
@@ -240,8 +241,6 @@ public class TreeNode<TKey, TModel> : ObservableClass
     {
         if (disposing)
         {
-            PropertyChanged -= TreeNode_PropertyChanged;
-
             if (Data is IDisposable)
             {
                 if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
