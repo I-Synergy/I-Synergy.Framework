@@ -1,5 +1,7 @@
-﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Enumerations;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 
@@ -24,8 +26,8 @@ public class ControlPositionProvider : IPositionProvider
 
         ParentWindow = parentWindow;
 
-        parentWindow.SizeChanged += ParentWindowOnSizeChanged;
-        parentWindow.LocationChanged += ParentWindowOnLocationChanged;
+        parentWindow.SizeChanged += new WeakEventHandler<SizeChangedEventArgs>(ParentWindowOnSizeChanged).Handler;
+        parentWindow.LocationChanged += new WeakEventHandler<EventArgs>(ParentWindowOnLocationChanged).Handler;
 
         SetEjectDirection(corner);
     }
@@ -107,8 +109,6 @@ public class ControlPositionProvider : IPositionProvider
 
     public void Dispose()
     {
-        ParentWindow.LocationChanged -= ParentWindowOnLocationChanged;
-        ParentWindow.SizeChanged -= ParentWindowOnSizeChanged;
     }
 
     protected virtual void RequestUpdatePosition()

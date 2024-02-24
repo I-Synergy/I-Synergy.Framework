@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -123,7 +124,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
         BaseCommonServices = commonServices;
         Logger = logger;
 
-        PropertyChanged += OnPropertyChanged;
+        PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(OnPropertyChanged).Handler;
         IsInitialized = false;
 
         CloseCommand = new AsyncRelayCommand(CloseAsync);
@@ -189,7 +190,6 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// </summary>
     public virtual void Cleanup()
     {
-        PropertyChanged -= OnPropertyChanged;
         CloseCommand = null;
         CancelCommand = null;
     }

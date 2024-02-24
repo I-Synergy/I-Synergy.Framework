@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
@@ -98,15 +99,12 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     private async Task ShowUnitsAsync()
     {
         TestViewModel vm = new TestViewModel(Context, BaseCommonServices, Logger);
-        vm.Submitted += Vm_Submitted;
+        vm.Submitted += new WeakEventHandler<SubmitEventArgs<object>>(Vm_Submitted).Handler;
         await BaseCommonServices.DialogService.ShowDialogAsync(typeof(TestWindow), vm);
     }
 
     private async void Vm_Submitted(object sender, SubmitEventArgs<object> e)
     {
-        if (sender is TestViewModel vm)
-            vm.Submitted -= Vm_Submitted;
-
         CanExecuteTest = !CanExecuteTest;
 
         await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result} selected.");
@@ -137,7 +135,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     private Task SelectMultipleAsync()
     {
         ViewModelSelectionBlade<TestItem> selectionVm = new ViewModelSelectionBlade<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
-        selectionVm.Submitted += SelectionVm_MultipleSubmitted;
+        selectionVm.Submitted += new WeakEventHandler<SubmitEventArgs<List<TestItem>>>(SelectionVm_MultipleSubmitted).Handler;
         return BaseCommonServices.NavigationService.OpenBladeAsync(this, selectionVm);
     }
 
@@ -148,7 +146,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     private Task SelectSingleAsync()
     {
         ViewModelSelectionBlade<TestItem> selectionVm = new ViewModelSelectionBlade<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
-        selectionVm.Submitted += SelectionVm_SingleSubmitted;
+        selectionVm.Submitted += new WeakEventHandler<SubmitEventArgs<List<TestItem>>>(SelectionVm_SingleSubmitted).Handler;
         return BaseCommonServices.NavigationService.OpenBladeAsync(this, selectionVm);
     }
 
@@ -159,9 +157,6 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <param name="e">The e.</param>
     private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
-        if (sender is ViewModelSelectionBlade<TestItem> vm)
-            vm.Submitted -= SelectionVm_MultipleSubmitted;
-
         SelectedTestItems = new ObservableCollection<TestItem>(e.Result);
 
         await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
@@ -174,9 +169,6 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <param name="e">The e.</param>
     private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
-        if (sender is ViewModelSelectionBlade<TestItem> vm)
-            vm.Submitted -= SelectionVm_SingleSubmitted;
-
         await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
     }
 

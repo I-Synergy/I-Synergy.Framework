@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
@@ -309,7 +310,7 @@ public class AuthenticationViewModel : ViewModel
     public Task ForgotPasswordAsync()
     {
         ForgotPasswordViewModel forgotPasswordVM = new(Context, BaseCommonServices, _authenticationService, Logger);
-        forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
+        forgotPasswordVM.Submitted += new WeakEventHandler<SubmitEventArgs<bool>>(ForgotPasswordVM_Submitted).Handler;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }
 
@@ -320,9 +321,6 @@ public class AuthenticationViewModel : ViewModel
     /// <param name="e">The e.</param>
     private async void ForgotPasswordVM_Submitted(object sender, SubmitEventArgs<bool> e)
     {
-        if (sender is ForgotPasswordViewModel vm)
-            vm.Submitted -= ForgotPasswordVM_Submitted;
-
         if (e.Result)
         {
             await BaseCommonServices.DialogService

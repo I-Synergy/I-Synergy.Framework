@@ -1,8 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using System.ComponentModel;
 using Application = Microsoft.Maui.Controls.Application;
 
 namespace ISynergy.Framework.UI.Services;
@@ -202,8 +204,6 @@ internal class DialogService : IDialogService
 
             async void ViewModelClosedHandler(object sender, EventArgs e)
             {
-                viewmodel.Closed -= ViewModelClosedHandler;
-
                 await Application.Current.MainPage.Navigation.PopModalAsync();
 
                 viewmodel.Dispose();
@@ -213,7 +213,7 @@ internal class DialogService : IDialogService
                 window = null;
             };
 
-            viewmodel.Closed += ViewModelClosedHandler;
+            viewmodel.Closed += new WeakEventHandler<EventArgs>(ViewModelClosedHandler).Handler;
 
             await viewmodel.InitializeAsync();
 

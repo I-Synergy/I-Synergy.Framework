@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Commands;
+﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -23,7 +24,7 @@ internal sealed class CancelCommand : ICommand, IDisposable
     public CancelCommand(IAsyncRelayCommand command)
     {
         _command = command;
-        _command.PropertyChanged += OnPropertyChanged;
+        _command.PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(OnPropertyChanged).Handler;
     }
 
     /// <inheritdoc/>
@@ -72,7 +73,6 @@ internal sealed class CancelCommand : ICommand, IDisposable
         if (disposing)
         {
             // free managed resources
-            _command.PropertyChanged -= OnPropertyChanged;
         }
 
         // free native resources if there are any.

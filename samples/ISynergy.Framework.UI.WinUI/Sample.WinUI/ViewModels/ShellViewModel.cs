@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -9,6 +10,7 @@ using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
+using System.ComponentModel;
 
 namespace Sample.ViewModels;
 
@@ -119,7 +121,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SettingsService = settingsService;
 
         _navigationService = navigationService;
-        _navigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
+        _navigationService.BackStackChanged += new WeakEventHandler<EventArgs>((s, e) => OnPropertyChanged(nameof(IsBackEnabled))).Handler;
 
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;

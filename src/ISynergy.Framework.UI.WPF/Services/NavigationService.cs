@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -7,6 +8,7 @@ using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -98,7 +100,7 @@ public class NavigationService : INavigationService
         if (viewmodel is IViewModelBlade bladeVm)
         {
             bladeVm.Owner = owner;
-            bladeVm.Closed += Viewmodel_Closed;
+            bladeVm.Closed += new WeakEventHandler<EventArgs>(Viewmodel_Closed).Handler;
 
             var view = await GetNavigationBladeAsync(bladeVm);
 
@@ -132,7 +134,7 @@ public class NavigationService : INavigationService
         if (viewmodel is IViewModelBlade bladeVm)
         {
             bladeVm.Owner = owner;
-            bladeVm.Closed += Viewmodel_Closed;
+            bladeVm.Closed += new WeakEventHandler<EventArgs>(Viewmodel_Closed).Handler;
 
             if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View view)
             {
