@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -14,6 +15,7 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
 
@@ -241,15 +243,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected virtual Task OpenLanguageAsync()
     {
         var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Language);
-        languageVM.Submitted += LanguageVM_Submitted;
-        languageVM.Closed += LanguageVM_Closed;
+        languageVM.Submitted += new WeakEventHandler<SubmitEventArgs<Languages>>(LanguageVM_Submitted).Handler;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
-    }
-
-    private void LanguageVM_Closed(object sender, EventArgs e)
-    {
-        if (sender is LanguageViewModel vm)
-            vm.Submitted -= LanguageVM_Submitted;
     }
 
     /// <summary>
@@ -281,15 +276,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected virtual Task OpenColorsAsync()
     {
         var themeVM = new ThemeViewModel(Context, BaseCommonServices, _applicationSettingsService, Logger);
-        themeVM.Submitted += ThemeVM_Submitted;
-        themeVM.Closed += ThemeVM_Closed;
+        themeVM.Submitted += new WeakEventHandler<SubmitEventArgs<Style>>(ThemeVM_Submitted).Handler;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
-    }
-
-    private void ThemeVM_Closed(object sender, EventArgs e)
-    {
-        if (sender is ThemeViewModel vm)
-            vm.Closed -= ThemeVM_Closed;
     }
 
     /// <summary>
@@ -299,9 +287,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="e">The e.</param>
     private async void ThemeVM_Submitted(object sender, SubmitEventArgs<Style> e)
     {
-        if (sender is ThemeViewModel vm)
-            vm.Submitted -= ThemeVM_Submitted;
-
         if (e.Result is { } style)
         {
             _applicationSettingsService.Settings.Theme = style.Theme;

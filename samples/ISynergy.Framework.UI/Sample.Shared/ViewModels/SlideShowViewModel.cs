@@ -1,10 +1,12 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
@@ -65,7 +67,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         : base(context, commonServices, logger)
     {
         UpdateSourceTimer = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
-        UpdateSourceTimer.Elapsed += UpdateSourceTimer_Tick;
+        UpdateSourceTimer.Elapsed += new WeakEventHandler<ElapsedEventArgs>(UpdateSourceTimer_Tick).Handler;
         UpdateSourceTimer.AutoReset = true;
         UpdateSourceTimer.Start();
 
@@ -82,7 +84,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         if (Items.Count > 0)
         {
             SlideshowTimer = new Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
-            SlideshowTimer.Elapsed += SlideshowTimer_Tick;
+            SlideshowTimer.Elapsed += new WeakEventHandler<ElapsedEventArgs>(SlideshowTimer_Tick).Handler;
             UpdateSourceTimer.AutoReset = true;
             SlideshowTimer.Start();
         }

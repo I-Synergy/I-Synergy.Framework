@@ -1,11 +1,13 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -260,8 +262,6 @@ public class DialogService : IDialogService
 
             void ViewModelClosedHandler(object sender, EventArgs e)
             {
-                viewmodel.Closed -= ViewModelClosedHandler;
-
                 window.ViewModel?.Dispose();
                 window.ViewModel = null;
 
@@ -273,7 +273,7 @@ public class DialogService : IDialogService
                 window = null;
             };
 
-            viewmodel.Closed += ViewModelClosedHandler;
+            viewmodel.Closed += new WeakEventHandler<EventArgs>(ViewModelClosedHandler).Handler;
 
             await viewmodel.InitializeAsync();
 

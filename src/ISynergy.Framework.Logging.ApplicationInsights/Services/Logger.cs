@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Base;
 using ISynergy.Framework.Logging.Extensions;
@@ -8,6 +9,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Logging.Services;
 
@@ -55,7 +57,7 @@ public class Logger : BaseLogger
         _client.Context.Session.Id = Guid.NewGuid().ToString();
         _client.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
 
-        AppDomain.CurrentDomain.ProcessExit += (s, e) => Flush();
+        AppDomain.CurrentDomain.ProcessExit += new WeakEventHandler<EventArgs>((s, e) => Flush()).Handler;
     }
 
     /// <summary>

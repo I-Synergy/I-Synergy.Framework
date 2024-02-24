@@ -8,8 +8,10 @@ using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Exceptions;
 using ISynergy.Framework.UI.Views;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.ExceptionServices;
 
 [assembly: ExportFont("ISynergy.ttf", Alias = "ISynergy")]
 [assembly: ExportFont("OpenDyslexic3-Bold.ttf", Alias = "OpenDyslexic3-Bold")]
@@ -65,7 +67,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Setting up authentication service.");
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
-        _authenticationService.AuthenticationChanged += AuthenticationChanged;
+        _authenticationService.AuthenticationChanged += new WeakEventHandler<ReturnEventArgs<bool>>(AuthenticationChanged).Handler;
 
         _logger.LogInformation("Setting up theming service.");
         _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
@@ -106,9 +108,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     protected virtual void SetGlobalExceptionHandler()
     {
-        AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-        MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
-        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+        AppDomain.CurrentDomain.FirstChanceException += new WeakEventHandler<FirstChanceExceptionEventArgs>(CurrentDomain_FirstChanceException).Handler;
+        MauiExceptions.UnhandledException += new WeakEventHandler<UnhandledExceptionEventArgs>(CurrentDomain_UnhandledException).Handler;
+        TaskScheduler.UnobservedTaskException += new WeakEventHandler<UnobservedTaskExceptionEventArgs>(TaskScheduler_UnobservedTaskException).Handler;
     }
 
     /// <summary>
@@ -215,10 +217,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
-            _authenticationService.AuthenticationChanged -= AuthenticationChanged;
-            AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
-            MauiExceptions.UnhandledException -= CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
         }
 
         // free native resources if there are any.

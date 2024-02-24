@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
@@ -208,7 +209,7 @@ public class SignUpViewModel : ViewModel
     private Task SelectModulesAsync()
     {
         ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
-        selectionVM.Submitted += SelectionVM_Submitted;
+        selectionVM.Submitted += new WeakEventHandler<SubmitEventArgs<List<Module>>>(SelectionVM_Submitted).Handler;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
     }
 
@@ -228,9 +229,6 @@ public class SignUpViewModel : ViewModel
         }
 
         SelectedModules = selectedItems;
-
-        if (sender is ViewModelSelectionDialog<Module> vm)
-            vm.Submitted -= SelectionVM_Submitted;
     }
 
     private async Task ValidateMailAsync()

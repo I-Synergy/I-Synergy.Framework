@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Documents.Abstractions.Services;
@@ -8,6 +9,7 @@ using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.XlsIO;
 using System.Collections;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Documents.Services;
 
@@ -125,7 +127,8 @@ internal class DocumentService : IDocumentService
                     dataSet.Add(alternativesDataTable);
                     commands.Add(new DictionaryEntry(alternativesDataTable.GroupName, string.Empty));
 
-                    document.MailMerge.MergeImageField += MergeImageField;
+                    document.MailMerge.MergeImageField += new WeakEventHandler<MergeImageFieldEventArgs>(MergeImageField).Handler;
+
                     document.MailMerge.RemoveEmptyParagraphs = true;
                     document.MailMerge.ExecuteNestedGroup(dataSet, commands);
 

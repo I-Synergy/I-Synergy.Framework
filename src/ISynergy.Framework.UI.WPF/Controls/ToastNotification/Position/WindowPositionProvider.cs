@@ -1,6 +1,8 @@
-﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Enumerations;
 using ISynergy.Framework.UI.Controls.ToastNotification.Extensions;
+using System.ComponentModel;
 using System.Windows;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification.Position;
@@ -21,10 +23,10 @@ public class WindowPositionProvider : IPositionProvider
         _offsetY = offsetY;
         ParentWindow = parentWindow;
 
-        parentWindow.SizeChanged += ParentWindowOnSizeChanged;
-        parentWindow.LocationChanged += ParentWindowOnLocationChanged;
-        parentWindow.StateChanged += ParentWindowOnStateChanged;
-        parentWindow.Activated += ParentWindowOnActivated;
+        parentWindow.SizeChanged += new WeakEventHandler<SizeChangedEventArgs>(ParentWindowOnSizeChanged).Handler;
+        parentWindow.LocationChanged += new WeakEventHandler<EventArgs>(ParentWindowOnLocationChanged).Handler;
+        parentWindow.StateChanged += new WeakEventHandler<EventArgs>(ParentWindowOnStateChanged).Handler;
+        parentWindow.Activated += new WeakEventHandler<EventArgs>(ParentWindowOnActivated).Handler;
 
         SetEjectDirection(corner);
     }
@@ -110,10 +112,6 @@ public class WindowPositionProvider : IPositionProvider
 
     public void Dispose()
     {
-        ParentWindow.LocationChanged -= ParentWindowOnLocationChanged;
-        ParentWindow.SizeChanged -= ParentWindowOnSizeChanged;
-        ParentWindow.StateChanged -= ParentWindowOnStateChanged;
-        ParentWindow.Activated -= ParentWindowOnActivated;
     }
 
     protected virtual void RequestUpdatePosition()
