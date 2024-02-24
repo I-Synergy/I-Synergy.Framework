@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Logging.Base;
 using ISynergy.Framework.Logging.Extensions;
 using Microsoft.Extensions.Logging;
@@ -44,7 +45,7 @@ public class Logger : BaseLogger
 
         _client = new SentryClient(_sentryOptions);
 
-        AppDomain.CurrentDomain.ProcessExit += (s, e) => Flush();
+        AppDomain.CurrentDomain.ProcessExit += new WeakEventHandler<EventArgs>((s, e) => Flush()).Handler;
     }
 
     /// <summary>

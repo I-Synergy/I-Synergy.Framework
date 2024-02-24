@@ -1,8 +1,10 @@
-﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Events;
 using ISynergy.Framework.UI.Controls.ToastNotification.Options;
 using ISynergy.Framework.UI.Controls.ToastNotification.Utilities;
 using ISynergy.Framework.UI.Controls.Toasts;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -31,12 +33,12 @@ public class NotificationsDisplaySupervisor : IDisposable
         _displayOptions = displayOptions;
         _keyboardEventHandler = keyboardEventHandler;
 
-        _lifetimeSupervisor.ShowNotificationRequested += LifetimeSupervisorOnShowNotificationRequested;
-        _lifetimeSupervisor.CloseNotificationRequested += LifetimeSupervisorOnCloseNotificationRequested;
+        _lifetimeSupervisor.ShowNotificationRequested += new WeakEventHandler<ShowNotificationEventArgs>(LifetimeSupervisorOnShowNotificationRequested).Handler;
+        _lifetimeSupervisor.CloseNotificationRequested += new WeakEventHandler<CloseNotificationEventArgs>(LifetimeSupervisorOnCloseNotificationRequested).Handler;
 
-        _positionProvider.UpdatePositionRequested += PositionProviderOnUpdatePositionRequested;
-        _positionProvider.UpdateEjectDirectionRequested += PositionProviderOnUpdateEjectDirectionRequested;
-        _positionProvider.UpdateHeightRequested += PositionProviderOnUpdateHeightRequested;
+        _positionProvider.UpdatePositionRequested += new WeakEventHandler<EventArgs>(PositionProviderOnUpdatePositionRequested).Handler;
+        _positionProvider.UpdateEjectDirectionRequested += new WeakEventHandler<EventArgs>(PositionProviderOnUpdateEjectDirectionRequested).Handler;
+        _positionProvider.UpdateHeightRequested += new WeakEventHandler<EventArgs>(PositionProviderOnUpdateHeightRequested).Handler;
     }
 
     public void DisplayNotification(INotification notification)
@@ -161,14 +163,6 @@ public class NotificationsDisplaySupervisor : IDisposable
     {
         _window?.Close();
         _window = null;
-
-        _lifetimeSupervisor.ShowNotificationRequested -= LifetimeSupervisorOnShowNotificationRequested;
-        _lifetimeSupervisor.CloseNotificationRequested -= LifetimeSupervisorOnCloseNotificationRequested;
-
-        _positionProvider.UpdatePositionRequested -= PositionProviderOnUpdatePositionRequested;
-        _positionProvider.UpdateEjectDirectionRequested -= PositionProviderOnUpdateEjectDirectionRequested;
-        _positionProvider.UpdateHeightRequested -= PositionProviderOnUpdateHeightRequested;
-
         _lifetimeSupervisor = null;
     }
 }

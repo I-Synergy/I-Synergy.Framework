@@ -1,16 +1,20 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.ExceptionServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 
 namespace ISynergy.Framework.UI;
 
@@ -51,7 +55,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Setting up authentication service.");
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
-        _authenticationService.AuthenticationChanged += AuthenticationChanged;
+        _authenticationService.AuthenticationChanged += new WeakEventHandler<Core.Events.ReturnEventArgs<bool>>(AuthenticationChanged).Handler;
 
         _logger.LogInformation("Setting up theming service.");
         _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
@@ -92,10 +96,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     protected virtual void SetGlobalExceptionHandler()
     {
-        AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-        DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
+        AppDomain.CurrentDomain.FirstChanceException += new WeakEventHandler<FirstChanceExceptionEventArgs>(CurrentDomain_FirstChanceException).Handler;
+        AppDomain.CurrentDomain.UnhandledException += new WeakEventHandler<UnhandledExceptionEventArgs>(CurrentDomain_UnhandledException).Handler;
+        TaskScheduler.UnobservedTaskException += new WeakEventHandler<UnobservedTaskExceptionEventArgs>(TaskScheduler_UnobservedTaskException).Handler;
+        DispatcherUnhandledException += new WeakEventHandler<DispatcherUnhandledExceptionEventArgs>(BaseApplication_DispatcherUnhandledException).Handler;
     }
 
     /// <summary>
@@ -201,7 +205,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (rootFrame is null)
         {
             rootFrame = new Frame();
-            rootFrame.NavigationFailed += OnNavigationFailed;
+            rootFrame.NavigationFailed += new WeakEventHandler<NavigationFailedEventArgs>(OnNavigationFailed).Handler;
 
             // Add custom resourcedictionaries from code.
             if (Application.Current.Resources?.MergedDictionaries is not null)
@@ -264,11 +268,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
-            _authenticationService.AuthenticationChanged -= AuthenticationChanged;
-            AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
-            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
-            DispatcherUnhandledException -= BaseApplication_DispatcherUnhandledException;
         }
 
         // free native resources if there are any.
