@@ -11,7 +11,7 @@
         StrokeThickness="0"
         BackgroundColor="{DynamicResource RedAccent}">
         <Border.StrokeShape>
-            <RoundRectangle CornerRadius="{StaticResource DefaultCornerRadius}"/>
+            <RoundRectangle CornerRadius="{DynamicResource DefaultCornerRadius}"/>
         </Border.StrokeShape>
         <StackLayout BindableLayout.ItemsSource="{Binding Errors}" Margin="10">
             <BindableLayout.ItemTemplate>

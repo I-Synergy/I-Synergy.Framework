@@ -25,12 +25,6 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>
         item.PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(item_PropertyChanged).Handler;
     }
 
-    protected override void RemoveItem(int index)
-    {
-        var item = this[index];
-        base.RemoveItem(index);
-    }
-
     protected override void SetItem(int index, T item)
     {
         base.SetItem(index, item);

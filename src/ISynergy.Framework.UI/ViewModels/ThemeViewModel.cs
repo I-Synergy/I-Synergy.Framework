@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 
@@ -20,15 +19,6 @@ public class ThemeViewModel : ViewModelDialog<Style>
     public override string Title => BaseCommonServices.LanguageService.GetString("Theme");
 
     /// <summary>
-    /// Gets or sets the Items property value.
-    /// </summary>
-    public ThemeColors ThemeColors
-    {
-        get => GetValue<ThemeColors>();
-        set => SetValue(value);
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
     /// </summary>
     /// <param name="context">The context.</param>
@@ -44,7 +34,6 @@ public class ThemeViewModel : ViewModelDialog<Style>
     {
         applicationSettingsService.LoadSettings();
 
-        ThemeColors = new ThemeColors();
         SelectedItem = new Style()
         {
             Color = applicationSettingsService.Settings.Color, 

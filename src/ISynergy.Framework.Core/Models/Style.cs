@@ -13,9 +13,9 @@ public class Style : ObservableClass
     /// Gets or sets the Color property value.
     /// </summary>
     /// <value>The color.</value>
-    public string Color
+    public ThemeColors Color
     {
-        get => GetValue<string>();
+        get => GetValue<ThemeColors>();
         set => SetValue(value);
     }
 
@@ -40,7 +40,7 @@ public class Style : ObservableClass
     /// </summary>
     /// <param name="color">The color.</param>
     /// <param name="theme">The theme.</param>
-    public Style(string color, Themes theme)
+    public Style(ThemeColors color, Themes theme)
     {
         Color = color;
         Theme = theme;

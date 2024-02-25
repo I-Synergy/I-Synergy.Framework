@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
 
@@ -174,3 +175,43 @@ public class EnumToDescriptionConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+/// <summary>
+/// Converts ThemeColors to color.
+/// </summary>
+public class ThemeColorToColorBrushConverter : IValueConverter
+{
+    /// <summary>
+    /// Convert
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value != null && Enum.TryParse<ThemeColors>(value.ToString(), out ThemeColors themeColor))
+        {
+            var color = Color.FromArgb(themeColor.ToHtmlColor());
+            return new SolidColorBrush(color);
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Convert back
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+

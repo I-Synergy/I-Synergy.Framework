@@ -11,14 +11,14 @@
           x:DataType="viewmodels:ThemeViewModel"
           Title="{Binding Title}">
 
+    <c:Window.Resources>
+        <converters:ThemeColorToColorBrushConverter x:Key="ThemeColorToColorBrushConverter"/>
+    </c:Window.Resources>
+    
     <ContentView 
         ControlTemplate="{DynamicResource DefaultDialogTemplate}"
         WidthRequest="400"
         HeightRequest="510">
-        
-        <ContentView.Resources>
-            <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
-        </ContentView.Resources>
         
         <VerticalStackLayout>
             <Grid ColumnDefinitions="*,*" WidthRequest="300" HorizontalOptions="EndAndExpand" >
@@ -37,7 +37,7 @@
             </Grid>
 
             <CollectionView
-                ItemsSource="{Binding ThemeColors.Colors}"
+                ItemsSource="{m:EnumCollection {x:Type enums:ThemeColors}}"
                 SelectedItem="{Binding SelectedItem.Color}"
                 SelectionMode="Single"
                 HorizontalOptions="Center">
@@ -50,7 +50,7 @@
                     <DataTemplate>
                         <Grid>
                             <Ellipse
-                                Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
+                                Fill="{Binding Converter={StaticResource ThemeColorToColorBrushConverter}}" 
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center"
                                 WidthRequest="32"

@@ -81,6 +81,16 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     }
 
     /// <summary>
+    /// Gets or sets the SoftwareEnvironments property value by enum value.
+    /// </summary>
+    /// <value>The software environments.</value>
+    public SoftwareEnvironments SelectedSoftwareEnvironmentByEnum
+    {
+        get { return GetValue<SoftwareEnvironments>(); }
+        set { SetValue(value); }
+    }
+
+    /// <summary>
     /// Gets or sets the IntegerValue property value.
     /// </summary>
     public int IntegerValue
