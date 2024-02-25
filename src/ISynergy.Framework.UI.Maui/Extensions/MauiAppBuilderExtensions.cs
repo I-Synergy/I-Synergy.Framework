@@ -104,13 +104,12 @@ public static class MauiAppBuilderExtensions
             .UseMauiCommunityToolkitMarkup()
             .ConfigureFonts(fonts =>
             {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("ISynergy.ttf", "ISynergy");
-                fonts.AddFont("OpenDyslexic3-Bold.ttf", "OpenDyslexic3-Bold");
-                fonts.AddFont("OpenDyslexic3-Regular.ttf", "OpenDyslexic3-Regular");
-                fonts.AddFont("SegMDL2.ttf", "SegoeMdl2");
-                fonts.AddFont("segoeui.ttf", "SegoeUI");
+                fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
+                fonts.AddFont("opensans-regular.ttf", "OpenSansRegular");
+                fonts.AddFont("opensans-semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
+                fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
+                fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
             });
     }
 

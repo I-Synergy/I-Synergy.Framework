@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
@@ -13,7 +14,7 @@ namespace ISynergy.Framework.UI.Markup;
 /// </summary>
 /// <seealso cref="MarkupExtension" />
 [Bindable]
-[MarkupExtensionReturnType(ReturnType = typeof(List<KeyValuePair<int, string>>))]
+[MarkupExtensionReturnType(ReturnType = typeof(List<Enum>))]
 public class EnumCollection : MarkupExtension
 {
     /// <summary>
@@ -30,15 +31,7 @@ public class EnumCollection : MarkupExtension
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsNotNull(EnumType);
-
-        var list = new List<KeyValuePair<int, string>>();
-
-        if (EnumType.IsEnum)
-        {
-            list.AddRange(from Enum item in Enum.GetValues(EnumType) select new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
-        }
-
-        return list;
+        return EnumType.ToList();
     }
 
     /// <summary>

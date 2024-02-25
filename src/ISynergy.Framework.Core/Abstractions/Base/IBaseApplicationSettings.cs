@@ -26,7 +26,7 @@ public interface IBaseApplicationSettings
     /// <summary>
     /// Setting for storing the theme color.
     /// </summary>
-    string Color { get; set; }
+    ThemeColors Color { get; set; }
     /// <summary>
     /// Gets or sets the theme.
     /// </summary>

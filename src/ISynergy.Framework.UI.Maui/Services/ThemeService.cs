@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Extensions;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -51,7 +52,7 @@ public class ThemeService : IThemeService
     /// </summary>
     public void SetStyle()
     {
-        Application.AccentColor = Color.FromArgb(Style.Color);
+        Application.AccentColor = Color.FromArgb(Style.Color.ToHtmlColor());
 
         // Add custom resourcedictionaries from code.
         if (Application.Current is BaseApplication application && application.Resources?.MergedDictionaries is { } dictionary)

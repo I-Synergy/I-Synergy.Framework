@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using ISynergy.Framework.Core.Enumerations;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.Core.Models;
 
@@ -44,25 +45,25 @@ public partial class NavigationItem
     public object Symbol { get; set; }
 
     /// <summary>
-    /// Gets or sets the foreground.
+    /// Gets or sets the color.
     /// </summary>
-    /// <value>The foreground.</value>
-    public string Foreground { get; set; }
+    /// <value>The color.</value>
+    public ThemeColors Color { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationItem"/> class.
     /// </summary>
     /// <param name="name">The name.</param>
     /// <param name="symbol">The symbol.</param>
-    /// <param name="foreground">The foreground.</param>
+    /// <param name="color">The color.</param>
     /// <param name="command">The command.</param>
     /// <param name="commandParameter">The command parameter.</param>
-    public NavigationItem(string name, object symbol, string foreground, ICommand command, object commandParameter = null)
+    public NavigationItem(string name, object symbol, ThemeColors color, ICommand command, object commandParameter = null)
     {
         Name = name;
         ToolTipMenu = name;
         Symbol = symbol;
-        Foreground = foreground;
+        Color = color;
         Command = command;
         CommandParameter = commandParameter;
     }
