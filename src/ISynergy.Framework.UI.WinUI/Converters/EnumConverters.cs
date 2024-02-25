@@ -1,8 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Helpers;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -235,5 +238,44 @@ public class EnumToIntegerConverter : IValueConverter
             return result;
 
         return default;
+    }
+}
+
+/// <summary>
+/// Converts hex string to color.
+/// </summary>
+public class ThemeColorToColorBrushConverter : IValueConverter
+{
+    /// <summary>
+    /// Convert
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="language"></param>
+    /// <returns></returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value != null && Enum.TryParse<ThemeColors>(value.ToString(), out ThemeColors themeColor))
+        {
+            var color = themeColor.ToHtmlColor();
+            return new SolidColorBrush(ColorHelper.HexStringToColor(color));
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Convert back
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="language"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }
