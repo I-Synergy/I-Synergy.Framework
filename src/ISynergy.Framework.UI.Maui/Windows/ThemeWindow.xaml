@@ -11,6 +11,10 @@
           x:DataType="viewmodels:ThemeViewModel"
           Title="{Binding Title}">
 
+    <c:Window.Resources>
+        <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
+    </c:Window.Resources>
+    
     <ContentView 
         ControlTemplate="{DynamicResource DefaultDialogTemplate}"
         WidthRequest="400"

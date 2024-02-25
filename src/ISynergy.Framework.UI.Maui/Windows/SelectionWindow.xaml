@@ -4,8 +4,13 @@
           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
           x:Class="ISynergy.Framework.UI.Windows.SelectionWindow"
           xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+          xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
           Title="{Binding Title}">
 
+    <c:Window.Resources>
+        <converters:SelectionModeConverter x:Key="SelectionModeConverter"/>
+    </c:Window.Resources>
+    
     <ContentView 
         ControlTemplate="{StaticResource DefaultDialogTemplate}" 
         WidthRequest="{OnPlatform WinUI=600, Default=400}">
