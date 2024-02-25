@@ -48,6 +48,8 @@ public class MauiProgram
             .Configuration
             .AddConfiguration(config);
 
+        var localSettingsService = new LocalSettingsService();
+
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
@@ -65,11 +67,13 @@ public class MauiProgram
         builder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
         builder.Services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-        builder.Services.TryAddSingleton<IBaseApplicationSettingsService, LocalSettingsService>();
+        builder.Services.TryAddSingleton<IBaseApplicationSettingsService>(s => localSettingsService);
+
         builder.Services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
 
-        builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
-        builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
+        builder.Services.TryAddSingleton<CommonServices>();
+        builder.Services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
+        builder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
 
         ServiceLocator.SetLocatorProvider(builder.Services.BuildServiceProvider());
 

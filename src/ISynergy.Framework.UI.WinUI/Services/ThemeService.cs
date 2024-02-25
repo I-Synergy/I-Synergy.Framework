@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Helpers;
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -52,20 +53,21 @@ public class ThemeService : IThemeService
     public void SetStyle()
     {
         var palette = FindColorPaletteResourcesForTheme(Style.Theme.ToString());
+        var hexColor = Style.Color.ToHtmlColor();
 
         if (palette is not null)
         {
-            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
+            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(hexColor);
         }
         else
         {
             palette = new ColorPaletteResources();
-            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
+            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(hexColor);
             Application.Current.Resources.MergedDictionaries.Add(palette);
         }
 
-        Application.Current.Resources["SystemAccentColor"] = Style.Color;
-        Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = Style.Color;
+        Application.Current.Resources["SystemAccentColor"] = hexColor;
+        Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = hexColor;
 
         switch (Style.Theme)
         {
@@ -130,7 +132,7 @@ public class ThemeService : IThemeService
     }
 
     /// <summary>
-    /// Finds the color palette resources for theme.
+    /// Finds the hexColor palette resources for theme.
     /// </summary>
     /// <param name="theme">The theme.</param>
     /// <returns>ColorPaletteResources.</returns>

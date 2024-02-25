@@ -76,7 +76,8 @@ public static class EnumExtensions
     {
         var list = new List<Enum>();
 
-        if (enumeration.IsEnum) list.AddRange(Enum.GetValues(enumeration).Cast<Enum>());
+        if (enumeration.IsEnum) 
+            list.AddRange(Enum.GetValues(enumeration).Cast<Enum>());
 
         return list;
     }
