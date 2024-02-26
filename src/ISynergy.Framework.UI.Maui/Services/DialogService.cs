@@ -204,6 +204,8 @@ internal class DialogService : IDialogService
 
             async void ViewModelClosedHandler(object sender, EventArgs e)
             {
+                viewmodel.Closed -= ViewModelClosedHandler;
+
                 await Application.Current.MainPage.Navigation.PopModalAsync();
 
                 viewmodel.Dispose();
@@ -213,7 +215,7 @@ internal class DialogService : IDialogService
                 window = null;
             };
 
-            viewmodel.Closed += new WeakEventHandler<EventArgs>(ViewModelClosedHandler).Handler;
+            viewmodel.Closed += ViewModelClosedHandler;
 
             await viewmodel.InitializeAsync();
 

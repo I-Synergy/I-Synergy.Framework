@@ -3,7 +3,6 @@ using ISynergy.Framework.UI.Abstractions.Windows;
 
 namespace ISynergy.Framework.UI.Windows;
 
-[Scoped(true)]
 public partial class ThemeWindow : IThemeWindow
 {
     public ThemeWindow()
