@@ -18,7 +18,7 @@
     <ContentView 
         ControlTemplate="{DynamicResource DefaultDialogTemplate}"
         WidthRequest="400"
-        HeightRequest="510">
+        HeightRequest="600">
         
         <VerticalStackLayout>
             <Grid ColumnDefinitions="*,*" WidthRequest="300" HorizontalOptions="EndAndExpand" >

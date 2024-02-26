@@ -133,7 +133,7 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        BaseCommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
+        CommonServices.NavigationService.NavigateAsync<SettingsViewModel>();
 
     /// <summary>
     /// Restarts the application asynchronous.

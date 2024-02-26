@@ -91,6 +91,9 @@
 	  <MauiXaml Update="Resources\Styles\Style.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\SettingsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\SlideShowView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

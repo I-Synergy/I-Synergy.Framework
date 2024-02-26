@@ -31,6 +31,6 @@
             <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
         </VerticalStackLayout>
         
-        <ActivityIndicator IsRunning="{Binding BaseCommonServices.BusyService.IsBusy}"/>
+        <ActivityIndicator IsRunning="{Binding BaseCommonServices.BusyService.IsBusy}" Color="{DynamicResource Primary}"/>
     </Grid>
 </c:View>
