@@ -66,7 +66,7 @@
                 VerticalOptions="Center"
                 MaximumWidthRequest="250">
                 <Entry Text="{Binding Username}" Placeholder="{m:GetString Username}" Keyboard="Email" />
-                <Entry Text="{Binding Password}" Placeholder="{m:GetString Password}" IsPassword="True" />
+                <Entry Text="{Binding Password}" Placeholder="{m:GetString Password}" IsPassword="True" ReturnCommand="{Binding SignInCommand}"/>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                     <CheckBox IsChecked="{Binding AutoLogin}" VerticalOptions="Center" HorizontalOptions="Start" />
                     <Label Text="{m:GetString Remember}" VerticalOptions="Center" HorizontalOptions="Start"/>
