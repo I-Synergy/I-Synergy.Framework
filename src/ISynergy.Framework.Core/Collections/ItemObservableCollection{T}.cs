@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Collections;
@@ -19,10 +20,18 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>
 {
     public event EventHandler<ItemPropertyChangedEventArgs<T>> ItemPropertyChanged;
 
-    protected override void InsertItem(int index, T item)
+    public ItemObservableCollection() 
+        : base()
     {
-        base.InsertItem(index, item);
-        item.PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(item_PropertyChanged).Handler;
+        CollectionChanged += new WeakEventHandler<NotifyCollectionChangedEventArgs>(item_CollectionChanged).Handler;
+    }
+
+    private void item_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        foreach (T item in e.NewItems.EnsureNotNull())
+        {
+            item.PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(item_PropertyChanged).Handler;
+        }
     }
 
     protected override void SetItem(int index, T item)
@@ -33,14 +42,12 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>
 
     private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        OnItemPropertyChanged((T)sender, e.PropertyName);
+        T item = (T)sender;
+        OnItemPropertyChanged(item, e.PropertyName);
     }
 
     private void OnItemPropertyChanged(T item, string propertyName)
     {
-        var handler = this.ItemPropertyChanged;
-
-        if (handler != null)
-            handler(this, new ItemPropertyChangedEventArgs<T>(item, propertyName));
+        ItemPropertyChanged?.Invoke(this, new ItemPropertyChangedEventArgs<T>(item, propertyName));
     }
 }

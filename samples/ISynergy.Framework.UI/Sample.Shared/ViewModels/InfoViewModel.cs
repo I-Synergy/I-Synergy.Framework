@@ -1,12 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel;
-using System.Timers;
 
 namespace Sample.ViewModels;
 
@@ -15,7 +11,7 @@ namespace Sample.ViewModels;
 /// Implements the <see cref="ViewModelNavigation{Object}" />
 /// </summary>
 /// <seealso cref="ViewModelNavigation{Object}" />
-[Singleton(true)]
+[Scoped(true)]
 public class InfoViewModel : ViewModelNavigation<object>
 {
     /// <summary>
@@ -73,8 +69,6 @@ public class InfoViewModel : ViewModelNavigation<object>
         set => SetValue(value);
     }
 
-    public RelayCommand BusyOnCommand { get; private set; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
     /// </summary>
@@ -92,22 +86,5 @@ public class InfoViewModel : ViewModelNavigation<object>
         Version = commonServices.InfoService.ProductVersion;
         Copyrights = commonServices.InfoService.Copyrights;
         Startup = ((Context)context).Environment.ToString();
-
-        BusyOnCommand = new RelayCommand(StartTimer);
-    }
-
-    private void StartTimer()
-    {
-        System.Timers.Timer timer = new(5000);
-        timer.Elapsed += new WeakEventHandler<ElapsedEventArgs>(Timer_Elapsed).Handler;
-        BaseCommonServices.BusyService.StartBusy();
-        timer.Enabled = true;
-        timer.AutoReset = true;
-        timer.Start();
-    }
-
-    private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-    {
-        BaseCommonServices.BusyService.EndBusy();
     }
 }

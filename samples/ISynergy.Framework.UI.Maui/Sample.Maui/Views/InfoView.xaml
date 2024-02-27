@@ -27,10 +27,6 @@
 
             <Label Text="Memo"/>
             <Editor />
-
-            <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
         </VerticalStackLayout>
-        
-        <ActivityIndicator IsRunning="{Binding BaseCommonServices.BusyService.IsBusy}"/>
     </Grid>
 </c:View>

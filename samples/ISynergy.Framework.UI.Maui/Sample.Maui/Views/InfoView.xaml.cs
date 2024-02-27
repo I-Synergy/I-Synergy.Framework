@@ -4,7 +4,7 @@ using Sample.ViewModels;
 
 namespace Sample.Views;
 
-[Singleton(true)]
+[Scoped(true)]
 public partial class InfoView
 {
     public InfoView(IContext context, InfoViewModel viewModel)
