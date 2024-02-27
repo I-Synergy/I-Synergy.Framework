@@ -14,6 +14,10 @@
         <ShellContent ContentTemplate="{DataTemplate views:InfoView}"/>
     </ShellItem>
 
+    <ShellItem Route="ControlsViewModel" Title="Controls">
+        <ShellContent ContentTemplate="{DataTemplate views:ControlsView}"/>
+    </ShellItem>
+
     <ShellItem Route="SlideShowViewModel" Title="Slideshow">
         <ShellContent ContentTemplate="{DataTemplate views:SlideShowView}"/>
     </ShellItem>

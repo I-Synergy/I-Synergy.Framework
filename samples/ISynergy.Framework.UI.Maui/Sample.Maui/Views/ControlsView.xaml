@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View 
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Sample.Views.ControlsView"
+    Title="ControlsView">
+
+    <Grid>
+        <VerticalStackLayout Margin="10" Spacing="10">
+            <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
+            <Button Text="Show Memo window..." Command="{Binding ShowMemoCommand}"/>
+            <Button Text="Select single item..." Command="{Binding SelectSingleCommand}"/>
+            <Button Text="Select multiple items..." Command="{Binding SelectMultipleCommand}"/>
+        </VerticalStackLayout>
+
+        <ActivityIndicator IsRunning="{Binding BaseCommonServices.BusyService.IsBusy}" Color="{DynamicResource Primary}"/>
+    </Grid>
+</c:View>
