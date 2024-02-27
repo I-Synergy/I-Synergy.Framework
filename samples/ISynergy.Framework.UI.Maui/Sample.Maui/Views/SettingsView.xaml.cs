@@ -4,12 +4,12 @@ using Sample.ViewModels;
 
 namespace Sample.Views;
 
-[Scoped(true)]
-public partial class InfoView
+[Singleton(true)]
+public partial class SettingsView : IView
 {
-    public InfoView(IContext context, InfoViewModel viewModel)
+	public SettingsView(IContext context, SettingsViewModel viewModel)
        : base(context, viewModel)
     {
-        InitializeComponent();
-    }
+		InitializeComponent();
+	}
 }

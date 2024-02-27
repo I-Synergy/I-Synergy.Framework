@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
@@ -8,6 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
 
+[Scoped(true)]
 public class SettingsViewModel : ViewModelNavigation<object>
 {
     public override string Title { get => BaseCommonServices.LanguageService.GetString("Settings"); }

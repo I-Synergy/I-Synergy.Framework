@@ -85,8 +85,8 @@
 
                 <Grid Grid.Row="2">
                     <HorizontalStackLayout HorizontalOptions="EndAndExpand" Spacing="8">
-                        <Button Text="{m:GetString Cancel}" Command="{Binding CancelCommand}" WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"/>
                         <Button Text="{m:GetString Ok}" Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"/>
+                        <Button Text="{m:GetString Cancel}" Command="{Binding CancelCommand}" WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"/>
                     </HorizontalStackLayout>
                 </Grid>
             </Grid>

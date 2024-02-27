@@ -5,11 +5,11 @@ using Sample.ViewModels;
 namespace Sample.Views;
 
 [Scoped(true)]
-public partial class InfoView
+public partial class ControlsView : IView
 {
-    public InfoView(IContext context, InfoViewModel viewModel)
+	public ControlsView(IContext context, ControlsViewModel viewModel)
        : base(context, viewModel)
     {
-        InitializeComponent();
-    }
+		InitializeComponent();
+	}
 }

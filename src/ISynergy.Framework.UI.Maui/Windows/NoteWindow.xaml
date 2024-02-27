@@ -15,7 +15,8 @@
             <Editor
                 Text="{Binding SelectedItem, Mode=TwoWay}"
                 Placeholder=""
-                HeightRequest="300"
+                HeightRequest="250"
+                WidthRequest="400"
                 IsSpellCheckEnabled="True"
                 IsTextPredictionEnabled="True"/>
         </Grid>
