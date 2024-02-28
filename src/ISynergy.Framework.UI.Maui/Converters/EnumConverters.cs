@@ -193,7 +193,7 @@ public class ThemeColorToColorBrushConverter : IValueConverter
     {
         var color = Color.FromArgb(ThemeColors.Default.ToHtmlColor());
 
-        if (value != null && Enum.TryParse<ThemeColors>(value?.ToString(), out ThemeColors themeColor))
+        if (value != null && Enum.TryParse<ThemeColors>(value.ToString(), out ThemeColors themeColor))
             color = Color.FromArgb(themeColor.ToHtmlColor());
 
         return new SolidColorBrush(color);
