@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
@@ -246,30 +247,37 @@ public class NavigationService : INavigationService
     /// <param name="absolute"></param>
     /// <returns>Task&lt;IView&gt;.</returns>
     /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
+    public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
     {
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
             NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
         {
-            // Check if actual page is the same as destination page.
-            if (frame.Content is View originalView)
-            {
-                if (originalView.GetType().Equals(page.GetType()))
-                    return;
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(
+               DispatcherQueuePriority.Normal,
+               async () =>
+               { 
+                    // Check if actual page is the same as destination page.
+                    if (frame.Content is View originalView)
+                    {
+                        if (originalView.GetType().Equals(page.GetType()))
+                            return;
 
-                if (!absolute)
-                    _backStack.Push(originalView.ViewModel);
-            }
+                        if (!absolute)
+                            _backStack.Push(originalView.ViewModel);
+                    }
 
-            frame.Content = page;
+                    frame.Content = page;
 
-            if (!page.ViewModel.IsInitialized)
-                await page.ViewModel.InitializeAsync();
+                    if (!page.ViewModel.IsInitialized)
+                        await page.ViewModel.InitializeAsync();
+                });
 
             OnBackStackChanged(EventArgs.Empty);
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -281,7 +289,7 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <param name="absolute"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
         where TViewModel : class, IViewModel
         where TView : IView
     {
@@ -298,35 +306,49 @@ public class NavigationService : INavigationService
 
             page.ViewModel = viewModel;
 
-            // Check if actual page is the same as destination page.
-            if (frame.Content is View originalView)
-            {
-                if (originalView.GetType().Equals(page.GetType()))
-                    return;
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(
+               DispatcherQueuePriority.Normal,
+               async () =>
+               {
+                   // Check if actual page is the same as destination page.
+                   if (frame.Content is View originalView)
+                   {
+                       if (originalView.GetType().Equals(page.GetType()))
+                           return;
 
-                if (!absolute)
-                    _backStack.Push(originalView.ViewModel);
-            }
+                       if (!absolute)
+                           _backStack.Push(originalView.ViewModel);
+                   }
 
-            frame.Content = page;
+                   frame.Content = page;
 
-            if (!page.ViewModel.IsInitialized)
-                await page.ViewModel.InitializeAsync();
+                   if (!page.ViewModel.IsInitialized)
+                       await page.ViewModel.InitializeAsync();
+               });
 
             OnBackStackChanged(EventArgs.Empty);
         }
+
+        return Task.CompletedTask;
     }
 
-    public async Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
+    public Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
     {
         if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page &&
             Application.Current is BaseApplication baseApplication)
         {
-            baseApplication.MainWindow.Content = page;
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(
+                DispatcherQueuePriority.Normal,
+                async () =>
+                {
+                    baseApplication.MainWindow.Content = page;
 
-            if (!page.ViewModel.IsInitialized)
-                await page.ViewModel.InitializeAsync();
+                    if (!page.ViewModel.IsInitialized)
+                        await page.ViewModel.InitializeAsync();
+                });
         }
+
+        return Task.CompletedTask;
     }
 
     public Task CleanBackStackAsync()
