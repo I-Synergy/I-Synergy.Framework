@@ -191,13 +191,12 @@ public class ThemeColorToColorBrushConverter : IValueConverter
     /// <returns></returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value != null && Enum.TryParse<ThemeColors>(value.ToString(), out ThemeColors themeColor))
-        {
-            var color = Color.FromArgb(themeColor.ToHtmlColor());
-            return new SolidColorBrush(color);
-        }
+        var color = Color.FromArgb(ThemeColors.Default.ToHtmlColor());
 
-        return null;
+        if (value != null && Enum.TryParse<ThemeColors>(value?.ToString(), out ThemeColors themeColor))
+            color = Color.FromArgb(themeColor.ToHtmlColor());
+
+        return new SolidColorBrush(color);
     }
 
     /// <summary>

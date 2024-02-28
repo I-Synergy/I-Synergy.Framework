@@ -33,7 +33,11 @@ public class Style : ObservableClass
     /// <summary>
     /// Prevents a default instance of the <see cref="Style"/> class from being created.
     /// </summary>
-    public Style() { }
+    public Style() 
+    {
+        Color = ThemeColors.Default;
+        Theme = Themes.Default;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Style"/> class.
