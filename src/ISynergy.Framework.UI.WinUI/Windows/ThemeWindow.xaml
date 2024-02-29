@@ -4,10 +4,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:enums="using:ISynergy.Framework.Core.Enumerations"
     xmlns:c="using:ISynergy.Framework.UI.Controls"
     xmlns:converters="using:ISynergy.Framework.UI.Converters"
-    xmlns:m="using:ISynergy.Framework.UI.Markup"
     mc:Ignorable="d"
     Title="{Binding Title}"
     PrimaryButtonCommand="{Binding SubmitCommand}"
@@ -18,7 +16,7 @@
 
     <c:Window.Resources>
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ISynergy.Framework.Core.Enumerations.Themes, ISynergy.Framework.Core"/>
-        <converters:ThemeColorToColorBrushConverter x:Key="ThemeColorToColorBrushConverter" />
+        <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter" />
     </c:Window.Resources>
     
     <StackPanel Orientation="Vertical">
@@ -27,7 +25,7 @@
             <RadioButton GroupName="Theme" Content="Light" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <RadioButton GroupName="Theme" Content="Dark" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
-        <GridView ItemsSource="{m:EnumCollection EnumType=enums:ThemeColors}"
+        <GridView ItemsSource="{Binding ThemeColors.Colors}"
                   HorizontalAlignment="Center"
                   SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <GridView.ItemsPanel>
@@ -37,7 +35,7 @@
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{Binding Converter={StaticResource ThemeColorToColorBrushConverter}}" 
+                    <Border Background="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
                         Height="28" 
                         Width="28" 
                         CornerRadius="14"
