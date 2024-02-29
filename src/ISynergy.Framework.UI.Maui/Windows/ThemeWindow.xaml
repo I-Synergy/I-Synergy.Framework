@@ -12,7 +12,7 @@
           Title="{Binding Title}">
 
     <c:Window.Resources>
-        <converters:ThemeColorToColorBrushConverter x:Key="ThemeColorToColorBrushConverter"/>
+        <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
     </c:Window.Resources>
     
     <ContentView 
@@ -37,7 +37,7 @@
             </Grid>
 
             <CollectionView
-                ItemsSource="{m:EnumCollection {x:Type enums:ThemeColors}}"
+                ItemsSource="{Binding ThemeColors.Colors}"
                 SelectedItem="{Binding SelectedItem.Color}"
                 SelectionMode="Single"
                 HorizontalOptions="Center">
@@ -50,7 +50,7 @@
                     <DataTemplate>
                         <Grid>
                             <Ellipse
-                                Fill="{Binding Converter={StaticResource ThemeColorToColorBrushConverter}}" 
+                                Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center"
                                 WidthRequest="32"

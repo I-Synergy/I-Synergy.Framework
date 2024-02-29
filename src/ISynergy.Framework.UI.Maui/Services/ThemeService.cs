@@ -52,7 +52,7 @@ public class ThemeService : IThemeService
     /// </summary>
     public void SetStyle()
     {
-        Application.AccentColor = Color.FromArgb(Style.Color.ToHtmlColor());
+        Application.AccentColor = Color.FromArgb(Style.Color);
 
         // Add custom resourcedictionaries from code.
         if (Application.Current is BaseApplication application && application.Resources?.MergedDictionaries is { } dictionary)

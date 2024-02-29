@@ -48,7 +48,7 @@ public partial class NavigationItem
     /// Gets or sets the color.
     /// </summary>
     /// <value>The color.</value>
-    public ThemeColors Color { get; set; }
+    public string Color { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationItem"/> class.
@@ -58,7 +58,7 @@ public partial class NavigationItem
     /// <param name="color">The color.</param>
     /// <param name="command">The command.</param>
     /// <param name="commandParameter">The command parameter.</param>
-    public NavigationItem(string name, object symbol, ThemeColors color, ICommand command, object commandParameter = null)
+    public NavigationItem(string name, object symbol, string color, ICommand command, object commandParameter = null)
     {
         Name = name;
         ToolTipMenu = name;
