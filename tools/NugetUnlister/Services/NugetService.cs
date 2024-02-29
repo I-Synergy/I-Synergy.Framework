@@ -7,13 +7,13 @@ using System.Net.Http.Json;
 
 namespace NugetUnlister.Services;
 
-internal class NugetService(IOptions<NugetOptions> options) : INugetService
+internal class NugetService(IHttpClientFactory httpClientFactory, IOptions<NugetOptions> options) : INugetService
 {
     private readonly NugetOptions _nugetOptions = options.Value;
 
     public async Task<NugetResponse> GetIndexAsync(string packageId, CancellationToken cancellationToken = default)
     {
-        using HttpClient client = new HttpClient();
+        using HttpClient client = httpClientFactory.CreateClient();
         Uri url = new Uri($"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/index.json");
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
         HttpResponseMessage response = await client.SendAsync(request);

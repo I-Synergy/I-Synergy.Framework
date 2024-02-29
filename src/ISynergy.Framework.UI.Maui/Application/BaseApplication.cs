@@ -13,11 +13,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.ExceptionServices;
 
-[assembly: ExportFont("ISynergy.ttf", Alias = "ISynergy")]
-[assembly: ExportFont("OpenDyslexic3-Bold.ttf", Alias = "OpenDyslexic3-Bold")]
-[assembly: ExportFont("OpenDyslexic3-Regular.ttf", Alias = "OpenDyslexic3-Regular")]
-[assembly: ExportFont("SegMDL2.ttf", Alias = "SegoeMdl2")]
-[assembly: ExportFont("segoeui.ttf", Alias = "SegoeUI")]
+[assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]
+[assembly: ExportFont("opendyslexic3-regular.ttf", Alias = "OpenDyslexic3-Regular")]
+[assembly: ExportFont("segoemdl2.ttf", Alias = "SegoeMdl2")]
 
 namespace ISynergy.Framework.UI;
 
