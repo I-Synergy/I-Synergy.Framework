@@ -10,7 +10,7 @@ public class LocalSettings : IBaseApplicationSettings
     public bool IsFullscreen { get; set; }
     public string DefaultUser { get; set; } = string.Empty;
     public string RefreshToken { get; set; } = string.Empty;
-    public ThemeColors Color { get; set; } = ThemeColors.Default;
+    public string Color { get; set; } = ThemeColors.Default;
     public Themes Theme { get; set; } = Themes.Dark;
     public bool IsAutoLogin { get; set; }
     public bool IsAdvanced { get; set; }
