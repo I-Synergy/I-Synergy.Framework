@@ -26,6 +26,10 @@ public abstract class BaseRestService
     /// </summary>
     protected readonly IContext _context;
     /// <summary>
+    /// The http client factory
+    /// </summary>
+    protected readonly IHttpClientFactory _httpClientFactory;
+    /// <summary>
     /// Authentication service.
     /// </summary>
     protected readonly IAuthenticationService _authenticationService;
@@ -46,6 +50,7 @@ public abstract class BaseRestService
     /// Initializes a new instance of the Rest Api Service.
     /// </summary>
     /// <param name="context">The context.</param>
+    /// <param name="httpClientFactory"></param>
     /// <param name="authenticationService"></param>
     /// <param name="languageService">The language service.</param>
     /// <param name="exceptionHandlerService">The exception handler service.</param>
@@ -54,6 +59,7 @@ public abstract class BaseRestService
     /// <param name="retryCount"></param>
     protected BaseRestService(
         IContext context,
+        IHttpClientFactory httpClientFactory,
         IAuthenticationService authenticationService,
         ILanguageService languageService,
         IExceptionHandlerService exceptionHandlerService,
@@ -62,6 +68,7 @@ public abstract class BaseRestService
         int retryCount = 3)
     {
         _context = context;
+        _httpClientFactory = httpClientFactory;
         _authenticationService = authenticationService;
         _languageService = languageService;
         _exceptionHandlerService = exceptionHandlerService;
@@ -89,7 +96,7 @@ public abstract class BaseRestService
 
         if (anonymous || _context.IsAuthenticated)
         {
-            using (var client = new HttpClient())
+            using (var client = _httpClientFactory.CreateClient())
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
@@ -134,7 +141,7 @@ public abstract class BaseRestService
 
         if (anonymous || _context.IsAuthenticated)
         {
-            using (var client = new HttpClient())
+            using (var client = _httpClientFactory.CreateClient())
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
@@ -178,7 +185,7 @@ public abstract class BaseRestService
 
         if (anonymous || _context.IsAuthenticated)
         {
-            using (var client = new HttpClient())
+            using (var client = _httpClientFactory.CreateClient())
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
@@ -224,7 +231,7 @@ public abstract class BaseRestService
 
         if (anonymous || _context.IsAuthenticated)
         {
-            using (var client = new HttpClient())
+            using (var client = _httpClientFactory.CreateClient())
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
@@ -273,7 +280,7 @@ public abstract class BaseRestService
 
         if (anonymous || _context.IsAuthenticated)
         {
-            using (var client = new HttpClient())
+            using (var client = _httpClientFactory.CreateClient())
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
@@ -323,7 +330,7 @@ public abstract class BaseRestService
 
         if (anonymous || _context.IsAuthenticated)
         {
-            using (var client = new HttpClient())
+            using (var client = _httpClientFactory.CreateClient())
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
@@ -371,7 +378,7 @@ public abstract class BaseRestService
 
         if (anonymous || _context.IsAuthenticated)
         {
-            using (var client = new HttpClient())
+            using (var client = _httpClientFactory.CreateClient())
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
