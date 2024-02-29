@@ -53,21 +53,20 @@ public class ThemeService : IThemeService
     public void SetStyle()
     {
         var palette = FindColorPaletteResourcesForTheme(Style.Theme.ToString());
-        var hexColor = Style.Color.ToHtmlColor();
 
         if (palette is not null)
         {
-            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(hexColor);
+            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
         }
         else
         {
             palette = new ColorPaletteResources();
-            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(hexColor);
+            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
             Application.Current.Resources.MergedDictionaries.Add(palette);
         }
 
-        Application.Current.Resources["SystemAccentColor"] = hexColor;
-        Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = hexColor;
+        Application.Current.Resources["SystemAccentColor"] = Style.Color;
+        Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = Style.Color;
 
         switch (Style.Theme)
         {

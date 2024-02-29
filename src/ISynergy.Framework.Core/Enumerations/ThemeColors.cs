@@ -1,53 +1,80 @@
 ﻿namespace ISynergy.Framework.Core.Enumerations;
-public enum ThemeColors : uint
+
+/// <summary>
+/// Theme colors.
+/// </summary>
+public class ThemeColors
 {
-    Default = 0xFF0078D7,
-    FFFFB900 = 0xFFFFB900,
-    FFFF8C00 = 0xFFFF8C00,
-    FFF7630C = 0xFFF7630C,
-    FFCA5010 = 0xFFCA5010,
-    FFDA3B01 = 0xFFDA3B01,
-    FFEF6950 = 0xFFEF6950,
-    FFD13438 = 0xFFD13438,
-    FFFF4343 = 0xFFFF4343,
-    FFE74856 = 0xFFE74856,
-    FFE81123 = 0xFFE81123,
-    FFEA005E = 0xFFEA005E,
-    FFC30052 = 0xFFC30052,
-    FFE3008C = 0xFFE3008C,
-    FFBF0077 = 0xFFBF0077,
-    FFC239B3 = 0xFFC239B3,
-    FF9A0089 = 0xFF9A0089,
-    FF0078D7 = 0xFF0078D7,
-    FF0063B1 = 0xFF0063B1,
-    FF8E8CD8 = 0xFF8E8CD8,
-    FF6B69D6 = 0xFF6B69D6,
-    FF8764B8 = 0xFF8764B8,
-    FF744DA9 = 0xFF744DA9,
-    FFB146C2 = 0xFFB146C2,
-    FF881798 = 0xFF881798,
-    FF0099BC = 0xFF0099BC,
-    FF2D7D9A = 0xFF2D7D9A,
-    FF00B7C3 = 0xFF00B7C3,
-    FF038387 = 0xFF038387,
-    FF00B294 = 0xFF00B294,
-    FF018574 = 0xFF018574,
-    FF00CC6A = 0xFF00CC6A,
-    FF10893E = 0xFF10893E,
-    FF7A7574 = 0xFF7A7574,
-    FF5D5A58 = 0xFF5D5A58,
-    FF68768A = 0xFF68768A,
-    FF515C6B = 0xFF515C6B,
-    FF567C73 = 0xFF567C73,
-    FF486860 = 0xFF486860,
-    FF498205 = 0xFF498205,
-    FF107C10 = 0xFF107C10,
-    FF767676 = 0xFF767676,
-    FF4C4A48 = 0xFF4C4A48,
-    FF69797E = 0xFF69797E,
-    FF4A5459 = 0xFF4A5459,
-    FF647C64 = 0xFF647C64,
-    FF525E54 = 0xFF525E54,
-    FF847545 = 0xFF847545,
-    FF7E735F = 0xFF7E735F
+    private readonly List<string> _colors;
+
+    /// <summary>
+    /// Get list of all available colors.
+    /// </summary>
+    public List<string> Colors { get => _colors; }
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public ThemeColors()
+    {
+        _colors =
+        [
+            "#ffb900",
+            "#ff8c00",
+            "#f7630c",
+            "#ca5010",
+            "#da3b01",
+            "#ef6950",
+            "#d13438",
+            "#ff4343",
+            "#e74856",
+            "#e81123",
+            "#ea005e",
+            "#c30052",
+            "#e3008c",
+            "#bf0077",
+            "#c239b3",
+            "#9a0089",
+            "#0078d7",
+            "#0063b1",
+            "#8e8cd8",
+            "#6b69d6",
+            "#8764b8",
+            "#744da9",
+            "#b146c2",
+            "#881798",
+            "#0099bc",
+            "#2d7d9a",
+            "#00b7c3",
+            "#038387",
+            "#00b294",
+            "#018574",
+            "#00cc6a",
+            "#10893e",
+            "#7a7574",
+            "#5d5a58",
+            "#68768a",
+            "#515c6b",
+            "#567c73",
+            "#486860",
+            "#498205",
+            "#107c10",
+            "#767676",
+            "#4c4a48",
+            "#69797e",
+            "#4a5459",
+            "#647c64",
+            "#525e54",
+            "#847545",
+            "#7e735f"
+        ];
+    }
+
+    /// <summary>
+    /// Gets or sets the Default property value.
+    /// </summary>
+    public static string Default
+    {
+        get => "#0078d7";
+    }
 }
