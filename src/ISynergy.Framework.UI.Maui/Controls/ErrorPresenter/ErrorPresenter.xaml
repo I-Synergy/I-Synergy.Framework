@@ -21,7 +21,7 @@
                             <FormattedString>
                                 <Span Text="&#xe7c8;" FontFamily="SegoeMdl2" FontSize="8" FontAttributes="Bold"/>
                                 <Span Text=" "/>
-                                <Span Text="{Binding Value}" FontSize="12" FontAttributes="Bold"/>
+                                <Span Text="{Binding Value}" FontSize="{DynamicResource DefaultFontSize}" FontAttributes="Bold"/>
                             </FormattedString> 
                         </Label.FormattedText>
                     </Label>

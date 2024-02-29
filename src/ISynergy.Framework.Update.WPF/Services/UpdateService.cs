@@ -22,6 +22,11 @@ internal class UpdateService : IUpdateService
     private readonly IDialogService _dialogService;
 
     /// <summary>
+    /// Gets the HTTP client factory.
+    /// </summary>
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    /// <summary>
     /// Gets the language service.
     /// </summary>
     /// <value>The language service.</value>
@@ -40,11 +45,13 @@ internal class UpdateService : IUpdateService
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
     /// </summary>
+    /// <param name="httpClientFactory"></param>
     /// <param name="languageService">The language service.</param>
     /// <param name="dialogService">The dialog service.</param>
     /// <param name="infoService"></param>
     /// <param name="options"></param>
     public UpdateService(
+        IHttpClientFactory httpClientFactory,
         ILanguageService languageService,
         IDialogService dialogService,
         IInfoService infoService,
@@ -52,6 +59,7 @@ internal class UpdateService : IUpdateService
     {
         Argument.IsNotNull(options);
 
+        _httpClientFactory = httpClientFactory;
         _languageService = languageService;
         _dialogService = dialogService;
         _infoService = infoService;
@@ -93,7 +101,7 @@ internal class UpdateService : IUpdateService
     {
         var version = string.Empty;
 
-        using (var client = new HttpClient())
+        using (var client = _httpClientFactory.CreateClient())
         {
             var request = new HttpRequestMessage(HttpMethod.Get, _updateOptions.VersionEndpoint);
             var response = await client.SendAsync(request);
@@ -137,7 +145,7 @@ internal class UpdateService : IUpdateService
             {
                 var updatePath = Path.Combine(Path.GetTempPath(), _updateOptions.Filename);
 
-                using (var client = new HttpClient())
+                using (var client = _httpClientFactory.CreateClient())
                 {
                     var request = new HttpRequestMessage(HttpMethod.Get, _updateOptions.DownloadEndpoint);
                     var response = await client.SendAsync(request);

@@ -17,6 +17,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <MauiFont Include="Resources\Fonts\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\Fonts\opendyslexic3-bold.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\opendyslexic3-regular.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\opensans-medium.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\opensans-regular.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\opensans-semibold.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoemdl2.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" />

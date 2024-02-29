@@ -13,11 +13,19 @@
     <SolidColorBrush x:Key="WhiteBrush" Color="{DynamicResource White}"/>
     <SolidColorBrush x:Key="BlackBrush" Color="{DynamicResource Black}"/>
 
-    <Color x:Key="RedAccent">#ffe63d3d</Color>
+    <Color x:Key="RedAccent">#ffE62626</Color>
+    <Color x:Key="LightRedAccent">#ffffaaab</Color>
+    <Color x:Key="DarkRedAccent">#ff7f0000</Color>
     <Color x:Key="GreenAccent">#ff45e63d</Color>
+    <Color x:Key="LightGreenAccent">#ffb2f8af</Color>
+    <Color x:Key="DarkGreenAccent">#ff007200</Color>
 
     <SolidColorBrush x:Key="RedAccentBrush" Color="{DynamicResource RedAccent}"/>
+    <SolidColorBrush x:Key="LightRedAccentBrush" Color="{DynamicResource LightRedAccent}"/>
+    <SolidColorBrush x:Key="DarkRedAccentBrush" Color="{DynamicResource DarkRedAccent}"/>
     <SolidColorBrush x:Key="GreenAccentBrush" Color="{DynamicResource GreenAccent}"/>
+    <SolidColorBrush x:Key="LightGreenAccentBrush" Color="{DynamicResource LightGreenAccent}"/>
+    <SolidColorBrush x:Key="DarkGreenAccentBrush" Color="{DynamicResource DarkGreenAccent}"/>
 
     <Color x:Key="Gray000">#F0F0F0</Color>
     <Color x:Key="Gray100">#E1E1E1</Color>
