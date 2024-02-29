@@ -15,8 +15,6 @@ namespace ISynergy.Framework.UI.Services.Base;
 /// </summary>
 public abstract class BaseRestService
 {
-    private readonly int _retryCount;
-    
     /// <summary>
     /// Json serializer options.
     /// </summary>
@@ -56,7 +54,6 @@ public abstract class BaseRestService
     /// <param name="exceptionHandlerService">The exception handler service.</param>
     /// <param name="jsonSerializerOptions"></param>
     /// <param name="configurationOptions">The configuration options.</param>
-    /// <param name="retryCount"></param>
     protected BaseRestService(
         IContext context,
         IHttpClientFactory httpClientFactory,
@@ -64,8 +61,7 @@ public abstract class BaseRestService
         ILanguageService languageService,
         IExceptionHandlerService exceptionHandlerService,
         JsonSerializerOptions jsonSerializerOptions,
-        IOptions<ConfigurationOptions> configurationOptions,
-        int retryCount = 3)
+        IOptions<ConfigurationOptions> configurationOptions)
     {
         _context = context;
         _httpClientFactory = httpClientFactory;
@@ -74,7 +70,6 @@ public abstract class BaseRestService
         _exceptionHandlerService = exceptionHandlerService;
         _configurationOptions = configurationOptions.Value;
         _jsonSerializerOptions = jsonSerializerOptions;
-        _retryCount = retryCount;
     }
 
     /// <summary>
