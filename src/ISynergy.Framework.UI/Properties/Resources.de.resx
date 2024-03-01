@@ -403,4 +403,13 @@ Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsof
 	<data name="Remember" xml:space="preserve">
 		<value>Merken</value>
 	</data>
+	<data name="WarningEmailExists" xml:space="preserve">
+		<value>Die eingegebene E-Mail-Adresse ist bereits vorhanden. Geben Sie eine neue ein, und versuchen Sie es erneut.</value>
+	</data>
+	<data name="WarningNameExists" xml:space="preserve">
+		<value>Der eingegebene Name ist bereits vorhanden. Geben Sie eine neue an, und versuchen Sie es erneut.</value>
+	</data>
+	<data name="WarningRegistrationExists" xml:space="preserve">
+		<value>Die Kombination aus Name und E-Mail-Adresse existiert bereits. Geben Sie einen neuen Namen und/oder eine neue E-Mail-Adresse ein und versuchen Sie es erneut.</value>
+	</data>
 </root>
