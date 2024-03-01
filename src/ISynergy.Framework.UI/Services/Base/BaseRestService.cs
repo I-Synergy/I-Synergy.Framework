@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
@@ -98,7 +99,7 @@ public abstract class BaseRestService
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                 if (!string.IsNullOrEmpty(version))
-                    client.DefaultRequestHeaders.Add(nameof(version), version);
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -147,7 +148,7 @@ public abstract class BaseRestService
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                 if (!string.IsNullOrEmpty(version))
-                    client.DefaultRequestHeaders.Add(nameof(version), version);
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -195,7 +196,7 @@ public abstract class BaseRestService
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                 if (!string.IsNullOrEmpty(version))
-                    client.DefaultRequestHeaders.Add(nameof(version), version);
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -245,7 +246,7 @@ public abstract class BaseRestService
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                 if (!string.IsNullOrEmpty(version))
-                    client.DefaultRequestHeaders.Add(nameof(version), version);
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -298,7 +299,7 @@ public abstract class BaseRestService
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                 if (!string.IsNullOrEmpty(version))
-                    client.DefaultRequestHeaders.Add(nameof(version), version);
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -352,7 +353,7 @@ public abstract class BaseRestService
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                 if (!string.IsNullOrEmpty(version))
-                    client.DefaultRequestHeaders.Add(nameof(version), version);
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -404,7 +405,7 @@ public abstract class BaseRestService
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
 
                 if (!string.IsNullOrEmpty(version))
-                    client.DefaultRequestHeaders.Add(nameof(version), version);
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
