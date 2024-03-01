@@ -403,4 +403,13 @@ Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	<data name="Remember" xml:space="preserve">
 		<value>Onthouden</value>
 	</data>
+	<data name="WarningEmailExists" xml:space="preserve">
+		<value>Ingevuld e-mailadres bestaat al. Geef een nieuwe op en probeer het opnieuw.</value>
+	</data>
+	<data name="WarningNameExists" xml:space="preserve">
+		<value>De ingevoerde naam bestaat al. Geef een nieuwe op en probeer het opnieuw.</value>
+	</data>
+	<data name="WarningRegistrationExists" xml:space="preserve">
+		<value>De combinatie van naam en e-mailadres bestaat al. Geef een nieuwe naam en/of e-mailadres op en probeer het opnieuw.</value>
+	</data>
 </root>

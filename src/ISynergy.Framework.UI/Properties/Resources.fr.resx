@@ -403,4 +403,13 @@ Réessayez ou mettez à jour l’application via le Microsoft Store.</value>
 	<data name="Remember" xml:space="preserve">
 		<value>Se souvenir</value>
 	</data>
+	<data name="WarningEmailExists" xml:space="preserve">
+		<value>L’adresse e-mail saisie existe déjà. Fournissez-en un nouveau et réessayez.</value>
+	</data>
+	<data name="WarningNameExists" xml:space="preserve">
+		<value>Le nom saisi existe déjà. Spécifiez-en un nouveau et réessayez.</value>
+	</data>
+	<data name="WarningRegistrationExists" xml:space="preserve">
+		<value>La combinaison du nom et de l’adresse e-mail existe déjà. Indiquez un nouveau nom et/ou une nouvelle adresse e-mail, puis réessayez.</value>
+	</data>
 </root>
