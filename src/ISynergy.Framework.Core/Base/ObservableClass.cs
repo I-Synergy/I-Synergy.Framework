@@ -313,8 +313,14 @@ public abstract class ObservableClass : IObservableClass
     }
 
     #region IDataErrorInfo
-    public void AddValidationError(string propertyName, string errorMessage) =>
+    public void AddValidationError(string propertyName, string errorMessage)
+    {
         Errors.Add(new KeyValuePair<string, string>(propertyName, errorMessage));
+
+        OnErrorsChanged(nameof(Errors));
+        OnPropertyChanged(nameof(IsValid));
+    }
+        
 
     [JsonIgnore]
     [DataTableIgnore]
