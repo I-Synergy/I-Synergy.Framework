@@ -20,16 +20,10 @@ public class ProxyEntry
     public Uri DestinationUri { get; set; }
 
     /// <summary>
-    /// Description of destination endpoint.
-    /// </summary>
-    /// <value>The swagger description.</value>
-    public string SwaggerDescription { get; set; }
-
-    /// <summary>
-    /// Endpoint of swagger documentation.
+    /// Endpoints of swagger documentation.
     /// </summary>
     /// <value>The swagger endpoint.</value>
-    public Uri SwaggerEndpoint { get; set; }
+    public List<SwaggerEndpoint> SwaggerEndpoints { get; set; }
 
     /// <summary>
     /// List of allowed HttpMethod.

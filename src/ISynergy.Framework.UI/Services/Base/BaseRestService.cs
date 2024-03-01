@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
@@ -78,10 +79,11 @@ public abstract class BaseRestService
     /// <typeparam name="T"></typeparam>
     /// <param name="url">The base URL.</param>
     /// <param name="anonymous">if set to <c>true</c> [is anonymous].</param>
+    /// <param name="version"></param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;T&gt;.</returns>
     /// <exception cref="TaskCanceledException"></exception>
-    public virtual async Task<T> GetAsync<T>(string url, bool anonymous = false, CancellationToken cancellationToken = default)
+    public virtual async Task<T> GetAsync<T>(string url, bool anonymous = false, string version = null, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
@@ -95,6 +97,9 @@ public abstract class BaseRestService
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
+
+                if (!string.IsNullOrEmpty(version))
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -123,10 +128,11 @@ public abstract class BaseRestService
     /// </summary>
     /// <param name="url">The base URL.</param>
     /// <param name="anonymous">if set to <c>true</c> [is anonymous].</param>
+    /// <param name="version"></param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.String&gt;.</returns>
     /// <exception cref="TaskCanceledException"></exception>
-    public virtual async Task<string> GetStringAsync(string url, bool anonymous = false, CancellationToken cancellationToken = default)
+    public virtual async Task<string> GetStringAsync(string url, bool anonymous = false, string version = null, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
@@ -140,6 +146,9 @@ public abstract class BaseRestService
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
+
+                if (!string.IsNullOrEmpty(version))
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -167,10 +176,11 @@ public abstract class BaseRestService
     /// </summary>
     /// <param name="url">The base URL.</param>
     /// <param name="anonymous">if set to <c>true</c> [is anonymous].</param>
+    /// <param name="version"></param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.String&gt;.</returns>
     /// <exception cref="TaskCanceledException"></exception>
-    public virtual async Task<byte[]> DownloadAsync(string url, bool anonymous = false, CancellationToken cancellationToken = default)
+    public virtual async Task<byte[]> DownloadAsync(string url, bool anonymous = false, string version = null, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
@@ -184,6 +194,9 @@ public abstract class BaseRestService
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
+
+                if (!string.IsNullOrEmpty(version))
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -213,10 +226,11 @@ public abstract class BaseRestService
     /// <param name="url">The base URL.</param>
     /// <param name="data">The data.</param>
     /// <param name="anonymous">if set to <c>true</c> [is anonymous].</param>
+    /// <param name="version"></param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;T&gt;.</returns>
     /// <exception cref="TaskCanceledException"></exception>
-    public virtual async Task<T> PostAsync<T>(string url, object data, bool anonymous = false, CancellationToken cancellationToken = default)
+    public virtual async Task<T> PostAsync<T>(string url, object data, bool anonymous = false, string version = null, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
@@ -230,6 +244,9 @@ public abstract class BaseRestService
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
+
+                if (!string.IsNullOrEmpty(version))
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -262,10 +279,11 @@ public abstract class BaseRestService
     /// <param name="url">The base URL.</param>
     /// <param name="data">The data.</param>
     /// <param name="anonymous">if set to <c>true</c> [is anonymous].</param>
+    /// <param name="version"></param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;T&gt;.</returns>
     /// <exception cref="TaskCanceledException"></exception>
-    public virtual async Task<byte[]> PostBytesAsync(string url, object data, bool anonymous = false, CancellationToken cancellationToken = default)
+    public virtual async Task<byte[]> PostBytesAsync(string url, object data, bool anonymous = false, string version = null, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
@@ -279,6 +297,9 @@ public abstract class BaseRestService
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
+
+                if (!string.IsNullOrEmpty(version))
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -312,10 +333,11 @@ public abstract class BaseRestService
     /// <param name="url">The base URL.</param>
     /// <param name="data">The data.</param>
     /// <param name="anonymous">if set to <c>true</c> [is anonymous].</param>
+    /// <param name="version"></param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;T&gt;.</returns>
     /// <exception cref="TaskCanceledException"></exception>
-    public virtual async Task<T> PutAsync<T>(string url, object data, bool anonymous = false, CancellationToken cancellationToken = default)
+    public virtual async Task<T> PutAsync<T>(string url, object data, bool anonymous = false, string version = null, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
@@ -329,6 +351,9 @@ public abstract class BaseRestService
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
+
+                if (!string.IsNullOrEmpty(version))
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
@@ -360,10 +385,11 @@ public abstract class BaseRestService
     /// </summary>
     /// <param name="url">The base URL.</param>
     /// <param name="anonymous">if set to <c>true</c> [is anonymous].</param>
+    /// <param name="version"></param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
     /// <exception cref="TaskCanceledException"></exception>
-    public virtual async Task<int> DeleteAsync(string url, bool anonymous = false, CancellationToken cancellationToken = default)
+    public virtual async Task<int> DeleteAsync(string url, bool anonymous = false, string version = null, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
@@ -377,6 +403,9 @@ public abstract class BaseRestService
             {
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_id), _configurationOptions.ClientId);
                 client.DefaultRequestHeaders.Add(nameof(Grant.client_secret), _configurationOptions.ClientSecret);
+
+                if (!string.IsNullOrEmpty(version))
+                    client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);

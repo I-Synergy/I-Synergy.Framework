@@ -170,6 +170,12 @@ public static class GenericConstants
     /// The API name
     /// </summary>
     public const string ApiName = "api";
+
+    /// <summary>
+    /// The API version
+    /// </summary>
+    public const string ApiVersion = "Api_Version";
+
     /// <summary>
     /// The API client
     /// </summary>
