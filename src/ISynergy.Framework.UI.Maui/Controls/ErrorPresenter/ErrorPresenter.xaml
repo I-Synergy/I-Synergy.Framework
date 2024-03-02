@@ -9,7 +9,7 @@
     
     <Border
         StrokeThickness="0"
-        BackgroundColor="{DynamicResource RedAccent}">
+        Background="{DynamicResource RedAccent}">
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="{DynamicResource DefaultCornerRadius}"/>
         </Border.StrokeShape>
