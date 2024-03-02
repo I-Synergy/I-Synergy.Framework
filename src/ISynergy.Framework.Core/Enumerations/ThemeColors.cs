@@ -1,24 +1,17 @@
-﻿namespace ISynergy.Framework.Core.Enumerations;
+﻿using System.Collections.ObjectModel;
+
+namespace ISynergy.Framework.Core.Enumerations;
 
 /// <summary>
 /// Theme colors.
 /// </summary>
 public class ThemeColors
 {
-    private readonly List<string> _colors;
-
     /// <summary>
     /// Get list of all available colors.
     /// </summary>
-    public List<string> Colors { get => _colors; }
-
-    /// <summary>
-    /// Default constructor.
-    /// </summary>
-    public ThemeColors()
-    {
-        _colors =
-        [
+    public ReadOnlyCollection<string> Colors { get; } = new List<string>
+        {
             "#ffb900",
             "#ff8c00",
             "#f7630c",
@@ -67,8 +60,7 @@ public class ThemeColors
             "#525e54",
             "#847545",
             "#7e735f"
-        ];
-    }
+        }.AsReadOnly();
 
     /// <summary>
     /// Gets or sets the Default property value.
