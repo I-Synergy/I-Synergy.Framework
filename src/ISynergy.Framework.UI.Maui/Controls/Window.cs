@@ -18,7 +18,7 @@ public class Window : ContentPage, IWindow
 
     public Window()
     {
-        BackgroundColor = Colors.Transparent;
+        Background = new SolidColorBrush(Colors.Transparent);
     }
 
     #region IDisposable
