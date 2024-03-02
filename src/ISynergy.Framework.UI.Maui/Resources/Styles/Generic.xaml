@@ -10,22 +10,12 @@
     <Color x:Key="Black">Black</Color>
     <Color x:Key="OffBlack">#1f1f1f</Color>
 
-    <SolidColorBrush x:Key="WhiteBrush" Color="{DynamicResource White}"/>
-    <SolidColorBrush x:Key="BlackBrush" Color="{DynamicResource Black}"/>
-
     <Color x:Key="RedAccent">#ffE62626</Color>
     <Color x:Key="LightRedAccent">#ffffaaab</Color>
     <Color x:Key="DarkRedAccent">#ff7f0000</Color>
     <Color x:Key="GreenAccent">#ff45e63d</Color>
     <Color x:Key="LightGreenAccent">#ffb2f8af</Color>
     <Color x:Key="DarkGreenAccent">#ff007200</Color>
-
-    <SolidColorBrush x:Key="RedAccentBrush" Color="{DynamicResource RedAccent}"/>
-    <SolidColorBrush x:Key="LightRedAccentBrush" Color="{DynamicResource LightRedAccent}"/>
-    <SolidColorBrush x:Key="DarkRedAccentBrush" Color="{DynamicResource DarkRedAccent}"/>
-    <SolidColorBrush x:Key="GreenAccentBrush" Color="{DynamicResource GreenAccent}"/>
-    <SolidColorBrush x:Key="LightGreenAccentBrush" Color="{DynamicResource LightGreenAccent}"/>
-    <SolidColorBrush x:Key="DarkGreenAccentBrush" Color="{DynamicResource DarkGreenAccent}"/>
 
     <Color x:Key="Gray000">#F0F0F0</Color>
     <Color x:Key="Gray100">#E1E1E1</Color>
@@ -37,15 +27,6 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
-    <SolidColorBrush x:Key="Gray100Brush" Color="{DynamicResource Gray100}"/>
-    <SolidColorBrush x:Key="Gray200Brush" Color="{DynamicResource Gray200}"/>
-    <SolidColorBrush x:Key="Gray300Brush" Color="{DynamicResource Gray300}"/>
-    <SolidColorBrush x:Key="Gray400Brush" Color="{DynamicResource Gray400}"/>
-    <SolidColorBrush x:Key="Gray500Brush" Color="{DynamicResource Gray500}"/>
-    <SolidColorBrush x:Key="Gray600Brush" Color="{DynamicResource Gray600}"/>
-    <SolidColorBrush x:Key="Gray900Brush" Color="{DynamicResource Gray900}"/>
-    <SolidColorBrush x:Key="Gray950Brush" Color="{DynamicResource Gray950}"/>
-
     <Color x:Key="Yellow100Accent">#F7B548</Color>
     <Color x:Key="Yellow200Accent">#FFD590</Color>
     <Color x:Key="Yellow300Accent">#FFE5B9</Color>
@@ -55,20 +36,19 @@
     <Color x:Key="Blue100Accent">#3E8EED</Color>
     <Color x:Key="Blue200Accent">#72ACF1</Color>
     <Color x:Key="Blue300Accent">#A7CBF6</Color>
-
-    <x:Double x:Key="DefaultFontSize">12</x:Double>
     
     <Thickness x:Key="DefaultMargin">4</Thickness>
     
     <x:Int32 x:Key="DefaultCornerRadius">8</x:Int32>
 
+    <x:Double x:Key="DefaultFontSize">12</x:Double>
     <x:Double x:Key="DefaultMinimumHeightRequest">40</x:Double>
     <x:Double x:Key="DefaultMinimumWidthRequest">125</x:Double>
 
     <ControlTemplate x:Key="DefaultDialogTemplate">
         <Border 
             BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
-            Background="{AppThemeBinding Light={DynamicResource WhiteBrush}, Dark={DynamicResource Gray900Brush}}"
+            Background="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Gray900}}"
             HorizontalOptions="Center"
             VerticalOptions="Center"
             WidthRequest="{TemplateBinding WidthRequest}"
@@ -103,7 +83,7 @@
 
     <ControlTemplate x:Key="DefaultCleanDialogTemplate">
         <Border BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
-            Background="{AppThemeBinding Light={DynamicResource WhiteBrush}, Dark={DynamicResource Gray900Brush}}"
+            Background="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Gray900}}"
             HorizontalOptions="Center"
             VerticalOptions="Center"
             WidthRequest="{TemplateBinding WidthRequest}"
@@ -121,6 +101,4 @@
             </Grid>
         </Border>
     </ControlTemplate>
-
-    
 </ResourceDictionary>

@@ -46,13 +46,6 @@ public partial class App : BaseApplication
             await _navigationService.NavigateModalAsync<SignInViewModel>(absolute: true);
     }
 
-    public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() => new List<ResourceDictionary>
-    {
-        new Sample.Resources.Styles.Colors(),
-        new Sample.Resources.Styles.Style(),
-        new Sample.Resources.Styles.Images()
-    };
-
     protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
     {
         base.CurrentDomain_FirstChanceException(sender, e);
