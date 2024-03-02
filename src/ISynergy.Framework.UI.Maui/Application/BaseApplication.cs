@@ -86,9 +86,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (_applicationSettingsService.Settings is not null)
             _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
 
-        _logger.LogInformation("Setting style.");
-        _themeService.SetStyle();
-
         _logger.LogInformation("Starting initialization of application");
         InitializeApplication();
         _logger.LogInformation("Finishing initialization of application");
@@ -178,12 +175,15 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Get a new list of additional resource dictionaries which can be merged.
-    /// </summary>
-    /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
-    public virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
-        new List<ResourceDictionary>();
+    protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState activationState)
+    {
+        var window = base.CreateWindow(activationState);
+
+        _logger.LogInformation("Setting style.");
+        _themeService.SetStyle();
+
+        return window;
+    }
 
     #region IDisposable
     // Dispose() calls Dispose(true)

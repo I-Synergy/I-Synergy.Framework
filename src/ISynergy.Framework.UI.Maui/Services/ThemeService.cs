@@ -1,7 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Utilities;
+using Microsoft.Maui.Controls;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -54,84 +57,54 @@ public class ThemeService : IThemeService
     {
         Application.AccentColor = Color.FromArgb(Style.Color);
 
-        // Add custom resourcedictionaries from code.
-        if (Application.Current is BaseApplication application && application.Resources?.MergedDictionaries is { } dictionary)
+        if (Application.Current is BaseApplication application)
         {
-            application.Resources.Clear();
+            if (ResourceUtility.FindResource<Color>(Primary) is Color color)
+                Application.AccentColor = color;
 
-            var additionalResourceDictionaries = application.GetAdditionalResourceDictionaries();
+            RemoveColors(application.Resources);
 
-            foreach (var item in additionalResourceDictionaries.Reverse())
+            if (application.Resources?.MergedDictionaries is { } resourceDictionaries)
             {
-                // Accent color.
-                if (item.ContainsKey(Primary) && item[Primary] is Color accentColor)
-                {
-                    Application.AccentColor = accentColor;
-
-                    item.Remove(Primary);
-
-                    if (!application.Resources.ContainsKey(nameof(Primary)))
-                        application.Resources.Add(nameof(Primary), accentColor);
-
-                    if (!application.Resources.ContainsKey("colorPrimary"))
-                        application.Resources.Add("colorPrimary", accentColor);
-
-                    if (!application.Resources.ContainsKey("colorAccent"))
-                        application.Resources.Add("colorAccent", accentColor);
-                }
-
-                // Accent color light.
-                if (item.ContainsKey(Secondary) && item[Secondary] is Color accentColorLight)
-                {
-                    item.Remove(Secondary);
-
-                    if (!application.Resources.ContainsKey(nameof(Secondary)))
-                        application.Resources.Add(nameof(Secondary), accentColorLight);
-                }
-
-                // Accent color dark
-                if (item.ContainsKey(Tertiary) && item[Tertiary] is Color accentColorDark)
-                {
-                    item.Remove(Tertiary);
-
-                    if (!application.Resources.ContainsKey(nameof(Tertiary)))
-                        application.Resources.Add(nameof(Tertiary), accentColorDark);
-
-                    if (!application.Resources.ContainsKey("colorPrimaryDark"))
-                        application.Resources.Add("colorPrimaryDark", accentColorDark);
-                }
+                foreach (var resourceDictionary in resourceDictionaries.EnsureNotNull())
+                    RemoveColors(resourceDictionary);
             }
 
-            if (!application.Resources.ContainsKey(nameof(Primary)))
-                application.Resources.Add(nameof(Primary), Application.AccentColor);
-
-            if (!application.Resources.ContainsKey(nameof(Secondary)))
-                application.Resources.Add(nameof(Secondary), Application.AccentColor.AddLuminosity(0.25f));
-
-            if (!application.Resources.ContainsKey(nameof(Tertiary)))
-                application.Resources.Add(nameof(Tertiary), Application.AccentColor.AddLuminosity(-0.25f));
-
-            if (!application.Resources.ContainsKey("colorPrimary"))
-                application.Resources.Add("colorPrimary", Application.AccentColor);
-
-            if (!application.Resources.ContainsKey("colorAccent"))
-                application.Resources.Add("colorAccent", Application.AccentColor);
-
-            if (!application.Resources.ContainsKey("colorPrimaryDark"))
-                application.Resources.Add("colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
-
-            dictionary.Clear();
-            dictionary.Add(new ISynergy.Framework.UI.Resources.Styles.Generic());
-
-            foreach (var item in additionalResourceDictionaries)
-            {
-                dictionary.Add(item);
-            }
+            application.Resources.Add(Primary, Application.AccentColor);
+            application.Resources.Add("colorPrimary", Application.AccentColor);
+            application.Resources.Add("colorAccent", Application.AccentColor);
+            application.Resources.Add("colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
+            application.Resources.Add(nameof(Secondary), Application.AccentColor.AddLuminosity(0.25f));
+            application.Resources.Add(nameof(Tertiary), Application.AccentColor.AddLuminosity(-0.25f));
 
             if (IsLightThemeEnabled)
                 application.UserAppTheme = AppTheme.Light;
             else
                 application.UserAppTheme = AppTheme.Dark;
+        }
+    }
+
+    private void RemoveColors(ResourceDictionary resourceDictionary)
+    {
+        if (resourceDictionary is not null)
+        {
+            if (ResourceUtility.FindResource<Color>(resourceDictionary, Primary) is not null)
+                resourceDictionary.Remove(Primary);
+
+            if (ResourceUtility.FindResource<Color>(resourceDictionary, "colorPrimary") is not null)
+                resourceDictionary.Remove("colorPrimary");
+
+            if (ResourceUtility.FindResource<Color>(resourceDictionary, "colorAccent") is not null)
+                resourceDictionary.Remove("colorAccent");
+
+            if (ResourceUtility.FindResource<Color>(resourceDictionary, "colorPrimaryDark") is not null)
+                resourceDictionary.Remove("colorPrimaryDark");
+
+            if (ResourceUtility.FindResource<Color>(resourceDictionary, Secondary) is not null)
+                resourceDictionary.Remove(Secondary);
+
+            if (ResourceUtility.FindResource<Color>(resourceDictionary, Tertiary) is not null)
+                resourceDictionary.Remove(Tertiary);
         }
     }
 }
