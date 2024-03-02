@@ -14,6 +14,7 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
+		<Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<ItemGroup>
