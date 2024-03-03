@@ -87,7 +87,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
 
         _logger.LogInformation("Starting initialization of application");
-        InitializeApplication();
+        Application.Current.MainPage = new NavigationPage(new LoadingView());
         _logger.LogInformation("Finishing initialization of application");
     }
 
@@ -174,6 +174,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         return Task.CompletedTask;
     }
+
+    protected override void OnStart() =>
+        InitializeApplication();
 
     protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState activationState)
     {
