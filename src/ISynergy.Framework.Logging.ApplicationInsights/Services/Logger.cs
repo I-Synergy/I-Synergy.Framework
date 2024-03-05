@@ -40,8 +40,9 @@ public class Logger : BaseLogger
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="infoService">The information service.</param>
+    /// <param name="telemetryInitializer"></param>
     /// <param name="options">The options.</param>
-    public Logger(IContext context, IInfoService infoService, IOptions<ApplicationInsightsOptions> options)
+    public Logger(IContext context, IInfoService infoService, ITelemetryInitializer telemetryInitializer, IOptions<ApplicationInsightsOptions> options)
         : base("Application Insights Logger")
     {
         _context = context;
@@ -50,6 +51,7 @@ public class Logger : BaseLogger
 
         var config = TelemetryConfiguration.CreateDefault();
         config.ConnectionString = _applicationInsightsOptions.ConnectionString;
+        config.TelemetryInitializers.Add(telemetryInitializer);
 
         _client = new TelemetryClient(config);
         _client.Context.User.UserAgent = infoService.ProductName;
@@ -61,51 +63,10 @@ public class Logger : BaseLogger
     }
 
     /// <summary>
-    /// Gets the metrics.
-    /// </summary>
-    /// <returns>Dictionary&lt;System.String, System.String&gt;.</returns>
-    private Dictionary<string, string> GetMetrics()
-    {
-        var metrics = new Dictionary<string, string>();
-
-        if (_context.IsAuthenticated && _context.Profile is { } profile)
-        {
-            metrics.Add(nameof(profile.Username), profile.Username);
-            metrics.Add(nameof(profile.UserId), profile.UserId.ToString());
-            metrics.Add(nameof(profile.AccountId), profile.AccountId.ToString());
-            metrics.Add(nameof(profile.AccountDescription), profile.AccountDescription);
-        }
-
-        metrics.Add(nameof(_infoService.ProductName), _infoService.ProductName);
-        metrics.Add(nameof(_infoService.ProductVersion), _infoService.ProductVersion.ToString());
-
-        return metrics;
-    }
-
-    /// <summary>
-    /// Sets profile in logging context.
-    /// </summary>
-    private void SetUserProfile()
-    {
-        if (_context.IsAuthenticated && _context.Profile is { } profile)
-        {
-            _client.Context.User.Id = profile.Username;
-            _client.Context.User.AccountId = profile.AccountDescription;
-        }
-        else
-        {
-            _client.Context.User.Id = string.Empty;
-            _client.Context.User.AccountId = string.Empty;
-        }
-    }
-
-    /// <summary>
     /// Flushes this instance.
     /// </summary>
     public void Flush()
     {
-        SetUserProfile();
-
         _client.Flush();
 
         // Explicitly call Flush() followed by Delay, as required in console apps.
@@ -119,25 +80,32 @@ public class Logger : BaseLogger
 
         var message = formatter(state, exception);
 
-        SetUserProfile();
-
-        var metrics = GetMetrics();
-
         if (!string.IsNullOrEmpty(message) || exception != null)
         {
-            if (logLevel == LogLevel.Error || logLevel == LogLevel.Critical)
+            switch (logLevel)
             {
-                _client.TrackException(new ExceptionTelemetry { Exception = exception, Message = message });
-            }
-            else if (logLevel == LogLevel.Trace)
-            {
-                metrics.Add("LogLevel", logLevel.ToLogLevelString());
-                _client.TrackTrace(message, metrics);
-            }
-            else
-            {
-                metrics.Add("LogLevel", logLevel.ToLogLevelString());
-                _client.TrackEvent(message, metrics, null);
+                case LogLevel.Error:
+                case LogLevel.Critical:
+                    _client.TrackException(new ExceptionTelemetry { Exception = exception, Message = message });
+                    break;
+                case LogLevel.Debug:
+                case LogLevel.Trace:
+                    if (message.EndsWith("ViewModel"))
+                        _client.TrackPageView(message.Replace("ViewModel", ""));
+                    else if (message.EndsWith("View"))
+                        _client.TrackPageView(message.Replace("View", ""));
+                    else if (message.EndsWith("Window"))
+                        _client.TrackPageView(message.Replace("Window", ""));
+                    else
+                        _client.TrackTrace(message);
+
+                    break;
+                case LogLevel.Information:
+                case LogLevel.Warning:
+                case LogLevel.None:
+                default:
+                    _client.TrackEvent(message);
+                    break;
             }
         }
     }
