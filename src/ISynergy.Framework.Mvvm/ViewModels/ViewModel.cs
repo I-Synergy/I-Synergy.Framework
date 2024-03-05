@@ -138,7 +138,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            Logger.LogTrace($"{GetType().Name.Replace("ViewModel", "")}");
+            Logger.LogTrace(GetType().Name);
 
         return Task.CompletedTask;
     }

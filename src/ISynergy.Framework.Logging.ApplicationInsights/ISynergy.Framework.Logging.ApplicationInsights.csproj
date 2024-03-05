@@ -11,11 +11,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ApplicationInsights"  />
-		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector"  />
-		<PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector"  />
-		<PackageReference Include="Microsoft.Extensions.Options"  />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug"  />
+		<PackageReference Include="Microsoft.ApplicationInsights" />
+		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" />
+		<PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 	</ItemGroup>
 	
 	<ItemGroup>
