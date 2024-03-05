@@ -51,7 +51,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Logging.AppCenter\ISynergy.Framework.Logging.AppCenter.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Logging.ApplicationInsights\ISynergy.Framework.Logging.ApplicationInsights.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
