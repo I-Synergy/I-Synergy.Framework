@@ -1,6 +1,8 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
+using ISynergy.Framework.Logging.Initializers;
 using ISynergy.Framework.Logging.Services;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -24,6 +26,7 @@ public static class ServiceCollectionExtensions
         builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
         builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<ILogger, Logger>();
+        builder.Services.TryAddSingleton<ITelemetryInitializer, DefaultTelemetryInitializer>();
 
         return builder;
     }

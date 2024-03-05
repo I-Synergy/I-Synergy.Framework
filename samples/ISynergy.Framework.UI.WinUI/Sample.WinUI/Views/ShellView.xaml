@@ -51,7 +51,6 @@
 		<NavigationView x:Name="RootNavigationView"
 						Grid.Row="1"
 						IsTitleBarAutoPaddingEnabled="False"            
-						ExpandedModeThresholdWidth="1920"
 						MenuItemsSource="{Binding PrimaryItems}"
 						FooterMenuItemsSource="{Binding SecondaryItems}"
 						MenuItemTemplateSelector="{StaticResource ItemSelector}"
