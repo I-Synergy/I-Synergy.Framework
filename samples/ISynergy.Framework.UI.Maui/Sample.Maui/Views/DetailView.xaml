@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View 
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+    x:DataType="viewmodels:DetailViewModel"
+    x:Class="Sample.Views.DetailView"
+    Title="Detail View">
+
+    <Grid>
+        <VerticalStackLayout Margin="10" Spacing="10">
+            <Label Text="Id" />
+            <Label Text="{Binding SelectedItem.Id}"/>
+
+            <Label Text="Description" />
+            <Label Text="{Binding SelectedItem.Description}"/>
+        </VerticalStackLayout>
+    </Grid>
+</c:View>

@@ -77,7 +77,7 @@ public abstract class View : ContentPage, IView
     /// <param name="e"></param>
     private async void View_Loaded(object sender, EventArgs e)
     {
-        if (ViewModel is not null)
+        if (ViewModel is not null && !ViewModel.IsInitialized)
             await ViewModel.InitializeAsync();
     }
 

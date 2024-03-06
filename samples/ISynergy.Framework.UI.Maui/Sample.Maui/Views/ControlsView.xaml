@@ -9,9 +9,10 @@
     <Grid>
         <VerticalStackLayout Margin="10" Spacing="10">
             <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
-            <Button Text="Show Memo window..." Command="{Binding ShowMemoCommand}"/>
-            <Button Text="Select single item..." Command="{Binding SelectSingleCommand}"/>
-            <Button Text="Select multiple items..." Command="{Binding SelectMultipleCommand}"/>
+            <Button Text="Show Memo window" Command="{Binding ShowMemoCommand}"/>
+            <Button Text="Select single item" Command="{Binding SelectSingleCommand}"/>
+            <Button Text="Select multiple items" Command="{Binding SelectMultipleCommand}"/>
+            <Button Text="Navigate to details" Command="{Binding NavigateToDetailCommand}"/>
         </VerticalStackLayout>
 
         <ActivityIndicator IsRunning="{Binding BaseCommonServices.BusyService.IsBusy}" Color="{DynamicResource Primary}"/>

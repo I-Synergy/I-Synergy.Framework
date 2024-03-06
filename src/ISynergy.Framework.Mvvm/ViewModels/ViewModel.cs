@@ -129,6 +129,8 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
         CloseCommand = new AsyncRelayCommand(CloseAsync);
         CancelCommand = new AsyncRelayCommand(CancelAsync);
+
+        Logger.LogTrace(GetType().Name);
     }
 
     /// <summary>
@@ -138,7 +140,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            Logger.LogTrace(GetType().Name);
+            Logger.LogTrace($"{GetType().Name} initialized.");
 
         return Task.CompletedTask;
     }

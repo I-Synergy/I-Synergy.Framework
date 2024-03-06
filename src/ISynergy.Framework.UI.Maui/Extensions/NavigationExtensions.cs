@@ -39,7 +39,11 @@ public static class NavigationExtensions
         {
             if (resolvedPage.ViewModel is null)
             {
-                resolvedPage.ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+                if (viewModel is not null)
+                    resolvedPage.ViewModel = viewModel;
+                else
+                    resolvedPage.ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+
                 resolvedPage.ViewModel.Parameter = parameter;
             }
 
