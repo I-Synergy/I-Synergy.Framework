@@ -71,8 +71,8 @@
 		</When>
 		<When Condition="$(TargetFramework.Contains('windows10'))">
 		  <PropertyGroup>
-			<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-			<SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+			<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+			<SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
 		  </PropertyGroup>
 		</When>
 	  </Choose>
