@@ -26,6 +26,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public AsyncRelayCommand ShowMemoCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
+    public AsyncRelayCommand<TestItem> NavigateToDetailCommand { get; private set; }  
 
     public ControlsViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool automaticValidation = false) 
         : base(context, commonServices, logger, automaticValidation)
@@ -34,6 +35,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
         ShowMemoCommand = new AsyncRelayCommand(ShowMemoAsync);
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
+        NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
 
         Items =
         [
@@ -43,6 +45,13 @@ public class ControlsViewModel : ViewModelNavigation<object>
             new TestItem { Id = 4, Description = "Test 4"},
             new TestItem { Id = 5, Description = "Test 5"}
         ];
+    }
+
+    private async Task NavigateToDetailAsync(TestItem item)
+    {
+        item = new TestItem { Id = 1, Description = "Test 1" };
+        var detailsVm = new DetailViewModel(Context, BaseCommonServices, Logger, item);
+        await BaseCommonServices.NavigationService.NavigateAsync(detailsVm);
     }
 
     /// <summary>
