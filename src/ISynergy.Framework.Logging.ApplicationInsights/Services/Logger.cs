@@ -80,7 +80,7 @@ public class Logger : BaseLogger
 
         var message = formatter(state, exception);
 
-        if (!string.IsNullOrEmpty(message) || exception != null)
+        if (!string.IsNullOrEmpty(message))
         {
             switch (logLevel)
             {
@@ -100,9 +100,6 @@ public class Logger : BaseLogger
                         _client.TrackTrace(message);
 
                     break;
-                case LogLevel.Information:
-                case LogLevel.Warning:
-                case LogLevel.None:
                 default:
                     _client.TrackEvent(message);
                     break;
