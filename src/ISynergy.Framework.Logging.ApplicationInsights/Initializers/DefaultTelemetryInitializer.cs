@@ -48,13 +48,10 @@ public class DefaultTelemetryInitializer : ITelemetryInitializer
         if (telemetry is PageViewTelemetry pageViewTelemetry)
             pageViewTelemetry.Properties.AddDefaultProperties(pageViewTelemetry.Context, _context, _infoService);
 
-        if (telemetry is ISupportProperties supportProperties)
+        if (telemetry is ISupportProperties supportProperties && !supportProperties.Properties.ContainsKey("client-ip"))
         {
-            if (!supportProperties.Properties.ContainsKey("client-ip"))
-            {
-                var clientIPAddress = telemetry.Context.Location.Ip;
-                supportProperties.Properties.Add("client-ip", clientIPAddress);
-            }
+            var clientIPAddress = telemetry.Context.Location.Ip;
+            supportProperties.Properties.Add("client-ip", clientIPAddress);
         }
     }
 }
