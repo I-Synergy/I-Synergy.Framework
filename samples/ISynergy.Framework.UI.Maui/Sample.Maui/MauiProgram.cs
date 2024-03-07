@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Maui;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -10,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
-using System.Reflection;
 
 namespace Sample;
 
@@ -52,7 +50,6 @@ public class MauiProgram
 
         builder
             .UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Font Awesome 6 Pro-Regular-400.otf", "fontawesome");

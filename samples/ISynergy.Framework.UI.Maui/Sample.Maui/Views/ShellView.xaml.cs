@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Sample.ViewModels;
