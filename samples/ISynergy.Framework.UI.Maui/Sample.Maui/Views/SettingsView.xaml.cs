@@ -5,7 +5,7 @@ using Sample.ViewModels;
 namespace Sample.Views;
 
 [Singleton(true)]
-public partial class SettingsView : IView
+public partial class SettingsView
 {
 	public SettingsView(IContext context, SettingsViewModel viewModel)
        : base(context, viewModel)

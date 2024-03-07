@@ -1,5 +1,3 @@
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Markup;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
@@ -100,8 +98,6 @@ public static class MauiAppBuilderExtensions
         appBuilder.RegisterAssemblies(mainAssembly, assemblyFilter);
 
         return appBuilder
-            .UseMauiCommunityToolkit()
-            .UseMauiCommunityToolkitMarkup()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
