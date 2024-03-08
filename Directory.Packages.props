@@ -7,8 +7,6 @@
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.17.4" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.19.1" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
-    <PackageVersion Include="CommunityToolkit.Maui" Version="7.0.1" />
-    <PackageVersion Include="CommunityToolkit.Maui.Markup" Version="4.0.0" />
     <PackageVersion Include="CompareNETObjects" Version="4.83.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.1" />
     <PackageVersion Include="Docfx.App" Version="2.75.3" />

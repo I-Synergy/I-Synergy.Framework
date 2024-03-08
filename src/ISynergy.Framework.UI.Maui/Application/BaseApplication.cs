@@ -48,6 +48,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             config.SetMinimumLevel(LogLevel.Trace);
         }).CreateLogger(AppDomain.CurrentDomain.FriendlyName);
 
+        _logger.LogInformation("Setting up global exception handler.");
+
+        AppDomain.CurrentDomain.FirstChanceException += new WeakEventHandler<FirstChanceExceptionEventArgs>(CurrentDomain_FirstChanceException).Handler;
+        MauiExceptions.UnhandledException += new WeakEventHandler<UnhandledExceptionEventArgs>(CurrentDomain_UnhandledException).Handler;
+        TaskScheduler.UnobservedTaskException += new WeakEventHandler<UnobservedTaskExceptionEventArgs>(TaskScheduler_UnobservedTaskException).Handler;
+
         _logger.LogInformation("Starting application");
 
         // Pass a timeout to limit the execution time.
@@ -56,9 +62,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Setting up main page.");
         MainPage = new LoadingView();
-
-        _logger.LogInformation("Setting up global exception handler.");
-        SetGlobalExceptionHandler();
 
         _logger.LogInformation("Setting up context.");
         _context = ServiceLocator.Default.GetInstance<IContext>();
@@ -98,15 +101,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     public abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
 
-    /// <summary>
-    /// Sets the global exception handler.
-    /// </summary>
-    protected virtual void SetGlobalExceptionHandler()
-    {
-        AppDomain.CurrentDomain.FirstChanceException += new WeakEventHandler<FirstChanceExceptionEventArgs>(CurrentDomain_FirstChanceException).Handler;
-        MauiExceptions.UnhandledException += new WeakEventHandler<UnhandledExceptionEventArgs>(CurrentDomain_UnhandledException).Handler;
-        TaskScheduler.UnobservedTaskException += new WeakEventHandler<UnobservedTaskExceptionEventArgs>(TaskScheduler_UnobservedTaskException).Handler;
-    }
+    private string lastErrorMessage = string.Empty;
 
     /// <summary>
     /// Handles the first chance exception.
@@ -115,7 +110,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
-        Debug.WriteLine(e.Exception.Message);
+        if (e.Exception.Message != lastErrorMessage)
+        {
+            lastErrorMessage = e.Exception.Message;
+            _logger.LogError(e.Exception, e.Exception.Message);
+        }
     }
 
     /// <summary>

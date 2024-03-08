@@ -30,12 +30,10 @@ public static class NavigationExtensions
     /// <exception cref="FileNotFoundException"></exception>
     public static IView CreatePage<TViewModel>(IContext context, TViewModel viewModel = null, object parameter = null) where TViewModel : class, IViewModel
     {
-        var page = MauiAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(typeof(TViewModel).GetRelatedView()));
+        var view = typeof(TViewModel).GetRelatedView();
+        var viewType = view.GetRelatedViewType();
 
-        if (page is null)
-            throw new KeyNotFoundException($"Page not found: {typeof(TViewModel).GetRelatedView()}.");
-
-        if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is IView resolvedPage)
+        if (context.ScopedServices.ServiceProvider.GetRequiredService(viewType) is IView resolvedPage)
         {
             if (resolvedPage.ViewModel is null)
             {
@@ -50,7 +48,7 @@ public static class NavigationExtensions
             return resolvedPage;
         }
 
-        throw new InvalidNavigationException($"Cannot create or navigate to page: {typeof(TViewModel).GetRelatedView()}.");
+        throw new InvalidNavigationException($"Cannot create or navigate to page: {view}.");
     }
 
     /// <summary>

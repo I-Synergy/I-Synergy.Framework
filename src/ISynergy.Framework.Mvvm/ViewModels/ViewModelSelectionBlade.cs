@@ -107,7 +107,8 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
         RawItems = items.ToList();
 
-        Items = new ObservableCollection<TEntity>(items);
+        Items = new ObservableCollection<TEntity>();
+        Items.AddRange(items);
 
         SelectedItems = new List<object>();
 
@@ -143,7 +144,8 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
                 }
             }
 
-            Items = new ObservableCollection<TEntity>(filteredList);
+            Items = new ObservableCollection<TEntity>();
+            Items.AddRange(filteredList);
         }
 
         return Task.CompletedTask;
