@@ -90,7 +90,7 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex.Message, ex);
+            _logger.LogCritical(ex, ex.Message);
         }
     }
 }

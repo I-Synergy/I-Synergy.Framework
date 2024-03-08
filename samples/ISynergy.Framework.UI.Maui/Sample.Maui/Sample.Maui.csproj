@@ -64,6 +64,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Logging.AppCenter\ISynergy.Framework.Logging.AppCenter.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Update.Maui\ISynergy.Framework.Update.Maui.csproj" />
 		<ProjectReference Include="..\..\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
 
