@@ -204,13 +204,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinUI", "WinUI", "{70225C23
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{C79A2A25-68CC-403E-8129-52F9CE2ECF5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Maui", "samples\ISynergy.Framework.UI.Maui\Sample.Maui\Sample.Maui.csproj", "{D5951F6A-C2A1-4568-B652-644410CF5BA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Maui", "samples\ISynergy.Framework.UI.Maui\Sample.Maui\Sample.Maui.csproj", "{D5951F6A-C2A1-4568-B652-644410CF5BA1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{F7007222-6D8B-46C2-942B-9F5BAD1FD457}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Shared", "samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.csproj", "{948A2EAB-9554-4DA7-A4F7-3AA13B2959D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.MessageBus.Shared", "samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.csproj", "{99C13F0D-C29F-478A-BAA9-716EEB970A5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.Update.Maui", "src\ISynergy.Framework.Update.Maui\ISynergy.Framework.Update.Maui.csproj", "{E24CD5BE-BC7E-4001-8FE5-8BA5BC23E48A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -533,6 +535,10 @@ Global
 		{99C13F0D-C29F-478A-BAA9-716EEB970A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99C13F0D-C29F-478A-BAA9-716EEB970A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99C13F0D-C29F-478A-BAA9-716EEB970A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E24CD5BE-BC7E-4001-8FE5-8BA5BC23E48A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E24CD5BE-BC7E-4001-8FE5-8BA5BC23E48A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E24CD5BE-BC7E-4001-8FE5-8BA5BC23E48A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E24CD5BE-BC7E-4001-8FE5-8BA5BC23E48A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -627,6 +633,7 @@ Global
 		{F7007222-6D8B-46C2-942B-9F5BAD1FD457} = {748C5FD2-1F73-4289-BC5C-4AC0F7FECB1B}
 		{948A2EAB-9554-4DA7-A4F7-3AA13B2959D1} = {F7007222-6D8B-46C2-942B-9F5BAD1FD457}
 		{99C13F0D-C29F-478A-BAA9-716EEB970A5A} = {0072263F-6637-48DC-B0AE-049A84A468BF}
+		{E24CD5BE-BC7E-4001-8FE5-8BA5BC23E48A} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
