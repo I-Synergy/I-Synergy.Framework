@@ -5,6 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     x:Class="Sample.Views.SettingsView"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+    x:DataType="viewmodels:SettingsViewModel"
     Title="SettingsView">
 
     <Grid>

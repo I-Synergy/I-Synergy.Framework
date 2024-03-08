@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
@@ -287,12 +288,15 @@ public class AuthenticationViewModel : ViewModel
             Registration_Modules.Add(module);
 
         AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
-        Usernames = new ObservableCollection<string>(await _credentialLockerService.GetUsernamesFromCredentialLockerAsync());
+
+        var users = await _credentialLockerService.GetUsernamesFromCredentialLockerAsync();
+        Usernames = new ObservableCollection<string>();
+        Usernames.AddRange(users);
 
         if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
             Username = _applicationSettingsService.Settings.DefaultUser;
         if (string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && Usernames.Count > 0)
-            Username = Usernames.FirstOrDefault();
+            Username = Usernames[0];
     }
 
     /// <summary>

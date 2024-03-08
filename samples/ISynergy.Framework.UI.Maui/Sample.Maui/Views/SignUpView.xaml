@@ -4,7 +4,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
         x:Class="Sample.Views.SignUpView"
         xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
-        xmlns:toolkitbehaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
         xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
         x:DataType="viewmodels:SignUpViewModel"
         Shell.FlyoutBehavior="Disabled"
@@ -69,13 +68,13 @@
                 MaximumWidthRequest="250">
                 <Entry Text="{Binding Name}" Placeholder="{m:GetString Fullname}"/>
                 <Entry Text="{Binding Mail}" Placeholder="{m:GetString EmailAddress}" Keyboard="Email">
-                    <Entry.Behaviors>
+                    <!--<Entry.Behaviors>
                         <toolkitbehaviors:UserStoppedTypingBehavior 
                             Command="{Binding ValidateMailCommand}" 
                             StoppedTypingTimeThreshold="2500"
                             MinimumLengthThreshold="3"
                             ShouldDismissKeyboardAutomatically="True"/>
-                    </Entry.Behaviors>
+                    </Entry.Behaviors>-->
                 </Entry>
 
                 <Entry Text="{Binding Password}" Placeholder="{m:GetString Password}" IsPassword="True"/>

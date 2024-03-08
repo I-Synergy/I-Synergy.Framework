@@ -4,11 +4,15 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Sample.Views.ControlsView"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+    x:DataType="viewmodels:ControlsViewModel"
     Title="ControlsView">
 
     <Grid>
         <VerticalStackLayout Margin="10" Spacing="10">
             <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
+            <Button Text="Throw Not Implemented error" Command="{Binding NotImplementedErrorCommand}"/>
+            <Button Text="Throw Not Implemented error (Asynchronous)" Command="{Binding AsyncNotImplementedErrorCommand}"/>
             <Button Text="Show Memo window" Command="{Binding ShowMemoCommand}"/>
             <Button Text="Select single item" Command="{Binding SelectSingleCommand}"/>
             <Button Text="Select multiple items" Command="{Binding SelectMultipleCommand}"/>

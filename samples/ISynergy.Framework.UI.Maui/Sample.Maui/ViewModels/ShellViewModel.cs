@@ -7,7 +7,6 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
-using FileResult = ISynergy.Framework.Mvvm.Models.FileResult;
 
 namespace Sample.ViewModels;
 

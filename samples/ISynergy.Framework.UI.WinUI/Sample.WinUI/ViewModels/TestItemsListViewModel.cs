@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
@@ -147,8 +148,9 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
 
         try
         {
-            Items = new ObservableCollection<TestItem>(
-                await RetrieveItemsAsync(SearchCancellationtoken.Token));
+            var items = await RetrieveItemsAsync(SearchCancellationtoken.Token);
+            Items = new ObservableCollection<TestItem>();
+            Items.AddRange(items);
         }
         catch (OperationCanceledException)
         {

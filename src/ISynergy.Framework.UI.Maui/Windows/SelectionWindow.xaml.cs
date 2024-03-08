@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 
 namespace ISynergy.Framework.UI.Windows;
 
+[XamlCompilation(XamlCompilationOptions.Skip)]
 public partial class SelectionWindow : ISelectionWindow
 {
     public SelectionWindow()
