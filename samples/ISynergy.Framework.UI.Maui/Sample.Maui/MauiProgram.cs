@@ -28,25 +28,24 @@ public static class MauiProgram
             .Configuration
             .AddConfiguration(config);
 
-        var localSettingsService = new LocalSettingsService();
-
         builder
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Font Awesome 6 Pro-Regular-400.otf", "fontawesome");
             })
-            .ConfigureLogging(logging =>
+            .ConfigureLogging((logging, configuration) =>
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
-                logging.AddAppCenterLogging(config);
+                logging.AddAppCenterLogging(configuration);
             })
-            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(services => 
+            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) => 
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                services.TryAddSingleton<IBaseApplicationSettingsService>(s => localSettingsService);
+                services.TryAddSingleton<LocalSettingsService>();
+                services.TryAddSingleton<IBaseApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
 
                 services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
 

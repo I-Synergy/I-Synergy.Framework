@@ -8,7 +8,6 @@ using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -69,22 +68,20 @@ public class NavigationService : INavigationService
     /// <exception cref="ArgumentException">Instance could not be created from {viewModelKey}</exception>
     private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
-        var page = WPFAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetRelatedView()));
+        var view = viewModel.GetRelatedView();
+        var viewType = view.GetRelatedViewType();
 
-        if (page is null)
-            throw new KeyNotFoundException($"Page not found: {viewModel.GetRelatedView()}.");
-
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(page) is ISynergy.Framework.UI.Controls.View view)
+        if (_context.ScopedServices.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
         {
-            view.ViewModel = viewModel;
+            resolvedPage.ViewModel = viewModel;
 
             if (!viewModel.IsInitialized)
                 await viewModel.InitializeAsync();
 
-            return view;
+            return resolvedPage;
         }
 
-        throw new InvalidOperationException($"Instance could not be created from {viewModel.GetRelatedView()}");
+        throw new InvalidOperationException($"Instance create or navigate to page: {view}.");
     }
 
     /// <summary>
