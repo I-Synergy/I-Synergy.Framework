@@ -72,20 +72,6 @@ public static class ViewModelExtensions
         return result;
     }
 
-    public static Type GetRelatedViewType(this string name)
-    {
-        return
-            AppDomain.CurrentDomain.GetAssemblies()
-                .Reverse()
-                    .Select(assembly => assembly.GetType(name))
-                    .FirstOrDefault(t => t != null)
-                ??
-                AppDomain.CurrentDomain.GetAssemblies()
-                    .Reverse()
-                    .SelectMany(assembly => assembly.GetTypes())
-                    .FirstOrDefault(t => t.Name.EndsWith(name));
-    }
-
     public static string GetRelatedView(this IViewModel viewModel) =>
         viewModel.GetType().GetRelatedView();
 
@@ -103,4 +89,19 @@ public static class ViewModelExtensions
     
     public static string GetRelatedViewModel(this IView view) =>
         view.GetType().GetRelatedViewModel();
+
+
+    public static Type GetRelatedViewType(this string name)
+    {
+        return
+            AppDomain.CurrentDomain.GetAssemblies()
+                .Reverse()
+                    .Select(assembly => assembly.GetType(name))
+                    .FirstOrDefault(t => t != null)
+                ??
+                AppDomain.CurrentDomain.GetAssemblies()
+                    .Reverse()
+                    .SelectMany(assembly => assembly.GetTypes())
+                    .FirstOrDefault(t => t.Name.EndsWith(name));
+    }
 }
