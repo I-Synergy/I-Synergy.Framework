@@ -1,6 +1,7 @@
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -23,6 +24,8 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public ObservableCollection<TestItem> SelectedTestItems { get; set; }
 
     public RelayCommand BusyOnCommand { get; private set; }
+    public RelayCommand NotImplementedErrorCommand { get; private set; }
+    public AsyncRelayCommand AsyncNotImplementedErrorCommand { get; private set; }
     public AsyncRelayCommand ShowMemoCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
@@ -36,6 +39,8 @@ public class ControlsViewModel : ViewModelNavigation<object>
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
         NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
+        NotImplementedErrorCommand = new RelayCommand(() => throw new NotImplementedException());
+        AsyncNotImplementedErrorCommand = new AsyncRelayCommand(() => throw new NotImplementedException());
 
         Items =
         [
