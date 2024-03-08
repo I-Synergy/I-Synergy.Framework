@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -99,15 +100,22 @@ public class SignInViewModel : ViewModel
 
     public override async Task InitializeAsync()
     {
-        await base.InitializeAsync();
+        if (!IsInitialized)
+        {
+            await base.InitializeAsync();
 
-        AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
-        Usernames = new ObservableCollection<string>(await _credentialLockerService.GetUsernamesFromCredentialLockerAsync());
+            AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
+            var users = await _credentialLockerService.GetUsernamesFromCredentialLockerAsync();
+            Usernames = new ObservableCollection<string>();
+            Usernames.AddRange(users);
 
-        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
-            Username = _applicationSettingsService.Settings.DefaultUser;
-        if (string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && Usernames.Count > 0)
-            Username = Usernames.FirstOrDefault();
+            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
+                Username = _applicationSettingsService.Settings.DefaultUser;
+            if (string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && Usernames.Count > 0)
+                Username = Usernames[0];
+
+            IsInitialized = true;
+        }
     }
 
     private Task SignUpAsync() =>

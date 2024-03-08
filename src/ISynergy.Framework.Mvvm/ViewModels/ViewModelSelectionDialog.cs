@@ -116,7 +116,9 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
         RawItems = items.ToList();
-        Items = new ObservableCollection<TEntity>(items);
+
+        Items = new ObservableCollection<TEntity>();
+        Items.AddRange(items);
 
         SelectedItems = new List<object>();
 
@@ -152,7 +154,8 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
                 }
             }
 
-            Items = new ObservableCollection<TEntity>(filteredList);
+            Items = new ObservableCollection<TEntity>();
+            Items.AddRange(filteredList);
         }
 
         return Task.CompletedTask;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -83,7 +83,8 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// <param name="e">The e.</param>
     private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
-        SelectedTestItems = new ObservableCollection<TestItem>(e.Result);
+        SelectedTestItems = new ObservableCollection<TestItem>();
+        SelectedTestItems.AddRange(e.Result);
 
         await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
     }
