@@ -11,6 +11,10 @@ using Sample.Models;
 using Sample.Services;
 using System.Reflection;
 
+#if WINDOWS
+using ISynergy.Framework.Update.Extensions;
+#endif
+
 namespace Sample;
 
 public static class MauiProgram
@@ -52,6 +56,10 @@ public static class MauiProgram
                 services.TryAddSingleton<CommonServices>();
                 services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
                 services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
+
+#if WINDOWS
+                services.AddUpdatesIntegration();
+#endif
             });
 
         return builder.Build();
