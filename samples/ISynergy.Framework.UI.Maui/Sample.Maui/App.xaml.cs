@@ -1,7 +1,11 @@
-﻿using ISynergy.Framework.Core.Events;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI;
+using ISynergy.Framework.Update.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.ViewModels;
@@ -19,6 +23,27 @@ public partial class App : BaseApplication
     public override async Task InitializeApplicationAsync()
     {
         await base.InitializeApplicationAsync();
+
+#if WINDOWS
+        try
+        {
+            ServiceLocator.Default.GetInstance<IBusyService>().StartBusy(ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateCheckForUpdates"));
+
+            if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(
+                ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateExecuteNow"),
+                "Update",
+                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                ServiceLocator.Default.GetInstance<IBusyService>().BusyMessage = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateDownloadAndInstall");
+                await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
+                Environment.Exit(Environment.ExitCode);
+            }
+        }
+        finally
+        {
+            ServiceLocator.Default.GetInstance<IBusyService>().EndBusy();
+        }
+#endif
 
         bool navigateToAuthentication = true;
 
