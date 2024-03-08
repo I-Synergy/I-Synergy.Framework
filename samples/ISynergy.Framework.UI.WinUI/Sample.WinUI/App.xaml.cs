@@ -2,11 +2,11 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.Update.Abstractions.Services;
@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Windows.AppLifecycle;
 using Sample.Abstractions;
 using Sample.Models;
@@ -48,10 +49,16 @@ public sealed partial class App : BaseApplication
                 Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
                 builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
             })
-            .ConfigureServices((context, services) =>
+            .ConfigureLogging(( logging, configuration) =>
             {
-                services.ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
+                logging.SetMinimumLevel(LogLevel.Trace);
+                logging.AddAppCenterLogging(configuration);
 
+                //logging.AddApplicationInsightsLogging(configuration);
+                //logging.AddSentryLogging(configuration);
+            })
+            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
+            {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
@@ -62,12 +69,6 @@ public sealed partial class App : BaseApplication
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
                 services.AddUpdatesIntegration();
-            })
-            .ConfigureLogging((context, logging) =>
-            {
-                //logging.AddApplicationInsightsLogging(context.Configuration);
-                //logging.AddAppCenterLogging(context.Configuration);
-                //logging.AddSentryLogging(context.Configuration);
             });
     }
 

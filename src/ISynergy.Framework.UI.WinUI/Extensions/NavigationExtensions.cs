@@ -31,22 +31,24 @@ public static class NavigationExtensions
     /// <exception cref="FileNotFoundException"></exception>
     public static View CreatePage<TViewModel>(IContext context, TViewModel viewModel, object parameter = null) where TViewModel : class, IViewModel
     {
-        if (viewModel is null && context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
-            viewModel = resolvedViewModel;
+        var view = typeof(TViewModel).GetRelatedView();
+        var viewType = view.GetRelatedViewType();
 
-        viewModel.Parameter = parameter;
-
-        var page = WindowsAppBuilderExtensions.ViewTypes.SingleOrDefault(q => q.Name.Equals(viewModel.GetRelatedView()));
-
-        if (page is null)
-            throw new KeyNotFoundException($"Page not found: {viewModel.GetRelatedView()}.");
-
-        if (context.ScopedServices.ServiceProvider.GetRequiredService(page) is View resolvedPage)
+        if (context.ScopedServices.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
         {
-            resolvedPage.ViewModel = viewModel;
+            if (resolvedPage.ViewModel is null)
+            {
+                if (viewModel is not null)
+                    resolvedPage.ViewModel = viewModel;
+                else
+                    resolvedPage.ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+
+                resolvedPage.ViewModel.Parameter = parameter;
+            }
+
             return resolvedPage;
         }
 
-        throw new FileNotFoundException($"Cannot create or navigate to page: {viewModel.GetRelatedView()}.");
+        throw new FileNotFoundException($"Cannot create or navigate to page: {view}.");
     }
 }

@@ -10,6 +10,7 @@ using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
@@ -19,11 +20,17 @@ namespace ISynergy.Framework.UI.Extensions;
 
 public static class MauiAppBuilderExtensions
 {
-    public static MauiAppBuilder ConfigureLogging(this MauiAppBuilder appBuilder, Action<ILoggingBuilder> logging)
+    /// <summary>
+    /// Returns an instance of the <see cref="MauiAppBuilder"/> and adds logging.
+    /// </summary>
+    /// <param name="appBuilder"></param>
+    /// <param name="logging"></param>
+    /// <returns></returns>
+    public static MauiAppBuilder ConfigureLogging(this MauiAppBuilder appBuilder, Action<ILoggingBuilder, IConfiguration> logging)
     {
         appBuilder.Services.AddLogging();
 
-        // Register singleton services
+        // Register singleton action
         appBuilder.Services.TryAddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
         {
             builder.AddDebug();
@@ -34,21 +41,22 @@ public static class MauiAppBuilderExtensions
         appBuilder.Logging.AddDebug();
 #endif
 
-        logging.Invoke(appBuilder.Logging);
+        logging.Invoke(appBuilder.Logging, appBuilder.Configuration);
 
         return appBuilder;
     }
 
     /// <summary>
-    /// 
+    /// Returns an instance of the <see cref="IServiceCollection"/> and configures all services.
     /// </summary>
     /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TExceptionHandler"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="appBuilder"></param>
+    /// <param name="action"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this MauiAppBuilder appBuilder, Action<IServiceCollection> services)
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this MauiAppBuilder appBuilder, Action<IServiceCollection, IConfiguration> action)
     where TApplication : class, Microsoft.Maui.IApplication
     where TContext : class, IContext
     where TExceptionHandler : class, IExceptionHandlerService
@@ -90,7 +98,7 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.RegisterAssemblies();
 
-        services.Invoke(appBuilder.Services);
+        action.Invoke(appBuilder.Services, appBuilder.Configuration);
 
         appBuilder
             .ConfigureFonts(fonts =>
@@ -154,7 +162,7 @@ public static class MauiAppBuilderExtensions
     }
 
     /// <summary>
-    /// Registers the services in the service collection with the page resolver
+    /// Registers the action in the service collection with the page resolver
     /// </summary>
     /// <param name="services"></param>
     public static void AddPageResolver(this IServiceCollection services)

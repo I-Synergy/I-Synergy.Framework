@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Physics.Abstractions;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using NugetUnlister;
+using Microsoft.Extensions.Logging;
 using NugetUnlister.Extensions;
 using Sample.Abstractions;
 using Sample.Models;
@@ -29,12 +29,16 @@ public static class Program
                 Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
                 builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
             })
-            .ConfigureServices((context, services) =>
+            .ConfigureLogging((logging, configuration) =>
             {
-                services.ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(context.Configuration, x =>
-                    x.Name.StartsWith(typeof(App).Namespace) ||
-                    x.FullName.Equals(typeof(Identifier).Assembly.FullName));
+                logging.SetMinimumLevel(LogLevel.Trace);
+                logging.AddAppCenterLogging(configuration);
 
+                //logging.AddApplicationInsightsLogging(context.Configuration);
+                //logging.AddSentryLogging(context.Configuration);
+            })
+            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
+            {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
@@ -45,15 +49,9 @@ public static class Program
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
-                services.AddNugetServiceIntegrations(context.Configuration);
-            })
-            .ConfigureLogging((context, logging) =>
-            {
+                services.AddNugetServiceIntegrations(configuration);
             })
             .Build();
-
-        using IServiceScope scope = host.Services.CreateScope();
-        ServiceLocator.SetLocatorProvider(scope.ServiceProvider);
 
         App application = new();
         application.InitializeComponent();
