@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Extensions;
@@ -9,38 +9,20 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
+using System.Reflection;
 
 namespace Sample;
 
-public class MauiProgram
+public static class MauiProgram
 {
-    private static readonly object _creationLock = new object();
-    private static MauiProgram _defaultInstance;
-
-    public static MauiProgram Default
-    {
-        get
-        {
-            if (_defaultInstance is null)
-            {
-                lock (_creationLock)
-                {
-                    if (_defaultInstance is null)
-                        _defaultInstance = new MauiProgram();
-                }
-            }
-
-            return _defaultInstance;
-        }
-    }
-
-    public async Task<MauiApp> CreateMauiAppAsync()
+    public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+        var mainAssembly = Assembly.GetAssembly(typeof(App));
 
-        IConfigurationRoot config = new ConfigurationBuilder()
-            .AddJsonStream(await FileSystem.OpenAppPackageFileAsync("appsettings.json"))
-            .Build();
+        var configBuilder = new ConfigurationBuilder();
+        configBuilder.AddJsonStream(mainAssembly.GetManifestResourceStream("Sample.appsettings.json"));
+        var config = configBuilder.Build();
 
         builder
             .Configuration
@@ -54,28 +36,25 @@ public class MauiProgram
             {
                 fonts.AddFont("Font Awesome 6 Pro-Regular-400.otf", "fontawesome");
             })
-            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(x => x.Name.StartsWith(typeof(MauiProgram).Namespace));
+            .ConfigureLogging(logging =>
+            {
+                logging.SetMinimumLevel(LogLevel.Trace);
+                logging.AddAppCenterLogging(config);
+            })
+            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(services => 
+            {
+                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-#if DEBUG
-        builder.Logging.AddDebug();
-#endif
-        builder.Logging.SetMinimumLevel(LogLevel.Trace);
+                services.TryAddSingleton<IBaseApplicationSettingsService>(s => localSettingsService);
 
-        builder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-        builder.Services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
+                services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
 
-        builder.Services.TryAddSingleton<IBaseApplicationSettingsService>(s => localSettingsService);
-
-        builder.Services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
-
-        builder.Services.TryAddSingleton<CommonServices>();
-        builder.Services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
-        builder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
-
-        ServiceLocator.SetLocatorProvider(builder.Services.BuildServiceProvider());
+                services.TryAddSingleton<CommonServices>();
+                services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
+                services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
+            });
 
         return builder.Build();
     }
-
-    
 }
