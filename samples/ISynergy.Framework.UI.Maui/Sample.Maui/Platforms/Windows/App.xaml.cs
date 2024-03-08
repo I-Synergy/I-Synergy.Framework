@@ -18,6 +18,6 @@ public partial class App : MauiWinUIApplication
         this.InitializeComponent();
     }
 
-    protected override MauiApp CreateMauiApp() => MauiProgram.Default.CreateMauiAppAsync().GetAwaiter().GetResult();
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }
 

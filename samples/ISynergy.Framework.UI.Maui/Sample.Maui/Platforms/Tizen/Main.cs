@@ -6,7 +6,7 @@ namespace Sample;
 
 internal class Program : MauiApplication
 {
-    protected override MauiApp CreateMauiApp() => MauiProgram.Default.CreateMauiAppAsync().GetAwaiter().GetResult();
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
     static void Main(string[] args)
     {
