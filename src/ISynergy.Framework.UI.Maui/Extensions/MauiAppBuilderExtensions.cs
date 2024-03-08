@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -18,23 +19,25 @@ namespace ISynergy.Framework.UI.Extensions;
 
 public static class MauiAppBuilderExtensions
 {
-    /// <summary>
-    /// Gets the shellView model types.
-    /// </summary>
-    /// <value>The shellView model types.</value>
-    public static IEnumerable<Type> ViewModelTypes { get; private set; }
+    public static MauiAppBuilder ConfigureLogging(this MauiAppBuilder appBuilder, Action<ILoggingBuilder> logging)
+    {
+        appBuilder.Services.AddLogging();
 
-    /// <summary>
-    /// Gets the shellView types.
-    /// </summary>
-    /// <value>The shellView types.</value>
-    public static IEnumerable<Type> ViewTypes { get; private set; }
+        // Register singleton services
+        appBuilder.Services.TryAddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
+        {
+            builder.AddDebug();
+            builder.SetMinimumLevel(LogLevel.Trace);
+        }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
 
-    /// <summary>
-    /// Gets the window types.
-    /// </summary>
-    /// <value>The window types.</value>
-    public static IEnumerable<Type> WindowTypes { get; private set; }
+#if DEBUG
+        appBuilder.Logging.AddDebug();
+#endif
+
+        logging.Invoke(appBuilder.Logging);
+
+        return appBuilder;
+    }
 
     /// <summary>
     /// 
@@ -44,15 +47,13 @@ public static class MauiAppBuilderExtensions
     /// <typeparam name="TExceptionHandler"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="appBuilder"></param>
-    /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this MauiAppBuilder appBuilder, Func<AssemblyName, bool> assemblyFilter)
-        where TApplication : class, Microsoft.Maui.IApplication
-        where TContext : class, IContext
-        where TExceptionHandler : class, IExceptionHandlerService
-        where TResource : class
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this MauiAppBuilder appBuilder, Action<IServiceCollection> services)
+    where TApplication : class, Microsoft.Maui.IApplication
+    where TContext : class, IContext
+    where TExceptionHandler : class, IExceptionHandlerService
+    where TResource : class
     {
-        appBuilder.Services.AddLogging();
         appBuilder.Services.AddOptions();
         appBuilder.Services.AddPageResolver();
 
@@ -66,13 +67,7 @@ public static class MauiAppBuilderExtensions
         var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
         languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
-
-        // Register singleton services
-        appBuilder.Services.TryAddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
-        {
-            builder.AddDebug();
-            builder.SetMinimumLevel(LogLevel.Trace);
-        }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+        languageService.AddResourceManager(typeof(TResource));
 
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
@@ -93,11 +88,11 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();
         appBuilder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
-        languageService.AddResourceManager(typeof(TResource));
+        appBuilder.RegisterAssemblies();
 
-        appBuilder.RegisterAssemblies(mainAssembly, assemblyFilter);
+        services.Invoke(appBuilder.Services);
 
-        return appBuilder
+        appBuilder
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
@@ -107,54 +102,34 @@ public static class MauiAppBuilderExtensions
                 fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
                 fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
             });
+
+        ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
+
+        return appBuilder;
     }
 
     /// <summary>
     /// Registers the assemblies.
     /// </summary>
     /// <param name="appBuilder"></param>
-    /// <param name="mainAssembly">The main assembly.</param>
-    /// <param name="assemblyFilter">The assembly filter.</param>
-    private static void RegisterAssemblies(this MauiAppBuilder appBuilder, Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
+    private static void RegisterAssemblies(this MauiAppBuilder appBuilder)
     {
-        var referencedAssemblies = mainAssembly.GetAllReferencedAssemblyNames();
-        var assemblies = new List<Assembly>();
+        var viewTypes = ReflectionExtensions.GetViewTypes();
+        var windowTypes = ReflectionExtensions.GetWindowTypes();
+        var viewModelTypes = ReflectionExtensions.GetViewModelTypes();
 
-        if (assemblyFilter is not null)
-            foreach (var item in referencedAssemblies.Where(assemblyFilter).EnsureNotNull())
-                assemblies.Add(Assembly.Load(item));
+        appBuilder.Services.RegisterViewModels(viewModelTypes);
+        appBuilder.Services.RegisterViews(viewTypes);
+        appBuilder.Services.RegisterWindows(windowTypes);
 
-        foreach (var item in referencedAssemblies.Where(x =>
-            x.Name.StartsWith("ISynergy.Framework.UI") ||
-            x.Name.StartsWith("ISynergy.Framework.Mvvm")))
-            assemblies.Add(Assembly.Load(item));
-
-        appBuilder.RegisterAssemblies(assemblies);
+        appBuilder.Services.RegisterViewModelRoutes(viewModelTypes, viewTypes);
     }
 
-    /// <summary>
-    /// Registers the assemblies.
-    /// </summary>
-    /// <param name="appBuilder"></param>
-    /// <param name="assemblies">The assemblies.</param>
-    private static void RegisterAssemblies(this MauiAppBuilder appBuilder, IEnumerable<Assembly> assemblies)
+    private static void RegisterViewModelRoutes(this IServiceCollection services, IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)
     {
-        ViewTypes = assemblies.ToViewTypes();
-        WindowTypes = assemblies.ToWindowTypes();
-        ViewModelTypes = assemblies.ToViewModelTypes();
-
-        appBuilder.Services.RegisterViewModels(ViewModelTypes);
-        appBuilder.Services.RegisterViews(ViewTypes);
-        appBuilder.Services.RegisterWindows(WindowTypes);
-
-        appBuilder.Services.RegisterViewModelRoutes(ViewTypes);
-    }
-
-    private static void RegisterViewModelRoutes(this IServiceCollection services, IEnumerable<Type> views)
-    {
-        foreach (var view in views.Distinct())
+        foreach (var view in viewTypes.Distinct())
         {
-            if (ViewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is { } viewmodel)
+            if (viewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is { } viewmodel)
                 services.RegisterViewModelRoute(viewmodel, view);
         }
     }
