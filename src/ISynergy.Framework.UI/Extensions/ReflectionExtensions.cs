@@ -144,33 +144,33 @@ public static class ReflectionExtensions
             if (abstraction is not null)
             {
                 services.TryAddSingleton(abstraction, type);
-                logger.LogDebug($"Registering singleton abstraction {abstraction.Name} with implementation {type.Name}.");
+                logger.LogDebug("Registering singleton abstraction {0} with implementation {1}.", abstraction.Name, type.Name);
             }
 
             services.TryAddSingleton(type);
-            logger.LogDebug($"Register singleton implementation {type.Name}.");
+            logger.LogDebug("Register singleton implementation {0}.", type.Name);
         }
         else if (type.IsScoped())
         {
             if (abstraction is not null)
             {
                 services.TryAddScoped(abstraction, type);
-                logger.LogDebug($"Registering scoped abstraction {abstraction.Name} with implementation {type.Name}.");
+                logger.LogDebug("Registering scoped abstraction {0} with implementation {1}.", abstraction.Name, type.Name);
             }
 
             services.TryAddScoped(type);
-            logger.LogDebug($"Register scoped implementation {type.Name}.");
+            logger.LogDebug("Register scoped implementation {0}.", type.Name);
         }
         else
         {
             if (abstraction is not null)
             {
                 services.TryAddTransient(abstraction, type);
-                logger.LogDebug($"Registering transient abstraction {abstraction.Name} with implementation {type.Name}.");
+                logger.LogDebug("Registering transient abstraction {0} with implementation {1}.", abstraction.Name, type.Name);
             }
 
             services.TryAddTransient(type);
-            logger.LogDebug($"Register transient implementation {type.Name}.");
+            logger.LogDebug("Register transient implementation {0}.", type.Name);
         }
     }
 }

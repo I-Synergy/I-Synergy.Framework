@@ -49,7 +49,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         }).CreateLogger(AppDomain.CurrentDomain.FriendlyName);
 
         _logger.LogInformation("Setting up global exception handler.");
-        SetGlobalExceptionHandler();
+
+        AppDomain.CurrentDomain.FirstChanceException += new WeakEventHandler<FirstChanceExceptionEventArgs>(CurrentDomain_FirstChanceException).Handler;
+        MauiExceptions.UnhandledException += new WeakEventHandler<UnhandledExceptionEventArgs>(CurrentDomain_UnhandledException).Handler;
+        TaskScheduler.UnobservedTaskException += new WeakEventHandler<UnobservedTaskExceptionEventArgs>(TaskScheduler_UnobservedTaskException).Handler;
 
         _logger.LogInformation("Starting application");
 
@@ -97,16 +100,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
-
-    /// <summary>
-    /// Sets the global exception handler.
-    /// </summary>
-    protected virtual void SetGlobalExceptionHandler()
-    {
-        AppDomain.CurrentDomain.FirstChanceException += new WeakEventHandler<FirstChanceExceptionEventArgs>(CurrentDomain_FirstChanceException).Handler;
-        MauiExceptions.UnhandledException += new WeakEventHandler<UnhandledExceptionEventArgs>(CurrentDomain_UnhandledException).Handler;
-        TaskScheduler.UnobservedTaskException += new WeakEventHandler<UnobservedTaskExceptionEventArgs>(TaskScheduler_UnobservedTaskException).Handler;
-    }
 
     private string lastErrorMessage = string.Empty;
 
