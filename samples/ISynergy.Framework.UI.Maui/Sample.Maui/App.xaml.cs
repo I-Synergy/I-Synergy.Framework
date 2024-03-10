@@ -24,6 +24,9 @@ public partial class App : BaseApplication
     {
         await base.InitializeApplicationAsync();
 
+        // Delay to show loading screen on startup.
+        await Task.Delay(5000);
+
 #if WINDOWS
         try
         {
