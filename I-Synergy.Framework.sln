@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		azure-pipelines.yml = azure-pipelines.yml
 		codecoverage.runsettings = codecoverage.runsettings
 		Directory.Build.props = Directory.Build.props
-		Directory.Build.targets = Directory.Build.targets
 		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
 		icon.png = icon.png
@@ -212,7 +211,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Shared", "samples\IS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.MessageBus.Shared", "samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.csproj", "{99C13F0D-C29F-478A-BAA9-716EEB970A5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.Update.Maui", "src\ISynergy.Framework.Update.Maui\ISynergy.Framework.Update.Maui.csproj", "{E24CD5BE-BC7E-4001-8FE5-8BA5BC23E48A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Update.Maui", "src\ISynergy.Framework.Update.Maui\ISynergy.Framework.Update.Maui.csproj", "{E24CD5BE-BC7E-4001-8FE5-8BA5BC23E48A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
