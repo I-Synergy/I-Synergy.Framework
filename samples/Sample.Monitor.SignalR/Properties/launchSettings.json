@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Sample.Monitor.SignalR": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:52756;http://localhost:52757"
+    }
+  }
+}
