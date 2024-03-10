@@ -10,9 +10,9 @@ internal class DispatcherService : IDispatcherService
     public DispatcherService()
     {
         Argument.IsNotNull(Application.Current);
-        Argument.IsNotNull(Application.Current.MainPage);
+        Argument.IsNotNull(Application.Current.Dispatcher);
 
-        _dispatcher = Application.Current.MainPage.Dispatcher;
+        _dispatcher = Application.Current.Dispatcher;
     }
 
     public object Dispatcher { get => _dispatcher; }
