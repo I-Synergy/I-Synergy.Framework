@@ -43,37 +43,17 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">31.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<None Include="..\..\icon.png" Pack="true" PackagePath="\"/>
 		<None Include="readme.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
-
-	<Choose>
-		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-		  <PropertyGroup>
-			<SupportedOSPlatformVersion>31.0</SupportedOSPlatformVersion>
-		  </PropertyGroup>
-		</When>
-		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
-		  <PropertyGroup>
-			<SupportedOSPlatformVersion>16.1</SupportedOSPlatformVersion>
-		  </PropertyGroup>
-		</When>
-		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
-		  <PropertyGroup>
-			<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
-		  </PropertyGroup>
-		</When>
-		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-		  <PropertyGroup>
-			<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
-		  </PropertyGroup>
-		</When>
-		<When Condition="$(TargetFramework.Contains('windows10'))">
-		  <PropertyGroup>
-			<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-			<SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
-		  </PropertyGroup>
-		</When>
-	  </Choose>
 </Project>
