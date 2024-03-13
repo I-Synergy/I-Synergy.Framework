@@ -19,7 +19,6 @@
 		<DefaultLanguage>en</DefaultLanguage>
 		<IsPackable>false</IsPackable>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
-		<SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
