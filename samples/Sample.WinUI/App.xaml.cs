@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -52,10 +51,6 @@ public sealed partial class App : BaseApplication
             .ConfigureLogging(( logging, configuration) =>
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
-                logging.AddAppCenterLogging(configuration);
-
-                //logging.AddApplicationInsightsLogging(configuration);
-                //logging.AddSentryLogging(configuration);
             })
             .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
             {

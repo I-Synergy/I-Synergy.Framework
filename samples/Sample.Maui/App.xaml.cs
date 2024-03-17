@@ -8,6 +8,7 @@ using ISynergy.Framework.UI;
 using ISynergy.Framework.Update.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
+using Sample.Services;
 using Sample.ViewModels;
 
 namespace Sample;
@@ -27,47 +28,51 @@ public partial class App : BaseApplication
         // Delay to show loading screen on startup.
         await Task.Delay(5000);
 
+        if (ServiceLocator.Default.GetInstance<ICommonServices>() is CommonServices commonServices)
+        {
+            try
+            {
 #if WINDOWS
-        try
-        {
-            ServiceLocator.Default.GetInstance<IBusyService>().StartBusy(ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateCheckForUpdates"));
+                //commonServices.BusyService.StartBusy(commonServices.LanguageService.GetString("UpdateCheckForUpdates"));
 
-            if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(
-                ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateExecuteNow"),
-                "Update",
-                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                ServiceLocator.Default.GetInstance<IBusyService>().BusyMessage = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateDownloadAndInstall");
-                await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
-                Environment.Exit(Environment.ExitCode);
-            }
-        }
-        finally
-        {
-            ServiceLocator.Default.GetInstance<IBusyService>().EndBusy();
-        }
+                //if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await commonServices.DialogService.ShowMessageAsync(
+                //    commonServices.LanguageService.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + commonServices.LanguageService.GetString("UpdateExecuteNow"),
+                //    "Update",
+                //    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                //{
+                //    commonServices.BusyService.BusyMessage = commonServices.LanguageService.GetString("UpdateDownloadAndInstall");
+                //    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
+                //    Environment.Exit(Environment.ExitCode);
+                //}
 #endif
+                commonServices.BusyService.StartBusy();
 
-        bool navigateToAuthentication = true;
+                bool navigateToAuthentication = true;
 
-        _logger.LogInformation("Retrieve default user and check for auto login");
+                _logger.LogInformation("Retrieve default user and check for auto login");
 
-        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
-        {
-            string username = _applicationSettingsService.Settings.DefaultUser;
-            string password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+                if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
+                {
+                    string username = _applicationSettingsService.Settings.DefaultUser;
+                    string password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
-            if (!string.IsNullOrEmpty(password))
-            {
-                await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
-                navigateToAuthentication = false;
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
+                        navigateToAuthentication = false;
+                    }
+                }
+
+                if (navigateToAuthentication)
+                {
+                    _logger.LogInformation("Navigate to SignIn page");
+                    await _navigationService.NavigateModalAsync<SignInViewModel>(absolute: true);
+                }
             }
-        }
-
-        if (navigateToAuthentication)
-        {
-            _logger.LogInformation("Navigate to SignIn page");
-            await _navigationService.NavigateModalAsync<SignInViewModel>(absolute: true);
+            finally
+            {
+                commonServices.BusyService.EndBusy();
+            }
         }
     }
 
