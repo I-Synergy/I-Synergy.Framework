@@ -244,7 +244,7 @@ public static class CollectionExtensions
     /// <param name="range">An range of items.</param>
     public static void AddNewRange<T>(this ICollection<T> collection, IEnumerable<T> range)
     {
-        collection.EnsureNotNull();
+        collection.EnsureNotNull<T>();
         collection.Clear();
         collection.AddRange(range);
     }

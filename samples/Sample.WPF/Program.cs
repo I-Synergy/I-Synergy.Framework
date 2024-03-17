@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Physics.Abstractions;
@@ -32,10 +31,6 @@ public static class Program
             .ConfigureLogging((logging, configuration) =>
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
-                logging.AddAppCenterLogging(configuration);
-
-                //logging.AddApplicationInsightsLogging(context.Configuration);
-                //logging.AddSentryLogging(context.Configuration);
             })
             .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
             {

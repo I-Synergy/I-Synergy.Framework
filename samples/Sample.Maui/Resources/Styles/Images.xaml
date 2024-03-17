@@ -10,4 +10,8 @@
     <x:String x:Key="help">&#xe14b;</x:String>
     <x:String x:Key="signin">&#xe058;</x:String>
     <x:String x:Key="info">&#xf685;</x:String>
+    <x:String x:Key="add">&#x2b;</x:String>
+    <x:String x:Key="refresh">&#xf021;</x:String>
+    <x:String x:Key="edit">&#xf304;</x:String>
+    <x:String x:Key="delete">&#xf1f8;</x:String>
 </ResourceDictionary>

@@ -8,6 +8,7 @@
     xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Maui"
     xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
     xmlns:models="clr-namespace:ISynergy.Framework.Core.Models;assembly=ISynergy.Framework.Core"
+    xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui">
 
     <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
@@ -506,4 +507,17 @@
             </StackLayout>
         </ViewCell>
     </DataTemplate>
+
+    <Style TargetType="syncfusion:SfAvatarView" x:Key="DefaultInitialsAvatar">
+        <Setter Property="HeightRequest" Value="60"/>
+        <Setter Property="WidthRequest" Value="60"/>
+        <Setter Property="CornerRadius" Value="30"/>
+        <Setter Property="ContentType" Value="Initials"/>
+        <Setter Property="InitialsType" Value="DoubleCharacter"/>
+        <Setter Property="Background" Value="{DynamicResource Primary}"/>
+        <Setter Property="Stroke" Value="White"/>
+        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="InitialsColor" Value="White"/>
+        <Setter Property="Margin" Value="10"/>
+    </Style>
 </ResourceDictionary>
