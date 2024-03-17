@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Extensions;
@@ -10,6 +9,9 @@ using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
 using System.Reflection;
+using Sentry.Profiling;
+using Syncfusion.Maui.Core.Hosting;
+
 
 #if WINDOWS
 using ISynergy.Framework.Update.Extensions;
@@ -34,6 +36,19 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseSentry(options =>
+            {
+                options.Release = $"{mainAssembly.GetName().Name}@{mainAssembly.GetName().Version}";
+
+                // Initialize some (non null) ExperimentalMetricsOptions to enable Sentry Metrics,
+                options.ExperimentalMetrics = new ExperimentalMetricsOptions { EnableCodeLocations = true };
+
+                // Requires NuGet package:
+                // - Sentry.Profiling
+                // - Microsoft.Diagnostics.Tracing.TraceEvent
+                // Note: By default, the profiler is initialized asynchronously. This can be tuned by passing a desired initialization timeout to the constructor.
+                options.AddIntegration(new ProfilingIntegration());
+            })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Font Awesome 6 Pro-Regular-400.otf", "fontawesome");
@@ -41,7 +56,6 @@ public static class MauiProgram
             .ConfigureLogging((logging, configuration) =>
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
-                logging.AddAppCenterLogging(configuration);
             })
             .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) => 
             {
@@ -57,10 +71,11 @@ public static class MauiProgram
                 services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
                 services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
 
-#if WINDOWS
-                services.AddUpdatesIntegration();
-#endif
-            });
+//#if WINDOWS
+//                services.AddUpdatesIntegration();
+//#endif
+            })
+            .ConfigureSyncfusionCore();
 
         return builder.Build();
     }

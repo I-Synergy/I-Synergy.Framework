@@ -55,13 +55,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" />
 		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Sentry.Maui" />
+		<PackageReference Include="Sentry.Profiling" />
+		<PackageReference Include="Syncfusion.Maui.Core" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.AppCenter\ISynergy.Framework.Logging.AppCenter.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Update.Maui\ISynergy.Framework.Update.Maui.csproj" />
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
@@ -83,6 +86,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<MauiXaml Update="Views\DetailsView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\DetailView.xaml.cs">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -107,5 +113,11 @@
 		<MauiXaml Update="Views\SlideShowView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Views\DetailsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
 	</ItemGroup>
 </Project>

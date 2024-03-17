@@ -54,8 +54,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
 
     private async Task NavigateToDetailAsync(TestItem item)
     {
-        item = new TestItem { Id = 1, Description = "Test 1" };
-        var detailsVm = new DetailViewModel(Context, BaseCommonServices, Logger, item);
+        var detailsVm = new DetailsViewModel(Context, BaseCommonServices, Logger);
         await BaseCommonServices.NavigationService.NavigateAsync(detailsVm);
     }
 

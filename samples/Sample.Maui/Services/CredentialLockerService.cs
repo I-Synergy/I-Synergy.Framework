@@ -25,7 +25,7 @@ internal class CredentialLockerService : ICredentialLockerService
         }
         catch (Exception)
         {
-            result = null;
+            // do nothing here...;
         }
 
         return Task.FromResult(result);
@@ -43,7 +43,7 @@ internal class CredentialLockerService : ICredentialLockerService
         }
         catch (Exception)
         {
-            result = null;
+            // do nothing here...;
         }
 
         return Task.FromResult(result);

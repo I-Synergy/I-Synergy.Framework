@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View 
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Sample.Views.DetailsView"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+    xmlns:models="clr-namespace:Sample.Models;assembly=Sample.Shared"
+    x:DataType="viewmodels:DetailsViewModel">
+
+    <Grid RowSpacing="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="25,4">
+            <HorizontalStackLayout VerticalOptions="Center" Spacing="4" HorizontalOptions="Start">
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout VerticalOptions="Center" Spacing="4" HorizontalOptions="End">
+                <Button Command="{Binding RefreshCommand}" Style="{DynamicResource RefreshButtonStyle}"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <ScrollView Grid.Row="1" Margin="25,4">
+            <StackLayout
+                BindableLayout.ItemsSource="{Binding Items}"
+                BindableLayout.EmptyView="{m:GetString NoItemsToDisplay}"
+                Orientation="Vertical"
+                Spacing="4">
+                <FlyoutBase.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            Text="{m:GetString Add}"
+                            Command="{Binding AddCommand, Source={RelativeSource AncestorType={x:Type viewmodels:DetailsViewModel}}}">
+                            <MenuFlyoutItem.IconImageSource>
+                                <FontImageSource Glyph="{DynamicResource add}" FontFamily="fontawesome" Color="{DynamicResource White}" />
+                            </MenuFlyoutItem.IconImageSource>
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Ctrl" Key="N"/>
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            Text="{m:GetString Refresh}"
+                            Command="{Binding RefreshCommand, Source={RelativeSource AncestorType={x:Type viewmodels:DetailsViewModel}}}">
+                            <MenuFlyoutItem.IconImageSource>
+                                <FontImageSource Glyph="{DynamicResource refresh}" FontFamily="fontawesome" Color="{DynamicResource White}" />
+                            </MenuFlyoutItem.IconImageSource>
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="None" Key="{OnPlatform MacCatalyst=UIKeyInputF5, WinUI=F5}"/>
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.ContextFlyout>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:TestItem" >
+                        <SwipeView Margin="4">
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem
+                                         BackgroundColor="{DynamicResource GreenAccent}"
+                                         Text="{m:GetString Edit}"
+                                         Command="{Binding EditCommand, Source={RelativeSource AncestorType={x:Type viewmodels:DetailsViewModel}}}"
+                                         CommandParameter="{Binding}">
+                                        <SwipeItem.IconImageSource>
+                                            <FontImageSource Glyph="{StaticResource edit}" FontFamily="fontawesome" Color="{DynamicResource White}"/>
+                                        </SwipeItem.IconImageSource>
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem
+                                    BackgroundColor="{DynamicResource RedAccent}"
+                                    Text="{m:GetString Delete}"
+                                    Command="{Binding DeleteCommand, Source={RelativeSource AncestorType={x:Type viewmodels:DetailsViewModel}}}"
+                                    CommandParameter="{Binding}">
+                                        <SwipeItem.IconImageSource>
+                                            <FontImageSource Glyph="{StaticResource delete}" FontFamily="fontawesome" Color="{DynamicResource White}" />
+                                        </SwipeItem.IconImageSource>
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Border 
+                                StrokeThickness="2" 
+                                Stroke="{AppThemeBinding Dark={DynamicResource White}, Light={DynamicResource Primary}}"
+                                BackgroundColor="{DynamicResource Primary}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Border.Shadow>
+                                    <Shadow
+                                    Brush="{DynamicResource TertiaryBrush}"
+                                    Offset="4,4"
+                                    Radius="8"
+                                    Opacity="0.75" />
+                                </Border.Shadow>
+
+                                <FlyoutBase.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem
+                                            Text="{m:GetString Edit}"
+                                            Command="{Binding EditCommand, Source={RelativeSource AncestorType={x:Type viewmodels:DetailsViewModel}}}"
+                                            CommandParameter="{Binding}">
+                                            <MenuFlyoutItem.IconImageSource>
+                                                <FontImageSource Glyph="{DynamicResource edit}" FontFamily="fontawesome" Color="{DynamicResource White}" />
+                                            </MenuFlyoutItem.IconImageSource>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem
+                                        Text="{m:GetString Delete}"
+                                            Command="{Binding DeleteCommand, Source={RelativeSource AncestorType={x:Type viewmodels:DetailsViewModel}}}"
+                                            CommandParameter="{Binding}">
+                                            <MenuFlyoutItem.IconImageSource>
+                                                <FontImageSource Glyph="{DynamicResource delete}" FontFamily="fontawesome" Color="{DynamicResource White}" />
+                                            </MenuFlyoutItem.IconImageSource>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </FlyoutBase.ContextFlyout>
+
+                                <Grid Margin="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.Shadow>
+                                        <Shadow
+                                        Brush="Black"
+                                        Offset="1,1"
+                                        Radius="2"
+                                        Opacity="0.50" />
+                                    </Grid.Shadow>
+
+                                    <syncfusion:SfAvatarView
+                                        Grid.Column="0" 
+                                        AvatarName="{Binding Description}" 
+                                        Style="{DynamicResource DefaultInitialsAvatar}"/>
+
+                                    <VerticalStackLayout
+                                        Grid.Column="1"
+                                        VerticalOptions="Center"
+                                        Margin="10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label
+                                                Grid.Column="0"
+                                                Text="{Binding Description}"
+                                                FontAttributes="Bold"
+                                                FontSize="Subtitle"
+                                                TextColor="{DynamicResource White}"
+                                                VerticalOptions="End"/>
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        NumberOfTapsRequired="2" 
+                                        Command="{Binding SubmitCommand, Source={RelativeSource AncestorType={x:Type viewmodels:DetailsViewModel}}}" 
+                                        CommandParameter="{Binding}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </SwipeView>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+        </ScrollView>
+
+        <ImageButton
+            Grid.RowSpan="2"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Command="{Binding AddCommand}" 
+            Style="{DynamicResource AddButtonStyle}" />
+
+        <Grid 
+            IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" 
+            Grid.RowSpan="2">
+            <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.8"/>
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                <Label FontSize="14" Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}" TextColor="{DynamicResource Primary}" IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}"/>
+                <ActivityIndicator x:Name="IsBusyProgressRing" IsRunning="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" Color="{DynamicResource Primary}" />
+            </StackLayout>
+        </Grid>
+    </Grid>
+</c:View>
