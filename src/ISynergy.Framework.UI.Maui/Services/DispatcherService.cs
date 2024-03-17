@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -15,15 +14,22 @@ internal class DispatcherService : IDispatcherService
 {
     private readonly IDispatcher _dispatcher;
 
-    public DispatcherService()
+    public object Dispatcher 
     {
-        Argument.IsNotNull(Application.Current);
-        Argument.IsNotNull(Application.Current.Dispatcher);
-
-        _dispatcher = Application.Current.Dispatcher;
+        init
+        {
+            if (Application.Current is not null)
+            {
+                if (Application.Current.MainPage is not null)
+                    _dispatcher = Application.Current.MainPage.Dispatcher;
+                else
+                    _dispatcher = Application.Current.Dispatcher;
+            }
+            else
+                throw new NullReferenceException("Application.Current is null. Dispatcher cannot be used.");
+        }
+        get => _dispatcher;
     }
-
-    public object Dispatcher { get => _dispatcher; }
 
     public bool Invoke(Action action) =>
         _dispatcher.Dispatch(action);
