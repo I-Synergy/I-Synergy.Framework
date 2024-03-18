@@ -27,6 +27,10 @@ ___
 | [I-Synergy.Framework.Financial](https://www.nuget.org/packages/I-Synergy.Framework.Financial/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Financial) |
 | [I-Synergy.Framework.Geography](https://www.nuget.org/packages/I-Synergy.Framework.Geography/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Geography) |
 | [I-Synergy.Framework.IO](https://www.nuget.org/packages/I-Synergy.Framework.IO/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.IO) |
+| [I-Synergy.Framework.Logging](https://www.nuget.org/packages/I-Synergy.Framework.Logging/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Logging) |
+| [I-Synergy.Framework.Logging.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Logging.AppCenter/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Logging.AppCenter) |
+| [I-Synergy.Framework.Logging.Sentry](https://www.nuget.org/packages/I-Synergy.Framework.Logging.Sentry/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Logging.Sentry) |
+| [I-Synergy.Framework.Logging.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Logging.ApplicationInsights/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Logging.ApplicationInsights) |
 | [I-Synergy.Framework.Mail](https://www.nuget.org/packages/I-Synergy.Framework.Mail/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mail) |
 | [I-Synergy.Framework.Mail.Microsoft365](https://www.nuget.org/packages/I-Synergy.Framework.Mail.Microsoft365/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mail.Microsoft365) |
 | [I-Synergy.Framework.Mail.SendGrid](https://www.nuget.org/packages/I-Synergy.Framework.Mail.SendGrid/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mail.SendGrid) |
