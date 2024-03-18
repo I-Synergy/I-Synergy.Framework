@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageId>I-Synergy.Framework.Logging.AppCenter</PackageId>
+		<Description>I-Synergy Framework AppCenter Logging library for Windows and Android</Description>
+		<PackageTags>I-Synergy, Framework, Logging, AppCenter, Windows, Android, Uno</PackageTags>
+		<RootNamespace>ISynergy.Framework.Logging</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnableMsixTooling>true</EnableMsixTooling>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Logging.AppCenter.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AppCenter"  />
+		<PackageReference Include="Microsoft.AppCenter.Analytics"  />
+		<PackageReference Include="Microsoft.AppCenter.Crashes"  />
+		<PackageReference Include="Microsoft.Extensions.Options"  />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Logging\ISynergy.Framework.Logging.csproj" />
+	</ItemGroup>
+</Project>
