@@ -1,40 +1,77 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<c:View 
+<c:TabbedView 
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     x:Class="Sample.Views.SettingsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
-    x:DataType="viewmodels:SettingsViewModel"
-    Title="SettingsView">
+    x:DataType="viewmodels:SettingsViewModel">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="600"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <ContentPage Title="A">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="600"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="300"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <VerticalStackLayout Grid.Column="1" Margin="10">
-            <Label 
-                Text="Settings"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center" />
-        </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="1" Margin="10">
+                <Label 
+                    Text="Settings"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
 
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10" Grid.Row="1" Grid.Column="1" Margin="10">
-            <Button
-                Text="{m:GetString SaveRestart}" 
-                Command="{Binding SubmitCommand}"/>
+            <HorizontalStackLayout
+                HorizontalOptions="Center" 
+                Spacing="10" 
+                Grid.Row="1" 
+                Grid.Column="1" 
+                Margin="10">
+                <Button
+                    Text="{m:GetString SaveRestart}" 
+                    Command="{Binding SubmitCommand}"/>
 
-            <Button
-                Text="{m:GetString Cancel}" 
-                Command="{Binding CancelCommand}"/>
-        </HorizontalStackLayout>
-    </Grid>
-</c:View>
+                <Button
+                    Text="{m:GetString Cancel}" 
+                    Command="{Binding CancelCommand}"/>
+            </HorizontalStackLayout>
+        </Grid>
+    </ContentPage>
+    <ContentPage Title="B">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="600"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <VerticalStackLayout Grid.Column="1" Margin="10">
+                <Label 
+        Text="Settings"
+        VerticalOptions="Center" 
+        HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10" Grid.Row="1" Grid.Column="1" Margin="10">
+                <Button
+        Text="{m:GetString SaveRestart}" 
+        Command="{Binding SubmitCommand}"/>
+
+                <Button
+        Text="{m:GetString Cancel}" 
+        Command="{Binding CancelCommand}"/>
+            </HorizontalStackLayout>
+        </Grid>
+    </ContentPage>
+
+</c:TabbedView>

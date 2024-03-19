@@ -40,20 +40,9 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <param name="absolute"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel
-    {
-        var url = typeof(TViewModel).Name;
-
-        if (parameter is Dictionary<string, string> parameters)
-            url = QueryHelpers.AddQueryString(url, parameters);
-
-        if (absolute)
-            url = $"//{url}";
-
-        await Shell.Current.GoToAsync(url);
-
-        OnBackStackChanged(EventArgs.Empty);
-    }
+    public Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false)
+        where TViewModel : class, IViewModel =>
+        NavigateAsync<TViewModel>(null, parameter, absolute);
 
     /// <summary>
     /// Navigates to the viewmodel with parameters.
@@ -63,14 +52,45 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <param name="absolute"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false) where TViewModel : class, IViewModel 
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false)
+        where TViewModel : class, IViewModel 
     {
         if (NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
         {
             if (absolute)
                 Application.Current.MainPage = new NavigationPage((Page)page);
             else
-                await Application.Current.MainPage.Navigation.PushAsync((Page)page, true);
+            {
+                if (Application.Current.MainPage is FlyoutPage flyoutPage)
+                {
+                    if (flyoutPage.Detail is NavigationPage navigationPage)
+                    {
+                        if (navigationPage.Navigation.NavigationStack.Contains((Page)page))
+                        {
+                            for (int i = navigationPage.Navigation.NavigationStack.Count - 1; i >= 0; i--)
+                            {
+                                if (navigationPage.Navigation.NavigationStack[i].Equals(page))
+                                    break;
+
+                                await navigationPage.PopAsync();
+                            }
+                        }
+                        else
+                        {
+                            if (navigationPage.CurrentPage is null)
+                                ((Page)page).Parent = null;
+
+                            await navigationPage.PushAsync((Page)page, true);
+                        }
+                    }
+                    else
+                        flyoutPage.Detail = (Page)page;
+                }
+                else if (Application.Current.MainPage is NavigationPage navigationPage)
+                    await navigationPage.PushAsync((Page)page, true);
+                else
+                    await Application.Current.MainPage.Navigation.PushAsync((Page)page, true);
+            }
 
             if (!page.ViewModel.IsInitialized)
                 await page.ViewModel.InitializeAsync();
@@ -103,7 +123,7 @@ public class NavigationService : INavigationService
 
     public async Task CleanBackStackAsync()
     {
-        await Shell.Current.Navigation.PopToRootAsync();
+        await Application.Current.MainPage.Navigation.PopToRootAsync();
         OnBackStackChanged(EventArgs.Empty);
     }
         
@@ -113,8 +133,8 @@ public class NavigationService : INavigationService
     /// </summary>
     public async Task GoBackAsync()
     {
-        if (CanGoBack)
-            await Shell.Current.GoToAsync("..");
+        if (CanGoBack && Application.Current.MainPage.Navigation.NavigationStack.Count > 0)
+            await Application.Current.MainPage.Navigation.PopAsync();
 
         OnBackStackChanged(EventArgs.Empty);
     }

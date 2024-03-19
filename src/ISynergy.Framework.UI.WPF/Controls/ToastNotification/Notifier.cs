@@ -39,10 +39,8 @@ public class Notifier : IDisposable
 
             _configuration = cfg;
             _lifetimeSupervisor = cfg.LifetimeSupervisor;
-            _lifetimeSupervisor.UseDispatcher(cfg.Dispatcher);
 
             _displaySupervisor = new NotificationsDisplaySupervisor(
-                cfg.Dispatcher,
                 cfg.PositionProvider,
                 cfg.LifetimeSupervisor,
                 cfg.DisplayOptions,
@@ -52,10 +50,8 @@ public class Notifier : IDisposable
 
     private NotifierConfiguration CreateConfiguration()
     {
-        var cfg = new NotifierConfiguration
-        {
-            Dispatcher = Application.Current.Dispatcher
-        };
+        var cfg = new NotifierConfiguration();
+
         _configureAction(cfg);
 
         if (cfg.LifetimeSupervisor == null)

@@ -13,7 +13,6 @@ namespace ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
 public class NotificationsDisplaySupervisor : IDisposable
 {
     private readonly object _syncRoot = new object();
-    private readonly Dispatcher _dispatcher;
     private readonly IPositionProvider _positionProvider;
     private readonly DisplayOptions _displayOptions;
     private readonly IKeyboardEventHandler _keyboardEventHandler;
@@ -21,13 +20,12 @@ public class NotificationsDisplaySupervisor : IDisposable
     private INotificationsLifetimeSupervisor _lifetimeSupervisor;
     private NotificationsWindow _window;
 
-    public NotificationsDisplaySupervisor(Dispatcher dispatcher,
+    public NotificationsDisplaySupervisor(
         IPositionProvider positionProvider,
         INotificationsLifetimeSupervisor lifetimeSupervisor,
         DisplayOptions displayOptions,
         IKeyboardEventHandler keyboardEventHandler)
     {
-        _dispatcher = dispatcher;
         _positionProvider = positionProvider;
         _lifetimeSupervisor = lifetimeSupervisor;
         _displayOptions = displayOptions;
@@ -43,7 +41,7 @@ public class NotificationsDisplaySupervisor : IDisposable
 
     public void DisplayNotification(INotification notification)
     {
-        Dispatch(() => InternalDisplayNotification(notification));
+        Application.Current.Dispatcher.Invoke(() => InternalDisplayNotification(notification));
     }
 
     private void InternalDisplayNotification(INotification notification)
@@ -58,18 +56,13 @@ public class NotificationsDisplaySupervisor : IDisposable
 
     private void Close(INotification notification)
     {
-        Dispatch(() => InternalClose(notification));
+        Application.Current.Dispatcher.Invoke(() => InternalClose(notification));
     }
 
     private void InternalClose(INotification notification)
     {
         _lifetimeSupervisor.CloseNotification(notification);
         UpdateWindowPosition();
-    }
-
-    private void Dispatch(Action action)
-    {
-        _dispatcher.Invoke(action);
     }
 
     private void InitializeWindow()
@@ -125,7 +118,7 @@ public class NotificationsDisplaySupervisor : IDisposable
             notification.DisplayPart.OnClose();
             DelayAction.Execute(TimeSpan.FromMilliseconds(300),
                 () => _window?.CloseNotification(notification.DisplayPart),
-                _dispatcher);
+                Application.Current.Dispatcher);
         }
     }
 

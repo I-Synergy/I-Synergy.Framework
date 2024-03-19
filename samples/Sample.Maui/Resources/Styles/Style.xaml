@@ -454,8 +454,8 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray000}, Dark={DynamicResource OffBlack}}" />
     </Style>
 
-    <Style TargetType="Shell" ApplyToDerivedTypes="True">
-        <!--<Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Gray950}}" />-->
+    <!--<Style TargetType="Shell" ApplyToDerivedTypes="True">
+        --><!--<Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Gray950}}" />--><!--
         <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource OffBlack}}" />
         <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={DynamicResource Primary}, Default={DynamicResource White}}" />
         <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
@@ -463,12 +463,12 @@
         <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray200}}" />
         <Setter Property="Shell.NavBarHasShadow" Value="False" />
         <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}" />
-        <!--<Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
-    <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />-->
+        --><!--<Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
+    <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />--><!--
         <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Magenta}, Dark={DynamicResource White}}" />
         <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Magenta}, Dark={DynamicResource White}}" />
         <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
-    </Style>
+    </Style>-->
 
     <Style TargetType="NavigationPage">
         <!--<Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Gray950}}" />-->
@@ -485,29 +485,6 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
     </Style>
 
-    <DataTemplate x:Key="ShellMenuItemTemplate" x:DataType="models:NavigationItem">
-        <ViewCell>
-            <StackLayout
-            Padding="15,10"
-            HorizontalOptions="FillAndExpand">
-                <Label
-                VerticalOptions="FillAndExpand"
-                VerticalTextAlignment="Center"
-                TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding Symbol}" FontSize="{DynamicResource DefaultFontSize}" FontFamily="fontawesome" CharacterSpacing="10"/>
-                            <Span FontSize="{DynamicResource DefaultFontSize}" Text="{Binding Name}" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </StackLayout>
-        </ViewCell>
-    </DataTemplate>
-
     <Style TargetType="syncfusion:SfAvatarView" x:Key="DefaultInitialsAvatar">
         <Setter Property="HeightRequest" Value="60"/>
         <Setter Property="WidthRequest" Value="60"/>
@@ -520,4 +497,25 @@
         <Setter Property="InitialsColor" Value="White"/>
         <Setter Property="Margin" Value="10"/>
     </Style>
+
+    <DataTemplate x:DataType="models:NavigationItem" x:Key="DefaultMenuItemStyle">
+        <Grid Padding="10" ColumnSpacing="10" ColumnDefinitions="Auto,*">
+            <Image
+                Grid.Column="0"
+                HeightRequest="18"
+                WidthRequest="18"
+                VerticalOptions="Center">
+                <Image.Source>
+                    <FontImageSource Glyph="{Binding Symbol}" FontFamily="fontawesome"/>
+                </Image.Source>
+            </Image>
+            <Label Grid.Column="1" Text="{Binding Name}" FontSize="{StaticResource DefaultFontSize}" VerticalOptions="Center" />
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer
+                    NumberOfTapsRequired="1" 
+                    Command="{Binding Command}" 
+                    CommandParameter="{Binding CommandParameter}"/>
+            </Grid.GestureRecognizers>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

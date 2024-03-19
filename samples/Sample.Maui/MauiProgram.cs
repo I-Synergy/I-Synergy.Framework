@@ -8,9 +8,8 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
-using System.Reflection;
-using Sentry.Profiling;
 using Syncfusion.Maui.Core.Hosting;
+using System.Reflection;
 
 
 #if WINDOWS
@@ -36,19 +35,6 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
-            .UseSentry(options =>
-            {
-                options.Release = $"{mainAssembly.GetName().Name}@{mainAssembly.GetName().Version}";
-
-                // Initialize some (non null) ExperimentalMetricsOptions to enable Sentry Metrics,
-                options.ExperimentalMetrics = new ExperimentalMetricsOptions { EnableCodeLocations = true };
-
-                // Requires NuGet package:
-                // - Sentry.Profiling
-                // - Microsoft.Diagnostics.Tracing.TraceEvent
-                // Note: By default, the profiler is initialized asynchronously. This can be tuned by passing a desired initialization timeout to the constructor.
-                options.AddIntegration(new ProfilingIntegration());
-            })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Font Awesome 6 Pro-Regular-400.otf", "fontawesome");

@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
+﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Mvvm.Commands;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
@@ -9,9 +11,8 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 /// <seealso cref="IViewModel" />
 public interface IShellViewModel : IViewModel
 {
-    /// <summary>
-    /// Gets or sets the settings _command.
-    /// </summary>
-    /// <value>The settings _command.</value>
-    static AsyncRelayCommand SettingsCommand { get; }
+    AsyncRelayCommand SettingsCommand { get; }
+    AsyncRelayCommand SignInCommand { get; }
+    ObservableCollection<NavigationItem> PrimaryItems { get; }
+    ObservableCollection<NavigationItem> SecondaryItems { get; }
 }

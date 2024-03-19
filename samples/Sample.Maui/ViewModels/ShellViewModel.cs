@@ -1,9 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.UI.Utilities;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
@@ -45,7 +47,7 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Gets or sets the display command.
     /// </summary>
     /// <value>The display command.</value>
-    public AsyncRelayCommand DisplayCommand { get; private set; }
+    public AsyncRelayCommand SlideshowCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the information command.
@@ -54,10 +56,10 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
     public AsyncRelayCommand InfoCommand { get; private set; }
 
     /// <summary>
-    /// Gets or sets the browse command.
+    /// Gets or sets the controls command.
     /// </summary>
     /// <value>The browse command.</value>
-    public AsyncRelayCommand BrowseCommand { get; private set; }
+    public AsyncRelayCommand ControlsCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -85,9 +87,31 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
 
-        DisplayCommand = new AsyncRelayCommand(OpenDisplayAsync);
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
-        BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
+        ControlsCommand = new AsyncRelayCommand(OpenControlsAsync);
+        SlideshowCommand = new AsyncRelayCommand(OpenSlideshowAsync);
+
+        PopulateNavigationMenuItems();
+    }
+
+    private void PopulateNavigationMenuItems()
+    {
+        PrimaryItems.Clear();
+        SecondaryItems.Clear();
+
+        if (Context.IsAuthenticated)
+        {
+            PrimaryItems.Add(new NavigationItem("Info", ResourceUtility.FindResource<string>("info"), _themeService.Style.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("Controls", ResourceUtility.FindResource<string>("search"), _themeService.Style.Color, ControlsCommand));
+            PrimaryItems.Add(new NavigationItem("SlideShow", ResourceUtility.FindResource<string>("info"), _themeService.Style.Color, SlideshowCommand));
+
+            SecondaryItems.Add(new NavigationItem("Help", ResourceUtility.FindResource<string>("help"), _themeService.Style.Color, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", ResourceUtility.FindResource<string>("language"), _themeService.Style.Color, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", ResourceUtility.FindResource<string>("theme"), _themeService.Style.Color, ColorCommand));
+            SecondaryItems.Add(new NavigationItem("Settings", ResourceUtility.FindResource<string>("settings"), _themeService.Style.Color, SettingsCommand));
+        }
+
+        SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("signin"), _themeService.Style.Color, SignInCommand));
     }
 
     protected override async Task SignOutAsync()
@@ -102,18 +126,6 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
     }
 
     /// <summary>
-    /// browse file as an asynchronous operation.
-    /// </summary>
-    /// <returns>A Task representing the asynchronous operation.</returns>
-    private async Task BrowseFileAsync()
-    {
-        string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
-
-        if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
-            await CommonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
-    }
-
-    /// <summary>
     /// Opens the information asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
@@ -121,10 +133,17 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
         CommonServices.NavigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
+    /// Opens the controls page asynchronous.
+    /// </summary>
+    /// <returns></returns>
+    private Task OpenControlsAsync() =>
+        CommonServices.NavigationService.NavigateAsync<ControlsViewModel>();
+
+    /// <summary>
     /// Opens the display asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    private Task OpenDisplayAsync() =>
+    private Task OpenSlideshowAsync() =>
         CommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
 
     /// <summary>
@@ -132,7 +151,7 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        CommonServices.NavigationService.NavigateAsync<SettingsViewModel>();
+        CommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>(absolute: true);
 
     /// <summary>
     /// Restarts the application asynchronous.
