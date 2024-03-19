@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
@@ -101,7 +102,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
     public override async Task CancelAsync()
     {
         await base.CancelAsync();
-        await _commonServices.NavigationService.GoBackAsync();
+        await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>(absolute: true);
     }
 
     public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)

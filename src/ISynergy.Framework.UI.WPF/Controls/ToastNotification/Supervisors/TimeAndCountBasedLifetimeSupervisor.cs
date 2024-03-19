@@ -3,6 +3,7 @@ using ISynergy.Framework.UI.Controls.ToastNotification.Events;
 using ISynergy.Framework.UI.Controls.ToastNotification.Lifetime;
 using ISynergy.Framework.UI.Controls.ToastNotification.Utilities;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
@@ -12,7 +13,6 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
     private readonly TimeSpan _notificationLifetime;
     private readonly int _maximumNotificationCount;
 
-    private Dispatcher _dispatcher;
     private NotificationsList _notifications;
     private Queue<INotification> _notificationsPending;
 
@@ -91,13 +91,6 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
         _notificationsPending?.Clear();
     }
 
-
-
-    public void UseDispatcher(Dispatcher dispatcher)
-    {
-        _dispatcher = dispatcher;
-    }
-
     protected virtual void RequestShowNotification(ShowNotificationEventArgs e)
     {
         ShowNotificationRequested?.Invoke(this, e);
@@ -110,7 +103,10 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
 
     private void TimerStart()
     {
-        _interval.Invoke(TimeSpan.FromMilliseconds(200), OnTimerTick, _dispatcher);
+        _interval.Invoke(
+            TimeSpan.FromMilliseconds(200), 
+            OnTimerTick, 
+            Application.Current.Dispatcher);
     }
 
     private void TimerStop()
