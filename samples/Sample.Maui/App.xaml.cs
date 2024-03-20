@@ -66,7 +66,7 @@ public partial class App : BaseApplication
                 if (navigateToAuthentication)
                 {
                     _logger.LogInformation("Navigate to SignIn page");
-                    await _navigationService.NavigateModalAsync<SignInViewModel>(absolute: true);
+                    await _navigationService.NavigateModalAsync<SignInViewModel>();
                 }
             }
             finally
@@ -81,12 +81,12 @@ public partial class App : BaseApplication
         if (e.Value)
         {
             _logger.LogInformation("Navigate to Shell");
-            await _navigationService.NavigateModalAsync<IShellViewModel>(absolute: true);
+            await _navigationService.NavigateModalAsync<IShellViewModel>();
         }
         else
         {
             _logger.LogInformation("Navigate to SignIn page");
-            await _navigationService.NavigateModalAsync<SignInViewModel>(absolute: true);
+            await _navigationService.NavigateModalAsync<SignInViewModel>();
         }
     }
 }
