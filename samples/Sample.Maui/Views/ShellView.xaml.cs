@@ -4,7 +4,7 @@ using Sample.ViewModels;
 
 namespace Sample.Views;
 
-public partial class ShellView : Shell, IShellView
+public partial class ShellView : IShellView
 {
     public IViewModel ViewModel
     {

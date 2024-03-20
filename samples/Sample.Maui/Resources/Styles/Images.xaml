@@ -14,4 +14,5 @@
     <x:String x:Key="refresh">&#xf021;</x:String>
     <x:String x:Key="edit">&#xf304;</x:String>
     <x:String x:Key="delete">&#xf1f8;</x:String>
+    <x:String x:Key="menu">&#xf0c9;</x:String>
 </ResourceDictionary>

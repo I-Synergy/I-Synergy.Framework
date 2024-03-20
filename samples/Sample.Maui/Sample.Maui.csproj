@@ -57,8 +57,6 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" />
 		<PackageReference Include="Microsoft.Maui.Controls" />
-		<PackageReference Include="Sentry.Maui" />
-		<PackageReference Include="Sentry.Profiling" />
 		<PackageReference Include="Syncfusion.Maui.Core" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />

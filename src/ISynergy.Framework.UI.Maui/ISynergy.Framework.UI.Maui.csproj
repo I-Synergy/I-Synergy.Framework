@@ -67,6 +67,9 @@
 	  <MauiXaml Update="Controls\ErrorPresenter\ErrorPresenter.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\NavigationMenu\NavigationMenu.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Resources\Styles\Generic.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

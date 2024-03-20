@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using System.Reflection;
 
 namespace ISynergy.Framework.Mvvm.Extensions;
 
@@ -10,6 +11,17 @@ namespace ISynergy.Framework.Mvvm.Extensions;
 /// </summary>
 public static class ViewModelExtensions
 {
+    private static Func<Assembly, bool> assemblyFilter => 
+        (x => 
+        !x.FullName.StartsWith("System") &&
+        !x.FullName.StartsWith("WinRT") &&
+        !x.FullName.StartsWith("Microsoft") &&
+        !x.FullName.StartsWith("Syncfusion") &&
+        !x.FullName.StartsWith("Snippets") &&
+        !x.FullName.StartsWith("Xamarin") &&
+        !x.FullName.StartsWith("netstandard") &&
+        !x.FullName.StartsWith("mscorlib"));
+
     /// <summary>
     /// In case of an generic viewmodel, this function returns the base name from IViewModel. 
     /// </summary>
@@ -95,11 +107,13 @@ public static class ViewModelExtensions
     {
         return
             AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assemblyFilter)
                 .Reverse()
                     .Select(assembly => assembly.GetType(name))
                     .FirstOrDefault(t => t != null)
                 ??
                 AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(assemblyFilter)
                     .Reverse()
                     .SelectMany(assembly => assembly.GetTypes())
                     .FirstOrDefault(t => t.Name.EndsWith(name));
