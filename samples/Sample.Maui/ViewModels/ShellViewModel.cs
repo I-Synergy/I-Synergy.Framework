@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Utilities;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
@@ -114,6 +115,19 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
         SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("signin"), _themeService.Style.Color, SignInCommand));
     }
 
+    public override async Task InitializeAsync()
+    {
+        if (!IsInitialized && Context.IsAuthenticated)
+        {
+            await base.InitializeAsync();
+            
+            if (PrimaryItems.Count > 0 && PrimaryItems.First() is { } navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
+                navigationItem.Command.Execute(navigationItem.CommandParameter);
+
+            IsInitialized = true;
+        }
+    }
+
     protected override async Task SignOutAsync()
     {
         await base.SignOutAsync();
@@ -151,7 +165,7 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        CommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>(absolute: true);
+        CommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
 
     /// <summary>
     /// Restarts the application asynchronous.

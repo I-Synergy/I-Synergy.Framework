@@ -119,7 +119,7 @@ public class SignInViewModel : ViewModel
     }
 
     private Task SignUpAsync() =>
-        BaseCommonServices.NavigationService.NavigateModalAsync<SignUpViewModel>(absolute: true);
+        BaseCommonServices.NavigationService.NavigateModalAsync<SignUpViewModel>();
 
     /// <summary>
     /// Forgots the password asynchronous.

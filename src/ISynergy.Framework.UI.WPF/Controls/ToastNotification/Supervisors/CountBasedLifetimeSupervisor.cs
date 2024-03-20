@@ -69,10 +69,6 @@ public class CountBasedLifetimeSupervisor : INotificationsLifetimeSupervisor
         _notifications = null;
     }
 
-    public void UseDispatcher(Dispatcher dispatcher)
-    {
-    }
-
     public void ClearMessages(IClearStrategy clearStrategy)
     {
         var notifications = clearStrategy.GetNotificationsToRemove(_notifications);

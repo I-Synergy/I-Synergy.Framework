@@ -4,7 +4,7 @@ using Sample.ViewModels;
 
 namespace Sample.Views;
 
-[Singleton(true)]
+[Scoped(true)]
 public partial class SettingsView
 {
 	public SettingsView(IContext context, SettingsViewModel viewModel)

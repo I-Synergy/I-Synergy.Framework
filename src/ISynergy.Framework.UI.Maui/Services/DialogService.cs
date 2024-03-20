@@ -219,7 +219,7 @@ internal class DialogService : IDialogService
 
             await viewmodel.InitializeAsync();
 
-            await Application.Current.MainPage.Navigation.PushModalAsync(window);
+            await Application.Current.MainPage.Navigation.PushModalAsync(window, true);
         }
     }
 }
