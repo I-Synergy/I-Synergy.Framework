@@ -17,9 +17,8 @@ public interface INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
-    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false)
+    Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
         where TViewModel : class, IViewModel;
 
     /// <summary>
@@ -29,9 +28,8 @@ public interface INavigationService
     /// <typeparam name="TView"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
-    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
+    Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null)
         where TViewModel : class, IViewModel
         where TView : IView;
 
@@ -40,9 +38,8 @@ public interface INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false)
+    Task NavigateAsync<TViewModel>(object parameter = null)
         where TViewModel : class, IViewModel;
 
     /// <summary>
@@ -51,9 +48,8 @@ public interface INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TView"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel, TView>(object parameter = null, bool absolute = false)
+    Task NavigateAsync<TViewModel, TView>(object parameter = null)
         where TViewModel : class, IViewModel
         where TView : IView;
 
@@ -62,9 +58,9 @@ public interface INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="absolute"></param>
     /// <returns></returns>
-    Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false) where TViewModel : class, IViewModel;
+    Task NavigateModalAsync<TViewModel>(object parameter = null)
+        where TViewModel : class, IViewModel;
 
     /// <summary>
     /// Opens blade with a view retrieved from DI.
@@ -81,7 +77,8 @@ public interface INavigationService
     /// <param name="owner"></param>
     /// <param name="viewmodel"></param>
     /// <returns></returns>
-    Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel) where TView : IView;
+    Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
+        where TView : IView;
 
     /// <summary>
     /// Removes the blade asynchronous.

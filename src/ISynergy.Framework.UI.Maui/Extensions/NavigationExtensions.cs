@@ -85,4 +85,19 @@ public static class NavigationExtensions
         if (!Application.Current.MainPage.GetType().Name.Equals(page.GetType().Name))
             await navigation.PushModalAsync((Page)page, true);
     }
+
+    public static (INavigation Navigation, NavigationPage NavigationPage) GetNavigation(this Page page)
+    {
+        if (page is FlyoutPage flyoutPage)
+        {
+            if (flyoutPage.Detail is NavigationPage navigationPage)
+                return (navigationPage.Navigation, navigationPage);
+
+            return (flyoutPage.Navigation, null);
+        }
+        else if (page is NavigationPage navigationPage)
+            return (navigationPage.Navigation, navigationPage);
+        else
+            return (Application.Current.MainPage.Navigation, null);
+    }
 }
