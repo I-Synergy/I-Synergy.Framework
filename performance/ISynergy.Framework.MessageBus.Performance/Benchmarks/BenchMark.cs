@@ -20,11 +20,11 @@ public class BenchMark
     /// <value>The model.</value>
     private TestModel _model { get; set; }
 
-    /// <summary>
-    /// The file name
-    /// </summary>
-    [Params("file.docx", "file.pdf", "file.jpg", "file.json", "file.xlsx", "file.zip")]
-    private string _fileName;
+    ///// <summary>
+    ///// The file name
+    ///// </summary>
+    //[Params("file.docx", "file.pdf", "file.jpg", "file.json", "file.xlsx", "file.zip")]
+    //private string _fileName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BenchMark"/> class.
@@ -82,15 +82,15 @@ public class BenchMark
     //    }
     //}
 
-    /// <summary>
-    /// Globals the setup.
-    /// </summary>
-    [GlobalSetup]
-    public async Task GlobalSetup()
-    {
-        byte[] file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", _fileName));
-        _model = GetTestObject(file);
-    }
+    ///// <summary>
+    ///// Globals the setup.
+    ///// </summary>
+    //[GlobalSetup]
+    //public async Task GlobalSetup()
+    //{
+    //    byte[] file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", _fileName));
+    //    _model = GetTestObject(file);
+    //}
 
     //private byte[] SerializeToByteArray(object obj)
     //{

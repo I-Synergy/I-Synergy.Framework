@@ -2,13 +2,13 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Extensions;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace ISynergy.Framework.UI.Services;
 
 public class NavigationService : INavigationService
 {
     private readonly IContext _context;
+    private readonly bool _animated = true;
 
     public event EventHandler BackStackChanged;
 
@@ -22,7 +22,9 @@ public class NavigationService : INavigationService
     /// Gets a value indicating whether this instance can go back.
     /// </summary>
     /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-    public bool CanGoBack => Application.Current.MainPage.Navigation.NavigationStack.Count > 1 ? true : false;
+    public bool CanGoBack => 
+        Application.Current.MainPage.GetNavigation().Navigation.NavigationStack.Count > 0 || 
+        Application.Current.MainPage.Navigation.ModalStack.Count > 0 ? true : false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
@@ -38,11 +40,10 @@ public class NavigationService : INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="absolute"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object parameter = null, bool absolute = false)
+    public Task NavigateAsync<TViewModel>(object parameter = null)
         where TViewModel : class, IViewModel =>
-        NavigateAsync<TViewModel>(null, parameter, absolute);
+        NavigateAsync<TViewModel>(null, parameter);
 
     /// <summary>
     /// Navigates to the viewmodel with parameters.
@@ -50,50 +51,32 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
-    /// <param name="absolute"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool absolute = false)
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
         where TViewModel : class, IViewModel 
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } view && view is Page page)
         {
-            if (absolute)
-                Application.Current.MainPage = new NavigationPage((Page)page);
+            var result = Application.Current.MainPage.GetNavigation();
+
+            if (result.Navigation.NavigationStack.Contains(page))
+            {
+                for (int i = result.Navigation.NavigationStack.Count - 1; i >= 0; i--)
+                {
+                    if (result.Navigation.NavigationStack[i].Equals(page))
+                        break;
+
+                    await result.Navigation.PopAsync(_animated);
+                }
+            }
             else
             {
-                if (Application.Current.MainPage is FlyoutPage flyoutPage)
-                {
-                    if (flyoutPage.Detail is NavigationPage navigationPage)
-                    {
-                        if (navigationPage.Navigation.NavigationStack.Contains((Page)page))
-                        {
-                            for (int i = navigationPage.Navigation.NavigationStack.Count - 1; i >= 0; i--)
-                            {
-                                if (navigationPage.Navigation.NavigationStack[i].Equals(page))
-                                    break;
-
-                                await navigationPage.PopAsync();
-                            }
-                        }
-                        else
-                        {
-                            if (navigationPage.CurrentPage is null)
-                                ((Page)page).Parent = null;
-
-                            await navigationPage.PushAsync((Page)page, true);
-                        }
-                    }
-                    else
-                        flyoutPage.Detail = (Page)page;
-                }
-                else if (Application.Current.MainPage is NavigationPage navigationPage)
-                    await navigationPage.PushAsync((Page)page, true);
-                else
-                    await Application.Current.MainPage.Navigation.PushAsync((Page)page, true);
+                page.Parent = null;
+                await result.Navigation.PushAsync(page, _animated);
             }
 
-            if (!page.ViewModel.IsInitialized)
-                await page.ViewModel.InitializeAsync();
+            if (!view.ViewModel.IsInitialized)
+                await view.ViewModel.InitializeAsync();
 
             OnBackStackChanged(EventArgs.Empty);
         }
@@ -104,37 +87,40 @@ public class NavigationService : INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
-    /// <param name="absolute"></param>
     /// <returns></returns>
-    public async Task NavigateModalAsync<TViewModel>(object parameter = null, bool absolute = false)
+    public async Task NavigateModalAsync<TViewModel>(object parameter = null)
          where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page)
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } view && view is Page page)
         {
-            if (absolute)
-                Application.Current.MainPage = (Page)page;
-            else
-                await Application.Current.MainPage.Navigation.PushModalAsync((Page)page, true);
+            // Added this nullification of handler becuase of some issues with TabbedPage.
+            // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
+            Application.Current.MainPage.Handler = null;
+            Application.Current.MainPage = page;
 
-            if (!page.ViewModel.IsInitialized)
-                await page.ViewModel.InitializeAsync();
+            if (!view.ViewModel.IsInitialized)
+                await view.ViewModel.InitializeAsync();
         }
     }
 
     public async Task CleanBackStackAsync()
     {
-        await Application.Current.MainPage.Navigation.PopToRootAsync();
+        await Application.Current.MainPage.GetNavigation().Navigation.PopToRootAsync(_animated);
         OnBackStackChanged(EventArgs.Empty);
     }
-        
 
     /// <summary>
     /// Goes the back.
     /// </summary>
     public async Task GoBackAsync()
     {
-        if (CanGoBack && Application.Current.MainPage.Navigation.NavigationStack.Count > 0)
-            await Application.Current.MainPage.Navigation.PopAsync();
+        if (CanGoBack)
+        {
+            if (Application.Current.MainPage.Navigation.ModalStack.Count > 0)
+                await Application.Current.MainPage.Navigation.PopModalAsync(_animated);
+            else
+                await Application.Current.MainPage.GetNavigation().Navigation.PopAsync(_animated);
+        } 
 
         OnBackStackChanged(EventArgs.Empty);
     }
@@ -152,12 +138,12 @@ public class NavigationService : INavigationService
     public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
 
     [Obsolete("Not supported!", true)]
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool absolute = false)
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null)
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 
     [Obsolete("Not supported!", true)]
-    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool absolute = false)
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null)
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 

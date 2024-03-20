@@ -102,7 +102,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
     public override async Task CancelAsync()
     {
         await base.CancelAsync();
-        await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>(absolute: true);
+        await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
     }
 
     public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)

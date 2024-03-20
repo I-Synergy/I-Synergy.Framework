@@ -41,9 +41,6 @@ public class Program
         app.UseOpenApi();
         app.UseSwaggerUi();
 
-        //app.UseOpenApi();
-        //app.UseReDoc();
-
         app.Run();
     }
 }
