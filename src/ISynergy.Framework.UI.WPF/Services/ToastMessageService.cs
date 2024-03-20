@@ -38,15 +38,6 @@ public class ToastMessageService : IToastMessageService
                 notificationLifetime: TimeSpan.FromSeconds(_options.NotificationLifetimeInSeconds),
                 maximumNotificationCount: MaximumNotificationCount.FromCount(_options.MaximumNotificationCount));
 
-            if (_dispatcherService.Dispatcher is System.Windows.Threading.Dispatcher dispatcher)
-            {
-                cfg.Dispatcher = dispatcher;
-            }
-            else
-            {
-                cfg.Dispatcher = Application.Current.Dispatcher;
-            }
-
             cfg.DisplayOptions.TopMost = _options.TopMost;
             cfg.DisplayOptions.Width = _options.Width;
         });

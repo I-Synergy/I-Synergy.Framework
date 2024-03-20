@@ -14,23 +14,11 @@ internal class DispatcherService : IDispatcherService
 {
     private readonly IDispatcher _dispatcher;
 
-    public object Dispatcher 
+    public bool Invoke(Action action)
     {
-        init
-        {
-            if (Application.Current is not null)
-            {
-                if (Application.Current.MainPage is not null)
-                    _dispatcher = Application.Current.MainPage.Dispatcher;
-                else
-                    _dispatcher = Application.Current.Dispatcher;
-            }
-            else
-                throw new NullReferenceException("Application.Current is null. Dispatcher cannot be used.");
-        }
-        get => _dispatcher;
+        if (Application.Current.MainPage is not null && Application.Current.MainPage.Dispatcher is IDispatcher dispatcher)
+            return dispatcher.Dispatch(action);
+        else
+            return Application.Current.Dispatcher.Dispatch(action);
     }
-
-    public bool Invoke(Action action) =>
-        _dispatcher.Dispatch(action);
 }
