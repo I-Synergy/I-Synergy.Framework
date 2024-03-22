@@ -95,7 +95,7 @@ public class NavigationService : INavigationService
         {
             // Added this nullification of handler becuase of some issues with TabbedPage.
             // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
-            Application.Current.MainPage.Handler = null;
+            page.Handler = null;
             Application.Current.MainPage = page;
 
             if (!view.ViewModel.IsInitialized)
