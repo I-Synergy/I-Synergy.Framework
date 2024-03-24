@@ -40,9 +40,6 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
 		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
-		<ProvisioningType>manual</ProvisioningType>
-		<CodesignKey>Apple Development: Created via API (S4WZ4N6YJ9)</CodesignKey>
-		<CodesignProvision>VS: WildCard Development</CodesignProvision>
 	</PropertyGroup>
 
 	<ItemGroup>
