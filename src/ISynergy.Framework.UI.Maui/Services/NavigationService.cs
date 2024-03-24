@@ -97,7 +97,7 @@ public class NavigationService : INavigationService
             // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
             page.Handler = null;
             Application.Current.MainPage = page;
-
+            
             if (!view.ViewModel.IsInitialized)
                 await view.ViewModel.InitializeAsync();
         }

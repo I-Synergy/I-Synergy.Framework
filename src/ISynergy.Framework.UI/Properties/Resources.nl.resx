@@ -412,4 +412,7 @@ Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	<data name="WarningRegistrationExists" xml:space="preserve">
 		<value>De combinatie van naam en e-mailadres bestaat al. Geef een nieuwe naam en/of e-mailadres op en probeer het opnieuw.</value>
 	</data>
+	<data name="EnterNote" xml:space="preserve">
+		<value>Vul hier een notitie in...</value>
+	</data>
 </root>
