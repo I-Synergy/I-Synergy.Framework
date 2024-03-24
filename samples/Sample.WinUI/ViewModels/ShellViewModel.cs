@@ -6,11 +6,9 @@ using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
-using System.ComponentModel;
 
 namespace Sample.ViewModels;
 
@@ -245,10 +243,4 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
         BaseCommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
-
-    protected override Task RestartApplicationAsync()
-    {
-        Application.Current.Exit();
-        return Task.CompletedTask;
-    }
 }

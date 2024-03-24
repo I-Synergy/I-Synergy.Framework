@@ -265,7 +265,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
                     BaseCommonServices.LanguageService.GetString("TitleQuestion"),
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
-            await RestartApplicationAsync();
+            BaseCommonServices.RestartApplication();
         }
     }
 
@@ -301,7 +301,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
                     BaseCommonServices.LanguageService.GetString("TitleQuestion"),
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                await RestartApplicationAsync();
+                BaseCommonServices.RestartApplication();
             }
         }
     }
@@ -316,11 +316,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// open feedback as an asynchronous operation.
     /// </summary>
     protected virtual Task OpenFeedbackAsync() => throw new NotImplementedException();
-
-    /// <summary>
-    /// restart application as an asynchronous operation.
-    /// </summary>
-    protected abstract Task RestartApplicationAsync();
 
     protected override void Dispose(bool disposing)
     {

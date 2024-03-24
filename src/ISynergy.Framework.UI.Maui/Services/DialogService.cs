@@ -1,10 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using System.ComponentModel;
 using Application = Microsoft.Maui.Controls.Application;
 
 namespace ISynergy.Framework.UI.Services;
@@ -99,6 +97,12 @@ internal class DialogService : IDialogService
     /// <returns>MessageBoxResult.</returns>
     public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
     {
+#if IOS || MACCATALYST
+        // This delay allows windows to close before showing the next one.
+        // If not, the alert is not shown.
+        await Task.Delay(1000);
+#endif
+
         switch (buttons)
         {
             case MessageBoxButton.OKCancel:

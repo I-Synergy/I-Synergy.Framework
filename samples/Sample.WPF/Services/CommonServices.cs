@@ -3,6 +3,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Services;
 using Sample.Abstractions;
+using System.Diagnostics;
 
 namespace Sample.Services;
 
@@ -48,4 +49,21 @@ public class CommonServices(
     /// </summary>
     /// <value>The file service.</value>
     public IFileService<FileResult> FileService { get; } = fileService;
+
+    /// <summary>
+    /// Restarts application.
+    /// </summary>
+    public override void RestartApplication()
+    {
+        // Start a new instance of the application
+        Process.Start(Environment.ProcessPath);
+        // Close the current process
+        QuitApplication();
+    }
+
+    /// <summary>
+    /// Quits the application.
+    /// </summary>
+    public override void QuitApplication() =>
+        Environment.Exit(Environment.ExitCode);
 }
