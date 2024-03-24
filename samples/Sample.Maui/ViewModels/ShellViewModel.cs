@@ -13,7 +13,7 @@ using Sample.Abstractions;
 
 namespace Sample.ViewModels;
 
-internal class ShellViewModel : BaseShellViewModel, IShellViewModel
+public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     /// <summary>
     /// Gets or sets the Version property value.
@@ -113,19 +113,6 @@ internal class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
 
         SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("signin"), _themeService.Style.Color, SignInCommand));
-    }
-
-    public override async Task InitializeAsync()
-    {
-        if (!IsInitialized && Context.IsAuthenticated)
-        {
-            await base.InitializeAsync();
-            
-            if (PrimaryItems.Count > 0 && PrimaryItems.First() is { } navigationItem && navigationItem.Command.CanExecute(navigationItem.CommandParameter))
-                navigationItem.Command.Execute(navigationItem.CommandParameter);
-
-            IsInitialized = true;
-        }
     }
 
     protected override async Task SignOutAsync()

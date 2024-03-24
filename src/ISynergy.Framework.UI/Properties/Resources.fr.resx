@@ -412,4 +412,7 @@ Réessayez ou mettez à jour l’application via le Microsoft Store.</value>
 	<data name="WarningRegistrationExists" xml:space="preserve">
 		<value>La combinaison du nom et de l’adresse e-mail existe déjà. Indiquez un nouveau nom et/ou une nouvelle adresse e-mail, puis réessayez.</value>
 	</data>
+	<data name="EnterNote" xml:space="preserve">
+		<value>Entrez la note ici...</value>
+	</data>
 </root>
