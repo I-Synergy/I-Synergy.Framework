@@ -12,8 +12,6 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 internal class DispatcherService : IDispatcherService
 {
-    private readonly IDispatcher _dispatcher;
-
     public bool Invoke(Action action)
     {
         if (Application.Current.MainPage is not null && Application.Current.MainPage.Dispatcher is IDispatcher dispatcher)

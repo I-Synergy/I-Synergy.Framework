@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using System.Diagnostics;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -79,4 +80,14 @@ public abstract class BaseCommonService : IBaseCommonServices
         ConverterService = converterService;
         DispatcherService = dispatcherService;
     }
+
+    /// <summary>
+    /// Restarts application.
+    /// </summary>
+    public abstract void RestartApplication();
+
+    /// <summary>
+    /// Quits the application.
+    /// </summary>
+    public abstract void QuitApplication();
 }
