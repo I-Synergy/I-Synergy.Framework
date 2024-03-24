@@ -40,6 +40,9 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
 		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+		<ProvisioningType>manual</ProvisioningType>
+		<CodesignKey>Apple Development: Ismail Hassani (ANJW676PZ3)</CodesignKey>
+		<CodesignProvision>ISynergy</CodesignProvision>
 	</PropertyGroup>
 
 	<ItemGroup>
