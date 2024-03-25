@@ -506,7 +506,7 @@
                 WidthRequest="18"
                 VerticalOptions="Center">
                 <Image.Source>
-                    <FontImageSource Glyph="{Binding Symbol}" FontFamily="fontawesome"/>
+                    <FontImageSource Glyph="{Binding Symbol}" FontFamily="fontawesome" Color="{DynamicResource Primary}"/>
                 </Image.Source>
             </Image>
             <Label Grid.Column="1" Text="{Binding Name}" FontSize="{StaticResource DefaultFontSize}" VerticalOptions="Center" />

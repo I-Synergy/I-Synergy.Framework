@@ -1,5 +1,7 @@
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Extensions;
 using Sample.ViewModels;
 
 namespace Sample.Views;
@@ -12,9 +14,14 @@ public partial class ShellView : IShellView
         set => BindingContext = value;
     }
 
-    public ShellView()
+    public ShellView(IContext context, ShellViewModel viewModel)
     {
         InitializeComponent();
+
+        ViewModel = viewModel;
+
+        if (NavigationExtensions.CreatePage<InfoViewModel>(context, null) is Page page)
+            Detail = new NavigationPage(page);
     }
 
     #region IDisposable

@@ -41,4 +41,12 @@ public interface IBaseCommonServices
     /// Dispatcher service.
     /// </summary>
     IDispatcherService DispatcherService { get; }
+    /// <summary>
+    /// Restarts application.
+    /// </summary>
+    void RestartApplication();
+    /// <summary>
+    /// Quits the application.
+    /// </summary>
+    void QuitApplication();
 }

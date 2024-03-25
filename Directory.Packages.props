@@ -45,9 +45,9 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.44.0" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.45.0" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.14" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.14" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.5.240311000" />
@@ -57,7 +57,7 @@
     <PackageVersion Include="MSTest.TestAdapter" Version="3.2.2" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.2.2" />
     <PackageVersion Include="NodaTime" Version="3.1.11" />
-    <PackageVersion Include="NSwag.AspNetCore" Version="14.0.3" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.0.4" />
     <PackageVersion Include="NuGet.Commands" Version="6.9.1" />
     <PackageVersion Include="SendGrid" Version="9.29.2" />
     <PackageVersion Include="Sentry" Version="4.2.1" />

@@ -8,8 +8,8 @@
     </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Drawing.Common"  />
-		<PackageReference Include="Microsoft.Extensions.Logging"  />
+		<PackageReference Include="System.Drawing.Common" />
+		<PackageReference Include="Microsoft.Extensions.Logging" />
 	</ItemGroup>
 	
 	<ItemGroup>

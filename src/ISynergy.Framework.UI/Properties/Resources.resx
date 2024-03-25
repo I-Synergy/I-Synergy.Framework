@@ -432,4 +432,7 @@ Try again or update the application through the Microsoft Store.</value>
 	<data name="WarningRegistrationExists" xml:space="preserve">
 		<value>The combination of name and e-mail address already exists. Provide a new name and/or e-mail address and try again.</value>
 	</data>
+	<data name="EnterNote" xml:space="preserve">
+		<value>Enter note here...</value>
+	</data>
 </root>

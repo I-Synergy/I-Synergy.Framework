@@ -10,7 +10,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels.Base;
@@ -19,7 +18,6 @@ using NugetUnlister.ViewModels;
 using Sample.Abstractions;
 using Sample.Models;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace Sample.ViewModels;
 
@@ -250,10 +248,4 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() => throw new NotImplementedException();
-
-    protected override Task RestartApplicationAsync()
-    {
-        Application.Current.Shutdown();
-        return Task.CompletedTask;
-    }
 }

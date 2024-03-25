@@ -16,12 +16,12 @@
         <StackLayout BindableLayout.ItemsSource="{Binding Errors}" Margin="10">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <Label TextColor="White">
+                    <Label>
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="&#xe7c8;" FontFamily="SegoeMdl2" FontSize="8" FontAttributes="Bold"/>
-                                <Span Text=" "/>
-                                <Span Text="{Binding Value}" FontSize="{DynamicResource DefaultFontSize}" FontAttributes="Bold"/>
+                                <Span Text="&#xe7c8;" FontFamily="SegoeMdl2" FontSize="8" FontAttributes="Bold" TextColor="White"/>
+                                <Span Text=" " TextColor="White"/>
+                                <Span Text="{Binding Value}" FontSize="{DynamicResource DefaultFontSize}" FontAttributes="Bold" TextColor="White"/>
                             </FormattedString> 
                         </Label.FormattedText>
                     </Label>

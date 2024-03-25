@@ -6,13 +6,7 @@
         xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
         xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
         x:DataType="viewmodels:SignUpViewModel"
-        Shell.FlyoutBehavior="Disabled"
-        Shell.NavBarIsVisible="False"
         Title="{Binding Title}">
-
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsVisible="False" />
-    </Shell.BackButtonBehavior>
 
     <Grid HorizontalOptions="Center">
         <Grid.RowDefinitions>
