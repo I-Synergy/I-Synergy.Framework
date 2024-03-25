@@ -12,10 +12,10 @@
     FlyoutLayoutBehavior="Popover">
 
     <FlyoutPage.Flyout>
-        <c:NavigationMenu x:Name="MenuFlyout"/>
+        <c:NavigationMenu x:Name="MenuFlyout">
+            <c:NavigationMenu.IconImageSource>
+                <FontImageSource Glyph="&#xe700;" FontFamily="SegoeMdl2" Size="18" Color="{AppThemeBinding Dark=White, Light=Black}"/>
+            </c:NavigationMenu.IconImageSource>
+        </c:NavigationMenu>
     </FlyoutPage.Flyout>
-    
-    <FlyoutPage.Detail>
-        <NavigationPage />
-    </FlyoutPage.Detail>
 </FlyoutPage>

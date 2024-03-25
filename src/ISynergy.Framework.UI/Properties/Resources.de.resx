@@ -412,4 +412,7 @@ Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsof
 	<data name="WarningRegistrationExists" xml:space="preserve">
 		<value>Die Kombination aus Name und E-Mail-Adresse existiert bereits. Geben Sie einen neuen Namen und/oder eine neue E-Mail-Adresse ein und versuchen Sie es erneut.</value>
 	</data>
+	<data name="EnterNote" xml:space="preserve">
+		<value>Hier Notiz eintragen...</value>
+	</data>
 </root>

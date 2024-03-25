@@ -4,6 +4,7 @@
           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
           x:Class="ISynergy.Framework.UI.Windows.NoteWindow"
           xmlns:viewmodels="clr-namespace:ISynergy.Framework.Mvvm.ViewModels;assembly=ISynergy.Framework.Mvvm"
+          xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
           x:DataType="viewmodels:NoteViewModel"
           Title="{Binding Title}">
 
@@ -11,12 +12,12 @@
         ControlTemplate="{StaticResource DefaultDialogTemplate}"
         MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
 
-        <Grid Margin="10">
+        <Grid Margin="4">
             <Editor
                 Text="{Binding SelectedItem, Mode=TwoWay}"
-                Placeholder=""
+                Placeholder="{m:GetString EnterNote}"
                 HeightRequest="250"
-                WidthRequest="400"
+                MinimumWidthRequest="375"
                 IsSpellCheckEnabled="True"
                 IsTextPredictionEnabled="True"/>
         </Grid>
