@@ -1,6 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Utilities;
@@ -74,14 +76,16 @@ public class ThemeService : IThemeService
             application.Resources.Add("colorPrimary", Application.AccentColor);
             application.Resources.Add("colorAccent", Application.AccentColor);
             application.Resources.Add("colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
-            application.Resources.Add(nameof(Secondary), Application.AccentColor.AddLuminosity(0.25f));
-            application.Resources.Add(nameof(Tertiary), Application.AccentColor.AddLuminosity(-0.25f));
+            application.Resources.Add(Secondary, Application.AccentColor.AddLuminosity(0.25f));
+            application.Resources.Add(Tertiary, Application.AccentColor.AddLuminosity(-0.25f));
 
             if (IsLightThemeEnabled)
                 application.UserAppTheme = AppTheme.Light;
             else
                 application.UserAppTheme = AppTheme.Dark;
         }
+
+        MessageService.Default.Send(new StyleChangedMessage(Style));
     }
 
     private void RemoveColors(ResourceDictionary resourceDictionary)

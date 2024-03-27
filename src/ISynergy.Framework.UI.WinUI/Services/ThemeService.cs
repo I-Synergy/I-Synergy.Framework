@@ -6,6 +6,8 @@ using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -103,6 +105,8 @@ public class ThemeService : IThemeService
                 SetTitlebar(window);
         }
 #endif
+
+        MessageService.Default.Send(new StyleChangedMessage(Style));
     }
 
     /// <summary>
