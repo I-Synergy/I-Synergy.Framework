@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -53,14 +54,16 @@ public static class MauiAppBuilderExtensions
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TExceptionHandler"></typeparam>
     /// <typeparam name="TResource"></typeparam>
+    /// <typeparam name="TLoadingView"></typeparam>
     /// <param name="appBuilder"></param>
     /// <param name="action"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this MauiAppBuilder appBuilder, Action<IServiceCollection, IConfiguration> action)
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource, TLoadingView>(this MauiAppBuilder appBuilder, Action<IServiceCollection, IConfiguration> action)
     where TApplication : class, Microsoft.Maui.IApplication
     where TContext : class, IContext
     where TExceptionHandler : class, IExceptionHandlerService
     where TResource : class
+    where TLoadingView : class, ILoadingView
     {
         appBuilder.Services.AddOptions();
         appBuilder.Services.AddPageResolver();

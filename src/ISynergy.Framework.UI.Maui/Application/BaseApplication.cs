@@ -8,11 +8,9 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Exceptions;
-using ISynergy.Framework.UI.Views;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.ExceptionServices;
 
@@ -71,7 +69,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices.BusyService.StartBusy();
 
         _logger.LogInformation("Setting up main page.");
-        Application.Current.MainPage = new NavigationPage(ServiceLocator.Default.GetInstance<LoadingView>());
+        Application.Current.MainPage = new NavigationPage((Page)ServiceLocator.Default.GetInstance<ILoadingView>());
 
         _logger.LogInformation("Setting up context.");
         _context = ServiceLocator.Default.GetInstance<IContext>();

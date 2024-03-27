@@ -415,4 +415,7 @@ Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsof
 	<data name="EnterNote" xml:space="preserve">
 		<value>Hier Notiz eintragen...</value>
 	</data>
+	<data name="Skip" xml:space="preserve">
+		<value>Hüpfen</value>
+	</data>
 </root>

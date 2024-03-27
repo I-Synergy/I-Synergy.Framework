@@ -415,4 +415,7 @@ Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	<data name="EnterNote" xml:space="preserve">
 		<value>Vul hier een notitie in...</value>
 	</data>
+	<data name="Skip" xml:space="preserve">
+		<value>Overslaan</value>
+	</data>
 </root>
