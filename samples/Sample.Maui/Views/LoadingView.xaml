@@ -25,7 +25,7 @@
             ShouldShowPlaybackControls="False"
             ShouldAutoPlay="True"
             IsEnabled="False"
-            Aspect="Fill"/>
+            Aspect="AspectFill"/>
 
         <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.25"/>
         

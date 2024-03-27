@@ -199,12 +199,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="m"></param>
     public virtual void StyleChanged(StyleChangedMessage m) =>
-        UpdateMauiHandlers();
+        UpdateMauiHandlers(m.Content);
 
     /// <summary>
     /// Allows to add or update platform specific handlers.
     /// </summary>
-    public virtual void UpdateMauiHandlers()
+    public virtual void UpdateMauiHandlers(Style style)
     {
     }
 
