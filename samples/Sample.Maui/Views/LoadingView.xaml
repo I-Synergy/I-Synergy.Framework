@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View 
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Sample.Views.LoadingView"
+    xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    x:DataType="viewmodels:LoadingViewModel"
+    Loaded="View_Loaded"
+    Unloaded="View_Unloaded"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    NavigationPage.TitleView="{x:Null}">
+
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="TapGestureRecognizer_Tapped" />
+        </Grid.GestureRecognizers>
+        
+        <toolkit:MediaElement
+            x:Name="BackgroundMediaElement"
+            MediaEnded="MediaElement_MediaEnded"
+            ShouldShowPlaybackControls="False"
+            ShouldAutoPlay="True"
+            IsEnabled="False"
+            Aspect="AspectFill"/>
+
+        <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.25"/>
+        
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+            <Label
+                FontSize="14" 
+                Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}" 
+                TextColor="{DynamicResource Primary}" 
+                IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}"/>
+            <ActivityIndicator 
+                IsRunning="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" 
+                Color="{DynamicResource Primary}" />
+        </StackLayout>
+
+        <Button
+            x:Name="SkipButton"
+            Text="{m:GetString Skip}"
+            IsEnabled="False"
+            Clicked="SkipClicked" 
+            HorizontalOptions="Center" 
+            VerticalOptions="End" 
+            Margin="20">
+            <FlyoutBase.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="{m:GetString Skip}" Clicked="SkipClicked" IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type Button}}, Path=IsEnabled}">
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="None" Key="Escape"/>
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
+                </MenuFlyout>
+            </FlyoutBase.ContextFlyout>
+        </Button>
+    </Grid>
+</c:View>

@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
@@ -219,10 +220,19 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         }
 
         _logger.LogInformation("Loading theme");
+        MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
         _themeService.SetStyle();
 
         MainWindow.Title = InfoService.Default.Title ?? string.Empty;
         MainWindow.Activate();
+    }
+
+    /// <summary>
+    /// Handles the style changed event.
+    /// </summary>
+    /// <param name="m"></param>
+    public virtual void StyleChanged(StyleChangedMessage m)
+    {
     }
 
     /// <summary>
@@ -277,6 +287,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
+            MessageService.Default.Unregister<StyleChangedMessage>(this);
         }
 
         // free native resources if there are any.
@@ -292,6 +303,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
+            MessageService.Default.Unregister<StyleChangedMessage>(this);
         }
 
         // free native resources if there are any.

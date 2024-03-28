@@ -3,11 +3,11 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.ExceptionServices;
@@ -77,12 +77,19 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
 
         _logger.LogInformation("Setting style.");
+        MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
         _themeService.SetStyle();
 
         _logger.LogInformation("Starting initialization of application");
         InitializeApplication();
         _logger.LogInformation("Finishing initialization of application");
     }
+
+    /// <summary>
+    /// Handles the style changed event.
+    /// </summary>
+    /// <param name="m"></param>
+    public virtual void StyleChanged(StyleChangedMessage m) { }
 
     /// <summary>
     /// Handles the authentication changed event.   
@@ -268,6 +275,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
+            MessageService.Default.Unregister<StyleChangedMessage>(this);
         }
 
         // free native resources if there are any.

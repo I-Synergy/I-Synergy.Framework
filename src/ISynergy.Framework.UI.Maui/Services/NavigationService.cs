@@ -8,6 +8,8 @@ namespace ISynergy.Framework.UI.Services;
 public class NavigationService : INavigationService
 {
     private readonly IContext _context;
+    private readonly IDispatcherService _dispatcherService;
+
     private readonly bool _animated = true;
 
     public event EventHandler BackStackChanged;
@@ -30,9 +32,13 @@ public class NavigationService : INavigationService
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="context"></param>
-    public NavigationService(IContext context)
+    /// <param name="dispatcherService"></param>
+    public NavigationService(
+        IContext context, 
+        IDispatcherService dispatcherService)
     {
         _context = context;
+        _dispatcherService = dispatcherService;
     }
 
     /// <summary>
@@ -52,34 +58,39 @@ public class NavigationService : INavigationService
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
+    public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
         where TViewModel : class, IViewModel 
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } view && view is Page page)
+        _dispatcherService.Invoke(async () =>
         {
-            var result = Application.Current.MainPage.GetNavigation();
-
-            if (result.Navigation.NavigationStack.Contains(page))
+            if (NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } view && view is Page page)
             {
-                for (int i = result.Navigation.NavigationStack.Count - 1; i >= 0; i--)
+                var result = Application.Current.MainPage.GetNavigation();
+
+                if (result.Navigation.NavigationStack.Contains(page))
                 {
-                    if (result.Navigation.NavigationStack[i].Equals(page))
-                        break;
+                    for (int i = result.Navigation.NavigationStack.Count - 1; i >= 0; i--)
+                    {
+                        if (result.Navigation.NavigationStack[i].Equals(page))
+                            break;
 
-                    await result.Navigation.PopAsync(_animated);
+                        await result.Navigation.PopAsync(_animated);
+                    }
                 }
-            }
-            else
-            {
-                page.Parent = null;
-                await result.Navigation.PushAsync(page, _animated);
-            }
+                else
+                {
+                    page.Parent = null;
+                    await result.Navigation.PushAsync(page, _animated);
+                }
 
-            if (!view.ViewModel.IsInitialized)
-                await view.ViewModel.InitializeAsync();
+                if (!view.ViewModel.IsInitialized)
+                    await view.ViewModel.InitializeAsync();
 
-            OnBackStackChanged(EventArgs.Empty);
-        }
+                OnBackStackChanged(EventArgs.Empty);
+            }
+        });
+        
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -88,41 +99,56 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public async Task NavigateModalAsync<TViewModel>(object parameter = null)
+    public Task NavigateModalAsync<TViewModel>(object parameter = null)
          where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } view && view is Page page)
+        _dispatcherService.Invoke(async () =>
         {
-            // Added this nullification of handler becuase of some issues with TabbedPage.
-            // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
-            page.Handler = null;
-            Application.Current.MainPage = page;
-            
-            if (!view.ViewModel.IsInitialized)
-                await view.ViewModel.InitializeAsync();
-        }
+            if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } view && view is Page page)
+            {
+                // Added this nullification of handler becuase of some issues with TabbedPage.
+                // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
+                page.Handler = null;
+                Application.Current.MainPage = page;
+
+                if (!view.ViewModel.IsInitialized)
+                    await view.ViewModel.InitializeAsync();
+            }
+        });
+
+        return Task.CompletedTask;
     }
 
-    public async Task CleanBackStackAsync()
+    public Task CleanBackStackAsync()
     {
-        await Application.Current.MainPage.GetNavigation().Navigation.PopToRootAsync(_animated);
-        OnBackStackChanged(EventArgs.Empty);
+        _dispatcherService.Invoke(async () =>
+        {
+            await Application.Current.MainPage.GetNavigation().Navigation.PopToRootAsync(_animated);
+            OnBackStackChanged(EventArgs.Empty);
+        });
+        
+        return Task.CompletedTask;
     }
 
     /// <summary>
     /// Goes the back.
     /// </summary>
-    public async Task GoBackAsync()
+    public Task GoBackAsync()
     {
-        if (CanGoBack)
+        _dispatcherService.Invoke(async () =>
         {
-            if (Application.Current.MainPage.Navigation.ModalStack.Count > 0)
-                await Application.Current.MainPage.Navigation.PopModalAsync(_animated);
-            else
-                await Application.Current.MainPage.GetNavigation().Navigation.PopAsync(_animated);
-        } 
+            if (CanGoBack)
+            {
+                if (Application.Current.MainPage.Navigation.ModalStack.Count > 0)
+                    await Application.Current.MainPage.Navigation.PopModalAsync(_animated);
+                else
+                    await Application.Current.MainPage.GetNavigation().Navigation.PopAsync(_animated);
+            }
 
-        OnBackStackChanged(EventArgs.Empty);
+            OnBackStackChanged(EventArgs.Empty);
+        });
+        
+        return Task.CompletedTask;
     }
 
     #region NotImplemented

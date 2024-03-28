@@ -10,7 +10,8 @@ using Sample.Models;
 using Sample.Services;
 using Syncfusion.Maui.Core.Hosting;
 using System.Reflection;
-
+using CommunityToolkit.Maui;
+using Sample.Views;
 
 #if WINDOWS
 using ISynergy.Framework.Update.Extensions;
@@ -35,6 +36,7 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkitMediaElement()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Font Awesome 6 Pro-Regular-400.otf", "fontawesome");
@@ -43,7 +45,7 @@ public static class MauiProgram
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
             })
-            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) => 
+            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources, LoadingView>((services, configuration) => 
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
