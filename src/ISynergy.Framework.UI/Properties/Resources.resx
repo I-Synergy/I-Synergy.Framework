@@ -435,4 +435,7 @@ Try again or update the application through the Microsoft Store.</value>
 	<data name="EnterNote" xml:space="preserve">
 		<value>Enter note here...</value>
 	</data>
+	<data name="Skip" xml:space="preserve">
+		<value>Skip</value>
+	</data>
 </root>

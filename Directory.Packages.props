@@ -7,6 +7,7 @@
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.17.4" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.19.1" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
+    <PackageVersion Include="CommunityToolkit.Maui.MediaElement" Version="3.1.0" />
     <PackageVersion Include="CompareNETObjects" Version="4.83.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="Docfx.App" Version="2.75.3" />
@@ -45,7 +46,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.45.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.46.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.14" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.14" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
@@ -57,27 +58,27 @@
     <PackageVersion Include="MSTest.TestAdapter" Version="3.2.2" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.2.2" />
     <PackageVersion Include="NodaTime" Version="3.1.11" />
-    <PackageVersion Include="NSwag.AspNetCore" Version="14.0.4" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.0.7" />
     <PackageVersion Include="NuGet.Commands" Version="6.9.1" />
     <PackageVersion Include="SendGrid" Version="9.29.2" />
     <PackageVersion Include="Sentry" Version="4.2.1" />
     <PackageVersion Include="Sentry.Maui" Version="4.2.1" />
     <PackageVersion Include="Sentry.Profiling" Version="4.2.1" />
     <PackageVersion Include="SkiaSharp" Version="2.88.7" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="25.1.35" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="25.1.35" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="25.1.37" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="25.1.37" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="System.Drawing.Common" Version="8.0.3" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.4.1" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.5.0" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="System.Net.Http.Json" Version="8.0.0" />
     <PackageVersion Include="System.Text.Encodings.Web" Version="8.0.0" />
