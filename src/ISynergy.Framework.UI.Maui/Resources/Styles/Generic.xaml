@@ -66,6 +66,9 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </Grid.GestureRecognizers>
 
                 <Label Text="{Binding Title}" FontSize="Title" HorizontalOptions="StartAndExpand" Margin="8,4" />
 
@@ -97,6 +100,9 @@
             </Border.StrokeShape>
 
             <Grid Margin="10">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </Grid.GestureRecognizers>
                 <ContentPresenter Margin="{DynamicResource DefaultMargin}"/>
             </Grid>
         </Border>

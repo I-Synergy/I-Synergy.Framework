@@ -59,7 +59,7 @@ public class Logger : BaseLogger
         _client.Context.Session.Id = Guid.NewGuid().ToString();
         _client.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
 
-        AppDomain.CurrentDomain.ProcessExit += new WeakEventHandler<EventArgs>((s, e) => Flush()).Handler;
+        AppDomain.CurrentDomain.ProcessExit += (s, e) => Flush();
     }
 
     /// <summary>

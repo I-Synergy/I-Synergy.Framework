@@ -29,7 +29,7 @@ public abstract class TabbedView : TabbedPage, IView
     /// </summary>
     protected TabbedView()
     {
-        Loaded += new WeakEventHandler<EventArgs>(TabbedView_Loaded).Handler;
+        Loaded += TabbedView_Loaded;
     }
 
     /// <summary>
@@ -110,6 +110,8 @@ public abstract class TabbedView : TabbedPage, IView
             // free managed resources
             ViewModel?.Dispose();
             ViewModel = null;
+
+            Loaded -= TabbedView_Loaded;
         }
 
         // free native resources if there are any.

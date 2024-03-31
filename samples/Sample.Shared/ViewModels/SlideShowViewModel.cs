@@ -67,7 +67,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         : base(context, commonServices, logger)
     {
         UpdateSourceTimer = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
-        UpdateSourceTimer.Elapsed += new WeakEventHandler<ElapsedEventArgs>(UpdateSourceTimer_Tick).Handler;
+        UpdateSourceTimer.Elapsed += UpdateSourceTimer_Tick;
         UpdateSourceTimer.AutoReset = true;
         UpdateSourceTimer.Start();
 
@@ -84,7 +84,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         if (Items.Count > 0)
         {
             SlideshowTimer = new Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
-            SlideshowTimer.Elapsed += new WeakEventHandler<ElapsedEventArgs>(SlideshowTimer_Tick).Handler;
+            SlideshowTimer.Elapsed += SlideshowTimer_Tick;
             UpdateSourceTimer.AutoReset = true;
             SlideshowTimer.Start();
         }
@@ -128,5 +128,27 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         };
 
         UpdateSourceTimer.Enabled = true;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (disposing)
+        {
+            if (SlideshowTimer is not null)
+            {
+                SlideshowTimer.Stop();
+                SlideshowTimer.Elapsed -= SlideshowTimer_Tick;
+                SlideshowTimer.Dispose();
+            }
+
+            if (UpdateSourceTimer is not null)
+            {
+                UpdateSourceTimer.Stop();
+                UpdateSourceTimer.Elapsed -= UpdateSourceTimer_Tick;
+                UpdateSourceTimer.Dispose();
+            }
+        }
     }
 }

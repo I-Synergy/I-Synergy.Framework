@@ -71,7 +71,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Setting up authentication service.");
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
 
-        _authenticationService.AuthenticationChanged += new WeakEventHandler<ReturnEventArgs<bool>>(AuthenticationChanged).Handler;
+        _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
         _logger.LogInformation("Setting up theming service.");
         _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
@@ -115,9 +115,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     protected virtual void SetGlobalExceptionHandler()
     {
-        AppDomain.CurrentDomain.FirstChanceException += new WeakEventHandler<System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs>(CurrentDomain_FirstChanceException).Handler;
-        AppDomain.CurrentDomain.UnhandledException += new WeakEventHandler<System.UnhandledExceptionEventArgs>(CurrentDomain_UnhandledException).Handler;
-        TaskScheduler.UnobservedTaskException += new WeakEventHandler<UnobservedTaskExceptionEventArgs>(TaskScheduler_UnobservedTaskException).Handler;
+        AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
     }
 
     /// <summary>
@@ -304,6 +304,13 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         {
             // free managed resources
             MessageService.Default.Unregister<StyleChangedMessage>(this);
+
+            if (_authenticationService is not null)
+                _authenticationService.AuthenticationChanged += AuthenticationChanged;
+
+            AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
         }
 
         // free native resources if there are any.

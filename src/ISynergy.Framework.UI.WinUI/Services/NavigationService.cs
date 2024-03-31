@@ -105,7 +105,17 @@ public class NavigationService : INavigationService
         if (viewmodel is IViewModelBlade bladeVm)
         {
             bladeVm.Owner = owner;
-            bladeVm.Closed += new WeakEventHandler<EventArgs>(Viewmodel_Closed).Handler;
+
+            void Viewmodel_Closed(object sender, EventArgs e)
+            {
+                if (sender is IViewModelBlade viewModel)
+                {
+                    viewModel.Closed -= Viewmodel_Closed;
+                    RemoveBlade(viewModel.Owner, viewModel);
+                }
+            }
+
+            bladeVm.Closed += Viewmodel_Closed;
 
             var view = await GetNavigationBladeAsync(bladeVm);
 
@@ -139,7 +149,17 @@ public class NavigationService : INavigationService
         if (viewmodel is IViewModelBlade bladeVm)
         {
             bladeVm.Owner = owner;
-            bladeVm.Closed += new WeakEventHandler<EventArgs>(Viewmodel_Closed).Handler;
+
+            void Viewmodel_Closed(object sender, EventArgs e)
+            {
+                if (sender is IViewModelBlade viewModel)
+                {
+                    viewModel.Closed -= Viewmodel_Closed;
+                    RemoveBlade(viewModel.Owner, viewModel);
+                }
+            }
+
+            bladeVm.Closed += Viewmodel_Closed;
 
             if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View view)
             {
@@ -165,17 +185,6 @@ public class NavigationService : INavigationService
                 throw new KeyNotFoundException($"Page not found: {typeof(TView)}.");
             }
         }
-    }
-
-    /// <summary>
-    /// Handles the Closed event of the Viewmodel control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void Viewmodel_Closed(object sender, EventArgs e)
-    {
-        if (sender is IViewModelBlade viewModel)
-            RemoveBlade(viewModel.Owner, viewModel);
     }
 
     /// <summary>

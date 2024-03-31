@@ -119,7 +119,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SettingsService = settingsService;
 
         _navigationService = navigationService;
-        _navigationService.BackStackChanged += new WeakEventHandler<EventArgs>((s, e) => OnPropertyChanged(nameof(IsBackEnabled))).Handler;
+        _navigationService.BackStackChanged += (s,e) => OnPropertyChanged(nameof(IsBackEnabled));
 
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;

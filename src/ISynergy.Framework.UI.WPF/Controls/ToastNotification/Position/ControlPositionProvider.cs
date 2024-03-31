@@ -26,8 +26,8 @@ public class ControlPositionProvider : IPositionProvider
 
         ParentWindow = parentWindow;
 
-        parentWindow.SizeChanged += new WeakEventHandler<SizeChangedEventArgs>(ParentWindowOnSizeChanged).Handler;
-        parentWindow.LocationChanged += new WeakEventHandler<EventArgs>(ParentWindowOnLocationChanged).Handler;
+        ParentWindow.SizeChanged += ParentWindowOnSizeChanged;
+        ParentWindow.LocationChanged += ParentWindowOnLocationChanged;
 
         SetEjectDirection(corner);
     }
@@ -109,6 +109,11 @@ public class ControlPositionProvider : IPositionProvider
 
     public void Dispose()
     {
+        if (ParentWindow is not null)
+        {
+            ParentWindow.SizeChanged -= ParentWindowOnSizeChanged;
+            ParentWindow.LocationChanged -= ParentWindowOnLocationChanged;
+        }
     }
 
     protected virtual void RequestUpdatePosition()

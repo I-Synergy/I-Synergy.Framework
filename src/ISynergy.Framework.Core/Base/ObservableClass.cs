@@ -164,7 +164,7 @@ public abstract class ObservableClass : IObservableClass
     protected ObservableClass(bool automaticValidationTrigger = false)
     {
         AutomaticValidationTrigger = automaticValidationTrigger;
-        ErrorsChanged += new WeakEventHandler<DataErrorsChangedEventArgs>(ObservableClass_ErrorsChanged).Handler;
+        ErrorsChanged += ObservableClass_ErrorsChanged;
     }
 
     private void ObservableClass_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
@@ -445,6 +445,8 @@ public abstract class ObservableClass : IObservableClass
 
             Properties?.Clear();
             Errors?.Clear();
+
+            ErrorsChanged -= ObservableClass_ErrorsChanged;
         }
 
         // free native resources if there are any.

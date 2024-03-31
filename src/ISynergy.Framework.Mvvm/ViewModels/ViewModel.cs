@@ -124,7 +124,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
         BaseCommonServices = commonServices;
         Logger = logger;
 
-        PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(OnPropertyChanged).Handler;
+        PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
 
         CloseCommand = new AsyncRelayCommand(CloseAsync);
@@ -227,6 +227,10 @@ public abstract class ViewModel : ObservableClass, IViewModel
         base.Dispose(disposing);
 
         if (disposing)
+        {
             Cleanup();
+
+            PropertyChanged -= OnPropertyChanged;
+        }
     }
 }

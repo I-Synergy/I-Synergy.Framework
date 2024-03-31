@@ -314,7 +314,7 @@ public class AuthenticationViewModel : ViewModel
     public Task ForgotPasswordAsync()
     {
         ForgotPasswordViewModel forgotPasswordVM = new(Context, BaseCommonServices, _authenticationService, Logger);
-        forgotPasswordVM.Submitted += new WeakEventHandler<SubmitEventArgs<bool>>(ForgotPasswordVM_Submitted).Handler;
+        forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }
 
@@ -325,6 +325,9 @@ public class AuthenticationViewModel : ViewModel
     /// <param name="e">The e.</param>
     private async void ForgotPasswordVM_Submitted(object sender, SubmitEventArgs<bool> e)
     {
+        if (sender is ForgotPasswordViewModel vm)
+            vm.Submitted -= ForgotPasswordVM_Submitted;
+
         if (e.Result)
         {
             await BaseCommonServices.DialogService
