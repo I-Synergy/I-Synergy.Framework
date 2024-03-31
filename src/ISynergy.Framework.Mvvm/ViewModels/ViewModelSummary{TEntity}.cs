@@ -136,6 +136,8 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// <returns>Task.</returns>
     public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
+
         if (!IsInitialized)
         {
             if (RefreshOnInitialization)

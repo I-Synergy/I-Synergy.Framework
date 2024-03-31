@@ -22,7 +22,7 @@ public static class DateTimeOffsetConverter
             return new TimeSpan(0);
         }
 
-        return dt - dt.Date;
+        return new TimeSpan(dt.TimeOfDay.Ticks);
     }
 
     /// <summary>

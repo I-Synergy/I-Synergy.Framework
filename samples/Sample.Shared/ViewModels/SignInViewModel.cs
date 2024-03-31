@@ -100,10 +100,10 @@ public class SignInViewModel : ViewModel
 
     public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
+
         if (!IsInitialized)
         {
-            await base.InitializeAsync();
-
             AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
             var users = await _credentialLockerService.GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();

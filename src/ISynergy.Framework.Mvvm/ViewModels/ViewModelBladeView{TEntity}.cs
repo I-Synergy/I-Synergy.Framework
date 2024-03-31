@@ -167,6 +167,8 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// <returns>Task.</returns>
     public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
+
         if (!IsInitialized)
         {
             if (RefreshOnInitialization)

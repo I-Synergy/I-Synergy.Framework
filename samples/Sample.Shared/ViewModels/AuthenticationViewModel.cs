@@ -282,21 +282,27 @@ public class AuthenticationViewModel : ViewModel
     {
         await base.InitializeAsync();
 
-        Modules = await _authenticationService.GetModulesAsync();
+        if (!IsInitialized)
+        {
+            Modules = await _authenticationService.GetModulesAsync();
 
-        if (Modules.FirstOrDefault() is { } module)
-            Registration_Modules.Add(module);
+            if (Modules.FirstOrDefault() is { } module)
+                Registration_Modules.Add(module);
 
-        AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
+            AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
 
-        var users = await _credentialLockerService.GetUsernamesFromCredentialLockerAsync();
-        Usernames = new ObservableCollection<string>();
-        Usernames.AddRange(users);
+            var users = await _credentialLockerService.GetUsernamesFromCredentialLockerAsync();
+            Usernames = new ObservableCollection<string>();
+            Usernames.AddRange(users);
 
-        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
-            Username = _applicationSettingsService.Settings.DefaultUser;
-        if (string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && Usernames.Count > 0)
-            Username = Usernames[0];
+            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
+                Username = _applicationSettingsService.Settings.DefaultUser;
+
+            if (string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && Usernames.Count > 0)
+                Username = Usernames[0];
+
+            IsInitialized = true;
+        }
     }
 
     /// <summary>

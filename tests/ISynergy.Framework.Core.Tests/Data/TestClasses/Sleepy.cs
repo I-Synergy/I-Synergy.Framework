@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Tests.Data.TestClasses;
 
-public class Sleepy
+public class Sleepy : IDisposable
 {
     private readonly Alarm _alarm;
     private int _snoozeCount;
@@ -22,5 +22,11 @@ public class Sleepy
     public int SnoozeCount
     {
         get { return _snoozeCount; }
+    }
+
+    public void Dispose()
+    {
+        if (_alarm != null)
+            _alarm.Beeped -= Alarm_Beeped;
     }
 }

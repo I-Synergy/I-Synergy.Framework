@@ -77,26 +77,31 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
     public override async Task InitializeAsync()
     {
-        _commonServices.BusyService.StartBusy();
-
-        if (!IsInitialized)
+        try
         {
+            _commonServices.BusyService.StartBusy();
+
             await base.InitializeAsync();
 
-            _localSettingsService.LoadSettings();
+            if (!IsInitialized)
+            {
+                _localSettingsService.LoadSettings();
 
-            await _globalSettingsService.LoadSettingsAsync();
+                await _globalSettingsService.LoadSettingsAsync();
 
-            if (_localSettingsService.Settings is LocalSettings localSetting)
-                LocalSettings = localSetting;
+                if (_localSettingsService.Settings is LocalSettings localSetting)
+                    LocalSettings = localSetting;
 
-            if (_globalSettingsService.Settings is { } globalSetting)
-                GlobalSettings = globalSetting;
+                if (_globalSettingsService.Settings is { } globalSetting)
+                    GlobalSettings = globalSetting;
 
-            IsInitialized = true;
+                IsInitialized = true;
+            }
         }
-
-        _commonServices.BusyService.EndBusy();
+        finally
+        {
+            _commonServices.BusyService.EndBusy();
+        }
     }
 
     public override async Task CancelAsync()
