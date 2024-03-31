@@ -262,6 +262,9 @@ public class DialogService : IDialogService
 
             void ViewModelClosedHandler(object sender, EventArgs e)
             {
+                if (sender is IViewModelDialog<TEntity> vm)
+                    vm.Closed -= ViewModelClosedHandler;
+
                 window.ViewModel?.Dispose();
                 window.ViewModel = null;
 
@@ -273,7 +276,7 @@ public class DialogService : IDialogService
                 window = null;
             };
 
-            viewmodel.Closed += new WeakEventHandler<EventArgs>(ViewModelClosedHandler).Handler;
+            viewmodel.Closed += ViewModelClosedHandler;
 
             await viewmodel.InitializeAsync();
 

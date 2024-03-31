@@ -32,7 +32,7 @@ public abstract class View : ContentPage, IView
     /// </summary>
     protected View()
     {
-        Loaded += new WeakEventHandler<EventArgs>(View_Loaded).Handler;
+        Loaded += View_Loaded;
     }
 
     /// <summary>
@@ -113,6 +113,8 @@ public abstract class View : ContentPage, IView
             // free managed resources
             ViewModel?.Dispose();
             ViewModel = null;
+
+            Loaded -= View_Loaded;
         }
 
         // free native resources if there are any.

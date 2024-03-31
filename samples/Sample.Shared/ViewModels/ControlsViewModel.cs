@@ -11,6 +11,7 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Timers;
 
 namespace Sample.ViewModels;
@@ -65,7 +66,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     private async Task SelectMultipleAsync()
     {
         var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
-        selectionVm.Submitted += new WeakEventHandler<SubmitEventArgs<List<TestItem>>>(SelectionVm_MultipleSubmitted).Handler;
+        selectionVm.Submitted += SelectionVm_MultipleSubmitted;
         await BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
@@ -76,7 +77,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     private async Task SelectSingleAsync()
     {
        var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
-        selectionVm.Submitted += new WeakEventHandler<SubmitEventArgs<List<TestItem>>>(SelectionVm_SingleSubmitted).Handler;
+        selectionVm.Submitted += SelectionVm_SingleSubmitted;
         await BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
@@ -87,6 +88,9 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// <param name="e">The e.</param>
     private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
+        if (sender is ViewModelSelectionDialog<TestItem> vm)
+            vm.Submitted -= SelectionVm_SingleSubmitted;
+
         SelectedTestItems = new ObservableCollection<TestItem>();
         SelectedTestItems.AddRange(e.Result);
 
@@ -100,33 +104,56 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// <param name="e">The e.</param>
     private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
+        if (sender is ViewModelSelectionDialog<TestItem> vm)
+            vm.Submitted -= SelectionVm_SingleSubmitted;
+
         await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
     }
 
     private async Task ShowMemoAsync()
     {
         var noteVM = new NoteViewModel(Context, BaseCommonServices, Logger, "");
-        noteVM.Submitted += new WeakEventHandler<SubmitEventArgs<string>>(NoteVM_Submitted).Handler;
+        noteVM.Submitted += NoteVM_Submitted;
         await BaseCommonServices.DialogService.ShowDialogAsync(typeof(INoteWindow), noteVM);
     }
 
     private async void NoteVM_Submitted(object sender, SubmitEventArgs<string> e)
     {
+        if (sender is NoteViewModel vm)
+            vm.Submitted -= NoteVM_Submitted;
+
         await BaseCommonServices.DialogService.ShowInformationAsync(e.Result);
     }
 
+    private System.Timers.Timer _timer;
+
     private void StartTimer()
     {
-        System.Timers.Timer timer = new(5000);
-        timer.Elapsed += new WeakEventHandler<ElapsedEventArgs>(Timer_Elapsed).Handler;
+        _timer = new(5000);
+        _timer.Elapsed += Timer_Elapsed;
         BaseCommonServices.BusyService.StartBusy();
-        timer.Enabled = true;
-        timer.AutoReset = true;
-        timer.Start();
+        _timer.Enabled = true;
+        _timer.AutoReset = true;
+        _timer.Start();
     }
 
     private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
         BaseCommonServices.BusyService.EndBusy();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (disposing)
+        {
+            if (_timer is not null)
+            {
+                _timer.Stop();
+                _timer.Elapsed -= Timer_Elapsed;
+                _timer.Dispose();
+            }   
+        }
     }
 }

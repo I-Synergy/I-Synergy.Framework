@@ -209,7 +209,7 @@ public class SignUpViewModel : ViewModel
     private Task SelectModulesAsync()
     {
         ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
-        selectionVM.Submitted += new WeakEventHandler<SubmitEventArgs<List<Module>>>(SelectionVM_Submitted).Handler;
+        selectionVM.Submitted += SelectionVM_Submitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
     }
 
@@ -220,6 +220,9 @@ public class SignUpViewModel : ViewModel
     /// <param name="e">The e.</param>
     private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<Module>> e)
     {
+        if (sender is ViewModelSelectionDialog<Module> vm)
+            vm.Submitted -= SelectionVM_Submitted;
+
         List<Module> selectedItems = [];
 
         foreach (object item in e.Result)

@@ -11,7 +11,7 @@ public class Sleepy
     public Sleepy(Alarm alarm)
     {
         _alarm = alarm;
-        _alarm.Beeped += new WeakEventHandler<PropertyChangedEventArgs>(Alarm_Beeped).Handler;
+        _alarm.Beeped += Alarm_Beeped;
     }
 
     private void Alarm_Beeped(object sender, PropertyChangedEventArgs e)

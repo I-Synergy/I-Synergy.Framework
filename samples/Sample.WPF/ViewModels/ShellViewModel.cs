@@ -175,24 +175,30 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     private Task SelectSingleAsync()
     {
         ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
-        selectionVm.Submitted += new WeakEventHandler<SubmitEventArgs<List<TestItem>>>(SelectionVm_SingleSubmitted).Handler;
+        selectionVm.Submitted += SelectionVm_SingleSubmitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
     private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
+        if (sender is ViewModelSelectionDialog<TestItem> vm)
+            vm.Submitted -= SelectionVm_SingleSubmitted;
+
         await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
     }
 
     private Task SelectMultipleAsync()
     {
         ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
-        selectionVm.Submitted += new WeakEventHandler<SubmitEventArgs<List<TestItem>>>(SelectionVm_MultipleSubmitted).Handler;
+        selectionVm.Submitted += SelectionVm_MultipleSubmitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
     private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
+        if (sender is ViewModelSelectionDialog<TestItem> vm)
+            vm.Submitted -= SelectionVm_MultipleSubmitted;
+
         SelectedTestItems = new ObservableCollection<TestItem>();
         SelectedTestItems.AddRange(e.Result);
 
