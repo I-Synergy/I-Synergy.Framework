@@ -32,7 +32,6 @@ public abstract class View : ContentPage, IView
     /// </summary>
     protected View()
     {
-        Loaded += View_Loaded;
     }
 
     /// <summary>
@@ -70,17 +69,6 @@ public abstract class View : ContentPage, IView
         ViewModel = viewModel;
     }
 
-    /// <summary>
-    /// Handles event when loaded.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void View_Loaded(object sender, EventArgs e)
-    {
-        if (ViewModel is not null && !ViewModel.IsInitialized)
-            await ViewModel.InitializeAsync();
-    }
-
     #region IDisposable
     // Dispose() calls Dispose(true)
     /// <summary>
@@ -113,8 +101,6 @@ public abstract class View : ContentPage, IView
             // free managed resources
             ViewModel?.Dispose();
             ViewModel = null;
-
-            Loaded -= View_Loaded;
         }
 
         // free native resources if there are any.

@@ -70,15 +70,7 @@ public abstract class BaseViewModel : PageModel, IBaseViewModel
     /// Initializes the asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    public virtual Task InitializeAsync()
-    {
-        if (!IsInitialized)
-        {
-            IsInitialized = true;
-        }
-
-        return Task.FromResult(IsInitialized);
-    }
+    public abstract Task InitializeAsync();
     #endregion
 
     #region IDisposable Support

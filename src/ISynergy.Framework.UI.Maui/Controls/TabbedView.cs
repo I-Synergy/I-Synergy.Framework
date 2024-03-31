@@ -29,7 +29,6 @@ public abstract class TabbedView : TabbedPage, IView
     /// </summary>
     protected TabbedView()
     {
-        Loaded += TabbedView_Loaded;
     }
 
     /// <summary>
@@ -67,17 +66,6 @@ public abstract class TabbedView : TabbedPage, IView
         ViewModel = viewModel;
     }
 
-    /// <summary>
-    /// Handles event when loaded.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void TabbedView_Loaded(object sender, EventArgs e)
-    {
-        if (ViewModel is not null && !ViewModel.IsInitialized)
-            await ViewModel.InitializeAsync();
-    }
-
     #region IDisposable
     // Dispose() calls Dispose(true)
     /// <summary>
@@ -110,8 +98,6 @@ public abstract class TabbedView : TabbedPage, IView
             // free managed resources
             ViewModel?.Dispose();
             ViewModel = null;
-
-            Loaded -= TabbedView_Loaded;
         }
 
         // free native resources if there are any.
