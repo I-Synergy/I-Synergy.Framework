@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ISynergy.Framework.Core.Extensions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -72,11 +73,11 @@ public class NotificationsItemsControl : ItemsControl
     private static Style CopyStyle(Style style)
     {
         Style styleCopy = new Style();
-        foreach (SetterBase currentSetter in style.Setters)
+        foreach (SetterBase currentSetter in style.Setters.EnsureNotNull())
         {
             styleCopy.Setters.Add(currentSetter);
         }
-        foreach (TriggerBase currentTrigger in style.Triggers)
+        foreach (TriggerBase currentTrigger in style.Triggers.EnsureNotNull())
         {
             styleCopy.Triggers.Add(currentTrigger);
         }

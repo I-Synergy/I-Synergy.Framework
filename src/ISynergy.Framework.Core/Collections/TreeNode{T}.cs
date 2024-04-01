@@ -84,7 +84,7 @@ public class TreeNode<TKey, TModel> : ObservableClass
     /// </summary>
     public TreeNode()
     {
-        PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(TreeNode_PropertyChanged).Handler;
+        PropertyChanged += TreeNode_PropertyChanged;
         IsSelected = false;
         DisposeTraversal = UpDownTraversalTypes.BottomUp;
         Parent = null;
@@ -244,15 +244,17 @@ public class TreeNode<TKey, TModel> : ObservableClass
             if (Data is IDisposable)
             {
                 if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
-                    foreach (var node in Children)
+                    foreach (var node in Children.EnsureNotNull())
                         node.Dispose();
 
                 (Data as IDisposable).Dispose();
 
                 if (DisposeTraversal == UpDownTraversalTypes.TopDown)
-                    foreach (var node in Children)
+                    foreach (var node in Children.EnsureNotNull())
                         node.Dispose();
             }
+
+            PropertyChanged -= TreeNode_PropertyChanged;
         }
 
         // free native resources if there are any.

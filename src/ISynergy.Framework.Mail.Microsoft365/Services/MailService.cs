@@ -1,4 +1,5 @@
 ﻿using Azure.Identity;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mail.Abstractions.Services;
 using ISynergy.Framework.Mail.Models;
@@ -67,7 +68,7 @@ internal class MailService : IMailService
             {
                 var recipients = new List<Recipient>();
 
-                foreach (var address in emailMessage.EmailAddressesTo)
+                foreach (var address in emailMessage.EmailAddressesTo.EnsureNotNull())
                     recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
 
                 message.ToRecipients = recipients;
@@ -77,7 +78,7 @@ internal class MailService : IMailService
             {
                 var recipients = new List<Recipient>();
 
-                foreach (var address in emailMessage.EmailAddressesCc)
+                foreach (var address in emailMessage.EmailAddressesCc.EnsureNotNull())
                     recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
 
                 message.CcRecipients = recipients;
@@ -87,7 +88,7 @@ internal class MailService : IMailService
             {
                 var recipients = new List<Recipient>();
 
-                foreach (var address in emailMessage.EmailAddressesBcc)
+                foreach (var address in emailMessage.EmailAddressesBcc.EnsureNotNull())
                     recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
 
                 if (emailMessage.SendCopy)

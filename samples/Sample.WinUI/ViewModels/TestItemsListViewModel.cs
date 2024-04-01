@@ -178,7 +178,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     public override Task AddAsync()
     {
         ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
-        selectionVM.Submitted += new WeakEventHandler<SubmitEventArgs<List<TestItem>>>(SelectionVM_Submitted).Handler;
+        selectionVM.Submitted += SelectionVM_Submitted;
         return CommonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }
 
@@ -189,6 +189,9 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <param name="e">The e.</param>
     private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
+        if (sender is ViewModelSelectionBlade<TestItem> vm)
+            vm.Submitted -= SelectionVM_Submitted;
+
         SelectedItems = e.Result;
     }
 }

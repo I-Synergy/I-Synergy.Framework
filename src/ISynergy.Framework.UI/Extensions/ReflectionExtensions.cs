@@ -4,7 +4,6 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -67,7 +66,7 @@ public static class ReflectionExtensions
     /// <param name="windows"></param>
     public static void RegisterWindows(this IServiceCollection services, IEnumerable<Type> windows)
     {
-        foreach (var window in windows.Distinct())
+        foreach (var window in windows.Distinct().EnsureNotNull())
             services.RegisterWindow(window);
     }
 
@@ -92,7 +91,7 @@ public static class ReflectionExtensions
     /// <param name="views"></param>
     public static void RegisterViews(this IServiceCollection services, IEnumerable<Type> views)
     {
-        foreach (var view in views.Distinct())
+        foreach (var view in views.Distinct().EnsureNotNull())
             services.RegisterView(view);
     }
 
@@ -117,7 +116,7 @@ public static class ReflectionExtensions
     /// <param name="viewmodels"></param>
     public static void RegisterViewModels(this IServiceCollection services, IEnumerable<Type> viewmodels)
     {
-        foreach (var viewmodel in viewmodels.Distinct())
+        foreach (var viewmodel in viewmodels.Distinct().EnsureNotNull())
             services.RegisterViewModel(viewmodel);
     }
 
@@ -137,40 +136,26 @@ public static class ReflectionExtensions
 
     private static void Register(this IServiceCollection services, Type type, Type abstraction)
     {
-        var logger = services.BuildServiceProvider().GetService<ILogger>();
-
         if (type.IsSingleton())
         {
             if (abstraction is not null)
-            {
                 services.TryAddSingleton(abstraction, type);
-                logger.LogDebug("Registering singleton abstraction {0} with implementation {1}.", abstraction.Name, type.Name);
-            }
 
             services.TryAddSingleton(type);
-            logger.LogDebug("Register singleton implementation {0}.", type.Name);
         }
         else if (type.IsScoped())
         {
             if (abstraction is not null)
-            {
                 services.TryAddScoped(abstraction, type);
-                logger.LogDebug("Registering scoped abstraction {0} with implementation {1}.", abstraction.Name, type.Name);
-            }
 
             services.TryAddScoped(type);
-            logger.LogDebug("Register scoped implementation {0}.", type.Name);
         }
         else
         {
             if (abstraction is not null)
-            {
                 services.TryAddTransient(abstraction, type);
-                logger.LogDebug("Registering transient abstraction {0} with implementation {1}.", abstraction.Name, type.Name);
-            }
 
             services.TryAddTransient(type);
-            logger.LogDebug("Register transient implementation {0}.", type.Name);
         }
     }
 }

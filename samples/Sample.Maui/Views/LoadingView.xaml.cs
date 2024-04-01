@@ -37,8 +37,11 @@ public partial class LoadingView : ILoadingView
 
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-        BackgroundMediaElement.Pause();
-        SendApplicationLoadedMessage();
+        if (SkipButton.IsEnabled)
+        {
+            BackgroundMediaElement.Pause();
+            SendApplicationLoadedMessage();
+        }
     }
 
     private void SkipClicked(object sender, EventArgs e)

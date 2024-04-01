@@ -21,12 +21,12 @@ public class WindowPositionProvider : IPositionProvider
         _corner = corner;
         _offsetX = offsetX;
         _offsetY = offsetY;
+        
         ParentWindow = parentWindow;
-
-        parentWindow.SizeChanged += new WeakEventHandler<SizeChangedEventArgs>(ParentWindowOnSizeChanged).Handler;
-        parentWindow.LocationChanged += new WeakEventHandler<EventArgs>(ParentWindowOnLocationChanged).Handler;
-        parentWindow.StateChanged += new WeakEventHandler<EventArgs>(ParentWindowOnStateChanged).Handler;
-        parentWindow.Activated += new WeakEventHandler<EventArgs>(ParentWindowOnActivated).Handler;
+        ParentWindow.SizeChanged += ParentWindowOnSizeChanged;
+        ParentWindow.LocationChanged += ParentWindowOnLocationChanged;
+        ParentWindow.StateChanged += ParentWindowOnStateChanged;
+        ParentWindow.Activated += ParentWindowOnActivated;
 
         SetEjectDirection(corner);
     }

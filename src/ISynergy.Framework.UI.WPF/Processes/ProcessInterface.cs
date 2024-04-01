@@ -34,14 +34,14 @@ public class ProcessInterface : IDisposable
         //  Configure the output worker.
         OutputWorker.WorkerReportsProgress = true;
         OutputWorker.WorkerSupportsCancellation = true;
-        OutputWorker.DoWork += new WeakEventHandler<DoWorkEventArgs>(OutputWorker_DoWork).Handler;
-        OutputWorker.ProgressChanged += new WeakEventHandler<ProgressChangedEventArgs>(OutputWorker_ProgressChanged).Handler;
+        OutputWorker.DoWork += OutputWorker_DoWork;
+        OutputWorker.ProgressChanged += OutputWorker_ProgressChanged;
 
         //  Configure the error worker.
         ErrorWorker.WorkerReportsProgress = true;
         ErrorWorker.WorkerSupportsCancellation = true;
-        ErrorWorker.DoWork += new WeakEventHandler<DoWorkEventArgs>(ErrorWorker_DoWork).Handler;
-        ErrorWorker.ProgressChanged += new WeakEventHandler<ProgressChangedEventArgs>(ErrorWorker_ProgressChanged).Handler;
+        ErrorWorker.DoWork += ErrorWorker_DoWork;
+        ErrorWorker.ProgressChanged += ErrorWorker_ProgressChanged;
     }
 
     /// <summary>
@@ -372,11 +372,15 @@ public class ProcessInterface : IDisposable
         {
             if (OutputWorker is not null)
             {
+                OutputWorker.ProgressChanged -= OutputWorker_ProgressChanged;
+                OutputWorker.DoWork -= OutputWorker_DoWork;
                 OutputWorker.Dispose();
             }
 
             if (ErrorWorker is not null)
             {
+                ErrorWorker.ProgressChanged -= ErrorWorker_ProgressChanged;
+                ErrorWorker.DoWork -= ErrorWorker_DoWork;
                 ErrorWorker.Dispose();
             }
 

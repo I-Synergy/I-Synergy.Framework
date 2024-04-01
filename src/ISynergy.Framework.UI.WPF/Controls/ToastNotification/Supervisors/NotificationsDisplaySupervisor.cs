@@ -31,12 +31,12 @@ public class NotificationsDisplaySupervisor : IDisposable
         _displayOptions = displayOptions;
         _keyboardEventHandler = keyboardEventHandler;
 
-        _lifetimeSupervisor.ShowNotificationRequested += new WeakEventHandler<ShowNotificationEventArgs>(LifetimeSupervisorOnShowNotificationRequested).Handler;
-        _lifetimeSupervisor.CloseNotificationRequested += new WeakEventHandler<CloseNotificationEventArgs>(LifetimeSupervisorOnCloseNotificationRequested).Handler;
+        _lifetimeSupervisor.ShowNotificationRequested += LifetimeSupervisorOnShowNotificationRequested;
+        _lifetimeSupervisor.CloseNotificationRequested += LifetimeSupervisorOnCloseNotificationRequested;
 
-        _positionProvider.UpdatePositionRequested += new WeakEventHandler<EventArgs>(PositionProviderOnUpdatePositionRequested).Handler;
-        _positionProvider.UpdateEjectDirectionRequested += new WeakEventHandler<EventArgs>(PositionProviderOnUpdateEjectDirectionRequested).Handler;
-        _positionProvider.UpdateHeightRequested += new WeakEventHandler<EventArgs>(PositionProviderOnUpdateHeightRequested).Handler;
+        _positionProvider.UpdatePositionRequested += PositionProviderOnUpdatePositionRequested;
+        _positionProvider.UpdateEjectDirectionRequested += PositionProviderOnUpdateEjectDirectionRequested;
+        _positionProvider.UpdateHeightRequested += PositionProviderOnUpdateHeightRequested;
     }
 
     public void DisplayNotification(INotification notification)
@@ -156,6 +156,18 @@ public class NotificationsDisplaySupervisor : IDisposable
     {
         _window?.Close();
         _window = null;
-        _lifetimeSupervisor = null;
+        
+        if(_lifetimeSupervisor is not null)
+        {
+            _lifetimeSupervisor.ShowNotificationRequested -= LifetimeSupervisorOnShowNotificationRequested;
+            _lifetimeSupervisor.CloseNotificationRequested -= LifetimeSupervisorOnCloseNotificationRequested;
+        }
+
+        if (_positionProvider is not null)
+        {
+            _positionProvider.UpdatePositionRequested -= PositionProviderOnUpdatePositionRequested;
+            _positionProvider.UpdateEjectDirectionRequested -= PositionProviderOnUpdateEjectDirectionRequested;
+            _positionProvider.UpdateHeightRequested -= PositionProviderOnUpdateHeightRequested;
+        }
     }
 }

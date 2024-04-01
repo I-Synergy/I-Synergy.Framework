@@ -21,10 +21,10 @@ public class DetailViewModel : ViewModelNavigation<TestItem>
 
     public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
+
         if (!IsInitialized)
         {
-            await base.InitializeAsync();
-
             IsInitialized = true;
         }
     }

@@ -26,7 +26,7 @@ public class WeakEventsTests
         new Action(() =>
         {
             // Run this in a delegate to that the local variable gets garbage collected
-            var sleepy = new Sleepy(alarm);
+            using var sleepy = new Sleepy(alarm);
             alarm.Beep();
             alarm.Beep();
             Assert.AreEqual(2, sleepy.SnoozeCount);

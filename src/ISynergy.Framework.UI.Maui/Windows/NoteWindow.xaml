@@ -8,18 +8,24 @@
           x:DataType="viewmodels:NoteViewModel"
           Title="{Binding Title}">
 
-    <ContentView 
-        ControlTemplate="{StaticResource DefaultDialogTemplate}"
-        MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding CancelCommand}" />
+        </Grid.GestureRecognizers>
 
-        <Grid Margin="4">
-            <Editor
+        <ContentView 
+            ControlTemplate="{StaticResource DefaultDialogTemplate}"
+            MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
+
+            <Grid Margin="4">
+                <Editor
                 Text="{Binding SelectedItem, Mode=TwoWay}"
                 Placeholder="{m:GetString EnterNote}"
                 HeightRequest="250"
                 MinimumWidthRequest="375"
                 IsSpellCheckEnabled="True"
                 IsTextPredictionEnabled="True"/>
-        </Grid>
-    </ContentView>
+            </Grid>
+        </ContentView>
+    </Grid>
 </c:Window>

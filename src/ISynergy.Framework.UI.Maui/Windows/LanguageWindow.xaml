@@ -9,33 +9,38 @@
           x:DataType="viewmodels:LanguageViewModel"
           x:Class="ISynergy.Framework.UI.Windows.LanguageWindow"
           Title="{Binding Title}">
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding CancelCommand}" />
+        </Grid.GestureRecognizers>
 
-    <ContentView 
-        ControlTemplate="{StaticResource DefaultDialogTemplate}"
-        WidthRequest="{OnPlatform WinUI=400, Default=400}">
+        <ContentView 
+            ControlTemplate="{StaticResource DefaultDialogTemplate}"
+            WidthRequest="{OnPlatform WinUI=400, Default=400}">
         
-        <VerticalStackLayout Margin="10" Spacing="10">
-            <RadioButton 
-                Content="{m:GetString Key=Language_Dutch}"
-                IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=Dutch}}"
-                GroupName="Language"/>
+            <VerticalStackLayout Margin="10" Spacing="10">
+                <RadioButton 
+                    Content="{m:GetString Key=Language_Dutch}"
+                    IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=Dutch}}"
+                    GroupName="Language"/>
             
-            <RadioButton 
-                Content="{m:GetString Key=Language_English}"
-                IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=English}}"
-                GroupName="Language"/>
+                <RadioButton 
+                    Content="{m:GetString Key=Language_English}"
+                    IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=English}}"
+                    GroupName="Language"/>
             
-            <RadioButton
-                Content="{m:GetString Key=Language_German}"
-                IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=German}}"
-                GroupName="Language" 
-                IsEnabled="False"/>
+                <RadioButton
+                    Content="{m:GetString Key=Language_German}"
+                    IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=German}}"
+                    GroupName="Language" 
+                    IsEnabled="False"/>
             
-            <RadioButton 
-                Content="{m:GetString Key=Language_French}"
-                IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=French}}"
-                GroupName="Language" 
-                IsEnabled="False"/>
-        </VerticalStackLayout>
-    </ContentView>
+                <RadioButton 
+                    Content="{m:GetString Key=Language_French}"
+                    IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=French}}"
+                    GroupName="Language" 
+                    IsEnabled="False"/>
+            </VerticalStackLayout>
+        </ContentView>
+    </Grid>
 </c:Window>

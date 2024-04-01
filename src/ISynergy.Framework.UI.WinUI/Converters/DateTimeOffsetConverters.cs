@@ -116,7 +116,7 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
         {
             var collection = value as ObservableCollection<DateTimeOffset>;
 
-            foreach (var item in collection)
+            foreach (var item in collection.EnsureNotNull())
             {
                 result.Add(item.ToLocalTime().DateTime);
             }
@@ -143,7 +143,7 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
             {
                 var collection = value as ObservableCollection<DateTime>;
 
-                foreach (var item in collection)
+                foreach (var item in collection.EnsureNotNull())
                 {
                     result.Add(new DateTimeOffset(DateTime.SpecifyKind(item, DateTimeKind.Local)));
                 }
@@ -153,7 +153,7 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
             {
                 var collection = value as ObservableCollection<string>;
 
-                foreach (var item in collection)
+                foreach (var item in collection.EnsureNotNull())
                 {
                     result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item), DateTimeKind.Local)));
                 }

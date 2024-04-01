@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Models.Accounts;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Accounts;
 using Microsoft.UI.Xaml.Controls;
 using Sample.ViewModels;
 using Syncfusion.UI.Xaml.Editors;
@@ -26,10 +27,10 @@ public sealed partial class SignUpControl : UserControl
     {
         if (DataContext is AuthenticationViewModel viewModel)
         {
-            foreach (Module item in e.AddedItems)
+            foreach (Module item in e.AddedItems.EnsureNotNull())
                 viewModel.Registration_Modules.Add(item);
 
-            foreach (Module item in e.RemovedItems)
+            foreach (Module item in e.RemovedItems.EnsureNotNull())
                 viewModel.Registration_Modules.Remove(item);
         }
     }

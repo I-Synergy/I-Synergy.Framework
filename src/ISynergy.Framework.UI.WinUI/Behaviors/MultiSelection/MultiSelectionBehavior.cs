@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using ISynergy.Framework.Core.Extensions;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using System.Collections.Specialized;
@@ -23,7 +24,7 @@ public class MultiSelectionBehavior : Behavior<ListView>
         if (SelectedItems is not null)
         {
             AssociatedObject.SelectedItems.Clear();
-            foreach (var item in SelectedItems)
+            foreach (var item in SelectedItems.EnsureNotNull())
             {
                 AssociatedObject.SelectedItems.Add(item);
             }
@@ -65,7 +66,7 @@ public class MultiSelectionBehavior : Behavior<ListView>
         if (e.NewValue is INotifyCollectionChanged newValue)
         {
             behavior.AssociatedObject.SelectedItems.Clear();
-            foreach (var item in (IEnumerable<object>)newValue)
+            foreach (var item in ((IEnumerable<object>)newValue).EnsureNotNull())
             {
                 behavior.AssociatedObject.SelectedItems.Add(item);
             }
@@ -100,7 +101,7 @@ public class MultiSelectionBehavior : Behavior<ListView>
 
             if (e.OldItems is not null)
             {
-                foreach (var item in e.OldItems)
+                foreach (var item in e.OldItems.EnsureNotNull())
                 {
                     AssociatedObject.SelectedItems.Remove(item);
                 }
@@ -108,7 +109,7 @@ public class MultiSelectionBehavior : Behavior<ListView>
 
             if (e.NewItems is not null)
             {
-                foreach (var item in e.NewItems)
+                foreach (var item in e.NewItems.EnsureNotNull())
                 {
                     AssociatedObject.SelectedItems.Add(item);
                 }
@@ -143,12 +144,12 @@ public class MultiSelectionBehavior : Behavior<ListView>
         {
             _isUpdatingSource = true;
 
-            foreach (var item in e.RemovedItems)
+            foreach (var item in e.RemovedItems.EnsureNotNull())
             {
                 selectedItems.Remove(item);
             }
 
-            foreach (var item in e.AddedItems)
+            foreach (var item in e.AddedItems.EnsureNotNull())
             {
                 selectedItems.Add(item);
             }

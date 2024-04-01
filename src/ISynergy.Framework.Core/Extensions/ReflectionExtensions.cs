@@ -302,7 +302,7 @@ public static class ReflectionExtensions
                 var newAssembly = Assembly.Load(name);
                 result.Add(newAssembly);
 
-                foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies())
+                foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies().EnsureNotNull())
                     queue.Enqueue(innerAssemblyName);
 
                 Debug.WriteLine(name);
@@ -337,7 +337,7 @@ public static class ReflectionExtensions
                 var newAssembly = Assembly.Load(name);
                 result.Add(newAssembly.GetName());
 
-                foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies())
+                foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies().EnsureNotNull())
                     queue.Enqueue(innerAssemblyName);
 
                 Debug.WriteLine(name);
