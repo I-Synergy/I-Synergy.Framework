@@ -66,14 +66,14 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
         UnlistCommand = new AsyncRelayCommand(async () => await UnlistPackageAsync());
         SelectAllCommand = new RelayCommand(() =>
         {
-            foreach (PackageVersion item in Items)
+            foreach (PackageVersion item in Items.EnsureNotNull())
             {
                 item.Selected = true;
             }
         });
         DeselectAllCommand = new RelayCommand(() =>
         {
-            foreach (PackageVersion item in Items)
+            foreach (PackageVersion item in Items.EnsureNotNull())
             {
                 item.Selected = false;
             }
@@ -90,7 +90,7 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
         System.Collections.Generic.IEnumerable<PackageVersion> selected = Items.Where(q => q.Selected);
         int count = selected.Count();
 
-        foreach (PackageVersion item in selected)
+        foreach (PackageVersion item in selected.EnsureNotNull())
         {
             i++;
             await _nugetService.UnlistPackageAsync(item.PackageId, item.Version);

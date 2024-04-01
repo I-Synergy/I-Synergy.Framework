@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using ISynergy.Framework.Core.Extensions;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using System.Collections;
 
@@ -102,7 +103,7 @@ public class InlineCollectionWrapper : IList<Inline>
             throw new ArgumentNullException(nameof(textBlock));
         }
 
-        foreach (var inline in _collection)
+        foreach (var inline in _collection.EnsureNotNull())
         {
             textBlock.Inlines.Add(inline);
         }

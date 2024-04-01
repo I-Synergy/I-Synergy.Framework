@@ -147,7 +147,7 @@ public static class ClaimsPrincipalExtensions
     {
         var claimValues = principal.GetClaims(claimType);
         var transformedClaimValues = new List<T>();
-        foreach (var claimValue in claimValues)
+        foreach (var claimValue in claimValues.EnsureNotNull())
             transformedClaimValues.Add(principal.GetClaimAs(claimType, claimValue, transformFunc));
         return transformedClaimValues;
     }

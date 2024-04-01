@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Models;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
@@ -53,7 +54,7 @@ public class ExceptionMiddleware
         return context.Response
             .WriteAsync(new ErrorDetail(
                 context.Response.StatusCode,
-                exception.Message,
+                exception.ToMessage(Environment.StackTrace),
                 exception.GetType().FullName)
             .ToString());
     }

@@ -81,7 +81,7 @@ public static class ObjectExtensions
         methods.AddRange(inputType.GetMethods(BindingFlags.Public | BindingFlags.Static));
         methods.AddRange(type.GetMethods(BindingFlags.Public | BindingFlags.Static));
 
-        foreach (MethodInfo m in methods)
+        foreach (MethodInfo m in methods.EnsureNotNull())
         {
             if (m.IsPublic && m.IsStatic)
             {

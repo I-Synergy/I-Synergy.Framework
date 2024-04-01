@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
@@ -127,7 +128,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
-        Debug.WriteLine(e.Exception.Message);
+        Debug.WriteLine(e.Exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -140,7 +141,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (_exceptionHandlerService is not null)
             await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.Message);
+            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -156,7 +157,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             if (_exceptionHandlerService is not null)
                 await _exceptionHandlerService.HandleExceptionAsync(exception);
             else
-                _logger.LogCritical(exception, exception.Message);
+                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -212,7 +213,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         // Add custom resourcedictionaries from code.
         if (Application.Current.Resources?.MergedDictionaries is not null)
         {
-            foreach (var item in GetAdditionalResourceDictionaries())
+            foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
             {
                 if (!Application.Current.Resources.MergedDictionaries.Contains(item))
                     Application.Current.Resources.MergedDictionaries.Add(item);

@@ -8,6 +8,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -99,7 +100,7 @@ public class ThemeService : IThemeService
         }
 
 #if WINDOWS
-        foreach (var window in WindowHelper.ActiveWindows)
+        foreach (var window in WindowHelper.ActiveWindows.EnsureNotNull())
         {
             if (window.Content is FrameworkElement rootElement)
                 SetTitlebar(window);
@@ -116,7 +117,7 @@ public class ThemeService : IThemeService
     {
         get
         {
-            foreach (var window in WindowHelper.ActiveWindows)
+            foreach (var window in WindowHelper.ActiveWindows.EnsureNotNull())
             {
                 if (window.Content is FrameworkElement rootElement)
                     return rootElement.ActualTheme;
@@ -126,7 +127,7 @@ public class ThemeService : IThemeService
         }
         set
         {
-            foreach (var window in WindowHelper.ActiveWindows)
+            foreach (var window in WindowHelper.ActiveWindows.EnsureNotNull())
             {
                 if (window.Content is FrameworkElement rootElement)
                     rootElement.RequestedTheme = value;
@@ -141,14 +142,14 @@ public class ThemeService : IThemeService
     /// <returns>ColorPaletteResources.</returns>
     private ColorPaletteResources FindColorPaletteResourcesForTheme(string theme)
     {
-        foreach (var themeDictionary in Application.Current.Resources.ThemeDictionaries)
+        foreach (var themeDictionary in Application.Current.Resources.ThemeDictionaries.EnsureNotNull())
         {
             if (themeDictionary.Key.ToString() == theme)
             {
                 if (themeDictionary.Value is ColorPaletteResources)
                     return themeDictionary.Value as ColorPaletteResources;
                 if (themeDictionary.Value is ResourceDictionary targetDictionary)
-                    foreach (var mergedDictionary in targetDictionary.MergedDictionaries)
+                    foreach (var mergedDictionary in targetDictionary.MergedDictionaries.EnsureNotNull())
                     {
                         if (mergedDictionary is ColorPaletteResources)
                             return mergedDictionary as ColorPaletteResources;
@@ -166,7 +167,7 @@ public class ThemeService : IThemeService
     {
         get
         {
-            foreach (var window in WindowHelper.ActiveWindows)
+            foreach (var window in WindowHelper.ActiveWindows.EnsureNotNull())
             {
                 if (window.Content is FrameworkElement rootElement && rootElement.RequestedTheme != ElementTheme.Default)
                 {

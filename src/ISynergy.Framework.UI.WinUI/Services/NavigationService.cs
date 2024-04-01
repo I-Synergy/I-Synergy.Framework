@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -121,7 +122,7 @@ public class NavigationService : INavigationService
 
             if (!owner.Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
             {
-                foreach (var blade in owner.Blades)
+                foreach (var blade in owner.Blades.EnsureNotNull())
                 {
                     blade.IsEnabled = false;
                 }
@@ -170,7 +171,7 @@ public class NavigationService : INavigationService
 
                 if (!owner.Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
                 {
-                    foreach (var blade in owner.Blades)
+                    foreach (var blade in owner.Blades.EnsureNotNull())
                     {
                         blade.IsEnabled = false;
                     }

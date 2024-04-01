@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Validation;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.UI.Extensions;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -206,7 +207,7 @@ public static class MaskValidator
         if (!string.IsNullOrWhiteSpace(customDictionaryValue))
         {
             var customRoles = customDictionaryValue.Split(',');
-            foreach (var role in customRoles)
+            foreach (var role in customRoles.EnsureNotNull())
             {
                 var roleValues = role.Split(':');
                 if (roleValues.Length != 2)
@@ -244,7 +245,7 @@ public static class MaskValidator
                 continue;
             }
 
-            foreach (var key in representationDictionary.Keys)
+            foreach (var key in representationDictionary.Keys.EnsureNotNull())
             {
                 if (displayTextBuilder[i] == key)
                 {

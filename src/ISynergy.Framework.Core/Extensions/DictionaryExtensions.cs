@@ -25,7 +25,7 @@ public static class DictionaryExtensions
         if (StringExtensions.HasMethod<TValue>("SetEquals"))
         {
             var setEquals = typeof(TValue).GetMethod("SetEquals");
-            foreach (var k in aKeys)
+            foreach (var k in aKeys.EnsureNotNull())
             {
                 if (!(bool)setEquals.Invoke(a[k], [b[k]]))
                     return false;
@@ -33,7 +33,7 @@ public static class DictionaryExtensions
         }
         else
         {
-            foreach (var k in aKeys)
+            foreach (var k in aKeys.EnsureNotNull())
                 if (!a[k].Equals(b[k]))
                     return false;
         }

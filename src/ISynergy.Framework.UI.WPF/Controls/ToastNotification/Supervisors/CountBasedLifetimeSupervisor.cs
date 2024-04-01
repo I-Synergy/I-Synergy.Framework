@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Events;
 using ISynergy.Framework.UI.Controls.ToastNotification.Lifetime;
 using System.Diagnostics;
@@ -34,7 +35,7 @@ public class CountBasedLifetimeSupervisor : INotificationsLifetimeSupervisor
             .Select(x => x.Value)
             .ToList();
 
-        foreach (var n in notificationsToRemove)
+        foreach (var n in notificationsToRemove.EnsureNotNull())
             CloseNotification(n.Notification);
 
         _notifications.Add(notification);
@@ -72,7 +73,7 @@ public class CountBasedLifetimeSupervisor : INotificationsLifetimeSupervisor
     public void ClearMessages(IClearStrategy clearStrategy)
     {
         var notifications = clearStrategy.GetNotificationsToRemove(_notifications);
-        foreach (var notification in notifications)
+        foreach (var notification in notifications.EnsureNotNull())
         {
             CloseNotification(notification);
         }
