@@ -66,7 +66,7 @@ public class AutomationService : IAutomationService
         var areAllConditionsValid = true;
 
         // Check if all conditions met.
-        foreach (var condition in automation.Conditions)
+        foreach (var condition in automation.Conditions.EnsureNotNull())
         {
             if (condition.Operator == OperatorTypes.And)
                 areAllConditionsValid = areAllConditionsValid && condition.ValidateCondition(value);

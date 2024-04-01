@@ -146,7 +146,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
         {
             var filteredList = new List<TEntity>();
 
-            foreach (var item in RawItems)
+            foreach (var item in RawItems.EnsureNotNull())
             {
                 if (item.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
                 {

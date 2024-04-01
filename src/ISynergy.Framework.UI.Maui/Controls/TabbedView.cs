@@ -29,7 +29,6 @@ public abstract class TabbedView : TabbedPage, IView
     /// </summary>
     protected TabbedView()
     {
-        Loaded += new WeakEventHandler<EventArgs>(TabbedView_Loaded).Handler;
     }
 
     /// <summary>
@@ -65,17 +64,6 @@ public abstract class TabbedView : TabbedPage, IView
     {
         Argument.IsNotNull(viewModel);
         ViewModel = viewModel;
-    }
-
-    /// <summary>
-    /// Handles event when loaded.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void TabbedView_Loaded(object sender, EventArgs e)
-    {
-        if (ViewModel is not null && !ViewModel.IsInitialized)
-            await ViewModel.InitializeAsync();
     }
 
     #region IDisposable

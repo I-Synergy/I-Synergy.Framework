@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
+﻿using CommunityToolkit.Maui;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Extensions;
@@ -8,10 +10,9 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
+using Sample.Views;
 using Syncfusion.Maui.Core.Hosting;
 using System.Reflection;
-using CommunityToolkit.Maui;
-using Sample.Views;
 
 #if WINDOWS
 using ISynergy.Framework.Update.Extensions;
@@ -44,6 +45,7 @@ public static class MauiProgram
             .ConfigureLogging((logging, configuration) =>
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
+                //logging.AddApplicationInsightsLogging(config);
             })
             .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources, LoadingView>((services, configuration) => 
             {

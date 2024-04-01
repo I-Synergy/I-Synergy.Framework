@@ -32,7 +32,6 @@ public abstract class View : ContentPage, IView
     /// </summary>
     protected View()
     {
-        Loaded += new WeakEventHandler<EventArgs>(View_Loaded).Handler;
     }
 
     /// <summary>
@@ -68,17 +67,6 @@ public abstract class View : ContentPage, IView
     {
         Argument.IsNotNull(viewModel);
         ViewModel = viewModel;
-    }
-
-    /// <summary>
-    /// Handles event when loaded.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void View_Loaded(object sender, EventArgs e)
-    {
-        if (ViewModel is not null && !ViewModel.IsInitialized)
-            await ViewModel.InitializeAsync();
     }
 
     #region IDisposable

@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.IO.Abtractions.Analyzers;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.IO.Abtractions.Analyzers;
 using ISynergy.Framework.IO.Models;
 using System.Text;
 using System.Text.Json;
@@ -89,7 +90,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
             .Where(q =>
                 q.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
                 !string.IsNullOrEmpty(q.Alias) && q.Alias.IndexOf(extension, 0, StringComparison.OrdinalIgnoreCase) != -1)
-            .ToList())
+            .ToList().EnsureNotNull())
         {
             // if we found a match return the matching filetypeinfo
             if (IsMatchingType(fileContent, fileTypeInfo))
@@ -179,7 +180,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
             }
 
             // investigate all of them for a match
-            foreach (int potentialMatchingIndex in matchingIndices)
+            foreach (int potentialMatchingIndex in matchingIndices.EnsureNotNull())
             {
                 isMatch = FindMatch(input, type.SubHeader, potentialMatchingIndex);
 

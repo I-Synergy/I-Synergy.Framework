@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ISynergy.Framework.Core.Extensions;
+using System.Collections;
 
 namespace ISynergy.Framework.Core.Collections;
 
@@ -249,7 +250,7 @@ public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
     {
-        foreach (TKey key in _list)
+        foreach (TKey key in _list.EnsureNotNull())
             yield return new KeyValuePair<TKey, TValue>(key, _dictionary[key]);
     }
 

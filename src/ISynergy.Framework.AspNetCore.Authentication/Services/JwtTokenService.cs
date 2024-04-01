@@ -46,12 +46,12 @@ public class JwtTokenService : IJwtTokenService
         var identity = new GenericIdentity(request.Username, AuthenticationTypes.ClientCredentials);
         var userClaims = new ClaimsIdentity(identity);
 
-        foreach (var item in request.Claims)
+        foreach (var item in request.Claims.EnsureNotNull())
         {
             userClaims.AddClaim(new Claim(item.Key, item.Value));
         }
 
-        foreach (var role in request.Roles)
+        foreach (var role in request.Roles.EnsureNotNull())
         {
             userClaims.AddClaim(new Claim(Core.Constants.ClaimTypes.RoleType, role));
         }

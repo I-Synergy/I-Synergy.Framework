@@ -23,21 +23,21 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>
     public ItemObservableCollection() 
         : base()
     {
-        CollectionChanged += new WeakEventHandler<NotifyCollectionChangedEventArgs>(item_CollectionChanged).Handler;
+        CollectionChanged += item_CollectionChanged;
     }
 
     private void item_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         foreach (T item in e.NewItems.EnsureNotNull())
         {
-            item.PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(item_PropertyChanged).Handler;
+            item.PropertyChanged += item_PropertyChanged;
         }
     }
 
     protected override void SetItem(int index, T item)
     {
         base.SetItem(index, item);
-        item.PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(item_PropertyChanged).Handler;
+        item.PropertyChanged += item_PropertyChanged;
     }
 
     private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)

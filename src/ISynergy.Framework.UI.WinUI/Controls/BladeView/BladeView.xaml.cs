@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation.Peers;
@@ -92,7 +93,7 @@ public partial class BladeView : ItemsControl
 
             if (bladeView.Items != null)
             {
-                foreach (var item in bladeView.Items)
+                foreach (var item in bladeView.Items.EnsureNotNull())
                 {
                     var bladeItem = bladeView.GetBladeItem(item);
                     bladeView._cachedBladeItemSizes.Add(bladeItem, new Size(bladeItem.Width, bladeItem.Height));
@@ -105,7 +106,7 @@ public partial class BladeView : ItemsControl
         if (bladeView.BladeMode == BladeMode.Normal)
         {
             // Reset blade items properties & clear cache
-            foreach (var kvBladeItemSize in bladeView._cachedBladeItemSizes)
+            foreach (var kvBladeItemSize in bladeView._cachedBladeItemSizes.EnsureNotNull())
             {
                 kvBladeItemSize.Key.Width = kvBladeItemSize.Value.Width;
                 kvBladeItemSize.Key.Height = kvBladeItemSize.Value.Height;
@@ -201,7 +202,7 @@ public partial class BladeView : ItemsControl
     private void CycleBlades()
     {
         ActiveBlades = new ObservableCollection<BladeItem>();
-        foreach (var item in Items)
+        foreach (var item in Items.EnsureNotNull())
         {
             BladeItem blade = GetBladeItem(item);
             if (blade != null)
@@ -286,7 +287,7 @@ public partial class BladeView : ItemsControl
         // Adjust blade items to be full screen
         if (BladeMode == BladeMode.Fullscreen && GetScrollViewer() != null)
         {
-            foreach (var item in Items)
+            foreach (var item in Items.EnsureNotNull())
             {
                 var blade = GetBladeItem(item);
                 blade.Width = _scrollViewer.ActualWidth;

@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.UI.Xaml;
@@ -42,7 +43,7 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
             }
             else
             {
-                foreach (var item in DataSummary.SelectedItems)
+                foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
                 {
                     viewModel.SelectedItems.Add(item);
                 }
@@ -65,7 +66,7 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
             }
             else
             {
-                foreach (var item in viewModel.SelectedItems)
+                foreach (var item in viewModel.SelectedItems.EnsureNotNull())
                 {
                     _ = DataSummary.Items.IndexOf(item);
                 }

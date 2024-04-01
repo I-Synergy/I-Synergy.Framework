@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -101,7 +102,7 @@ public sealed partial class App : BaseApplication
         }
         else if (Environment.GetCommandLineArgs().Length > 1)
         {
-            foreach (var arg in Environment.GetCommandLineArgs())
+            foreach (var arg in Environment.GetCommandLineArgs().EnsureNotNull())
                 await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(arg, "Environment");
         }
         else

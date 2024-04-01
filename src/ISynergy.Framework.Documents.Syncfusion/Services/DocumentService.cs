@@ -128,7 +128,12 @@ internal class DocumentService : IDocumentService
                     dataSet.Add(alternativesDataTable);
                     commands.Add(new DictionaryEntry(alternativesDataTable.GroupName, string.Empty));
 
-                    document.MailMerge.MergeImageField += new WeakEventHandler<MergeImageFieldEventArgs>(MergeImageField).Handler;
+                    document.MailMerge.MergeImageField += (sender, args) =>
+                    { 
+                        // Get the image from disk during Merge.
+                        if (args.FieldName == "Image")
+                            mailMergeImageParagraph.Add(args.CurrentMergeField.OwnerParagraph);
+                    };
 
                     document.MailMerge.RemoveEmptyParagraphs = true;
                     document.MailMerge.ExecuteNestedGroup(dataSet, commands);
@@ -137,7 +142,7 @@ internal class DocumentService : IDocumentService
                     {
                         if (paragraph.ChildEntities is not null)
                         {
-                            foreach (ParagraphItem paraItem in paragraph.ChildEntities)
+                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull())
                             {
                                 if (paraItem is WPicture picture && paragraph.OwnerTextBody is WTableCell cell)
                                 {
@@ -198,16 +203,4 @@ internal class DocumentService : IDocumentService
     /// The mail merge imgae paragraph
     /// </summary>
     private readonly List<WParagraph> mailMergeImageParagraph = new List<WParagraph>();
-
-    /// <summary>
-    /// Handles the MergeImageField event of the MailMerge control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="args">The <see cref="MergeImageFieldEventArgs" /> instance containing the event data.</param>
-    private void MergeImageField(object sender, MergeImageFieldEventArgs args)
-    {
-        // Get the image from disk during Merge.
-        if (args.FieldName == "Image")
-            mailMergeImageParagraph.Add(args.CurrentMergeField.OwnerParagraph);
-    }
 }

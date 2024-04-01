@@ -164,7 +164,7 @@ public class FileService : IFileService<FileResult>
         {
             var hasAtleastOneType = false;
 
-            foreach (var type in allowedTypes.Where(q => q.StartsWith(".")))
+            foreach (var type in allowedTypes.Where(q => q.StartsWith(".")).EnsureNotNull())
             {
                 picker.FileTypeFilter.Add(type);
                 hasAtleastOneType = true;
@@ -184,7 +184,7 @@ public class FileService : IFileService<FileResult>
         {
             if (await picker.PickMultipleFilesAsync() is { } files)
             {
-                foreach (var file in files)
+                foreach (var file in files.EnsureNotNull())
                 {
 #if WINDOWS
                     StorageApplicationPermissions.FutureAccessList.Add(file);

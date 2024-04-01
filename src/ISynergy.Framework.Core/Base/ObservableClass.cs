@@ -120,7 +120,7 @@ public abstract class ObservableClass : IObservableClass
                 !q.Name.Equals(nameof(IObservableClass.Properties)) &&
                 !q.Name.Equals(nameof(IObservableClass.Validator)));
 
-        foreach (var property in currentPropertiesToCheck)
+        foreach (var property in currentPropertiesToCheck.EnsureNotNull())
         {
             if (!propertiesToCheck.Any(a => a.Name.Equals(property.Name)))
             {
@@ -164,7 +164,7 @@ public abstract class ObservableClass : IObservableClass
     protected ObservableClass(bool automaticValidationTrigger = false)
     {
         AutomaticValidationTrigger = automaticValidationTrigger;
-        ErrorsChanged += new WeakEventHandler<DataErrorsChangedEventArgs>(ObservableClass_ErrorsChanged).Handler;
+        ErrorsChanged += ObservableClass_ErrorsChanged;
     }
 
     private void ObservableClass_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
@@ -269,7 +269,7 @@ public abstract class ObservableClass : IObservableClass
 
         if (validateUnderlayingProperties)
         {
-            foreach (var property in this.GetType().GetProperties().Where(q => q.PropertyType.GetInterfaces().Contains(typeof(IObservableClass)) && !q.IsDefined(typeof(IgnoreValidationAttribute))))
+            foreach (var property in this.GetType().GetProperties().Where(q => q.PropertyType.GetInterfaces().Contains(typeof(IObservableClass)) && !q.IsDefined(typeof(IgnoreValidationAttribute))).EnsureNotNull())
             {
                 if (property.GetValue(this, null) is ObservableClass observable &&
                     !observable.Validate(validateUnderlayingProperties))
@@ -293,7 +293,7 @@ public abstract class ObservableClass : IObservableClass
     /// </summary>
     public void Revert()
     {
-        foreach (var property in Properties)
+        foreach (var property in Properties.EnsureNotNull())
             property.Value.ResetChanges();
 
         if (AutomaticValidationTrigger)
@@ -305,7 +305,7 @@ public abstract class ObservableClass : IObservableClass
     /// </summary>
     public void MarkAsClean()
     {
-        foreach (var property in Properties)
+        foreach (var property in Properties.EnsureNotNull())
             property.Value.MarkAsClean();
 
         if (AutomaticValidationTrigger)
@@ -445,6 +445,8 @@ public abstract class ObservableClass : IObservableClass
 
             Properties?.Clear();
             Errors?.Clear();
+
+            ErrorsChanged -= ObservableClass_ErrorsChanged;
         }
 
         // free native resources if there are any.

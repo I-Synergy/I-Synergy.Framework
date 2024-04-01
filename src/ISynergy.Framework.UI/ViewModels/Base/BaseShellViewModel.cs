@@ -243,7 +243,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected virtual Task OpenLanguageAsync()
     {
         var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Language);
-        languageVM.Submitted += new WeakEventHandler<SubmitEventArgs<Languages>>(LanguageVM_Submitted).Handler;
+        languageVM.Submitted += LanguageVM_Submitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
 
@@ -254,6 +254,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="e">The e.</param>
     private async void LanguageVM_Submitted(object sender, SubmitEventArgs<Languages> e)
     {
+        if (sender is LanguageViewModel vm)
+            vm.Submitted -= LanguageVM_Submitted;
+
         _applicationSettingsService.Settings.Language = e.Result;
         _applicationSettingsService.SaveSettings();
         _localizationService.SetLocalizationLanguage(e.Result);
@@ -276,7 +279,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected virtual Task OpenColorsAsync()
     {
         var themeVM = new ThemeViewModel(Context, BaseCommonServices, _applicationSettingsService, Logger);
-        themeVM.Submitted += new WeakEventHandler<SubmitEventArgs<Style>>(ThemeVM_Submitted).Handler;
+        themeVM.Submitted += ThemeVM_Submitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
 
@@ -287,6 +290,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="e">The e.</param>
     private async void ThemeVM_Submitted(object sender, SubmitEventArgs<Style> e)
     {
+        if (sender is ThemeViewModel vm)
+            vm.Submitted -= ThemeVM_Submitted;
+
         if (e.Result is { } style)
         {
             _applicationSettingsService.Settings.Theme = style.Theme;

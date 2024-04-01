@@ -24,7 +24,7 @@ internal sealed class CancelCommand : ICommand, IDisposable
     public CancelCommand(IAsyncRelayCommand command)
     {
         _command = command;
-        _command.PropertyChanged += new WeakEventHandler<PropertyChangedEventArgs>(OnPropertyChanged).Handler;
+        _command.PropertyChanged += OnPropertyChanged;
     }
 
     /// <inheritdoc/>
@@ -73,6 +73,8 @@ internal sealed class CancelCommand : ICommand, IDisposable
         if (disposing)
         {
             // free managed resources
+            if (_command is not null)
+                _command.PropertyChanged -= OnPropertyChanged;
         }
 
         // free native resources if there are any.

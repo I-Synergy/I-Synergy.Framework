@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.AspNetCore.Globalization.Services;
+﻿using ISynergy.Framework.Core.Extensions;
+
+namespace ISynergy.Framework.AspNetCore.Globalization.Services;
 
 /// <summary>
 /// Class LanguageService.
@@ -34,7 +36,7 @@ internal class LanguageService : ILanguageService
     /// <returns>System.String.</returns>
     public string GetString(string key)
     {
-        foreach (var manager in _managers)
+        foreach (var manager in _managers.EnsureNotNull())
         {
             var result = manager.GetString(key, CultureInfo.CurrentCulture);
 

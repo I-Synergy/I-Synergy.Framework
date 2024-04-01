@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using System.Globalization;
 using System.Resources;
 
@@ -62,7 +63,7 @@ public sealed class LanguageService : ILanguageService
     /// <returns>System.String.</returns>
     public string GetString(string key)
     {
-        foreach (var manager in _managers)
+        foreach (var manager in _managers.EnsureNotNull())
         {
             string result = manager.GetString(key, CultureInfo.CurrentCulture);
             if (!string.IsNullOrEmpty(result))

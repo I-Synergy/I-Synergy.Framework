@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.AspNetCore.Proxy.Options;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -39,9 +40,9 @@ internal class GatewayProxyMiddleware
     {
         GenerateDebugOutput(context.Request);
 
-        foreach (var proxy in _options.ProxyEntries)
+        foreach (var proxy in _options.ProxyEntries.EnsureNotNull())
         {
-            foreach (var segment in proxy.SourcePaths)
+            foreach (var segment in proxy.SourcePaths.EnsureNotNull())
             {
                 if (context.Request.Path.StartsWithSegments(segment) && proxy.AllowedMethods.Contains(context.Request.Method))
                 {
@@ -74,7 +75,7 @@ internal class GatewayProxyMiddleware
     {
         var requestTrace = new StringBuilder();
 
-        foreach (var header in request.Headers)
+        foreach (var header in request.Headers.EnsureNotNull())
         {
             requestTrace.AppendLine(header.ToString());
         }

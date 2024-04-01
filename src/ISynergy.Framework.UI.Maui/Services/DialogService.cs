@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -32,7 +33,7 @@ internal class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "") =>
-        ShowMessageAsync(error.Message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK);
+        ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK);
 
     /// <summary>
     /// Shows the error asynchronous.

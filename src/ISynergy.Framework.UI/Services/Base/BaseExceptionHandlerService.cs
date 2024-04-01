@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
     {
         try
         {
-            _logger.LogError(exception.Message);
+            _logger.LogError(exception, exception.ToMessage(Environment.StackTrace));
 
             if (exception.InnerException is WebSocketException)
                 return;
@@ -90,7 +91,7 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex, ex.Message);
+            _logger.LogCritical(ex, ex.ToMessage(Environment.StackTrace));
         }
     }
 }
