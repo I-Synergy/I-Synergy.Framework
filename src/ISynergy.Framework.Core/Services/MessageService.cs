@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.Core.Services;
 
@@ -402,13 +403,13 @@ public class MessageService : IMessageService
         lock (_listLock)
         {
             var listsToRemove = new List<Type>();
-            foreach (var list in lists)
+            foreach (var list in lists.EnsureNotNull())
             {
                 var recipientsToRemove = list.Value
                     .Where(item => item.Action is null || !item.Action.IsAlive)
                     .ToList();
 
-                foreach (var recipient in recipientsToRemove)
+                foreach (var recipient in recipientsToRemove.EnsureNotNull())
                 {
                     list.Value.Remove(recipient);
                 }
@@ -419,7 +420,7 @@ public class MessageService : IMessageService
                 }
             }
 
-            foreach (var key in listsToRemove)
+            foreach (var key in listsToRemove.EnsureNotNull())
             {
                 lists.Remove(key);
             }
@@ -439,7 +440,7 @@ public class MessageService : IMessageService
             var list = weakActionsAndTokens.ToList();
             var listClone = list.Take(list.Count()).ToList();
 
-            foreach (var item in listClone)
+            foreach (var item in listClone.EnsureNotNull())
             {
                 var executeAction = item.Action as IExecuteWithObject;
 
@@ -469,9 +470,9 @@ public class MessageService : IMessageService
 
         lock (_listLock)
         {
-            foreach (var messageType in lists.Keys)
+            foreach (var messageType in lists.Keys.EnsureNotNull())
             {
-                foreach (var item in lists[messageType])
+                foreach (var item in lists[messageType].EnsureNotNull())
                 {
                     var weakAction = (IExecuteWithObject)item.Action;
 
@@ -503,7 +504,7 @@ public class MessageService : IMessageService
 
         lock (_listLock)
         {
-            foreach (var item in lists[messageType])
+            foreach (var item in lists[messageType].EnsureNotNull())
             {
                 var weakActionCasted = item.Action as WeakAction<TMessage>;
 
@@ -571,7 +572,7 @@ public class MessageService : IMessageService
             var listClone =
                 _recipientsOfSubclassesAction.Keys.Take(_recipientsOfSubclassesAction.Count()).ToList();
 
-            foreach (var type in listClone)
+            foreach (var type in listClone.EnsureNotNull())
             {
                 List<WeakActionAndToken> list = null;
 

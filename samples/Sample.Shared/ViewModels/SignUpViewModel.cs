@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
@@ -225,7 +226,7 @@ public class SignUpViewModel : ViewModel
 
         List<Module> selectedItems = [];
 
-        foreach (object item in e.Result)
+        foreach (object item in e.Result.EnsureNotNull())
         {
             if (item is Module module)
                 selectedItems.Add(module);

@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
@@ -107,7 +108,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     public abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
 
-    private string lastErrorMessage = string.Empty;
+    private int lastErrorMessage = 0;
 
     /// <summary>
     /// Handles the first chance exception.
@@ -116,10 +117,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
-        if (e.Exception.Message != lastErrorMessage)
+        if (e.Exception.HResult != lastErrorMessage)
         {
-            lastErrorMessage = e.Exception.Message;
-            _logger.LogError(e.Exception, e.Exception.Message);
+            lastErrorMessage = e.Exception.HResult;
+            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -133,7 +134,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleExceptionAsync(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.Message);
+            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -149,7 +150,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             if (_exceptionHandlerService is not null)
                 _exceptionHandlerService.HandleExceptionAsync(exception);
             else
-                _logger.LogCritical(exception, exception.Message);
+                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>

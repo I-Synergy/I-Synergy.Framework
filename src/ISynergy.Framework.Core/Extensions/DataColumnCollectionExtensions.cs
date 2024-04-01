@@ -58,7 +58,7 @@ public static class DataColumnCollectionExtensions
     /// 
     public static void Add(this DataColumnCollection collection, OrderedDictionary<string, Type> columns)
     {
-        foreach (var pair in columns)
+        foreach (var pair in columns.EnsureNotNull())
             collection.Add(pair.Key, pair.Value);
     }
 }

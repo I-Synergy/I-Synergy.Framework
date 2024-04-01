@@ -1,15 +1,19 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Base;
 using ISynergy.Framework.Logging.Extensions;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace ISynergy.Framework.Logging.Services;
 
@@ -53,6 +57,22 @@ public class Logger : BaseLogger
         config.ConnectionString = _applicationInsightsOptions.ConnectionString;
         config.TelemetryInitializers.Add(telemetryInitializer);
 
+        var temporaryLogFolder = Path.Combine(
+            Path.GetTempPath(),
+            Path.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName),
+            "Logging");
+
+        if (!Directory.Exists(temporaryLogFolder))
+            Directory.CreateDirectory(temporaryLogFolder);
+
+        var serverTelemetryChannel = new ServerTelemetryChannel();
+        serverTelemetryChannel.StorageFolder = temporaryLogFolder;
+#if DEBUG
+        serverTelemetryChannel.DeveloperMode = Debugger.IsAttached;
+#endif
+        serverTelemetryChannel.Initialize(config);
+        config.TelemetryChannel = serverTelemetryChannel;
+
         _client = new TelemetryClient(config);
         _client.Context.User.UserAgent = infoService.ProductName;
         _client.Context.Component.Version = infoService.ProductVersion.ToString();
@@ -71,7 +91,7 @@ public class Logger : BaseLogger
 
         // Explicitly call Flush() followed by Delay, as required in console apps.
         // This ensures that even if the application terminates, telemetry is sent to the back end.
-        Task.Delay(5000).Wait();
+        System.Threading.Thread.Sleep(5000);
     }
 
     public override void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
@@ -86,7 +106,7 @@ public class Logger : BaseLogger
             {
                 case LogLevel.Error:
                 case LogLevel.Critical:
-                    _client.TrackException(new ExceptionTelemetry { Exception = exception, Message = message });
+                    _client.TrackException(new ExceptionTelemetry(exception) { Message = message, });
                     break;
                 case LogLevel.Debug:
                 case LogLevel.Trace:

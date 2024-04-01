@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using ISynergy.Framework.Core.Extensions;
+using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Utilities;
 
@@ -25,7 +26,7 @@ public static class RegexUtility
         var regex = new List<string>();
         var capital = false;
 
-        foreach (var character in mask)
+        foreach (var character in mask.EnsureNotNull())
         {
             switch (character)
             {

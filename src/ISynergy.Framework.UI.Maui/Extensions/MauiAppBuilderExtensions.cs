@@ -138,7 +138,7 @@ public static class MauiAppBuilderExtensions
 
     private static void RegisterViewModelRoutes(this IServiceCollection services, IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)
     {
-        foreach (var view in viewTypes.Distinct())
+        foreach (var view in viewTypes.Distinct().EnsureNotNull())
         {
             if (viewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is { } viewmodel)
                 services.RegisterViewModelRoute(viewmodel, view);

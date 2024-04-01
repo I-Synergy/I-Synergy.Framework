@@ -1,4 +1,5 @@
 ﻿
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using System.Reflection;
@@ -193,7 +194,7 @@ public static class DependencyObjectExtensions
                 yield return type;
             }
 
-            foreach (var childofChild in child.FindDescendants<T>())
+            foreach (var childofChild in child.FindDescendants<T>().EnsureNotNull())
             {
                 yield return childofChild;
             }

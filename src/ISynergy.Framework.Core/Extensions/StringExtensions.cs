@@ -58,7 +58,7 @@ public static class StringExtensions
     {
         var result = string.Empty;
 
-        foreach (var character in _self)
+        foreach (var character in _self.EnsureNotNull())
         {
             if (char.IsDigit(character))
             {
@@ -628,7 +628,7 @@ public static class StringExtensions
         var result = new StringBuilder();
         var parts = _self.SplitAndKeep(delimiter);
 
-        foreach (var part in parts)
+        foreach (var part in parts.EnsureNotNull())
         {
             var characters = part.ToCharArray();
 

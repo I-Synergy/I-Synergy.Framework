@@ -352,7 +352,7 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
         {
             if (_cancellationTokenSources is not null)
             {
-                foreach (var cancellationTokenSource in _cancellationTokenSources)
+                foreach (var cancellationTokenSource in _cancellationTokenSources.EnsureNotNull())
                 {
                     cancellationTokenSource.Cancel();
                     cancellationTokenSource.Dispose();

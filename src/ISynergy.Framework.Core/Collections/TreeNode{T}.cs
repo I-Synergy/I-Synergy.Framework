@@ -244,13 +244,13 @@ public class TreeNode<TKey, TModel> : ObservableClass
             if (Data is IDisposable)
             {
                 if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
-                    foreach (var node in Children)
+                    foreach (var node in Children.EnsureNotNull())
                         node.Dispose();
 
                 (Data as IDisposable).Dispose();
 
                 if (DisposeTraversal == UpDownTraversalTypes.TopDown)
-                    foreach (var node in Children)
+                    foreach (var node in Children.EnsureNotNull())
                         node.Dispose();
             }
 

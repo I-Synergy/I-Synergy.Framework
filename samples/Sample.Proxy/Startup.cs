@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.Proxy.Extensions;
 using ISynergy.Framework.AspNetCore.Startup;
+using ISynergy.Framework.Core.Extensions;
 
 namespace Sample.Proxy;
 
@@ -79,7 +80,7 @@ public class Startup(IWebHostEnvironment environment, IConfiguration configurati
             Console.WriteLine($"Request Path: {context.Request.Path}");
 
             // Headers
-            foreach (System.Collections.Generic.KeyValuePair<string, Microsoft.Extensions.Primitives.StringValues> header in context.Request.Headers)
+            foreach (System.Collections.Generic.KeyValuePair<string, Microsoft.Extensions.Primitives.StringValues> header in context.Request.Headers.EnsureNotNull())
             {
                 Console.WriteLine($"Header: {header.Key}: {header.Value}");
             }

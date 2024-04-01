@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.UI.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
@@ -127,7 +128,7 @@ public partial class LayoutTransformControl : Control
         var propertyChangeEventSources =
             _transformPropertyChangeEventSources[transform];
 
-        foreach (var propertyChangeEventSource in propertyChangeEventSources)
+        foreach (var propertyChangeEventSource in propertyChangeEventSources.EnsureNotNull())
         {
             propertyChangeEventSource.ValueChanged -= OnTransformPropertyChanged;
         }
@@ -141,7 +142,7 @@ public partial class LayoutTransformControl : Control
 
         if (transformGroup != null)
         {
-            foreach (var childTransform in transformGroup.Children)
+            foreach (var childTransform in transformGroup.Children.EnsureNotNull())
             {
                 SubscribeToTransformPropertyChanges(childTransform);
             }

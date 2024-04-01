@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ISynergy.Framework.Core.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
@@ -21,10 +22,10 @@ public static class HttpContextExtensions
 
         response.StatusCode = (int)responseMessage.StatusCode;
 
-        foreach (var header in responseMessage.Headers)
+        foreach (var header in responseMessage.Headers.EnsureNotNull())
             response.Headers[header.Key] = header.Value.ToArray();
 
-        foreach (var header in responseMessage.Content.Headers)
+        foreach (var header in responseMessage.Content.Headers.EnsureNotNull())
             response.Headers[header.Key] = header.Value.ToArray();
 
         response.Headers.Remove("transfer-encoding");

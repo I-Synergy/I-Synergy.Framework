@@ -20,8 +20,8 @@ public static partial class Distance
         var size = 3;
         var zero = new int[size];
 
-        foreach (var a in Combinatorics.Sequences(3, size, true))
-            foreach (var b in Combinatorics.Sequences(3, size, true))
+        foreach (var a in Combinatorics.Sequences(3, size, true).EnsureNotNull())
+            foreach (var b in Combinatorics.Sequences(3, size, true).EnsureNotNull())
             {
                 var dza = value(zero, a);
                 var dzb = value(zero, b);

@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System.Reflection;
@@ -77,7 +78,7 @@ public static partial class Distance
     {
         var methods = typeof(Distance).GetMethods(BindingFlags.Public | BindingFlags.Static);
 
-        foreach (var method in methods)
+        foreach (var method in methods.EnsureNotNull())
         {
             var methodInfo = func.Method;
 

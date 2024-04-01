@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.IO.Events.Base;
 using ISynergy.Framework.IO.Models;
@@ -317,7 +318,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// </summary>
     public void Start()
     {
-        foreach (var watcher in _watchers)
+        foreach (var watcher in _watchers.EnsureNotNull())
             watcher.EnableRaisingEvents = true;
     }
 
@@ -326,7 +327,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// </summary>
     public void Stop()
     {
-        foreach (var watcher in _watchers)
+        foreach (var watcher in _watchers.EnsureNotNull())
             watcher.EnableRaisingEvents = false;
     }
 
@@ -351,7 +352,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// </summary>
     public void DisposeWatchers()
     {
-        foreach (var watcher in _watchers)
+        foreach (var watcher in _watchers.EnsureNotNull())
             watcher.Dispose();
 
         _watchers.Clear();

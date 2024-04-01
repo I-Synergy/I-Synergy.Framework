@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mathematics.Vectors;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mathematics.Vectors;
 
 namespace ISynergy.Framework.Mathematics.Common;
 
@@ -359,7 +360,7 @@ public static class Combinatorics
     {
         // TODO: Test
         for (var i = 0; i < values.Length; i++)
-            foreach (var value in values.Combinations(i + 1, inPlace))
+            foreach (var value in values.Combinations(i + 1, inPlace).EnsureNotNull())
                 yield return value;
     }
 
@@ -439,7 +440,7 @@ public static class Combinatorics
         // TODO: Optimize
         var values = set.ToArray();
         for (var i = 0; i < values.Length; i++)
-            foreach (var value in values.Combinations(i + 1, inPlace))
+            foreach (var value in values.Combinations(i + 1, inPlace).EnsureNotNull())
                 yield return new SortedSet<T>(value);
     }
 
@@ -450,7 +451,7 @@ public static class Combinatorics
     {
         // TODO: Optimize
         var values = set.ToArray();
-        foreach (var value in values.Combinations(k, inPlace))
+        foreach (var value in values.Combinations(k, inPlace).EnsureNotNull())
             yield return new SortedSet<T>(value);
     }
 

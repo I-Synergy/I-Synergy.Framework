@@ -43,17 +43,17 @@ internal static class BaseCollectionExtensions
                     (q.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(q.PropertyType)))
                 .ToArray();
 
-            foreach (var typeProperty in typeProperties)
+            foreach (var typeProperty in typeProperties.EnsureNotNull())
             {
                 dataTable.Columns.Add(typeProperty.Name, Nullable.GetUnderlyingType(typeProperty.PropertyType) ?? typeProperty.PropertyType).AllowDBNull = true;
             }
 
-            foreach (var item in collection)
+            foreach (var item in collection.EnsureNotNull())
             {
                 var dataRow = dataTable.NewRow();
                 dataRow.BeginEdit();
 
-                foreach (var typeProperty in typeProperties)
+                foreach (var typeProperty in typeProperties.EnsureNotNull())
                 {
                     var temp = typeProperty.GetValue(item) ?? DBNull.Value;
 

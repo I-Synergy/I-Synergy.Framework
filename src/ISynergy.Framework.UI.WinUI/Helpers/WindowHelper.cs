@@ -1,4 +1,5 @@
-﻿using Microsoft.UI;
+﻿using ISynergy.Framework.Core.Extensions;
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
@@ -54,7 +55,7 @@ public class WindowHelper
     {
         if (element.XamlRoot != null)
         {
-            foreach (var window in _activeWindows)
+            foreach (var window in _activeWindows.EnsureNotNull())
             {
                 if (element.XamlRoot == window.Content.XamlRoot)
                 {

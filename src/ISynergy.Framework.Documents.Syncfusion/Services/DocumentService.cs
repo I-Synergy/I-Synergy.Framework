@@ -142,7 +142,7 @@ internal class DocumentService : IDocumentService
                     {
                         if (paragraph.ChildEntities is not null)
                         {
-                            foreach (ParagraphItem paraItem in paragraph.ChildEntities)
+                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull())
                             {
                                 if (paraItem is WPicture picture && paragraph.OwnerTextBody is WTableCell cell)
                                 {

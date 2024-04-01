@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using ISynergy.Framework.Core.Extensions;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
@@ -45,7 +46,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>
 
         if (notificationMode == NotifyCollectionChangedAction.Reset)
         {
-            foreach (var i in collection)
+            foreach (var i in collection.EnsureNotNull())
                 Items.Add(i);
 
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
@@ -57,7 +58,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>
 
         var startIndex = Count;
         var changedItems = collection is List<T> ? (List<T>)collection : new List<T>(collection);
-        foreach (var i in changedItems)
+        foreach (var i in changedItems.EnsureNotNull())
             Items.Add(i);
 
         OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
@@ -83,7 +84,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>
 
         if (notificationMode == NotifyCollectionChangedAction.Reset)
         {
-            foreach (var i in collection)
+            foreach (var i in collection.EnsureNotNull())
                 Items.Remove(i);
 
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));

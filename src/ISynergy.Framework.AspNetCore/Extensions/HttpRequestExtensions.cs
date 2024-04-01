@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ISynergy.Framework.Core.Extensions;
+using Microsoft.AspNetCore.Http;
 using System.Net;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
@@ -53,7 +54,7 @@ public static class HttpRequestExtensions
         }
 
         // Copy the request headers
-        foreach (var header in request.Headers)
+        foreach (var header in request.Headers.EnsureNotNull())
         {
             if (!result.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && result.Content is not null)
             {

@@ -77,7 +77,7 @@ public static class TreeExtensions
         var flattened = node.Children
                             .SelectMany(child => Flatten(child));
 
-        foreach (var flattenedNode in flattened)
+        foreach (var flattenedNode in flattened.EnsureNotNull())
         {
             yield return flattenedNode;
         }
@@ -154,7 +154,7 @@ public static class TreeExtensions
         where TKey : struct
         where TModel : class
     {
-        foreach (var node in nodes)
+        foreach (var node in nodes.EnsureNotNull())
         {
             if (node.IsSelected && node.Key.Equals(key))
                 return node;
@@ -179,7 +179,7 @@ public static class TreeExtensions
         where TKey : struct
         where TModel : class
     {
-        foreach (var node in nodes)
+        foreach (var node in nodes.EnsureNotNull())
         {
             if (node.IsSelected)
                 return node;
