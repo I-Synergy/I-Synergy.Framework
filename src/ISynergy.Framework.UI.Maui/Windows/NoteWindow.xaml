@@ -19,12 +19,13 @@
 
             <Grid Margin="4">
                 <Editor
-                Text="{Binding SelectedItem, Mode=TwoWay}"
-                Placeholder="{m:GetString EnterNote}"
-                HeightRequest="250"
-                MinimumWidthRequest="375"
-                IsSpellCheckEnabled="True"
-                IsTextPredictionEnabled="True"/>
+                    Text="{Binding SelectedItem, Mode=TwoWay}"
+                    AutoSize="TextChanges"
+                    Placeholder="{m:GetString EnterNote}"
+                    HeightRequest="250"
+                    MinimumWidthRequest="375"
+                    IsSpellCheckEnabled="True"
+                    IsTextPredictionEnabled="True"/>
             </Grid>
         </ContentView>
     </Grid>
