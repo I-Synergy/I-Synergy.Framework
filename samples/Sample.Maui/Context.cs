@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
-using Microsoft.Extensions.DependencyInjection;
+using ISynergy.Framework.Synchronization.Options;
 using Microsoft.Extensions.Options;
 using Sample.Options;
 using System.Globalization;
@@ -19,21 +19,22 @@ namespace Sample;
 /// <seealso cref="IContext" />
 public sealed class Context : ObservableClass, IContext
 {
-    /// <summary>
-    /// The configuration options
-    /// </summary>
     private readonly ConfigurationOptions _configurationOptions;
+    private readonly SynchronizationOptions _synchronizationOptions;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Context" /> class.
     /// </summary>
+    /// <param name="synchronizationOptions"></param>
     /// <param name="configurationOptions"></param>
     /// <param name="serviceScopeFactory"></param>
     public Context(
+        IOptions<SynchronizationOptions> synchronizationOptions,
         IOptions<ConfigurationOptions> configurationOptions,
         IServiceScopeFactory serviceScopeFactory)
     {
         _configurationOptions = configurationOptions.Value;
+        _synchronizationOptions = synchronizationOptions.Value;
 
         CurrencyCode = "EURO";
         CurrencySymbol = "€";
@@ -107,15 +108,21 @@ public sealed class Context : ObservableClass, IContext
         switch (value)
         {
             case SoftwareEnvironments.Local:
+                break;
+            case SoftwareEnvironments.Test:
+                break;
+            default:
                 _configurationOptions.ServiceEndpoint = @"https://localhost:5000/api";
                 _configurationOptions.SignalREndpoint = @"https://localhost:5000/monitor/";
                 _configurationOptions.AuthenticationEndpoint = @"https://localhost:5000/connect/token";
                 _configurationOptions.AccountEndpoint = @"https://localhost:5000/account";
                 _configurationOptions.WebEndpoint = @"https://localhost:5001";
-                break;
-            case SoftwareEnvironments.Test:
-                break;
-            default:
+
+#if ANDROID
+                _synchronizationOptions.SynchronizationEndpoint = @"https://10.0.2.2:5213/sync";
+#else
+                _synchronizationOptions.SynchronizationEndpoint = @"https://localhost:5213/sync";
+#endif
                 break;
         }
     }

@@ -1162,7 +1162,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             dtm = (-((f1 / f2)));
         }
 
-        // 
+    // 
     // c------------------- the end of the loop -------------------------------
     // 
     L888:
@@ -3886,7 +3886,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         goto L1000;
 
-        L777:
+    L777:
 
         // 
         // c     Test for termination.

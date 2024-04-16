@@ -3,7 +3,6 @@ using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Events;
 using ISynergy.Framework.UI.Controls.ToastNotification.Lifetime;
 using System.Diagnostics;
-using System.Windows.Threading;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
 

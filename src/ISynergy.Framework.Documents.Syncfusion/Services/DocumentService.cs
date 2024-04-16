@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Documents.Abstractions.Services;
@@ -10,7 +9,6 @@ using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.XlsIO;
 using System.Collections;
-using System.ComponentModel;
 
 namespace ISynergy.Framework.Documents.Services;
 
@@ -129,7 +127,7 @@ internal class DocumentService : IDocumentService
                     commands.Add(new DictionaryEntry(alternativesDataTable.GroupName, string.Empty));
 
                     document.MailMerge.MergeImageField += (sender, args) =>
-                    { 
+                    {
                         // Get the image from disk during Merge.
                         if (args.FieldName == "Image")
                             mailMergeImageParagraph.Add(args.CurrentMergeField.OwnerParagraph);

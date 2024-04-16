@@ -11,11 +11,11 @@ public class DetailsViewModel : ViewModelSummary<TestItem>
     private readonly IBaseCommonServices _commonServices;
 
     public DetailsViewModel(
-        IContext context, 
-        IBaseCommonServices commonServices, 
-        ILogger logger, 
-        bool refreshOnInitialization = true, 
-        bool automaticValidation = false) 
+        IContext context,
+        IBaseCommonServices commonServices,
+        ILogger logger,
+        bool refreshOnInitialization = true,
+        bool automaticValidation = false)
         : base(context, commonServices, logger, refreshOnInitialization, automaticValidation)
     {
         _commonServices = commonServices;

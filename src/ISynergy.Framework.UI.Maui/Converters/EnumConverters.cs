@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
 

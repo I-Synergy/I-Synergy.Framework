@@ -20,7 +20,7 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>
 {
     public event EventHandler<ItemPropertyChangedEventArgs<T>> ItemPropertyChanged;
 
-    public ItemObservableCollection() 
+    public ItemObservableCollection()
         : base()
     {
         CollectionChanged += item_CollectionChanged;

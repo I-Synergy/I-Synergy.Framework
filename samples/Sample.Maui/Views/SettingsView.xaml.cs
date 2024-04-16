@@ -7,9 +7,9 @@ namespace Sample.Views;
 [Scoped(true)]
 public partial class SettingsView
 {
-	public SettingsView(IContext context, SettingsViewModel viewModel)
+    public SettingsView(IContext context, SettingsViewModel viewModel)
        : base(context, viewModel)
     {
-		InitializeComponent();
-	}
+        InitializeComponent();
+    }
 }

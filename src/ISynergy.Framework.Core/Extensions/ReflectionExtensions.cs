@@ -291,12 +291,12 @@ public static class ReflectionExtensions
         {
             var name = queue.Dequeue();
             var fullName = name.FullName;
-            
+
             if (alreadyProcessed.Contains(fullName) || fullName.StartsWith("Microsoft.") || fullName.StartsWith("System."))
                 continue;
-            
+
             alreadyProcessed.Add(fullName);
-            
+
             try
             {
                 var newAssembly = Assembly.Load(name);

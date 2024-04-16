@@ -22,7 +22,7 @@ public sealed class WeakEventHandler<TEventArgs> where TEventArgs : EventArgs
         if (target != null)
         {
             var callback = (Action<object, TEventArgs>)Delegate.CreateDelegate(typeof(Action<object, TEventArgs>), target, _method, true);
-            
+
             if (callback != null)
                 callback(sender, e);
         }

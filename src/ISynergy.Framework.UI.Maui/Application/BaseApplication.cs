@@ -13,7 +13,6 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
-using System.Runtime.ExceptionServices;
 
 [assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]
 [assembly: ExportFont("opendyslexic3-regular.ttf", Alias = "OpenDyslexic3-Regular")]

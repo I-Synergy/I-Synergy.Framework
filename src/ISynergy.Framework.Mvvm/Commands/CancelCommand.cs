@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Mvvm.Abstractions.Commands;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using System.ComponentModel;
 using System.Windows.Input;
 

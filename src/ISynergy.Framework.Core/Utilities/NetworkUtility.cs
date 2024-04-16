@@ -85,18 +85,16 @@ public static class NetworkUtility
     /// <param name="url">The URL.</param>
     /// <param name="method">The method.</param>
     /// <returns><c>true</c> if [is URL reachable] [the specified URL]; otherwise, <c>false</c>.</returns>
-    public static bool IsUrlReachable(Uri url, string method = "GET")
+    public static async Task<bool> IsUrlReachableAsync(Uri url, string method = "GET")
     {
-        var request = (HttpWebRequest)WebRequest.Create(url);
-        request.Timeout = 1000;
-        request.Method = method;
-
         try
         {
-            using var response = (HttpWebResponse)request.GetResponse();
-            return response.StatusCode == HttpStatusCode.OK;
+            using var client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(1);
+            using var response = await client.GetAsync(url);
+            return response.IsSuccessStatusCode;
         }
-        catch (WebException)
+        catch (HttpRequestException)
         {
             return false;
         }

@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Logging.Extensions;
 
 public static class TelemetryPropertiesExtensions
 {
-    public static void AddDefaultProperties(this IDictionary<string, string> properties, TelemetryContext telemetryContext,  IContext context, IInfoService infoService)
+    public static void AddDefaultProperties(this IDictionary<string, string> properties, TelemetryContext telemetryContext, IContext context, IInfoService infoService)
     {
         Argument.IsNotNull(properties);
         Argument.IsNotNull(context);

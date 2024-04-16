@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
@@ -243,7 +242,7 @@ public class NavigationService : INavigationService
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
         where TViewModel : class, IViewModel
     {
-        if (Application.Current.MainWindow.Content is DependencyObject dependencyObject && 
+        if (Application.Current.MainWindow.Content is DependencyObject dependencyObject &&
             dependencyObject.FindChild<Frame>() is { } frame &&
             NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
         {
@@ -273,7 +272,7 @@ public class NavigationService : INavigationService
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel,TView>(TViewModel viewModel, object parameter = null)
+    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null)
         where TViewModel : class, IViewModel
         where TView : IView
     {

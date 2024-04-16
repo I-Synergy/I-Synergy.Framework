@@ -35,7 +35,7 @@ public static class WindowsAppBuilderExtensions
 #endif
             logger.SetMinimumLevel(LogLevel.Trace);
 
-            loggingBuilder.Invoke( logger, context.Configuration);
+            loggingBuilder.Invoke(logger, context.Configuration);
         });
 
         return windowsAppBuilder;

@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -320,7 +319,7 @@ public abstract class ObservableClass : IObservableClass
         OnErrorsChanged(nameof(Errors));
         OnPropertyChanged(nameof(IsValid));
     }
-        
+
 
     [JsonIgnore]
     [DataTableIgnore]

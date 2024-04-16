@@ -5,7 +5,6 @@ using ISynergy.Framework.UI.Controls.ToastNotification.Lifetime;
 using ISynergy.Framework.UI.Controls.ToastNotification.Utilities;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
 
@@ -105,8 +104,8 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
     private void TimerStart()
     {
         _interval.Invoke(
-            TimeSpan.FromMilliseconds(200), 
-            OnTimerTick, 
+            TimeSpan.FromMilliseconds(200),
+            OnTimerTick,
             Application.Current.Dispatcher);
     }
 

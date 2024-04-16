@@ -162,7 +162,7 @@ internal class UpdateService : IUpdateService
         }
     }
 
-    
+
     /// <summary>
     /// Helper method for handling the scenario where a mandatory package update fails to
     /// download or install. Add code to this method to perform whatever actions you want
