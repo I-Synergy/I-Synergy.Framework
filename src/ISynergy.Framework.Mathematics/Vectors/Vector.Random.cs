@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Mathematics.Random;
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Random;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Vectors;

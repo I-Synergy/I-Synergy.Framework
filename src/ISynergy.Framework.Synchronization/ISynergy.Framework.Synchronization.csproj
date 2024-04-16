@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageId>I-Synergy.Framework.Synchronization</PackageId>
+		<Description>I-Synergy Framework Synchronization for .net 8.0</Description>
+		<PackageTags>I-Synergy, Framework, Synchronization</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dotmim.Sync.Web.Client" />
+		<PackageReference Include="Dotmim.Sync.Sqlite" />
+		<PackageReference Include="Microsoft.Extensions.Http" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Logging\ISynergy.Framework.Logging.csproj" />
+	</ItemGroup>
+</Project>

@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -59,7 +57,7 @@ public class NavigationService : INavigationService
     {
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
             return NavigateAsync(viewModel);
-        
+
         return Task.CompletedTask;
     }
 

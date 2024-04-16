@@ -81,6 +81,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.ApplicationInsights\ISynergy.Framework.Logging.ApplicationInsights.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization.Maui\ISynergy.Framework.Synchronization.Maui.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Update.Maui\ISynergy.Framework.Update.Maui.csproj" />
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
@@ -102,6 +103,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\SyncView.xaml.cs">
+	    <DependentUpon>SyncView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\LoadingView.xaml.cs">
 	    <DependentUpon>LoadingView.xaml</DependentUpon>
 	  </Compile>
@@ -128,6 +132,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\DetailView.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SyncView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\SettingsView.xaml">
 			<Generator>MSBuild:Compile</Generator>

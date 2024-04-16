@@ -29,7 +29,7 @@ public partial class LoadingView : ILoadingView
     private void MediaElement_MediaEnded(object sender, EventArgs e) =>
         SendApplicationLoadedMessage();
 
-    private void View_Loaded(object sender, EventArgs e) => 
+    private void View_Loaded(object sender, EventArgs e) =>
         BackgroundMediaElement.Play();
 
     private void View_Unloaded(object sender, EventArgs e) =>

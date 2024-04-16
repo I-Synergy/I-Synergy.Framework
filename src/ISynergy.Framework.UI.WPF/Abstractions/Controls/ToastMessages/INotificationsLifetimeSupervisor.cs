@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.UI.Controls.ToastNotification.Events;
-using System.Windows.Threading;
 
 namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 

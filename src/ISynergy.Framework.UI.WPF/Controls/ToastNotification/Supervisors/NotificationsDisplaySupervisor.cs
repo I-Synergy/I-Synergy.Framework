@@ -1,12 +1,9 @@
-﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Events;
 using ISynergy.Framework.UI.Controls.ToastNotification.Options;
 using ISynergy.Framework.UI.Controls.ToastNotification.Utilities;
 using ISynergy.Framework.UI.Controls.Toasts;
-using System.ComponentModel;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
 
@@ -156,8 +153,8 @@ public class NotificationsDisplaySupervisor : IDisposable
     {
         _window?.Close();
         _window = null;
-        
-        if(_lifetimeSupervisor is not null)
+
+        if (_lifetimeSupervisor is not null)
         {
             _lifetimeSupervisor.ShowNotificationRequested -= LifetimeSupervisorOnShowNotificationRequested;
             _lifetimeSupervisor.CloseNotificationRequested -= LifetimeSupervisorOnCloseNotificationRequested;

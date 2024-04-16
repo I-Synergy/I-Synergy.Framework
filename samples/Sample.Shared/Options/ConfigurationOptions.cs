@@ -43,5 +43,8 @@ public class ConfigurationOptions : IConfigurationOptions
     /// </summary>
     /// <value>The web endpoint.</value>
     public string WebEndpoint { get; set; }
+    /// <summary>
+    /// Gets or sets the environment.
+    /// </summary>
     public SoftwareEnvironments Environment { get; set; }
 }

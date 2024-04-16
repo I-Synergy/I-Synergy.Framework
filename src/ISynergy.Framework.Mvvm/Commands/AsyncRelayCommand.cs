@@ -380,7 +380,7 @@ public sealed class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCo
                 }
 
                 _cancellationTokenSources.Clear();
-            }   
+            }
 
             // free managed resources
             if (_cancellationTokenSource is not null)

@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Tests.Data.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Security.Claims;
 
 namespace ISynergy.Framework.Core.Tests.Events;
 

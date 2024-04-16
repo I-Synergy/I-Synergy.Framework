@@ -1,7 +1,5 @@
-﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Enumerations;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 

@@ -24,8 +24,8 @@ public class NavigationService : INavigationService
     /// Gets a value indicating whether this instance can go back.
     /// </summary>
     /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-    public bool CanGoBack => 
-        Application.Current.MainPage.GetNavigation().Navigation.NavigationStack.Count > 0 || 
+    public bool CanGoBack =>
+        Application.Current.MainPage.GetNavigation().Navigation.NavigationStack.Count > 0 ||
         Application.Current.MainPage.Navigation.ModalStack.Count > 0 ? true : false;
 
     /// <summary>
@@ -34,7 +34,7 @@ public class NavigationService : INavigationService
     /// <param name="context"></param>
     /// <param name="dispatcherService"></param>
     public NavigationService(
-        IContext context, 
+        IContext context,
         IDispatcherService dispatcherService)
     {
         _context = context;
@@ -59,7 +59,7 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <returns></returns>
     public Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
-        where TViewModel : class, IViewModel 
+        where TViewModel : class, IViewModel
     {
         _dispatcherService.Invoke(async () =>
         {
@@ -89,7 +89,7 @@ public class NavigationService : INavigationService
                 OnBackStackChanged(EventArgs.Empty);
             }
         });
-        
+
         return Task.CompletedTask;
     }
 
@@ -126,7 +126,7 @@ public class NavigationService : INavigationService
             await Application.Current.MainPage.GetNavigation().Navigation.PopToRootAsync(_animated);
             OnBackStackChanged(EventArgs.Empty);
         });
-        
+
         return Task.CompletedTask;
     }
 
@@ -147,7 +147,7 @@ public class NavigationService : INavigationService
 
             OnBackStackChanged(EventArgs.Empty);
         });
-        
+
         return Task.CompletedTask;
     }
 

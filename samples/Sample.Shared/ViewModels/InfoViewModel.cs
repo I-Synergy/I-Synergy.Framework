@@ -85,6 +85,6 @@ public class InfoViewModel : ViewModelNavigation<object>
         ProductName = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
         Copyrights = commonServices.InfoService.Copyrights;
-        Startup = ((Context)context).Environment.ToString();
+        Startup = context.Environment.ToString();
     }
 }

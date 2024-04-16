@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using ISynergy.Framework.UI.Extensions;
+﻿using ISynergy.Framework.UI.Extensions;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
 

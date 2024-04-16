@@ -49,7 +49,7 @@ public sealed partial class App : BaseApplication
                 Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
                 builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
             })
-            .ConfigureLogging(( logging, configuration) =>
+            .ConfigureLogging((logging, configuration) =>
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
             })

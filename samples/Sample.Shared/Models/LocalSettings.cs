@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Mvvm.Models;
 using System.Globalization;
 
 namespace Sample.Models;

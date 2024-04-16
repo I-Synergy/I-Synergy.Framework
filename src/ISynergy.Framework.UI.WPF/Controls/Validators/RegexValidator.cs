@@ -1,7 +1,5 @@
-﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;

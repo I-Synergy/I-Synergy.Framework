@@ -1,10 +1,7 @@
-﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Enumerations;
-using System.ComponentModel;
-using System.Windows;
 
 namespace ISynergy.Framework.UI.Windows;
 

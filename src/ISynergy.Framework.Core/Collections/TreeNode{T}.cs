@@ -1,10 +1,8 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Collections;
 

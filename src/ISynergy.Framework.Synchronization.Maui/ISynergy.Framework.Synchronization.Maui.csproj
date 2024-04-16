@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.22621.0</TargetFrameworks>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<PackageId>I-Synergy.Framework.Synchronization.Client.Maui</PackageId>
+		<Description>I-Synergy Synchronization Client Framework for .Net Maui</Description>
+		<PackageTags>I-Synergy, Framework, Synchronization, Client, Windows, Linux, Android, IOS, Maui</PackageTags>
+		<EnableMsixTooling>true</EnableMsixTooling>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.Synchronization</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Http" />
+		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Synchronization\ISynergy.Framework.Synchronization.csproj" />
+	</ItemGroup>
+</Project>
