@@ -89,7 +89,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Setting up application settings service.");
         _applicationSettingsService = ServiceLocator.Default.GetInstance<IBaseApplicationSettingsService>();
-        _applicationSettingsService.LoadSettings();
 
         _logger.LogInformation("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();

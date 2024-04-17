@@ -47,7 +47,6 @@ public class ThemeService : IThemeService
     public ThemeService(IBaseApplicationSettingsService applicationSettingsService)
     {
         _applicationSettingsService = applicationSettingsService;
-        _applicationSettingsService.LoadSettings();
     }
 
     /// <summary>
