@@ -438,4 +438,7 @@ Try again or update the application through the Microsoft Store.</value>
 	<data name="Skip" xml:space="preserve">
 		<value>Skip</value>
 	</data>
+	<data name="WarningSynchronizationRestart" xml:space="preserve">
+		<value>WarningSynchronizationRestart</value>
+	</data>
 </root>

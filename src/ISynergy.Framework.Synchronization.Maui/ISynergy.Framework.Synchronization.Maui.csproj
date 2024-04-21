@@ -24,5 +24,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Synchronization\ISynergy.Framework.Synchronization.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
 </Project>

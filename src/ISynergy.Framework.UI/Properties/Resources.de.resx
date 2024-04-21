@@ -418,4 +418,7 @@ Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsof
 	<data name="Skip" xml:space="preserve">
 		<value>Hüpfen</value>
 	</data>
+	<data name="WarningSynchronizationRestart" xml:space="preserve">
+		<value>Um synchronisieren zu können, müssen Sie die Anwendung neu starten, um die Synchronisierungseinstellungen zu übernehmen</value>
+	</data>
 </root>

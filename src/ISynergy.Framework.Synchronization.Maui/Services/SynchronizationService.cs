@@ -4,10 +4,11 @@ using Dotmim.Sync.Sqlite;
 using Dotmim.Sync.Web.Client;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Synchronization.Abstractions;
 using ISynergy.Framework.Synchronization.Messages;
-using ISynergy.Framework.Synchronization.Options;
+using ISynergy.Framework.UI.Options;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 using System.Net;
@@ -15,48 +16,37 @@ using System.Net.Http.Headers;
 
 namespace ISynergy.Framework.Synchronization.Services;
 
-public class SynchronizationService : ISynchronizationService
+internal class SynchronizationService : ISynchronizationService
 {
-    private readonly IDialogService _dialogService;
+    private readonly IContext _context;
     private readonly IMessageService _messageService;
-
-    private readonly SqliteSyncProvider _sqliteSyncProvider;
-    private readonly WebRemoteOrchestrator _webRemoteOrchestrator;
     private readonly SyncAgent _syncAgent;
-    private readonly SynchronizationOptions _synchronizationOptions;
-    private readonly HttpClient _httpClient;
-
-    private bool _stopping;
-    private int _synchronizationInterval = 30000;
-
-    public string SynchronizationFolder => Path.Combine(FileSystem.AppDataDirectory, "Synchronization");
-    public string SnapshotFolder => Path.Combine(FileSystem.AppDataDirectory, "Snapshots");
-    public string BatchFolder => Path.Combine(FileSystem.AppDataDirectory, "Batches");
-    public string SynchronizationDatabase => Path.Combine(SynchronizationFolder, "sync.db");
+    private const string _apiVersion = "2";
 
     public SynchronizationService(
         IContext context,
-        IDialogService dialogService,
         IMessageService messageService,
-        IOptions<SynchronizationOptions> synchronizationOptions)
+        ISynchronizationSettingsService localSettingsService,
+        IOptions<ConfigurationOptions> configurationOptions)
     {
-        _dialogService = dialogService;
+        _context = context;
         _messageService = messageService;
-        _synchronizationOptions = synchronizationOptions.Value;
-        _synchronizationInterval  = _synchronizationOptions.SynchronizationInterval;
 
-        if (!Directory.Exists(SynchronizationFolder))
-            Directory.CreateDirectory(SynchronizationFolder);
+        if (!_context.IsAuthenticated)
+            throw new InvalidOperationException("User is not authenticated");
 
-        if (!Directory.Exists(SnapshotFolder))
-            Directory.CreateDirectory(SnapshotFolder);
+        var options = configurationOptions.Value;
 
-        if (!Directory.Exists(BatchFolder))
-            Directory.CreateDirectory(BatchFolder);
+        if (!Directory.Exists(localSettingsService.Settings.SynchronizationFolder))
+            Directory.CreateDirectory(localSettingsService.Settings.SynchronizationFolder);
 
-        SQLitePCL.Batteries_V2.Init();
+        if (!Directory.Exists(localSettingsService.Settings.SnapshotFolder))
+            Directory.CreateDirectory(localSettingsService.Settings.SnapshotFolder);
 
-        var synchronizationUri = new Uri(_synchronizationOptions.SynchronizationEndpoint);
+        if (!Directory.Exists(localSettingsService.Settings.BatchesFolder))
+            Directory.CreateDirectory(localSettingsService.Settings.BatchesFolder);
+
+        var synchronizationUri = new Uri(Path.Combine(options.ServiceEndpoint, "sync"));
 
         var handler = new HttpClientHandler();
 #if DEBUG
@@ -73,81 +63,68 @@ public class SynchronizationService : ISynchronizationService
 
         handler.AutomaticDecompression = DecompressionMethods.GZip;
 
-        _httpClient = new HttpClient(handler);
+        var httpClient = new HttpClient(handler);
+        httpClient.DefaultRequestHeaders.Add(nameof(Grant.client_id), options.ClientId);
+        httpClient.DefaultRequestHeaders.Add(nameof(Grant.client_secret), options.ClientSecret);
+        httpClient.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, _apiVersion);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+
 
         // Check if we are trying to reach a IIS Express.
         // IIS Express does not allow any request other than localhost
         // So far,hacking the Host-Content header to mimic localhost call
         if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationUri.Host == "10.0.2.2")
-            _httpClient.DefaultRequestHeaders.Host = $"localhost:{synchronizationUri.Port}";
+            httpClient.DefaultRequestHeaders.Host = $"localhost:{synchronizationUri.Port}";
 
-        _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+        httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
 
-        _webRemoteOrchestrator = new WebRemoteOrchestrator(synchronizationUri.AbsoluteUri, client: _httpClient, maxDownladingDegreeOfParallelism: 1);
-        
-        var connectionstringbuilder = new SqliteConnectionStringBuilder();
-        connectionstringbuilder.DataSource = SynchronizationDatabase;
+        var webRemoteOrchestrator = new WebRemoteOrchestrator(synchronizationUri.AbsoluteUri, client: httpClient, maxDownladingDegreeOfParallelism: 1)
+        {
+            //Converter = new SqliteConverter()
+        };
 
-        _sqliteSyncProvider = new SqliteSyncProvider(connectionstringbuilder.ConnectionString);
+        var connectionStringBuilder = new SqliteConnectionStringBuilder
+        {
+            DataSource = Path.Combine(localSettingsService.Settings.SynchronizationFolder, $"{_context.Profile.AccountId:N}.db")
+        };
 
-        var clientOptions = new SyncOptions 
-        { 
-            BatchSize = _synchronizationOptions.BatchSize, 
-            BatchDirectory = BatchFolder,
-            SnapshotsDirectory = SnapshotFolder,
-            CleanFolder = _synchronizationOptions.CleanFolder,
-            CleanMetadatas = _synchronizationOptions.CleanMetadatas,
+        var sqliteSyncProvider = new SqliteSyncProvider(connectionStringBuilder.ConnectionString);
+
+        var clientOptions = new SyncOptions
+        {
+            BatchSize = localSettingsService.Settings.BatchSize,
+            BatchDirectory = localSettingsService.Settings.BatchesFolder,
+            SnapshotsDirectory = localSettingsService.Settings.SnapshotFolder,
+            CleanFolder = localSettingsService.Settings.CleanSynchronizationFolder,
+            CleanMetadatas = localSettingsService.Settings.CleanSynchronizationMetadatas,
             DisableConstraintsOnApplyChanges = true
         };
 
-        _syncAgent = new SyncAgent(_sqliteSyncProvider, _webRemoteOrchestrator, clientOptions);
-        
+        _syncAgent = new SyncAgent(sqliteSyncProvider, webRemoteOrchestrator, clientOptions);
+
         _syncAgent.SessionStateChanged += (s, state) =>
         {
             _messageService.Send(new SyncSessionStateChangedMessage(state));
         };
     }
 
-    public async Task StartServiceAsync(SyncParameters parameters, CancellationToken cancellationToken = default)
-    {
-        _stopping = false;
-
-        await Task.Run(async () =>
-        {
-            while (!_stopping)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                try
-                {
-                    await SynchronizeAsync(SyncType.Normal, parameters, cancellationToken);
-                    await Task.Delay(_synchronizationInterval);
-                }
-                catch (Exception ex)
-                {
-                    await _dialogService.ShowErrorAsync(ex.Message);
-                    _stopping = true;
-                }
-            }
-            return;
-        }, cancellationToken);
-    }
-    
-    public void StopService() => _stopping = true;
-
-
-    public async Task SynchronizeAsync(SyncType syncType, SyncParameters parameters, CancellationToken cancellationToken = default)
+    public async Task SynchronizeAsync(SyncType syncType, string scopeName = SyncOptions.DefaultScopeName, CancellationToken cancellationToken = default)
     {
         var result = string.Empty;
+
+        var parameters = new SyncParameters()
+        {
+            new SyncParameter(GenericConstants.TenantId, _context.Profile.AccountId)
+        };
 
         cancellationToken.ThrowIfCancellationRequested();
 
         var progress = new Progress<ProgressArgs>(args =>
         {
-             _messageService.Send(new SyncProgressMessage(args.ProgressPercentage));
+            _messageService.Send(new SyncProgressMessage(args.ProgressPercentage));
 
             if (result == string.Empty)
-                _messageService.Send(new SyncMessage( args.Message));
+                _messageService.Send(new SyncMessage(args.Message));
         });
 
         _syncAgent.LocalOrchestrator.OnConflictingSetup(async args =>
@@ -157,7 +134,7 @@ public class SynchronizationService : ISynchronizationService
             args.Action = ConflictingSetupAction.Continue;
         });
 
-        if (await _syncAgent.SynchronizeAsync(syncType, parameters, progress) is SyncResult syncResult)
+        if (await _syncAgent.SynchronizeAsync(scopeName, syncType, parameters, progress) is SyncResult syncResult)
             result = syncResult.ToString();
 
         _messageService.Send(new SyncMessage(result));
