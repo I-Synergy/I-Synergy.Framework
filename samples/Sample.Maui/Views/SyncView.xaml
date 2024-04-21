@@ -27,20 +27,6 @@
                 HorizontalOptions="Center" />
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-                <Button
-                    x:Name="BntStartSync"
-                    Text="Start Sync"
-                    IsEnabled="{Binding SyncCommandButtonEnabled}"
-                    Command="{Binding StartSyncCommand}"
-                    HorizontalOptions="Center" />
-
-                <Button
-                    x:Name="BntStopSync"
-                    Text="Stop Sync"
-                    IsEnabled="{Binding SyncCommandButtonEnabled}"
-                    Command="{Binding StopSyncCommand}"
-                    HorizontalOptions="Center" />
-                
                 <Button 
                     x:Name="BntSync"
                     Text="Sync"

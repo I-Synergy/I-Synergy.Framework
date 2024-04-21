@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Sample.Synchronization.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class SyncController : ControllerBase
     {
         private readonly WebServerAgent _webServerAgent;

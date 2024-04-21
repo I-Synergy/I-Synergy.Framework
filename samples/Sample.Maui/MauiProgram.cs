@@ -61,11 +61,12 @@ public static class MauiProgram
                 services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
                 services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
                 
+                services.ConfigureSynchronization(s => s.GetRequiredService<LocalSettingsService>());
+
 //#if WINDOWS
 //                services.AddUpdatesIntegration();
 //#endif
             })
-            .ConfigureSynchronization()
             .ConfigureSyncfusionCore();
 
         return builder.Build();

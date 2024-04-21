@@ -3,7 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Azure.Identity" Version="1.11.1" />
+    <PackageVersion Include="Azure.Identity" Version="1.11.2" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.17.5" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.19.1" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
@@ -51,7 +51,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.48.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.49.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.20" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.20" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />

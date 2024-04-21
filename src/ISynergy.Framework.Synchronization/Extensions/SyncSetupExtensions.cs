@@ -1,22 +1,31 @@
 ﻿using Dotmim.Sync;
-using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Validation;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
 namespace ISynergy.Framework.Synchronization.Extensions;
 public static class SyncSetupExtensions
 {
-    public static SyncSetup WithTenantFilter(this SyncSetup setup)
+    public static SyncSetup WithTenantFilter(this SyncSetup setup, Type[] entities)
     {
-        Argument.IsNotNull(setup);
-
-        foreach (var table in setup.Tables.EnsureNotNull())
+        foreach (var entity in entities.EnsureNotNull())
         {
-            var filter = new SetupFilter(table.TableName);
-            filter.AddParameter(nameof(IBaseTenantEntity.TenantId), DbType.Guid, false);
-            filter.AddWhere(nameof(IBaseTenantEntity.TenantId), table.TableName, nameof(IBaseTenantEntity.TenantId));
-            setup.Filters.Add(filter);
+            var tableName = entity.Name;
+
+            if (entity.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault() is TableAttribute attribute)
+                tableName = attribute.Name;
+
+            if (!setup.Tables.Any(q => q.TableName.Equals(tableName)))
+                setup.Tables.Add(tableName);
+
+            if (entity.GetProperty(GenericConstants.TenantId) is not null)
+            {
+                var filter = new SetupFilter(tableName);
+                filter.AddParameter(GenericConstants.TenantId, DbType.Guid, false);
+                filter.AddWhere(GenericConstants.TenantId, tableName, GenericConstants.TenantId);
+                setup.Filters.Add(filter);
+            }
         }
 
         return setup;

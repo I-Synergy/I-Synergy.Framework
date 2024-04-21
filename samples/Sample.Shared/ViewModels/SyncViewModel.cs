@@ -1,5 +1,4 @@
-﻿using Dotmim.Sync;
-using Dotmim.Sync.Enumerations;
+﻿using Dotmim.Sync.Enumerations;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Services;
@@ -7,10 +6,8 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.Synchronization.Abstractions;
 using ISynergy.Framework.Synchronization.Messages;
-using ISynergy.Framework.Synchronization.Options;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Sample.Abstractions;
 using System.Data;
 
@@ -22,8 +19,6 @@ public class SyncViewModel : ViewModelNavigation<object>
     public override string Title { get { return BaseCommonServices.LanguageService.GetString("Sync"); } }
 
     private readonly ISynchronizationService _synchronizationService;
-    private readonly SynchronizationOptions _synchronizationOptions;
-    private readonly SyncParameters _syncParameters;
 
     /// <summary>
     /// Gets or sets the SyncProgressionText property value.
@@ -53,8 +48,6 @@ public class SyncViewModel : ViewModelNavigation<object>
     }
 
     public AsyncRelayCommand SyncCommand { get; set; }
-    public AsyncRelayCommand StartSyncCommand { get; set; }
-    public RelayCommand StopSyncCommand { get; set; }
     public AsyncRelayCommand SyncReinitializeCommand { get; set; }
     public AsyncRelayCommand CustomActionCommand { get; set; }
 
@@ -62,16 +55,11 @@ public class SyncViewModel : ViewModelNavigation<object>
         IContext context, 
         ICommonServices commonServices,
         ISynchronizationService synchronizationService,
-        IOptions<SynchronizationOptions> options,
         ILogger logger, 
         bool automaticValidation = false) 
         : base(context, commonServices, logger, automaticValidation)
     {
         _synchronizationService = synchronizationService;
-        _synchronizationOptions = options.Value;
-
-        _syncParameters = new SyncParameters();
-        //_syncParameters.Add(new SyncParameter(nameof(IBaseTenantEntity.TenantId), Context.Profile.AccountId));
 
         SyncProgressionText = "Ready...";
         SyncCommandButtonEnabled = true;
@@ -79,9 +67,6 @@ public class SyncViewModel : ViewModelNavigation<object>
         SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal));
         SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize));
         CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync);
-
-        StartSyncCommand = new AsyncRelayCommand(() => _synchronizationService.StartServiceAsync(_syncParameters));
-        StopSyncCommand = new RelayCommand(_synchronizationService.StopService);
 
         MessageService.Default.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
         MessageService.Default.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
@@ -113,7 +98,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
         try
         {
-            await _synchronizationService.SynchronizeAsync(SyncType.Normal, _syncParameters);
+            await _synchronizationService.SynchronizeAsync(SyncType.Normal);
         }
         catch (Exception ex)
         {
@@ -128,7 +113,7 @@ public class SyncViewModel : ViewModelNavigation<object>
     private void CustomActionInsertProductRow()
     {
         var connectionstringbuilder = new SqliteConnectionStringBuilder();
-        connectionstringbuilder.DataSource = _synchronizationService.SynchronizationDatabase;
+        connectionstringbuilder.DataSource = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Synchronization", "sync.db");
 
         using var sqliteConnection = new SqliteConnection(connectionstringbuilder.ConnectionString);
         var c = new SqliteCommand($"Insert into ProductCategory(ProductcategoryId, Name, rowguid, ModifiedDate, IsActive) Values (@productcategoryId, @name, @rowguid, @modifiedDate, @isactive)")

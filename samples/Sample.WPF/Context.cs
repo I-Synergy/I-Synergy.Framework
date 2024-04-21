@@ -3,10 +3,9 @@ using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Synchronization.Options;
+using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Sample.Options;
 using System.Globalization;
 
 namespace Sample;
