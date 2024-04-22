@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace Sample.Services;
 
-public class LocalSettingsService : ILocalSettingsService
+internal class LocalSettingsService : ILocalSettingsService
 {
     private const string _fileName = "settings.json";
 
@@ -27,10 +27,19 @@ public class LocalSettingsService : ILocalSettingsService
     public LocalSettingsService()
     {
         _settings = new LocalSettings();
-        _settingsFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            "I-Synergy Framework UI Sample",
-            "Settings");
+        _settingsFolder = Path.Combine(FileSystem.AppDataDirectory, "Settings");
+
+        if (!Directory.Exists(_settingsFolder))
+            Directory.CreateDirectory(_settingsFolder);
+
+        var oldPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "I-Synergy Framework UI Sample");
+        var oldSettings = Path.Combine(oldPath, "Settings", _fileName);
+
+        if (File.Exists(oldSettings))
+        {
+            File.Move(oldSettings, Path.Combine(_settingsFolder, _fileName), true);
+            Directory.Delete(oldPath, true);
+        }
     }
 
     /// <summary>

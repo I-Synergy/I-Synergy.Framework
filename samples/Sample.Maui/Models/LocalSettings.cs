@@ -37,9 +37,9 @@ public class LocalSettings : ISynchronizationApplicationSettings
         IsSynchronizationEnabled = false;
         SynchronizationInterval = 30;
         BatchSize = 1000;
-        SynchronizationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Synchronization");
-        SnapshotFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Snapshots");
-        BatchesFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Batches");
+        SynchronizationFolder = Path.Combine(FileSystem.AppDataDirectory, "Synchronization");
+        SnapshotFolder = Path.Combine(FileSystem.AppDataDirectory, "Snapshots");
+        BatchesFolder = Path.Combine(FileSystem.AppDataDirectory, "Batches");
         CleanSynchronizationFolder = true;
         CleanSynchronizationMetadatas = true;
     }
