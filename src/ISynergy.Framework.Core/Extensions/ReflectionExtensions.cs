@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -300,10 +301,15 @@ public static class ReflectionExtensions
             try
             {
                 var newAssembly = Assembly.Load(name);
-                result.Add(newAssembly);
 
-                foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies().EnsureNotNull())
-                    queue.Enqueue(innerAssemblyName);
+                if (newAssembly != null)
+                {
+                    if (!result.Contains(newAssembly))
+                        result.Add(newAssembly);
+
+                    foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies().EnsureNotNull())
+                        queue.Enqueue(innerAssemblyName);
+                }
 
                 Debug.WriteLine(name);
             }
@@ -335,10 +341,15 @@ public static class ReflectionExtensions
             try
             {
                 var newAssembly = Assembly.Load(name);
-                result.Add(newAssembly.GetName());
 
-                foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies().EnsureNotNull())
-                    queue.Enqueue(innerAssemblyName);
+                if (newAssembly != null && newAssembly.GetName() is AssemblyName assemblyName)
+                {
+                    if (!result.Contains(assemblyName))
+                        result.Add(assemblyName);
+
+                    foreach (var innerAssemblyName in newAssembly.GetReferencedAssemblies().EnsureNotNull())
+                        queue.Enqueue(innerAssemblyName);
+                }
 
                 Debug.WriteLine(name);
             }
