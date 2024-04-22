@@ -65,7 +65,7 @@ public class AuthenticationService : IAuthenticationService
         _context.Environment = SoftwareEnvironments.Test;
         _context.Profile = new Profile(
             new Token(),
-            Guid.NewGuid(),
+            Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
             "Test",
             "Europe/Amsterdam",
             "NL",

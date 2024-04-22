@@ -52,9 +52,9 @@ public static class MauiProgram
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                services.TryAddSingleton<LocalSettingsService>();
-                services.TryAddSingleton<ILocalSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
-                services.TryAddSingleton<IBaseApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
+                services.TryAddScoped<LocalSettingsService>();
+                services.TryAddScoped<ILocalSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
+                services.TryAddScoped<IBaseApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
 
                 services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
 
