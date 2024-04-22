@@ -9,8 +9,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureSynchronization(this IServiceCollection services, Func<IServiceProvider, ISynchronizationSettingsService> implementation)
     {
-        services.TryAddSingleton<IBaseApplicationSettingsService>(implementation);
-        services.TryAddSingleton<ISynchronizationSettingsService>(implementation);
+        services.TryAddScoped<IBaseApplicationSettingsService>(implementation);
+        services.TryAddScoped<ISynchronizationSettingsService>(implementation);
 
         services.TryAddScoped<ISynchronizationService, SynchronizationService>();
         return services;
@@ -18,8 +18,8 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection ConfigureFakeSynchronization(this IServiceCollection services, Func<IServiceProvider, ISynchronizationSettingsService> implementation)
     {
-        services.TryAddSingleton<IBaseApplicationSettingsService>(implementation);
-        services.TryAddSingleton<ISynchronizationSettingsService>(implementation);
+        services.TryAddScoped<IBaseApplicationSettingsService>(implementation);
+        services.TryAddScoped<ISynchronizationSettingsService>(implementation);
 
         services.TryAddScoped<ISynchronizationService, FakeSynchronizationService>();
         return services;
