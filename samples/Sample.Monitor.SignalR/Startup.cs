@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.AspNetCore.Startup;
-using ISynergy.Framework.Monitoring.Extensions;
+﻿using ISynergy.Framework.AspNetCore.Monitoring.Extensions;
+using ISynergy.Framework.AspNetCore.Startup;
 
 namespace Sample.Monitor.SignalR;
 

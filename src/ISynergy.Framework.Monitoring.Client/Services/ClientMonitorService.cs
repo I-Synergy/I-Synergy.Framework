@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Monitoring.Client.Abstractions.Services;
-using ISynergy.Framework.Monitoring.Common.Options;
 using ISynergy.Framework.Monitoring.Enumerations;
 using ISynergy.Framework.Monitoring.Messages;
+using ISynergy.Framework.Monitoring.Options;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
@@ -77,14 +77,14 @@ internal class ClientMonitorService : IClientMonitorService
         {
             // User has logged in. 
             await _dialogService.ShowInformationAsync(
-                string.Format(_languageService.GetString("Warning_User_Loggedin"), m.Data.ToString()));
+                string.Format(_languageService.GetString("WarningUserLoggedin"), m.Data.ToString()));
         });
 
         _connection.On<HubMessage>(nameof(MonitorEvents.Disconnected), async (m) =>
         {
             // User has logged out. 
             await _dialogService.ShowInformationAsync(
-                string.Format(_languageService.GetString("Warning_User_Loggedout"), m.Data.ToString()));
+                string.Format(_languageService.GetString("WarningUserLoggedout"), m.Data.ToString()));
         });
 
         // Set up additional handlers

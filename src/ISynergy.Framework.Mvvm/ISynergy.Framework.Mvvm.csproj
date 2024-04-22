@@ -4,7 +4,6 @@
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
         <Description>I-Synergy Framework Mvvm for .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>
-        <CodeAnalysisRuleSet>ISynergy.Framework.Mvvm.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
 	<ItemGroup>

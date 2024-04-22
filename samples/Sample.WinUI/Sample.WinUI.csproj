@@ -9,7 +9,6 @@
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
-		<CodeAnalysisRuleSet>Sample.Desktop.ruleset</CodeAnalysisRuleSet>
 		<StartupObject>Sample.Program</StartupObject>
 		<Product>Sample WinUI Desktop</Product>
 		<AssemblyName>Sample</AssemblyName>

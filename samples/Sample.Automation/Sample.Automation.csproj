@@ -3,7 +3,6 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<AssemblyName>ISynergy.Framework.AspNetCore.Sample</AssemblyName>
 		<RootNamespace>ISynergy.Framework.AspNetCore.Sample</RootNamespace>
-		<CodeAnalysisRuleSet>Sample.Automation.ruleset</CodeAnalysisRuleSet>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 

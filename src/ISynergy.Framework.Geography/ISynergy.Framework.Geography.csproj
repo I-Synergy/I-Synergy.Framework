@@ -4,7 +4,6 @@
         <PackageId>I-Synergy.Framework.Geography</PackageId>
         <Description>I-Synergy Framework Geography for .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, Geography</PackageTags>
-        <CodeAnalysisRuleSet>ISynergy.Framework.Geography.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>

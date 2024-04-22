@@ -7,6 +7,5 @@
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Update.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 </Project>

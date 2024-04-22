@@ -4,7 +4,6 @@
 		<PackageId>I-Synergy.Framework.Storage</PackageId>
 		<Description>I-Synergy Framework Storage for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Storage</PackageTags>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Storage.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework Dymo Label printer library for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Printer, Label, Dymo</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Printer.Label.Dymo.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="DYMO.Connect.SDK"  />

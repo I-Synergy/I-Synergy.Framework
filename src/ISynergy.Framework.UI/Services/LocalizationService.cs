@@ -35,7 +35,7 @@ public class LocalizationService : ILocalizationService
             return locations.Select(s => s.ZoneId).ToList();
         }
 
-        return default;
+        return new List<string>();
     }
 
     /// <summary>

@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework Mail for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Mail</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Mail.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
