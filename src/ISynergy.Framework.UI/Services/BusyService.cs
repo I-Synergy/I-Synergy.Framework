@@ -77,13 +77,6 @@ public class BusyService : ObservableClass, IBusyService
     }
 
     /// <summary>
-    /// Starts the busy asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    public void StartBusy() =>
-        StartBusy(_languageService.GetString("PleaseWait"));
-
-    /// <summary>
     /// Ends the busy asynchronous.
     /// </summary>
     /// <returns>Task.</returns>

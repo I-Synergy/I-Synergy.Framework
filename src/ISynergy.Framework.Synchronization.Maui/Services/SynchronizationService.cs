@@ -22,10 +22,6 @@ internal class SynchronizationService : ISynchronizationService
     private readonly IMessageService _messageService;
     private readonly SyncAgent _syncAgent;
 
-    private readonly string _synchronizationFolder;
-    private readonly string _snapshotFolder;
-    private readonly string _batchesFolder;
-
     private const string _apiVersion = "2";
 
     public SynchronizationService(
@@ -43,20 +39,20 @@ internal class SynchronizationService : ISynchronizationService
         var options = configurationOptions.Value;
         var tenantId = _context.Profile.AccountId.ToString("N");
 
-        _synchronizationFolder = Path.Combine(localSettingsService.Settings.SynchronizationFolder, tenantId);
+        var synchronizationFolder = Path.Combine(localSettingsService.Settings.SynchronizationFolder, tenantId);
         
-        if (!Directory.Exists(_synchronizationFolder))
-            Directory.CreateDirectory(_synchronizationFolder);
+        if (!Directory.Exists(synchronizationFolder))
+            Directory.CreateDirectory(synchronizationFolder);
 
-        _snapshotFolder = Path.Combine(localSettingsService.Settings.SnapshotFolder, tenantId);
+        var snapshotFolder = Path.Combine(localSettingsService.Settings.SnapshotFolder, tenantId);
 
-        if (!Directory.Exists(_snapshotFolder))
-            Directory.CreateDirectory(_snapshotFolder);
+        if (!Directory.Exists(snapshotFolder))
+            Directory.CreateDirectory(snapshotFolder);
 
-        _batchesFolder = Path.Combine(localSettingsService.Settings.BatchesFolder, tenantId);
+        var batchesFolder = Path.Combine(localSettingsService.Settings.BatchesFolder, tenantId);
 
-        if (!Directory.Exists(_batchesFolder))
-            Directory.CreateDirectory(_batchesFolder);
+        if (!Directory.Exists(batchesFolder))
+            Directory.CreateDirectory(batchesFolder);
 
         var synchronizationUri = new Uri(Path.Combine(options.ServiceEndpoint, "sync"));
 
@@ -97,7 +93,7 @@ internal class SynchronizationService : ISynchronizationService
 
         var connectionStringBuilder = new SqliteConnectionStringBuilder
         {
-            DataSource = Path.Combine(_synchronizationFolder, "data.db")
+            DataSource = Path.Combine(synchronizationFolder, "data.db")
         };
 
         var sqliteSyncProvider = new SqliteSyncProvider(connectionStringBuilder.ConnectionString);
@@ -105,8 +101,8 @@ internal class SynchronizationService : ISynchronizationService
         var clientOptions = new SyncOptions
         {
             BatchSize = localSettingsService.Settings.BatchSize,
-            BatchDirectory = _batchesFolder,
-            SnapshotsDirectory = _snapshotFolder,
+            BatchDirectory = batchesFolder,
+            SnapshotsDirectory = snapshotFolder,
             CleanFolder = localSettingsService.Settings.CleanSynchronizationFolder,
             CleanMetadatas = localSettingsService.Settings.CleanSynchronizationMetadatas,
             DisableConstraintsOnApplyChanges = true
