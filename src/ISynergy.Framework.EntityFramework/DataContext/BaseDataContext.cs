@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.EntityFramework.Entities;
@@ -29,6 +28,14 @@ public abstract class BaseDataContext : DbContext
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseDataContext"/> class.
     /// </summary>
+    protected BaseDataContext()
+        : base()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseDataContext"/> class.
+    /// </summary>
     /// <param name="options">The options.</param>
     protected BaseDataContext(DbContextOptions options)
         : base(options)
@@ -46,8 +53,7 @@ public abstract class BaseDataContext : DbContext
                 modelBuilder
                     .Entity(entityType.Name)
                     .Property(property.Name)
-                    .HasColumnType(CurrencyPrecision)
-                    .HasConversion<double>();
+                    .HasColumnType(CurrencyPrecision);
             }
         }
     }
@@ -56,15 +62,15 @@ public abstract class BaseDataContext : DbContext
     /// Applies the query filters.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
-    /// <param name="tenantService"></param>
+    /// <param name="tenantId"></param>
     /// <summary>
     /// Applies the query filters.
     /// </summary>
-    public void ApplyQueryFilters(ModelBuilder modelBuilder, Func<Guid> tenantService)
+    public void ApplyQueryFilters(ModelBuilder modelBuilder, Func<Guid> tenantId)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
 
-        var tenantFilter = (Expression<Func<BaseTenantEntity, bool>>)(e => e.TenantId == tenantService.Invoke());
+        var tenantFilter = (Expression<Func<BaseTenantEntity, bool>>)(e => e.TenantId == tenantId.Invoke());
         var softDeleteFilter = (Expression<Func<ClassBase, bool>>)(e => e.IsDeleted == false);
 
         // Apply tenantFilter and softDeleteFilter 
@@ -86,16 +92,16 @@ public abstract class BaseDataContext : DbContext
     /// <summary>
     /// Called when [before saving].
     /// </summary>
-    private void OnBeforeSaving(Guid tenantId, string username)
+    private void OnBeforeSaving(Func<Guid> tenantId, Func<string> username)
     {
         if (ChangeTracker.HasChanges())
         {
             foreach (var entry in ChangeTracker.Entries<BaseTenantEntity>().Where(e => e.State == EntityState.Added).EnsureNotNull())
             {
-                entry.Entity.TenantId = tenantId;
+                entry.Entity.TenantId = tenantId.Invoke();
 
                 if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
-                    entry.Entity.CreatedBy = username;
+                    entry.Entity.CreatedBy = username.Invoke();
 
                 entry.Entity.CreatedDate = DateTimeOffset.UtcNow;
                 entry.Entity.Version = 1;
@@ -104,13 +110,13 @@ public abstract class BaseDataContext : DbContext
             foreach (var entry in ChangeTracker.Entries<BaseTenantEntity>().Where(e => e.State == EntityState.Modified).EnsureNotNull())
             {
                 if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
-                    entry.Entity.CreatedBy = username;
+                    entry.Entity.CreatedBy = username.Invoke();
 
                 if (entry.Entity.CreatedDate == DateTimeOffset.MinValue)
                     entry.Entity.CreatedDate = DateTimeOffset.UtcNow;
 
                 if (string.IsNullOrEmpty(entry.Entity.ChangedBy))
-                    entry.Entity.ChangedBy = username;
+                    entry.Entity.ChangedBy = username.Invoke();
 
                 entry.Entity.ChangedDate = DateTimeOffset.UtcNow;
                 entry.Entity.Version = entry.Entity.Version + 1;
@@ -134,7 +140,13 @@ public abstract class BaseDataContext : DbContext
 
         var andAlsoExprBase = (Expression<Func<BaseTenantEntity, bool>>)(_ => true);
         var andAlsoExpr = ReplacingExpressionVisitor.Replace(andAlsoExprBase.Parameters.Single(), newParam, andAlsoExprBase.Body);
-        andAlsoExpr = andAlsoExpressions.EnsureNotNull().Select(expressionBase => ReplacingExpressionVisitor.Replace(expressionBase.Parameters.Single(), newParam, expressionBase.Body)).Aggregate(andAlsoExpr, (current, expression) => Expression.AndAlso(current, expression));
+
+        foreach (var expressionBase in andAlsoExpressions.EnsureNotNull())
+        {
+            var expression = ReplacingExpressionVisitor.Replace(expressionBase.Parameters.Single(), newParam, expressionBase.Body);
+            andAlsoExpr = Expression.AndAlso(andAlsoExpr, expression);
+        }
+
         return Expression.Lambda(andAlsoExpr, newParam);
     }
 }

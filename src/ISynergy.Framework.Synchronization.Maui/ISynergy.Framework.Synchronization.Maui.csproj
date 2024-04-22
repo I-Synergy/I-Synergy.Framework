@@ -6,7 +6,7 @@
 		<SingleProject>true</SingleProject>
 		<PublishReadyToRun>false</PublishReadyToRun>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<PackageId>I-Synergy.Framework.Synchronization.Client.Maui</PackageId>
+		<PackageId>I-Synergy.Framework.Synchronization.Maui</PackageId>
 		<Description>I-Synergy Synchronization Client Framework for .Net Maui</Description>
 		<PackageTags>I-Synergy, Framework, Synchronization, Client, Windows, Linux, Android, IOS, Maui</PackageTags>
 		<EnableMsixTooling>true</EnableMsixTooling>
