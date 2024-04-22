@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework Logging library for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Logging</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Logging.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
 	<ItemGroup>

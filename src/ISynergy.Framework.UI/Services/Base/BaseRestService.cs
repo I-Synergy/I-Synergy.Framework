@@ -102,7 +102,7 @@ public abstract class BaseRestService
                     client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
                 var response = await client.SendAsync(request);
@@ -151,7 +151,7 @@ public abstract class BaseRestService
                     client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
                 var response = await client.SendAsync(request);
@@ -199,7 +199,7 @@ public abstract class BaseRestService
                     client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
                 var response = await client.SendAsync(request);
@@ -249,7 +249,7 @@ public abstract class BaseRestService
                     client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
@@ -302,7 +302,7 @@ public abstract class BaseRestService
                     client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
@@ -356,7 +356,7 @@ public abstract class BaseRestService
                     client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
                 var request = new HttpRequestMessage(HttpMethod.Put, url)
                 {
@@ -408,7 +408,7 @@ public abstract class BaseRestService
                     client.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, version);
 
                 if (!anonymous)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
                 var request = new HttpRequestMessage(HttpMethod.Delete, url);
                 var response = await client.SendAsync(request);

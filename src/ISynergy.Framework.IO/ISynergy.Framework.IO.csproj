@@ -4,7 +4,6 @@
 		<PackageId>I-Synergy.Framework.IO</PackageId>
 		<Description>I-Synergy IO Framework for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, IO</PackageTags>
-		<CodeAnalysisRuleSet>ISynergy.Framework.IO.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>

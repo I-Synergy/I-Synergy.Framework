@@ -8,12 +8,8 @@ public interface IBusyService
     /// <summary>
     /// Starts the busy.
     /// </summary>
-    void StartBusy();
-    /// <summary>
-    /// Starts the busy.
-    /// </summary>
     /// <param name="message">The message.</param>
-    void StartBusy(string message);
+    void StartBusy(string message = null);
     /// <summary>
     /// Ends the busy.
     /// </summary>

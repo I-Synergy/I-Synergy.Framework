@@ -5,7 +5,6 @@
         <Description>I-Synergy Framework Authentication for .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Authentication.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>
