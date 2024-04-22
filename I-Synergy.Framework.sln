@@ -117,9 +117,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Mail.Sen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Monitoring", "src\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj", "{754E91A5-A373-436C-9510-3883FF43C45C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Monitoring.Common", "src\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj", "{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Monitoring.SignalR", "src\ISynergy.Framework.Monitoring.SignalR\ISynergy.Framework.Monitoring.SignalR.csproj", "{258AF543-6069-438C-BD59-D62C401A5675}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCore.Monitoring", "src\ISynergy.Framework.AspNetCore.Monitoring\ISynergy.Framework.AspNetCore.Monitoring.csproj", "{258AF543-6069-438C-BD59-D62C401A5675}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Printer.Label", "src\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj", "{6E98B6A2-9D06-4410-9ADC-FD2BE2A6C8FE}"
 EndProject
@@ -131,7 +129,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Performance", "Performance"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.MessageBus.Performance", "performance\ISynergy.Framework.MessageBus.Performance\ISynergy.Framework.MessageBus.Performance.csproj", "{FAFEA37C-0C47-4C60-A13E-235C44787893}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Monitoring.SignalR.Tests", "tests\ISynergy.Framework.Monitoring.SignalR.Tests\ISynergy.Framework.Monitoring.SignalR.Tests.csproj", "{0E2C0892-CA8E-4587-8BAB-C8382CF63D8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCore.Monitoring.Tests", "tests\ISynergy.Framework.AspNetCore.Monitoring.Tests\ISynergy.Framework.AspNetCore.Monitoring.Tests.csproj", "{0E2C0892-CA8E-4587-8BAB-C8382CF63D8D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Monitor.SignalR", "samples\Sample.Monitor.SignalR\Sample.Monitor.SignalR.csproj", "{7FF399FA-BCE4-49BB-8D2B-7C18C5BAE956}"
 EndProject
@@ -930,22 +928,6 @@ Global
 		{754E91A5-A373-436C-9510-3883FF43C45C}.Release|x64.Build.0 = Release|Any CPU
 		{754E91A5-A373-436C-9510-3883FF43C45C}.Release|x86.ActiveCfg = Release|Any CPU
 		{754E91A5-A373-436C-9510-3883FF43C45C}.Release|x86.Build.0 = Release|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Debug|arm64.Build.0 = Debug|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Debug|x64.Build.0 = Debug|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Debug|x86.Build.0 = Debug|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Release|arm64.ActiveCfg = Release|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Release|arm64.Build.0 = Release|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Release|x64.ActiveCfg = Release|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Release|x64.Build.0 = Release|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Release|x86.ActiveCfg = Release|Any CPU
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6}.Release|x86.Build.0 = Release|Any CPU
 		{258AF543-6069-438C-BD59-D62C401A5675}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{258AF543-6069-438C-BD59-D62C401A5675}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{258AF543-6069-438C-BD59-D62C401A5675}.Debug|arm64.ActiveCfg = Debug|Any CPU
@@ -1555,7 +1537,6 @@ Global
 		{4A785A2D-0A8B-4A07-9477-F435600435FF} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{6C2662D7-024F-4E7B-8AF4-A4396F56941E} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{754E91A5-A373-436C-9510-3883FF43C45C} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
-		{80C0CB93-127D-4B37-BDAF-E3AE8C94E7A6} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{258AF543-6069-438C-BD59-D62C401A5675} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{6E98B6A2-9D06-4410-9ADC-FD2BE2A6C8FE} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{A0BBB4FF-0C18-4193-BBAD-14D4D621FAC1} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}

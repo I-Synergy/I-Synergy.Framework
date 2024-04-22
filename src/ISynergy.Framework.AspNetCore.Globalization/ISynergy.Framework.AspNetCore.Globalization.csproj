@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework Globalization for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Globalization</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Globalization.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>

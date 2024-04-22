@@ -4,7 +4,6 @@
 		<PackageId>I-Synergy.Framework.EntityFramework</PackageId>
 		<Description>I-Synergy Entity Framework for .net 8.0</Description>
 		<PackageTags>I-Synergy, Entity, Framework</PackageTags>
-		<CodeAnalysisRuleSet>ISynergy.Framework.EntityFramework.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>

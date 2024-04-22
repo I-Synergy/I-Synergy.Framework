@@ -4,7 +4,6 @@
 		<PackageId>I-Synergy.Framework.Automations</PackageId>
 		<Description>I-Synergy Automations Framework for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Automations</PackageTags>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Automations.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>

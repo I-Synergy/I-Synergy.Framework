@@ -3,7 +3,6 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <UserSecretsId>57f1ce89-fdf7-46f2-99d7-cf0363b7fbc8</UserSecretsId>
-        <CodeAnalysisRuleSet>Sample.MessageBus.Publisher.ruleset</CodeAnalysisRuleSet>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 

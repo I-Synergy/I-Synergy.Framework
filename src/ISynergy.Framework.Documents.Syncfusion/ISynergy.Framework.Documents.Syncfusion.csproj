@@ -6,7 +6,6 @@
 		<PackageTags>I-Synergy, Framework, Documents, Syncfusion</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>ISynergy.Framework.Documents</RootNamespace>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Documents.Syncfusion.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

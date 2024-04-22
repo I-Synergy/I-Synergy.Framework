@@ -5,6 +5,5 @@
 		<Description>I-Synergy Framework Documents for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Documents</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Documents.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 </Project>

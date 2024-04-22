@@ -139,4 +139,10 @@
 	<data name="WarningNull" xml:space="preserve">
 		<value>La valeur ne peut pas être null.</value>
 	</data>
+	<data name="WarningUserLoggedin" xml:space="preserve">
+		<value>{0} s’est connecté.</value>
+	</data>
+	<data name="WarningUserLoggedout" xml:space="preserve">
+		<value>{0} est déconnecté.</value>
+	</data>
 </root>

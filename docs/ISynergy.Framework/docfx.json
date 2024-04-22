@@ -30,7 +30,7 @@
             "src/ISynergy.Framework.Monitoring.Client/ISynergy.Framework.Monitoring.Client.csproj",
             "src/ISynergy.Framework.Monitoring.Client.SignalR/ISynergy.Framework.Monitoring.Client.SignalR.csproj",
             "src/ISynergy.Framework.Monitoring.Common/ISynergy.Framework.Monitoring.Common.csproj",
-            "src/ISynergy.Framework.Monitoring.SignalR/ISynergy.Framework.Monitoring.SignalR.csproj",
+            "src/ISynergy.Framework.AspNetCore.Monitoring/ISynergy.Framework.AspNetCore.Monitoring.csproj",
             "src/ISynergy.Framework.Mvvm/ISynergy.Framework.Mvvm.csproj",
             "src/ISynergy.Framework.Physics/ISynergy.Framework.Physics.csproj",
             "src/ISynergy.Framework.Printer.Label/ISynergy.Framework.Printer.Label.csproj",

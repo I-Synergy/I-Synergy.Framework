@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="SonarQube - I-Synergy.Framework Sonar way" ToolsVersion="17.0">
-  <Include Path="sample.desktop.ruleset" Action="Default" />
-</RuleSet>

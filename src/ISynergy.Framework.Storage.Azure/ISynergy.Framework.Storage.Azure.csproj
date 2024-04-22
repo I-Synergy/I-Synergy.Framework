@@ -4,7 +4,6 @@
         <PackageId>I-Synergy.Framework.Storage.Azure</PackageId>
         <Description>I-Synergy Framework Azure Storage for .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>
-        <CodeAnalysisRuleSet>ISynergy.Framework.Storage.Azure.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>

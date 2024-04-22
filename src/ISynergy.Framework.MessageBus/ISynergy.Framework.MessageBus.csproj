@@ -4,7 +4,6 @@
         <PackageId>I-Synergy.Framework.MessageBus</PackageId>
         <Description>I-Synergy Framework MessageBus for .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, MessageBus</PackageTags>
-        <CodeAnalysisRuleSet>ISynergy.Framework.MessageBus.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
 	<ItemGroup>

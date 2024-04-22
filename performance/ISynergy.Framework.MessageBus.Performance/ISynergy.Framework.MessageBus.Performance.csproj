@@ -3,7 +3,6 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
 		<RootNamespace>ISynergy.Framework.MessageBus.Performance</RootNamespace>
-		<CodeAnalysisRuleSet>ISynergy.Framework.MessageBus.Performance.ruleset</CodeAnalysisRuleSet>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 

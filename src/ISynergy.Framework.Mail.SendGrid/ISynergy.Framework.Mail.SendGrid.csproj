@@ -6,7 +6,6 @@
 		<PackageTags>I-Synergy, Framework, Mail, SendGrid</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>ISynergy.Framework.Mail</RootNamespace>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Mail.SendGrid.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>

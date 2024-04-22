@@ -5,9 +5,5 @@
 		<Description>I-Synergy Framework Monitoring for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Monitoring.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj" />
-	</ItemGroup>
 </Project>
