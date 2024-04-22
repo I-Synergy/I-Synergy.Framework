@@ -68,7 +68,7 @@ public class BusyService : ObservableClass, IBusyService
     /// <returns>Task.</returns>
     public void StartBusy(string message = null)
     {
-        if (message is not null)
+        if (!string.IsNullOrEmpty(message))
             BusyMessage = message;
         else
             BusyMessage = _languageService.GetString("PleaseWait");

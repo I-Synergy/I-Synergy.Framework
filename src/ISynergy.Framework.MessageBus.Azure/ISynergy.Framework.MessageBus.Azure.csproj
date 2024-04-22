@@ -5,7 +5,6 @@
         <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
         <Description>I-Synergy Framework Azure MessageBus for .net 8.0</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
-        <CodeAnalysisRuleSet>ISynergy.Framework.MessageBus.Azure.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>

@@ -4,7 +4,6 @@
         <PackageId>I-Synergy.Framework.Financial</PackageId>
         <Description>I-Synergy Financial Framework for .net 8.0</Description>
         <PackageTags>I-Synergy, Financial, Framework</PackageTags>
-        <CodeAnalysisRuleSet>ISynergy.Framework.Financial.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>

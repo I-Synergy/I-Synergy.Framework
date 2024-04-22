@@ -79,7 +79,7 @@ internal class SynchronizationService : ISynchronizationService
         httpClient.DefaultRequestHeaders.Add(nameof(Grant.client_id), options.ClientId);
         httpClient.DefaultRequestHeaders.Add(nameof(Grant.client_secret), options.ClientSecret);
         httpClient.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, _apiVersion);
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", _context.Profile.Token.AccessToken);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
 
         // Check if we are trying to reach a IIS Express.

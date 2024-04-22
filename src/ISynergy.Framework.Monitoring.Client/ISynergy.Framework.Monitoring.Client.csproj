@@ -5,16 +5,14 @@
 		<Description>I-Synergy Framework SignalR Monitoring Client for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, Client, SignalR</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<RootNamespace>ISynergy.Framework.Monitoring.Client</RootNamespace>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Monitoring.Client.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client"  />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
 	</ItemGroup>
 
 	<ItemGroup>
-        <ProjectReference Include="..\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj" />
+        <ProjectReference Include="..\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj" />
         <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
     </ItemGroup>
 </Project>

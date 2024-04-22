@@ -159,4 +159,10 @@
 	<data name="WarningNull" xml:space="preserve">
 		<value>Waarde kan niet null zijn.</value>
 	</data>
+	<data name="WarningUserLoggedin" xml:space="preserve">
+		<value>{0} is ingelogd.</value>
+	</data>
+	<data name="WarningUserLoggedout" xml:space="preserve">
+		<value>{0} is uitgelogd.</value>
+	</data>
 </root>

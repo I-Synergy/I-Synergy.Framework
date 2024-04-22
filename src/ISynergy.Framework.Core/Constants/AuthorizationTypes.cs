@@ -25,4 +25,8 @@ public static class AuthenticationTypes
     /// The refresh token
     /// </summary>
     public const string RefreshToken = "refresh_token";
+    /// <summary>
+    /// Bearer token.
+    /// </summary>
+    public const string Bearer = "bearer";
 }

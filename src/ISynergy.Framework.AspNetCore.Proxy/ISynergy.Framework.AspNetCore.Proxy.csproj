@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework Proxy for .net 8.0</Description>
 		<PackageTags>I-Synergy, Framework, Proxy, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Proxy.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />

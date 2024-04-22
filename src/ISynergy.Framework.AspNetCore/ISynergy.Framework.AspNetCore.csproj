@@ -6,7 +6,6 @@
 		<PackageTags>I-Synergy, Framework, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
-		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>

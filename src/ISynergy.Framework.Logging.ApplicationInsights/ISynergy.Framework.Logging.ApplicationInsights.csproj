@@ -7,7 +7,6 @@
 		<RootNamespace>ISynergy.Framework.Logging</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnableMsixTooling>true</EnableMsixTooling>
-		<CodeAnalysisRuleSet>ISynergy.Framework.Logging.ApplicationInsights.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
