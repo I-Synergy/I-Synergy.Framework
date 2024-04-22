@@ -53,6 +53,7 @@ public static class MauiProgram
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
                 services.TryAddSingleton<LocalSettingsService>();
+                services.TryAddSingleton<ILocalSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
                 services.TryAddSingleton<IBaseApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
 
                 services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();

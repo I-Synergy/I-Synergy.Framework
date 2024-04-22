@@ -1,12 +1,13 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Synchronization.Abstractions;
+using Sample.Abstractions;
 using Sample.Models;
 using System.Text.Json;
 
 namespace Sample.Services;
 
-public class LocalSettingsService : ISynchronizationSettingsService
+public class LocalSettingsService : ILocalSettingsService
 {
     private const string _fileName = "settings.json";
 
@@ -70,10 +71,8 @@ public class LocalSettingsService : ISynchronizationSettingsService
         File.WriteAllText(file, json);
     }
 
-    /// <summary>
-    /// Settings used globally.
-    /// </summary>
-    public ISynchronizationApplicationSettings Settings => _settings;
-
     IBaseApplicationSettings IBaseApplicationSettingsService.Settings => _settings;
+    ISynchronizationApplicationSettings ISynchronizationSettingsService.Settings => _settings;
+
+    public LocalSettings Settings => _settings;
 }
