@@ -14,10 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.ExceptionServices;
 using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI;

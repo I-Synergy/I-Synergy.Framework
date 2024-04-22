@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using Windows.Media.Capture;
-using Windows.Storage;
 
 namespace ISynergy.Framework.UI.Services;
 

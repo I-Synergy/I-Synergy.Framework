@@ -15,6 +15,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization\ISynergy.Framework.Synchronization.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
 

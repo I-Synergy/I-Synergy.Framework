@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.EntityFramework.Base;
 
 namespace ISynergy.Framework.EntityFramework.Events;
 
@@ -6,7 +6,7 @@ namespace ISynergy.Framework.EntityFramework.Events;
 /// A container for entities that are updated.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class EntityUpdatedEvent<T> where T : EntityBase
+public class EntityUpdatedEvent<T> where T : BaseEntity
 {
     /// <summary>
     /// Ctor

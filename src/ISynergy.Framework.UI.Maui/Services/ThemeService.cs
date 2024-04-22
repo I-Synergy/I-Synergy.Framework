@@ -4,9 +4,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Utilities;
-using Microsoft.Maui.Controls;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -49,7 +47,6 @@ public class ThemeService : IThemeService
     public ThemeService(IBaseApplicationSettingsService applicationSettingsService)
     {
         _applicationSettingsService = applicationSettingsService;
-        _applicationSettingsService.LoadSettings();
     }
 
     /// <summary>

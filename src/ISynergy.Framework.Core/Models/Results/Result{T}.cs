@@ -29,7 +29,11 @@ public class Result<T> : Result, IResult<T>
 
     public static Result<T> Success(T data) => new() { Succeeded = true, Data = data };
 
-    public static Result<T> Success(T data, string message) => new() { Succeeded = true, Data = data, Messages =
+    public static Result<T> Success(T data, string message) => new()
+    {
+        Succeeded = true,
+        Data = data,
+        Messages =
         [message]
     };
 

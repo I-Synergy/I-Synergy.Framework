@@ -2,7 +2,7 @@
 
 namespace ISynergy.Framework.Automations.Tests.Fixtures;
 
-public class Customer : ModelBase
+public class Customer : BaseModel
 {
     public event EventHandler Registered;
 

@@ -23,6 +23,6 @@ public sealed partial class ShellView : View, IShellView
         _navigationService = navigationService;
     }
 
-    private async void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => 
+    private async void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) =>
         await _navigationService.GoBackAsync();
 }

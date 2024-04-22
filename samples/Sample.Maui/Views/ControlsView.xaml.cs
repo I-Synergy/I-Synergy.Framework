@@ -7,9 +7,9 @@ namespace Sample.Views;
 [Scoped(true)]
 public partial class ControlsView
 {
-	public ControlsView(IContext context, ControlsViewModel viewModel)
+    public ControlsView(IContext context, ControlsViewModel viewModel)
        : base(context, viewModel)
     {
-		InitializeComponent();
-	}
+        InitializeComponent();
+    }
 }

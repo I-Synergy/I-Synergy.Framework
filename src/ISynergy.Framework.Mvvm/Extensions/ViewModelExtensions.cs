@@ -11,8 +11,8 @@ namespace ISynergy.Framework.Mvvm.Extensions;
 /// </summary>
 public static class ViewModelExtensions
 {
-    private static Func<Assembly, bool> assemblyFilter => 
-        (x => 
+    private static Func<Assembly, bool> assemblyFilter =>
+        (x =>
         !x.FullName.StartsWith("System") &&
         !x.FullName.StartsWith("WinRT") &&
         !x.FullName.StartsWith("Microsoft") &&
@@ -72,7 +72,7 @@ public static class ViewModelExtensions
         return result;
     }
 
-    public static string GetRelatedView(this Type viewModelType) 
+    public static string GetRelatedView(this Type viewModelType)
     {
         var result = viewModelType.Name;
 
@@ -98,7 +98,7 @@ public static class ViewModelExtensions
 
         return result;
     }
-    
+
     public static string GetRelatedViewModel(this IView view) =>
         view.GetType().GetRelatedViewModel();
 

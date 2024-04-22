@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace ISynergy.Framework.Core.Models;
 

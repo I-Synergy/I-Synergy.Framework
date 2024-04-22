@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.EntityFramework.Entities;
+using ISynergy.Framework.EntityFramework.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
@@ -26,104 +26,82 @@ public abstract class BaseDataContext : DbContext
     protected const string CurrencyPrecision = "decimal(38, 10)";
 
     /// <summary>
-    /// The tenant service
+    /// Initializes a new instance of the <see cref="BaseDataContext"/> class.
     /// </summary>
-    protected readonly ITenantService _tenantService;
+    protected BaseDataContext()
+        : base()
+    {
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseDataContext"/> class.
     /// </summary>
     /// <param name="options">The options.</param>
-    /// <param name="tenantService">The tenant service.</param>
-    protected BaseDataContext(DbContextOptions options, ITenantService tenantService)
+    protected BaseDataContext(DbContextOptions options)
         : base(options)
     {
-        _tenantService = tenantService;
+    }
+
+    protected virtual void ApplyDecimalPrecision(ModelBuilder modelBuilder)
+    {
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            var decimalProperties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(decimal));
+
+            foreach (var property in decimalProperties)
+            {
+                modelBuilder
+                    .Entity(entityType.Name)
+                    .Property(property.Name)
+                    .HasColumnType(CurrencyPrecision);
+            }
+        }
     }
 
     /// <summary>
     /// Applies the query filters.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
-    public virtual void ApplyQueryFilters(ModelBuilder modelBuilder)
+    /// <param name="tenantId"></param>
+    /// <summary>
+    /// Applies the query filters.
+    /// </summary>
+    protected virtual void ApplyQueryFilters(ModelBuilder modelBuilder, Func<Guid> tenantId)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
 
-        var tenantFilter = (Expression<Func<BaseTenantEntity, bool>>)(e => e.TenantId == _tenantService.TenantId);
+        var tenantFilter = (Expression<Func<BaseTenantEntity, bool>>)(e => e.TenantId == tenantId.Invoke());
+        var softDeleteFilter = (Expression<Func<BaseClass, bool>>)(e => !e.IsDeleted);
 
-        // Apply tenantFilter
+        // Apply tenantFilter and softDeleteFilter 
         foreach (var type in clrTypes.Where(t => typeof(BaseTenantEntity).IsAssignableFrom(t)).EnsureNotNull())
         {
-            var filter = CombineQueryFilters(type, new LambdaExpression[] { tenantFilter });
+            var filter = CombineQueryFilters(type, new LambdaExpression[] { tenantFilter, softDeleteFilter });
             modelBuilder.Entity(type).HasQueryFilter(filter);
         }
 
         // Apply default version
-        foreach (var type in clrTypes.Where(t => typeof(IClassBase).IsAssignableFrom(t)).EnsureNotNull())
+        foreach (var type in clrTypes.Where(t => typeof(IBaseClass).IsAssignableFrom(t)).EnsureNotNull())
         {
             modelBuilder.Entity(type)
-                .Property<int>(nameof(IClassBase.Version))
+                .Property<int>(nameof(IBaseClass.Version))
                 .HasDefaultValue(1);
         }
     }
 
     /// <summary>
-    /// <para>
-    /// Saves all changes made in this context to the database.
-    /// </para>
-    /// <para>
-    /// This method will automatically call <see cref="M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.DetectChanges" /> to discover any
-    /// changes to entity instances before saving to the underlying database. This can be disabled via
-    /// <see cref="P:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AutoDetectChangesEnabled" />.
-    /// </para>
-    /// </summary>
-    /// <param name="acceptAllChangesOnSuccess">Indicates whether <see cref="M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AcceptAllChanges" /> is called after the changes have
-    /// been sent successfully to the database.</param>
-    /// <returns>The number of state entries written to the database.</returns>
-    public override int SaveChanges(bool acceptAllChangesOnSuccess)
-    {
-        OnBeforeSaving();
-        return base.SaveChanges(acceptAllChangesOnSuccess);
-    }
-
-    /// <summary>
-    /// <para>
-    /// Saves all changes made in this context to the database.
-    /// </para>
-    /// <para>
-    /// This method will automatically call <see cref="M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.DetectChanges" /> to discover any
-    /// changes to entity instances before saving to the underlying database. This can be disabled via
-    /// <see cref="P:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AutoDetectChangesEnabled" />.
-    /// </para>
-    /// <para>
-    /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-    /// that any asynchronous operations have completed before calling another method on this context.
-    /// </para>
-    /// </summary>
-    /// <param name="acceptAllChangesOnSuccess">Indicates whether <see cref="M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AcceptAllChanges" /> is called after the changes have
-    /// been sent successfully to the database.</param>
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <returns>A task that represents the asynchronous save operation. The task result contains the
-    /// number of state entries written to the database.</returns>
-    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
-    {
-        OnBeforeSaving();
-        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-    }
-
-    /// <summary>
     /// Called when [before saving].
     /// </summary>
-    private void OnBeforeSaving()
+    protected virtual void OnBeforeSaving(Func<Guid> tenantId, Func<string> username)
     {
         if (ChangeTracker.HasChanges())
         {
             foreach (var entry in ChangeTracker.Entries<BaseTenantEntity>().Where(e => e.State == EntityState.Added).EnsureNotNull())
             {
-                entry.Entity.TenantId = _tenantService.TenantId;
+                entry.Entity.TenantId = tenantId.Invoke();
 
                 if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
-                    entry.Entity.CreatedBy = _tenantService.UserName;
+                    entry.Entity.CreatedBy = username.Invoke();
 
                 entry.Entity.CreatedDate = DateTimeOffset.UtcNow;
                 entry.Entity.Version = 1;
@@ -131,8 +109,14 @@ public abstract class BaseDataContext : DbContext
 
             foreach (var entry in ChangeTracker.Entries<BaseTenantEntity>().Where(e => e.State == EntityState.Modified).EnsureNotNull())
             {
+                if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
+                    entry.Entity.CreatedBy = username.Invoke();
+
+                if (entry.Entity.CreatedDate == DateTimeOffset.MinValue)
+                    entry.Entity.CreatedDate = DateTimeOffset.UtcNow;
+
                 if (string.IsNullOrEmpty(entry.Entity.ChangedBy))
-                    entry.Entity.ChangedBy = _tenantService.UserName;
+                    entry.Entity.ChangedBy = username.Invoke();
 
                 entry.Entity.ChangedDate = DateTimeOffset.UtcNow;
                 entry.Entity.Version = entry.Entity.Version + 1;
@@ -150,35 +134,19 @@ public abstract class BaseDataContext : DbContext
     /// <param name="entityType">Type of the entity.</param>
     /// <param name="andAlsoExpressions">The and also expressions.</param>
     /// <returns>LambdaExpression.</returns>
-    private static LambdaExpression CombineQueryFilters(Type entityType, IEnumerable<LambdaExpression> andAlsoExpressions)
+    protected static LambdaExpression CombineQueryFilters(Type entityType, IEnumerable<LambdaExpression> andAlsoExpressions)
     {
         var newParam = Expression.Parameter(entityType);
 
         var andAlsoExprBase = (Expression<Func<BaseTenantEntity, bool>>)(_ => true);
         var andAlsoExpr = ReplacingExpressionVisitor.Replace(andAlsoExprBase.Parameters.Single(), newParam, andAlsoExprBase.Body);
-        andAlsoExpr = andAlsoExpressions.EnsureNotNull().Select(expressionBase => ReplacingExpressionVisitor.Replace(expressionBase.Parameters.Single(), newParam, expressionBase.Body)).Aggregate(andAlsoExpr, (current, expression) => Expression.AndAlso(current, expression));
+
+        foreach (var expressionBase in andAlsoExpressions.EnsureNotNull())
+        {
+            var expression = ReplacingExpressionVisitor.Replace(expressionBase.Parameters.Single(), newParam, expressionBase.Body);
+            andAlsoExpr = Expression.AndAlso(andAlsoExpr, expression);
+        }
+
         return Expression.Lambda(andAlsoExpr, newParam);
-    }
-
-    // This is necessary due to a current limitation in EFCore.
-    // SetQueryFilter() only accepts an expression of a data entity type, not a base class or interface.
-    // Here we rewrite the expression from a base class / interface to a data entity type.
-    // This can be removed if this issue is resolved:
-    // https://github.com/aspnet/EntityFrameworkCore/issues/10257
-    /// <summary>
-    /// Converts the filter expression.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="filterExpression">The filter expression.</param>
-    /// <param name="entityType">Type of the entity.</param>
-    /// <returns>LambdaExpression.</returns>
-    private static LambdaExpression ConvertFilterExpression<T>(
-        Expression<Func<T, bool>> filterExpression,
-        Type entityType)
-    {
-        var newParam = Expression.Parameter(entityType);
-        var newBody = ReplacingExpressionVisitor.Replace(filterExpression.Parameters.Single(), newParam, filterExpression.Body);
-
-        return Expression.Lambda(newBody, newParam);
     }
 }

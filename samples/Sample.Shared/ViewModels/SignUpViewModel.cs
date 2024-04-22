@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;

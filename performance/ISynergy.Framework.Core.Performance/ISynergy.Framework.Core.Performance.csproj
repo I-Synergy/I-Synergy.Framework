@@ -8,11 +8,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BenchmarkDotNet"  />
+		<PackageReference Include="BenchmarkDotNet" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj" />
 	</ItemGroup>
 
 </Project>

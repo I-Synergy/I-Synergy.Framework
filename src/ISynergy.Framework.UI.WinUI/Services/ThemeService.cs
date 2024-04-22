@@ -1,14 +1,13 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Helpers;
-using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.UI.Services;
 

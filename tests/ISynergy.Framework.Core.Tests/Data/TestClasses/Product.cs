@@ -10,7 +10,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses;
 /// Implements the <see cref="ObservableClass" />
 /// </summary>
 /// <seealso cref="ObservableClass" />
-public class Product : ModelBase
+public class Product : BaseModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Product"/> class.

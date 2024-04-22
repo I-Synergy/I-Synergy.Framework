@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Update.Extensions;

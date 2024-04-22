@@ -418,4 +418,7 @@ Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	<data name="Skip" xml:space="preserve">
 		<value>Overslaan</value>
 	</data>
+	<data name="WarningSynchronizationRestart" xml:space="preserve">
+		<value>Om te kunnen synchroniseren, moet u de applicatie opnieuw opstarten om de synchronisatie-instellingen toe te passen</value>
+	</data>
 </root>

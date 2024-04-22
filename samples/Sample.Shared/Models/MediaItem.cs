@@ -5,7 +5,7 @@ namespace Sample.Models;
 /// <summary>
 /// Class MediaItem.
 /// </summary>
-public class MediaItem : ModelBase
+public class MediaItem : BaseModel
 {
     /// <summary>
     /// Gets or sets the Index property value.

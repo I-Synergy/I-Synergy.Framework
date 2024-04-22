@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
-using ISynergy.Framework.Mathematics.Matrices;
+using System.Collections;
 
 namespace ISynergy.Framework.Mathematics.Kinematics;
 

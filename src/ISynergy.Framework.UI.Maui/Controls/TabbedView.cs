@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
