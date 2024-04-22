@@ -5,17 +5,17 @@ namespace ISynergy.Framework.Core.Base;
 /// <summary>
 /// Class ModelBase.
 /// Implements the <see cref="ObservableClass" />
-/// Implements the <see cref="IModelBase" />
+/// Implements the <see cref="IBaseModel" />
 /// </summary>
 /// <seealso cref="ObservableClass" />
-/// <seealso cref="IModelBase" />
-public abstract class ModelBase : ObservableClass, IModelBase
+/// <seealso cref="IBaseModel" />
+public abstract class BaseModel : ObservableClass, IBaseModel
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ModelBase"/> class.
+    /// Initializes a new instance of the <see cref="BaseModel"/> class.
     /// </summary>
     /// <param name="automaticValidation">The validation.</param>
-    protected ModelBase(bool automaticValidation = false)
+    protected BaseModel(bool automaticValidation = false)
         : base(automaticValidation)
     {
     }

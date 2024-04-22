@@ -2,7 +2,7 @@
 
 namespace Sample.Models;
 
-public class Budget : ModelBase
+public class Budget : BaseModel
 {
     /// <summary>
     /// Gets or sets the StartingDate property value.

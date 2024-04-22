@@ -1,13 +1,14 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Base;
 using System.Reflection;
 
-namespace ISynergy.Framework.Core.Base;
+namespace ISynergy.Framework.EntityFramework.Base;
 
 /// <summary>
 /// BaseEntity model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public abstract class EntityBase : ClassBase, IEntityBase
+public abstract class BaseEntity : BaseClass, IBaseEntity
 {
     /// <summary>
     /// Gets or sets the memo.
@@ -36,9 +37,9 @@ public abstract class EntityBase : ClassBase, IEntityBase
     public string ChangedBy { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EntityBase"/> class.
+    /// Initializes a new instance of the <see cref="BaseEntity"/> class.
     /// </summary>
-    protected EntityBase()
+    protected BaseEntity()
     {
         CreatedBy = string.Empty;
     }

@@ -2,6 +2,6 @@
 
 namespace ISynergy.Framework.Mvvm.Models.Tests;
 
-public class TestClass : ModelBase
+public class TestClass : BaseModel
 {
 }

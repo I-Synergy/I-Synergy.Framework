@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Base;
 /// Base_Class model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public abstract class ClassBase : IClassBase
+public abstract class BaseClass : IBaseClass
 {
     /// <summary>
     /// Gets or sets the version.

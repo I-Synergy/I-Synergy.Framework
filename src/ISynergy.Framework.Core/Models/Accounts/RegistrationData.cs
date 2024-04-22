@@ -5,10 +5,10 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 
 /// <summary>
 /// Class RegistrationData.
-/// Implements the <see cref="ModelBase" />
+/// Implements the <see cref="BaseModel" />
 /// </summary>
-/// <seealso cref="ModelBase" />
-public class RegistrationData : ModelBase
+/// <seealso cref="BaseModel" />
+public class RegistrationData : BaseModel
 {
     /// <summary>
     /// Gets or sets the ApplicationId property value.

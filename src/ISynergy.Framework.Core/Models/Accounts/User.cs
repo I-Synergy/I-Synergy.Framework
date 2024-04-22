@@ -5,10 +5,10 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 
 /// <summary>
 /// Class User.
-/// Implements the <see cref="ModelBase" />
+/// Implements the <see cref="BaseModel" />
 /// </summary>
-/// <seealso cref="ModelBase" />
-public record User : RecordBase
+/// <seealso cref="BaseModel" />
+public record User : BaseRecord
 {
     /// <summary>
     /// Gets or sets the Id property value.
