@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.EntityFramework.Base;
 using System.Linq.Expressions;
 
 namespace ISynergy.Framework.EntityFramework.Abstractions.Repositories;
@@ -17,8 +18,8 @@ public interface IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     Task<int> AddItemAsync<TEntity, TSource>(TSource e, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
-        where TSource : RecordBase, new();
+        where TEntity : BaseEntity, new()
+        where TSource : BaseRecord, new();
 
     /// <summary>
     /// Adds the update item asynchronous.
@@ -29,8 +30,8 @@ public interface IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     Task<int> AddUpdateItemAsync<TEntity, TSource>(TSource e, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
-        where TSource : RecordBase, new();
+        where TEntity : BaseEntity, new()
+        where TSource : BaseRecord, new();
 
     /// <summary>
     /// Existses the asynchronous.
@@ -39,7 +40,7 @@ public interface IBaseEntityManager
     /// <param name="predicate">The predicate.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default) where TEntity : EntityBase, new();
+    Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default) where TEntity : BaseEntity, new();
 
     /// <summary>
     /// Gets the item by identifier asynchronous.
@@ -50,7 +51,7 @@ public interface IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>ValueTask&lt;TEntity&gt;.</returns>
     ValueTask<TEntity> GetItemByIdAsync<TEntity, TId>(TId id, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
+        where TEntity : BaseEntity, new()
         where TId : struct;
 
     /// <summary>
@@ -63,7 +64,7 @@ public interface IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     Task<int> RemoveItemAsync<TEntity, TId>(TId id, bool soft = false, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
+        where TEntity : BaseEntity, new()
         where TId : struct;
 
     /// <summary>
@@ -75,6 +76,6 @@ public interface IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     Task<int> UpdateItemAsync<TEntity, TSource>(TSource e, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
-        where TSource : RecordBase, new();
+        where TEntity : BaseEntity, new()
+        where TSource : BaseRecord, new();
 }

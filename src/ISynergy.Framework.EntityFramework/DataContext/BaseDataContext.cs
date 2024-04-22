@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.EntityFramework.Entities;
+using ISynergy.Framework.EntityFramework.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
@@ -42,7 +42,7 @@ public abstract class BaseDataContext : DbContext
     {
     }
 
-    public virtual void ApplyDecimalPrecision(ModelBuilder modelBuilder)
+    protected virtual void ApplyDecimalPrecision(ModelBuilder modelBuilder)
     {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
@@ -66,12 +66,12 @@ public abstract class BaseDataContext : DbContext
     /// <summary>
     /// Applies the query filters.
     /// </summary>
-    public void ApplyQueryFilters(ModelBuilder modelBuilder, Func<Guid> tenantId)
+    protected virtual void ApplyQueryFilters(ModelBuilder modelBuilder, Func<Guid> tenantId)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
 
         var tenantFilter = (Expression<Func<BaseTenantEntity, bool>>)(e => e.TenantId == tenantId.Invoke());
-        var softDeleteFilter = (Expression<Func<ClassBase, bool>>)(e => e.IsDeleted == false);
+        var softDeleteFilter = (Expression<Func<BaseClass, bool>>)(e => !e.IsDeleted);
 
         // Apply tenantFilter and softDeleteFilter 
         foreach (var type in clrTypes.Where(t => typeof(BaseTenantEntity).IsAssignableFrom(t)).EnsureNotNull())
@@ -81,10 +81,10 @@ public abstract class BaseDataContext : DbContext
         }
 
         // Apply default version
-        foreach (var type in clrTypes.Where(t => typeof(IClassBase).IsAssignableFrom(t)).EnsureNotNull())
+        foreach (var type in clrTypes.Where(t => typeof(IBaseClass).IsAssignableFrom(t)).EnsureNotNull())
         {
             modelBuilder.Entity(type)
-                .Property<int>(nameof(IClassBase.Version))
+                .Property<int>(nameof(IBaseClass.Version))
                 .HasDefaultValue(1);
         }
     }
@@ -92,7 +92,7 @@ public abstract class BaseDataContext : DbContext
     /// <summary>
     /// Called when [before saving].
     /// </summary>
-    private void OnBeforeSaving(Func<Guid> tenantId, Func<string> username)
+    protected virtual void OnBeforeSaving(Func<Guid> tenantId, Func<string> username)
     {
         if (ChangeTracker.HasChanges())
         {
@@ -134,7 +134,7 @@ public abstract class BaseDataContext : DbContext
     /// <param name="entityType">Type of the entity.</param>
     /// <param name="andAlsoExpressions">The and also expressions.</param>
     /// <returns>LambdaExpression.</returns>
-    private static LambdaExpression CombineQueryFilters(Type entityType, IEnumerable<LambdaExpression> andAlsoExpressions)
+    protected static LambdaExpression CombineQueryFilters(Type entityType, IEnumerable<LambdaExpression> andAlsoExpressions)
     {
         var newParam = Expression.Parameter(entityType);
 

@@ -4,13 +4,13 @@ namespace ISynergy.Framework.Core.Fixtures;
 
 /// <summary>
 /// Class ModelFixture.
-/// Implements the <see cref="ModelBase" />
+/// Implements the <see cref="BaseModel" />
 /// Implements the <see cref="IDisposable" />
 /// </summary>
 /// <typeparam name="T"></typeparam>
-/// <seealso cref="ModelBase" />
+/// <seealso cref="BaseModel" />
 /// <seealso cref="IDisposable" />
-public class ModelFixture<T> : ModelBase, IDisposable
+public class ModelFixture<T> : BaseModel, IDisposable
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ModelFixture{T}"/> class.

@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.EntityFramework.Abstractions.Repositories;
+using ISynergy.Framework.EntityFramework.Base;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -62,7 +63,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public virtual Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
+        where TEntity : BaseEntity, new()
     {
         return _dataContext.Set<TEntity>().AnyAsync(predicate, cancellationToken);
     }
@@ -76,7 +77,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>ValueTask&lt;TEntity&gt;.</returns>
     public virtual async ValueTask<TEntity> GetItemByIdAsync<TEntity, TId>(TId id, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
+        where TEntity : BaseEntity, new()
         where TId : struct
     {
         var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
@@ -120,8 +121,8 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;TModel&gt; representing the asynchronous operation.</returns>
     public virtual async Task<TModel> GetItemByIdAsync<TEntity, TModel, TId>(TId id, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
-        where TModel : RecordBase, new()
+        where TEntity : BaseEntity, new()
+        where TModel : BaseRecord, new()
         where TId : struct
     {
         if (await GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false) is { } result)
@@ -139,8 +140,8 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Int32&gt;.</returns>
     public async Task<int> AddItemAsync<TEntity, TModel>(TModel e, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
-        where TModel : RecordBase, new()
+        where TEntity : BaseEntity, new()
+        where TModel : BaseRecord, new()
     {
         Argument.IsNotNull(e);
 
@@ -164,8 +165,8 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
     public async Task<int> UpdateItemAsync<TEntity, TModel>(TModel e, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
-        where TModel : RecordBase, new()
+        where TEntity : BaseEntity, new()
+        where TModel : BaseRecord, new()
     {
         Argument.IsNotNull(e);
 
@@ -227,8 +228,8 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
     public async Task<int> AddUpdateItemAsync<TEntity, TModel>(TModel e, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
-        where TModel : RecordBase, new()
+        where TEntity : BaseEntity, new()
+        where TModel : BaseRecord, new()
     {
         Argument.IsNotNull(e);
 
@@ -305,7 +306,7 @@ public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
     /// <returns>System.Int32.</returns>
     /// <exception cref="Microsoft.EntityFrameworkCore.DbUpdateException"></exception>
     public async Task<int> RemoveItemAsync<TEntity, TId>(TId id, bool soft = false, CancellationToken cancellationToken = default)
-        where TEntity : EntityBase, new()
+        where TEntity : BaseEntity, new()
         where TId : struct
     {
         Argument.IsNotNull(id);

@@ -2,7 +2,7 @@
 
 namespace Sample.Models;
 
-public class GlobalSettings : ModelBase
+public class GlobalSettings : BaseModel
 {
     public bool IsFirstRun
     {
