@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Drawing.Imaging;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage.Streams;
 
 namespace ISynergy.Framework.UI.Services;
 

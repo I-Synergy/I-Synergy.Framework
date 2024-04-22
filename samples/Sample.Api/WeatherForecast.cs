@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Base;
 
 namespace Sample.Api;
 
-public record WeatherForecast : RecordBase
+public record WeatherForecast : BaseRecord
 {
     public DateTime Date { get; set; }
 

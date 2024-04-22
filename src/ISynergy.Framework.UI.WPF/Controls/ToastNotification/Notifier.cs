@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Events;
 using ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
-using System.Windows;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification;
 

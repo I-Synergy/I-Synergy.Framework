@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -61,6 +62,7 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
     {
+        _context.Environment = SoftwareEnvironments.Test;
         _context.Profile = new Profile(
             new Token(),
             Guid.NewGuid(),

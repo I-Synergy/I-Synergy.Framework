@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Tests.Data.TestClasses;
 

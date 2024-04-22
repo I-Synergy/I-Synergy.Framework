@@ -6,7 +6,7 @@ namespace Sample.Models;
 /// <summary>
 /// Class TestItem.
 /// </summary>
-public class TestItem : ModelBase
+public class TestItem : BaseModel
 {
     /// <summary>
     /// Gets or sets the Id property value.

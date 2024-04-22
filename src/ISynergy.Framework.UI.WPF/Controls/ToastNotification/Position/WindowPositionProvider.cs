@@ -1,8 +1,6 @@
-﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
+﻿using ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 using ISynergy.Framework.UI.Controls.ToastNotification.Enumerations;
 using ISynergy.Framework.UI.Controls.ToastNotification.Extensions;
-using System.ComponentModel;
 using System.Windows;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification.Position;
@@ -21,7 +19,7 @@ public class WindowPositionProvider : IPositionProvider
         _corner = corner;
         _offsetX = offsetX;
         _offsetY = offsetY;
-        
+
         ParentWindow = parentWindow;
         ParentWindow.SizeChanged += ParentWindowOnSizeChanged;
         ParentWindow.LocationChanged += ParentWindowOnLocationChanged;

@@ -10,10 +10,10 @@ namespace ISynergy.Framework.UI.ViewModels;
 public sealed class LoadingViewModel : ViewModel
 {
     public LoadingViewModel(
-        IContext context, 
-        IBaseCommonServices commonServices, 
-        ILogger logger, 
-        bool automaticValidation = false) 
+        IContext context,
+        IBaseCommonServices commonServices,
+        ILogger logger,
+        bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
     }

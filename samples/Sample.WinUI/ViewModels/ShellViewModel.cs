@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -119,7 +118,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SettingsService = settingsService;
 
         _navigationService = navigationService;
-        _navigationService.BackStackChanged += (s,e) => OnPropertyChanged(nameof(IsBackEnabled));
+        _navigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
 
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
@@ -162,7 +161,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, SignInCommand));
 
-        
+
     }
 
     protected override async Task SignOutAsync()

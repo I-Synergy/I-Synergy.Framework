@@ -61,6 +61,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <value>The browse command.</value>
     public AsyncRelayCommand ControlsCommand { get; private set; }
 
+    public AsyncRelayCommand SyncCommand { get; private set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
@@ -90,6 +92,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
         ControlsCommand = new AsyncRelayCommand(OpenControlsAsync);
         SlideshowCommand = new AsyncRelayCommand(OpenSlideshowAsync);
+        SyncCommand = new AsyncRelayCommand(OpenSyncAsync);
 
         PopulateNavigationMenuItems();
     }
@@ -104,6 +107,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             PrimaryItems.Add(new NavigationItem("Info", ResourceUtility.FindResource<string>("info"), _themeService.Style.Color, InfoCommand));
             PrimaryItems.Add(new NavigationItem("Controls", ResourceUtility.FindResource<string>("search"), _themeService.Style.Color, ControlsCommand));
             PrimaryItems.Add(new NavigationItem("SlideShow", ResourceUtility.FindResource<string>("info"), _themeService.Style.Color, SlideshowCommand));
+            PrimaryItems.Add(new NavigationItem("Sync", ResourceUtility.FindResource<string>("Sync"), _themeService.Style.Color, SyncCommand));
 
             SecondaryItems.Add(new NavigationItem("Help", ResourceUtility.FindResource<string>("help"), _themeService.Style.Color, HelpCommand));
             SecondaryItems.Add(new NavigationItem("Language", ResourceUtility.FindResource<string>("language"), _themeService.Style.Color, LanguageCommand));
@@ -152,4 +156,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
         CommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
+
+    /// <summary>
+    /// Opens the sync asynchronous.
+    /// </summary>
+    /// <returns></returns>
+    private Task OpenSyncAsync() =>
+        CommonServices.NavigationService.NavigateAsync<SyncViewModel>();
 }

@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models;
 /// Country model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public record Country : RecordBase
+public record Country : BaseRecord
 {
     /// <summary>
     /// Gets or sets the CountryId property value.

@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Core.Models;
 /// TileItem model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public class TileItem : ModelBase
+public class TileItem : BaseModel
 {
     /// <summary>
     /// Gets or sets the Name property value.

@@ -95,7 +95,7 @@ public class AutomationTests
     public async Task AutomationScenario1TestAsync()
     {
         var cancellationTokenSource = new CancellationTokenSource();
-        
+
         _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, TimeSpan.FromSeconds(1)));
 
         _stopwatch.Start();

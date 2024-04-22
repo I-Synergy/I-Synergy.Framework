@@ -1,12 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Timers;
 using Timer = System.Timers.Timer;
 

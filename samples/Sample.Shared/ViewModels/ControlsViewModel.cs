@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -11,8 +10,6 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Timers;
 
 namespace Sample.ViewModels;
 
@@ -30,9 +27,9 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public AsyncRelayCommand ShowMemoCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
-    public AsyncRelayCommand<TestItem> NavigateToDetailCommand { get; private set; }  
+    public AsyncRelayCommand<TestItem> NavigateToDetailCommand { get; private set; }
 
-    public ControlsViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool automaticValidation = false) 
+    public ControlsViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
         BusyOnCommand = new RelayCommand(StartTimer);
@@ -76,7 +73,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// <returns>Task.</returns>
     private async Task SelectSingleAsync()
     {
-       var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
+        var selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
         await BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
@@ -153,7 +150,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
                 _timer.Stop();
                 _timer.Elapsed -= Timer_Elapsed;
                 _timer.Dispose();
-            }   
+            }
         }
     }
 }

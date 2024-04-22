@@ -13,7 +13,6 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
-using System.Runtime.ExceptionServices;
 
 [assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]
 [assembly: ExportFont("opendyslexic3-regular.ttf", Alias = "OpenDyslexic3-Regular")]
@@ -90,7 +89,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Setting up application settings service.");
         _applicationSettingsService = ServiceLocator.Default.GetInstance<IBaseApplicationSettingsService>();
-        _applicationSettingsService.LoadSettings();
 
         _logger.LogInformation("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();

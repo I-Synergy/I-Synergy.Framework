@@ -9,11 +9,11 @@ namespace Sample.ViewModels;
 public class DetailViewModel : ViewModelNavigation<TestItem>
 {
     public DetailViewModel(
-        IContext context, 
-        IBaseCommonServices commonServices, 
-        ILogger logger, 
+        IContext context,
+        IBaseCommonServices commonServices,
+        ILogger logger,
         TestItem item,
-        bool automaticValidation = false) 
+        bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
         SelectedItem = item;

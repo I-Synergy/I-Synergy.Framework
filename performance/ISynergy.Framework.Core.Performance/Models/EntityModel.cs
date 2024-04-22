@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.EntityFramework.Base;
 
 namespace ISynergy.Framework.Core.Performance.Models;
 
-public class EntityModel : EntityBase
+public class EntityModel : BaseEntity
 {
     public Guid Id { get; }
     public string Name { get; }

@@ -5,10 +5,10 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 
 /// <summary>
 /// Class Module.
-/// Implements the <see cref="ModelBase" />
+/// Implements the <see cref="BaseModel" />
 /// </summary>
-/// <seealso cref="ModelBase" />
-public record Module : RecordBase
+/// <seealso cref="BaseModel" />
+public record Module : BaseRecord
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Module"/> class.

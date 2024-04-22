@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Synchronization.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -47,12 +47,13 @@ public static class MauiProgram
                 logging.SetMinimumLevel(LogLevel.Trace);
                 //logging.AddApplicationInsightsLogging(config);
             })
-            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources, LoadingView>((services, configuration) => 
+            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources, LoadingView>((services, configuration) =>
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
                 services.TryAddSingleton<LocalSettingsService>();
+                services.TryAddSingleton<ILocalSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
                 services.TryAddSingleton<IBaseApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
 
                 services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
@@ -60,6 +61,8 @@ public static class MauiProgram
                 services.TryAddSingleton<CommonServices>();
                 services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
                 services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
+                
+                services.ConfigureSynchronization(s => s.GetRequiredService<LocalSettingsService>());
 
 //#if WINDOWS
 //                services.AddUpdatesIntegration();
