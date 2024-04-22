@@ -54,6 +54,7 @@ public class ExceptionMiddleware
         return context.Response
             .WriteAsync(new ErrorDetail(
                 context.Response.StatusCode,
+                exception.Message,
                 exception.ToMessage(Environment.StackTrace),
                 exception.GetType().FullName)
             .ToString());
