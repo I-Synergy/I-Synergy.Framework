@@ -14,4 +14,9 @@ public class DataProtectionOptions : IStorageOptions
     /// </summary>
     /// <value>The connection string.</value>
     public string ConnectionString { get; set; }
+
+    /// <summary>
+    /// Gets or sets the container.
+    /// </summary>
+    public string KeyIdentifier { get; set; }
 }

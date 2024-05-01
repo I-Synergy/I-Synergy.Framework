@@ -1,5 +1,12 @@
-﻿using ISynergy.Framework.Core.Validation;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Helpers;
+using Microsoft.Maui.LifecycleEvents;
 using Microsoft.UI.Windowing;
+using Microsoft.Windows.AppLifecycle;
+using Windows.ApplicationModel.Activation;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -57,5 +64,34 @@ public static class AppWindowExtensions
             overlappedPresenter.SetBorderAndTitleBar(true, true);
             overlappedPresenter.Restore();
         }
+    }
+
+    public static MauiAppBuilder ConfigureSingleInstanceApp(this MauiAppBuilder builder, Action<string[]> defaultAction, Action<ProtocolActivatedEventArgs> protocolAction, Action<LaunchActivatedEventArgs> launchAction)
+    {
+#if WINDOWS
+        builder.ConfigureLifecycleEvents(configureDelegate =>
+        {
+            configureDelegate.AddWindows(windows =>
+            {
+                windows.OnAppInstanceActivated((sender, e) =>
+                {
+                    if (e.Kind == ExtendedActivationKind.Launch)
+                    {
+                        launchAction.Invoke(e.Data as LaunchActivatedEventArgs);
+                    }
+                    else if (e.Kind == ExtendedActivationKind.Protocol)
+                    {
+                        protocolAction.Invoke(e.Data as ProtocolActivatedEventArgs);
+                    }
+                    else if (Environment.GetCommandLineArgs().Length > 1)
+                    {
+                        defaultAction.Invoke(Environment.GetCommandLineArgs());
+                    }
+                });
+            });
+        });
+#endif
+
+        return builder;
     }
 }
