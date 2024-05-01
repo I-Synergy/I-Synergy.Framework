@@ -1,12 +1,14 @@
 ﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.Models;
 using Sample.ViewModels;
+using System.Runtime.ExceptionServices;
 
 namespace Sample;
 
@@ -99,5 +101,10 @@ public partial class App : BaseApplication
         {
             MessageService.Default.Unregister<ApplicationLoadedMessage>(this);
         }
+    }
+
+    protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
+    {
+        base.CurrentDomain_FirstChanceException(sender, e);
     }
 }
