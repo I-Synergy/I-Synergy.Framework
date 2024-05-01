@@ -2,6 +2,7 @@
   "profiles": {
     "Windows Machine": {
       "commandName": "MsixPackage",
+      "commandLineArgs": "?environment=local&country=nl",
       "nativeDebugging": false
     }
   }

@@ -10,13 +10,13 @@ namespace ISynergy.Framework.Update.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds update integration.
+    /// Adds Microsoft Store Update integration.
     /// </summary>
-    /// <param name="services"></param>
+    /// <param name="builder"></param>
     /// <returns></returns>
-    public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services)
+    public static MauiAppBuilder ConfigureStoreUpdateIntegration(this MauiAppBuilder builder)
     {
-        services.TryAddSingleton<IUpdateService, UpdateService>();
-        return services;
+        builder.Services.TryAddSingleton<IUpdateService, UpdateService>();
+        return builder;
     }
 }
