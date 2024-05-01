@@ -11,18 +11,22 @@ namespace ISynergy.Framework.UI.Services;
 internal class DialogService : IDialogService
 {
     private readonly ILanguageService _languageService;
+    private readonly IDispatcherService _dispatcherService;
     private readonly IContext _context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="context"></param>
+    /// <param name="dispatcherService"></param>
     /// <param name="languageService">The language service.</param>
     public DialogService(
         IContext context,
+        IDispatcherService dispatcherService,
         ILanguageService languageService)
     {
         _context = context;
+        _dispatcherService = dispatcherService;
         _languageService = languageService;
     }
 
@@ -98,38 +102,45 @@ internal class DialogService : IDialogService
     /// <returns>MessageBoxResult.</returns>
     public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
     {
-#if IOS || MACCATALYST
+        var result = MessageBoxResult.None;
+
         // This delay allows windows to close before showing the next one.
         // If not, the alert is not shown.
         await Task.Delay(1000);
-#endif
 
-        switch (buttons)
+        _dispatcherService.Invoke(async () =>
         {
-            case MessageBoxButton.OKCancel:
-                if (await Application.Current.MainPage.DisplayAlert(
-                    title,
-                    message,
-                    _languageService.GetString("Ok"),
-                    _languageService.GetString("Cancel")))
-                    return MessageBoxResult.OK;
-                return MessageBoxResult.Cancel;
-            case MessageBoxButton.YesNo:
-                if (await Application.Current.MainPage.DisplayAlert(
-                    title,
-                    message,
-                    _languageService.GetString("Yes"),
-                    _languageService.GetString("No")))
-                    return MessageBoxResult.Yes;
-                return MessageBoxResult.No;
-            default:
-                await Application.Current.MainPage.DisplayAlert(
-                    title,
-                    message,
-                    _languageService.GetString("Ok"));
+            switch (buttons)
+            {
+                case MessageBoxButton.OKCancel:
+                    if (await Application.Current.MainPage.DisplayAlert(
+                        title,
+                        message,
+                        _languageService.GetString("Ok"),
+                        _languageService.GetString("Cancel")))
+                        result = MessageBoxResult.OK;
+                    result = MessageBoxResult.Cancel;
+                    break;
+                case MessageBoxButton.YesNo:
+                    if (await Application.Current.MainPage.DisplayAlert(
+                        title,
+                        message,
+                        _languageService.GetString("Yes"),
+                        _languageService.GetString("No")))
+                        result = MessageBoxResult.Yes;
+                    result = MessageBoxResult.No;
+                    break;
+                default:
+                    await Application.Current.MainPage.DisplayAlert(
+                        title,
+                        message,
+                        _languageService.GetString("Ok"));
+                    result = MessageBoxResult.OK;
+                    break;
+            }
+        });
 
-                return MessageBoxResult.OK;
-        }
+        return result;
     }
 
     /// <summary>
@@ -201,30 +212,35 @@ internal class DialogService : IDialogService
     /// <param name="dialog"></param>
     /// <param name="viewmodel"></param>
     /// <returns></returns>
-    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
+    public Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
     {
-        if (dialog is Window window)
+        _dispatcherService.Invoke(async () =>
         {
-            window.ViewModel = viewmodel;
-
-            async void ViewModelClosedHandler(object sender, EventArgs e)
+            if (dialog is Window window)
             {
-                viewmodel.Closed -= ViewModelClosedHandler;
+                window.ViewModel = viewmodel;
 
-                await Application.Current.MainPage.Navigation.PopModalAsync();
+                async void ViewModelClosedHandler(object sender, EventArgs e)
+                {
+                    viewmodel.Closed -= ViewModelClosedHandler;
 
-                viewmodel.Dispose();
-                viewmodel = null;
+                    await Application.Current.MainPage.Navigation.PopModalAsync();
 
-                window?.Dispose();
-                window = null;
-            };
+                    viewmodel.Dispose();
+                    viewmodel = null;
 
-            viewmodel.Closed += ViewModelClosedHandler;
+                    window?.Dispose();
+                    window = null;
+                };
 
-            await viewmodel.InitializeAsync();
+                viewmodel.Closed += ViewModelClosedHandler;
 
-            await Application.Current.MainPage.Navigation.PushModalAsync(window, true);
-        }
+                await viewmodel.InitializeAsync();
+
+                await Application.Current.MainPage.Navigation.PushModalAsync(window, true);
+            }
+        });
+
+        return Task.CompletedTask;
     }
 }

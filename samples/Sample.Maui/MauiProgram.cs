@@ -13,6 +13,9 @@ using Sample.Services;
 using Sample.Views;
 using Syncfusion.Maui.Core.Hosting;
 using System.Reflection;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Extensions;
+
 
 #if WINDOWS
 using ISynergy.Framework.Update.Extensions;
@@ -30,6 +33,8 @@ public static class MauiProgram
         var configBuilder = new ConfigurationBuilder();
         configBuilder.AddJsonStream(mainAssembly.GetManifestResourceStream("Sample.appsettings.json"));
         var config = configBuilder.Build();
+
+        var localSettingsService = new LocalSettingsService();
 
         builder
             .Configuration
@@ -52,9 +57,9 @@ public static class MauiProgram
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                services.TryAddScoped<LocalSettingsService>();
-                services.TryAddScoped<ILocalSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
-                services.TryAddScoped<IBaseApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
+                services.TryAddSingleton(s => localSettingsService);
+                services.TryAddSingleton<ILocalSettingsService>(s => localSettingsService);
+                services.TryAddSingleton<IBaseApplicationSettingsService>(s => localSettingsService);
 
                 services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
 
@@ -64,10 +69,34 @@ public static class MauiProgram
                 
                 services.ConfigureSynchronization(s => s.GetRequiredService<LocalSettingsService>());
 
-//#if WINDOWS
-//                services.AddUpdatesIntegration();
-//#endif
+                if (localSettingsService.Settings.IsSynchronizationEnabled)
+                {
+                    services.ConfigureSynchronization(s => localSettingsService);
+                }
+                else
+                {
+                    services.ConfigureFakeSynchronization(s => localSettingsService);
+                }
             })
+#if WINDOWS
+            //.ConfigureStoreUpdateIntegration()
+            .ConfigureSingleInstanceApp(async e =>
+            {
+                foreach (var arg in e.EnsureNotNull())
+                {
+                    if (!string.IsNullOrEmpty(arg))
+                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(arg, "Environment");
+                }
+            }, async p =>
+            {
+                if (!string.IsNullOrEmpty(p.Uri?.Query))
+                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{p.Uri.Query}", "ProtocolActivatedEventArgs");
+            }, async l =>
+            {
+                if (!string.IsNullOrEmpty(l.Arguments))
+                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
+            })
+#endif
             .ConfigureSyncfusionCore();
 
         return builder.Build();
