@@ -31,8 +31,6 @@ public class Startup(IWebHostEnvironment environment, IConfiguration configurati
         }
     }
 
-    private const string CorsOrigins = "CorsOrigins";
-
     /// <summary>
     /// Configures required services.
     /// </summary>
@@ -43,7 +41,7 @@ public class Startup(IWebHostEnvironment environment, IConfiguration configurati
 
         services.AddCors(options =>
         {
-            options.AddPolicy(CorsOrigins, builder =>
+            options.AddDefaultPolicy(builder =>
             {
                 builder.WithOrigins("https://localhost:5000", "https://localhost:5003", "https://localhost:5006")
                     .AllowAnyMethod()
@@ -71,7 +69,7 @@ public class Startup(IWebHostEnvironment environment, IConfiguration configurati
             app.UseHsts();
         }
 
-        app.UseCors(CorsOrigins);
+        app.UseCors();
         app.Use(async (context, next) =>
         {
             // Request method, scheme, and path

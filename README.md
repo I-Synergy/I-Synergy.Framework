@@ -19,7 +19,6 @@ ___
 | [I-Synergy.Framework.AspNetCore.Globalization](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Globalization/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Globalization) |
 | [I-Synergy.Framework.AspNetCore.Monitoring](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Monitoring/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Monitoring) |
 | [I-Synergy.Framework.AspNetCore.MultiTenancy](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.MultiTenancy/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.MultiTenancy) |
-| [I-Synergy.Framework.AspNetCore.Proxy](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Proxy/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Proxy) |
 | [I-Synergy.Framework.Automations](https://www.nuget.org/packages/I-Synergy.Framework.Automations/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Automations) |
 | [I-Synergy.Framework.Core](https://www.nuget.org/packages/I-Synergy.Framework.Core/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Core) |
 | [I-Synergy.Framework.Documents](https://www.nuget.org/packages/I-Synergy.Framework.Documents/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Documents) |
