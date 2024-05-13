@@ -249,35 +249,26 @@ public class NavigationService : INavigationService
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
         where TViewModel : class, IViewModel
     {
-        if (!DispatcherQueue.GetForCurrentThread().HasThreadAccess)
+        if (Application.Current is BaseApplication baseApplication &&
+            baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
+            dependencyObject.FindDescendant<Frame>() is { } frame &&
+            NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
         {
-            DispatcherQueue.GetForCurrentThread().TryEnqueue(
-                DispatcherQueuePriority.Normal,
-                async () => await NavigateAsync<TViewModel>(viewModel, parameter));
-        }
-        else
-        {
-            if (Application.Current is BaseApplication baseApplication &&
-                baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
-                dependencyObject.FindDescendant<Frame>() is { } frame &&
-                NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
+            // Check if actual page is the same as destination page.
+            if (frame.Content is View originalView)
             {
-                // Check if actual page is the same as destination page.
-                if (frame.Content is View originalView)
-                {
-                    if (originalView.GetType().Equals(page.GetType()))
-                        return;
+                if (originalView.GetType().Equals(page.GetType()))
+                    return;
 
-                    _backStack.Push(originalView.ViewModel);
-                }
-
-                frame.Content = page;
-
-                if (!page.ViewModel.IsInitialized)
-                    await page.ViewModel.InitializeAsync();
-
-                OnBackStackChanged(EventArgs.Empty);
+                _backStack.Push(originalView.ViewModel);
             }
+
+            frame.Content = page;
+
+            if (!page.ViewModel.IsInitialized)
+                await page.ViewModel.InitializeAsync();
+
+            OnBackStackChanged(EventArgs.Empty);
         }
     }
 
@@ -293,66 +284,47 @@ public class NavigationService : INavigationService
         where TViewModel : class, IViewModel
         where TView : IView
     {
-        if (!DispatcherQueue.GetForCurrentThread().HasThreadAccess)
+        if (Application.Current is BaseApplication baseApplication &&
+            baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
+            dependencyObject.FindDescendant<Frame>() is { } frame &&
+            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
         {
-            DispatcherQueue.GetForCurrentThread().TryEnqueue(
-                DispatcherQueuePriority.Normal,
-                async () => await NavigateAsync<TViewModel, TView>(viewModel, parameter));
-        }
-        else
-        {
-            if (Application.Current is BaseApplication baseApplication &&
-                baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
-                dependencyObject.FindDescendant<Frame>() is { } frame &&
-                _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
+            if (viewModel is null && _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
+                viewModel = resolvedViewModel;
+
+            if (viewModel is not null && parameter is not null)
+                viewModel.Parameter = parameter;
+
+            page.ViewModel = viewModel;
+
+            // Check if actual page is the same as destination page.
+            if (frame.Content is View originalView)
             {
-                if (viewModel is null && _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
-                    viewModel = resolvedViewModel;
+                if (originalView.GetType().Equals(page.GetType()))
+                    return;
 
-                if (viewModel is not null && parameter is not null)
-                    viewModel.Parameter = parameter;
-
-                page.ViewModel = viewModel;
-
-                // Check if actual page is the same as destination page.
-                if (frame.Content is View originalView)
-                {
-                    if (originalView.GetType().Equals(page.GetType()))
-                        return;
-
-                    _backStack.Push(originalView.ViewModel);
-                }
-
-                frame.Content = page;
-
-                if (!page.ViewModel.IsInitialized)
-                    await page.ViewModel.InitializeAsync();
-
-                OnBackStackChanged(EventArgs.Empty);
+                _backStack.Push(originalView.ViewModel);
             }
 
+            frame.Content = page;
+
+            if (!page.ViewModel.IsInitialized)
+                await page.ViewModel.InitializeAsync();
+
+            OnBackStackChanged(EventArgs.Empty);
         }
     }
 
     public async Task NavigateModalAsync<TViewModel>(object parameter = null)
         where TViewModel : class, IViewModel
     {
-        if (!DispatcherQueue.GetForCurrentThread().HasThreadAccess)
-        {
-            DispatcherQueue.GetForCurrentThread().TryEnqueue(
-                DispatcherQueuePriority.Normal,
-                async () => await NavigateModalAsync<TViewModel>(parameter));
-        }
-        else
-        {
-            if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page &&
+        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page &&
             Application.Current is BaseApplication baseApplication)
-            {
-                baseApplication.MainWindow.Content = page;
+        {
+            baseApplication.MainWindow.Content = page;
 
-                if (!page.ViewModel.IsInitialized)
-                    await page.ViewModel.InitializeAsync();
-            }
+            if (!page.ViewModel.IsInitialized)
+                await page.ViewModel.InitializeAsync();
         }
     }
 

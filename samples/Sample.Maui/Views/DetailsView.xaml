@@ -92,13 +92,6 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10" />
                                 </Border.StrokeShape>
-                                <Border.Shadow>
-                                    <Shadow
-                                    Brush="{DynamicResource TertiaryBrush}"
-                                    Offset="4,4"
-                                    Radius="8"
-                                    Opacity="0.75" />
-                                </Border.Shadow>
 
                                 <FlyoutBase.ContextFlyout>
                                     <MenuFlyout>
@@ -126,14 +119,7 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Grid.Shadow>
-                                        <Shadow
-                                        Brush="Black"
-                                        Offset="1,1"
-                                        Radius="2"
-                                        Opacity="0.50" />
-                                    </Grid.Shadow>
-
+    
                                     <syncfusion:SfAvatarView
                                         Grid.Column="0" 
                                         AvatarName="{Binding Description}" 

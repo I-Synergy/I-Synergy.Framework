@@ -20,13 +20,15 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="44"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
+            
             <Entry
                 Text="{Binding Query,Mode=TwoWay}"
                 Placeholder="{m:GetString Search}"
+                Grid.Row="1"
                 Grid.Column="0"
                 ClearButtonVisibility="WhileEditing"
                 ReturnCommand="{Binding RefreshCommand}"
@@ -35,6 +37,7 @@
 
             <Button
                 Text="{m:GetString Search}"
+                Grid.Row="1"
                 Grid.Column="1"
                 Command="{Binding RefreshCommand}"
                 CommandParameter="{Binding Query}"
@@ -44,25 +47,23 @@
                 x:Name="DataSummary"
                 ItemsSource="{Binding Items}"
                 SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
-                SelectionChanged="DataSummary_SelectionChanged"
                 MinimumHeightRequest="400"
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.ColumnSpan="2">
                 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="10">
                             <Label Text="{Binding}" Margin="10,0" />
-                            <!--<Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.SubmitCommand}"
-                                    CommandParameter="{Binding}" 
-                                    NumberOfTapsRequired="2"/>
-                            </Grid.GestureRecognizers>-->
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
+            <c:ErrorPresenter
+                Grid.Row="0" 
+                Grid.ColumnSpan="2"
+                VerticalOptions="Start"/>
         </Grid>
     </ContentView>
 </c:Window>
