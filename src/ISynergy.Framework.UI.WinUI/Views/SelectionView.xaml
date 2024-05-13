@@ -50,6 +50,7 @@
                           x:Name="DataSummary" 
                           ItemsSource="{Binding Items}"
                           SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
+                          SelectedItem="{Binding InternalSelectedItem, Mode=TwoWay}"
                           Margin="1,4">
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior EventName="DoubleTapped">

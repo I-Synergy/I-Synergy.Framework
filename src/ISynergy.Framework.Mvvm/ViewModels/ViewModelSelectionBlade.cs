@@ -61,10 +61,6 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         set => SetValue(value);
     }
 
-    /// <summary>
-    /// Gets or sets the refresh command.
-    /// </summary>
-    /// <value>The refresh command.</value>
     public AsyncRelayCommand<string> RefreshCommand { get; private set; }
 
     /// <summary>
@@ -97,7 +93,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
         Validator = new Action<IObservableClass>(arg =>
         {
-            if (SelectionMode == SelectionModes.Single && SelectedItems.Count != 1)
+            if (SelectionMode == SelectionModes.Single && SelectedItems.Count < 1)
                 AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
 
             if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
@@ -163,10 +159,9 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         {
             var result = new List<TEntity>();
 
-            foreach (var item in SelectedItems.EnsureNotNull())
+            foreach (TEntity item in SelectedItems)
             {
-                if (item is TEntity entity)
-                    result.Add(entity);
+                result.Add(item);
             }
 
             OnSubmitted(new SubmitEventArgs<List<TEntity>>(result));
