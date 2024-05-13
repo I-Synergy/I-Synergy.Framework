@@ -20,7 +20,6 @@ public class DialogService : IDialogService
 {
     private readonly ILanguageService _languageService;
     private readonly IContext _context;
-    private readonly IDispatcherService _dispatcherService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
@@ -30,12 +29,10 @@ public class DialogService : IDialogService
     /// <param name="languageService">The language service.</param>
     public DialogService(
         IContext context,
-        ILanguageService languageService,
-        IDispatcherService dispatcherService)
+        ILanguageService languageService)
     {
         _context = context;
         _languageService = languageService;
-        _dispatcherService = dispatcherService;
     }
 
     /// <summary>
@@ -111,42 +108,38 @@ public class DialogService : IDialogService
     public Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
     {
         var result = MessageBoxResult.None;
+        var button = System.Windows.MessageBoxButton.OK;
 
-        _dispatcherService.Invoke(() =>
+        switch (buttons)
         {
-            var button = System.Windows.MessageBoxButton.OK;
+            case MessageBoxButton.OKCancel:
+                button = System.Windows.MessageBoxButton.OKCancel;
+                break;
+            case MessageBoxButton.YesNoCancel:
+                button = System.Windows.MessageBoxButton.YesNoCancel;
+                break;
+            case MessageBoxButton.YesNo:
+                button = System.Windows.MessageBoxButton.YesNo;
+                break;
+        }
 
-            switch (buttons)
-            {
-                case MessageBoxButton.OKCancel:
-                    button = System.Windows.MessageBoxButton.OKCancel;
-                    break;
-                case MessageBoxButton.YesNoCancel:
-                    button = System.Windows.MessageBoxButton.YesNoCancel;
-                    break;
-                case MessageBoxButton.YesNo:
-                    button = System.Windows.MessageBoxButton.YesNo;
-                    break;
-            }
+        var dialog = MessageBox.Show(
+            Application.Current.MainWindow,
+            message,
+            title,
+            button,
+            MessageBoxImage.Information,
+            System.Windows.MessageBoxResult.Cancel);
 
-            var dialog = MessageBox.Show(
-                Application.Current.MainWindow,
-                message,
-                title,
-                button,
-                MessageBoxImage.Information,
-                System.Windows.MessageBoxResult.Cancel);
-
-            result = dialog switch
-            {
-                System.Windows.MessageBoxResult.None => MessageBoxResult.None,
-                System.Windows.MessageBoxResult.OK => MessageBoxResult.OK,
-                System.Windows.MessageBoxResult.Cancel => MessageBoxResult.Cancel,
-                System.Windows.MessageBoxResult.Yes => MessageBoxResult.Yes,
-                System.Windows.MessageBoxResult.No => MessageBoxResult.No,
-                _ => MessageBoxResult.None,
-            };
-        });
+        result = dialog switch
+        {
+            System.Windows.MessageBoxResult.None => MessageBoxResult.None,
+            System.Windows.MessageBoxResult.OK => MessageBoxResult.OK,
+            System.Windows.MessageBoxResult.Cancel => MessageBoxResult.Cancel,
+            System.Windows.MessageBoxResult.Yes => MessageBoxResult.Yes,
+            System.Windows.MessageBoxResult.No => MessageBoxResult.No,
+            _ => MessageBoxResult.None,
+        };
 
         return Task.FromResult(result);
     }
