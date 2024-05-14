@@ -17,7 +17,6 @@ internal class DialogService : IDialogService
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="dispatcherService"></param>
     /// <param name="languageService">The language service.</param>
     public DialogService(
         IContext context,
