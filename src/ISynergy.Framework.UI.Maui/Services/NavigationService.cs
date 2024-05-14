@@ -31,7 +31,6 @@ public class NavigationService : INavigationService
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="dispatcherService"></param>
     public NavigationService(IContext context)
     {
         _context = context;
