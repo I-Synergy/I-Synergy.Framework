@@ -7,7 +7,7 @@ namespace Sample.Migrations;
 
 public class _001 : IMigration
 {
-    public string MigrationVersion => nameof(_001);
+    public int MigrationVersion => 1;
 
     public void Up()
     {
@@ -37,7 +37,6 @@ public class _001 : IMigration
         }
 
         Preferences.Default.SetObject(nameof(LocalSettings), localSettings);
-        Preferences.Default.Set(nameof(MigrationVersion), MigrationVersion);
     }
 
     public void Down()
@@ -68,6 +67,5 @@ public class _001 : IMigration
         File.WriteAllText(file, json);
 
         Preferences.Default.Remove(nameof(LocalSettings));
-        Preferences.Default.Remove(nameof(MigrationVersion));
     }
 }
