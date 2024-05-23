@@ -58,7 +58,7 @@ public static class MauiAppBuilderExtensions
     /// <param name="appBuilder"></param>
     /// <param name="action"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource, TLoadingView>(this MauiAppBuilder appBuilder, Action<IServiceCollection, IConfiguration> action)
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource, TLoadingView>(this MauiAppBuilder appBuilder, Action<MauiAppBuilder> action)
     where TApplication : class, Microsoft.Maui.IApplication
     where TContext : class, IContext
     where TExceptionHandler : class, IExceptionHandlerService
@@ -83,6 +83,8 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
         appBuilder.Services.TryAddSingleton<IMessageService>(s => MessageService.Default);
+        appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
+        appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
 
         appBuilder.Services.TryAddSingleton<TContext>();
         appBuilder.Services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
@@ -101,7 +103,7 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.RegisterAssemblies();
 
-        action.Invoke(appBuilder.Services, appBuilder.Configuration);
+        action.Invoke(appBuilder);
 
         appBuilder
             .ConfigureFonts(fonts =>
@@ -147,9 +149,8 @@ public static class MauiAppBuilderExtensions
 
     private static void RegisterViewModelRoute(this IServiceCollection services, Type viewmodel, Type view)
     {
-        var abstraction = viewmodel
-            .GetInterfaces()
-            .FirstOrDefault(q =>
+        var abstraction = Array.Find(viewmodel
+            .GetInterfaces(), q =>
                 q.GetInterfaces().Contains(typeof(IViewModel))
                 && !q.Name.StartsWith(nameof(IViewModel)));
 

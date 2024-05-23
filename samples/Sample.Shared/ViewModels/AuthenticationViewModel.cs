@@ -27,7 +27,7 @@ public class AuthenticationViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;
     private readonly ILocalizationService _localizationService;
-    private readonly IBaseApplicationSettingsService _applicationSettingsService;
+    private readonly IApplicationSettingsService _applicationSettingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
     /// <summary>
@@ -194,7 +194,7 @@ public class AuthenticationViewModel : ViewModel
         IBaseCommonServices commonServices,
         ILocalizationService localizationService,
         IAuthenticationService authenticationService,
-        IBaseApplicationSettingsService applicationSettingsService,
+        IApplicationSettingsService applicationSettingsService,
         ICredentialLockerService credentialLockerService,
         ILogger logger,
         bool automaticValidation = false)

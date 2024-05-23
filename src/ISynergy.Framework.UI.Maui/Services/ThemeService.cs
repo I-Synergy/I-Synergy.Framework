@@ -19,7 +19,7 @@ public class ThemeService : IThemeService
     private const string Secondary = nameof(Secondary);
     private const string Tertiary = nameof(Tertiary);
 
-    private readonly IBaseApplicationSettingsService _applicationSettingsService;
+    private readonly IApplicationSettingsService _applicationSettingsService;
 
     /// <summary>
     /// Gets or sets the theme.
@@ -44,7 +44,7 @@ public class ThemeService : IThemeService
     /// Default constructor.
     /// </summary>
     /// <param name="applicationSettingsService"></param>
-    public ThemeService(IBaseApplicationSettingsService applicationSettingsService)
+    public ThemeService(IApplicationSettingsService applicationSettingsService)
     {
         _applicationSettingsService = applicationSettingsService;
     }

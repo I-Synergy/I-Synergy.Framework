@@ -39,7 +39,7 @@ public class ThemeViewModel : ViewModelDialog<Style>
     public ThemeViewModel(
         IContext context,
         IBaseCommonServices commonServices,
-        IBaseApplicationSettingsService applicationSettingsService,
+        IApplicationSettingsService applicationSettingsService,
         ILogger logger)
         : base(context, commonServices, logger)
     {

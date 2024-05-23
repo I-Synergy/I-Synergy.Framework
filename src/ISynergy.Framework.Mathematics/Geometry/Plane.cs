@@ -299,7 +299,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     /// 
     public string ToString(string format, IFormatProvider formatProvider)
     {
-        formatter f = new formatter();
+        var f = new Formatter();
         f.format = format;
         f.provider = formatProvider;
 
@@ -337,7 +337,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     /// 
     public string ToString(char variable, IFormatProvider formatProvider)
     {
-        formatter f = new formatter();
+        var f = new Formatter();
         f.provider = formatProvider;
 
         switch (variable)
@@ -359,7 +359,7 @@ public class Plane : IEquatable<Plane>, IFormattable
         }
     }
 
-    private class formatter
+    private class Formatter
     {
         public IFormatProvider provider;
         public string format = "g";
@@ -373,5 +373,4 @@ public class Plane : IEquatable<Plane>, IFormattable
             return (x > 0) ? "+" + str : str;
         }
     }
-
 }

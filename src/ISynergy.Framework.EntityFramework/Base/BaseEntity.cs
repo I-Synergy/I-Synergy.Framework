@@ -8,7 +8,7 @@ namespace ISynergy.Framework.EntityFramework.Base;
 /// BaseEntity model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public abstract class BaseEntity : BaseClass, IBaseEntity
+public abstract class BaseEntity : BaseClass, IEntity
 {
     /// <summary>
     /// Gets or sets the memo.

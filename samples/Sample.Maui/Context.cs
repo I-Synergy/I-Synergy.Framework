@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.UI.Options;
@@ -57,7 +56,6 @@ public class Context : ObservableClass, IContext
         {
             SetValue(value);
             OnPropertyChanged(nameof(IsAuthenticated));
-            OnPropertyChanged(nameof(IsUserAdministrator));
         }
     }
 
@@ -70,9 +68,7 @@ public class Context : ObservableClass, IContext
         get
         {
             if (Profile != null)
-            {
                 return TimeZoneInfo.FindSystemTimeZoneById(Profile.TimeZoneId);
-            }
 
             return TimeZoneInfo.Local;
         }
@@ -144,41 +140,9 @@ public class Context : ObservableClass, IContext
         get
         {
             if (Profile != null)
-            {
                 return Profile.IsAuthenticated();
-            }
 
             return false;
-        }
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether this instance is user administrator.
-    /// </summary>
-    /// <value><c>true</c> if this instance is user administrator; otherwise, <c>false</c>.</value>
-    public bool IsUserAdministrator
-    {
-        get
-        {
-            if (Profile != null)
-            {
-                return Profile.IsInRole(nameof(RoleNames.Administrator));
-            }
-
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is offline.
-    /// </summary>
-    /// <value><c>true</c> if this instance is offline; otherwise, <c>false</c>.</value>
-    public bool IsOffline
-    {
-        get { return GetValue<bool>(); }
-        set
-        {
-            SetValue(value);
         }
     }
 

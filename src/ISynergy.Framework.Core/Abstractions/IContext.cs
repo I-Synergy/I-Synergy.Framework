@@ -44,16 +44,6 @@ public interface IContext
     /// </summary>
     /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
     bool IsAuthenticated { get; }
-    /// <summary>
-    /// Gets a value indicating whether this instance is user administrator.
-    /// </summary>
-    /// <value><c>true</c> if this instance is user administrator; otherwise, <c>false</c>.</value>
-    bool IsUserAdministrator { get; }
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is offline.
-    /// </summary>
-    /// <value><c>true</c> if this instance is offline; otherwise, <c>false</c>.</value>
-    bool IsOffline { get; set; }
 
     /// <summary>
     /// Gets the service scopes.
