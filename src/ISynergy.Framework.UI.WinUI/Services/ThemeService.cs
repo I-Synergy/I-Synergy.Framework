@@ -18,7 +18,7 @@ namespace ISynergy.Framework.UI.Services;
 /// <seealso cref="IThemeService" />
 public class ThemeService : IThemeService
 {
-    private readonly IBaseApplicationSettingsService _applicationSettingsService;
+    private readonly IApplicationSettingsService _applicationSettingsService;
 
     /// <summary>
     /// Gets or sets the theme.
@@ -43,7 +43,7 @@ public class ThemeService : IThemeService
     /// Default constructor.
     /// </summary>
     /// <param name="applicationSettingsService"></param>
-    public ThemeService(IBaseApplicationSettingsService applicationSettingsService)
+    public ThemeService(IApplicationSettingsService applicationSettingsService)
     {
         _applicationSettingsService = applicationSettingsService;
         _applicationSettingsService.LoadSettings();

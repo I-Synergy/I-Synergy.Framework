@@ -2,7 +2,7 @@
 
 namespace ISynergy.Framework.Core.Base;
 
-public abstract record BaseRecord : IBaseRecord
+public abstract record BaseRecord : IRecord
 {
     /// <summary>
     /// Gets or sets the version.

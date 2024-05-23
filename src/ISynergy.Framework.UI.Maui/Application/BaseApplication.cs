@@ -28,7 +28,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
-    protected readonly IBaseApplicationSettingsService _applicationSettingsService;
+    protected readonly IApplicationSettingsService _applicationSettingsService;
     protected readonly INavigationService _navigationService;
     protected readonly IBaseCommonServices _commonServices;
 
@@ -88,7 +88,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
         _logger.LogInformation("Setting up application settings service.");
-        _applicationSettingsService = ServiceLocator.Default.GetInstance<IBaseApplicationSettingsService>();
+        _applicationSettingsService = ServiceLocator.Default.GetInstance<IApplicationSettingsService>();
 
         _logger.LogInformation("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();

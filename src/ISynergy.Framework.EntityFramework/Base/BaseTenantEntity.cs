@@ -9,7 +9,7 @@ namespace ISynergy.Framework.EntityFramework.Base;
 /// backwards compatibility and error checking.
 /// </summary>
 [TenantAware(nameof(TenantId))]
-public abstract class BaseTenantEntity : BaseEntity, IBaseTenantEntity
+public abstract class BaseTenantEntity : BaseEntity, ITenantEntity
 {
     /// <summary>
     /// Gets or sets the tenant identifier.

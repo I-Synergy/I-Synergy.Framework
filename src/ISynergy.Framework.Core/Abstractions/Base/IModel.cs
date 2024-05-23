@@ -1,17 +1,19 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Base;
+﻿using System.ComponentModel;
+
+namespace ISynergy.Framework.Core.Abstractions.Base;
 
 /// <summary>
-/// Interface IEntityBase
-/// Implements the <see cref="IBaseClass" />
+/// Interface IModelBase
+/// Implements the <see cref="INotifyPropertyChanged" />
 /// </summary>
-/// <seealso cref="IBaseClass" />
-public interface IBaseEntity : IBaseClass
+/// <seealso cref="INotifyPropertyChanged" />
+public interface IModel : IObservableClass
 {
     /// <summary>
-    /// Gets or sets the memo.
+    /// Gets or sets the version.
     /// </summary>
-    /// <value>The memo.</value>
-    string Memo { get; set; }
+    /// <value>The version.</value>
+    int Version { get; set; }
     /// <summary>
     /// Gets or sets the created date.
     /// </summary>

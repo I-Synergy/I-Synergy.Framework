@@ -16,7 +16,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
     public override string Title { get => BaseCommonServices.LanguageService.GetString("Settings"); }
 
     private readonly ICommonServices _commonServices;
-    private readonly IBaseApplicationSettingsService _localSettingsService;
+    private readonly IApplicationSettingsService _localSettingsService;
     private readonly ISettingsService<GlobalSettings> _globalSettingsService;
 
     /// <summary>
@@ -49,7 +49,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
     public SettingsViewModel(
         IContext context,
         ICommonServices commonServices,
-        IBaseApplicationSettingsService localSettingsService,
+        IApplicationSettingsService localSettingsService,
         ISettingsService<GlobalSettings> globalSettingsService,
         ILogger logger,
         bool automaticValidation = false)

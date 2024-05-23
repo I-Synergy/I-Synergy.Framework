@@ -82,7 +82,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <summary>
     /// The settings service.
     /// </summary>
-    protected readonly IBaseApplicationSettingsService _applicationSettingsService;
+    protected readonly IApplicationSettingsService _applicationSettingsService;
 
     /// <summary>
     /// The theme selector
@@ -128,7 +128,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected BaseShellViewModel(
         IContext context,
         IBaseCommonServices commonServices,
-        IBaseApplicationSettingsService applicationSettingsService,
+        IApplicationSettingsService applicationSettingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
         IThemeService themeService,

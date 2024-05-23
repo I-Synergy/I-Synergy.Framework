@@ -3,7 +3,7 @@
 /// <summary>
 /// Interface IClassBase
 /// </summary>
-public interface IBaseClass
+public interface IClass
 {
     /// <summary>
     /// Gets or sets the version.
