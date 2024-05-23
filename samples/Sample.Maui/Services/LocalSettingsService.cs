@@ -1,45 +1,27 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Synchronization.Abstractions;
+using ISynergy.Framework.Synchronization.Options;
+using ISynergy.Framework.UI.Extensions;
 using Sample.Abstractions;
 using Sample.Models;
-using System.Text.Json;
 
 namespace Sample.Services;
 
 internal class LocalSettingsService : ILocalSettingsService
 {
-    private const string _fileName = "settings.json";
-
-    /// <summary>
-    /// The global settings folder.
-    /// </summary>
-    private readonly string _settingsFolder;
-
-    /// <summary>
-    /// Settings used globally.
-    /// </summary>
-    private LocalSettings _settings;
+    private readonly IPreferences _preferences;
+    
+    private LocalSettings _localSettings;
+    private SynchronizationSettings _synchronizationSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LocalSettingsService"/> class.
     /// </summary>
-    public LocalSettingsService()
+    public LocalSettingsService(IPreferences preferences)
     {
-        _settings = new LocalSettings();
-        _settingsFolder = Path.Combine(FileSystem.AppDataDirectory, "Settings");
+        _preferences = preferences;
 
-        if (!Directory.Exists(_settingsFolder))
-            Directory.CreateDirectory(_settingsFolder);
-
-        var oldPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "I-Synergy Framework UI Sample");
-        var oldSettings = Path.Combine(oldPath, "Settings", _fileName);
-
-        if (File.Exists(oldSettings))
-        {
-            File.Move(oldSettings, Path.Combine(_settingsFolder, _fileName), true);
-            Directory.Delete(oldPath, true);
-        }
+        LoadSettings();
     }
 
     /// <summary>
@@ -47,24 +29,8 @@ internal class LocalSettingsService : ILocalSettingsService
     /// </summary>
     public void LoadSettings()
     {
-        try
-        {
-            string file = Path.Combine(_settingsFolder, _fileName);
-
-            if (!File.Exists(file))
-                SaveSettings();
-
-            string json = File.ReadAllText(file);
-            _settings = JsonSerializer.Deserialize<LocalSettings>(json);
-        }
-        catch (JsonException)
-        {
-            SaveSettings();
-        }
-        catch (FileNotFoundException)
-        {
-            _settings = new LocalSettings();
-        }
+        _localSettings = _preferences.GetObject<LocalSettings>(nameof(LocalSettings), new LocalSettings());
+        _synchronizationSettings = _preferences.GetObject<SynchronizationSettings>(nameof(SynchronizationSettings), default);
     }
 
     /// <summary>
@@ -72,16 +38,12 @@ internal class LocalSettingsService : ILocalSettingsService
     /// </summary>
     public void SaveSettings()
     {
-        if (!Directory.Exists(_settingsFolder))
-            Directory.CreateDirectory(_settingsFolder);
-
-        string file = Path.Combine(_settingsFolder, _fileName);
-        string json = JsonSerializer.Serialize(_settings);
-        File.WriteAllText(file, json);
+        _preferences.SetObject(nameof(LocalSettings), _localSettings);
+        _preferences.GetObject(nameof(SynchronizationSettings), _synchronizationSettings);
     }
 
-    IBaseApplicationSettings IBaseApplicationSettingsService.Settings => _settings;
-    ISynchronizationApplicationSettings ISynchronizationSettingsService.Settings => _settings;
+    public LocalSettings Settings => _localSettings;
+    public SynchronizationSettings SynchronizationSettings => _synchronizationSettings;
 
-    public LocalSettings Settings => _settings;
+    IApplicationSettings IApplicationSettingsService.Settings => _localSettings;
 }
