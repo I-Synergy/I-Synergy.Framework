@@ -9,7 +9,6 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Messaging.ServiceBus"  />
-        <PackageReference Include="Microsoft.CSharp"  />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />
