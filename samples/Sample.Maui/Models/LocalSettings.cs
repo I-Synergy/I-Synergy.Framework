@@ -4,7 +4,7 @@ using ISynergy.Framework.Synchronization.Abstractions;
 using System.Globalization;
 
 namespace Sample.Models;
-public class LocalSettings : ISynchronizationApplicationSettings
+public class LocalSettings : IApplicationSettings
 {
     public Languages Language { get; set; } = Languages.English;
     public bool IsFullscreen { get; set; }
@@ -15,14 +15,6 @@ public class LocalSettings : ISynchronizationApplicationSettings
     public bool IsAutoLogin { get; set; }
     public bool IsAdvanced { get; set; }
     public byte[] Wallpaper { get; set; } = Array.Empty<byte>();
-    public bool IsSynchronizationEnabled { get; set; }
-    public int SynchronizationInterval { get; set; }
-    public int BatchSize { get; set; }
-    public string SynchronizationFolder { get; set; }
-    public string SnapshotFolder { get; set; }
-    public string BatchesFolder { get; set; }
-    public bool CleanSynchronizationFolder { get; set; }
-    public bool CleanSynchronizationMetadatas { get; set; }
 
     public LocalSettings()
     {
@@ -33,14 +25,5 @@ public class LocalSettings : ISynchronizationApplicationSettings
             "fr" => Languages.French,
             _ => Languages.English,
         };
-
-        IsSynchronizationEnabled = false;
-        SynchronizationInterval = 30;
-        BatchSize = 1000;
-        SynchronizationFolder = Path.Combine(FileSystem.AppDataDirectory, "Synchronization");
-        SnapshotFolder = Path.Combine(FileSystem.AppDataDirectory, "Snapshots");
-        BatchesFolder = Path.Combine(FileSystem.AppDataDirectory, "Batches");
-        CleanSynchronizationFolder = true;
-        CleanSynchronizationMetadatas = true;
     }
 }

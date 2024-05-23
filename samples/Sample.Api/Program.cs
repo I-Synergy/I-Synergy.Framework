@@ -23,8 +23,8 @@ public class Program
                 options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
                 options.JsonSerializerOptions.ReferenceHandler = null;
 
-                options.JsonSerializerOptions.Converters.Add(new IsoDateTimeJsonConverter());
-                options.JsonSerializerOptions.Converters.Add(new IsoDateTimeOffsetJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+                options.JsonSerializerOptions.Converters.Add(new DateTimeOffsetConverter());
             });
 
         builder.Services.AddControllersWithViews();

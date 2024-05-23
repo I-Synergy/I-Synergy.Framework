@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
 namespace ISynergy.Framework.Synchronization.Extensions;
+
 public static class SyncSetupExtensions
 {
     public static SyncSetup WithTenantFilter(this SyncSetup setup, Type[] entities)

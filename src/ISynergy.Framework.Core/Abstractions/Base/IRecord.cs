@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Framework.Core.Abstractions.Base;
 
-public interface IBaseRecord
+public interface IRecord
 {
     /// <summary>
     /// Gets or sets the version.

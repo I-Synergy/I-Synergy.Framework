@@ -5,13 +5,13 @@ namespace ISynergy.Framework.Core.Abstractions.Services.Base;
 /// <summary>
 /// Interface IBaseApplicationSettingsService
 /// </summary>
-public interface IBaseApplicationSettingsService
+public interface IApplicationSettingsService
 {
     /// <summary>
     /// Gets the settings.
     /// </summary>
     /// <value>The settings.</value>
-    IBaseApplicationSettings Settings { get; }
+    IApplicationSettings Settings { get; }
     /// <summary>
     /// Loads the settings.
     /// </summary>

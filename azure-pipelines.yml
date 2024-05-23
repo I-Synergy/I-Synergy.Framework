@@ -56,9 +56,9 @@ stages:
             PackageVersion: '$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
-          displayName: 'Install NuGet 6.9.1'
+          displayName: 'Install NuGet 6.10.0'
           inputs:
-            versionSpec: 6.9.1
+            versionSpec: 6.10.0
 
         - task: JavaToolInstaller@0
           inputs:

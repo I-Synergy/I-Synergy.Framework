@@ -19,7 +19,7 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly IContext _context;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IBaseApplicationSettingsService _applicationSettingsService;
+    private readonly IApplicationSettingsService _applicationSettingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
     /// <summary>
@@ -35,7 +35,7 @@ public class AuthenticationService : IAuthenticationService
     public AuthenticationService(
         IContext context,
         IServiceScopeFactory serviceScopeFactory,
-        IBaseApplicationSettingsService applicationSettingsService,
+        IApplicationSettingsService applicationSettingsService,
         ICredentialLockerService credentialLockerService)
     {
         _context = context;

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Converters;
@@ -16,5 +17,5 @@ public class CustomDateTimeJsonConverter : JsonConverter<DateTime>
         writer.WriteStringValue(date.ToString(Format));
 
     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        DateTime.ParseExact(reader.GetString(), Format, null);
+        DateTime.ParseExact(reader.GetString(), Format, CultureInfo.InvariantCulture);
 }

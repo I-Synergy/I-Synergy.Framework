@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dotmim.Sync.SqlServer" />
+    <PackageReference Include="Dotmim.Sync.SqlServer.ChangeTracking" />
     <PackageReference Include="Dotmim.Sync.Web.Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization\ISynergy.Framework.Synchronization.csproj" />
   </ItemGroup>
 </Project>
