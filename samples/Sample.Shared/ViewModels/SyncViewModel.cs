@@ -51,6 +51,10 @@ public class SyncViewModel : ViewModelNavigation<object>
     public AsyncRelayCommand SyncReinitializeCommand { get; set; }
     public AsyncRelayCommand CustomActionCommand { get; set; }
 
+    public AsyncRelayCommand DeprovisionClientCommand { get; private set; }
+    public AsyncRelayCommand ProvisionClientCommand { get; private set; }
+
+
     public SyncViewModel(
         IContext context, 
         ICommonServices commonServices,
@@ -67,6 +71,8 @@ public class SyncViewModel : ViewModelNavigation<object>
         SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal));
         SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize));
         CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync);
+        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync);
+        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync);
 
         MessageService.Default.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
         MessageService.Default.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
@@ -113,7 +119,7 @@ public class SyncViewModel : ViewModelNavigation<object>
     private void CustomActionInsertProductRow()
     {
         var connectionstringbuilder = new SqliteConnectionStringBuilder();
-        connectionstringbuilder.DataSource = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Synchronization", "sync.db");
+        connectionstringbuilder.DataSource = _synchronizationService.OfflineDatabase;
 
         using var sqliteConnection = new SqliteConnection(connectionstringbuilder.ConnectionString);
         var c = new SqliteCommand($"Insert into ProductCategory(ProductcategoryId, Name, rowguid, ModifiedDate, IsActive) Values (@productcategoryId, @name, @rowguid, @modifiedDate, @isactive)")
@@ -182,6 +188,19 @@ public class SyncViewModel : ViewModelNavigation<object>
 
         sqliteConnection.Close();
 
+    }
+
+    private async Task ProvisionClientAsync()
+    {
+        var agent = _synchronizationService.SynchronizationAgent;
+        var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
+        await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
+    }
+
+    private async Task DeprovisionClientAsync()
+    {
+        var agent = _synchronizationService.SynchronizationAgent;
+        await agent.LocalOrchestrator.DeprovisionAsync();
     }
 
     protected override void Dispose(bool disposing)

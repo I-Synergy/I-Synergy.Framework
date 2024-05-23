@@ -47,6 +47,16 @@
                     IsEnabled="{Binding SyncCommandButtonEnabled}"
                     Command="{Binding CustomActionCommand}"/>
 
+                <Button 
+                    VerticalOptions="Center" Text="Deprovision Client" 
+                    IsEnabled="{Binding SyncCommandButtonEnabled}"
+                    Command="{Binding DeprovisionClientCommand}"/>
+
+                <Button 
+                    VerticalOptions="Center" Text="Provision Client" 
+                    IsEnabled="{Binding SyncCommandButtonEnabled}"
+                    Command="{Binding ProvisionClientCommand}"/>
+
             </HorizontalStackLayout>
 
             <ProgressBar Progress="{Binding SyncProgress}" />
