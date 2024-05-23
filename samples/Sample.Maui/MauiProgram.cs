@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -34,8 +34,6 @@ public static class MauiProgram
         configBuilder.AddJsonStream(mainAssembly.GetManifestResourceStream("Sample.appsettings.json"));
         var config = configBuilder.Build();
 
-        var localSettingsService = new LocalSettingsService();
-
         builder
             .Configuration
             .AddConfiguration(config);
@@ -52,31 +50,20 @@ public static class MauiProgram
                 logging.SetMinimumLevel(LogLevel.Trace);
                 //logging.AddApplicationInsightsLogging(config);
             })
-            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources, LoadingView>((services, configuration) =>
+            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources, LoadingView>(appBuilder =>
             {
-                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-                services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
+                appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                appBuilder.Services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                services.TryAddSingleton(s => localSettingsService);
-                services.TryAddSingleton<ILocalSettingsService>(s => localSettingsService);
-                services.TryAddSingleton<IBaseApplicationSettingsService>(s => localSettingsService);
+                appBuilder.Services.TryAddSingleton<LocalSettingsService>();
+                appBuilder.Services.TryAddSingleton<ILocalSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
+                appBuilder.Services.TryAddSingleton<IApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
 
-                services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
+                appBuilder.Services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
 
-                services.TryAddSingleton<CommonServices>();
-                services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
-                services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
-                
-                services.ConfigureSynchronization(s => s.GetRequiredService<LocalSettingsService>());
-
-                if (localSettingsService.Settings.IsSynchronizationEnabled)
-                {
-                    services.ConfigureSynchronization(s => localSettingsService);
-                }
-                else
-                {
-                    services.ConfigureFakeSynchronization(s => localSettingsService);
-                }
+                appBuilder.Services.TryAddSingleton<CommonServices>();
+                appBuilder.Services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
+                appBuilder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
             })
 #if WINDOWS
             //.ConfigureStoreUpdateIntegration()
