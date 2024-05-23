@@ -58,7 +58,7 @@ public static class MauiAppBuilderExtensions
     /// <param name="appBuilder"></param>
     /// <param name="action"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource, TLoadingView>(this MauiAppBuilder appBuilder, Action<IServiceCollection, IConfiguration> action)
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource, TLoadingView>(this MauiAppBuilder appBuilder, Action<MauiAppBuilder> action)
     where TApplication : class, Microsoft.Maui.IApplication
     where TContext : class, IContext
     where TExceptionHandler : class, IExceptionHandlerService
@@ -83,6 +83,7 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
         appBuilder.Services.TryAddSingleton<IMessageService>(s => MessageService.Default);
+        appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
 
         appBuilder.Services.TryAddSingleton<TContext>();
         appBuilder.Services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
@@ -101,7 +102,7 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.RegisterAssemblies();
 
-        action.Invoke(appBuilder.Services, appBuilder.Configuration);
+        action.Invoke(appBuilder);
 
         appBuilder
             .ConfigureFonts(fonts =>
