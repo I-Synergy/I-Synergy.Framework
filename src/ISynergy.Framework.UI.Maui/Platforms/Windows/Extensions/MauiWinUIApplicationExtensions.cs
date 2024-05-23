@@ -5,6 +5,8 @@ using Microsoft.Windows.AppLifecycle;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace ISynergy.Framework.UI.Extensions;
 
 public static class MauiWinUIApplicationExtensions
