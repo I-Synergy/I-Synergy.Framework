@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
+using Sample.Migrations;
 using Sample.Models;
 using Sample.ViewModels;
 using System.Runtime.ExceptionServices;
@@ -14,10 +15,15 @@ namespace Sample;
 
 public partial class App : BaseApplication
 {
-    public App()
+    private readonly IMigrationService _migrationService;
+
+    public App(IMigrationService migrationService)
         : base()
     {
         InitializeComponent();
+        
+        _migrationService = migrationService;
+
         MessageService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
     }
 
@@ -26,7 +32,13 @@ public partial class App : BaseApplication
         await base.InitializeApplicationAsync();
 
         _commonServices.BusyService.BusyMessage = "Start doing important stuff";
+
         await Task.Delay(5000);
+
+        _commonServices.BusyService.BusyMessage = "Applying migrations";
+
+        await _migrationService.ApplyMigrationAsync<_001>();
+
         _commonServices.BusyService.BusyMessage = "Done doing important stuff";
 
         MessageService.Default.Send(new ApplicationInitializedMessage());

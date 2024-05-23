@@ -84,6 +84,7 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
         appBuilder.Services.TryAddSingleton<IMessageService>(s => MessageService.Default);
         appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
+        appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
 
         appBuilder.Services.TryAddSingleton<TContext>();
         appBuilder.Services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
