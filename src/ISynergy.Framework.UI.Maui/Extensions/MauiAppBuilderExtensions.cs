@@ -149,9 +149,8 @@ public static class MauiAppBuilderExtensions
 
     private static void RegisterViewModelRoute(this IServiceCollection services, Type viewmodel, Type view)
     {
-        var abstraction = viewmodel
-            .GetInterfaces()
-            .FirstOrDefault(q =>
+        var abstraction = Array.Find(viewmodel
+            .GetInterfaces(), q =>
                 q.GetInterfaces().Contains(typeof(IViewModel))
                 && !q.Name.StartsWith(nameof(IViewModel)));
 

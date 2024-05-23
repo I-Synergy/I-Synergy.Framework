@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Constants;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -12,7 +13,7 @@ namespace ISynergy.Framework.Core.Converters;
 public class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
 {
     public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        DateTimeOffset.ParseExact(reader.GetString(), StringFormats.IsoDateTimeFormat, null);
+        DateTimeOffset.ParseExact(reader.GetString(), StringFormats.IsoDateTimeFormat, CultureInfo.InvariantCulture);
 
     public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
     {

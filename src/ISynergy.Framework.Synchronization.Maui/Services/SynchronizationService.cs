@@ -23,7 +23,7 @@ internal class SynchronizationService : ISynchronizationService
 {
     private readonly IContext _context;
     private readonly IMessageService _messageService;
-    private readonly IPreferences _preferences;
+    //private readonly IPreferences _preferences;
     private readonly SynchronizationSettings _synchronizationOptions;
 
     public SyncAgent SynchronizationAgent { get; }
@@ -42,7 +42,6 @@ internal class SynchronizationService : ISynchronizationService
     {
         _context = context;
         _messageService = messageService;
-        _preferences = preferences;
 
         if (!_context.IsAuthenticated)
             throw new InvalidOperationException("User is not authenticated");
@@ -50,7 +49,7 @@ internal class SynchronizationService : ISynchronizationService
         var options = configurationOptions.Value;
         var tenantId = _context.Profile.AccountId.ToString("N");
 
-        _synchronizationOptions = _preferences.GetObject<SynchronizationSettings>(nameof(SynchronizationOptions), default);
+        _synchronizationOptions = preferences.GetObject<SynchronizationSettings>(nameof(SynchronizationOptions), default);
 
         if (_synchronizationOptions is not null && _synchronizationOptions.IsSynchronizationEnabled)
         {

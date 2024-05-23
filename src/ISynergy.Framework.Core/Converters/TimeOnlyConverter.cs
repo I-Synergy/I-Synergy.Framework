@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Converters;
@@ -13,7 +14,7 @@ public class TimeOnlyConverter : JsonConverter<TimeOnly>
 
     /// <inheritdoc />
     public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => TimeOnly.Parse(reader.GetString() ?? string.Empty);
+        => TimeOnly.Parse(reader.GetString() ?? string.Empty, CultureInfo.InvariantCulture);
 
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, TimeOnly value, JsonSerializerOptions options)
