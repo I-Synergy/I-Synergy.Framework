@@ -158,39 +158,6 @@ public static class ObjectExtensions
     }
 
     /// <summary>
-    ///   Retrieves the memory address of a generic value type.
-    /// </summary>
-    /// 
-    /// <typeparam name="T">The type of the object whose address needs to be retrieved.</typeparam>
-    /// <param name="t">The object those address needs to be retrieved.</param>
-    /// 
-    public static System.IntPtr AddressOf<T>(this T t)
-    {
-        unsafe
-        {
-            System.TypedReference reference = __makeref(t);
-            return *(System.IntPtr*)(&reference);
-        }
-    }
-
-    /// <summary>
-    ///   Retrieves the memory address of a generic reference type.
-    /// </summary>
-    /// 
-    /// <typeparam name="T">The type of the object whose address needs to be retrieved.</typeparam>
-    /// <param name="t">The object those address needs to be retrieved.</param>
-    /// 
-    static System.IntPtr AddressOfRef<T>(ref T t)
-    {
-        unsafe
-        {
-            System.TypedReference reference = __makeref(t);
-            System.TypedReference* pRef = &reference;
-            return (System.IntPtr)pRef; //(&pRef)
-        }
-    }
-
-    /// <summary>
     ///  Serializes (converts) a structure to a byte array.
     /// </summary>
     /// 

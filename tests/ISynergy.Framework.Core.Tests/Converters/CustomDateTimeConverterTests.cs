@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace ISynergy.Framework.Core.Converters.Tests;
 
 [TestClass()]
-public class CustomDateTimeJsonConverterTests
+public class CustomDateTimeConverterTests
 {
     private readonly DateTime _dateUnspecified;
     private readonly DateTime _dateUtc;
@@ -18,7 +18,7 @@ public class CustomDateTimeJsonConverterTests
 
     private readonly JsonSerializerOptions _serializerOptions;
 
-    public CustomDateTimeJsonConverterTests()
+    public CustomDateTimeConverterTests()
     {
         _serializerOptions = new JsonSerializerOptions();
         _serializerOptions.Converters.Add(new CustomDateTimeJsonConverter("yyyyMMddHHmmK"));

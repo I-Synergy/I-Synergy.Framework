@@ -1,11 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ISynergy.Framework.Core.Serializers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Converters.Tests;
 
 [TestClass()]
-public class IsoDateTimeJsonConverterTests
+public class DateTimeConverterTests
 {
     private readonly DateTime _dateUnspecified;
     private readonly DateTime _dateUtc;
@@ -18,10 +19,9 @@ public class IsoDateTimeJsonConverterTests
 
     private readonly JsonSerializerOptions _serializerOptions;
 
-    public IsoDateTimeJsonConverterTests()
+    public DateTimeConverterTests()
     {
-        _serializerOptions = new JsonSerializerOptions();
-        _serializerOptions.Converters.Add(new IsoDateTimeJsonConverter());
+        _serializerOptions = DefaultJsonSerializers.Default();
 
         _dateUnspecified = new DateTime(1975, 10, 29, 15, 0, 0, DateTimeKind.Unspecified);
         _dateUtc = new DateTime(1975, 10, 29, 15, 0, 0, DateTimeKind.Utc);
@@ -78,4 +78,29 @@ public class IsoDateTimeJsonConverterTests
     //    var json = JsonSerializer.Serialize(_dateLocal, _serializerOptions);
     //    Assert.AreEqual(_jsonLocal, Regex.Unescape(json));
     //}
+
+    [TestMethod]
+    public void ReadValidStringReturnsValidResult()
+    {
+        DateTime expected = DateTime.Parse("2023-12-23T12:23:20.0000010Z");
+        const string json = "{\"dt\":\"2023-12-23T12:23:20.0000010Z\"}";
+        Dictionary<string, DateTime> actual = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
+        Assert.AreEqual(expected, actual["dt"]);
+    }
+
+    [TestMethod]
+    public void ReadNonStringReturnsDefault()
+    {
+        const string json = "{\"dt\":null}";
+        Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
+        Assert.ThrowsException<ArgumentNullException>(act);
+    }
+
+    [TestMethod]
+    public void ReadBadStringThrows()
+    {
+        const string json = "{\"dt\":\"not-date\"}";
+        Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
+        Assert.ThrowsException<FormatException>(act);
+    }
 }
