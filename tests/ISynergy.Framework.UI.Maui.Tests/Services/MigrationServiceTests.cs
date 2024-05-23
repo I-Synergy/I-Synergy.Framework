@@ -20,17 +20,28 @@ public class MigrationServiceTests
     {
         // Arrange
         var migrationServiceMock = new Mock<IMigrationService>();
-        migrationServiceMock.Setup(p => p.ApplyMigrationAsync<SampleMigration>()).Callback(() => new SampleMigration().Up());
-        migrationServiceMock.Setup(p => p.RevertMigrationAsync<SampleMigration>()).Callback(() => new SampleMigration().Down());
+        migrationServiceMock.Setup(p => p.ApplyMigrationAsync<SampleMigration_01>()).Callback(() => new SampleMigration_01().Up());
+        migrationServiceMock.Setup(p => p.RevertMigrationAsync<SampleMigration_01>()).Callback(() => new SampleMigration_01().Down());
+        migrationServiceMock.Setup(p => p.ApplyMigrationAsync<SampleMigration_02>()).Callback(() => new SampleMigration_02().Up());
+        migrationServiceMock.Setup(p => p.RevertMigrationAsync<SampleMigration_02>()).Callback(() => new SampleMigration_02().Down());
 
         // Act
-        await migrationServiceMock.Object.ApplyMigrationAsync<SampleMigration>();
+        await migrationServiceMock.Object.ApplyMigrationAsync<SampleMigration_01>();
 
         // Assert
-        migrationServiceMock.Verify(p => p.ApplyMigrationAsync<SampleMigration>(), Times.Once);
+        migrationServiceMock.Verify(p => p.ApplyMigrationAsync<SampleMigration_01>(), Times.Once);
 
-        Assert.IsTrue(_migrations.ContainsKey(nameof(SampleMigration.MigrationVersion)));
-        Assert.AreEqual(1975, _migrations.GetValueOrDefault(nameof(SampleMigration.MigrationVersion), 0));
+        Assert.IsTrue(_migrations.ContainsKey(nameof(SampleMigration_01.MigrationVersion)));
+        Assert.AreEqual(1, _migrations.GetValueOrDefault(nameof(SampleMigration_01.MigrationVersion), 0));
+
+        // Act
+        await migrationServiceMock.Object.ApplyMigrationAsync<SampleMigration_02>();
+
+        // Assert
+        migrationServiceMock.Verify(p => p.ApplyMigrationAsync<SampleMigration_02>(), Times.Once);
+
+        Assert.IsTrue(_migrations.ContainsKey(nameof(SampleMigration_02.MigrationVersion)));
+        Assert.AreEqual(2, _migrations.GetValueOrDefault(nameof(SampleMigration_02.MigrationVersion), 0));
     }
 
     [TestMethod]
@@ -38,40 +49,76 @@ public class MigrationServiceTests
     {
         // Arrange
         var migrationServiceMock = new Mock<IMigrationService>();
-        migrationServiceMock.Setup(p => p.ApplyMigrationAsync<SampleMigration>()).Callback(() => new SampleMigration().Up());
-        migrationServiceMock.Setup(p => p.RevertMigrationAsync<SampleMigration>()).Callback(() => new SampleMigration().Down());
-
-
-        // Act
-        await migrationServiceMock.Object.ApplyMigrationAsync<SampleMigration>();
-
-        // Assert
-        Assert.IsTrue(_migrations.ContainsKey(nameof(SampleMigration.MigrationVersion)));
-        Assert.AreEqual(1975, _migrations.GetValueOrDefault(nameof(SampleMigration.MigrationVersion), 0));
+        migrationServiceMock.Setup(p => p.ApplyMigrationAsync<SampleMigration_01>()).Callback(() => new SampleMigration_01().Up());
+        migrationServiceMock.Setup(p => p.RevertMigrationAsync<SampleMigration_01>()).Callback(() => new SampleMigration_01().Down());
+        migrationServiceMock.Setup(p => p.ApplyMigrationAsync<SampleMigration_02>()).Callback(() => new SampleMigration_02().Up());
+        migrationServiceMock.Setup(p => p.RevertMigrationAsync<SampleMigration_02>()).Callback(() => new SampleMigration_02().Down());
 
         // Act
-        await migrationServiceMock.Object.RevertMigrationAsync<SampleMigration>();
+        await migrationServiceMock.Object.ApplyMigrationAsync<SampleMigration_01>();
 
         // Assert
-        migrationServiceMock.Verify(p => p.RevertMigrationAsync<SampleMigration>(), Times.Once);
+        migrationServiceMock.Verify(p => p.ApplyMigrationAsync<SampleMigration_01>(), Times.Once);
 
-        Assert.IsFalse(_migrations.ContainsKey(nameof(SampleMigration.MigrationVersion)));
+        Assert.IsTrue(_migrations.ContainsKey(nameof(SampleMigration_01.MigrationVersion)));
+        Assert.AreEqual(1, _migrations.GetValueOrDefault(nameof(SampleMigration_01.MigrationVersion), 0));
+
+        // Act
+        await migrationServiceMock.Object.ApplyMigrationAsync<SampleMigration_02>();
+
+        // Assert
+        migrationServiceMock.Verify(p => p.ApplyMigrationAsync<SampleMigration_02>(), Times.Once);
+
+        Assert.IsTrue(_migrations.ContainsKey(nameof(SampleMigration_02.MigrationVersion)));
+        Assert.AreEqual(2, _migrations.GetValueOrDefault(nameof(SampleMigration_02.MigrationVersion), 0));
+
+        // Act
+        await migrationServiceMock.Object.RevertMigrationAsync<SampleMigration_02>();
+
+        // Assert
+        Assert.IsTrue(_migrations.ContainsKey(nameof(SampleMigration_02.MigrationVersion)));
+        Assert.AreEqual(1, _migrations.GetValueOrDefault(nameof(SampleMigration_02.MigrationVersion), 0));
+
+        // Act
+        await migrationServiceMock.Object.RevertMigrationAsync<SampleMigration_01>();
+
+        // Assert
+        migrationServiceMock.Verify(p => p.RevertMigrationAsync<SampleMigration_01>(), Times.Once);
+
+        Assert.IsFalse(_migrations.ContainsKey(nameof(SampleMigration_01.MigrationVersion)));
     }
 
-    public class SampleMigration : IMigration
+    public class SampleMigration_01 : IMigration
     {
-        public string MigrationVersion => "SampleMigration";
+        public int MigrationVersion => 1;
 
         public void Up()
         {
             // Add your migration logic here
-            _migrations.Add(nameof(MigrationVersion), 1975);
+            _migrations.Add(nameof(MigrationVersion), MigrationVersion);
         }
 
         public void Down()
         {
             // Add your migration rollback logic here
             _migrations.Remove(nameof(MigrationVersion));
+        }
+    }
+
+    public class SampleMigration_02 : IMigration
+    {
+        public int MigrationVersion => 2;
+
+        public void Up()
+        {
+            // Add your migration logic here
+            _migrations[nameof(MigrationVersion)] = MigrationVersion;
+        }
+
+        public void Down()
+        {
+            // Add your migration rollback logic here
+            _migrations[nameof(MigrationVersion)] = 1;
         }
     }
 }
