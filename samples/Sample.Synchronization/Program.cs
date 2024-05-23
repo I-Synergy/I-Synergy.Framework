@@ -1,80 +1,66 @@
 using Dotmim.Sync;
 using Dotmim.Sync.SqlServer;
-using Microsoft.Extensions.DependencyInjection;
+using Dotmim.Sync.Web.Server;
+using ISynergy.Framework.Core.Serializers;
+using ISynergy.Framework.Synchronization.Factories;
 
-namespace Sample.Synchronization;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+// Add services to the container.
+// [Required]: Handling multiple sessions
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(30));
+
+// [Required]: Get a connection string to your server data source
+var connectionString = builder.Configuration.GetSection("ConnectionStrings")["SqlConnection"];
+
+// snapshot directory
+var snapshotDirectoryName = "snapshots";
+var snapshotDirctory = Path.Combine(Environment.CurrentDirectory, snapshotDirectoryName);
+
+// batches directory
+var batchesDirectoryName = "batches";
+var batchesDirctory = Path.Combine(Environment.CurrentDirectory, batchesDirectoryName);
+
+var options = new SyncOptions
 {
-    public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+    SnapshotsDirectory = snapshotDirctory,
+    BatchDirectory = batchesDirctory,
+    CleanFolder = true,
+    CleanMetadatas = true,
+    BatchSize = 1000
+};
 
-        // Add services to the container.
-        // [Required]: Handling multiple sessions
-        builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(30));
+var tables = new string[] {
+    "Address",
+    "Customer",
+    "CustomerAddress",
+    "ProductCategory",
+    "ProductModel",
+    "ProductDescription",
+    "Product",
+    "ProductModelProductDescription"
+    };
 
-        // [Required]: Get a connection string to your server data source
-        var connectionString = builder.Configuration.GetSection("ConnectionStrings")["SqlConnection"];
+// [Required] Tables involved in the sync process:
+//var setup = new SyncSetup(tables).WithTenantFilter();
+var setup = new SyncSetup(tables);
 
-        // snapshot directory
-        var snapshotDirectoryName = "snapshots";
-        var snapshotDirctory = Path.Combine(Environment.CurrentDirectory, snapshotDirectoryName);
+// To add a converter, create an instance and add it to the special WebServerOptions
+var webServerOptions = new WebServerOptions();
+webServerOptions.SerializerFactories.Add(new MessagePackSerializerFactory());
 
-        // batches directory
-        var batchesDirectoryName = "batches";
-        var batchesDirctory = Path.Combine(Environment.CurrentDirectory, batchesDirectoryName);
+// add a SqlSyncProvider acting as the server hub
+builder.Services.AddSyncServer<SqlSyncChangeTrackingProvider>(connectionString, setup, options, webServerOptions);
+//builder.Services.AddSyncServer<SqlSyncProvider>(connectionString, setup, options, webServerOptions);
 
-        var options = new SyncOptions
-        {
-            SnapshotsDirectory = snapshotDirctory,
-            BatchDirectory = batchesDirctory,
-            CleanFolder = true,
-            CleanMetadatas = true,
-            BatchSize = 1000
-        };
+builder.Services.AddControllers()
+    .AddJsonOptions(options => DefaultJsonSerializers.Web());
 
-        // [Required] Tables involved in the sync process:
-        //var setup = new SyncSetup(new[] {
-        //    "Address",
-        //    "Customer",
-        //    "CustomerAddress",
-        //    "ProductCategory",
-        //    "ProductModel",
-        //    "ProductDescription",
-        //    "Product",
-        //    "ProductModelProductDescription"
-        //    }).WithTenantFilter();
+var app = builder.Build();
 
-        var setup = new SyncSetup(new[] {
-            "Address",
-            "Customer",
-            "CustomerAddress",
-            "ProductCategory",
-            "ProductModel",
-            "ProductDescription",
-            "Product",
-            "ProductModelProductDescription"
-            });
-
-        // add a SqlSyncProvider acting as the server hub
-        builder.Services.AddSyncServer<SqlSyncProvider>(connectionString, setup, options);
-
-        builder.Services.AddControllers();
-
-        var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
-        app.UseSession();
-
-        app.MapControllers();
-
-        app.Run();
-    }
-}
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.UseSession();
+app.MapControllers();
+app.Run();

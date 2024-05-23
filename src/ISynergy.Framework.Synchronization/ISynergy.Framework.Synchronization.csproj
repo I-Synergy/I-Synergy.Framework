@@ -9,7 +9,10 @@
 	<ItemGroup>
 		<PackageReference Include="Dotmim.Sync.Web.Client" />
 		<PackageReference Include="Dotmim.Sync.Sqlite" />
+		<PackageReference Include="MessagePack" />
 		<PackageReference Include="Microsoft.Extensions.Http" />
+		<PackageReference Include="System.Net.Http" />
+		<PackageReference Include="System.Text.RegularExpressions" />
 	</ItemGroup>
 
 	<ItemGroup>

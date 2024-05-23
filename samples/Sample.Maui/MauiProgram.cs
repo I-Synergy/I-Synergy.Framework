@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -84,6 +84,7 @@ public static class MauiProgram
                     await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
             })
 #endif
+            .ConfigureOfflineSynchronization()
             .ConfigureSyncfusionCore();
 
         return builder.Build();

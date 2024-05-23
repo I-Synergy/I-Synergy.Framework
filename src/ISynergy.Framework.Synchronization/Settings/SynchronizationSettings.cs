@@ -1,8 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+﻿namespace ISynergy.Framework.Synchronization.Options;
 
-namespace ISynergy.Framework.Synchronization.Abstractions;
-
-public interface ISynchronizationApplicationSettings : IBaseApplicationSettings
+public class SynchronizationSettings
 {
     /// <summary>
     /// Gets or sets the IsSynchronizationEnabled property value.
@@ -43,4 +41,29 @@ public interface ISynchronizationApplicationSettings : IBaseApplicationSettings
     /// Gets or sets the CleanSynchronizationMetadatas property value.
     /// </summary>
     public bool CleanSynchronizationMetadatas { get; set; }
+
+    /// <summary>
+    /// Gets or sets the synchronization endpoint as anonymous.
+    /// Defalut is false.
+    /// </summary>
+    public bool IsAnonymous { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default synchronization endpoint version.
+    /// </summary>
+    public string Version { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SynchronizationSettings"/> class.
+    /// </summary>
+    public SynchronizationSettings()
+    {
+        BatchSize = 1000;
+        CleanSynchronizationFolder = false;
+        CleanSynchronizationMetadatas = false;
+        IsAnonymous = false;
+        IsSynchronizationEnabled = false;
+        SynchronizationInterval = 60;
+        Version = "2";
+    }
 }
