@@ -42,7 +42,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <value>The common services.</value>
     public ICommonServices CommonServices { get; }
 
-    public IBaseApplicationSettingsService SettingsService { get; }
+    public IApplicationSettingsService SettingsService { get; }
 
     /// <summary>
     /// Gets or sets the display command.
@@ -107,7 +107,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         IContext context,
         ICommonServices commonServices,
         INavigationService navigationService,
-        IBaseApplicationSettingsService settingsService,
+        IApplicationSettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
         IThemeService themeService,

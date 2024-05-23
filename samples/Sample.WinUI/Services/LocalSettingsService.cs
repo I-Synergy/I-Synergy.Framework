@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace Sample.Services;
 
-public class LocalSettingsService : IBaseApplicationSettingsService
+public class LocalSettingsService : IApplicationSettingsService
 {
     private const string _fileName = "settings.json";
 
@@ -72,5 +72,5 @@ public class LocalSettingsService : IBaseApplicationSettingsService
     /// <summary>
     /// Settings used globally.
     /// </summary>
-    public IBaseApplicationSettings Settings => _settings;
+    public IApplicationSettings Settings => _settings;
 }

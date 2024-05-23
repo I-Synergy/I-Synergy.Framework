@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 /// <summary>
 /// Base class for application settings.
 /// </summary>
-public interface IBaseApplicationSettings
+public interface IApplicationSettings
 {
     /// <summary>
     /// Setting for maintaining the default culture used.

@@ -38,7 +38,7 @@ public static class Program
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, LocalSettingsService>());
+                services.TryAddEnumerable(ServiceDescriptor.Singleton<IApplicationSettingsService, LocalSettingsService>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<GlobalSettings>, GlobalSettingsService>());
 
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());

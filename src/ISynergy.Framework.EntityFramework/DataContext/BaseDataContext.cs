@@ -81,10 +81,10 @@ public abstract class BaseDataContext : DbContext
         }
 
         // Apply default version
-        foreach (var type in clrTypes.Where(t => typeof(IBaseClass).IsAssignableFrom(t)).EnsureNotNull())
+        foreach (var type in clrTypes.Where(t => typeof(IClass).IsAssignableFrom(t)).EnsureNotNull())
         {
             modelBuilder.Entity(type)
-                .Property<int>(nameof(IBaseClass.Version))
+                .Property<int>(nameof(IClass.Version))
                 .HasDefaultValue(1);
         }
     }

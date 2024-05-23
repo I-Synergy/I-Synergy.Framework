@@ -21,7 +21,7 @@ namespace Sample.ViewModels;
 public class SignInViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly IBaseApplicationSettingsService _applicationSettingsService;
+    private readonly IApplicationSettingsService _applicationSettingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
     public override string Title { get { return BaseCommonServices.LanguageService.GetString("Login"); } }
@@ -70,7 +70,7 @@ public class SignInViewModel : ViewModel
         IContext context,
         IBaseCommonServices commonServices,
         IAuthenticationService authenticationService,
-        IBaseApplicationSettingsService applicationSettingsService,
+        IApplicationSettingsService applicationSettingsService,
         ICredentialLockerService credentialLockerService,
         ILogger logger,
         bool automaticValidation = false)

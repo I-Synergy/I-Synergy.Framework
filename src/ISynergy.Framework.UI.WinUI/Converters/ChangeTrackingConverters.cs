@@ -23,7 +23,7 @@ public class ChangeTrackingConverters : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is IBaseModel model)
+        if (value is IModel model)
         {
             var result = new StringBuilder();
 

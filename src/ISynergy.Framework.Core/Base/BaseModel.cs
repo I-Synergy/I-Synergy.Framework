@@ -5,11 +5,11 @@ namespace ISynergy.Framework.Core.Base;
 /// <summary>
 /// Class ModelBase.
 /// Implements the <see cref="ObservableClass" />
-/// Implements the <see cref="IBaseModel" />
+/// Implements the <see cref="IModel" />
 /// </summary>
 /// <seealso cref="ObservableClass" />
-/// <seealso cref="IBaseModel" />
-public abstract class BaseModel : ObservableClass, IBaseModel
+/// <seealso cref="IModel" />
+public abstract class BaseModel : ObservableClass, IModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseModel"/> class.
