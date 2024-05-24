@@ -51,7 +51,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.53.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.54.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.40" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
