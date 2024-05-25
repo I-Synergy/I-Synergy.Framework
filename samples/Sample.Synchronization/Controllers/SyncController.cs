@@ -4,7 +4,6 @@ using Dotmim.Sync.SqlServer;
 using Dotmim.Sync.Web.Server;
 using ISynergy.Framework.Core.Serializers;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json.Serialization;
 
 namespace Sample.Synchronization.Controllers
 {
