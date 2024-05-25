@@ -31,15 +31,29 @@ public partial class App : BaseApplication
     {
         await base.InitializeApplicationAsync();
 
-        _commonServices.BusyService.BusyMessage = "Start doing important stuff";
+        try
+        {
+            _commonServices.BusyService.BusyMessage = "Start doing important stuff";
+            await Task.Delay(5000);
+            _commonServices.BusyService.BusyMessage = "Done doing important stuff";
+        }
+        catch (Exception)
+        {
+            await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff");
+            _commonServices.BusyService.EndBusy();
+        }
 
-        await Task.Delay(5000);
-
-        _commonServices.BusyService.BusyMessage = "Applying migrations";
-
-        await _migrationService.ApplyMigrationAsync<_001>();
-
-        _commonServices.BusyService.BusyMessage = "Done doing important stuff";
+        try
+        {
+            _commonServices.BusyService.BusyMessage = "Applying migrations";
+            await _migrationService.ApplyMigrationAsync<_001>();
+            _commonServices.BusyService.BusyMessage = "Done applying migrations";
+        }
+        catch (Exception)
+        {
+            await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations");
+            _commonServices.BusyService.EndBusy();
+        }
 
         MessageService.Default.Send(new ApplicationInitializedMessage());
     }
