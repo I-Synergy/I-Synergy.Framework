@@ -1,8 +1,8 @@
 ﻿using Dotmim.Sync;
 using Dotmim.Sync.Enumerations;
-using ISynergy.Framework.Synchronization.Options;
+using ISynergy.Framework.Synchronization.Abstractions.Settings;
 
-namespace ISynergy.Framework.Synchronization.Abstractions;
+namespace ISynergy.Framework.Synchronization.Abstractions.Services;
 
 public interface ISynchronizationService
 {
@@ -12,6 +12,6 @@ public interface ISynchronizationService
     public string SnapshotsFolder { get; }
     public string BatchesFolder { get; }
     string OfflineDatabase { get; }
-    SynchronizationSettings SynchronizationOptions { get; }
+    ISynchronizationSettings SynchronizationOptions { get; }
     Task SynchronizeAsync(SyncType syncType, string scopeName = SyncOptions.DefaultScopeName, CancellationToken cancellationToken = default);
 }
