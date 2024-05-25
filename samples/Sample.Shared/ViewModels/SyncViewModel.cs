@@ -4,7 +4,7 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.Synchronization.Abstractions;
+using ISynergy.Framework.Synchronization.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Messages;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;

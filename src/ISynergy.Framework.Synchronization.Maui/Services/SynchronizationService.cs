@@ -6,10 +6,10 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Synchronization.Abstractions;
+using ISynergy.Framework.Synchronization.Abstractions.Services;
+using ISynergy.Framework.Synchronization.Abstractions.Settings;
 using ISynergy.Framework.Synchronization.Factories;
 using ISynergy.Framework.Synchronization.Messages;
-using ISynergy.Framework.Synchronization.Options;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Data.Sqlite;
@@ -23,8 +23,7 @@ internal class SynchronizationService : ISynchronizationService
 {
     private readonly IContext _context;
     private readonly IMessageService _messageService;
-    //private readonly IPreferences _preferences;
-    private readonly SynchronizationSettings _synchronizationOptions;
+    private readonly ISynchronizationSettings _synchronizationSettings;
 
     public SyncAgent SynchronizationAgent { get; }
     public Uri SynchronizationEndpoint { get; }
@@ -32,7 +31,7 @@ internal class SynchronizationService : ISynchronizationService
     public string SnapshotsFolder { get; }
     public string BatchesFolder { get; }
     public string OfflineDatabase { get; }
-    public SynchronizationSettings SynchronizationOptions => _synchronizationOptions;
+    public ISynchronizationSettings SynchronizationOptions => _synchronizationSettings;
 
     public SynchronizationService(
         IContext context,
@@ -49,32 +48,32 @@ internal class SynchronizationService : ISynchronizationService
         var options = configurationOptions.Value;
         var tenantId = _context.Profile.AccountId.ToString("N");
 
-        _synchronizationOptions = preferences.GetObject<SynchronizationSettings>(nameof(SynchronizationOptions), default);
+        _synchronizationSettings = preferences.GetObject<ISynchronizationSettings>(nameof(SynchronizationOptions), default);
 
-        if (_synchronizationOptions is not null && _synchronizationOptions.IsSynchronizationEnabled)
+        if (_synchronizationSettings is not null && _synchronizationSettings.IsSynchronizationEnabled)
         {
-            if (string.IsNullOrEmpty(_synchronizationOptions.SynchronizationFolder))
-                _synchronizationOptions.SynchronizationFolder = Path.Combine(FileSystem.AppDataDirectory, "Synchronization");
+            if (string.IsNullOrEmpty(_synchronizationSettings.SynchronizationFolder))
+                _synchronizationSettings.SynchronizationFolder = Path.Combine(FileSystem.AppDataDirectory, "Synchronization");
 
-            SynchronizationFolder = Path.Combine(_synchronizationOptions.SynchronizationFolder, tenantId);
+            SynchronizationFolder = Path.Combine(_synchronizationSettings.SynchronizationFolder, tenantId);
 
             if (!Directory.Exists(SynchronizationFolder))
                 Directory.CreateDirectory(SynchronizationFolder);
 
             OfflineDatabase = Path.Combine(SynchronizationFolder, "data.db");
 
-            if (string.IsNullOrEmpty(_synchronizationOptions.SnapshotFolder))
-                _synchronizationOptions.SnapshotFolder = Path.Combine(FileSystem.AppDataDirectory, "Snapshots");
+            if (string.IsNullOrEmpty(_synchronizationSettings.SnapshotFolder))
+                _synchronizationSettings.SnapshotFolder = Path.Combine(FileSystem.AppDataDirectory, "Snapshots");
 
-            SnapshotsFolder = Path.Combine(_synchronizationOptions.SnapshotFolder, tenantId);
+            SnapshotsFolder = Path.Combine(_synchronizationSettings.SnapshotFolder, tenantId);
 
             if (!Directory.Exists(SnapshotsFolder))
                 Directory.CreateDirectory(SnapshotsFolder);
 
-            if (string.IsNullOrEmpty(_synchronizationOptions.BatchesFolder))
-                _synchronizationOptions.BatchesFolder = Path.Combine(FileSystem.AppDataDirectory, "Snapshots");
+            if (string.IsNullOrEmpty(_synchronizationSettings.BatchesFolder))
+                _synchronizationSettings.BatchesFolder = Path.Combine(FileSystem.AppDataDirectory, "Snapshots");
 
-            BatchesFolder = Path.Combine(_synchronizationOptions.BatchesFolder, tenantId);
+            BatchesFolder = Path.Combine(_synchronizationSettings.BatchesFolder, tenantId);
 
             if (!Directory.Exists(BatchesFolder))
                 Directory.CreateDirectory(BatchesFolder);
@@ -101,10 +100,10 @@ internal class SynchronizationService : ISynchronizationService
             httpClient.DefaultRequestHeaders.Add(nameof(Grant.client_id), options.ClientId);
             httpClient.DefaultRequestHeaders.Add(nameof(Grant.client_secret), options.ClientSecret);
 
-            if (!string.IsNullOrEmpty(_synchronizationOptions.Version))
-                httpClient.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, _synchronizationOptions.Version);
+            if (!string.IsNullOrEmpty(_synchronizationSettings.Version))
+                httpClient.DefaultRequestHeaders.Add(GenericConstants.ApiVersion, _synchronizationSettings.Version);
 
-            if (!_synchronizationOptions.IsAnonymous)
+            if (!_synchronizationSettings.IsAnonymous)
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
             // Check if we are trying to reach a IIS Express.
@@ -130,11 +129,11 @@ internal class SynchronizationService : ISynchronizationService
 
             var clientOptions = new SyncOptions
             {
-                BatchSize = _synchronizationOptions.BatchSize,
+                BatchSize = _synchronizationSettings.BatchSize,
                 BatchDirectory = BatchesFolder,
                 SnapshotsDirectory = SnapshotsFolder,
-                CleanFolder = _synchronizationOptions.CleanSynchronizationFolder,
-                CleanMetadatas = _synchronizationOptions.CleanSynchronizationMetadatas,
+                CleanFolder = _synchronizationSettings.CleanSynchronizationFolder,
+                CleanMetadatas = _synchronizationSettings.CleanSynchronizationMetadatas,
                 DisableConstraintsOnApplyChanges = true
             };
 
@@ -152,7 +151,7 @@ internal class SynchronizationService : ISynchronizationService
         if (!_context.IsAuthenticated)
             throw new InvalidOperationException("User is not authenticated");
 
-        if (_synchronizationOptions is not null && _synchronizationOptions.IsSynchronizationEnabled)
+        if (_synchronizationSettings is not null && _synchronizationSettings.IsSynchronizationEnabled)
         {
             var result = string.Empty;
 
