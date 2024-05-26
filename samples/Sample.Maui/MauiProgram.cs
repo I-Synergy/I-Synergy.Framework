@@ -15,6 +15,7 @@ using Syncfusion.Maui.Core.Hosting;
 using System.Reflection;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
+using System.Diagnostics;
 
 
 #if WINDOWS
@@ -38,6 +39,8 @@ public static class MauiProgram
             .Configuration
             .AddConfiguration(config);
 
+        var localSettingsService = new LocalSettingsService(Preferences.Default);
+
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkitMediaElement()
@@ -55,7 +58,7 @@ public static class MauiProgram
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 appBuilder.Services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                appBuilder.Services.TryAddSingleton<LocalSettingsService>();
+                appBuilder.Services.TryAddSingleton(localSettingsService);
                 appBuilder.Services.TryAddSingleton<ILocalSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
                 appBuilder.Services.TryAddSingleton<IApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
 
@@ -84,7 +87,11 @@ public static class MauiProgram
                     await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
             })
 #endif
-            .ConfigureOfflineSynchronization()
+            .ConfigureOfflineSynchronization(builder =>
+            {
+                Debug.WriteLine("Configuring offline synchronization");
+                Debug.WriteLine(localSettingsService.SynchronizationSettings.IsSynchronizationEnabled);
+            })
             .ConfigureSyncfusionCore();
 
         return builder.Build();
