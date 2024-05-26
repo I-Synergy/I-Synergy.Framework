@@ -30,7 +30,7 @@ internal class LocalSettingsService : ILocalSettingsService
     public void LoadSettings()
     {
         _localSettings = _preferences.GetObject<LocalSettings>(nameof(LocalSettings), new LocalSettings());
-        _synchronizationSettings = _preferences.GetObject<SynchronizationSettings>(nameof(SynchronizationSettings), default);
+        _synchronizationSettings = _preferences.GetObject<SynchronizationSettings>(nameof(SynchronizationSettings), new SynchronizationSettings());
     }
 
     /// <summary>
