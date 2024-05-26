@@ -39,7 +39,7 @@ public partial class App : BaseApplication
         }
         catch (Exception)
         {
-            await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff");
+            await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
             _commonServices.BusyService.EndBusy();
         }
 
@@ -51,7 +51,7 @@ public partial class App : BaseApplication
         }
         catch (Exception)
         {
-            await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations");
+            await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
             _commonServices.BusyService.EndBusy();
         }
 
