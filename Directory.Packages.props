@@ -27,13 +27,13 @@
     <PackageVersion Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.22.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.22.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.22.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.5" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.5" />
-    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.5" />
-    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.5" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.6" />
     <PackageVersion Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.9" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
@@ -78,7 +78,7 @@
     <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="25.2.6" />
     <PackageVersion Include="Syncfusion.Maui.Core" Version="25.2.6" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
-    <PackageVersion Include="System.Drawing.Common" Version="8.0.5" />
+    <PackageVersion Include="System.Drawing.Common" Version="8.0.6" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="System.Net.Http.Json" Version="8.0.0" />
     <PackageVersion Include="System.Text.Encodings.Web" Version="8.0.0" />
