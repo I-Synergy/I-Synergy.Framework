@@ -33,7 +33,7 @@ public static class ClaimTypes
     /// <summary>
     /// The role type
     /// </summary>
-    public const string RoleType = "user_role";
+    public const string RoleType = "role";
     /// <summary>
     /// The modules type
     /// </summary>

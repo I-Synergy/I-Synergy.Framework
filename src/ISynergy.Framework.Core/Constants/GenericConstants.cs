@@ -174,7 +174,7 @@ public static class GenericConstants
     /// <summary>
     /// The API version
     /// </summary>
-    public const string ApiVersion = "Api_Version";
+    public const string ApiVersion = "x-ms-version";
 
     /// <summary>
     /// The API client
