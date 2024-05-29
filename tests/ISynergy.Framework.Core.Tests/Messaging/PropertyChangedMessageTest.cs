@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Core.Messaging.Base;
+using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Core.Messages.Base;
 using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -36,7 +37,7 @@ public class PropertyChangedMessageTest
 
         MessageService.Reset();
 
-        MessageService.Default.Register<PropertyChangedMessageBase>(
+        MessageService.Default.Register<BasePropertyChangedMessage>(
             this,
             true,
             m =>

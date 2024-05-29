@@ -1,9 +1,9 @@
 ﻿using Dotmim.Sync.Enumerations;
-using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Messages.Base;
 
 namespace ISynergy.Framework.Synchronization.Messages;
 
-public class SyncSessionStateChangedMessage : Message<SyncSessionState>
+public sealed class SyncSessionStateChangedMessage : BaseMessage<SyncSessionState>
 {
     public SyncSessionStateChangedMessage(SyncSessionState sessionState)
         : base(sessionState)

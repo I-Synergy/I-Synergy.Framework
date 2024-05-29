@@ -1,4 +1,7 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Core.Messages.Base;
+using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Tests.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
@@ -22,12 +25,12 @@ public class MessengerRegisterWhileSendingTest
             list.Add(new TestRecipient1(true));
         }
 
-        MessageService.Default.Send(new Message<string>(TestContentString));
+        MessageService.Default.Send(new MessageFixture(TestContentString));
 
         Assert.AreEqual(null, TestRecipient.LastReceivedString);
         Assert.AreEqual(0, TestRecipient.ReceivedStringMessages);
 
-        MessageService.Default.Send(new Message<string>(TestContentStringNested));
+        MessageService.Default.Send(new MessageFixture(TestContentStringNested));
 
         Assert.AreEqual(TestContentStringNested, TestRecipient.LastReceivedString);
         Assert.AreEqual(10, TestRecipient.ReceivedStringMessages);
@@ -46,12 +49,12 @@ public class MessengerRegisterWhileSendingTest
             list.Add(new TestRecipient2(true));
         }
 
-        MessageService.Default.Send(new Message<string>(TestContentString));
+        MessageService.Default.Send(new MessageFixture(TestContentString));
 
         Assert.AreEqual(null, TestRecipient.LastReceivedString);
         Assert.AreEqual(0, TestRecipient.ReceivedStringMessages);
 
-        MessageService.Default.Send(new Message<string>(TestContentStringNested));
+        MessageService.Default.Send(new MessageFixture(TestContentStringNested));
 
         Assert.AreEqual(TestContentStringNested, TestRecipient.LastReceivedString);
         Assert.AreEqual(10, TestRecipient.ReceivedStringMessages);
@@ -159,16 +162,16 @@ public class MessengerRegisterWhileSendingTest
         {
             if (register)
             {
-                MessageService.Default.Register<Message<string>>(this, ReceiveString);
+                MessageService.Default.Register<MessageFixture>(this, ReceiveString);
             }
         }
 
-        protected virtual void ReceiveString(Message<string> m)
+        protected virtual void ReceiveString(MessageFixture m)
         {
-            MessageService.Default.Register<Message<string>>(this, ReceiveStringNested);
+            MessageService.Default.Register<MessageFixture>(this, ReceiveStringNested);
         }
 
-        protected void ReceiveStringNested(Message<string> m)
+        protected void ReceiveStringNested(MessageFixture m)
         {
             ReceivedStringMessages++;
             LastReceivedString = m.Content;
@@ -181,22 +184,22 @@ public class MessengerRegisterWhileSendingTest
         {
             if (register)
             {
-                MessageService.Default.Register<Message>(this, true, ReceiveString);
+                MessageService.Default.Register<BaseMessage>(this, true, ReceiveString);
             }
         }
 
-        public virtual void ReceiveString(Message m)
+        public virtual void ReceiveString(BaseMessage m)
         {
-            Message<string> message = m as Message<string>;
+            MessageFixture message = m as MessageFixture;
             if (message is not null)
             {
-                MessageService.Default.Register<Message>(this, true, ReceiveStringNested);
+                MessageService.Default.Register<BaseMessage>(this, true, ReceiveStringNested);
             }
         }
 
-        public void ReceiveStringNested(Message m)
+        public void ReceiveStringNested(BaseMessage m)
         {
-            Message<string> message = m as Message<string>;
+            MessageFixture message = m as MessageFixture;
             if (message is not null)
             {
                 ReceivedStringMessages++;

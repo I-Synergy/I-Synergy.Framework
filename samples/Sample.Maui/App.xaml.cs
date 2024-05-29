@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -7,7 +8,6 @@ using ISynergy.Framework.UI;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.Migrations;
-using Sample.Models;
 using Sample.ViewModels;
 using System.Runtime.ExceptionServices;
 
