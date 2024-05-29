@@ -1,10 +1,10 @@
 using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.ViewModels;
-using Sample.Models;
 
 namespace Sample.Views;
 

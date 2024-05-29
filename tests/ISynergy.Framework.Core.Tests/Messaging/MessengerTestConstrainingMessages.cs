@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Messages.Base;
+using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
@@ -122,7 +123,7 @@ public class MessengerTestConstrainingMessages
     {
         Reset();
         MessageService.Reset();
-        MessageService.Default.Register<Message>(this, ReceiveMessageBase);
+        MessageService.Default.Register<BaseMessage>(this, ReceiveMessageBase);
 
         TestMessageImpl testMessage = new(this)
         {
@@ -140,7 +141,7 @@ public class MessengerTestConstrainingMessages
         Assert.IsFalse(_messageWasReceivedInITestMessage);
 
         MessageService.Default.Unregister<ITestMessage>(this);
-        MessageService.Default.Register<Message>(this, true, ReceiveMessageBase);
+        MessageService.Default.Register<BaseMessage>(this, true, ReceiveMessageBase);
 
         MessageService.Default.Send(testMessage);
         Assert.IsTrue(_messageWasReceived);
@@ -165,7 +166,7 @@ public class MessengerTestConstrainingMessages
         _messageWasReceivedInTestMessageBase = true;
     }
 
-    public void ReceiveMessageBase(Message testMessage)
+    public void ReceiveMessageBase(BaseMessage testMessage)
     {
         Assert.IsNotNull(testMessage);
 

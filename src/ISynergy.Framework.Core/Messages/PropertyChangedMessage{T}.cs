@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Messaging.Base;
+﻿using ISynergy.Framework.Core.Messages.Base;
 
-namespace ISynergy.Framework.Core.Messaging;
+namespace ISynergy.Framework.Core.Messages;
 
 /// <summary>
 /// Passes a string property name (PropertyName) and a generic value
@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Core.Messaging;
 /// a recipient using the messenging system.
 /// </summary>
 /// <typeparam name="T">The type of the OldValue and NewValue property.</typeparam>
-public class PropertyChangedMessage<T> : PropertyChangedMessageBase
+public sealed class PropertyChangedMessage<T> : BasePropertyChangedMessage
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PropertyChangedMessage{T}" /> class.

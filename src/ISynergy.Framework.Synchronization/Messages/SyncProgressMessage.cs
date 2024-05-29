@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Messaging;
+﻿using ISynergy.Framework.Core.Messages.Base;
 
 namespace ISynergy.Framework.Synchronization.Messages;
-public class SyncProgressMessage : Message<double>
+public sealed class SyncProgressMessage : BaseMessage<double>
 {
     public SyncProgressMessage(double progress)
         : base(progress)
