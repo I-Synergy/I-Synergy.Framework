@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Messaging;
+﻿using ISynergy.Framework.Core.Messages.Base;
 
 namespace ISynergy.Framework.Synchronization.Messages;
 
-public class SyncMessage : Message<string>
+public sealed class SyncMessage : BaseMessage<string>
 {
     public SyncMessage(string message)
         : base(message)

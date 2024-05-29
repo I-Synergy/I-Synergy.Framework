@@ -17,10 +17,6 @@ namespace ISynergy.Framework.UI.Services.Base;
 public abstract class BaseRestService
 {
     /// <summary>
-    /// Json serializer options.
-    /// </summary>
-    protected readonly JsonSerializerOptions _jsonSerializerOptions;
-    /// <summary>
     /// The context
     /// </summary>
     protected readonly IContext _context;
@@ -53,7 +49,6 @@ public abstract class BaseRestService
     /// <param name="authenticationService"></param>
     /// <param name="languageService">The language service.</param>
     /// <param name="exceptionHandlerService">The exception handler service.</param>
-    /// <param name="jsonSerializerOptions"></param>
     /// <param name="configurationOptions">The configuration options.</param>
     protected BaseRestService(
         IContext context,
@@ -61,7 +56,6 @@ public abstract class BaseRestService
         IAuthenticationService authenticationService,
         ILanguageService languageService,
         IExceptionHandlerService exceptionHandlerService,
-        JsonSerializerOptions jsonSerializerOptions,
         IOptions<ConfigurationOptions> configurationOptions)
     {
         _context = context;
@@ -70,7 +64,6 @@ public abstract class BaseRestService
         _languageService = languageService;
         _exceptionHandlerService = exceptionHandlerService;
         _configurationOptions = configurationOptions.Value;
-        _jsonSerializerOptions = jsonSerializerOptions;
     }
 
     /// <summary>
@@ -112,7 +105,7 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
-                    return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
+                    return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
                 }
 
                 return default(T);
@@ -253,7 +246,7 @@ public abstract class BaseRestService
 
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
-                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions)
+                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"))
                 };
 
                 var response = await client.SendAsync(request);
@@ -263,7 +256,7 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
-                    return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
+                    return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
                 }
 
                 return default(T);
@@ -306,7 +299,7 @@ public abstract class BaseRestService
 
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
-                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions)
+                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"))
                 };
 
                 var response = await client.SendAsync(request);
@@ -360,7 +353,7 @@ public abstract class BaseRestService
 
                 var request = new HttpRequestMessage(HttpMethod.Put, url)
                 {
-                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions)
+                    Content = JsonContent.Create(data, data.GetType(), new MediaTypeHeaderValue("application/json"))
                 };
 
                 var response = await client.SendAsync(request);
@@ -370,7 +363,7 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
-                    return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions, cancellationToken);
+                    return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
                 }
 
                 return default(T);
@@ -418,7 +411,7 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return 0;
 
-                    return await response.Content.ReadFromJsonAsync<int>(_jsonSerializerOptions, cancellationToken);
+                    return await response.Content.ReadFromJsonAsync<int>(cancellationToken);
                 }
 
                 return 0;

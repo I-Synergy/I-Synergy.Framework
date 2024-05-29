@@ -1,6 +1,8 @@
-﻿namespace ISynergy.Framework.Core.Messaging.Tests;
+﻿using ISynergy.Framework.Core.Messages.Base;
 
-public class TestMessageBase(object sender) : Message(sender), ITestMessage
+namespace ISynergy.Framework.Core.Messaging.Tests;
+
+public class TestMessageBase(object sender) : BaseMessage(sender), ITestMessage
 {
     public string Content
     {
