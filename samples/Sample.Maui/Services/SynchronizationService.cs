@@ -10,19 +10,19 @@ using ISynergy.Framework.Synchronization.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Abstractions.Settings;
 using ISynergy.Framework.Synchronization.Factories;
 using ISynergy.Framework.Synchronization.Messages;
-using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace ISynergy.Framework.Synchronization.Services;
+namespace Sample.Services;
 
 internal class SynchronizationService : ISynchronizationService
 {
     private readonly IContext _context;
     private readonly IMessageService _messageService;
+    private readonly LocalSettingsService _localSettingsService;
     private readonly ISynchronizationSettings _synchronizationSettings;
 
     public SyncAgent SynchronizationAgent { get; }
@@ -36,11 +36,12 @@ internal class SynchronizationService : ISynchronizationService
     public SynchronizationService(
         IContext context,
         IMessageService messageService,
-        IPreferences preferences,
+        LocalSettingsService localSettingsService,
         IOptions<ConfigurationOptions> configurationOptions)
     {
         _context = context;
         _messageService = messageService;
+        _localSettingsService = localSettingsService;
 
         if (!_context.IsAuthenticated)
             throw new InvalidOperationException("User is not authenticated");
@@ -48,9 +49,9 @@ internal class SynchronizationService : ISynchronizationService
         var options = configurationOptions.Value;
         var tenantId = _context.Profile.AccountId.ToString("N");
 
-        _synchronizationSettings = preferences.GetObject<ISynchronizationSettings>(nameof(SynchronizationOptions), default);
+        _synchronizationSettings = _localSettingsService.Settings.SynchronizationSetting;
 
-        if (_synchronizationSettings is not null && _synchronizationSettings.IsSynchronizationEnabled)
+        if (_synchronizationSettings is not null && _localSettingsService.Settings.IsSynchronizationEnabled)
         {
             if (string.IsNullOrEmpty(_synchronizationSettings.SynchronizationFolder))
                 _synchronizationSettings.SynchronizationFolder = Path.Combine(FileSystem.AppDataDirectory, "Synchronization");
@@ -151,7 +152,7 @@ internal class SynchronizationService : ISynchronizationService
         if (!_context.IsAuthenticated)
             throw new InvalidOperationException("User is not authenticated");
 
-        if (_synchronizationSettings is not null && _synchronizationSettings.IsSynchronizationEnabled)
+        if (_synchronizationSettings is not null && _localSettingsService.Settings.IsSynchronizationEnabled)
         {
             var result = string.Empty;
 

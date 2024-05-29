@@ -1,50 +1,43 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services;
 
 public class MigrationService : IMigrationService
 {
-    private readonly IPreferences _preferences;
+    private readonly IApplicationSettingsService _applicationSettingsService;
 
-    public MigrationService(IPreferences preferences)
+    public MigrationService(IApplicationSettingsService applicationSettingsService)
     {
-        _preferences = preferences;
+        _applicationSettingsService = applicationSettingsService;
     }
 
-    public Task ApplyMigrationAsync<TMigration>()
+    public async Task ApplyMigrationAsync<TMigration>()
         where TMigration : class, IMigration
     {
-        var property = typeof(TMigration).GetProperty(nameof(IMigration.MigrationVersion));
-        var version = (int)property.GetValue(null);
+        var migration = Activator.CreateInstance(typeof(TMigration)) as IMigration;
 
-        if (_preferences.ContainsKey(nameof(IMigration.MigrationVersion)) &&
-            _preferences.Get(nameof(IMigration.MigrationVersion), 0) < version)
+        if (_applicationSettingsService.Settings.MigrationVersion < migration.MigrationVersion)
         {
-            var method = typeof(TMigration).GetMethod(nameof(IMigration.Up));
-            method.Invoke(null, null);
+            await migration.UpAsync();
 
-            _preferences.Set(nameof(IMigration.MigrationVersion), version);
+            _applicationSettingsService.Settings.MigrationVersion = migration.MigrationVersion;
+            _applicationSettingsService.SaveSettings();
         }
-
-        return Task.CompletedTask;
     }
 
-    public Task RevertMigrationAsync<TMigration>()
+    public async Task RevertMigrationAsync<TMigration>()
         where TMigration : class, IMigration
     {
-        var property = typeof(TMigration).GetProperty(nameof(IMigration.MigrationVersion));
-        var version = (int)property.GetValue(null);
+        var migration = Activator.CreateInstance(typeof(TMigration)) as IMigration;
 
-        if (_preferences.ContainsKey(nameof(IMigration.MigrationVersion)) &&
-            _preferences.Get(nameof(IMigration.MigrationVersion), 0) > version)
+        if (_applicationSettingsService.Settings.MigrationVersion > migration.MigrationVersion)
         {
-            var method = typeof(TMigration).GetMethod(nameof(IMigration.Down));
-            method.Invoke(null, null);
+            await migration.DownAsync();
 
-            _preferences.Set(nameof(IMigration.MigrationVersion), version);
+            _applicationSettingsService.Settings.MigrationVersion = migration.MigrationVersion;
+            _applicationSettingsService.SaveSettings();
         }
-        
-        return Task.CompletedTask;
     }
 }

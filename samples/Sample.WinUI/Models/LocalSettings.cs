@@ -13,7 +13,8 @@ public class LocalSettings : IApplicationSettings
     public Themes Theme { get; set; } = Themes.Dark;
     public bool IsAutoLogin { get; set; }
     public bool IsAdvanced { get; set; }
-    public byte[] Wallpaper { get; set; } = Array.Empty<byte>();
+    public int MigrationVersion { get; set; }
+    public bool IsSynchronizationEnabled { get; set; }
 
     public LocalSettings()
     {
