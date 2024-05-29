@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Synchronization.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -16,7 +15,7 @@ using System.Reflection;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
 using System.Diagnostics;
-
+using Sample.Extensions;
 
 #if WINDOWS
 using ISynergy.Framework.Update.Extensions;
@@ -39,7 +38,7 @@ public static class MauiProgram
             .Configuration
             .AddConfiguration(config);
 
-        var localSettingsService = new LocalSettingsService(Preferences.Default);
+        var localSettingsService = new LocalSettingsService();
 
         builder
             .UseMauiApp<App>()
@@ -90,7 +89,7 @@ public static class MauiProgram
             .ConfigureOfflineSynchronization(builder =>
             {
                 Debug.WriteLine("Configuring offline synchronization");
-                Debug.WriteLine(localSettingsService.SynchronizationSettings.IsSynchronizationEnabled);
+                Debug.WriteLine(localSettingsService.Settings.IsSynchronizationEnabled);
             })
             .ConfigureSyncfusionCore();
 

@@ -81,7 +81,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.ApplicationInsights\ISynergy.Framework.Logging.ApplicationInsights.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization.Maui\ISynergy.Framework.Synchronization.Maui.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Update.Maui\ISynergy.Framework.Update.Maui.csproj" />
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />

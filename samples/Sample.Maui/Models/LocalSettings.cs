@@ -1,10 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Abstractions;
 using System.Globalization;
 
 namespace Sample.Models;
-public class LocalSettings : IApplicationSettings
+public class LocalSettings : ObservableClass, IApplicationSettings
 {
     public Languages Language { get; set; } = Languages.English;
     public bool IsFullscreen { get; set; }
@@ -14,7 +14,33 @@ public class LocalSettings : IApplicationSettings
     public Themes Theme { get; set; } = Themes.Dark;
     public bool IsAutoLogin { get; set; }
     public bool IsAdvanced { get; set; }
-    public byte[] Wallpaper { get; set; } = Array.Empty<byte>();
+    public int MigrationVersion { get; set; }
+
+    /// <summary>
+    /// Gets or sets the SynchronizationSetting property value.
+    /// </summary>
+    public SynchronizationSettings SynchronizationSetting
+    {
+        get => GetValue<SynchronizationSettings>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the IsSynchronizationEnabled property value.
+    /// </summary>
+    public bool IsSynchronizationEnabled
+    {
+        get => GetValue<bool>();
+        set
+        {
+            SetValue(value);
+
+            if (value && SynchronizationSetting is null)
+                SynchronizationSetting = new SynchronizationSettings();
+            else if (!value)
+                SynchronizationSetting = null;
+        }
+    }
 
     public LocalSettings()
     {
@@ -25,5 +51,9 @@ public class LocalSettings : IApplicationSettings
             "fr" => Languages.French,
             _ => Languages.English,
         };
+
+        MigrationVersion = 0;
+        IsSynchronizationEnabled = false;
+        SynchronizationSetting = default;
     }
 }
