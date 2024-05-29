@@ -1,19 +1,10 @@
 ﻿using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Synchronization.Abstractions.Settings;
 
-namespace ISynergy.Framework.Synchronization.Options;
+namespace Sample.Models;
 
 public class SynchronizationSettings : ObservableClass, ISynchronizationSettings
 {
-    /// <summary>
-    /// Gets or sets the IsSynchronizationEnabled property value.
-    /// </summary>
-    public bool IsSynchronizationEnabled
-    {
-        get => GetValue<bool>();
-        set => SetValue(value);
-    }
-
     /// <summary>
     /// Gets or sets the SynchronizationInterval property value in seconds.
     /// </summary>
@@ -105,7 +96,6 @@ public class SynchronizationSettings : ObservableClass, ISynchronizationSettings
         CleanSynchronizationFolder = false;
         CleanSynchronizationMetadatas = false;
         IsAnonymous = false;
-        IsSynchronizationEnabled = false;
         SynchronizationInterval = 60;
         Version = "2";
     }
