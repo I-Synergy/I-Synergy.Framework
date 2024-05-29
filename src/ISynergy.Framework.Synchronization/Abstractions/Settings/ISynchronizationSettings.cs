@@ -7,7 +7,6 @@ public interface ISynchronizationSettings
     bool CleanSynchronizationFolder { get; set; }
     bool CleanSynchronizationMetadatas { get; set; }
     bool IsAnonymous { get; set; }
-    bool IsSynchronizationEnabled { get; set; }
     string SnapshotFolder { get; set; }
     string SynchronizationFolder { get; set; }
     int SynchronizationInterval { get; set; }

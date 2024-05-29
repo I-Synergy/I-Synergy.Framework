@@ -2,7 +2,7 @@
 
 public interface IMigration
 {
-    void Up();
-    void Down();
+    Task UpAsync();
+    Task DownAsync();
     int MigrationVersion { get; }
 }

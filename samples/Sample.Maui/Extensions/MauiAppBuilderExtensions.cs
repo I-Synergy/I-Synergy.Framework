@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Synchronization.Abstractions.Services;
-using ISynergy.Framework.Synchronization.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Sample.Services;
 
-namespace ISynergy.Framework.Synchronization.Extensions;
+namespace Sample.Extensions;
 
 public static class MauiAppBuilderExtensions
 {
@@ -13,3 +13,4 @@ public static class MauiAppBuilderExtensions
         return builder;
     }
 }
+

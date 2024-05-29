@@ -40,7 +40,11 @@ public interface IApplicationSettings
     /// </summary>
     bool IsAdvanced { get; set; }
     /// <summary>
-    /// Wallpaper of the application.
+    /// Version of applied migration.
     /// </summary>
-    byte[] Wallpaper { get; set; }
+    int MigrationVersion { get; set; }
+    /// <summary>
+    /// Synchronization enabeled property.
+    /// </summary>
+    bool IsSynchronizationEnabled { get; set; }
 }
