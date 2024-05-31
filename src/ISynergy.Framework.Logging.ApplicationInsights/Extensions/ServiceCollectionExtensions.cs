@@ -20,10 +20,11 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
+    /// <param name="prefix"></param>
     /// <returns></returns>
-    public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, IConfiguration configuration)
+    public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, IConfiguration configuration, string prefix = "")
     {
-        builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
+        builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection($"{prefix}{nameof(ApplicationInsightsOptions)}").BindWithReload);
 
         builder.Services.TryAddSingleton<ITelemetryInitializer, DefaultTelemetryInitializer>();
 

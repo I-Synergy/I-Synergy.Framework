@@ -19,9 +19,10 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
-    public static void AddAutomationServices(this IServiceCollection services, IConfiguration configuration)
+    /// <param name="prefix"></param>
+    public static void AddAutomationServices(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
-        services.Configure<AutomationOptions>(configuration.GetSection(nameof(AutomationOptions)).BindWithReload);
+        services.Configure<AutomationOptions>(configuration.GetSection($"{prefix}{nameof(AutomationOptions)}").BindWithReload);
 
         services.TryAddSingleton<IActionService, ActionService>();
         services.TryAddSingleton<IAutomationService, AutomationService>();
