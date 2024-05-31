@@ -20,11 +20,12 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
+    /// <param name="prefix"></param>
     /// <returns></returns>
-    public static IServiceCollection AddDocumentsSyncfusionIntegration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDocumentsSyncfusionIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<SyncfusionLicenseOptions>(configuration.GetSection(nameof(SyncfusionLicenseOptions)).BindWithReload);
+        services.Configure<SyncfusionLicenseOptions>(configuration.GetSection($"{prefix}{nameof(SyncfusionLicenseOptions)}").BindWithReload);
         services.TryAddSingleton<ILanguageService, LanguageService>();
         services.TryAddSingleton<IDocumentService, DocumentService>();
 

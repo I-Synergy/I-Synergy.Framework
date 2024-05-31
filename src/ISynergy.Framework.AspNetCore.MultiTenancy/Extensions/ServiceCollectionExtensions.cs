@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.AspNetCore.MultiTenancy.Services;
 using ISynergy.Framework.Core.Abstractions.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 
 namespace ISynergy.Framework.AspNetCore.MultiTenancy.Extensions;
 
@@ -14,12 +14,12 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Adds multi tenancy integration.
     /// </summary>
-    /// <param name="services"></param>
+    /// <param name="builder"></param>
     /// <returns></returns>
-    public static IServiceCollection AddMultiTenancyIntegration(this IServiceCollection services)
+    public static IHostApplicationBuilder AddMultiTenancyIntegration(this IHostApplicationBuilder builder)
     {
-        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.TryAddTransient<ITenantService, TenantService>();
-        return services;
+        builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        builder.Services.TryAddTransient<ITenantService, TenantService>();
+        return builder;
     }
 }

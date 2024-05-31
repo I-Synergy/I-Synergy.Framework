@@ -135,10 +135,11 @@ public abstract class BaseStartup : IAsyncInitialization
     /// Adds the options.
     /// </summary>
     /// <param name="services">The services.</param>
-    protected virtual void AddOptions(IServiceCollection services)
+    /// <param name="prefix"></param>
+    protected virtual void AddOptions(IServiceCollection services, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<WebsiteOptions>(Configuration.GetSection(nameof(WebsiteOptions)).BindWithReload);
+        services.Configure<WebsiteOptions>(Configuration.GetSection($"{prefix}{nameof(WebsiteOptions)}").BindWithReload);
     }
 
     /// <summary>
