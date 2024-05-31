@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 
 namespace ISynergy.Framework.AspNetCore.Monitoring.Extensions;
 
@@ -36,6 +37,18 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IMonitorService<TEntity>, MonitorService<TEntity>>();
 
         return services;
+    }
+
+    /// <summary>
+    /// Adds monitoring with SignalR integration.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static IHostApplicationBuilder AddMonitorSignalR<TEntity>(this IHostApplicationBuilder builder)
+        where TEntity : class
+    {
+        builder.Services.AddMonitorSignalR<TEntity>(builder.Configuration);
+        return builder;
     }
 
     /// <summary>

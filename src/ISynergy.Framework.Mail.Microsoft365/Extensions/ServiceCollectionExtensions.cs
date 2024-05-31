@@ -15,11 +15,12 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
+    /// <param name="prefix"></param>
     /// <returns></returns>
-    public static IServiceCollection AddMicrosoft365MailIntegration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddMicrosoft365MailIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<MailOptions>(configuration.GetSection(nameof(MailOptions)).BindWithReload);
+        services.Configure<MailOptions>(configuration.GetSection($"{prefix}{nameof(MailOptions)}").BindWithReload);
         services.TryAddSingleton<IMailService, MailService>();
         return services;
     }

@@ -18,12 +18,13 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
+    /// <param name="prefix"></param>
     /// <returns></returns>
-    public static IServiceCollection AddMessageBusAzurePublishIntegration<TQueuePublishMessage>(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddMessageBusAzurePublishIntegration<TQueuePublishMessage>(this IServiceCollection services, IConfiguration configuration, string prefix = "")
         where TQueuePublishMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<PublisherOptions>(configuration.GetSection(nameof(PublisherOptions)).BindWithReload);
+        services.Configure<PublisherOptions>(configuration.GetSection($"{prefix}{nameof(PublisherOptions)}").BindWithReload);
         services.AddPublishingQueueMessageBus<TQueuePublishMessage, PublisherServiceBus<TQueuePublishMessage, PublisherOptions>>();
         return services;
     }
@@ -33,12 +34,13 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
+    /// <param name="prefix"></param>
     /// <returns></returns>
-    public static IServiceCollection AddMessageBusAzureSubscribeIntegration<TQueueSubscribeMessage>(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddMessageBusAzureSubscribeIntegration<TQueueSubscribeMessage>(this IServiceCollection services, IConfiguration configuration, string prefix = "")
         where TQueueSubscribeMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<SubscriberOptions>(configuration.GetSection(nameof(SubscriberOptions)).BindWithReload);
+        services.Configure<SubscriberOptions>(configuration.GetSection($"{prefix}{nameof(SubscriberOptions)}").BindWithReload);
         services.AddSubscribingQueueMessageBus<TQueueSubscribeMessage, SubscriberServiceBus<TQueueSubscribeMessage, SubscriberOptions>>();
         return services;
     }
