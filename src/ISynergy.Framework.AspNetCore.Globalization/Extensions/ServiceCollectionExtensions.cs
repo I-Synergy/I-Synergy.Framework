@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.Globalization.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 
 namespace ISynergy.Framework.AspNetCore.Globalization.Extensions;
 
@@ -12,12 +12,12 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Adds globalization integration.
     /// </summary>
-    /// <param name="services"></param>
+    /// <param name="builder"></param>
     /// <returns></returns>
-    public static IServiceCollection AddGlobalizationIntegration(this IServiceCollection services)
+    public static IHostApplicationBuilder AddGlobalizationIntegration(this IHostApplicationBuilder builder)
     {
-        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.TryAddSingleton<ILanguageService, LanguageService>();
-        return services;
+        builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        builder.Services.TryAddSingleton<ILanguageService, LanguageService>();
+        return builder;
     }
 }
