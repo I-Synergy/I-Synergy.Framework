@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.UI.Hosting;
+﻿using Microsoft.UI.Xaml;
+
+namespace ISynergy.Framework.UI.Hosting;
 
 public class CancelableApplication : Application
 {

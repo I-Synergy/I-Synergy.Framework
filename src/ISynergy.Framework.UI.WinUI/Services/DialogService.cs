@@ -7,6 +7,8 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Window = ISynergy.Framework.UI.Controls.Window;
+using Application = Microsoft.UI.Xaml.Application;
 
 namespace ISynergy.Framework.UI.Services;
 

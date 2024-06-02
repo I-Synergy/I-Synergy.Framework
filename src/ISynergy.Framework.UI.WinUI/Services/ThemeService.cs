@@ -9,6 +9,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel;
 using WinRT.Interop;
+using Style = ISynergy.Framework.Core.Models.Style;
 
 namespace ISynergy.Framework.UI.Services;
 

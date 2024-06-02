@@ -19,7 +19,6 @@
 		<DefaultLanguage>en</DefaultLanguage>
 		<IsPackable>false</IsPackable>
 		<EnableMsixTooling>true</EnableMsixTooling>
-		<DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -42,12 +41,12 @@
 	<ItemGroup>
 		<Manifest Include="$(ApplicationManifest)" />
 
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="26.1.41" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="26.1.41" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="26.1.41" />
 	</ItemGroup>
 
 	<ItemGroup>
