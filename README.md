@@ -45,9 +45,9 @@ ___
 | [I-Synergy.Framework.Storage](https://www.nuget.org/packages/I-Synergy.Framework.Storage/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage) |
 | [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage.Azure) |
 | [I-Synergy.Framework.Synchronization](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization) |
-| [I-Synergy.Framework.Synchronization.Maui](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Maui/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Maui) |
 | [I-Synergy.Framework.UI](https://www.nuget.org/packages/I-Synergy.Framework.UI/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI) |
 | [I-Synergy.Framework.UI.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.UI.WinUI/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI.WinUI) |
+| [I-Synergy.Framework.UI.Uno](https://www.nuget.org/packages/I-Synergy.Framework.UI.Uno/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI.Uno) |
 | [I-Synergy.Framework.UI.Maui](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI.Maui) |
 | [I-Synergy.Framework.UI.WPF](https://www.nuget.org/packages/I-Synergy.Framework.UI.WPF/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI.WPF) |
 | [I-Synergy.Framework.Update](https://www.nuget.org/packages/I-Synergy.Framework.Update/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update) |

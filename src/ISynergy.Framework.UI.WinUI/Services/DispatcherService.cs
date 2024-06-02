@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.UI.Dispatching;
+using Application = Microsoft.UI.Xaml.Application;
 
 namespace ISynergy.Framework.UI.Services;
 

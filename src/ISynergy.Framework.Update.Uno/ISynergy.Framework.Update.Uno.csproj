@@ -1,0 +1,45 @@
+﻿<Project Sdk="Uno.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net8.0-ios;net8.0-maccatalyst;net8.0-android;net8.0-windows10.0.22621;net8.0-browserwasm;net8.0-desktop</TargetFrameworks>
+		<UnoSingleProject>true</UnoSingleProject>
+		<OutputType>Library</OutputType>
+		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<PackageId>I-Synergy.Framework.Update.Uno</PackageId>
+		<Description>I-Synergy Update Framework for Uno Platform</Description>
+		<PackageTags>I-Synergy, Framework, Update, Windows, Linux, Android, IOS, Uno</PackageTags>
+		<EnableMsixTooling>true</EnableMsixTooling>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+		<!--
+		If you encounter this error message:
+
+		  error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
+		  Please update to a newer .NET SDK in order to reference this assembly.
+
+		This means that the two packages below must be aligned with the "build" version number of
+		the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
+		must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
+		-->
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.26100.1" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.26100.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Include="..\ISynergy.Framework.Update.WinUI\Extensions\ServiceCollectionExtensions.cs" Link="Extensions\ServiceCollectionExtensions.cs" />
+	  <Compile Include="..\ISynergy.Framework.Update.WinUI\Services\UpdateService.cs" Link="Services\UpdateService.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj" />
+	</ItemGroup>
+</Project>

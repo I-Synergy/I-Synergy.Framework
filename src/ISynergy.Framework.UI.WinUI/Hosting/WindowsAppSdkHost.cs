@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using WinRT;
 using HostOptions = ISynergy.Framework.UI.Options.HostOptions;
 using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
@@ -77,7 +78,9 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
         HostOptions.XamlCheckProcessRequirements();
 
+#if WINDOWS
         ComWrappersSupport.InitializeComWrappers();
+#endif
 
         void OnAppOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
@@ -93,10 +96,10 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
                 {
                     try
                     {
-                        var context = new DispatcherQueueSynchronizationContext(
-                            DispatcherQueue.GetForCurrentThread()
-                        );
-                        SynchronizationContext.SetSynchronizationContext(context);
+                        //var context = new DispatcherQueueSynchronizationContext(
+                        //    DispatcherQueue.GetForCurrentThread()
+                        //);
+                        //SynchronizationContext.SetSynchronizationContext(context);
                         var app = Services.GetRequiredService<TApp>();
 
                         app.UnhandledException += OnAppOnUnhandledException;

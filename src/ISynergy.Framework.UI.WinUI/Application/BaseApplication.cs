@@ -13,14 +13,15 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Services;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.Windows.AppLifecycle;
 using System.Globalization;
 using Windows.ApplicationModel.Activation;
 using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
+using Window = ISynergy.Framework.UI.Controls.Window;
+using Application = Microsoft.UI.Xaml.Application;
 
 namespace ISynergy.Framework.UI;
 
@@ -56,6 +57,18 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected BaseApplication(Func<ILoadingView> initialView = null)
         : base()
     {
+        var host = CreateHostBuilder()
+            .ConfigureLogging(config =>
+            {
+#if DEBUG
+                config.AddDebug();
+#endif
+                config.SetMinimumLevel(LogLevel.Trace);
+            })
+            .Build();
+
+        ServiceLocator.SetLocatorProvider(host.Services);
+
         _logger = ServiceLocator.Default.GetInstance<ILogger>();
         _logger.LogInformation("Setting up global exception handler.");
 
@@ -146,6 +159,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     }
 
     /// <summary>
+    /// Creates the host builder.
+    /// </summary>
+    /// <returns></returns>
+    protected abstract IHostBuilder CreateHostBuilder();
+
+    /// <summary>
     /// Handles the authentication changed event.   
     /// </summary>
     /// <param name="sender"></param>
@@ -234,7 +253,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
     /// </summary>
     /// <param name="e">Event data for the event.</param>
-    protected override async void OnLaunched(LaunchActivatedEventArgs e)
+    protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs e)
     {
         //MainWindow = WindowHelper.CreateWindow();
 
