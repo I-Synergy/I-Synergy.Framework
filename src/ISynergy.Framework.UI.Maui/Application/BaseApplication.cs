@@ -10,6 +10,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
@@ -39,7 +40,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected BaseApplication()
+    protected BaseApplication(Func<Page> initialView = null)
         : base()
     {
         _logger = ServiceLocator.Default.GetInstance<ILogger>() ?? LoggerFactory.Create(config =>
@@ -64,12 +65,16 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Starting initialization of application");
 
+        _logger.LogInformation("Setting up main page.");
+
         _logger.LogInformation("Getting common services.");
         _commonServices = ServiceLocator.Default.GetInstance<IBaseCommonServices>();
         _commonServices.BusyService.StartBusy();
 
-        _logger.LogInformation("Setting up main page.");
-        Application.Current.MainPage = new NavigationPage((Page)ServiceLocator.Default.GetInstance<ILoadingView>());
+        if (initialView is not null)
+            Application.Current.MainPage = new NavigationPage(initialView.Invoke());
+        else
+            Application.Current.MainPage = new NavigationPage(new EmptyView(_commonServices));
 
         _logger.LogInformation("Setting up context.");
         _context = ServiceLocator.Default.GetInstance<IContext>();
@@ -190,6 +195,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
         _themeService.SetStyle();
 
+        window.Title = InfoService.Default.Title ?? string.Empty;
         return window;
     }
 

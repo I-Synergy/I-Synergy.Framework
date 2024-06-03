@@ -41,16 +41,16 @@
         </StackLayout>
 
         <Button
-            x:Name="SkipButton"
+            x:Name="SignInButton"
             Text="{m:GetString Skip}"
             IsEnabled="False"
-            Clicked="SkipClicked" 
+            Clicked="SignInClicked" 
             HorizontalOptions="Center" 
             VerticalOptions="End" 
             Margin="20">
             <FlyoutBase.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="{m:GetString Skip}" Clicked="SkipClicked" IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type Button}}, Path=IsEnabled}">
+                    <MenuFlyoutItem Text="{m:GetString SignIn}" Clicked="SignInClicked" IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type Button}}, Path=IsEnabled}">
                         <MenuFlyoutItem.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="None" Key="Escape"/>
                         </MenuFlyoutItem.KeyboardAccelerators>
