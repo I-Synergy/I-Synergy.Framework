@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
@@ -21,13 +22,10 @@ public partial class LoadingView : ILoadingView
     }
 
     private void ApplicationInitialized(ApplicationInitializedMessage message) =>
-        SkipButton.IsEnabled = true;
+        SignInButton.IsEnabled = true;
 
-    private void SendApplicationLoadedMessage() =>
-        MessageService.Default.Send(new ApplicationLoadedMessage());
-
-    private void MediaElement_MediaEnded(object sender, EventArgs e) =>
-        SendApplicationLoadedMessage();
+    private void MediaElement_MediaEnded(object sender, EventArgs e) => 
+        Complete();
 
     private void View_Loaded(object sender, EventArgs e) =>
         BackgroundMediaElement.Play();
@@ -37,17 +35,19 @@ public partial class LoadingView : ILoadingView
 
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-        if (SkipButton.IsEnabled)
-        {
-            BackgroundMediaElement.Pause();
-            SendApplicationLoadedMessage();
-        }
+        if (SignInButton.IsEnabled)
+            Complete();
     }
 
-    private void SkipClicked(object sender, EventArgs e)
+    private void SignInClicked(object sender, EventArgs e) => 
+        Complete();
+
+    private void Complete()
     {
-        BackgroundMediaElement.Pause();
-        SendApplicationLoadedMessage();
+        if (BackgroundMediaElement.CurrentState != MediaElementState.Stopped)
+            BackgroundMediaElement.Pause();
+
+        MessageService.Default.Send(new ApplicationLoadedMessage());
     }
 
     protected override void Dispose(bool disposing)
@@ -55,8 +55,6 @@ public partial class LoadingView : ILoadingView
         base.Dispose(disposing);
 
         if (disposing)
-        {
             MessageService.Default.Unregister<ApplicationInitializedMessage>(this);
-        }
     }
 }
