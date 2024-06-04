@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.Migrations;
@@ -18,12 +19,12 @@ public partial class App : BaseApplication
     private readonly IMigrationService _migrationService;
 
     public App(IMigrationService migrationService)
-        : base()
+        : base(() => (Page)ServiceLocator.Default.GetInstance<ILoadingView>())
     {
-        InitializeComponent();
-        
         _migrationService = migrationService;
 
+        InitializeComponent();
+        
         MessageService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
     }
 
@@ -124,9 +125,7 @@ public partial class App : BaseApplication
         base.Dispose(disposing);
 
         if (disposing)
-        {
             MessageService.Default.Unregister<ApplicationLoadedMessage>(this);
-        }
     }
 
     protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
