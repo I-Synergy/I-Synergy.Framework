@@ -148,7 +148,7 @@ public partial class Expander : HeaderedContentControl
     /// Identifies the <see cref="HeaderStyle"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty HeaderStyleProperty =
-        DependencyProperty.Register(nameof(HeaderStyle), typeof(Style), typeof(Expander), new PropertyMetadata(default(Style)));
+        DependencyProperty.Register(nameof(HeaderStyle), typeof(Microsoft.UI.Xaml.Style), typeof(Expander), new PropertyMetadata(default(Microsoft.UI.Xaml.Style)));
 
     /// <summary>
     /// Gets or sets a value indicating whether the content of the control is opened/visible or closed/hidden.
@@ -180,9 +180,9 @@ public partial class Expander : HeaderedContentControl
     /// <summary>
     /// Gets or sets a value for the style to use for the Header of the Expander.
     /// </summary>
-    public Style HeaderStyle
+    public Microsoft.UI.Xaml.Style HeaderStyle
     {
-        get { return (Style)GetValue(HeaderStyleProperty); }
+        get { return (Microsoft.UI.Xaml.Style)GetValue(HeaderStyleProperty); }
         set { SetValue(HeaderStyleProperty, value); }
     }
 

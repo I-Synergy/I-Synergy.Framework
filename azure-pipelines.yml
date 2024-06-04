@@ -60,24 +60,18 @@ stages:
           inputs:
             versionSpec: 6.10.0
 
-        - task: JavaToolInstaller@0
-          inputs:
-            versionSpec: '11'
-            jdkArchitectureOption: 'x64' 
-            jdkSourceOption: 'PreInstalled'
-
         - task: UseDotNet@2
+          displayName: 'Install .Net Sdk'
           inputs:
             packageType: 'sdk'
             useGlobalJson: true
 
-        - task: Bash@3
-          displayName: Install MAUI
+        - task: DotNetCoreCLI@2
+          displayName: 'Install MAUI workloads'
           inputs:
-            targetType: 'inline'
-            script: |
-              dotnet nuget locals all --clear 
-              dotnet workload install maui maui-windows android ios maccatalyst tvos macos wasm-tools --source https://api.nuget.org/v3/index.json
+            command: custom
+            custom: 'workload '
+            arguments: 'install maui --source https://api.nuget.org/v3/index.json'
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
