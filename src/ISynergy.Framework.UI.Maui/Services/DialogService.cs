@@ -8,7 +8,7 @@ using Application = Microsoft.Maui.Controls.Application;
 
 namespace ISynergy.Framework.UI.Services;
 
-internal class DialogService : IDialogService
+public class DialogService : IDialogService
 {
     private readonly ILanguageService _languageService;
     private readonly IContext _context;

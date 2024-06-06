@@ -21,6 +21,15 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public ObservableCollection<TestItem> Items { get; set; }
     public ObservableCollection<TestItem> SelectedTestItems { get; set; }
 
+    /// <summary>
+    /// Gets or sets the File property value.
+    /// </summary>
+    public byte[] File
+    {
+        get => GetValue<byte[]>();
+        set => SetValue(value);
+    }
+
     public RelayCommand BusyOnCommand { get; private set; }
     public RelayCommand NotImplementedErrorCommand { get; private set; }
     public AsyncRelayCommand AsyncNotImplementedErrorCommand { get; private set; }
