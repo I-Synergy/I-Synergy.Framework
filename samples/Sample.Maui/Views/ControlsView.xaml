@@ -9,15 +9,38 @@
     Title="ControlsView">
 
     <Grid>
-        <VerticalStackLayout Margin="10" Spacing="10">
-            <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
-            <Button Text="Throw Not Implemented error" Command="{Binding NotImplementedErrorCommand}"/>
-            <Button Text="Throw Not Implemented error (Asynchronous)" Command="{Binding AsyncNotImplementedErrorCommand}"/>
-            <Button Text="Show Memo window" Command="{Binding ShowMemoCommand}"/>
-            <Button Text="Select single item" Command="{Binding SelectSingleCommand}"/>
-            <Button Text="Select multiple items" Command="{Binding SelectMultipleCommand}"/>
-            <Button Text="Navigate to details" Command="{Binding NavigateToDetailCommand}"/>
-        </VerticalStackLayout>
+        <ScrollView Margin="10">
+            <VerticalStackLayout Spacing="10">
+                <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Exceptions"/>
+                    <Button Text="Throw Not Implemented error" Command="{Binding NotImplementedErrorCommand}"/>
+                    <Button Text="Throw Not Implemented error (Asynchronous)" Command="{Binding AsyncNotImplementedErrorCommand}"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Memo"/>
+                    <Button Text="Show Memo window" Command="{Binding ShowMemoCommand}"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Selection"/>
+                    <Button Text="Select single item" Command="{Binding SelectSingleCommand}"/>
+                    <Button Text="Select multiple items" Command="{Binding SelectMultipleCommand}"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Master-Detail"/>
+                    <Button Text="Navigate to details" Command="{Binding NavigateToDetailCommand}"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Image browser"/>
+                    <c:ImageBrowser WidthRequest="600" HeightRequest="400" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
 
         <Grid IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}">
             <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.8"/>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ISynergy.Framework.UI.Controls.ImageBrowser"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+    x:Name="ImageBrowserControl">
+
+    <ContentView.Resources>
+        <converters:BytesToImageSourceConverter x:Key="BytesToImageSourceConverter"/>
+    </ContentView.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="75"/>
+        </Grid.ColumnDefinitions>
+
+        <VerticalStackLayout Grid.Column="1" Spacing="10" Margin="10">
+            <ImageButton
+                x:Name="BrowseButton"
+                Clicked="BrowseButton_Clicked"
+                ToolTipProperties.Text="{m:GetString Browse}"
+                WidthRequest="50"
+                MinimumWidthRequest="50"
+                HeightRequest="50"
+                MinimumHeightRequest="50"
+                VerticalOptions="End"
+                Padding="10">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="&#xe721;" FontFamily="SegoeMdl2" Size="14"/>
+                </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton 
+                x:Name="CameraButton"
+                Clicked="CameraButton_Clicked"
+                ToolTipProperties.Text="{m:GetString TakePhoto}"
+                WidthRequest="50"
+                MinimumWidthRequest="50"
+                HeightRequest="50"
+                MinimumHeightRequest="50"
+                VerticalOptions="End"
+                Padding="10">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="&#xe722;" FontFamily="SegoeMdl2" Size="14"/>
+                </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton 
+                x:Name="PasteButton"
+                Clicked="PasteButton_Clicked"
+                ToolTipProperties.Text="{m:GetString Paste}"
+                IsVisible="{OnPlatform Default=False, WinUI=True}"
+                WidthRequest="50"
+                MinimumWidthRequest="50"
+                HeightRequest="50"
+                MinimumHeightRequest="50"
+                VerticalOptions="End"
+                Padding="10">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="&#xe77f;" FontFamily="SegoeMdl2" Size="14"/>
+                </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton
+                x:Name="ClearButton"
+                Clicked="ClearButton_Clicked"
+                ToolTipProperties.Text="{m:GetString Delete}"
+                WidthRequest="50"
+                MinimumWidthRequest="50"
+                HeightRequest="50"
+                MinimumHeightRequest="50"
+                VerticalOptions="End"
+                Padding="10">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="&#xe74d;" FontFamily="SegoeMdl2" Size="14"/>
+                </ImageButton.Source>
+            </ImageButton>
+        </VerticalStackLayout>
+
+        <Border
+            Grid.Row="0"
+            Grid.Column="0"
+            StrokeThickness="2" 
+            StrokeShape="RoundRectangle 10" 
+            Stroke="{DynamicResource Primary}">
+            <Image
+                Aspect="AspectFit"
+                Source="{Binding FileBytes, Source={x:Reference ImageBrowserControl}, Converter={StaticResource BytesToImageSourceConverter}}"/>
+        </Border>
+    </Grid>
+</ContentView>
