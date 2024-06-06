@@ -33,6 +33,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly INavigationService _navigationService;
     protected readonly IBaseCommonServices _commonServices;
 
+    private Microsoft.Maui.Controls.Window _window;
+
     private Task Initialize { get; set; }
 
     public AppTheme Theme { get; set; } = AppTheme.Dark;
@@ -100,6 +102,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         if (_applicationSettingsService.Settings is not null)
             _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
+
+        MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
+        {
+            _window.Title = InfoService.Default.Title ?? string.Empty;
+        });
 
         _logger.LogInformation("Finishing initialization of application");
     }
@@ -189,14 +196,14 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
     protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState activationState)
     {
-        var window = base.CreateWindow(activationState);
+        _window = base.CreateWindow(activationState);
 
         _logger.LogInformation("Setting style.");
         MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
         _themeService.SetStyle();
 
-        window.Title = InfoService.Default.Title ?? string.Empty;
-        return window;
+        _window.Title = InfoService.Default.Title ?? string.Empty;
+        return _window;
     }
 
     /// <summary>
