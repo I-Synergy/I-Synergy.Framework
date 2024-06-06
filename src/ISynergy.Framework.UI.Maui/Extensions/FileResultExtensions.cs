@@ -9,9 +9,14 @@ public static class FileResultExtensions
     /// <returns></returns>
     public static ISynergy.Framework.Mvvm.Models.FileResult ToFileResult(this Microsoft.Maui.Storage.FileResult fileResult)
     {
-        return new ISynergy.Framework.Mvvm.Models.FileResult(
-    fileResult.FullPath,
-    fileResult.FileName,
-    () => fileResult.OpenReadAsync().GetAwaiter().GetResult());
+        if (fileResult is not null)
+        {
+            return new ISynergy.Framework.Mvvm.Models.FileResult(
+                fileResult.FullPath,
+                fileResult.FileName,
+                () => fileResult.OpenReadAsync().GetAwaiter().GetResult());
+        }
+
+        return null;
     }
 }

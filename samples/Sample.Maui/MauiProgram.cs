@@ -16,6 +16,7 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
 using System.Diagnostics;
 using Sample.Extensions;
+using ISynergy.Framework.UI.Services;
 
 #if WINDOWS
 using ISynergy.Framework.Update.Extensions;
@@ -66,6 +67,8 @@ public static class MauiProgram
                 appBuilder.Services.TryAddSingleton<CommonServices>();
                 appBuilder.Services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
                 appBuilder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
+
+                appBuilder.Services.TryAddSingleton<ICameraService, CameraService>();
             })
 #if WINDOWS
             //.ConfigureStoreUpdateIntegration()

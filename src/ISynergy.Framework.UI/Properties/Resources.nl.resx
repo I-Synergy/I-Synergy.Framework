@@ -421,4 +421,13 @@ Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	<data name="WarningSynchronizationRestart" xml:space="preserve">
 		<value>Om te kunnen synchroniseren, moet u de applicatie opnieuw opstarten om de synchronisatie-instellingen toe te passen</value>
 	</data>
+	<data name="TakePhoto" xml:space="preserve">
+		<value>Maak een foto</value>
+	</data>
+	<data name="Browse" xml:space="preserve">
+		<value>Bladeren</value>
+	</data>
+	<data name="Paste" xml:space="preserve">
+		<value>Plakken</value>
+	</data>
 </root>
