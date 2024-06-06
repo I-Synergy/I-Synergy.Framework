@@ -5,7 +5,7 @@ using FileResult = ISynergy.Framework.Mvvm.Models.FileResult;
 
 namespace ISynergy.Framework.UI.Services;
 
-internal class FileService : IFileService<FileResult>
+public class FileService : IFileService<FileResult>
 {
     public async Task<List<FileResult>> BrowseFileAsync(string filefilter, bool multiple = false, long maxFileSize = 1048576)
     {
@@ -47,9 +47,7 @@ internal class FileService : IFileService<FileResult>
     public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
-        {
             return result[0].File;
-        }
 
         return null;
     }

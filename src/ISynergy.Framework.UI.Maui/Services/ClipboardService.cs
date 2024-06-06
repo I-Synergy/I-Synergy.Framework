@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Models.Results;
+﻿#if !WINDOWS
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services;
@@ -13,3 +14,4 @@ public class ClipboardService : IClipboardService
         return Task.FromResult<ImageResult>(null);
     }
 }
+#endif
