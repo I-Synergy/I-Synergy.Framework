@@ -37,7 +37,7 @@
 
                 <VerticalStackLayout Spacing="4">
                     <Label Text="Image browser"/>
-                    <c:ImageBrowser WidthRequest="600" HeightRequest="400" />
+                    <c:ImageBrowser WidthRequest="600" HeightRequest="400" FileBytes="{Binding File}" />
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>

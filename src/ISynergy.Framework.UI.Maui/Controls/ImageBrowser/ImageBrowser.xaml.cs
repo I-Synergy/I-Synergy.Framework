@@ -15,12 +15,12 @@ public partial class ImageBrowser : ContentView
     /// <value>The file.</value>
     public byte[] FileBytes
     {
-        get { return (byte[])GetValue(FileProperty); }
-        set { SetValue(FileProperty, value); }
+        get { return (byte[])GetValue(FileBytesProperty); }
+        set { SetValue(FileBytesProperty, value); }
     }
 
     // Using a BindableProperty as the backing store for File. This enables animation, styling, binding, etc...
-    public static readonly BindableProperty FileProperty = BindableProperty.CreateAttached(nameof(FileBytes), typeof(byte[]), typeof(ImageBrowser), Array.Empty<byte>());
+    public static readonly BindableProperty FileBytesProperty = BindableProperty.Create(nameof(FileBytes), typeof(byte[]), typeof(ImageBrowser), Array.Empty<byte>());
 
     /// <summary>
     /// Gets or sets the ContentType property value.
@@ -33,7 +33,7 @@ public partial class ImageBrowser : ContentView
     }
 
     // Using a BindableProperty as the backing store for ContentType. This enables animation, styling, binding, etc...
-    public static readonly BindableProperty ContentTypeProperty = BindableProperty.CreateAttached(nameof(ContentType), typeof(string), typeof(ImageBrowser), string.Empty);
+    public static readonly BindableProperty ContentTypeProperty = BindableProperty.Create(nameof(ContentType), typeof(string), typeof(ImageBrowser), string.Empty);
 
     public string FileName
     {
@@ -42,7 +42,7 @@ public partial class ImageBrowser : ContentView
     }
 
     // Using a BindableProperty as the backing store for FileName. This enables animation, styling, binding, etc...
-    public static readonly BindableProperty FileNameProperty = BindableProperty.CreateAttached(nameof(FileName), typeof(string), typeof(ImageBrowser), string.Empty);
+    public static readonly BindableProperty FileNameProperty = BindableProperty.Create(nameof(FileName), typeof(string), typeof(ImageBrowser), string.Empty);
 
     public DateTimeOffset DateTime
     {
@@ -51,7 +51,7 @@ public partial class ImageBrowser : ContentView
     }
 
     // Using a BindableProperty as the backing store for FileName. This enables animation, styling, binding, etc...
-    public static readonly BindableProperty DateTimeProperty = BindableProperty.CreateAttached(nameof(DateTime), typeof(DateTimeOffset), typeof(ImageBrowser), DateTimeOffset.Now);
+    public static readonly BindableProperty DateTimeProperty = BindableProperty.Create(nameof(DateTime), typeof(DateTimeOffset), typeof(ImageBrowser), DateTimeOffset.Now);
 
     public ImageBrowser()
     {
