@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Options;
@@ -95,6 +96,8 @@ public class Context : ObservableClass, IContext
     private void ApplyEnvironment(SoftwareEnvironments value)
     {
         InfoService.Default.SetTitle(value);
+        
+        MessageService.Default.Send(new EnvironmentChangedMessage(value));  
 
         switch (value)
         {
