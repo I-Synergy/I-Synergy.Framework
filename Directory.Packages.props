@@ -19,10 +19,10 @@
     <PackageVersion Include="DYMO.Connect.SDK" Version="1.4.4.21" />
     <PackageVersion Include="lz4net" Version="1.0.15.93" />
     <PackageVersion Include="Mapster" Version="7.4.0" />
-    <PackageVersion Include="MessagePack" Version="2.5.140" />
-    <PackageVersion Include="Microsoft.AppCenter" Version="5.0.4" />
-    <PackageVersion Include="Microsoft.AppCenter.Analytics" Version="5.0.4" />
-    <PackageVersion Include="Microsoft.AppCenter.Crashes" Version="5.0.4" />
+    <PackageVersion Include="MessagePack" Version="2.5.168" />
+    <PackageVersion Include="Microsoft.AppCenter" Version="5.0.5" />
+    <PackageVersion Include="Microsoft.AppCenter.Analytics" Version="5.0.5" />
+    <PackageVersion Include="Microsoft.AppCenter.Crashes" Version="5.0.5" />
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.22.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.22.0" />
@@ -50,7 +50,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.55.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.56.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.40" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
