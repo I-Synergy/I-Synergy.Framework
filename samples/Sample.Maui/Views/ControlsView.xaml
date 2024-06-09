@@ -17,6 +17,7 @@
                     <Label Text="Exceptions"/>
                     <Button Text="Throw Not Implemented error" Command="{Binding NotImplementedErrorCommand}"/>
                     <Button Text="Throw Not Implemented error (Asynchronous)" Command="{Binding AsyncNotImplementedErrorCommand}"/>
+                    <Button Text="Show dialog (with error)" Command="{Binding ShowErrorWindowCommand}"/>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="4">
