@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions.Windows;
 using Sample.Models;
 using System.Collections.ObjectModel;
 
@@ -37,6 +38,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
     public AsyncRelayCommand<TestItem> NavigateToDetailCommand { get; private set; }
+    public AsyncRelayCommand ShowErrorWindowCommand { get; private set; }
 
     public ControlsViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
@@ -48,6 +50,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
         NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
         NotImplementedErrorCommand = new RelayCommand(() => throw new NotImplementedException());
         AsyncNotImplementedErrorCommand = new AsyncRelayCommand(() => throw new NotImplementedException());
+        ShowErrorWindowCommand = new AsyncRelayCommand(ShowErrorWindowAsync);
 
         Items =
         [
@@ -57,6 +60,17 @@ public class ControlsViewModel : ViewModelNavigation<object>
             new TestItem { Id = 4, Description = "Test 4"},
             new TestItem { Id = 5, Description = "Test 5"}
         ];
+    }
+
+    private async Task ShowErrorWindowAsync()
+    {
+        var testVm = new TestExceptionViewModel(Context, BaseCommonServices, Logger);
+        testVm.Submitted += TestVm_Submitted;
+        await BaseCommonServices.DialogService.ShowDialogAsync(typeof(ITestExceptionWindow), testVm);
+    }
+
+    private void TestVm_Submitted(object sender, SubmitEventArgs<object> e)
+    {
     }
 
     private async Task NavigateToDetailAsync(TestItem item)
