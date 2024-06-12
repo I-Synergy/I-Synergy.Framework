@@ -6,6 +6,7 @@ namespace ISynergy.Framework.Synchronization.Abstractions.Services;
 
 public interface ISynchronizationService
 {
+    bool IsActive { get; }
     SyncAgent SynchronizationAgent { get; }
     Uri SynchronizationEndpoint { get; }
     public string SynchronizationFolder { get; }
