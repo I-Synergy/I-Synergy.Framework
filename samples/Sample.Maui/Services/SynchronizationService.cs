@@ -25,6 +25,7 @@ internal class SynchronizationService : ISynchronizationService
     private readonly LocalSettingsService _localSettingsService;
     private readonly ISynchronizationSettings _synchronizationSettings;
 
+    public bool IsActive { get; }
     public SyncAgent SynchronizationAgent { get; }
     public Uri SynchronizationEndpoint { get; }
     public string SynchronizationFolder { get; }
@@ -53,6 +54,8 @@ internal class SynchronizationService : ISynchronizationService
 
         if (_synchronizationSettings is not null && _localSettingsService.Settings.IsSynchronizationEnabled)
         {
+            IsActive = _localSettingsService.Settings.IsSynchronizationEnabled;
+
             if (string.IsNullOrEmpty(_synchronizationSettings.SynchronizationFolder))
                 _synchronizationSettings.SynchronizationFolder = Path.Combine(FileSystem.AppDataDirectory, "Synchronization");
 
@@ -152,7 +155,7 @@ internal class SynchronizationService : ISynchronizationService
         if (!_context.IsAuthenticated)
             throw new InvalidOperationException("User is not authenticated");
 
-        if (_synchronizationSettings is not null && _localSettingsService.Settings.IsSynchronizationEnabled)
+        if (_synchronizationSettings is not null && IsActive)
         {
             var result = string.Empty;
 
