@@ -17,8 +17,9 @@ public interface INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
+    Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel;
 
     /// <summary>
@@ -28,8 +29,9 @@ public interface INavigationService
     /// <typeparam name="TView"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null)
+    Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView;
 
@@ -38,8 +40,9 @@ public interface INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel>(object parameter = null)
+    Task NavigateAsync<TViewModel>(object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel;
 
     /// <summary>
@@ -48,8 +51,9 @@ public interface INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TView"></typeparam>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel, TView>(object parameter = null)
+    Task NavigateAsync<TViewModel, TView>(object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView;
 
