@@ -68,11 +68,11 @@ public class SyncViewModel : ViewModelNavigation<object>
         SyncProgressionText = "Ready...";
         SyncCommandButtonEnabled = true;
 
-        SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal));
-        SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize));
-        CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync);
-        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync);
-        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync);
+        SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal), () => _synchronizationService.IsActive);
+        SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize), () => _synchronizationService.IsActive);
+        CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync, () => _synchronizationService.IsActive);
+        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync, () => _synchronizationService.IsActive);
+        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync, () => _synchronizationService.IsActive);
 
         MessageService.Default.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
         MessageService.Default.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
@@ -104,7 +104,8 @@ public class SyncViewModel : ViewModelNavigation<object>
 
         try
         {
-            await _synchronizationService.SynchronizeAsync(syncType);
+            if (_synchronizationService.IsActive)
+                await _synchronizationService.SynchronizeAsync(syncType);
         }
         catch (Exception ex)
         {
@@ -118,89 +119,97 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private void CustomActionInsertProductRow()
     {
-        var connectionstringbuilder = new SqliteConnectionStringBuilder();
-        connectionstringbuilder.DataSource = _synchronizationService.OfflineDatabase;
-
-        using var sqliteConnection = new SqliteConnection(connectionstringbuilder.ConnectionString);
-        var c = new SqliteCommand($"Insert into ProductCategory(ProductcategoryId, Name, rowguid, ModifiedDate, IsActive) Values (@productcategoryId, @name, @rowguid, @modifiedDate, @isactive)")
+        if (_synchronizationService.IsActive)
         {
-            Connection = sqliteConnection
-        };
+            var connectionstringbuilder = new SqliteConnectionStringBuilder();
+            connectionstringbuilder.DataSource = _synchronizationService.OfflineDatabase;
 
-        var p = new SqliteParameter
-        {
-            DbType = DbType.Guid,
-            ParameterName = "@productcategoryId"
-        };
-        c.Parameters.Add(p);
-
-        p = new SqliteParameter
-        {
-            DbType = DbType.String,
-            Size = 50,
-            ParameterName = "@name"
-        };
-        c.Parameters.Add(p);
-
-        p = new SqliteParameter
-        {
-            DbType = DbType.String,
-            Size = 36,
-            ParameterName = "@rowguid"
-        };
-        c.Parameters.Add(p);
-
-        p = new SqliteParameter
-        {
-            DbType = DbType.DateTime,
-            ParameterName = "@modifiedDate"
-        };
-        c.Parameters.Add(p);
-
-        p = new SqliteParameter
-        {
-            DbType = DbType.Int32,
-            ParameterName = "@isactive"
-        };
-        c.Parameters.Add(p);
-
-        sqliteConnection.Open();
-
-        c.Prepare();
-
-        using (var t = sqliteConnection.BeginTransaction())
-        {
-
-            for (var i = 0; i < 1000; i++)
+            using var sqliteConnection = new SqliteConnection(connectionstringbuilder.ConnectionString);
+            var c = new SqliteCommand($"Insert into ProductCategory(ProductcategoryId, Name, rowguid, ModifiedDate, IsActive) Values (@productcategoryId, @name, @rowguid, @modifiedDate, @isactive)")
             {
-                c.Transaction = t;
-                c.Parameters[0].Value = Guid.NewGuid();
-                c.Parameters[1].Value = Guid.NewGuid().ToString();
-                c.Parameters[2].Value = Guid.NewGuid().ToString();
-                c.Parameters[3].Value = DateTime.Now;
-                c.Parameters[4].Value = 1;
+                Connection = sqliteConnection
+            };
 
-                c.ExecuteNonQuery();
+            var p = new SqliteParameter
+            {
+                DbType = DbType.Guid,
+                ParameterName = "@productcategoryId"
+            };
+            c.Parameters.Add(p);
+
+            p = new SqliteParameter
+            {
+                DbType = DbType.String,
+                Size = 50,
+                ParameterName = "@name"
+            };
+            c.Parameters.Add(p);
+
+            p = new SqliteParameter
+            {
+                DbType = DbType.String,
+                Size = 36,
+                ParameterName = "@rowguid"
+            };
+            c.Parameters.Add(p);
+
+            p = new SqliteParameter
+            {
+                DbType = DbType.DateTime,
+                ParameterName = "@modifiedDate"
+            };
+            c.Parameters.Add(p);
+
+            p = new SqliteParameter
+            {
+                DbType = DbType.Int32,
+                ParameterName = "@isactive"
+            };
+            c.Parameters.Add(p);
+
+            sqliteConnection.Open();
+
+            c.Prepare();
+
+            using (var t = sqliteConnection.BeginTransaction())
+            {
+
+                for (var i = 0; i < 1000; i++)
+                {
+                    c.Transaction = t;
+                    c.Parameters[0].Value = Guid.NewGuid();
+                    c.Parameters[1].Value = Guid.NewGuid().ToString();
+                    c.Parameters[2].Value = Guid.NewGuid().ToString();
+                    c.Parameters[3].Value = DateTime.Now;
+                    c.Parameters[4].Value = 1;
+
+                    c.ExecuteNonQuery();
+                }
+
+                t.Commit();
             }
 
-            t.Commit();
+            sqliteConnection.Close();
         }
-
-        sqliteConnection.Close();
-
     }
 
     private async Task ProvisionClientAsync()
     {
-        var agent = _synchronizationService.SynchronizationAgent;
-        var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
-        await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
+        if (_synchronizationService.IsActive)
+        {
+            var agent = _synchronizationService.SynchronizationAgent;
+            var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
+            await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
+        }
     }
 
     private async Task DeprovisionClientAsync()
     {
-        var agent = _synchronizationService.SynchronizationAgent;
-        await agent.LocalOrchestrator.DeprovisionAsync();
+        if (_synchronizationService.IsActive)
+        {
+            var agent = _synchronizationService.SynchronizationAgent;
+            await agent.LocalOrchestrator.DeprovisionAsync();
+        }
     }
 
     protected override void Dispose(bool disposing)
