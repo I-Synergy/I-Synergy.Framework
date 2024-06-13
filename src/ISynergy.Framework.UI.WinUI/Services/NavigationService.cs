@@ -21,6 +21,7 @@ namespace ISynergy.Framework.UI.Services;
 public class NavigationService : INavigationService
 {
     private readonly IContext _context;
+    private bool _backstackRoot;
 
     public event EventHandler BackStackChanged;
 
@@ -56,7 +57,7 @@ public class NavigationService : INavigationService
     public Task GoBackAsync()
     {
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
-            return NavigateAsync(viewModel);
+            return NavigateAsync(viewModel, backNavigation: true);
 
         return Task.CompletedTask;
     }
@@ -221,10 +222,11 @@ public class NavigationService : INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object parameter = null)
+    public Task NavigateAsync<TViewModel>(object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel =>
-        NavigateAsync(default(TViewModel), parameter);
+        NavigateAsync(default(TViewModel), parameter, backNavigation);
 
     /// <summary>
     /// Navigates viewmodel to a specified view.
@@ -232,11 +234,12 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TView"></typeparam>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel, TView>(object parameter = null)
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView =>
-        NavigateAsync<TViewModel, TView>(default, parameter);
+        NavigateAsync<TViewModel, TView>(default, parameter, backNavigation);
 
     /// <summary>
     /// navigate as an asynchronous operation.
@@ -244,9 +247,10 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter">The parameter.</param>
+    /// <param name="backNavigation"></param>
     /// <returns>Task&lt;IView&gt;.</returns>
     /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
     {
         if (Application.Current is BaseApplication baseApplication &&
@@ -260,7 +264,8 @@ public class NavigationService : INavigationService
                 if (originalView.GetType().Equals(page.GetType()))
                     return;
 
-                _backStack.Push(originalView.ViewModel);
+                if (!backNavigation)
+                    _backStack.Push(originalView.ViewModel);
             }
 
             frame.Content = page;
@@ -279,8 +284,9 @@ public class NavigationService : INavigationService
     /// <typeparam name="TView"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null)
+    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView
     {
@@ -303,7 +309,8 @@ public class NavigationService : INavigationService
                 if (originalView.GetType().Equals(page.GetType()))
                     return;
 
-                _backStack.Push(originalView.ViewModel);
+                if (!backNavigation)
+                    _backStack.Push(originalView.ViewModel);
             }
 
             frame.Content = page;

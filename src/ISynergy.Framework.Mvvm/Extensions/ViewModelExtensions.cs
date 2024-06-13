@@ -116,6 +116,6 @@ public static class ViewModelExtensions
                     .Where(assemblyFilter)
                     .Reverse()
                     .SelectMany(assembly => assembly.GetTypes())
-                    .FirstOrDefault(t => t.Name.EndsWith(name));
+                    .FirstOrDefault(t => t.Name.Equals(name));
     }
 }
