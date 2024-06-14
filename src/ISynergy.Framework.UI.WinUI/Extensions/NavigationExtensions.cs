@@ -31,18 +31,17 @@ public static class NavigationExtensions
     /// <exception cref="FileNotFoundException"></exception>
     public static View CreatePage<TViewModel>(IContext context, TViewModel viewModel, object parameter = null) where TViewModel : class, IViewModel
     {
-        var view = typeof(TViewModel).GetRelatedView();
+        if (viewModel is null)
+            viewModel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+
+        var view = viewModel.GetRelatedView();
         var viewType = view.GetRelatedViewType();
 
         if (context.ScopedServices.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
         {
             if (resolvedPage.ViewModel is null)
             {
-                if (viewModel is not null)
-                    resolvedPage.ViewModel = viewModel;
-                else
-                    resolvedPage.ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
-
+                resolvedPage.ViewModel = viewModel;
                 resolvedPage.ViewModel.Parameter = parameter;
             }
 

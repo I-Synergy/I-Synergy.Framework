@@ -41,10 +41,11 @@ public class NavigationService : INavigationService
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object parameter = null)
+    public Task NavigateAsync<TViewModel>(object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel =>
-        NavigateAsync<TViewModel>(null, parameter);
+        NavigateAsync<TViewModel>(null, parameter, backNavigation);
 
     /// <summary>
     /// Navigates to the viewmodel with parameters.
@@ -52,8 +53,9 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
+    /// <param name="backNavigation"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null)
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
     {
         if (NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } view && view is Page page)
@@ -139,12 +141,12 @@ public class NavigationService : INavigationService
     public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
 
     [Obsolete("Not supported!", true)]
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null)
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 
     [Obsolete("Not supported!", true)]
-    public Task NavigateAsync<TViewModel, TView>(object parameter = null)
+    public Task NavigateAsync<TViewModel, TView>(object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 
