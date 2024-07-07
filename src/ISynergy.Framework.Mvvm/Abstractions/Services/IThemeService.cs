@@ -18,7 +18,6 @@ public interface IThemeService
     /// </summary>
     /// <value>The theme.</value>
     Style Style { get; }
-
     /// <summary>
     /// Sets the theme.
     /// </summary>

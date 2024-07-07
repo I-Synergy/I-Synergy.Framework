@@ -430,4 +430,10 @@ Réessayez ou mettez à jour l’application via le Microsoft Store.</value>
 	<data name="Paste" xml:space="preserve">
 		<value>Pâte</value>
 	</data>
+	<data name="SelectCountry" xml:space="preserve">
+		<value>Sélectionner un pays</value>
+	</data>
+	<data name="SelectTimeZone" xml:space="preserve">
+		<value>Sélectionnez le fuseau horaire</value>
+	</data>
 </root>

@@ -18,17 +18,18 @@ using System.Reflection;
 
 namespace ISynergy.Framework.UI.Extensions;
 
-public static class WindowsAppBuilderExtensions
+public static class WindowsAppSdkHostBuilderExtensions
 {
     /// <summary>
     /// Returns an instance of the <see cref="IServiceCollection"/> and adds loggingBuilder.
     /// </summary>
-    /// <param name="windowsAppBuilder"></param>
+    /// <param name="appBuilder"></param>
     /// <param name="loggingBuilder"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureLogging(this IHostBuilder windowsAppBuilder, Action<ILoggingBuilder, IConfiguration> loggingBuilder)
+    public static IHostBuilder ConfigureLogging<TApplication>(this IHostBuilder appBuilder, Action<ILoggingBuilder, IConfiguration> loggingBuilder)
+        where TApplication : Microsoft.UI.Xaml.Application, new()
     {
-        windowsAppBuilder.ConfigureLogging((context, logger) =>
+        appBuilder.ConfigureLogging((context, logger) =>
         {
 #if DEBUG
             logger.AddDebug();
@@ -38,7 +39,7 @@ public static class WindowsAppBuilderExtensions
             loggingBuilder.Invoke(logger, context.Configuration);
         });
 
-        return windowsAppBuilder;
+        return appBuilder;
     }
 
     /// <summary>
@@ -48,21 +49,21 @@ public static class WindowsAppBuilderExtensions
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TExceptionHandler"></typeparam>
     /// <typeparam name="TResource"></typeparam>
-    /// <param name="windowsAppBuilder"></param>
+    /// <param name="appBuilder"></param>
     /// <param name="action"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this IHostBuilder windowsAppBuilder, Action<IServiceCollection, IConfiguration> action)
-        where TApplication : Microsoft.UI.Xaml.Application
+    public static IHostBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this IHostBuilder appBuilder, Action<IServiceCollection> action)
+        where TApplication : Microsoft.UI.Xaml.Application, new()
         where TContext : class, IContext
         where TExceptionHandler : class, IExceptionHandlerService
         where TResource : class
     {
-        windowsAppBuilder.ConfigureServices((context, services) =>
+        appBuilder.ConfigureServices((context, services) =>
         {
             services.AddLogging();
             services.AddOptions();
 
-            // Register singleton windowsAppBuilder
+            //// Register singleton windowsAppBuilder
             services.TryAddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
             {
                 builder.AddDebug();
@@ -101,12 +102,13 @@ public static class WindowsAppBuilderExtensions
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
             services.RegisterAssemblies();
-            action.Invoke(services, context.Configuration);
+
+            action.Invoke(services);
 
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         });
 
-        return windowsAppBuilder;
+        return appBuilder;
     }
 
     /// <summary>

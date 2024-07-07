@@ -125,7 +125,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    public virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         if (e.Exception.HResult != lastErrorMessage)
         {
@@ -139,7 +139,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    public virtual void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleExceptionAsync(e.Exception);
@@ -154,7 +154,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    public virtual void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
             if (_exceptionHandlerService is not null)
@@ -166,7 +166,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <summary>
     /// Initializes the application asynchronously.
     /// </summary>
-    public void InitializeApplication() => Initialize = InitializeApplicationAsync();
+    private void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
     /// <summary>
     /// LoadAssembly the application.

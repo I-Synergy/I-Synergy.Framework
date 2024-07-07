@@ -128,7 +128,7 @@ public partial class App : BaseApplication
             MessageService.Default.Unregister<ApplicationLoadedMessage>(this);
     }
 
-    protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
+    public override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
     {
         base.CurrentDomain_FirstChanceException(sender, e);
     }

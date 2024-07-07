@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<AssemblyName>ISynergy.Framework.UI.WinUI</AssemblyName>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI.WinUI</PackageId>
 		<Description>I-Synergy UI Framework for WinUI</Description>
 		<PackageTags>I-Synergy, Framework, UI, Windows, WinUI, WinUI3</PackageTags>
-		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
+		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+		<UseWinUI>true</UseWinUI>
+		<EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
 	</PropertyGroup>
 
-	<ItemGroup>
+	<!--<ItemGroup>
 		<None Include="bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pri" Pack="true" PackagePath="lib/$(TargetFramework.TrimEnd('.0'))/" />
-	</ItemGroup>
+	</ItemGroup>-->
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
@@ -42,6 +45,54 @@
 		<None Remove="Controls\ImageView\ImageView.xaml" />
 		<None Remove="Controls\Menu\BaseMenu.xaml" />
 		<None Remove="Controls\Tiles\Tile.xaml" />
+		<None Remove="Resources\Styles\0063b1.xaml" />
+		<None Remove="Resources\Styles\0078d7.xaml" />
+		<None Remove="Resources\Styles\0099bc.xaml" />
+		<None Remove="Resources\Styles\00b294.xaml" />
+		<None Remove="Resources\Styles\00b7c3.xaml" />
+		<None Remove="Resources\Styles\00cc6a.xaml" />
+		<None Remove="Resources\Styles\018574.xaml" />
+		<None Remove="Resources\Styles\038387.xaml" />
+		<None Remove="Resources\Styles\107c10.xaml" />
+		<None Remove="Resources\Styles\10893e.xaml" />
+		<None Remove="Resources\Styles\2d7d9a.xaml" />
+		<None Remove="Resources\Styles\486860.xaml" />
+		<None Remove="Resources\Styles\498205.xaml" />
+		<None Remove="Resources\Styles\4a5459.xaml" />
+		<None Remove="Resources\Styles\4c4a48.xaml" />
+		<None Remove="Resources\Styles\515c6b.xaml" />
+		<None Remove="Resources\Styles\525e54.xaml" />
+		<None Remove="Resources\Styles\567c73.xaml" />
+		<None Remove="Resources\Styles\5d5a58.xaml" />
+		<None Remove="Resources\Styles\647c64.xaml" />
+		<None Remove="Resources\Styles\68768a.xaml" />
+		<None Remove="Resources\Styles\69797e.xaml" />
+		<None Remove="Resources\Styles\6b69d6.xaml" />
+		<None Remove="Resources\Styles\744da9.xaml" />
+		<None Remove="Resources\Styles\767676.xaml" />
+		<None Remove="Resources\Styles\7a7574.xaml" />
+		<None Remove="Resources\Styles\7e735f.xaml" />
+		<None Remove="Resources\Styles\847545.xaml" />
+		<None Remove="Resources\Styles\8764b8.xaml" />
+		<None Remove="Resources\Styles\881798.xaml" />
+		<None Remove="Resources\Styles\8e8cd8.xaml" />
+		<None Remove="Resources\Styles\9a0089.xaml" />
+		<None Remove="Resources\Styles\b146c2.xaml" />
+		<None Remove="Resources\Styles\bf0077.xaml" />
+		<None Remove="Resources\Styles\c239b3.xaml" />
+		<None Remove="Resources\Styles\c30052.xaml" />
+		<None Remove="Resources\Styles\ca5010.xaml" />
+		<None Remove="Resources\Styles\d13438.xaml" />
+		<None Remove="Resources\Styles\da3b01.xaml" />
+		<None Remove="Resources\Styles\e3008c.xaml" />
+		<None Remove="Resources\Styles\e74856.xaml" />
+		<None Remove="Resources\Styles\e81123.xaml" />
+		<None Remove="Resources\Styles\ea005e.xaml" />
+		<None Remove="Resources\Styles\ef6950.xaml" />
+		<None Remove="Resources\Styles\f7630c.xaml" />
+		<None Remove="Resources\Styles\ff4343.xaml" />
+		<None Remove="Resources\Styles\ff8c00.xaml" />
+		<None Remove="Resources\Styles\ffb900.xaml" />
 		<None Remove="Views\SelectionView.xaml" />
 		<None Remove="Windows\LanguageWindow.xaml" />
 		<None Remove="Windows\NoteWindow.xaml" />
@@ -96,6 +147,150 @@
 		</Page>
 		<Page Include="Controls\Tiles\Tile.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\0063b1.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\0078d7.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\0099bc.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\00b294.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\00b7c3.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\00cc6a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\018574.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\038387.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\107c10.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\10893e.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\2d7d9a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\486860.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\498205.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\4a5459.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\4c4a48.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\515c6b.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\525e54.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\567c73.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\5d5a58.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\647c64.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\68768a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\69797e.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\6b69d6.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\744da9.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\767676.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\7a7574.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\7e735f.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\847545.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\8764b8.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\881798.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\8e8cd8.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\9a0089.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\b146c2.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\bf0077.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\c239b3.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\c30052.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\ca5010.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\d13438.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\da3b01.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\e3008c.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\e74856.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\e81123.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\ea005e.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\ef6950.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\f7630c.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\ff4343.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\ff8c00.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Resources\Styles\ffb900.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\SelectionView.xaml">
 			<Generator>MSBuild:Compile</Generator>

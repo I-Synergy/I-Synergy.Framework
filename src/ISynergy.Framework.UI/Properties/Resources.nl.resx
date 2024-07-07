@@ -430,4 +430,10 @@ Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
 	<data name="Paste" xml:space="preserve">
 		<value>Plakken</value>
 	</data>
+	<data name="SelectCountry" xml:space="preserve">
+		<value>Selecteer land</value>
+	</data>
+	<data name="SelectTimeZone" xml:space="preserve">
+		<value>Selecteer tijdzone</value>
+	</data>
 </root>
