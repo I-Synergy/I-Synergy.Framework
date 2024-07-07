@@ -50,7 +50,6 @@ public static class Program
 
         App application = new();
         application.InitializeComponent();
-        application.InitializeApplication();
         application.Run();
     }
 }

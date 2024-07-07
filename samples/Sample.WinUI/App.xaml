@@ -6,9 +6,14 @@
 
     <app:BaseApplication.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ColorPaletteResources x:Key="Light" Accent="{ThemeResource SystemAccentColor}" />
+                <ColorPaletteResources x:Key="Dark" Accent="{ThemeResource SystemAccentColor}" />
+                <ColorPaletteResources x:Key="Default" Accent="{ThemeResource SystemAccentColor}"/>
+            </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
-                <ResourceDictionary Source="ms-appx:///Assets/Images.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/Images.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Style.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
