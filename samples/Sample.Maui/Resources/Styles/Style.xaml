@@ -60,15 +60,13 @@
     </Style>
 
     <Style TargetType="BoxView">
-        <!--<Setter Property="Color" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />-->
+        <Setter Property="Color" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
     </Style>
 
     <Style TargetType="Button">
-        <Setter Property="TextColor" Value="{DynamicResource White}" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
-        <!--<Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource PrimaryDarkText}}" />
-    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />-->
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource PrimaryDarkText}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
         <Setter Property="BorderWidth" Value="0"/>
@@ -119,8 +117,7 @@
 
     <Style TargetType="DatePicker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
-        <!--<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />-->
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
@@ -141,7 +138,6 @@
 
     <Style TargetType="Editor">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <!--<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />-->
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Gray900}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
@@ -213,8 +209,7 @@
     </Style>
 
     <Style TargetType="Label">
-        <!--<Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />-->
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
@@ -258,8 +253,7 @@
     <Style TargetType="Picker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="TitleColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
-        <!--<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />-->
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
@@ -324,8 +318,7 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="PlaceholderColor" Value="{DynamicResource Gray500}" />
         <Setter Property="CancelButtonColor" Value="{DynamicResource Gray500}" />
-        <!--<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />-->
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
@@ -348,8 +341,7 @@
     <Style TargetType="SearchHandler">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="PlaceholderColor" Value="{DynamicResource Gray500}" />
-        <!--<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />-->
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -450,12 +442,10 @@
 
     <Style TargetType="Page" ApplyToDerivedTypes="True">
         <Setter Property="Padding" Value="0"/>
-        <!--<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}" />-->
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray000}, Dark={DynamicResource OffBlack}}" />
     </Style>
 
-    <!--<Style TargetType="Shell" ApplyToDerivedTypes="True">
-        --><!--<Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Gray950}}" />--><!--
+    <Style TargetType="Shell" ApplyToDerivedTypes="True">
         <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource OffBlack}}" />
         <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={DynamicResource Primary}, Default={DynamicResource White}}" />
         <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
@@ -463,24 +453,20 @@
         <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray200}}" />
         <Setter Property="Shell.NavBarHasShadow" Value="False" />
         <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}" />
-        --><!--<Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
-    <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />--><!--
-        <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Magenta}, Dark={DynamicResource White}}" />
-        <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Magenta}, Dark={DynamicResource White}}" />
+        <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
+        <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
         <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
-    </Style>-->
+    </Style>
 
     <Style TargetType="NavigationPage">
-        <!--<Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Gray950}}" />-->
         <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource OffBlack}}" />
-        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource White}}" />
-        <Setter Property="IconColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource White}}" />
+        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Gray500}, Dark={DynamicResource White}}" />
+        <Setter Property="IconColor" Value="{AppThemeBinding Light={DynamicResource Gray500}, Dark={DynamicResource White}}" />
     </Style>
 
     <Style TargetType="TabbedPage">
         <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Gray950}}" />
-        <!--<Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />-->
-        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Magenta}, Dark={DynamicResource White}}" />
+        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
         <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray950}}" />
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
     </Style>

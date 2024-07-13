@@ -14,6 +14,7 @@
 		<RootNamespace>Sample</RootNamespace>
 		<AssemblyName>Sample</AssemblyName>
 		<IsPackable>false</IsPackable>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 
 		<!-- Display name -->
 		<ApplicationTitle>Sample</ApplicationTitle>
@@ -22,7 +23,7 @@
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
-		
+
 		<!--
 		If you encounter this error message:
 
@@ -43,13 +44,80 @@
 		</UnoFeatures>
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="appsettings.json" />
+		<None Remove="appsettings.json" />
+		<None Remove="Styles\Images.xaml" />
+		<None Remove="Styles\Style.xaml" />
+		<None Remove="Views\AuthenticationView.xaml" />
+		<None Remove="Views\Controls\BaseList.xaml" />
+		<None Remove="Views\ConvertersView.xaml" />
+		<None Remove="Views\ForgotPasswordWindow.xaml" />
+		<None Remove="Views\Identity\Controls\SignInControl.xaml" />
+		<None Remove="Views\Identity\Controls\SignUpControl.xaml" />
+		<None Remove="Views\InfoView.xaml" />
+		<None Remove="Views\SelectionTestView.xaml" />
+		<None Remove="Views\SettingsView.xaml" />
+		<None Remove="Views\ShellView.xaml" />
+		<None Remove="Views\SlideShowView.xaml" />
+		<None Remove="Views\TestItemsListView.xaml" />
+		<None Remove="Views\TestWindow.xaml" />
+		<None Remove="Views\TreeNodeView.xaml" />
+		<None Remove="Views\ValidationView.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Include="Styles\Images.xaml" />
+		<Page Include="Styles\Images.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Style.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\AuthenticationView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\Controls\BaseList.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ConvertersView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ForgotPasswordWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\Identity\Controls\SignInControl.xaml" >
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\Identity\Controls\SignUpControl.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\InfoView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\SelectionTestView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\SettingsView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ShellView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\SlideShowView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\TestItemsListView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\TestWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\TreeNodeView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ValidationView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 	</ItemGroup>
 	<ItemGroup>
-	  <EmbeddedResource Include="appsettings.json" />
+		<EmbeddedResource Include="appsettings.json" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">

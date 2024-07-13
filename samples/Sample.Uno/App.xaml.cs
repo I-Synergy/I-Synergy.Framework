@@ -187,12 +187,14 @@ public sealed partial class App : BaseApplication
 #if WINDOWS
     private async Task HandleProtocolActivationAsync(ProtocolActivatedEventArgs e)
     {
-        await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{e.Uri}", "ProtocolActivatedEventArgs");
+        if (e is not null)
+            await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{e.Uri}", "ProtocolActivatedEventArgs");
     }
 
     private async Task HandleLaunchActivationAsync(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs e)
     {
-        await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{e.Arguments}", "LaunchActivatedEventArgs");
+        if (e is not null)
+            await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{e.Arguments}", "LaunchActivatedEventArgs");
     }
 #endif
 }
