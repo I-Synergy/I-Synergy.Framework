@@ -15,6 +15,13 @@ using ISynergy.Framework.UI.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 
+#if WINDOWS
+using Microsoft.UI.Xaml.Media;
+using ISynergy.Framework.UI.Helpers;
+#elif ANDROID
+using Android.Content.Res;
+#endif
+
 [assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]
 [assembly: ExportFont("opendyslexic3-regular.ttf", Alias = "OpenDyslexic3-Regular")]
 [assembly: ExportFont("segoemdl2.ttf", Alias = "SegoeMdl2")]
@@ -37,7 +44,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
     private Task Initialize { get; set; }
 
-    public AppTheme Theme { get; set; } = AppTheme.Dark;
+    //public AppTheme Theme { get; set; } = AppTheme.Dark;
 
     /// <summary>
     /// Default constructor.
@@ -73,6 +80,14 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices = ServiceLocator.Default.GetInstance<IBaseCommonServices>();
         _commonServices.BusyService.StartBusy();
 
+        _logger.LogInformation("Setting up theming service.");
+        _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
+
+        if (_themeService.IsLightThemeEnabled)
+            Application.Current.UserAppTheme = AppTheme.Light;
+        else
+            Application.Current.UserAppTheme = AppTheme.Dark;
+
         if (initialView is not null)
             Application.Current.MainPage = new NavigationPage(initialView.Invoke());
         else
@@ -84,9 +99,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Setting up authentication service.");
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
-
-        _logger.LogInformation("Setting up theming service.");
-        _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
 
         _logger.LogInformation("Setting up navigation service.");
         _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
