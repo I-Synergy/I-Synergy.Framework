@@ -296,7 +296,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             _applicationSettingsService.Settings.Theme = style.Theme;
             _applicationSettingsService.Settings.Color = style.Color;
             _applicationSettingsService.SaveSettings();
-            _themeService.SetStyle();
 
             if (await BaseCommonServices.DialogService.ShowMessageAsync(
                     BaseCommonServices.LanguageService.GetString("WarningColorChange") +

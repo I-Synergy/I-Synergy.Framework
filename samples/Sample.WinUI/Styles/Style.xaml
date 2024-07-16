@@ -80,15 +80,4 @@
         <Setter Property="MinHeight" Value="{ThemeResource ContentDialogButtonMinHeight}" />
         <Setter Property="MinWidth" Value="{ThemeResource ContentDialogButtonMinWidth}" />
     </Style>
-
-    <media:AcrylicBrush x:Key="InAppAcrylicBrush" 
-                        Opacity="1.0"
-                        TintColor="LemonChiffon"
-                        FallbackColor="#EE555555"
-                        TintOpacity="0.2" />
-
-    <media:AcrylicBrush x:Key="ThemeAcryllicBrush"
-                        Opacity="1.0"
-                        TintColor="LemonChiffon"
-                        TintOpacity="0.2" />
 </ResourceDictionary>

@@ -9,6 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Window = ISynergy.Framework.UI.Controls.Window;
 using Application = Microsoft.UI.Xaml.Application;
+using Microsoft.UI.Xaml;
+using ISynergy.Framework.Core.Enumerations;
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Media;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -16,6 +20,7 @@ public class DialogService : IDialogService
 {
     private readonly ILanguageService _languageService;
     private readonly IContext _context;
+    private readonly IThemeService _themeService;
 
     private Window _activeDialog = null;
 
@@ -24,12 +29,15 @@ public class DialogService : IDialogService
     /// </summary>
     /// <param name="context"></param>
     /// <param name="languageService">The language service.</param>
+    /// <param name="themeService"></param>
     public DialogService(
         IContext context,
-        ILanguageService languageService)
+        ILanguageService languageService,
+        IThemeService themeService)
     {
         _context = context;
         _languageService = languageService;
+        _themeService = themeService;
     }
 
     /// <summary>
@@ -112,6 +120,8 @@ public class DialogService : IDialogService
 
         if (Application.Current is BaseApplication baseApplication)
             dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+
+        dialog.RequestedTheme = _themeService.IsLightThemeEnabled ? ElementTheme.Light : ElementTheme.Dark;
 
         switch (buttons)
         {
@@ -250,6 +260,8 @@ public class DialogService : IDialogService
         {
             if (Application.Current is BaseApplication baseApplication)
                 window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+
+            window.RequestedTheme = _themeService.IsLightThemeEnabled ? ElementTheme.Light : ElementTheme.Dark;
 
             window.ViewModel = viewmodel;
 
