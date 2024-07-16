@@ -19,9 +19,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using System.Globalization;
 using Windows.ApplicationModel.Activation;
-using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
-using Window = ISynergy.Framework.UI.Controls.Window;
 using Application = Microsoft.UI.Xaml.Application;
+using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI;
 
@@ -40,7 +39,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly INavigationService _navigationService;
     protected readonly IBaseCommonServices _commonServices;
 
-    private ILoadingView _loadingView;
+    private Func<ILoadingView> _initialView;
     private int lastErrorMessage = 0;
 
     private Task Initialize { get; set; }
@@ -57,6 +56,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected BaseApplication(Func<ILoadingView> initialView = null)
         : base()
     {
+        _initialView = initialView;
+
         var host = CreateHostBuilder()
             .ConfigureLogging(config =>
             {
@@ -90,18 +91,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices = ServiceLocator.Default.GetInstance<IBaseCommonServices>();
         _commonServices.BusyService.StartBusy();
 
-        MainWindow = WindowHelper.CreateWindow();
-
-        MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
-        {
-            MainWindow.Title = InfoService.Default.Title ?? string.Empty;
-        });
-
-        if (initialView is not null)
-            MainWindow.Content = initialView.Invoke() as FrameworkElement;
-        else
-            MainWindow.Content = new BusyIndicatorControl(_commonServices);
-
         _logger.LogInformation("Setting up context.");
         _context = ServiceLocator.Default.GetInstance<IContext>();
 
@@ -111,6 +100,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Setting up theming service.");
         _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
+
+        if (_themeService.IsLightThemeEnabled)
+            RequestedTheme = ApplicationTheme.Light;
+        else
+            RequestedTheme = ApplicationTheme.Dark;
 
         _logger.LogInformation("Setting up navigation service.");
         _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
@@ -126,34 +120,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         if (_applicationSettingsService.Settings is not null)
             _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
-
-        _logger.LogInformation("Loading custom resource dictionaries");
-        if (Application.Current.Resources?.MergedDictionaries is not null)
-        {
-            foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
-            {
-                if (!Application.Current.Resources.MergedDictionaries.Contains(item))
-                    Application.Current.Resources.MergedDictionaries.Add(item);
-            }
-        }
-
-        _logger.LogInformation("Loading theme");
-        MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
-        
-        if (_themeService is ThemeService themeService)
-        {
-            themeService.InitializeMainWindow(MainWindow);
-            themeService.SetStyle();
-        }
         
         _logger.LogInformation("Starting initialization of application");
         InitializeApplication();
-
-        if (MainWindow is not null)
-        {
-            //MainWindow.Title = InfoService.Default.Title ?? string.Empty;
-            MainWindow.Activate();
-        }
 
         _logger.LogInformation("Finishing initialization of application");
     }
@@ -255,13 +224,34 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e">Event data for the event.</param>
     protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs e)
     {
-        //MainWindow = WindowHelper.CreateWindow();
+        MainWindow = WindowHelper.CreateWindow();
 
-        //if (_loadingView is not null)
-        //    MainWindow.Content = _loadingView as FrameworkElement;
-        //else
-        //    MainWindow.Content = new BusyIndicatorControl(_commonServices);
+        MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
 
+        _logger.LogInformation("Loading custom resource dictionaries");
+
+        if (Application.Current.Resources?.MergedDictionaries is not null)
+        {
+            foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
+            {
+                if (!Application.Current.Resources.MergedDictionaries.Contains(item))
+                    Application.Current.Resources.MergedDictionaries.Add(item);
+            }
+        }
+
+        _logger.LogInformation("Loading theme");
+
+        if (_themeService is ThemeService themeService)
+        {
+            themeService.InitializeMainWindow(MainWindow);
+            themeService.SetStyle();
+        }
+
+        if (_initialView is not null)
+            MainWindow.Content = _initialView.Invoke() as FrameworkElement;
+        else
+            MainWindow.Content = new BusyIndicatorControl(_commonServices);
+        
         if (e.UWPLaunchActivatedEventArgs is not null)
         {
             switch (e.UWPLaunchActivatedEventArgs.Kind)
@@ -278,23 +268,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (Environment.GetCommandLineArgs().Length > 1)
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
 
-        //// Add custom resourcedictionaries from code.
-        //if (Application.Current.Resources?.MergedDictionaries is not null)
-        //{
-        //    foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
-        //    {
-        //        if (!Application.Current.Resources.MergedDictionaries.Contains(item))
-        //            Application.Current.Resources.MergedDictionaries.Add(item);
-        //    }
-        //}
-
-
-
-        //if (MainWindow is not null)
-        //{
-        //    MainWindow.Title = InfoService.Default.Title ?? string.Empty;
-        //    MainWindow.Activate();
-        //}
+        if (MainWindow is not null)
+        {
+            MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = InfoService.Default.Title ?? string.Empty);
+            MainWindow.Title = InfoService.Default.Title ?? string.Empty;
+            MainWindow.Activate();
+        }
     }
 
     /// <summary>
@@ -383,6 +362,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
+            MessageService.Default.Unregister<EnvironmentChangedMessage>(this);
             MessageService.Default.Unregister<StyleChangedMessage>(this);
 
             if (_authenticationService is not null)

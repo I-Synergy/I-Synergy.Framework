@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Messages;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Services;
@@ -112,5 +113,6 @@ public sealed class InfoService : IInfoService
     public void SetTitle(SoftwareEnvironments environment)
     {
         Title = $"{ProductName} v{ProductVersion} ({environment})";
+        MessageService.Default.Send(new EnvironmentChangedMessage(environment));
     }
 }

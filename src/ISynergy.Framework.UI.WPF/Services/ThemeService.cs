@@ -22,11 +22,7 @@ public class ThemeService : IThemeService
     /// <value>The theme.</value>
     public Style Style
     {
-        get => new()
-        {
-            Theme = _applicationSettingsService.Settings.Theme,
-            Color = _applicationSettingsService.Settings.Color
-        };
+        get => new(_applicationSettingsService.Settings.Color, _applicationSettingsService.Settings.Theme);
     }
 
     /// <summary>
