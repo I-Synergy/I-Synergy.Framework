@@ -13,6 +13,7 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Services;
+using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
@@ -248,7 +249,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         }
 
         if (_initialView is not null)
-            MainWindow.Content = _initialView.Invoke() as FrameworkElement;
+        {
+            var loadingView = _initialView.Invoke() as View;
+            loadingView.ViewModel = ServiceLocator.Default.GetInstance<LoadingViewModel>();
+            MainWindow.Content = loadingView;
+        }
         else
             MainWindow.Content = new BusyIndicatorControl(_commonServices);
         
