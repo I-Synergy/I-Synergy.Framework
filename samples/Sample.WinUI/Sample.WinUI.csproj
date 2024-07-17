@@ -23,6 +23,8 @@
 	
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="Assets\gta.mp4" />
+	  <None Remove="Views\LoadingView.xaml" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -69,5 +71,16 @@
 	   package has not yet been restored -->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
+	</ItemGroup>
+	<ItemGroup>
+	  <CustomAdditionalCompileInputs Remove="Views\LoadingView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Resource Remove="Views\LoadingView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Update="Assets\gta.mp4">
+	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+	  </Content>
 	</ItemGroup>
 </Project>

@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +34,7 @@ public sealed partial class App : BaseApplication
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        : base()
+        : base(() => ServiceLocator.Default.GetInstance<ILoadingView>())
     {
         InitializeComponent();
 
@@ -70,36 +71,43 @@ public sealed partial class App : BaseApplication
 
     public override async Task InitializeApplicationAsync()
     {
-        await base.InitializeApplicationAsync();
-
         try
         {
-            _commonServices.BusyService.BusyMessage = "Start doing important stuff";
-            await Task.Delay(2000);
-            _commonServices.BusyService.BusyMessage = "Done doing important stuff";
-            await Task.Delay(2000);
+            _commonServices.BusyService.StartBusy();
+
+            await base.InitializeApplicationAsync();
+
+            try
+            {
+                _commonServices.BusyService.BusyMessage = "Start doing important stuff";
+                await Task.Delay(2000);
+                _commonServices.BusyService.BusyMessage = "Done doing important stuff";
+                await Task.Delay(2000);
+            }
+            catch (Exception)
+            {
+                await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
+            }
+
+            try
+            {
+                _commonServices.BusyService.BusyMessage = "Applying migrations";
+                //await _migrationService.ApplyMigrationAsync<_001>();
+                await Task.Delay(2000);
+                _commonServices.BusyService.BusyMessage = "Done applying migrations";
+                await Task.Delay(2000);
+            }
+            catch (Exception)
+            {
+                await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
+            }
+
+            MessageService.Default.Send(new ApplicationInitializedMessage());
         }
-        catch (Exception)
+        finally
         {
-            await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
             _commonServices.BusyService.EndBusy();
         }
-
-        try
-        {
-            _commonServices.BusyService.BusyMessage = "Applying migrations";
-            //await _migrationService.ApplyMigrationAsync<_001>();
-            await Task.Delay(2000);
-            _commonServices.BusyService.BusyMessage = "Done applying migrations";
-            await Task.Delay(2000);
-        }
-        catch (Exception)
-        {
-            await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
-            _commonServices.BusyService.EndBusy();
-        }
-
-        MessageService.Default.Send(new ApplicationInitializedMessage());
     }
 
     private async Task ApplicationLoadedAsync(ApplicationLoadedMessage message)

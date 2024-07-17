@@ -46,6 +46,7 @@
 	
 	<ItemGroup>
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Abstractions\IConfigureContainerAdapter.cs" Link="Abstractions\IConfigureContainerAdapter.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Abstractions\Views\ILoadingView.cs" Link="Abstractions\Views\ILoadingView.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Application\BaseApplication.cs" Link="Application\BaseApplication.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Behaviors\AuthenticationAction.cs" Link="Behaviors\AuthenticationAction.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Behaviors\AuthorizationBehavior.cs" Link="Behaviors\AuthorizationBehavior.cs" />
