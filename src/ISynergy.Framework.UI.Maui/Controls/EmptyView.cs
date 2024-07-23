@@ -16,7 +16,7 @@ internal class EmptyView : ContentPage
         label.BindingContext = _commonServices.BusyService;
         label.SetBinding(Label.TextProperty, new Binding(nameof(_commonServices.BusyService.BusyMessage), BindingMode.OneWay));
         label.SetBinding(Label.IsVisibleProperty, new Binding(nameof(_commonServices.BusyService.IsBusy), BindingMode.OneWay));
-        label.SetDynamicResource(Label.TextColorProperty, "Primary"); 
+        label.SetDynamicResource(Label.TextColorProperty, "Primary");
 
         var indicator = new ActivityIndicator();
         indicator.BindingContext = _commonServices.BusyService;
@@ -37,7 +37,7 @@ internal class EmptyView : ContentPage
                 MessageService.Default.Send(new ApplicationLoadedMessage());
             });
 
-        Unloaded += (s,e) =>
+        Unloaded += (s, e) =>
             MessageService.Default.Unregister<ApplicationInitializedMessage>(this);
     }
 }

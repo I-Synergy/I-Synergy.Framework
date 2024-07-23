@@ -4,8 +4,8 @@ namespace Sample.Views;
 
 public partial class TestExceptionWindow : ITestExceptionWindow
 {
-	public TestExceptionWindow()
-	{
-		InitializeComponent();
-	}
+    public TestExceptionWindow()
+    {
+        InitializeComponent();
+    }
 }

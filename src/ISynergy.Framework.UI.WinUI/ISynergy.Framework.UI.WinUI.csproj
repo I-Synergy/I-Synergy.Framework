@@ -51,54 +51,54 @@
 		<None Remove="Assets\Fonts\segoeuil.ttf" />
 		<None Remove="Assets\Fonts\segoeuisl.ttf" />
 		<None Remove="Assets\Fonts\seguisb.ttf" />
-		<None Remove="Styles\0063b1.xaml" />
-		<None Remove="Styles\0078d7.xaml" />
-		<None Remove="Styles\0099bc.xaml" />
-		<None Remove="Styles\00b294.xaml" />
-		<None Remove="Styles\00b7c3.xaml" />
-		<None Remove="Styles\00cc6a.xaml" />
-		<None Remove="Styles\018574.xaml" />
-		<None Remove="Styles\038387.xaml" />
-		<None Remove="Styles\107c10.xaml" />
-		<None Remove="Styles\10893e.xaml" />
-		<None Remove="Styles\2d7d9a.xaml" />
-		<None Remove="Styles\486860.xaml" />
-		<None Remove="Styles\498205.xaml" />
-		<None Remove="Styles\4a5459.xaml" />
-		<None Remove="Styles\4c4a48.xaml" />
-		<None Remove="Styles\515c6b.xaml" />
-		<None Remove="Styles\525e54.xaml" />
-		<None Remove="Styles\567c73.xaml" />
-		<None Remove="Styles\5d5a58.xaml" />
-		<None Remove="Styles\647c64.xaml" />
-		<None Remove="Styles\68768a.xaml" />
-		<None Remove="Styles\69797e.xaml" />
-		<None Remove="Styles\6b69d6.xaml" />
-		<None Remove="Styles\744da9.xaml" />
-		<None Remove="Styles\767676.xaml" />
-		<None Remove="Styles\7a7574.xaml" />
-		<None Remove="Styles\7e735f.xaml" />
-		<None Remove="Styles\847545.xaml" />
-		<None Remove="Styles\8764b8.xaml" />
-		<None Remove="Styles\881798.xaml" />
-		<None Remove="Styles\8e8cd8.xaml" />
-		<None Remove="Styles\9a0089.xaml" />
-		<None Remove="Styles\b146c2.xaml" />
-		<None Remove="Styles\bf0077.xaml" />
-		<None Remove="Styles\c239b3.xaml" />
-		<None Remove="Styles\c30052.xaml" />
-		<None Remove="Styles\ca5010.xaml" />
-		<None Remove="Styles\d13438.xaml" />
-		<None Remove="Styles\da3b01.xaml" />
-		<None Remove="Styles\e3008c.xaml" />
-		<None Remove="Styles\e74856.xaml" />
-		<None Remove="Styles\e81123.xaml" />
-		<None Remove="Styles\ea005e.xaml" />
-		<None Remove="Styles\ef6950.xaml" />
-		<None Remove="Styles\f7630c.xaml" />
-		<None Remove="Styles\ff4343.xaml" />
-		<None Remove="Styles\ff8c00.xaml" />
-		<None Remove="Styles\ffb900.xaml" />
+		<None Remove="Styles\Theme0063b1.xaml" />
+		<None Remove="Styles\Theme0078d7.xaml" />
+		<None Remove="Styles\Theme0099bc.xaml" />
+		<None Remove="Styles\Theme00b294.xaml" />
+		<None Remove="Styles\Theme00b7c3.xaml" />
+		<None Remove="Styles\Theme00cc6a.xaml" />
+		<None Remove="Styles\Theme018574.xaml" />
+		<None Remove="Styles\Theme038387.xaml" />
+		<None Remove="Styles\Theme107c10.xaml" />
+		<None Remove="Styles\Theme10893e.xaml" />
+		<None Remove="Styles\Theme2d7d9a.xaml" />
+		<None Remove="Styles\Theme486860.xaml" />
+		<None Remove="Styles\Theme498205.xaml" />
+		<None Remove="Styles\Theme4a5459.xaml" />
+		<None Remove="Styles\Theme4c4a48.xaml" />
+		<None Remove="Styles\Theme515c6b.xaml" />
+		<None Remove="Styles\Theme525e54.xaml" />
+		<None Remove="Styles\Theme567c73.xaml" />
+		<None Remove="Styles\Theme5d5a58.xaml" />
+		<None Remove="Styles\Theme647c64.xaml" />
+		<None Remove="Styles\Theme68768a.xaml" />
+		<None Remove="Styles\Theme69797e.xaml" />
+		<None Remove="Styles\Theme6b69d6.xaml" />
+		<None Remove="Styles\Theme744da9.xaml" />
+		<None Remove="Styles\Theme767676.xaml" />
+		<None Remove="Styles\Theme7a7574.xaml" />
+		<None Remove="Styles\Theme7e735f.xaml" />
+		<None Remove="Styles\Theme847545.xaml" />
+		<None Remove="Styles\Theme8764b8.xaml" />
+		<None Remove="Styles\Theme881798.xaml" />
+		<None Remove="Styles\Theme8e8cd8.xaml" />
+		<None Remove="Styles\Theme9a0089.xaml" />
+		<None Remove="Styles\Themeb146c2.xaml" />
+		<None Remove="Styles\Themebf0077.xaml" />
+		<None Remove="Styles\Themec239b3.xaml" />
+		<None Remove="Styles\Themec30052.xaml" />
+		<None Remove="Styles\Themeca5010.xaml" />
+		<None Remove="Styles\Themed13438.xaml" />
+		<None Remove="Styles\Themeda3b01.xaml" />
+		<None Remove="Styles\Themee3008c.xaml" />
+		<None Remove="Styles\Themee74856.xaml" />
+		<None Remove="Styles\Themee81123.xaml" />
+		<None Remove="Styles\Themeea005e.xaml" />
+		<None Remove="Styles\Themeef6950.xaml" />
+		<None Remove="Styles\Themef7630c.xaml" />
+		<None Remove="Styles\Themeff4343.xaml" />
+		<None Remove="Styles\Themeff8c00.xaml" />
+		<None Remove="Styles\Themeffb900.xaml" />
 		<None Remove="Views\SelectionView.xaml" />
 		<None Remove="Windows\LanguageWindow.xaml" />
 		<None Remove="Windows\NoteWindow.xaml" />
@@ -106,54 +106,54 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Styles\0063b1.xaml" />
-		<Content Include="Styles\0078d7.xaml" />
-		<Content Include="Styles\0099bc.xaml" />
-		<Content Include="Styles\00b294.xaml" />
-		<Content Include="Styles\00b7c3.xaml" />
-		<Content Include="Styles\00cc6a.xaml" />
-		<Content Include="Styles\018574.xaml" />
-		<Content Include="Styles\038387.xaml" />
-		<Content Include="Styles\107c10.xaml" />
-		<Content Include="Styles\10893e.xaml" />
-		<Content Include="Styles\2d7d9a.xaml" />
-		<Content Include="Styles\486860.xaml" />
-		<Content Include="Styles\498205.xaml" />
-		<Content Include="Styles\4a5459.xaml" />
-		<Content Include="Styles\4c4a48.xaml" />
-		<Content Include="Styles\515c6b.xaml" />
-		<Content Include="Styles\525e54.xaml" />
-		<Content Include="Styles\567c73.xaml" />
-		<Content Include="Styles\5d5a58.xaml" />
-		<Content Include="Styles\647c64.xaml" />
-		<Content Include="Styles\68768a.xaml" />
-		<Content Include="Styles\69797e.xaml" />
-		<Content Include="Styles\6b69d6.xaml" />
-		<Content Include="Styles\744da9.xaml" />
-		<Content Include="Styles\767676.xaml" />
-		<Content Include="Styles\7a7574.xaml" />
-		<Content Include="Styles\7e735f.xaml" />
-		<Content Include="Styles\847545.xaml" />
-		<Content Include="Styles\8764b8.xaml" />
-		<Content Include="Styles\881798.xaml" />
-		<Content Include="Styles\8e8cd8.xaml" />
-		<Content Include="Styles\9a0089.xaml" />
-		<Content Include="Styles\b146c2.xaml" />
-		<Content Include="Styles\bf0077.xaml" />
-		<Content Include="Styles\c239b3.xaml" />
-		<Content Include="Styles\c30052.xaml" />
-		<Content Include="Styles\ca5010.xaml" />
-		<Content Include="Styles\d13438.xaml" />
-		<Content Include="Styles\da3b01.xaml" />
-		<Content Include="Styles\e3008c.xaml" />
-		<Content Include="Styles\e74856.xaml" />
-		<Content Include="Styles\e81123.xaml" />
-		<Content Include="Styles\ea005e.xaml" />
-		<Content Include="Styles\ef6950.xaml" />
-		<Content Include="Styles\f7630c.xaml" />
-		<Content Include="Styles\ff4343.xaml" />
-		<Content Include="Styles\ff8c00.xaml" />
-		<Content Include="Styles\ffb900.xaml" />
+		<Content Include="Styles\Theme0063b1.xaml" />
+		<Content Include="Styles\Theme0078d7.xaml" />
+		<Content Include="Styles\Theme0099bc.xaml" />
+		<Content Include="Styles\Theme00b294.xaml" />
+		<Content Include="Styles\Theme00b7c3.xaml" />
+		<Content Include="Styles\Theme00cc6a.xaml" />
+		<Content Include="Styles\Theme018574.xaml" />
+		<Content Include="Styles\Theme038387.xaml" />
+		<Content Include="Styles\Theme107c10.xaml" />
+		<Content Include="Styles\Theme10893e.xaml" />
+		<Content Include="Styles\Theme2d7d9a.xaml" />
+		<Content Include="Styles\Theme486860.xaml" />
+		<Content Include="Styles\Theme498205.xaml" />
+		<Content Include="Styles\Theme4a5459.xaml" />
+		<Content Include="Styles\Theme4c4a48.xaml" />
+		<Content Include="Styles\Theme515c6b.xaml" />
+		<Content Include="Styles\Theme525e54.xaml" />
+		<Content Include="Styles\Theme567c73.xaml" />
+		<Content Include="Styles\Theme5d5a58.xaml" />
+		<Content Include="Styles\Theme647c64.xaml" />
+		<Content Include="Styles\Theme68768a.xaml" />
+		<Content Include="Styles\Theme69797e.xaml" />
+		<Content Include="Styles\Theme6b69d6.xaml" />
+		<Content Include="Styles\Theme744da9.xaml" />
+		<Content Include="Styles\Theme767676.xaml" />
+		<Content Include="Styles\Theme7a7574.xaml" />
+		<Content Include="Styles\Theme7e735f.xaml" />
+		<Content Include="Styles\Theme847545.xaml" />
+		<Content Include="Styles\Theme8764b8.xaml" />
+		<Content Include="Styles\Theme881798.xaml" />
+		<Content Include="Styles\Theme8e8cd8.xaml" />
+		<Content Include="Styles\Theme9a0089.xaml" />
+		<Content Include="Styles\Themeb146c2.xaml" />
+		<Content Include="Styles\Themebf0077.xaml" />
+		<Content Include="Styles\Themec239b3.xaml" />
+		<Content Include="Styles\Themec30052.xaml" />
+		<Content Include="Styles\Themeca5010.xaml" />
+		<Content Include="Styles\Themed13438.xaml" />
+		<Content Include="Styles\Themeda3b01.xaml" />
+		<Content Include="Styles\Themee3008c.xaml" />
+		<Content Include="Styles\Themee74856.xaml" />
+		<Content Include="Styles\Themee81123.xaml" />
+		<Content Include="Styles\Themeea005e.xaml" />
+		<Content Include="Styles\Themeef6950.xaml" />
+		<Content Include="Styles\Themef7630c.xaml" />
+		<Content Include="Styles\Themeff4343.xaml" />
+		<Content Include="Styles\Themeff8c00.xaml" />
+		<Content Include="Styles\Themeffb900.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -187,148 +187,148 @@
 		<Page Include="Controls\Tiles\Tile.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\0063b1.xaml">
+		<Page Include="Styles\Theme0063b1.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\0078d7.xaml">
+		<Page Include="Styles\Theme0078d7.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\0099bc.xaml">
+		<Page Include="Styles\Theme0099bc.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\00b294.xaml">
+		<Page Include="Styles\Theme00b294.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\00b7c3.xaml">
+		<Page Include="Styles\Theme00b7c3.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\00cc6a.xaml">
+		<Page Include="Styles\Theme00cc6a.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\018574.xaml">
+		<Page Include="Styles\Theme018574.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\038387.xaml">
+		<Page Include="Styles\Theme038387.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\107c10.xaml">
+		<Page Include="Styles\Theme107c10.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\10893e.xaml">
+		<Page Include="Styles\Theme10893e.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\2d7d9a.xaml">
+		<Page Include="Styles\Theme2d7d9a.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\486860.xaml">
+		<Page Include="Styles\Theme486860.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\498205.xaml">
+		<Page Include="Styles\Theme498205.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\4a5459.xaml">
+		<Page Include="Styles\Theme4a5459.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\4c4a48.xaml">
+		<Page Include="Styles\Theme4c4a48.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\515c6b.xaml">
+		<Page Include="Styles\Theme515c6b.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\525e54.xaml">
+		<Page Include="Styles\Theme525e54.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\567c73.xaml">
+		<Page Include="Styles\Theme567c73.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\5d5a58.xaml">
+		<Page Include="Styles\Theme5d5a58.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\647c64.xaml">
+		<Page Include="Styles\Theme647c64.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\68768a.xaml">
+		<Page Include="Styles\Theme68768a.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\69797e.xaml">
+		<Page Include="Styles\Theme69797e.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\6b69d6.xaml">
+		<Page Include="Styles\Theme6b69d6.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\744da9.xaml">
+		<Page Include="Styles\Theme744da9.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\767676.xaml">
+		<Page Include="Styles\Theme767676.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\7a7574.xaml">
+		<Page Include="Styles\Theme7a7574.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\7e735f.xaml">
+		<Page Include="Styles\Theme7e735f.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\847545.xaml">
+		<Page Include="Styles\Theme847545.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\8764b8.xaml">
+		<Page Include="Styles\Theme8764b8.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\881798.xaml">
+		<Page Include="Styles\Theme881798.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\8e8cd8.xaml">
+		<Page Include="Styles\Theme8e8cd8.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\9a0089.xaml">
+		<Page Include="Styles\Theme9a0089.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\b146c2.xaml">
+		<Page Include="Styles\Themeb146c2.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\bf0077.xaml">
+		<Page Include="Styles\Themebf0077.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\c239b3.xaml">
+		<Page Include="Styles\Themec239b3.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\c30052.xaml">
+		<Page Include="Styles\Themec30052.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\ca5010.xaml">
+		<Page Include="Styles\Themeca5010.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\d13438.xaml">
+		<Page Include="Styles\Themed13438.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\da3b01.xaml">
+		<Page Include="Styles\Themeda3b01.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\e3008c.xaml">
+		<Page Include="Styles\Themee3008c.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\e74856.xaml">
+		<Page Include="Styles\Themee74856.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\e81123.xaml">
+		<Page Include="Styles\Themee81123.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\ea005e.xaml">
+		<Page Include="Styles\Themeea005e.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\ef6950.xaml">
+		<Page Include="Styles\Themeef6950.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\f7630c.xaml">
+		<Page Include="Styles\Themef7630c.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\ff4343.xaml">
+		<Page Include="Styles\Themeff4343.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\ff8c00.xaml">
+		<Page Include="Styles\Themeff8c00.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Styles\ffb900.xaml">
+		<Page Include="Styles\Themeffb900.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\SelectionView.xaml">

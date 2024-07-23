@@ -17,8 +17,6 @@ using System.Globalization;
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
 using ISynergy.Framework.UI.Helpers;
-#elif ANDROID
-using Android.Content.Res;
 #endif
 
 [assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]

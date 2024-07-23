@@ -142,7 +142,7 @@ public partial class Window : ContentDialog, IWindow
     //}
 
 #if IOS || MACCATALYST || ANDROID
-    
+
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
     /// </summary>

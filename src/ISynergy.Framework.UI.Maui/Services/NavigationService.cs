@@ -69,7 +69,7 @@ public class NavigationService : INavigationService
                     if (result.Navigation.NavigationStack[i].Equals(page))
                         break;
 
-                    if(!backNavigation)
+                    if (!backNavigation)
                         await result.Navigation.PopAsync(_animated);
                 }
             }

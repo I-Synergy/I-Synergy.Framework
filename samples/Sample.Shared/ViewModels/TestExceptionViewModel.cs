@@ -8,10 +8,10 @@ namespace Sample.ViewModels;
 public class TestExceptionViewModel : ViewModelDialog<object>
 {
     public TestExceptionViewModel(
-        IContext context, 
-        IBaseCommonServices commonServices, 
-        ILogger logger, 
-        bool automaticValidation = false) 
+        IContext context,
+        IBaseCommonServices commonServices,
+        ILogger logger,
+        bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
     }

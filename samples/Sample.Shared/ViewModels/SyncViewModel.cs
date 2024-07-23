@@ -56,11 +56,11 @@ public class SyncViewModel : ViewModelNavigation<object>
 
 
     public SyncViewModel(
-        IContext context, 
+        IContext context,
         ICommonServices commonServices,
         ISynchronizationService synchronizationService,
-        ILogger logger, 
-        bool automaticValidation = false) 
+        ILogger logger,
+        bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
         _synchronizationService = synchronizationService;
@@ -82,7 +82,7 @@ public class SyncViewModel : ViewModelNavigation<object>
     private async Task CustomActionCommandExecuteAsync()
     {
         BaseCommonServices.BusyService.StartBusy();
-        
+
         try
         {
             CustomActionInsertProductRow();

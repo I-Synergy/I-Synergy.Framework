@@ -171,7 +171,7 @@ public sealed partial class App : BaseApplication
             _logger.LogInformation("Navigate to SignIn page");
             await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
-            
+
     }
 
     protected override void Dispose(bool disposing)

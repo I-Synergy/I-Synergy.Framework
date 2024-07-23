@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Models.Accounts;
-using Microsoft.UI.Xaml.Controls;
-using Sample.ViewModels;
-
-namespace Sample.Views.Identity.Controls;
+﻿namespace Sample.Views.Identity.Controls;
 
 /// <summary>
 /// Class SignUpControl. This class cannot be inherited.

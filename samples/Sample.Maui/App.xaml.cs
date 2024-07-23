@@ -24,7 +24,7 @@ public partial class App : BaseApplication
         _migrationService = migrationService;
 
         InitializeComponent();
-        
+
         MessageService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
     }
 

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Mvvm.Abstractions;
 
 namespace ISynergy.Framework.UI.Abstractions.Views;
 

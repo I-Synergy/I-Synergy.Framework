@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Utilities;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Sample.ViewModels;
 using Windows.System;
