@@ -45,6 +45,9 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="appsettings.json" />
+		<None Remove="Assets\Fonts\Font Awesome 6 Pro-Regular-400.otf" />
+		<None Remove="Assets\gta.mp4" />
+		<None Remove="Assets\sample.mp4" />
 		<None Remove="Styles\Images.xaml" />
 		<None Remove="Styles\Style.xaml" />
 		<None Remove="Views\AuthenticationView.xaml" />
@@ -54,6 +57,7 @@
 		<None Remove="Views\Identity\Controls\SignInControl.xaml" />
 		<None Remove="Views\Identity\Controls\SignUpControl.xaml" />
 		<None Remove="Views\InfoView.xaml" />
+		<None Remove="Views\LoadingView.xaml" />
 		<None Remove="Views\SelectionTestView.xaml" />
 		<None Remove="Views\SettingsView.xaml" />
 		<None Remove="Views\ShellView.xaml" />
@@ -62,6 +66,13 @@
 		<None Remove="Views\TestWindow.xaml" />
 		<None Remove="Views\TreeNodeView.xaml" />
 		<None Remove="Views\ValidationView.xaml" />
+		<None Remove="Views\LoadingView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Assets\gta.mp4">
+	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+	  </Content>
+	  <Content Include="Assets\sample.mp4" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Include="Styles\Images.xaml">
@@ -82,7 +93,7 @@
 		<Page Include="Views\ForgotPasswordWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Views\Identity\Controls\SignInControl.xaml" >
+		<Page Include="Views\Identity\Controls\SignInControl.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\Identity\Controls\SignUpControl.xaml">
@@ -115,6 +126,9 @@
 		<Page Include="Views\ValidationView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="Views\LoadingView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />
@@ -123,6 +137,14 @@
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'desktop'">
+		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.20" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'browserwasm'">
+		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.4.0-dev.956" />
 	</ItemGroup>
 
 	<ItemGroup>

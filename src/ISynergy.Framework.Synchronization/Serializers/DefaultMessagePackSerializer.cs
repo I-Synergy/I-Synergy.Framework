@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Synchronization.Serializers;
 
 public class DefaultMessagePackSerializer : ISerializer
 {
-    public Task<byte[]> SerializeAsync<T>(T obj) => 
+    public Task<byte[]> SerializeAsync<T>(T obj) =>
         SerializeAsync((object)obj);
 
     public async Task<byte[]> SerializeAsync(object obj)

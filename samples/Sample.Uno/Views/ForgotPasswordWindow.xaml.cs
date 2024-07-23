@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
-using ISynergy.Framework.UI.Controls;
 using Window = ISynergy.Framework.UI.Controls.Window;
 
 namespace Sample.Views;

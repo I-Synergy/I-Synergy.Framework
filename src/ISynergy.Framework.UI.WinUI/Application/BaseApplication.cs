@@ -121,7 +121,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         if (_applicationSettingsService.Settings is not null)
             _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
-        
+
         _logger.LogInformation("Starting initialization of application");
         InitializeApplication();
 
@@ -256,7 +256,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         }
         else
             MainWindow.Content = new BusyIndicatorControl(_commonServices);
-        
+
         if (e.UWPLaunchActivatedEventArgs is not null)
         {
             switch (e.UWPLaunchActivatedEventArgs.Kind)
@@ -298,10 +298,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     public virtual void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
         throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
 
-    public virtual Task HandleProtocolActivationAsync(string e) => 
+    public virtual Task HandleProtocolActivationAsync(string e) =>
         Task.CompletedTask;
 
-    public virtual Task HandleLaunchActivationAsync(string e) => 
+    public virtual Task HandleLaunchActivationAsync(string e) =>
         Task.CompletedTask;
 
     public virtual Task HandleCommandLineArgumentsAsync(string[] e) =>

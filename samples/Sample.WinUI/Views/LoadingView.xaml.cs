@@ -41,7 +41,7 @@ public sealed partial class LoadingView : ILoadingView
     public void ApplicationInitialized(ApplicationInitializedMessage message) =>
         SignInButton.IsEnabled = true;
 
-    private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)  =>
+    private void MediaPlayer_MediaEnded(MediaPlayer sender, object args) =>
         DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => Complete());
 
     private void Grid_Tapped(object sender, TappedRoutedEventArgs e)

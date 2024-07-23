@@ -24,6 +24,6 @@ public static class ServiceCollectionExtensions
     }
 
     public static IHostBuilder ConfigureStoreUpdateIntegration(this IHostBuilder hostbuilder) =>
-        hostbuilder.ConfigureServices((builder,services) => services.AddUpdatesIntegration());
+        hostbuilder.ConfigureServices((builder, services) => services.AddUpdatesIntegration());
 }
 #endif

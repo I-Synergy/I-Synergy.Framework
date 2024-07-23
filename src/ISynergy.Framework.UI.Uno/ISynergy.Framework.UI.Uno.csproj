@@ -138,6 +138,54 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\FileService.cs" Link="Services\FileService.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\NavigationService.cs" Link="Services\NavigationService.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\ThemeService.cs" Link="Services\ThemeService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme0063b1.xaml.cs" Link="Styles\Theme0063b1.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme0078d7.xaml.cs" Link="Styles\Theme0078d7.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme0099bc.xaml.cs" Link="Styles\Theme0099bc.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme00b294.xaml.cs" Link="Styles\Theme00b294.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme00b7c3.xaml.cs" Link="Styles\Theme00b7c3.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme00cc6a.xaml.cs" Link="Styles\Theme00cc6a.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme018574.xaml.cs" Link="Styles\Theme018574.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme038387.xaml.cs" Link="Styles\Theme038387.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme107c10.xaml.cs" Link="Styles\Theme107c10.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme10893e.xaml.cs" Link="Styles\Theme10893e.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme2d7d9a.xaml.cs" Link="Styles\Theme2d7d9a.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme486860.xaml.cs" Link="Styles\Theme486860.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme498205.xaml.cs" Link="Styles\Theme498205.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme4a5459.xaml.cs" Link="Styles\Theme4a5459.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme4c4a48.xaml.cs" Link="Styles\Theme4c4a48.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme515c6b.xaml.cs" Link="Styles\Theme515c6b.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme525e54.xaml.cs" Link="Styles\Theme525e54.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme567c73.xaml.cs" Link="Styles\Theme567c73.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme5d5a58.xaml.cs" Link="Styles\Theme5d5a58.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme647c64.xaml.cs" Link="Styles\Theme647c64.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme68768a.xaml.cs" Link="Styles\Theme68768a.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme69797e.xaml.cs" Link="Styles\Theme69797e.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme6b69d6.xaml.cs" Link="Styles\Theme6b69d6.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme744da9.xaml.cs" Link="Styles\Theme744da9.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme767676.xaml.cs" Link="Styles\Theme767676.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme7a7574.xaml.cs" Link="Styles\Theme7a7574.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme7e735f.xaml.cs" Link="Styles\Theme7e735f.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme847545.xaml.cs" Link="Styles\Theme847545.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme8764b8.xaml.cs" Link="Styles\Theme8764b8.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme881798.xaml.cs" Link="Styles\Theme881798.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme8e8cd8.xaml.cs" Link="Styles\Theme8e8cd8.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme9a0089.xaml.cs" Link="Styles\Theme9a0089.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeb146c2.xaml.cs" Link="Styles\Themeb146c2.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themebf0077.xaml.cs" Link="Styles\Themebf0077.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themec239b3.xaml.cs" Link="Styles\Themec239b3.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themec30052.xaml.cs" Link="Styles\Themec30052.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeca5010.xaml.cs" Link="Styles\Themeca5010.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themed13438.xaml.cs" Link="Styles\Themed13438.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeda3b01.xaml.cs" Link="Styles\Themeda3b01.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themee3008c.xaml.cs" Link="Styles\Themee3008c.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themee74856.xaml.cs" Link="Styles\Themee74856.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themee81123.xaml.cs" Link="Styles\Themee81123.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeea005e.xaml.cs" Link="Styles\Themeea005e.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeef6950.xaml.cs" Link="Styles\Themeef6950.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themef7630c.xaml.cs" Link="Styles\Themef7630c.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeff4343.xaml.cs" Link="Styles\Themeff4343.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeff8c00.xaml.cs" Link="Styles\Themeff8c00.xaml.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeffb900.xaml.cs" Link="Styles\Themeffb900.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\BooleanDataTrigger.cs" Link="Triggers\BooleanDataTrigger.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\DecimalDataTrigger.cs" Link="Triggers\DecimalDataTrigger.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\IntegerDataTrigger.cs" Link="Triggers\IntegerDataTrigger.cs" />
@@ -199,6 +247,150 @@
 		</Page>
 		<Page Include="..\ISynergy.Framework.UI.WinUI\Controls\Tiles\Tile.xaml" Link="Controls\Tiles\Tile.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme0063b1.xaml" Link="Styles\Theme0063b1.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme0078d7.xaml" Link="Styles\Theme0078d7.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme0099bc.xaml" Link="Styles\Theme0099bc.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme00b294.xaml" Link="Styles\Theme00b294.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme00b7c3.xaml" Link="Styles\Theme00b7c3.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme00cc6a.xaml" Link="Styles\Theme00cc6a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme018574.xaml" Link="Styles\Theme018574.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme038387.xaml" Link="Styles\Theme038387.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme107c10.xaml" Link="Styles\Theme107c10.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme10893e.xaml" Link="Styles\Theme10893e.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme2d7d9a.xaml" Link="Styles\Theme2d7d9a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme486860.xaml" Link="Styles\Theme486860.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme498205.xaml" Link="Styles\Theme498205.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme4a5459.xaml" Link="Styles\Theme4a5459.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme4c4a48.xaml" Link="Styles\Theme4c4a48.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme515c6b.xaml" Link="Styles\Theme515c6b.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme525e54.xaml" Link="Styles\Theme525e54.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme567c73.xaml" Link="Styles\Theme567c73.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme5d5a58.xaml" Link="Styles\Theme5d5a58.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme647c64.xaml" Link="Styles\Theme647c64.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme68768a.xaml" Link="Styles\Theme68768a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme69797e.xaml" Link="Styles\Theme69797e.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme6b69d6.xaml" Link="Styles\Theme6b69d6.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme744da9.xaml" Link="Styles\Theme744da9.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme767676.xaml" Link="Styles\Theme767676.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme7a7574.xaml" Link="Styles\Theme7a7574.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme7e735f.xaml" Link="Styles\Theme7e735f.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme847545.xaml" Link="Styles\Theme847545.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme8764b8.xaml" Link="Styles\Theme8764b8.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme881798.xaml" Link="Styles\Theme881798.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme8e8cd8.xaml" Link="Styles\Theme8e8cd8.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Theme9a0089.xaml" Link="Styles\Theme9a0089.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeb146c2.xaml" Link="Styles\Themeb146c2.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themebf0077.xaml" Link="Styles\Themebf0077.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themec239b3.xaml" Link="Styles\Themec239b3.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themec30052.xaml" Link="Styles\Themec30052.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeca5010.xaml" Link="Styles\Themeca5010.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themed13438.xaml" Link="Styles\Themed13438.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeda3b01.xaml" Link="Styles\Themeda3b01.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themee3008c.xaml" Link="Styles\Themee3008c.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themee74856.xaml" Link="Styles\Themee74856.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themee81123.xaml" Link="Styles\Themee81123.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeea005e.xaml" Link="Styles\Themeea005e.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeef6950.xaml" Link="Styles\Themeef6950.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themef7630c.xaml" Link="Styles\Themef7630c.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeff4343.xaml" Link="Styles\Themeff4343.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeff8c00.xaml" Link="Styles\Themeff8c00.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="..\ISynergy.Framework.UI.WinUI\Styles\Themeffb900.xaml" Link="Styles\Themeffb900.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="..\ISynergy.Framework.UI.WinUI\Views\SelectionView.xaml" Link="Views\SelectionView.xaml">
 			<Generator>MSBuild:Compile</Generator>

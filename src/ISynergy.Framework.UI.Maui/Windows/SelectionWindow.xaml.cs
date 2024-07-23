@@ -26,7 +26,7 @@ public partial class SelectionWindow : ISelectionWindow
             else
             {
                 DataSummary.SelectedItems = new List<object>();
-                
+
                 foreach (var item in viewModel.SelectedItems.EnsureNotNull())
                 {
                     DataSummary.SelectedItems.Add(item);

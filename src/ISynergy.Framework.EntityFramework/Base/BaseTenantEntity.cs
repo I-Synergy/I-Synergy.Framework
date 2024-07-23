@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.EntityFramework.Attributes;
 
 namespace ISynergy.Framework.EntityFramework.Base;

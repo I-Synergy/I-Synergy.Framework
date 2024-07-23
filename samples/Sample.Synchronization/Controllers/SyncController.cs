@@ -42,10 +42,10 @@ namespace Sample.Synchronization.Controllers
             remoteOrchestrator.Provider = new SqlSyncProvider(connectionString);
 
             // Deprovision everything
-            var provisioning = 
-                SyncProvision.ScopeInfo | 
+            var provisioning =
+                SyncProvision.ScopeInfo |
                 SyncProvision.ScopeInfoClient |
-                SyncProvision.StoredProcedures | 
+                SyncProvision.StoredProcedures |
                 SyncProvision.TrackingTable |
                 SyncProvision.Triggers;
 
