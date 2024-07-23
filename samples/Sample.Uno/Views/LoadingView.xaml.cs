@@ -57,7 +57,8 @@ public sealed partial class LoadingView : ILoadingView
     private void Complete()
     {
         if (BackgroundMediaElement.MediaPlayer is not null &&
-            BackgroundMediaElement.MediaPlayer.CurrentState != MediaPlayerState.Stopped)
+            BackgroundMediaElement.MediaPlayer.PlaybackSession is not null &&
+            BackgroundMediaElement.MediaPlayer.PlaybackSession.PlaybackState != MediaPlaybackState.Paused)
             BackgroundMediaElement.MediaPlayer.Pause();
 
         MessageService.Default.Send(new ApplicationLoadedMessage());
