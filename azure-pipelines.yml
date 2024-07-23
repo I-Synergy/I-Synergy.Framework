@@ -42,7 +42,7 @@ stages:
               Write-Host "##vso[task.setvariable variable=VersionRevision]$revision"
 
         - task: Assembly-Info-NetCore@2
-          displayName: 'Set Assembly Manifest Data v2'
+          displayName: 'Set Release versions'
           inputs:
             FileNames: |
               src/**/*.csproj
@@ -54,6 +54,20 @@ stages:
             FileVersionNumber: '$(VersionFile)'
             InformationalVersion: '$(VersionInformational)'
             PackageVersion: '$(VersionPackage)'
+
+        - task: Assembly-Info-NetCore@2
+          displayName: 'Set Preview versions'
+          inputs:
+            FileNames: |
+              src/ISynergy.Framework.UI.Uno/ISynergy.Framework.UI.Uno.csproj
+              src/ISynergy.Framework.Update.Uno/ISynergy.Framework.Update.Uno.csproj
+            InsertAttributes: true
+            WriteBOM: true
+            GeneratePackageOnBuild: true
+            VersionNumber: '$(VersionNumber)'
+            FileVersionNumber: '$(VersionFile)'
+            InformationalVersion: '$(VersionInformational)'
+            PackageVersion: '$(VersionPackagePreview)'
 
         - task: NuGetToolInstaller@1
           displayName: 'Install NuGet 6.10.0'
