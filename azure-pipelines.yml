@@ -70,9 +70,9 @@ stages:
             PackageVersion: '$(VersionPackagePreview)'
 
         - task: NuGetToolInstaller@1
-          displayName: 'Install NuGet 6.10.0'
+          displayName: 'Install NuGet 6.10.1'
           inputs:
-            versionSpec: 6.10.0
+            versionSpec: 6.10.1
 
         - task: UseDotNet@2
           displayName: 'Install .Net Sdk'
