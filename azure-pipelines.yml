@@ -102,12 +102,21 @@ stages:
             projectName: 'I-Synergy.Framework'
             projectVersion: '$(GitVersion.FullSemVer)'
 
-        - task: DotNetCoreCLI@2
+        # - task: DotNetCoreCLI@2
+        #   displayName: 'Build I-Synergy Framework solution'
+        #   inputs:
+        #     command: build
+        #     projects: 'I-Synergy.Framework.sln'
+        #     arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true'
+
+        - task: MSBuild@1
           displayName: 'Build I-Synergy Framework solution'
           inputs:
-            command: build
-            projects: 'I-Synergy.Framework.sln'
-            arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true'
+            solution: 'I-Synergy.Framework.sln'
+            msbuildArchitecture: 'x64'
+            configuration: $(BuildConfiguration)
+            msbuildArguments: '-p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true'
+            restoreNugetPackages: true
 
         - task: CopyFiles@2
           inputs:

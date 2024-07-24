@@ -144,7 +144,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'browserwasm'">
-		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.4.0-dev.956" />
+		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.3.90" />
 	</ItemGroup>
 
 	<ItemGroup>
