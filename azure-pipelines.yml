@@ -54,7 +54,7 @@ stages:
             FileVersionNumber: '$(VersionFile)'
             InformationalVersion: '$(VersionInformational)'
             PackageVersion: '$(VersionPackage)'
-            UpdateBuildNumber: '$(Build.DefinitionName)_v$(VersionPackage)'
+            UpdateBuildNumber: '$(VersionPackage)'
             AddBuildTag: 'v$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
