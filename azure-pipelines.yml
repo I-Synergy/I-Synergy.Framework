@@ -41,7 +41,7 @@ stages:
               Write-Host "##vso[task.setvariable variable=VersionMinor]$minor"
               Write-Host "##vso[task.setvariable variable=VersionRevision]$revision"
 
-        - task: Assembly-Info-NetCore@2
+        - task: Assembly-Info-NetCore@3
           displayName: 'Set Release versions'
           inputs:
             FileNames: |
@@ -54,20 +54,8 @@ stages:
             FileVersionNumber: '$(VersionFile)'
             InformationalVersion: '$(VersionInformational)'
             PackageVersion: '$(VersionPackage)'
-
-        - task: Assembly-Info-NetCore@2
-          displayName: 'Set Preview versions'
-          inputs:
-            FileNames: |
-              src/ISynergy.Framework.UI.Uno/ISynergy.Framework.UI.Uno.csproj
-              src/ISynergy.Framework.Update.Uno/ISynergy.Framework.Update.Uno.csproj
-            InsertAttributes: true
-            WriteBOM: true
-            GeneratePackageOnBuild: true
-            VersionNumber: '$(VersionNumber)'
-            FileVersionNumber: '$(VersionFile)'
-            InformationalVersion: '$(VersionInformational)'
-            PackageVersion: '$(VersionPackagePreview)'
+            UpdateBuildNumber: '$(Build.DefinitionName)_v$(VersionPackage)'
+            AddBuildTag: 'v$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
           displayName: 'Install NuGet 6.10.1'
@@ -110,6 +98,7 @@ stages:
         #     arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true'
 
         - task: NuGetCommand@2
+          displayName: 'Restore Nuget packages'
           inputs:
             command: 'restore'
             restoreSolution: 'I-Synergy.Framework.sln'
