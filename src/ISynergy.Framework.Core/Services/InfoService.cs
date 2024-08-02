@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Messages;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Services;
@@ -8,6 +9,7 @@ namespace ISynergy.Framework.Core.Services;
 /// <summary>
 /// Class BaseInfoService.
 /// </summary>
+[Bindable(BindableSupport.Yes)]
 public sealed class InfoService : IInfoService
 {
     private static readonly object _creationLock = new object();

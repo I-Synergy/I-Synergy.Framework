@@ -23,8 +23,6 @@ public class NavigationService : INavigationService
     private readonly IContext _context;
     private readonly IThemeService _themeService;
 
-    private bool _backstackRoot;
-
     public event EventHandler BackStackChanged;
 
     /// <summary>

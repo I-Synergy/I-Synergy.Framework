@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Enumerations;
 
 /// <summary>
 /// Theme colors.
 /// </summary>
+[Bindable(BindableSupport.Yes)]
 public class ThemeColors
 {
     /// <summary>

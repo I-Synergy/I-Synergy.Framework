@@ -44,7 +44,7 @@
 		</Grid.RowDefinitions>
 
 		<StackPanel Orientation="Horizontal" Grid.Row="0" Margin="18,0">
-			<Image Source="ms-appx:///Assets/icon.png" Width="18" Height="18"/>
+			<Image Source="ms-appx:///Assets/Icons/icon.png" Width="18" Height="18"/>
             <TextBlock Text="{Binding CommonServices.InfoService.Title}" VerticalAlignment="Center" Margin="18,0"/>
 		</StackPanel>
 

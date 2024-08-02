@@ -1,11 +1,13 @@
 ﻿using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Models;
 
 /// <summary>
 /// Application style model.
 /// </summary>
+[Bindable(BindableSupport.Yes)]
 public class Style : ObservableClass
 {
 
