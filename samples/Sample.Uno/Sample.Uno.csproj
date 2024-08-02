@@ -69,10 +69,8 @@
 		<None Remove="Views\LoadingView.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Include="Assets\gta.mp4">
-	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-	  </Content>
-	  <Content Include="Assets\sample.mp4" />
+	  <UnoAsset Include="Assets\gta.mp4" />
+	  <UnoAsset Include="Assets\sample.mp4" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Include="Styles\Images.xaml">
@@ -144,7 +142,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'browserwasm'">
-		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.3.90" />
+		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.3.114" />
 	</ItemGroup>
 
 	<ItemGroup>

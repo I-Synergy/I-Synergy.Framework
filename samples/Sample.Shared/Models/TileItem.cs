@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Base;
+using System.ComponentModel;
 
 namespace Sample.Models;
 
@@ -6,6 +7,7 @@ namespace Sample.Models;
 /// TileItem model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
+[Bindable(BindableSupport.Yes)]
 public class TileItem : BaseModel
 {
     /// <summary>

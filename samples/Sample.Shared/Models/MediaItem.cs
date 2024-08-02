@@ -1,10 +1,12 @@
 ﻿using ISynergy.Framework.Core.Base;
+using System.ComponentModel;
 
 namespace Sample.Models;
 
 /// <summary>
 /// Class MediaItem.
 /// </summary>
+[Bindable(BindableSupport.Yes)]
 public class MediaItem : BaseModel
 {
     /// <summary>

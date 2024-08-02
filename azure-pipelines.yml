@@ -145,7 +145,7 @@ stages:
             git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
                 +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
           displayName: 'Copy source to Github'
-          condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+          # condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
 
   - stage: TestStage
     displayName: 'Test'

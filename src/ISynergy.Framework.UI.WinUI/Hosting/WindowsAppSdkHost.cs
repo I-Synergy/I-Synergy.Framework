@@ -81,11 +81,11 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         ComWrappersSupport.InitializeComWrappers();
 #endif
 
-        void OnAppOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
+        async void OnAppOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             _logger.LogCritical(args.Exception, "Unhandled exception.  Terminating.");
             args.Handled = false;
-            RequestExit(combinedCancellationTokenSource);
+            await RequestExit(combinedCancellationTokenSource);
         }
 
         //try
@@ -127,7 +127,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         try
         {
             _logger.LogInformation("Application is exiting.");
-            RequestExit(combinedCancellationTokenSource);
+            await RequestExit(combinedCancellationTokenSource);
         }
         catch (Exception ex)
         {
