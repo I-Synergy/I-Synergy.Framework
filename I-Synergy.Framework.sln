@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31825.309
@@ -48,6 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{600436D8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{298244B0-89FE-411C-816B-CE38C0E03DA1}"
 	ProjectSection(SolutionItems) = preProject
+		docs\maui.md = docs\maui.md
 		docs\readme.md = docs\readme.md
 	EndProjectSection
 EndProject
@@ -84,8 +84,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Api", "samples\Sample.Api\Sample.Api.csproj", "{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI", "src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj", "{837B30FA-B4F1-4ECE-B8B7-656C76C469CB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework", "docs\ISynergy.Framework\ISynergy.Framework.csproj", "{674FA504-9D17-4E23-8737-DC015123120E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Physics", "src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj", "{24DB0377-44A6-44F9-856A-DC4D7DB903E0}"
 EndProject
@@ -212,6 +210,19 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uno", "Uno", "{2D436347-7096-4D33-85C2-62BB4D4160E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno", "samples\Sample.Uno\Sample.Uno.csproj", "{5AC2FEE6-3773-4922-A818-8DDBB4121244}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISynergy.Framework.Core", "ISynergy.Framework.Core", "{97876BA9-D697-4624-AF13-F52BAF215C4B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{E954B812-433F-46E1-AE13-B0D498A0E0FA}"
+	ProjectSection(SolutionItems) = preProject
+		docs\ISynergy.Framework.Core\Extensions\Uuidv7.md = docs\ISynergy.Framework.Core\Extensions\Uuidv7.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISynergy.Framework.UI.Maui", "ISynergy.Framework.UI.Maui", "{371472B9-1A6C-4B81-9933-979B8FCD3192}"
+	ProjectSection(SolutionItems) = preProject
+		docs\ISynergy.Framework.UI.Maui\migrationservice.md = docs\ISynergy.Framework.UI.Maui\migrationservice.md
+		docs\ISynergy.Framework.UI.Maui\preferences.md = docs\ISynergy.Framework.UI.Maui\preferences.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -641,21 +652,6 @@ Global
 		{837B30FA-B4F1-4ECE-B8B7-656C76C469CB}.Release|x64.Build.0 = Release|Any CPU
 		{837B30FA-B4F1-4ECE-B8B7-656C76C469CB}.Release|x86.ActiveCfg = Release|Any CPU
 		{837B30FA-B4F1-4ECE-B8B7-656C76C469CB}.Release|x86.Build.0 = Release|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Debug|arm64.Build.0 = Debug|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Debug|x64.Build.0 = Debug|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Debug|x86.Build.0 = Debug|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Release|arm64.ActiveCfg = Release|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Release|arm64.Build.0 = Release|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Release|x64.ActiveCfg = Release|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Release|x64.Build.0 = Release|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Release|x86.ActiveCfg = Release|Any CPU
-		{674FA504-9D17-4E23-8737-DC015123120E}.Release|x86.Build.0 = Release|Any CPU
 		{24DB0377-44A6-44F9-856A-DC4D7DB903E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{24DB0377-44A6-44F9-856A-DC4D7DB903E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24DB0377-44A6-44F9-856A-DC4D7DB903E0}.Debug|arm64.ActiveCfg = Debug|Any CPU
@@ -1386,7 +1382,6 @@ Global
 		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93} = {F7A2E3A4-CF7D-4BFC-8678-ACAFFF23F569}
 		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA} = {2D3A92DC-BD91-4409-BE3A-98ED527D7833}
 		{837B30FA-B4F1-4ECE-B8B7-656C76C469CB} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
-		{674FA504-9D17-4E23-8737-DC015123120E} = {298244B0-89FE-411C-816B-CE38C0E03DA1}
 		{24DB0377-44A6-44F9-856A-DC4D7DB903E0} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{8B7AC477-9578-490F-A395-0B03F32FBAB4} = {600436D8-B218-4FC2-B2E0-90279B1D37D5}
 		{A8A98E20-855C-4728-B21A-EB976B25F46C} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
@@ -1449,6 +1444,9 @@ Global
 		{672B6824-5103-477C-8363-1521E7691D9C} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{2D436347-7096-4D33-85C2-62BB4D4160E8} = {96FE3E8C-9992-481D-95B6-D8FC7BB09F1F}
 		{5AC2FEE6-3773-4922-A818-8DDBB4121244} = {2D436347-7096-4D33-85C2-62BB4D4160E8}
+		{97876BA9-D697-4624-AF13-F52BAF215C4B} = {298244B0-89FE-411C-816B-CE38C0E03DA1}
+		{E954B812-433F-46E1-AE13-B0D498A0E0FA} = {97876BA9-D697-4624-AF13-F52BAF215C4B}
+		{371472B9-1A6C-4B81-9933-979B8FCD3192} = {298244B0-89FE-411C-816B-CE38C0E03DA1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
