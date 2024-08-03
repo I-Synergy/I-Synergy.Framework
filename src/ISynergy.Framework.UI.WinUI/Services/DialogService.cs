@@ -278,7 +278,7 @@ public class DialogService : IDialogService
                 window.ViewModel?.Dispose();
                 //window.ViewModel = null;
 
-                _activeDialog.Dispose();
+                //_activeDialog.Dispose();
                 //_activeDialog = null;
 
                 window.Close();
@@ -299,7 +299,7 @@ public class DialogService : IDialogService
         if (_activeDialog is not null)
         {
             _activeDialog.Close();
-            _activeDialog.Dispose();
+            //_activeDialog.Dispose();
         }
 
         _activeDialog = dialog;

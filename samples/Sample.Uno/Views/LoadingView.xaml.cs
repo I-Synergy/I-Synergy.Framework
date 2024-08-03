@@ -36,7 +36,7 @@ public sealed partial class LoadingView : ILoadingView
     private void LoadingView_Unloaded(object sender, RoutedEventArgs e)
     {
         BackgroundMediaElement.MediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
-        BackgroundMediaElement.MediaPlayer.Dispose();
+        //BackgroundMediaElement.MediaPlayer.Dispose();
     }
 
     public void ApplicationInitialized(ApplicationInitializedMessage message) =>
