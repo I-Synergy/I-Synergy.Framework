@@ -17,6 +17,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModel" />
 /// <seealso cref="IViewModelBlade" />
+[Scoped(true)]
 public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
 {
     /// <summary>

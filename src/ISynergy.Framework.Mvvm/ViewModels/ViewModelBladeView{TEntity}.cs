@@ -21,6 +21,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModel" />
 /// <seealso cref="IViewModelBladeView" />
+[Singleton(true)]
 public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeView
 {
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
