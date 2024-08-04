@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModelBlade{TEntity}" />
+[Scoped(true)]
 public abstract class ViewModelBladeWizard<TEntity> : ViewModelBlade<TEntity>
 {
     /// <summary>

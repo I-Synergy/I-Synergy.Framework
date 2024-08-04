@@ -1,9 +1,11 @@
-﻿using ISynergy.Framework.Core.Messages;
+﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 
 namespace ISynergy.Framework.UI.Controls;
 
+[Singleton(true)]
 internal class EmptyView : ContentPage
 {
     private readonly IBaseCommonServices _commonServices;

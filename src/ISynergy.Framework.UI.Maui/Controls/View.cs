@@ -1,9 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls;
 
+[Singleton(true)]
 public abstract class View : ContentPage, IView
 {
     private IViewModel _viewModel;

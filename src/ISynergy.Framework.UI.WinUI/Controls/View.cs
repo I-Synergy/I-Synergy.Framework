@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// </summary>
 /// <seealso cref="IView" />
 [Bindable(true)]
+[Singleton(true)]
 public abstract partial class View : Page, IView
 {
     private IViewModel _viewModel;

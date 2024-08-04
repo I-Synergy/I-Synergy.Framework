@@ -17,6 +17,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// Implements the <see name="ViewModelDialog{List{object}}" />
 /// </summary>
 /// <seealso name="ViewModelDialog{List{object}}" />
+[Scoped(true)]
 public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>, ISelectionViewModel
 {
     /// <summary>

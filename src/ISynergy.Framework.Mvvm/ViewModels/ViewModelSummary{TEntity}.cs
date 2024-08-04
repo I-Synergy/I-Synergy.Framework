@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -12,6 +13,7 @@ using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
+[Singleton(true)]
 public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<TEntity>
 {
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
