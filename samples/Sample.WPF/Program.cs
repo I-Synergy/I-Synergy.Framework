@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
