@@ -1,4 +1,4 @@
-﻿namespace Sample.Abstractions;
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
 public interface ICredentialLockerService
 {

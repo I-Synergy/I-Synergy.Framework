@@ -131,6 +131,7 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Navigation\MenuItemTemplateSelector.cs" Link="Navigation\MenuItemTemplateSelector.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Options\HostOptions.cs" Link="Options\HostOptions.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\CameraService.cs" Link="Services\CameraService.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\CredentialLockerService.cs" Link="Services\CredentialLockerService.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\ClipboardService.cs" Link="Services\ClipboardService.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\DialogService.cs" Link="Services\DialogService.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Services\DispatcherService.cs" Link="Services\DispatcherService.cs" />

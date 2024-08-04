@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
