@@ -158,7 +158,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<IEnumerable<TestItem>> e)
     {
         if (sender is ViewModelSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVm_MultipleSubmitted;
@@ -174,7 +174,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<IEnumerable<TestItem>> e)
     {
         if (sender is ViewModelSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
@@ -219,9 +219,9 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;List&lt;TestItem&gt;&gt;.</returns>
-    public override Task<List<TestItem>> RetrieveItemsAsync(CancellationToken cancellationToken)
+    public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        return Task.FromResult(new List<TestItem>()
+        Items.AddNewRange(new List<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
             new TestItem { Id = 2, Description = "Test 2"},
@@ -229,6 +229,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
             new TestItem { Id = 4, Description = "Test 4"},
             new TestItem { Id = 5, Description = "Test 5"}
         });
+        return Task.CompletedTask;
     }
 
     /// <summary>

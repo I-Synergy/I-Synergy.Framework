@@ -24,8 +24,6 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 [Singleton(true)]
 public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeView
 {
-    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
@@ -173,7 +171,10 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         if (!IsInitialized)
         {
             if (RefreshOnInitialization)
-                IsInitialized = await RefreshAsync();
+            {
+                await RefreshAsync();
+                IsInitialized = true;
+            }
         }
     }
 
@@ -242,44 +243,18 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Refreshes the asynchronous.
     /// </summary>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public virtual Task<bool> RefreshAsync() => GetItemsAsync();
-
-    /// <summary>
-    /// get items as an asynchronous operation.
-    /// </summary>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-    public async Task<bool> GetItemsAsync()
-    {
-        var result = false;
-
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource = new CancellationTokenSource();
-
-        try
-        {
-            BaseCommonServices.BusyService.StartBusy();
-
-            Items.AddNewRange(await RetrieveItemsAsync(_cancellationTokenSource.Token));
-            result = true;
-
-            _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-        }
-        catch (TaskCanceledException) { }
-        catch (OperationCanceledException) { }
-        finally
-        {
-            BaseCommonServices.BusyService.EndBusy();
-        }
-
-        return result;
-    }
+    public virtual Task RefreshAsync(CancellationToken cancellationToken = default) => RetrieveItemsAsync(cancellationToken);
 
     /// <summary>
     /// Retrieves the items asynchronous.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
-    public abstract Task<List<TEntity>> RetrieveItemsAsync(CancellationToken cancellationToken);
+    public virtual Task RetrieveItemsAsync(CancellationToken cancellationToken)
+    {
+        Items.AddNewRange(Enumerable.Empty<TEntity>());
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Submits the asynchronous.
@@ -321,17 +296,5 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
 
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (_cancellationTokenSource is not null)
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-            _cancellationTokenSource = null;
-        }
-
-        base.Dispose(disposing);
     }
 }

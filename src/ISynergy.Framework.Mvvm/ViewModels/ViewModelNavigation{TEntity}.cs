@@ -85,11 +85,10 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
     /// Sets the selected item.
     /// </summary>
     /// <param name="entity">The entity.</param>
-    public virtual Task SetSelectedItemAsync(TEntity entity)
+    public virtual void SetSelectedItem(TEntity entity)
     {
         SelectedItem = entity;
         IsUpdate = true;
-        return Task.CompletedTask;
     }
 
     /// <summary>

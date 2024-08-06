@@ -19,7 +19,7 @@ public interface IViewModelSelectedItem<TEntity> : IViewModel
     /// Sets the selected item.
     /// </summary>
     /// <param name="e">The entity.</param>
-    Task SetSelectedItemAsync(TEntity e);
+    void SetSelectedItem(TEntity e);
     /// <summary>
     /// Gets the selected item.
     /// </summary>
