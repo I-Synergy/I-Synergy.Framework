@@ -85,12 +85,10 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     /// Sets the selected item.
     /// </summary>
     /// <param name="entity">The entity.</param>
-    public virtual Task SetSelectedItemAsync(TEntity entity)
+    public virtual void SetSelectedItem(TEntity entity)
     {
         SelectedItem = entity;
         IsUpdate = true;
-
-        return Task.CompletedTask;
     }
 
     /// <summary>
