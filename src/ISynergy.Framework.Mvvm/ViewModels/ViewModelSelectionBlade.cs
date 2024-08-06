@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// </summary>
 /// <seealso name="ViewModelDialog{List{TEntity}}" />
 [Scoped(true)]
-public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<IEnumerable<TEntity>>, ISelectionViewModel
+public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, ISelectionViewModel
 {
     /// <summary>
     /// Gets the title.
@@ -31,7 +31,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<IEnumerable<TEnti
     /// </summary>
     /// <value>The raw items.</value>
     [IgnoreValidation]
-    private IEnumerable<TEntity> RawItems { get; set; }
+    private List<TEntity> RawItems { get; set; }
 
     /// <summary>
     /// Gets or sets the SelectionMode property value.
@@ -56,9 +56,9 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<IEnumerable<TEnti
     /// <summary>
     /// Gets or sets the SelectedItems property value.
     /// </summary>
-    public IEnumerable<object> SelectedItems
+    public List<object> SelectedItems
     {
-        get => GetValue<IEnumerable<object>>();
+        get => GetValue<List<object>>();
         set => SetValue(value);
     }
 
@@ -94,10 +94,10 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<IEnumerable<TEnti
 
         Validator = new Action<IObservableClass>(arg =>
         {
-            if (SelectionMode == SelectionModes.Single && SelectedItems.Count() < 1)
+            if (SelectionMode == SelectionModes.Single && SelectedItems.Count < 1)
                 AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
 
-            if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count() < 1)
+            if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
                 AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 
@@ -111,7 +111,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<IEnumerable<TEnti
 
         foreach (var item in selectedItems.EnsureNotNull())
         {
-            SelectedItems.ToList().Add(item);
+            SelectedItems.Add(item);
         }
 
         OnPropertyChanged(nameof(SelectedItems));
@@ -154,18 +154,18 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<IEnumerable<TEnti
     /// <param name="e"></param>
     /// <param name="validateUnderlayingProperties"></param>
     /// <returns></returns>
-    public override async Task SubmitAsync(IEnumerable<TEntity> e, bool validateUnderlayingProperties = true)
+    public override async Task SubmitAsync(List<TEntity> e, bool validateUnderlayingProperties = true)
     {
         if (Validate(validateUnderlayingProperties))
         {
-            var result = Enumerable.Empty<TEntity>();
+            var result = new List<TEntity>();
 
             foreach (TEntity item in SelectedItems)
             {
-                result.ToList().Add(item);
+                result.Add(item);
             }
 
-            OnSubmitted(new SubmitEventArgs<IEnumerable<TEntity>>(result));
+            OnSubmitted(new SubmitEventArgs<List<TEntity>>(result));
             await CloseAsync();
         }
     }
@@ -173,10 +173,6 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<IEnumerable<TEnti
     public override void Cleanup()
     {
         base.Cleanup();
-
-        RawItems?.ToList().Clear();
-        Items?.Clear();
-        SelectedItems?.ToList().Clear();
 
         RefreshCommand?.Cancel();
         RefreshCommand = null;

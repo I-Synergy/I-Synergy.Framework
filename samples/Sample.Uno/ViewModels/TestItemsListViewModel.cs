@@ -168,7 +168,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object sender, SubmitEventArgs<IEnumerable<TestItem>> e)
+    private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVM_Submitted;

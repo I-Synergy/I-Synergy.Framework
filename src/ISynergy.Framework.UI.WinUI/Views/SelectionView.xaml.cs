@@ -39,13 +39,13 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
-                viewModel.SelectedItems.ToList().Add(DataSummary.SelectedItem);
+                viewModel.SelectedItems.Add(DataSummary.SelectedItem);
             }
             else
             {
                 foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
                 {
-                    viewModel.SelectedItems.ToList().Add(item);
+                    viewModel.SelectedItems.Add(item);
                 }
             }
         }
@@ -60,7 +60,7 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {
-            if (viewModel.SelectionMode == SelectionModes.Single && viewModel.SelectedItems is not null && viewModel.SelectedItems.Count() == 1)
+            if (viewModel.SelectionMode == SelectionModes.Single && viewModel.SelectedItems is not null && viewModel.SelectedItems.Count == 1)
             {
                 DataSummary.SelectedItem = viewModel.SelectedItems.Single();
             }
