@@ -218,7 +218,7 @@ public class SignUpViewModel : ViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object sender, SubmitEventArgs<IEnumerable<Module>> e)
+    private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<Module>> e)
     {
         if (sender is ViewModelSelectionDialog<Module> vm)
             vm.Submitted -= SelectionVM_Submitted;

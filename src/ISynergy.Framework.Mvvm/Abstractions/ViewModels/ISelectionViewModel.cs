@@ -13,5 +13,5 @@ public interface ISelectionViewModel
     /// <summary>
     /// Gets or sets the selected items.    
     /// </summary>
-    IEnumerable<object> SelectedItems { get; set; }
+    List<object> SelectedItems { get; set; }
 }

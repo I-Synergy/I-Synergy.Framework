@@ -106,7 +106,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<IEnumerable<TestItem>> e)
+    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
@@ -122,7 +122,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<IEnumerable<TestItem>> e)
+    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;

@@ -178,7 +178,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
-    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<IEnumerable<TestItem>> e)
+    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
@@ -193,7 +193,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
-    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<IEnumerable<TestItem>> e)
+    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_MultipleSubmitted;
