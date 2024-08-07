@@ -91,14 +91,6 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
         bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
-        Validator = new Action<IObservableClass>(arg =>
-        {
-            if (arg is ViewModelBlade<TEntity> vm &&
-                vm.SelectedItem is IObservableClass selectedItem)
-            {
-            }
-        });
-
         SubmitCommand = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
     }
 

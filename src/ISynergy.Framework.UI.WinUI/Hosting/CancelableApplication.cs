@@ -14,7 +14,7 @@ public class CancelableApplication : Application
         get; internal set;
     }
 
-    public bool _isClosing = false;
+    private bool _isClosing = false;
 
     protected void ExitSuccess()
     {

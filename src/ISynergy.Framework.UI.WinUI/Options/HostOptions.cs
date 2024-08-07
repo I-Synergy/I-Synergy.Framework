@@ -8,11 +8,10 @@ namespace ISynergy.Framework.UI.Options;
 /// <summary>
 /// Options for <see cref="IHost"/>
 /// </summary>
-public class HostOptions
+public partial class HostOptions
 {
-    [DllImport("microsoft.ui.xaml.dll")]
-    internal static extern void XamlCheckProcessRequirements();
-
+    [LibraryImport("microsoft.ui.xaml.dll")]
+    public static partial void XamlCheckProcessRequirements();
 
     /// <summary>
     /// The default timeout for <see cref="IHost.StopAsync(System.Threading.CancellationToken)"/>.

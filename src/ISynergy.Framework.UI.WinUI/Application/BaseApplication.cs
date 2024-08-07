@@ -39,8 +39,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IApplicationSettingsService _applicationSettingsService;
     protected readonly INavigationService _navigationService;
     protected readonly IBaseCommonServices _commonServices;
+    protected readonly Func<ILoadingView> _initialView;
 
-    private Func<ILoadingView> _initialView;
     private int lastErrorMessage = 0;
 
     private Task Initialize { get; set; }
@@ -72,34 +72,34 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         ServiceLocator.SetLocatorProvider(host.Services);
 
         _logger = ServiceLocator.Default.GetInstance<ILogger>();
-        _logger.LogInformation("Setting up global exception handler.");
+        _logger.LogTrace("Setting up global exception handler.");
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-        _logger.LogInformation("Starting application");
+        _logger.LogTrace("Starting application");
 
         // Pass a timeout to limit the execution time.
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
         AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-        _logger.LogInformation("Starting initialization of application");
+        _logger.LogTrace("Starting initialization of application");
 
-        _logger.LogInformation("Setting up main page.");
+        _logger.LogTrace("Setting up main page.");
 
-        _logger.LogInformation("Getting common services.");
+        _logger.LogTrace("Getting common services.");
         _commonServices = ServiceLocator.Default.GetInstance<IBaseCommonServices>();
         _commonServices.BusyService.StartBusy();
 
-        _logger.LogInformation("Setting up context.");
+        _logger.LogTrace("Setting up context.");
         _context = ServiceLocator.Default.GetInstance<IContext>();
 
-        _logger.LogInformation("Setting up authentication service.");
+        _logger.LogTrace("Setting up authentication service.");
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
-        _logger.LogInformation("Setting up theming service.");
+        _logger.LogTrace("Setting up theming service.");
         _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
 
         if (_themeService.IsLightThemeEnabled)
@@ -107,25 +107,25 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         else
             RequestedTheme = ApplicationTheme.Dark;
 
-        _logger.LogInformation("Setting up navigation service.");
+        _logger.LogTrace("Setting up navigation service.");
         _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
 
-        _logger.LogInformation("Setting up exception handler service.");
+        _logger.LogTrace("Setting up exception handler service.");
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
-        _logger.LogInformation("Setting up application settings service.");
+        _logger.LogTrace("Setting up application settings service.");
         _applicationSettingsService = ServiceLocator.Default.GetInstance<IApplicationSettingsService>();
 
-        _logger.LogInformation("Setting up localization service.");
+        _logger.LogTrace("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
 
         if (_applicationSettingsService.Settings is not null)
             _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
 
-        _logger.LogInformation("Starting initialization of application");
+        _logger.LogTrace("Starting initialization of application");
         InitializeApplication();
 
-        _logger.LogInformation("Finishing initialization of application");
+        _logger.LogTrace("Finishing initialization of application");
     }
 
     /// <summary>
@@ -222,14 +222,14 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <summary>
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
     /// </summary>
-    /// <param name="e">Event data for the event.</param>
-    protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs e)
+    /// <param name="args">Event data for the event.</param>
+    protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         MainWindow = WindowHelper.CreateWindow();
 
         MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
 
-        _logger.LogInformation("Loading custom resource dictionaries");
+        _logger.LogTrace("Loading custom resource dictionaries");
 
         if (Application.Current.Resources?.MergedDictionaries is not null)
         {
@@ -240,7 +240,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             }
         }
 
-        _logger.LogInformation("Loading theme");
+        _logger.LogTrace("Loading theme");
 
         if (_themeService is ThemeService themeService)
         {
@@ -257,15 +257,15 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         else
             MainWindow.Content = new BusyIndicatorControl(_commonServices);
 
-        if (e.UWPLaunchActivatedEventArgs is not null)
+        if (args.UWPLaunchActivatedEventArgs is not null)
         {
-            switch (e.UWPLaunchActivatedEventArgs.Kind)
+            switch (args.UWPLaunchActivatedEventArgs.Kind)
             {
                 case ActivationKind.Launch:
-                    await HandleLaunchActivationAsync(e.UWPLaunchActivatedEventArgs.Arguments);
+                    await HandleLaunchActivationAsync(args.UWPLaunchActivatedEventArgs.Arguments);
                     break;
                 case ActivationKind.Protocol:
-                    await HandleProtocolActivationAsync(e.UWPLaunchActivatedEventArgs.Arguments);
+                    await HandleProtocolActivationAsync(args.UWPLaunchActivatedEventArgs.Arguments);
                     break;
             }
         }
@@ -273,12 +273,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (Environment.GetCommandLineArgs().Length > 1)
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
 
-        if (MainWindow is not null)
-        {
-            MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = InfoService.Default.Title ?? string.Empty);
-            MainWindow.Title = InfoService.Default.Title ?? string.Empty;
-            MainWindow.Activate();
-        }
+        MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = InfoService.Default.Title ?? string.Empty);
+        MainWindow.Title = InfoService.Default.Title ?? string.Empty;
+        MainWindow.Activate();
     }
 
     /// <summary>
@@ -331,15 +328,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     }
 #endif
 
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
-
     // The bulk of the clean-up code is implemented in Dispose(bool)
 #if IOS || MACCATALYST
     /// <summary>
@@ -381,5 +369,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         // free native resources if there are any.
     }
 #endif
+
+    ~BaseApplication()
+    {
+        Dispose(false);
+    }
     #endregion
 }

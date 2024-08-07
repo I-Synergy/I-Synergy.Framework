@@ -54,8 +54,6 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        //        _logger.Starting();
-
         using var combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _applicationLifetime.ApplicationStopping);
         var combinedCancellationToken = combinedCancellationTokenSource.Token;
 
@@ -88,41 +86,30 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
             await RequestExit(combinedCancellationTokenSource);
         }
 
-        //try
-        {
-            Application.Start(
-                _ =>
+        Application.Start(
+            _ =>
+            {
+                try
                 {
-                    try
+                    var app = Services.GetRequiredService<TApp>();
+
+                    app.UnhandledException += OnAppOnUnhandledException;
+
+                    if (app is CancelableApplication ca)
                     {
-                        //var context = new DispatcherQueueSynchronizationContext(
-                        //    DispatcherQueue.GetForCurrentThread()
-                        //);
-                        //SynchronizationContext.SetSynchronizationContext(context);
-                        var app = Services.GetRequiredService<TApp>();
-
-                        app.UnhandledException += OnAppOnUnhandledException;
-
-                        if (app is CancelableApplication ca)
-                        {
-                            ca.Services = Services;
-                            ca.Token = combinedCancellationToken;
-                        }
-
-                        // Fire IHostApplicationLifetime.Started
-                        _applicationLifetime.NotifyStarted();
+                        ca.Services = Services;
+                        ca.Token = combinedCancellationToken;
                     }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e, "Error while executing (in lambda).");
-                    }
+
+                    // Fire IHostApplicationLifetime.Started
+                    _applicationLifetime.NotifyStarted();
                 }
-            );
-        }
-        //catch (Exception ex)
-        //{
-        //    _logger.LogError(ex, "Error while executing.");
-        //}
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Error while executing (in lambda).");
+                }
+            }
+        );
 
         try
         {
@@ -165,10 +152,8 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
                 return;
             }
 
-            //_logger.BackgroundServiceFaulted(ex);
             if (_options.BackgroundServiceExceptionBehavior == BackgroundServiceExceptionBehavior.StopHost)
             {
-                //_logger.BackgroundServiceStoppingHost(ex);
                 _applicationLifetime.StopApplication();
             }
         }
@@ -177,7 +162,6 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     public async Task StopAsync(CancellationToken cancellationToken = default)
     {
         _stopCalled = true;
-        //_logger.Stopping();
 
         using var cts = new CancellationTokenSource(_options.ShutdownTimeout);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, cancellationToken);
@@ -218,11 +202,8 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         if (exceptions.Count > 0)
         {
             var ex = new AggregateException("One or more hosted services failed to stop.", exceptions);
-            //_logger.StoppedWithException(ex);
             throw ex;
         }
-
-        //_logger.Stopped();
     }
 
     public void Dispose() => DisposeAsync().AsTask().GetAwaiter().GetResult();

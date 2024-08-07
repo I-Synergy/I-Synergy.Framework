@@ -134,15 +134,6 @@ public partial class Window : ContentDialog, IWindow
     }
 #endif
 
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
-
 #if IOS || MACCATALYST || ANDROID
 
     /// <summary>

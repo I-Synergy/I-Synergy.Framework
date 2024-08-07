@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 #if WINDOWS
@@ -12,6 +12,7 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class CredentialLockerService : ICredentialLockerService
 {
+#if WINDOWS
     private readonly IInfoService _infoService;
 
     public CredentialLockerService(IInfoService infoService)
@@ -19,7 +20,6 @@ public class CredentialLockerService : ICredentialLockerService
         _infoService = infoService;
     }
 
-#if WINDOWS
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
         string result = string.Empty;

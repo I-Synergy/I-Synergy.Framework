@@ -41,8 +41,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
     private Task Initialize { get; set; }
 
-    //public AppTheme Theme { get; set; } = AppTheme.Dark;
-
     /// <summary>
     /// Default constructor.
     /// </summary>
@@ -57,27 +55,27 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             config.SetMinimumLevel(LogLevel.Trace);
         }).CreateLogger(AppDomain.CurrentDomain.FriendlyName);
 
-        _logger.LogInformation("Setting up global exception handler.");
+        _logger.LogTrace("Setting up global exception handler.");
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-        _logger.LogInformation("Starting application");
+        _logger.LogTrace("Starting application");
 
         // Pass a timeout to limit the execution time.
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
         AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-        _logger.LogInformation("Starting initialization of application");
+        _logger.LogTrace("Starting initialization of application");
 
-        _logger.LogInformation("Setting up main page.");
+        _logger.LogTrace("Setting up main page.");
 
-        _logger.LogInformation("Getting common services.");
+        _logger.LogTrace("Getting common services.");
         _commonServices = ServiceLocator.Default.GetInstance<IBaseCommonServices>();
         _commonServices.BusyService.StartBusy();
 
-        _logger.LogInformation("Setting up theming service.");
+        _logger.LogTrace("Setting up theming service.");
         _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
 
         if (_themeService.IsLightThemeEnabled)
@@ -90,23 +88,23 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         else
             Application.Current.MainPage = new NavigationPage(new EmptyView(_commonServices));
 
-        _logger.LogInformation("Setting up context.");
+        _logger.LogTrace("Setting up context.");
         _context = ServiceLocator.Default.GetInstance<IContext>();
 
-        _logger.LogInformation("Setting up authentication service.");
+        _logger.LogTrace("Setting up authentication service.");
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
-        _logger.LogInformation("Setting up navigation service.");
+        _logger.LogTrace("Setting up navigation service.");
         _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
 
-        _logger.LogInformation("Setting up exception handler service.");
+        _logger.LogTrace("Setting up exception handler service.");
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
-        _logger.LogInformation("Setting up application settings service.");
+        _logger.LogTrace("Setting up application settings service.");
         _applicationSettingsService = ServiceLocator.Default.GetInstance<IApplicationSettingsService>();
 
-        _logger.LogInformation("Setting up localization service.");
+        _logger.LogTrace("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
 
         if (_applicationSettingsService.Settings is not null)
@@ -117,7 +115,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             _window.Title = InfoService.Default.Title ?? string.Empty;
         });
 
-        _logger.LogInformation("Finishing initialization of application");
+        _logger.LogTrace("Finishing initialization of application");
     }
 
     /// <summary>
@@ -207,7 +205,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     {
         _window = base.CreateWindow(activationState);
 
-        _logger.LogInformation("Setting style.");
+        _logger.LogTrace("Setting style.");
         MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
         _themeService.SetStyle();
 
@@ -239,15 +237,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
     /// <summary>

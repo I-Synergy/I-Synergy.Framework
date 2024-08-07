@@ -15,6 +15,7 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">

@@ -23,15 +23,12 @@ public static class ColorHelper
         if (hc.Length != 6)
         {
             // you can choose whether to throw an exception
-            //throw new ArgumentException("hexColor is not exactly 6 digits.");
             return Colors.Transparent;
         }
 
         var r = hc.Substring(0, 2);
         var g = hc.Substring(2, 2);
         var b = hc.Substring(4, 2);
-
-        var color = Colors.Transparent;
 
         try
         {
@@ -42,15 +39,13 @@ public static class ColorHelper
             var bi
                = byte.Parse(b, NumberStyles.HexNumber);
 
-            color = Color.FromArgb(255, ri, gi, bi);
+            return Color.FromArgb(255, ri, gi, bi);
         }
         catch
         {
             // you can choose whether to throw an exception
-            //throw new ArgumentException("Conversion failed.");
             return Colors.Transparent;
         }
-        return color;
     }
 
     /// <summary>
