@@ -53,4 +53,5 @@ ___
 | [I-Synergy.Framework.Update](https://www.nuget.org/packages/I-Synergy.Framework.Update/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update) |
 | [I-Synergy.Framework.Update.Maui](https://www.nuget.org/packages/I-Synergy.Framework.Update.Maui/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update.Maui) |
 | [I-Synergy.Framework.Update.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.Update.WinUI/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update.WinUI) |
+| [I-Synergy.Framework.Update.Uno](https://www.nuget.org/packages/I-Synergy.Framework.Update.Uno/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update.Uno) |
 | [I-Synergy.Framework.Update.WPF](https://www.nuget.org/packages/I-Synergy.Framework.Update.WPF/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update.WPF) |
