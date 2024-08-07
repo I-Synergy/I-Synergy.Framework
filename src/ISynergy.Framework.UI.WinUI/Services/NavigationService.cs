@@ -7,9 +7,9 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using View = ISynergy.Framework.UI.Controls.View;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -21,7 +21,7 @@ namespace ISynergy.Framework.UI.Services;
 public class NavigationService : INavigationService
 {
     private readonly IContext _context;
-    private bool _backstackRoot;
+    private readonly IThemeService _themeService;
 
     public event EventHandler BackStackChanged;
 
@@ -46,9 +46,13 @@ public class NavigationService : INavigationService
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="context"></param>
-    public NavigationService(IContext context)
+    /// <param name="themeService"></param>
+    public NavigationService(
+        IContext context,
+        IThemeService themeService)
     {
         _context = context;
+        _themeService = themeService;
     }
 
     /// <summary>
@@ -258,6 +262,19 @@ public class NavigationService : INavigationService
             dependencyObject.FindDescendant<Frame>() is { } frame &&
             NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
         {
+            switch (_themeService.Style.Theme)
+            {
+                case Core.Enumerations.Themes.Light:
+                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                    break;
+                case Core.Enumerations.Themes.Dark:
+                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                    break;
+                default:
+                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                    break;
+            }
+
             // Check if actual page is the same as destination page.
             if (frame.Content is View originalView)
             {
@@ -303,6 +320,19 @@ public class NavigationService : INavigationService
 
             page.ViewModel = viewModel;
 
+            switch (_themeService.Style.Theme)
+            {
+                case Core.Enumerations.Themes.Light:
+                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                    break;
+                case Core.Enumerations.Themes.Dark:
+                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                    break;
+                default:
+                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                    break;
+            }
+
             // Check if actual page is the same as destination page.
             if (frame.Content is View originalView)
             {
@@ -328,6 +358,19 @@ public class NavigationService : INavigationService
         if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page &&
             Application.Current is BaseApplication baseApplication)
         {
+            switch (_themeService.Style.Theme)
+            {
+                case Core.Enumerations.Themes.Light:
+                    page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
+                    break;
+                case Core.Enumerations.Themes.Dark:
+                    page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
+                    break;
+                default:
+                    page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
+                    break;
+            }
+
             baseApplication.MainWindow.Content = page;
 
             if (!page.ViewModel.IsInitialized)

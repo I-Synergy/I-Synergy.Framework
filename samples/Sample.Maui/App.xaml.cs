@@ -24,7 +24,7 @@ public partial class App : BaseApplication
         _migrationService = migrationService;
 
         InitializeComponent();
-        
+
         MessageService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
     }
 
@@ -35,8 +35,9 @@ public partial class App : BaseApplication
         try
         {
             _commonServices.BusyService.BusyMessage = "Start doing important stuff";
-            await Task.Delay(5000);
+            await Task.Delay(2000);
             _commonServices.BusyService.BusyMessage = "Done doing important stuff";
+            await Task.Delay(2000);
         }
         catch (Exception)
         {
@@ -48,7 +49,9 @@ public partial class App : BaseApplication
         {
             _commonServices.BusyService.BusyMessage = "Applying migrations";
             await _migrationService.ApplyMigrationAsync<_001>();
+            await Task.Delay(2000);
             _commonServices.BusyService.BusyMessage = "Done applying migrations";
+            await Task.Delay(2000);
         }
         catch (Exception)
         {
@@ -128,7 +131,7 @@ public partial class App : BaseApplication
             MessageService.Default.Unregister<ApplicationLoadedMessage>(this);
     }
 
-    protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
+    public override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
     {
         base.CurrentDomain_FirstChanceException(sender, e);
     }

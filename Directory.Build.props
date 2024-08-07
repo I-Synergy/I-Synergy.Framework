@@ -51,7 +51,7 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
 		<None Include="..\..\icon.png" Pack="true" PackagePath="\"/>
 		<None Include="readme.md" Pack="true" PackagePath="\"/>

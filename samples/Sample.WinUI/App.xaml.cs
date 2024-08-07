@@ -1,28 +1,27 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.Update.Abstractions.Services;
+using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Windows.AppLifecycle;
 using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
-using Windows.ApplicationModel.Activation;
+using System.Runtime.ExceptionServices;
 
 namespace Sample;
 
@@ -36,9 +35,11 @@ public sealed partial class App : BaseApplication
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        : base()
+        : base(() => ServiceLocator.Default.GetInstance<ILoadingView>())
     {
         InitializeComponent();
+
+        MessageService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
     }
 
     protected override IHostBuilder CreateHostBuilder()
@@ -61,71 +62,100 @@ public sealed partial class App : BaseApplication
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IApplicationSettingsService, LocalSettingsService>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<GlobalSettings>, GlobalSettingsService>());
 
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
+                services.TryAddSingleton<CommonServices>();
+                services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
+                services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
 
                 services.AddUpdatesIntegration();
             });
     }
 
-    protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs e)
+    public override async Task InitializeApplicationAsync()
     {
-        base.OnLaunched(e);
-
         try
         {
-            ServiceLocator.Default.GetInstance<IBusyService>().StartBusy(ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateCheckForUpdates"));
+            _commonServices.BusyService.StartBusy();
 
-            if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(
-                ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateExecuteNow"),
-                "Update",
-                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            await base.InitializeApplicationAsync();
+
+            try
             {
-                ServiceLocator.Default.GetInstance<IBusyService>().BusyMessage = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("UpdateDownloadAndInstall");
-                await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
-                Exit();
+                _commonServices.BusyService.BusyMessage = "Start doing important stuff";
+                await Task.Delay(2000);
+                _commonServices.BusyService.BusyMessage = "Done doing important stuff";
+                await Task.Delay(2000);
+            }
+            catch (Exception)
+            {
+                await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
+            }
+
+            try
+            {
+                _commonServices.BusyService.BusyMessage = "Applying migrations";
+                //await _migrationService.ApplyMigrationAsync<_001>();
+                await Task.Delay(2000);
+                _commonServices.BusyService.BusyMessage = "Done applying migrations";
+                await Task.Delay(2000);
+            }
+            catch (Exception)
+            {
+                await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
+            }
+
+            MessageService.Default.Send(new ApplicationInitializedMessage());
+        }
+        finally
+        {
+            _commonServices.BusyService.EndBusy();
+        }
+    }
+
+    private async Task ApplicationLoadedAsync(ApplicationLoadedMessage message)
+    {
+        try
+        {
+#if WINDOWS
+            //commonServices.BusyService.StartBusy(commonServices.LanguageService.GetString("UpdateCheckForUpdates"));
+
+            //if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await commonServices.DialogService.ShowMessageAsync(
+            //    commonServices.LanguageService.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + commonServices.LanguageService.GetString("UpdateExecuteNow"),
+            //    "Update",
+            //    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            //{
+            //    commonServices.BusyService.BusyMessage = commonServices.LanguageService.GetString("UpdateDownloadAndInstall");
+            //    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
+            //    Environment.Exit(Environment.ExitCode);
+            //}
+#endif
+            _commonServices.BusyService.StartBusy();
+
+            bool navigateToAuthentication = true;
+
+            _logger.LogInformation("Retrieve default user and check for auto login");
+
+            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
+            {
+                string username = _applicationSettingsService.Settings.DefaultUser;
+                string password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+
+                if (!string.IsNullOrEmpty(password))
+                {
+                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
+                    navigateToAuthentication = false;
+                }
+            }
+
+            if (navigateToAuthentication)
+            {
+                _logger.LogInformation("Navigate to SignIn page");
+                await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
             }
         }
         finally
         {
-            ServiceLocator.Default.GetInstance<IBusyService>().EndBusy();
+            _commonServices.BusyService.EndBusy();
         }
-
-        var activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
-        if (activatedEventArgs.Kind == ExtendedActivationKind.Launch)
-        {
-            await HandleLaunchActivationAsync(activatedEventArgs.Data as Windows.ApplicationModel.Activation.LaunchActivatedEventArgs);
-        }
-        else if (activatedEventArgs.Kind == ExtendedActivationKind.Protocol)
-        {
-            await HandleProtocolActivationAsync(activatedEventArgs.Data as ProtocolActivatedEventArgs);
-        }
-        else if (Environment.GetCommandLineArgs().Length > 1)
-        {
-            foreach (var arg in Environment.GetCommandLineArgs().EnsureNotNull())
-                await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync(arg, "Environment");
-        }
-        else
-        {
-            await ServiceLocator.Default.GetInstance<INavigationService>().NavigateModalAsync<AuthenticationViewModel>();
-        }
-
-        bool navigateToAuthentication = true;
-
-        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
-        {
-            string username = _applicationSettingsService.Settings.DefaultUser;
-            string password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
-
-            if (!string.IsNullOrEmpty(password))
-            {
-                await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
-                navigateToAuthentication = false;
-            }
-        }
-
-        if (navigateToAuthentication)
-            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
     public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
@@ -133,18 +163,28 @@ public sealed partial class App : BaseApplication
         await _navigationService.CleanBackStackAsync();
 
         if (e.Value)
+        {
+            _logger.LogInformation("Navigate to Shell");
             await _navigationService.NavigateModalAsync<IShellViewModel>();
+        }
         else
+        {
+            _logger.LogInformation("Navigate to SignIn page");
             await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+        }
+
     }
 
-    private async Task HandleProtocolActivationAsync(ProtocolActivatedEventArgs e)
+    protected override void Dispose(bool disposing)
     {
-        await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{e.Uri}", "ProtocolActivatedEventArgs");
+        base.Dispose(disposing);
+
+        if (disposing)
+            MessageService.Default.Unregister<ApplicationLoadedMessage>(this);
     }
 
-    private async Task HandleLaunchActivationAsync(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs e)
+    public override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
     {
-        await ServiceLocator.Default.GetInstance<IDialogService>().ShowMessageAsync($"{e.Arguments}", "LaunchActivatedEventArgs");
+        base.CurrentDomain_FirstChanceException(sender, e);
     }
 }

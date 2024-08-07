@@ -21,9 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Watchers\FileSystemWatcherEx.cs">
-			<SubType>Component</SubType>
-		</Compile>
+		<Compile Update="Watchers\FileSystemWatcherEx.cs" />
 	</ItemGroup>
 
 </Project>

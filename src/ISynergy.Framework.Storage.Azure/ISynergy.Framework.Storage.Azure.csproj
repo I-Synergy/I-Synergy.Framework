@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Storage.Blobs"  />
-		<PackageReference Include="System.Text.Encodings.Web"  />
-		<PackageReference Include="Microsoft.Extensions.Options"  />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.21.1" />
+		<PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
 	</ItemGroup>
 
     <ItemGroup>

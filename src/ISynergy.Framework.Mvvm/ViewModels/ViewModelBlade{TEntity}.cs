@@ -17,6 +17,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModel" />
 /// <seealso cref="IViewModelBlade" />
+[Scoped(true)]
 public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
 {
     /// <summary>
@@ -90,14 +91,6 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
         bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
-        Validator = new Action<IObservableClass>(arg =>
-        {
-            if (arg is ViewModelBlade<TEntity> vm &&
-                vm.SelectedItem is IObservableClass selectedItem)
-            {
-            }
-        });
-
         SubmitCommand = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
     }
 

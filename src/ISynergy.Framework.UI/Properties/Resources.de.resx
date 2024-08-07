@@ -430,4 +430,10 @@ Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsof
 	<data name="Paste" xml:space="preserve">
 		<value>Kleister</value>
 	</data>
+	<data name="SelectCountry" xml:space="preserve">
+		<value>Land auswählen</value>
+	</data>
+	<data name="SelectTimeZone" xml:space="preserve">
+		<value>Zeitzone auswählen</value>
+	</data>
 </root>

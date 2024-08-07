@@ -9,6 +9,34 @@
             "type": "maui",
             "request": "launch",
             "preLaunchTask": "maui: Build"
-        }
+        },
+        {
+            "name": "Uno Platform Windows",
+            "type": "Uno",
+            "request": "launch",
+            // any Uno* task will do, this is simply to satisfy vscode requirement when a launch.json is present
+            "preLaunchTask": "Uno: net8.0-windows10.0.22621 | Debug | win-x64"
+        },
+        {
+            "name": "Uno Platform WebAssembly",
+            "type": "Uno",
+            "request": "launch",
+            // any Uno* task will do, this is simply to satisfy vscode requirement when a launch.json is present
+            "preLaunchTask": "Uno: net8.0-browserwasm | Debug"
+        },
+        {
+            "name": "Uno Platform Android",
+            "type": "Uno",
+            "request": "launch",
+            // any Uno* task will do, this is simply to satisfy vscode requirement when a launch.json is present
+            "preLaunchTask": "Uno: net8.0-android | Debug | android-x64"
+        },
+        {
+            "name": "Uno Platform MacCatalyst",
+            "type": "Uno",
+            "request": "launch",
+            // any Uno* task will do, this is simply to satisfy vscode requirement when a launch.json is present
+            "preLaunchTask": "Uno: net8.0-maccatalyst | Debug | maccatalyst-arm64"
+        },
     ]
 }

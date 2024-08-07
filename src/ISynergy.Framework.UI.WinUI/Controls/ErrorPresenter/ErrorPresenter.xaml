@@ -10,7 +10,7 @@
     Opacity="0.85">
 
     <UserControl.Resources>
-        <FontFamily x:Key="SegoeMdl2">ms-resource:///Assets/Fonts/SegMDL2.ttf#Segoe MDL2 Assets</FontFamily>
+        <FontFamily x:Key="SegoeMdl2">ms-appx:///Assets/Fonts/SegMDL2.ttf#Segoe MDL2 Assets</FontFamily>
         <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{StaticResource SystemAccentColorRed}" />
     </UserControl.Resources>
     

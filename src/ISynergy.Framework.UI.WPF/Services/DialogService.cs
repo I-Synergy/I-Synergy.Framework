@@ -174,7 +174,7 @@ public class DialogService : IDialogService
         if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
             _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
         {
-            await viewmodel.SetSelectedItemAsync(e);
+            viewmodel.SetSelectedItem(e);
             await CreateDialogAsync(dialog, viewmodel);
         }
     }

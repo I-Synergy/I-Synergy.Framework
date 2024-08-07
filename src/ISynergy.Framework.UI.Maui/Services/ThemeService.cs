@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -27,11 +26,7 @@ public class ThemeService : IThemeService
     /// <value>The theme.</value>
     public Style Style
     {
-        get => new()
-        {
-            Theme = _applicationSettingsService.Settings.Theme,
-            Color = _applicationSettingsService.Settings.Color
-        };
+        get => new(_applicationSettingsService.Settings.Color, _applicationSettingsService.Settings.Theme);
     }
 
     /// <summary>
@@ -61,51 +56,51 @@ public class ThemeService : IThemeService
             if (ResourceUtility.FindResource<Color>(Primary) is Color color)
                 Application.AccentColor = color;
 
-            RemoveColors(application.Resources);
-
-            if (application.Resources?.MergedDictionaries is { } resourceDictionaries)
-            {
-                foreach (var resourceDictionary in resourceDictionaries.EnsureNotNull())
-                    RemoveColors(resourceDictionary);
-            }
-
-            application.Resources.Add(Primary, Application.AccentColor);
-            application.Resources.Add("colorPrimary", Application.AccentColor);
-            application.Resources.Add("colorAccent", Application.AccentColor);
-            application.Resources.Add("colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
-            application.Resources.Add(Secondary, Application.AccentColor.AddLuminosity(0.25f));
-            application.Resources.Add(Tertiary, Application.AccentColor.AddLuminosity(-0.25f));
-
-            if (IsLightThemeEnabled)
-                application.UserAppTheme = AppTheme.Light;
+            if (application.Resources.ContainsKey(Primary))
+                application.Resources[Primary] = Application.AccentColor;
             else
-                application.UserAppTheme = AppTheme.Dark;
+                application.Resources.Add(Primary, Application.AccentColor);
+
+            if (application.Resources.ContainsKey(Secondary))
+                application.Resources[Secondary] = Application.AccentColor.AddLuminosity(0.25f);
+            else
+                application.Resources.Add(Secondary, Application.AccentColor.AddLuminosity(0.25f));
+
+            if (application.Resources.ContainsKey(Tertiary))
+                application.Resources[Tertiary] = Application.AccentColor.AddLuminosity(-0.25f);
+            else
+                application.Resources.Add(Tertiary, Application.AccentColor.AddLuminosity(-0.25f));
+
+#if ANDROID
+            if (application.Resources.ContainsKey("colorPrimary"))
+                application.Resources["colorPrimary"] = Application.AccentColor;
+            else
+                application.Resources.Add("colorPrimary", Application.AccentColor);
+
+            if (application.Resources.ContainsKey("colorAccent"))
+                application.Resources["colorAccent"] = Application.AccentColor;
+            else
+                application.Resources.Add("colorAccent", Application.AccentColor);
+
+            if (application.Resources.ContainsKey("colorPrimaryDark"))
+                application.Resources["colorPrimaryDark"] = Application.AccentColor.AddLuminosity(-0.25f);
+            else
+                application.Resources.Add("colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
+#endif
+
+#if WINDOWS
+            if (application.Resources.ContainsKey("SystemAccentColor"))
+                application.Resources["SystemAccentColor"] = Application.AccentColor;
+            else
+                application.Resources.Add("SystemAccentColor", Application.AccentColor);
+
+            if (application.Resources.ContainsKey("SystemColorControlAccentColor"))
+                application.Resources["SystemColorControlAccentColor"] = Application.AccentColor;
+            else
+                application.Resources.Add("SystemColorControlAccentColor", Application.AccentColor);
+#endif
         }
 
         MessageService.Default.Send(new StyleChangedMessage(Style));
-    }
-
-    private void RemoveColors(ResourceDictionary resourceDictionary)
-    {
-        if (resourceDictionary is not null)
-        {
-            if (ResourceUtility.FindResource<Color>(resourceDictionary, Primary) is not null)
-                resourceDictionary.Remove(Primary);
-
-            if (ResourceUtility.FindResource<Color>(resourceDictionary, "colorPrimary") is not null)
-                resourceDictionary.Remove("colorPrimary");
-
-            if (ResourceUtility.FindResource<Color>(resourceDictionary, "colorAccent") is not null)
-                resourceDictionary.Remove("colorAccent");
-
-            if (ResourceUtility.FindResource<Color>(resourceDictionary, "colorPrimaryDark") is not null)
-                resourceDictionary.Remove("colorPrimaryDark");
-
-            if (ResourceUtility.FindResource<Color>(resourceDictionary, Secondary) is not null)
-                resourceDictionary.Remove(Secondary);
-
-            if (ResourceUtility.FindResource<Color>(resourceDictionary, Tertiary) is not null)
-                resourceDictionary.Remove(Tertiary);
-        }
     }
 }

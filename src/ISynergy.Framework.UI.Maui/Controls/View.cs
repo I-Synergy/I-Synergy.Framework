@@ -1,9 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls;
 
+[Singleton(true)]
 public abstract class View : ContentPage, IView
 {
     private IViewModel _viewModel;
@@ -77,15 +79,6 @@ public abstract class View : ContentPage, IView
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
     /// <summary>

@@ -9,11 +9,15 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+
+#if WINDOWS
+using Microsoft.UI.Xaml.Media;
+using ISynergy.Framework.UI.Helpers;
+#endif
 
 [assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]
 [assembly: ExportFont("opendyslexic3-regular.ttf", Alias = "OpenDyslexic3-Regular")]
@@ -37,8 +41,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
     private Task Initialize { get; set; }
 
-    public AppTheme Theme { get; set; } = AppTheme.Dark;
-
     /// <summary>
     /// Default constructor.
     /// </summary>
@@ -53,51 +55,56 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             config.SetMinimumLevel(LogLevel.Trace);
         }).CreateLogger(AppDomain.CurrentDomain.FriendlyName);
 
-        _logger.LogInformation("Setting up global exception handler.");
+        _logger.LogTrace("Setting up global exception handler.");
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-        _logger.LogInformation("Starting application");
+        _logger.LogTrace("Starting application");
 
         // Pass a timeout to limit the execution time.
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
         AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-        _logger.LogInformation("Starting initialization of application");
+        _logger.LogTrace("Starting initialization of application");
 
-        _logger.LogInformation("Setting up main page.");
+        _logger.LogTrace("Setting up main page.");
 
-        _logger.LogInformation("Getting common services.");
+        _logger.LogTrace("Getting common services.");
         _commonServices = ServiceLocator.Default.GetInstance<IBaseCommonServices>();
         _commonServices.BusyService.StartBusy();
+
+        _logger.LogTrace("Setting up theming service.");
+        _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
+
+        if (_themeService.IsLightThemeEnabled)
+            Application.Current.UserAppTheme = AppTheme.Light;
+        else
+            Application.Current.UserAppTheme = AppTheme.Dark;
 
         if (initialView is not null)
             Application.Current.MainPage = new NavigationPage(initialView.Invoke());
         else
             Application.Current.MainPage = new NavigationPage(new EmptyView(_commonServices));
 
-        _logger.LogInformation("Setting up context.");
+        _logger.LogTrace("Setting up context.");
         _context = ServiceLocator.Default.GetInstance<IContext>();
 
-        _logger.LogInformation("Setting up authentication service.");
+        _logger.LogTrace("Setting up authentication service.");
         _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
-        _logger.LogInformation("Setting up theming service.");
-        _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
-
-        _logger.LogInformation("Setting up navigation service.");
+        _logger.LogTrace("Setting up navigation service.");
         _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
 
-        _logger.LogInformation("Setting up exception handler service.");
+        _logger.LogTrace("Setting up exception handler service.");
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
-        _logger.LogInformation("Setting up application settings service.");
+        _logger.LogTrace("Setting up application settings service.");
         _applicationSettingsService = ServiceLocator.Default.GetInstance<IApplicationSettingsService>();
 
-        _logger.LogInformation("Setting up localization service.");
+        _logger.LogTrace("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
 
         if (_applicationSettingsService.Settings is not null)
@@ -108,7 +115,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             _window.Title = InfoService.Default.Title ?? string.Empty;
         });
 
-        _logger.LogInformation("Finishing initialization of application");
+        _logger.LogTrace("Finishing initialization of application");
     }
 
     /// <summary>
@@ -125,7 +132,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    public virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         if (e.Exception.HResult != lastErrorMessage)
         {
@@ -139,7 +146,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    public virtual void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleExceptionAsync(e.Exception);
@@ -154,7 +161,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    public virtual void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
             if (_exceptionHandlerService is not null)
@@ -166,7 +173,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <summary>
     /// Initializes the application asynchronously.
     /// </summary>
-    public void InitializeApplication() => Initialize = InitializeApplicationAsync();
+    private void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
     /// <summary>
     /// LoadAssembly the application.
@@ -198,7 +205,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     {
         _window = base.CreateWindow(activationState);
 
-        _logger.LogInformation("Setting style.");
+        _logger.LogTrace("Setting style.");
         MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
         _themeService.SetStyle();
 
@@ -230,15 +237,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
     /// <summary>

@@ -1,30 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<AssemblyName>ISynergy.Framework.UI.WinUI</AssemblyName>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI.WinUI</PackageId>
 		<Description>I-Synergy UI Framework for WinUI</Description>
 		<PackageTags>I-Synergy, Framework, UI, Windows, WinUI, WinUI3</PackageTags>
-		<EnableMsixTooling>true</EnableMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
+		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+		<UseWinUI>true</UseWinUI>
+		<EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
+		<EnableMsixTooling>true</EnableMsixTooling>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pri" Pack="true" PackagePath="lib/$(TargetFramework.TrimEnd('.0'))/" />
 	</ItemGroup>
-
+		
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,6 +47,64 @@
 		<None Remove="Controls\ImageView\ImageView.xaml" />
 		<None Remove="Controls\Menu\BaseMenu.xaml" />
 		<None Remove="Controls\Tiles\Tile.xaml" />
+		<None Remove="Assets\Fonts\ISynergy.ttf" />
+		<None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+		<None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+		<None Remove="Assets\Fonts\SegMDL2.ttf" />
+		<None Remove="Assets\Fonts\segoesb.ttf" />
+		<None Remove="Assets\Fonts\segoeui.ttf" />
+		<None Remove="Assets\Fonts\segoeuib.ttf" />
+		<None Remove="Assets\Fonts\segoeuil.ttf" />
+		<None Remove="Assets\Fonts\segoeuisl.ttf" />
+		<None Remove="Assets\Fonts\seguisb.ttf" />
+		<None Remove="Styles\Theme0063b1.xaml" />
+		<None Remove="Styles\Theme0078d7.xaml" />
+		<None Remove="Styles\Theme0099bc.xaml" />
+		<None Remove="Styles\Theme00b294.xaml" />
+		<None Remove="Styles\Theme00b7c3.xaml" />
+		<None Remove="Styles\Theme00cc6a.xaml" />
+		<None Remove="Styles\Theme018574.xaml" />
+		<None Remove="Styles\Theme038387.xaml" />
+		<None Remove="Styles\Theme107c10.xaml" />
+		<None Remove="Styles\Theme10893e.xaml" />
+		<None Remove="Styles\Theme2d7d9a.xaml" />
+		<None Remove="Styles\Theme486860.xaml" />
+		<None Remove="Styles\Theme498205.xaml" />
+		<None Remove="Styles\Theme4a5459.xaml" />
+		<None Remove="Styles\Theme4c4a48.xaml" />
+		<None Remove="Styles\Theme515c6b.xaml" />
+		<None Remove="Styles\Theme525e54.xaml" />
+		<None Remove="Styles\Theme567c73.xaml" />
+		<None Remove="Styles\Theme5d5a58.xaml" />
+		<None Remove="Styles\Theme647c64.xaml" />
+		<None Remove="Styles\Theme68768a.xaml" />
+		<None Remove="Styles\Theme69797e.xaml" />
+		<None Remove="Styles\Theme6b69d6.xaml" />
+		<None Remove="Styles\Theme744da9.xaml" />
+		<None Remove="Styles\Theme767676.xaml" />
+		<None Remove="Styles\Theme7a7574.xaml" />
+		<None Remove="Styles\Theme7e735f.xaml" />
+		<None Remove="Styles\Theme847545.xaml" />
+		<None Remove="Styles\Theme8764b8.xaml" />
+		<None Remove="Styles\Theme881798.xaml" />
+		<None Remove="Styles\Theme8e8cd8.xaml" />
+		<None Remove="Styles\Theme9a0089.xaml" />
+		<None Remove="Styles\Themeb146c2.xaml" />
+		<None Remove="Styles\Themebf0077.xaml" />
+		<None Remove="Styles\Themec239b3.xaml" />
+		<None Remove="Styles\Themec30052.xaml" />
+		<None Remove="Styles\Themeca5010.xaml" />
+		<None Remove="Styles\Themed13438.xaml" />
+		<None Remove="Styles\Themeda3b01.xaml" />
+		<None Remove="Styles\Themee3008c.xaml" />
+		<None Remove="Styles\Themee74856.xaml" />
+		<None Remove="Styles\Themee81123.xaml" />
+		<None Remove="Styles\Themeea005e.xaml" />
+		<None Remove="Styles\Themeef6950.xaml" />
+		<None Remove="Styles\Themef7630c.xaml" />
+		<None Remove="Styles\Themeff4343.xaml" />
+		<None Remove="Styles\Themeff8c00.xaml" />
+		<None Remove="Styles\Themeffb900.xaml" />
 		<None Remove="Views\SelectionView.xaml" />
 		<None Remove="Windows\LanguageWindow.xaml" />
 		<None Remove="Windows\NoteWindow.xaml" />
@@ -49,21 +112,54 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Assets\Fonts\ISynergy.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\SegMDL2.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\segoesb.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\segoeui.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\segoeuib.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\segoeuil.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\segoeuisl.ttf" />
-		<EmbeddedResource Include="Assets\Fonts\seguisb.ttf" />
-		<EmbeddedResource Include="Assets\Images\Error.png" />
-		<EmbeddedResource Include="Assets\Images\Information.png" />
-		<EmbeddedResource Include="Assets\Images\Question.png" />
-		<EmbeddedResource Include="Assets\Images\Refresh.png" />
-		<EmbeddedResource Include="Assets\Images\Warning.png" />
+		<Content Include="Styles\Theme0063b1.xaml" />
+		<Content Include="Styles\Theme0078d7.xaml" />
+		<Content Include="Styles\Theme0099bc.xaml" />
+		<Content Include="Styles\Theme00b294.xaml" />
+		<Content Include="Styles\Theme00b7c3.xaml" />
+		<Content Include="Styles\Theme00cc6a.xaml" />
+		<Content Include="Styles\Theme018574.xaml" />
+		<Content Include="Styles\Theme038387.xaml" />
+		<Content Include="Styles\Theme107c10.xaml" />
+		<Content Include="Styles\Theme10893e.xaml" />
+		<Content Include="Styles\Theme2d7d9a.xaml" />
+		<Content Include="Styles\Theme486860.xaml" />
+		<Content Include="Styles\Theme498205.xaml" />
+		<Content Include="Styles\Theme4a5459.xaml" />
+		<Content Include="Styles\Theme4c4a48.xaml" />
+		<Content Include="Styles\Theme515c6b.xaml" />
+		<Content Include="Styles\Theme525e54.xaml" />
+		<Content Include="Styles\Theme567c73.xaml" />
+		<Content Include="Styles\Theme5d5a58.xaml" />
+		<Content Include="Styles\Theme647c64.xaml" />
+		<Content Include="Styles\Theme68768a.xaml" />
+		<Content Include="Styles\Theme69797e.xaml" />
+		<Content Include="Styles\Theme6b69d6.xaml" />
+		<Content Include="Styles\Theme744da9.xaml" />
+		<Content Include="Styles\Theme767676.xaml" />
+		<Content Include="Styles\Theme7a7574.xaml" />
+		<Content Include="Styles\Theme7e735f.xaml" />
+		<Content Include="Styles\Theme847545.xaml" />
+		<Content Include="Styles\Theme8764b8.xaml" />
+		<Content Include="Styles\Theme881798.xaml" />
+		<Content Include="Styles\Theme8e8cd8.xaml" />
+		<Content Include="Styles\Theme9a0089.xaml" />
+		<Content Include="Styles\Themeb146c2.xaml" />
+		<Content Include="Styles\Themebf0077.xaml" />
+		<Content Include="Styles\Themec239b3.xaml" />
+		<Content Include="Styles\Themec30052.xaml" />
+		<Content Include="Styles\Themeca5010.xaml" />
+		<Content Include="Styles\Themed13438.xaml" />
+		<Content Include="Styles\Themeda3b01.xaml" />
+		<Content Include="Styles\Themee3008c.xaml" />
+		<Content Include="Styles\Themee74856.xaml" />
+		<Content Include="Styles\Themee81123.xaml" />
+		<Content Include="Styles\Themeea005e.xaml" />
+		<Content Include="Styles\Themeef6950.xaml" />
+		<Content Include="Styles\Themef7630c.xaml" />
+		<Content Include="Styles\Themeff4343.xaml" />
+		<Content Include="Styles\Themeff8c00.xaml" />
+		<Content Include="Styles\Themeffb900.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -97,6 +193,150 @@
 		<Page Include="Controls\Tiles\Tile.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="Styles\Theme0063b1.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme0078d7.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme0099bc.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme00b294.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme00b7c3.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme00cc6a.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme018574.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme038387.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme107c10.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme10893e.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme2d7d9a.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme486860.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme498205.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme4a5459.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme4c4a48.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme515c6b.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme525e54.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme567c73.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme5d5a58.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme647c64.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme68768a.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme69797e.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme6b69d6.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme744da9.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme767676.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme7a7574.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme7e735f.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme847545.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme8764b8.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme881798.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme8e8cd8.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme9a0089.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themeb146c2.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themebf0077.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themec239b3.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themec30052.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themeca5010.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themed13438.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themeda3b01.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themee3008c.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themee74856.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themee81123.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themeea005e.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themeef6950.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themef7630c.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themeff4343.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themeff8c00.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Themeffb900.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="Views\SelectionView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -109,23 +349,5 @@
 		<Page Include="Windows\ThemeWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Using Include="ISynergy.Framework.Core.Models.Style">
-			<Alias>Style</Alias>
-		</Using>
-		<Using Include="ISynergy.Framework.UI.Controls.View">
-			<Alias>View</Alias>
-		</Using>
-		<Using Include="ISynergy.Framework.UI.Controls.Window">
-			<Alias>Window</Alias>
-		</Using>
-		<Using Include="Microsoft.UI.Xaml.Application">
-			<Alias>Application</Alias>
-		</Using>
-		<Using Include="Microsoft.UI.Xaml.LaunchActivatedEventArgs">
-			<Alias>LaunchActivatedEventArgs</Alias>
-		</Using>
 	</ItemGroup>
 </Project>

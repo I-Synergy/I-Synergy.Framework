@@ -14,53 +14,45 @@ public static class ReflectionExtensions
     /// Get viewmodel types from assemblies.
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<Type> GetViewModelTypes()
-    {
-        return
-            from assembly in AppDomain.CurrentDomain.GetAssemblies()
-            from type in assembly.GetTypes()
-            where type.GetInterface(nameof(IViewModel), false) is not null
+    public static IEnumerable<Type> GetViewModelTypes() =>
+        AppDomain.CurrentDomain.GetAssemblies()
+            .Where(q => !q.IsDynamic)
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(type => type.GetInterface(nameof(IViewModel), false) is not null
                 && (type.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(type.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 && type.Name != GenericConstants.ViewModel
                 && !type.IsAbstract
-                && !type.IsInterface
-            select type;
-    }
+                && !type.IsInterface);
 
     /// <summary>
     /// Get view types from assemblies.
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<Type> GetViewTypes()
-    {
-        return
-            from assembly in AppDomain.CurrentDomain.GetAssemblies()
-            from type in assembly.GetTypes()
-            where Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
+    public static IEnumerable<Type> GetViewTypes() =>
+        AppDomain.CurrentDomain.GetAssemblies()
+            .Where(q => !q.IsDynamic)
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(type => type.GetInterfaces()
+                .Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
                 && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
                 && type.Name != GenericConstants.View
                 && type.Name != GenericConstants.Page
                 && !type.IsAbstract
-                && !type.IsInterface
-            select type;
-    }
+                && !type.IsInterface);
 
     /// <summary>
     /// Get window types from assemblies.
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<Type> GetWindowTypes()
-    {
-        return
-            from assembly in AppDomain.CurrentDomain.GetAssemblies()
-            from type in assembly.GetTypes()
-            where Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
+    public static IEnumerable<Type> GetWindowTypes() =>
+        AppDomain.CurrentDomain.GetAssemblies()
+            .Where(q => !q.IsDynamic)
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(type => Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
                 && type.Name.EndsWith(GenericConstants.Window)
                 && type.Name != GenericConstants.Window
                 && !type.IsAbstract
-                && !type.IsInterface
-            select type;
-    }
+                && !type.IsInterface);
 
     /// <summary>
     /// Register windows.
