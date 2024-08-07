@@ -8,15 +8,17 @@ using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.UI.Extensions;
 
-public static class MauiWinUIApplicationExtensions
+public static partial class MauiWinUIApplicationExtensions
 {
     private const int SW_SHOWNORMAL = 1;
 
-    [DllImport("User32.dll")]
-    private static extern bool SetForegroundWindow(IntPtr hWnd);
+    [LibraryImport("User32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SetForegroundWindow(IntPtr hWnd);
 
-    [DllImport("user32.dll")]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
     public static void InitializeSingleInstanceApp(this MauiWinUIApplication app)
     {

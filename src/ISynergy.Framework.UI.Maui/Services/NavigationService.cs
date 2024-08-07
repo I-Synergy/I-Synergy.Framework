@@ -25,7 +25,7 @@ public class NavigationService : INavigationService
     /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
     public bool CanGoBack =>
         Application.Current.MainPage.GetNavigation().Navigation.NavigationStack.Count > 0 ||
-        Application.Current.MainPage.Navigation.ModalStack.Count > 0 ? true : false;
+        Application.Current.MainPage.Navigation.ModalStack.Count > 0;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.

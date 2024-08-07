@@ -141,14 +141,6 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     {
         RefreshOnInitialization = refreshOnInitialization;
 
-        Validator = new Action<IObservableClass>(arg =>
-        {
-            if (arg is ViewModelBladeView<TEntity> vm &&
-                vm.SelectedItem is IObservableClass selectedItem)
-            {
-            }
-        });
-
         Items = new ObservableCollection<TEntity>();
         Blades = new ObservableCollection<IView>();
 
@@ -168,13 +160,10 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     {
         await base.InitializeAsync();
 
-        if (!IsInitialized)
+        if (!IsInitialized && RefreshOnInitialization)
         {
-            if (RefreshOnInitialization)
-            {
-                await RefreshAsync();
-                IsInitialized = true;
-            }
+            await RefreshAsync();
+            IsInitialized = true;
         }
     }
 

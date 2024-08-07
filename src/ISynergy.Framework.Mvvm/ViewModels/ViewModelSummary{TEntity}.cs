@@ -112,14 +112,6 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     {
         RefreshOnInitialization = refreshOnInitialization;
 
-        Validator = new Action<IObservableClass>(arg =>
-        {
-            if (arg is ViewModelSummary<TEntity> vm &&
-                vm.SelectedItem is IObservableClass selectedItem)
-            {
-            }
-        });
-
         Items = new ObservableCollection<TEntity>();
 
         AddCommand = new AsyncRelayCommand(async () => await AddAsync());
@@ -138,13 +130,10 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     {
         await base.InitializeAsync();
 
-        if (!IsInitialized)
+        if (!IsInitialized && RefreshOnInitialization)
         {
-            if (RefreshOnInitialization)
-            {
-                await RefreshAsync();
-                IsInitialized = true;
-            }
+            await RefreshAsync();
+            IsInitialized = true;
         }
     }
 
@@ -253,9 +242,6 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         SelectedItem = default(TEntity);
 
         Items?.Clear();
-
-        RefreshCommand?.Cancel();
-        RefreshCommand = null;
 
         AddCommand?.Cancel();
         AddCommand = null;

@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -70,24 +71,16 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
         bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
-        Validator = new Action<IObservableClass>(arg =>
-        {
-            if (arg is ViewModelDialog<TEntity> vm &&
-                vm.SelectedItem is IObservableClass selectedItem)
-            {
-            }
-        });
-
         SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e));
     }
 
     /// <summary>
     /// Sets the selected item.
     /// </summary>
-    /// <param name="entity">The entity.</param>
-    public virtual void SetSelectedItem(TEntity entity)
+    /// <param name="e">The entity.</param>
+    public virtual void SetSelectedItem(TEntity e)
     {
-        SelectedItem = entity;
+        SelectedItem = e;
         IsUpdate = true;
     }
 
@@ -106,7 +99,11 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
         }
     }
 
-    public void ApplyQueryAttributes(IDictionary<string, object> query) { }
+    public virtual void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue(GenericConstants.Parameter, out object result) && result is TEntity entity)
+            SetSelectedItem(entity);
+    }
 
     public override void Cleanup()
     {

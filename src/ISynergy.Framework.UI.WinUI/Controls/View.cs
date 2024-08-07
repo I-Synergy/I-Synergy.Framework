@@ -34,7 +34,6 @@ public abstract partial class View : Page, IView
     #region IDisposable
     // Dispose() calls Dispose(true)
 #if WINDOWS
-    // Dispose() calls Dispose(true)
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
@@ -54,15 +53,6 @@ public abstract partial class View : Page, IView
         base.Dispose();
     }
 #endif
-
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
 

@@ -55,15 +55,6 @@ public abstract partial class View : Page, IView
         GC.SuppressFinalize(this);
     }
 
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
-
     // The bulk of the clean-up code is implemented in Dispose(bool)
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.

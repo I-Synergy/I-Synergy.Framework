@@ -8,21 +8,17 @@ namespace ISynergy.Framework.UI.Controls;
 [Singleton(true)]
 internal class EmptyView : ContentPage
 {
-    private readonly IBaseCommonServices _commonServices;
-
     public EmptyView(IBaseCommonServices commonServices)
     {
-        _commonServices = commonServices;
-
         var label = new Label();
-        label.BindingContext = _commonServices.BusyService;
-        label.SetBinding(Label.TextProperty, new Binding(nameof(_commonServices.BusyService.BusyMessage), BindingMode.OneWay));
-        label.SetBinding(Label.IsVisibleProperty, new Binding(nameof(_commonServices.BusyService.IsBusy), BindingMode.OneWay));
+        label.BindingContext = commonServices.BusyService;
+        label.SetBinding(Label.TextProperty, new Binding(nameof(commonServices.BusyService.BusyMessage), BindingMode.OneWay));
+        label.SetBinding(Label.IsVisibleProperty, new Binding(nameof(commonServices.BusyService.IsBusy), BindingMode.OneWay));
         label.SetDynamicResource(Label.TextColorProperty, "Primary");
 
         var indicator = new ActivityIndicator();
-        indicator.BindingContext = _commonServices.BusyService;
-        indicator.SetBinding(ActivityIndicator.IsRunningProperty, new Binding(nameof(_commonServices.BusyService.IsBusy), BindingMode.OneWay));
+        indicator.BindingContext = commonServices.BusyService;
+        indicator.SetBinding(ActivityIndicator.IsRunningProperty, new Binding(nameof(commonServices.BusyService.IsBusy), BindingMode.OneWay));
         indicator.SetDynamicResource(ActivityIndicator.ColorProperty, "Primary");
 
         var stackLayout = new StackLayout();

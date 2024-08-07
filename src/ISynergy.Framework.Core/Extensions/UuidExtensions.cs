@@ -79,7 +79,7 @@ public static class Uuidv7
             ns = CurrentTime();
         else if (asOfCurrentTime == 0)
             // No randomness. In case one is needed for "earlier than everything else"
-            return new Guid("00000000-0000-0000-0000-000000000000");
+            return Guid.Empty;
         else
             ns = (long)asOfCurrentTime;
 
@@ -184,7 +184,7 @@ public static class Uuidv7
         arr[6] = arr[7];
         arr[7] = b;
 
-        var isZero = arr.All(b => b == 0);
+        var isZero = Array.TrueForAll(arr, b => b == 0);
         int uuidVersion = arr[6] >> 4;
         int uuidVariant = arr[8] >> 6;
         if ((!isZero) && (uuidVersion != 7 || uuidVariant != 2))

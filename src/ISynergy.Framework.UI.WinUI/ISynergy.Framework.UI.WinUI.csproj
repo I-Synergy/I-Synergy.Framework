@@ -17,6 +17,7 @@
 		<UseWinUI>true</UseWinUI>
 		<EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
 		<EnableMsixTooling>true</EnableMsixTooling>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
