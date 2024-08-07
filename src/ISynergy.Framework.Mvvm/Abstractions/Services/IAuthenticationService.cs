@@ -61,7 +61,7 @@ public interface IAuthenticationService
     Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default);
 
     Task SignOutAsync();
-    
+
     string GetEnvironmentalAuthToken(string token);
 
     /// <summary>

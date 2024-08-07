@@ -7,9 +7,9 @@
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="DYMO.Connect.SDK"  />
-		<PackageReference Include="SkiaSharp"  />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection"  />
+		<PackageReference Include="DYMO.Connect.SDK" Version="1.4.4.21" />
+		<PackageReference Include="SkiaSharp" Version="2.88.8" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

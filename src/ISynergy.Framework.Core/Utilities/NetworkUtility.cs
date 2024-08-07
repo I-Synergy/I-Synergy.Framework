@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Utilities;

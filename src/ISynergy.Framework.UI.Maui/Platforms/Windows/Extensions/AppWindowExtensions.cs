@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Helpers;
+﻿using ISynergy.Framework.Core.Validation;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.UI.Windowing;
 using Microsoft.Windows.AppLifecycle;

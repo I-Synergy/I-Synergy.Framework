@@ -227,8 +227,6 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
         if (disposing)
         {
-            Cleanup();
-
             PropertyChanged -= OnPropertyChanged;
         }
     }

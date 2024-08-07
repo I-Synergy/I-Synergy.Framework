@@ -21,10 +21,10 @@ public partial class LoadingView : ILoadingView
         BackgroundMediaElement.Source = MediaSource.FromResource("gta.mp4");
     }
 
-    private void ApplicationInitialized(ApplicationInitializedMessage message) =>
+    public void ApplicationInitialized(ApplicationInitializedMessage message) =>
         SignInButton.IsEnabled = true;
 
-    private void MediaElement_MediaEnded(object sender, EventArgs e) => 
+    private void MediaElement_MediaEnded(object sender, EventArgs e) =>
         Complete();
 
     private void View_Loaded(object sender, EventArgs e) =>
@@ -39,7 +39,7 @@ public partial class LoadingView : ILoadingView
             Complete();
     }
 
-    private void SignInClicked(object sender, EventArgs e) => 
+    public void SignInClicked(object sender, EventArgs e) =>
         Complete();
 
     private void Complete()

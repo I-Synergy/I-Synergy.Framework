@@ -4,10 +4,22 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Windows.ApplicationModel;
+using ISynergy.Framework.UI.Styles;
+
+#if WINDOWS
+using Windows.UI;
+#endif
+
+#if WINDOWS && !HAS_UNO
+using WinRT.Interop;
+#endif
+
+using Style = ISynergy.Framework.Core.Models.Style;
+
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -26,12 +38,13 @@ public class ThemeService : IThemeService
     /// <value>The theme.</value>
     public Style Style
     {
-        get => new()
-        {
-            Theme = _applicationSettingsService.Settings.Theme,
-            Color = _applicationSettingsService.Settings.Color
-        };
+        get => new(_applicationSettingsService.Settings.Color, _applicationSettingsService.Settings.Theme);
     }
+
+    /// <summary>
+    /// The window
+    /// </summary>
+    private Microsoft.UI.Xaml.Window _window;
 
     /// <summary>
     /// Gets a value indicating whether this instance is light theme enabled.
@@ -50,152 +63,314 @@ public class ThemeService : IThemeService
     }
 
     /// <summary>
+    /// Ininitialize main window for service.
+    /// </summary>
+    /// <param name="mainWindow">The main window.</param>
+    /// <exception cref="System.ArgumentException">MainWindow could not be set.</exception>
+    public void InitializeMainWindow(object mainWindow)
+    {
+        if (mainWindow is Microsoft.UI.Xaml.Window window)
+        {
+            _window = window;
+        }
+        else
+        {
+            throw new ArgumentException("MainWindow could not be set.");
+        }
+    }
+
+    /// <summary>
     /// Sets the theme.
     /// </summary>
     public void SetStyle()
     {
-        var palette = FindColorPaletteResourcesForTheme(Style.Theme.ToString());
-
-        if (palette is not null)
+        foreach (var item in Application.Current.Resources.MergedDictionaries.EnsureNotNull())
         {
-            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
-        }
-        else
-        {
-            palette = new ColorPaletteResources();
-            palette.Accent = ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(Style.Color);
-            Application.Current.Resources.MergedDictionaries.Add(palette);
+            if (!item.Source.AbsoluteUri.EndsWith("themeresources.xaml") &&
+                !item.Source.AbsoluteUri.EndsWith("themeresources_v2.xaml") &&
+                !item.Source.AbsoluteUri.EndsWith("Images.xaml") &&
+                !item.Source.AbsoluteUri.EndsWith("Style.xaml") &&
+                !item.Source.AbsoluteUri.EndsWith($"Theme{Style.Color.Substring(1, 6)}"))
+                Application.Current.Resources.MergedDictionaries.Remove(item);
         }
 
-        Application.Current.Resources["SystemAccentColor"] = Style.Color;
-        Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = Style.Color;
-
-        switch (Style.Theme)
+        switch (Style.Color)
         {
-            case Themes.Light:
-                if (RootTheme != ElementTheme.Light)
-                {
-                    Application.Current.RequestedTheme = ApplicationTheme.Light;
-                    RootTheme = ElementTheme.Light;
-                }
-
+            case "#ff8c00":
+                var style_ff8c00 = new Themeff8c00();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_ff8c00))
+                    Application.Current.Resources.MergedDictionaries.Add(style_ff8c00);
                 break;
-            case Themes.Dark:
-                if (RootTheme != ElementTheme.Dark)
-                {
-                    Application.Current.RequestedTheme = ApplicationTheme.Dark;
-                    RootTheme = ElementTheme.Dark;
-                }
-
+            case "#f7630c":
+                var style_f7630c = new Themef7630c();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_f7630c))
+                    Application.Current.Resources.MergedDictionaries.Add(style_f7630c);
                 break;
+            case "#ca5010":
+                var style_ca5010 = new Themeca5010();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_ca5010))
+                    Application.Current.Resources.MergedDictionaries.Add(style_ca5010);
+                break;
+            case "#da3b01":
+                var style_da3b01 = new Themeda3b01();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_da3b01))
+                    Application.Current.Resources.MergedDictionaries.Add(style_da3b01);
+                break;
+            case "#ef6950":
+                var style_ef6950 = new Themeef6950();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_ef6950))
+                    Application.Current.Resources.MergedDictionaries.Add(style_ef6950);
+                break;
+            case "#d13438":
+                var style_d13438 = new Themed13438();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_d13438))
+                    Application.Current.Resources.MergedDictionaries.Add(style_d13438);
+                break;
+            case "#ff4343":
+                var style_ff4343 = new Themeff4343();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_ff4343))
+                    Application.Current.Resources.MergedDictionaries.Add(style_ff4343);
+                break;
+            case "#e74856":
+                var style_e74856 = new Themee74856();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_e74856))
+                    Application.Current.Resources.MergedDictionaries.Add(style_e74856);
+                break;
+            case "#e81123":
+                var style_e81123 = new Themee81123();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_e81123))
+                    Application.Current.Resources.MergedDictionaries.Add(style_e81123);
+                break;
+            case "#ea005e":
+                var style_ea005e = new Themeea005e();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_ea005e))
+                    Application.Current.Resources.MergedDictionaries.Add(style_ea005e);
+                break;
+            case "#c30052":
+                var style_c30052 = new Themec30052();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_c30052))
+                    Application.Current.Resources.MergedDictionaries.Add(style_c30052);
+                break;
+            case "#e3008c":
+                var style_e3008c = new Themee3008c();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_e3008c))
+                    Application.Current.Resources.MergedDictionaries.Add(style_e3008c);
+                break;
+            case "#bf0077":
+                var style_bf0077 = new Themebf0077();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_bf0077))
+                    Application.Current.Resources.MergedDictionaries.Add(style_bf0077);
+                break;
+            case "#c239b3":
+                var style_c239b3 = new Themec239b3();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_c239b3))
+                    Application.Current.Resources.MergedDictionaries.Add(style_c239b3);
+                break;
+            case "#9a0089":
+                var style_9a0089 = new Theme9a0089();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_9a0089))
+                    Application.Current.Resources.MergedDictionaries.Add(style_9a0089);
+                break;
+            case "#0078d7":
+                var style_0078d7 = new Theme0078d7();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_0078d7))
+                    Application.Current.Resources.MergedDictionaries.Add(style_0078d7);
+                break;
+            case "#0063b1":
+                var style_0063b1 = new Theme0063b1();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_0063b1))
+                    Application.Current.Resources.MergedDictionaries.Add(style_0063b1);
+                break;
+            case "#8e8cd8":
+                var style_8e8cd80 = new Theme8e8cd8();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_8e8cd80))
+                    Application.Current.Resources.MergedDictionaries.Add(style_8e8cd80);
+                break;
+            case "#6b69d6":
+                var style_6b69d6 = new Theme6b69d6();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_6b69d6))
+                    Application.Current.Resources.MergedDictionaries.Add(style_6b69d6);
+                break;
+            case "#8764b8":
+                var style_8764b8 = new Theme8764b8();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_8764b8))
+                    Application.Current.Resources.MergedDictionaries.Add(style_8764b8);
+                break;
+            case "#744da9":
+                var style_744da9 = new Theme744da9();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_744da9))
+                    Application.Current.Resources.MergedDictionaries.Add(style_744da9);
+                break;
+            case "#b146c2":
+                var style_b146c2 = new Themeb146c2();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_b146c2))
+                    Application.Current.Resources.MergedDictionaries.Add(style_b146c2);
+                break;
+            case "#881798":
+                var style_881798 = new Theme881798();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_881798))
+                    Application.Current.Resources.MergedDictionaries.Add(style_881798);
+                break;
+            case "#0099bc":
+                var style_0099bc = new Theme0099bc();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_0099bc))
+                    Application.Current.Resources.MergedDictionaries.Add(style_0099bc);
+                break;
+            case "#2d7d9a":
+                var style_2d7d9a = new Theme2d7d9a();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_2d7d9a))
+                    Application.Current.Resources.MergedDictionaries.Add(style_2d7d9a);
+                break;
+            case "#00b7c3":
+                var style_00b7c3 = new Theme00b7c3();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_00b7c3))
+                    Application.Current.Resources.MergedDictionaries.Add(style_00b7c3);
+                break;
+            case "#038387":
+                var style_038387 = new Theme038387();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_038387))
+                    Application.Current.Resources.MergedDictionaries.Add(style_038387);
+                break;
+            case "#00b294":
+                var style_00b294 = new Theme00b294();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_00b294))
+                    Application.Current.Resources.MergedDictionaries.Add(style_00b294);
+                break;
+            case "#018574":
+                var style_018574 = new Theme018574();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_018574))
+                    Application.Current.Resources.MergedDictionaries.Add(style_018574);
+                break;
+            case "#00cc6a":
+                var style_00cc6a = new Theme00cc6a();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_00cc6a))
+                    Application.Current.Resources.MergedDictionaries.Add(style_00cc6a);
+                break;
+            case "#10893e":
+                var style_10893e = new Theme10893e();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_10893e))
+                    Application.Current.Resources.MergedDictionaries.Add(style_10893e);
+                break;
+            case "#7a7574":
+                var style_7a7574 = new Theme7a7574();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_7a7574))
+                    Application.Current.Resources.MergedDictionaries.Add(style_7a7574);
+                break;
+            case "#5d5a58":
+                var style_5d5a58 = new Theme5d5a58();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_5d5a58))
+                    Application.Current.Resources.MergedDictionaries.Add(style_5d5a58);
+                break;
+            case "#68768a":
+                var style_68768a = new Theme68768a();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_68768a))
+                    Application.Current.Resources.MergedDictionaries.Add(style_68768a);
+                break;
+            case "#515c6b":
+                var style_515c6b = new Theme515c6b();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_515c6b))
+                    Application.Current.Resources.MergedDictionaries.Add(style_515c6b);
+                break;
+            case "#567c73":
+                var style_567c73 = new Theme567c73();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_567c73))
+                    Application.Current.Resources.MergedDictionaries.Add(style_567c73);
+                break;
+            case "#486860":
+                var style_486860 = new Theme486860();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_486860))
+                    Application.Current.Resources.MergedDictionaries.Add(style_486860);
+                break;
+            case "#498205":
+                var style_498205 = new Theme498205();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_498205))
+                    Application.Current.Resources.MergedDictionaries.Add(style_498205);
+                break;
+            case "#107c10":
+                var style_107c10 = new Theme107c10();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_107c10))
+                    Application.Current.Resources.MergedDictionaries.Add(style_107c10);
+                break;
+            case "#767676":
+                var style_767676 = new Theme767676();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_767676))
+                    Application.Current.Resources.MergedDictionaries.Add(style_767676);
+                break;
+            case "#4c4a48":
+                var style_4c4a48 = new Theme4c4a48();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_4c4a48))
+                    Application.Current.Resources.MergedDictionaries.Add(style_4c4a48);
+                break;
+            case "#69797e":
+                var style_69797e = new Theme69797e();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_69797e))
+                    Application.Current.Resources.MergedDictionaries.Add(style_69797e);
+                break;
+            case "#4a5459":
+                var style_4a5459 = new Theme4a5459();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_4a5459))
+                    Application.Current.Resources.MergedDictionaries.Add(style_4a5459);
+                break;
+            case "#647c64":
+                var style_647c64 = new Theme647c64();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_647c64))
+                    Application.Current.Resources.MergedDictionaries.Add(style_647c64);
+                break;
+            case "#525e54":
+                var style_525e54 = new Theme525e54();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_525e54))
+                    Application.Current.Resources.MergedDictionaries.Add(style_525e54);
+                break;
+            case "#847545":
+                var style_847545 = new Theme847545();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_847545))
+                    Application.Current.Resources.MergedDictionaries.Add(style_847545);
+                break;
+            case "#7e735f":
+                var style_7e735f = new Theme7e735f();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_7e735f))
+                    Application.Current.Resources.MergedDictionaries.Add(style_7e735f);
+                break;
+            case "#ffb900":
             default:
-                if (RootTheme != ElementTheme.Default)
-                {
-                    Application.Current.RequestedTheme = ApplicationTheme.Dark;
-                    RootTheme = ElementTheme.Default;
-                }
-
+                var style_ffb900 = new Themeffb900();
+                if (!Application.Current.Resources.MergedDictionaries.Contains(style_ffb900))
+                    Application.Current.Resources.MergedDictionaries.Add(style_ffb900);
                 break;
+        }
+
+        if (_window.Content is FrameworkElement frameworkElement)
+        {
+            switch (Style.Theme)
+            {
+                case Themes.Light:
+                    frameworkElement.RequestedTheme = ElementTheme.Light;
+                    break;
+                case Themes.Dark:
+                    frameworkElement.RequestedTheme = ElementTheme.Dark;
+                    break;
+                default:
+                    frameworkElement.RequestedTheme = ElementTheme.Default;
+                    break;
+            }
         }
 
 #if WINDOWS
-        foreach (var window in WindowHelper.ActiveWindows.EnsureNotNull())
-        {
-            if (window.Content is FrameworkElement rootElement)
-                SetTitlebar(window);
-        }
+        SetTitlebar();
 #endif
 
         MessageService.Default.Send(new StyleChangedMessage(Style));
     }
 
     /// <summary>
-    /// Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
-    /// </summary>
-    private ElementTheme RootTheme
-    {
-        get
-        {
-            foreach (var window in WindowHelper.ActiveWindows.EnsureNotNull())
-            {
-                if (window.Content is FrameworkElement rootElement)
-                    return rootElement.ActualTheme;
-            }
-
-            return ElementTheme.Default;
-        }
-        set
-        {
-            foreach (var window in WindowHelper.ActiveWindows.EnsureNotNull())
-            {
-                if (window.Content is FrameworkElement rootElement)
-                    rootElement.RequestedTheme = value;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Finds the hexColor palette resources for theme.
-    /// </summary>
-    /// <param name="theme">The theme.</param>
-    /// <returns>ColorPaletteResources.</returns>
-    private ColorPaletteResources FindColorPaletteResourcesForTheme(string theme)
-    {
-        foreach (var themeDictionary in Application.Current.Resources.ThemeDictionaries.EnsureNotNull())
-        {
-            if (themeDictionary.Key.ToString() == theme)
-            {
-                if (themeDictionary.Value is ColorPaletteResources)
-                    return themeDictionary.Value as ColorPaletteResources;
-                if (themeDictionary.Value is ResourceDictionary targetDictionary)
-                    foreach (var mergedDictionary in targetDictionary.MergedDictionaries.EnsureNotNull())
-                    {
-                        if (mergedDictionary is ColorPaletteResources)
-                            return mergedDictionary as ColorPaletteResources;
-                    }
-            }
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// Gets the current actual theme of the app based on the requested theme of the
-    /// root element, or if that value is Default, the requested theme of the Application.
-    /// </summary>
-    private ElementTheme ActualTheme
-    {
-        get
-        {
-            foreach (var window in WindowHelper.ActiveWindows.EnsureNotNull())
-            {
-                if (window.Content is FrameworkElement rootElement && rootElement.RequestedTheme != ElementTheme.Default)
-                {
-                    return rootElement.RequestedTheme;
-                }
-            }
-
-            switch (Application.Current.RequestedTheme)
-            {
-                case ApplicationTheme.Light:
-                    return ElementTheme.Light;
-                case ApplicationTheme.Dark:
-                    return ElementTheme.Dark;
-                default:
-                    return ElementTheme.Default;
-            }
-        }
-    }
-
-#if WINDOWS
-    /// <summary>
     /// Setups the titlebar.
     /// </summary>
-    private void SetTitlebar(Microsoft.UI.Xaml.Window window)
+    private void SetTitlebar()
     {
+#if WINDOWS
+        var appWindow = GetAppWindowForCurrentWindow(_window);
 
-        var appWindow = WindowHelper.GetAppWindow(window);
-
-        var iconPath = Path.Combine(System.AppContext.BaseDirectory, "icon.ico");
+        var iconPath = Path.Combine(Environment.CurrentDirectory, "icon.ico");
 
         if (File.Exists(iconPath))
             appWindow.SetIcon(iconPath);
@@ -204,24 +379,53 @@ public class ThemeService : IThemeService
         {
             appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
 
-            appWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-
             if (Style.Theme == Themes.Dark)
             {
-                appWindow.TitleBar.ButtonForegroundColor = Colors.White;
                 appWindow.TitleBar.ForegroundColor = Colors.White;
+                appWindow.TitleBar.BackgroundColor = Color.FromArgb(255, 31, 31, 31);
+                appWindow.TitleBar.InactiveForegroundColor = Colors.Gray;
+                appWindow.TitleBar.InactiveBackgroundColor = Color.FromArgb(255, 31, 31, 31);
+
+                appWindow.TitleBar.ButtonForegroundColor = Colors.White;
+                appWindow.TitleBar.ButtonBackgroundColor = Color.FromArgb(255, 31, 31, 31);
+                appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.Gray;
+                appWindow.TitleBar.ButtonInactiveBackgroundColor = Color.FromArgb(255, 31, 31, 31);
+
+                appWindow.TitleBar.ButtonHoverForegroundColor = Colors.White;
+                appWindow.TitleBar.ButtonHoverBackgroundColor = Color.FromArgb(255, 51, 51, 51);
+                appWindow.TitleBar.ButtonPressedForegroundColor = Colors.White;
+                appWindow.TitleBar.ButtonPressedBackgroundColor = Colors.Gray;
             }
             else
             {
-                appWindow.TitleBar.ButtonForegroundColor = Colors.Black;
                 appWindow.TitleBar.ForegroundColor = Colors.Black;
+                appWindow.TitleBar.BackgroundColor = Colors.White;
+                appWindow.TitleBar.InactiveForegroundColor = Colors.Gray;
+                appWindow.TitleBar.InactiveBackgroundColor = Colors.White;
+
+                appWindow.TitleBar.ButtonForegroundColor = Colors.Black;
+                appWindow.TitleBar.ButtonBackgroundColor = Colors.White;
+                appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.Gray;
+                appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.White;
+
+                appWindow.TitleBar.ButtonHoverForegroundColor = Colors.Black;
+                appWindow.TitleBar.ButtonHoverBackgroundColor = Color.FromArgb(255, 245, 245, 245);
+                appWindow.TitleBar.ButtonPressedForegroundColor = Colors.Black;
+                appWindow.TitleBar.ButtonPressedBackgroundColor = Colors.White;
             }
 
-            appWindow.TitleBar.BackgroundColor = Colors.Black;
-
-            appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.LightGray;
+            appWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;
+            appWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
         }
+#endif
+    }
+
+#if WINDOWS && !HAS_UNO
+    private AppWindow GetAppWindowForCurrentWindow(Microsoft.UI.Xaml.Window window)
+    {
+        var hWnd = WindowNative.GetWindowHandle(window);
+        var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        return AppWindow.GetFromWindowId(wndId);
     }
 #endif
 }

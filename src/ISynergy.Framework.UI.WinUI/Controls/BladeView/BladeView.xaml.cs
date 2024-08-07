@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml;
@@ -9,6 +10,7 @@ using Windows.Foundation.Collections;
 
 namespace ISynergy.Framework.UI.Controls;
 
+[Scoped(true)]
 public partial class BladeView : ItemsControl
 {
     private ScrollViewer _scrollViewer;

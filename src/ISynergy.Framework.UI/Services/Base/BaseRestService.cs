@@ -7,7 +7,6 @@ using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace ISynergy.Framework.UI.Services.Base;
 

@@ -9,7 +9,8 @@
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     xmlns:views="clr-namespace:Sample.Views"
     x:DataType="viewmodels:ShellViewModel"
-    FlyoutLayoutBehavior="Popover">
+    FlyoutLayoutBehavior="Popover"
+    BackgroundColor="{DynamicResource Primary}">
 
     <FlyoutPage.Flyout>
         <c:NavigationMenu x:Name="MenuFlyout">

@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -12,10 +13,9 @@ using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
+[Singleton(true)]
 public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<TEntity>
 {
-    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
@@ -112,14 +112,6 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     {
         RefreshOnInitialization = refreshOnInitialization;
 
-        Validator = new Action<IObservableClass>(arg =>
-        {
-            if (arg is ViewModelSummary<TEntity> vm &&
-                vm.SelectedItem is IObservableClass selectedItem)
-            {
-            }
-        });
-
         Items = new ObservableCollection<TEntity>();
 
         AddCommand = new AsyncRelayCommand(async () => await AddAsync());
@@ -138,10 +130,10 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     {
         await base.InitializeAsync();
 
-        if (!IsInitialized)
+        if (!IsInitialized && RefreshOnInitialization)
         {
-            if (RefreshOnInitialization)
-                IsInitialized = await RefreshAsync();
+            await RefreshAsync();
+            IsInitialized = true;
         }
     }
 
@@ -149,11 +141,10 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Sets the selected item.
     /// </summary>
     /// <param name="e">The e.</param>
-    public virtual Task SetSelectedItemAsync(TEntity e)
+    public virtual void SetSelectedItem(TEntity e)
     {
         SelectedItem = e;
         IsUpdate = true;
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -211,52 +202,23 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Refreshes the asynchronous.
     /// </summary>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public virtual Task<bool> RefreshAsync() => GetItemsAsync();
-
-    /// <summary>
-    /// get items as an asynchronous operation.
-    /// </summary>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-    public async Task<bool> GetItemsAsync()
-    {
-        var result = false;
-
-        try
-        {
-            BaseCommonServices.BusyService.StartBusy();
-
-            var items = await RetrieveItemsAsync(_cancellationTokenSource.Token);
-
-            Items.AddNewRange(items);
-            result = true;
-        }
-        catch (TaskCanceledException) when (_cancellationTokenSource.IsCancellationRequested)
-        {
-            Logger.LogTrace("User canceled request.");
-        }
-        catch (OperationCanceledException)
-        {
-            Logger.LogTrace("Request timed out.");
-        }
-        finally
-        {
-            BaseCommonServices.BusyService.EndBusy();
-        }
-
-        return result;
-    }
+    public virtual Task RefreshAsync(CancellationToken cancellationToken = default) => RetrieveItemsAsync(cancellationToken);
 
     /// <summary>
     /// Retrieves the items asynchronous.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
-    public abstract Task<List<TEntity>> RetrieveItemsAsync(CancellationToken cancellationToken);
+    public virtual Task RetrieveItemsAsync(CancellationToken cancellationToken)
+    {
+        Items.AddNewRange(Enumerable.Empty<TEntity>());
+        return Task.CompletedTask;
+    }
 
     public virtual void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue(GenericConstants.Parameter, out object result) && result is TEntity entity)
-            SetSelectedItemAsync(entity);
+            SetSelectedItem(entity);
     }
 
     /// <summary>
@@ -281,9 +243,6 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
 
         Items?.Clear();
 
-        RefreshCommand?.Cancel();
-        RefreshCommand = null;
-
         AddCommand?.Cancel();
         AddCommand = null;
         EditCommand?.Cancel();
@@ -296,17 +255,5 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         SearchCommand = null;
         SubmitCommand?.Cancel();
         SubmitCommand = null;
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (_cancellationTokenSource is not null)
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-            _cancellationTokenSource = null;
-        }
-
-        base.Dispose(disposing);
     }
 }

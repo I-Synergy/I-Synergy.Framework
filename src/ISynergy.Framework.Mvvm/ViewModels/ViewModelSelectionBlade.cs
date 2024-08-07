@@ -17,6 +17,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// Implements the <see name="ViewModelDialog{List{TEntity}}" />
 /// </summary>
 /// <seealso name="ViewModelDialog{List{TEntity}}" />
+[Scoped(true)]
 public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, ISelectionViewModel
 {
     /// <summary>
@@ -172,10 +173,6 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     public override void Cleanup()
     {
         base.Cleanup();
-
-        RawItems?.Clear();
-        Items?.Clear();
-        SelectedItems?.Clear();
 
         RefreshCommand?.Cancel();
         RefreshCommand = null;

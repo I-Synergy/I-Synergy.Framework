@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -13,6 +14,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// </summary>
 /// <seealso cref="Mvvm.Abstractions.IWindow" />
 [Bindable(true)]
+[Scoped(true)]
 public partial class Window : ContentDialog, IWindow
 {
     private IViewModel _viewModel;
@@ -132,17 +134,8 @@ public partial class Window : ContentDialog, IWindow
     }
 #endif
 
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
-
 #if IOS || MACCATALYST || ANDROID
-    
+
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
     /// </summary>

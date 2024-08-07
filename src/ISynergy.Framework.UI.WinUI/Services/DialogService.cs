@@ -6,7 +6,10 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Application = Microsoft.UI.Xaml.Application;
+using Window = ISynergy.Framework.UI.Controls.Window;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -14,6 +17,7 @@ public class DialogService : IDialogService
 {
     private readonly ILanguageService _languageService;
     private readonly IContext _context;
+    private readonly IThemeService _themeService;
 
     private Window _activeDialog = null;
 
@@ -22,12 +26,15 @@ public class DialogService : IDialogService
     /// </summary>
     /// <param name="context"></param>
     /// <param name="languageService">The language service.</param>
+    /// <param name="themeService"></param>
     public DialogService(
         IContext context,
-        ILanguageService languageService)
+        ILanguageService languageService,
+        IThemeService themeService)
     {
         _context = context;
         _languageService = languageService;
+        _themeService = themeService;
     }
 
     /// <summary>
@@ -110,6 +117,8 @@ public class DialogService : IDialogService
 
         if (Application.Current is BaseApplication baseApplication)
             dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+
+        dialog.RequestedTheme = _themeService.IsLightThemeEnabled ? ElementTheme.Light : ElementTheme.Dark;
 
         switch (buttons)
         {
@@ -205,7 +214,7 @@ public class DialogService : IDialogService
         if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
             _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
         {
-            await viewmodel.SetSelectedItemAsync(e);
+            viewmodel.SetSelectedItem(e);
             await CreateDialogAsync(dialog, viewmodel);
         }
     }
@@ -249,6 +258,8 @@ public class DialogService : IDialogService
             if (Application.Current is BaseApplication baseApplication)
                 window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
 
+            window.RequestedTheme = _themeService.IsLightThemeEnabled ? ElementTheme.Light : ElementTheme.Dark;
+
             window.ViewModel = viewmodel;
 
             window.PrimaryButtonCommand = viewmodel.SubmitCommand;
@@ -265,14 +276,7 @@ public class DialogService : IDialogService
                     vm.Closed -= ViewModelClosedHandler;
 
                 window.ViewModel?.Dispose();
-                window.ViewModel = null;
-
-                _activeDialog.Dispose();
-                _activeDialog = null;
-
                 window.Close();
-                window.Dispose();
-                window = null;
             };
 
             viewmodel.Closed += ViewModelClosedHandler;
@@ -288,7 +292,6 @@ public class DialogService : IDialogService
         if (_activeDialog is not null)
         {
             _activeDialog.Close();
-            _activeDialog.Dispose();
         }
 
         _activeDialog = dialog;

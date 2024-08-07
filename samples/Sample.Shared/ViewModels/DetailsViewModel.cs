@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -36,10 +37,9 @@ public class DetailsViewModel : ViewModelSummary<TestItem>
         throw new NotImplementedException();
     }
 
-    public override Task<List<TestItem>> RetrieveItemsAsync(CancellationToken cancellationToken)
+    public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        return Task.FromResult(
-            new List<TestItem>
+        Items.AddNewRange(new List<TestItem>
             {
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},
@@ -47,6 +47,7 @@ public class DetailsViewModel : ViewModelSummary<TestItem>
                 new TestItem { Id = 4, Description = "Test 4"},
                 new TestItem { Id = 5, Description = "Test 5"}
             });
+        return Task.CompletedTask;
     }
 
     public override Task SearchAsync(object e)

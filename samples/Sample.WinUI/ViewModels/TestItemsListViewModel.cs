@@ -44,9 +44,9 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// Gets or sets the SelectedItems property value.
     /// </summary>
     /// <value>The selected items.</value>
-    public List<TestItem> SelectedItems
+    public IEnumerable<TestItem> SelectedItems
     {
-        get { return GetValue<List<TestItem>>(); }
+        get { return GetValue<IEnumerable<TestItem>>(); }
         set { SetValue(value); }
     }
 
@@ -98,11 +98,6 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     public RelayCommand ClearCommand { get; private set; }
 
     /// <summary>
-    /// The search cancellationtoken
-    /// </summary>
-    private CancellationTokenSource SearchCancellationtoken = null;
-
-    /// <summary>
     /// Edits the asynchronous.
     /// </summary>
     /// <param name="e">The e.</param>
@@ -115,15 +110,17 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
-    public override Task<List<TestItem>> RetrieveItemsAsync(CancellationToken cancellationToken) =>
-        Task.FromResult(new List<TestItem>()
-            {
-                new TestItem { Id = 1, Description = "Test 1"},
-                new TestItem { Id = 2, Description = "Test 2"},
-                new TestItem { Id = 3, Description = "Test 3"},
-                new TestItem { Id = 4, Description = "Test 4"},
-                new TestItem { Id = 5, Description = "Test 5"}
-            });
+    public override Task RetrieveItemsAsync(CancellationToken cancellationToken){
+        Items.AddNewRange(new List<TestItem>()
+        {
+            new TestItem { Id = 1, Description = "Test 1"},
+            new TestItem { Id = 2, Description = "Test 2"},
+            new TestItem { Id = 3, Description = "Test 3"},
+            new TestItem { Id = 4, Description = "Test 4"},
+            new TestItem { Id = 5, Description = "Test 5"}
+        });
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Removes the asynchronous.
@@ -139,27 +136,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// </summary>
     /// <param name="e">The e.</param>
     /// <returns>Task.</returns>
-    public override async Task SearchAsync(object e)
-    {
-        SearchCancellationtoken?.Cancel();
-        SearchCancellationtoken = new CancellationTokenSource();
-
-        try
-        {
-            var items = await RetrieveItemsAsync(SearchCancellationtoken.Token);
-            Items = new ObservableCollection<TestItem>();
-            Items.AddRange(items);
-        }
-        catch (OperationCanceledException)
-        {
-            //Ignore, operation has been canceled
-        }
-        finally
-        {
-            SearchCancellationtoken?.Dispose();
-            SearchCancellationtoken = null;
-        }
-    }
+    public override Task SearchAsync(object e) => RefreshAsync();
 
     /// <summary>
     /// Clears the items.

@@ -1,10 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+﻿#if WINDOWS
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Update.Abstractions.Services;
-
-#if WINDOWS
 using Windows.Services.Store;
-#endif
 
 namespace ISynergy.Framework.Update.Services;
 
@@ -175,3 +173,4 @@ internal class UpdateService : IUpdateService
                     _languageService.GetString("WarningMandatoryUpdateFailed"));
     }
 }
+#endif

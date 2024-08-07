@@ -112,7 +112,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    public virtual async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
             await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
@@ -127,7 +127,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    public virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         Debug.WriteLine(e.Exception.ToMessage(Environment.StackTrace));
     }
@@ -137,7 +137,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    public virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
             await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
@@ -152,7 +152,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    public virtual async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
             if (_exceptionHandlerService is not null)
@@ -164,7 +164,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <summary>
     /// Initializes the application asynchronously.
     /// </summary>
-    public void InitializeApplication() => Initialize = InitializeApplicationAsync();
+    private void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
     /// <summary>
     /// LoadAssembly the application.
@@ -242,6 +242,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
         throw new Exception($"Failed to load {e.Uri}: {e.Exception}");
 
+    public virtual Task HandleCommandLineArgumentsAsync(string[] e) =>
+        Task.CompletedTask;
 
     #region IDisposable
     // Dispose() calls Dispose(true)
@@ -253,15 +255,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
     /// <summary>

@@ -1,7 +1,9 @@
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls;
 
+[Scoped(true)]
 public class Window : ContentPage, IWindow
 {
     public static readonly BindableProperty ViewModelProperty = BindableProperty.Create(nameof(ViewModel), typeof(IViewModel), typeof(Window), null);
@@ -31,15 +33,6 @@ public class Window : ContentPage, IWindow
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
-    // NOTE: Leave out the finalizer altogether if this class doesn't
-    // own unmanaged resources, but leave the other methods
-    // exactly as they are.
-    //~ObservableClass()
-    //{
-    //    // Finalizer calls Dispose(false)
-    //    Dispose(false);
-    //}
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
     /// <summary>
