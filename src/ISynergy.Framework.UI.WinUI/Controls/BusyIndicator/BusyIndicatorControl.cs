@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -8,7 +9,7 @@ using Microsoft.UI.Xaml.Data;
 
 namespace ISynergy.Framework.UI.Controls;
 
-[Singleton(true)]
+[Lifetime(Lifetimes.Singleton)]
 public partial class BusyIndicatorControl : Grid
 {
     private readonly IBaseCommonServices _commonServices;

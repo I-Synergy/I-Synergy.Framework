@@ -22,7 +22,7 @@ using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
 
-[Singleton(true)]
+[Lifetime(Lifetimes.Singleton)]
 public class SignUpViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;

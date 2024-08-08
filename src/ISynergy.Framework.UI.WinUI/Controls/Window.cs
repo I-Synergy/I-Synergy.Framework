@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.UI.Xaml;
@@ -14,7 +15,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// </summary>
 /// <seealso cref="Mvvm.Abstractions.IWindow" />
 [Bindable(true)]
-[Scoped(true)]
+[Lifetime(Lifetimes.Scoped)]
 public partial class Window : ContentDialog, IWindow
 {
     private IViewModel _viewModel;

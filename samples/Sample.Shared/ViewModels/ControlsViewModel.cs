@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -14,7 +15,7 @@ using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
 
-[Scoped(true)]
+[Lifetime(Lifetimes.Scoped)]
 public class ControlsViewModel : ViewModelNavigation<object>
 {
     public override string Title { get { return BaseCommonServices.LanguageService.GetString("Controls"); } }

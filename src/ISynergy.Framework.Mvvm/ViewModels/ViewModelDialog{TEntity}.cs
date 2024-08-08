@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -18,7 +19,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModel" />
 /// <seealso cref="IViewModelDialog{TEntity}" />
-[Scoped(true)]
+[Lifetime(Lifetimes.Scoped)]
 public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEntity>
 {
     /// <summary>
