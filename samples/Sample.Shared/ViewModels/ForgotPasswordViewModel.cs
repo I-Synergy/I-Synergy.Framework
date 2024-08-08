@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -17,7 +18,7 @@ namespace Sample.ViewModels;
 /// </summary>
 /// <seealso cref="ViewModelDialog{Boolean}" />
 /// <seealso cref="IForgotPasswordViewModel" />
-[Singleton(true)]
+[Lifetime(Lifetimes.Singleton)]
 public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordViewModel
 {
     /// <summary>

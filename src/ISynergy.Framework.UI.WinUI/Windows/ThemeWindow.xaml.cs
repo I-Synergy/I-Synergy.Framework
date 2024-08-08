@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Windows;
 
@@ -8,7 +9,7 @@ namespace ISynergy.Framework.UI;
 /// <summary>
 /// Class ThemeWindow. This class cannot be inherited.
 /// </summary>
-[Scoped(true)]
+[Lifetime(Lifetimes.Scoped)]
 public sealed partial class ThemeWindow : ISynergy.Framework.UI.Controls.Window, IThemeWindow
 {
     /// <summary>

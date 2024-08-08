@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
@@ -14,7 +15,7 @@ namespace Sample.Views;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-[Singleton(true)]
+[Lifetime(Lifetimes.Singleton)]
 public sealed partial class LoadingView : ILoadingView
 {
     public LoadingView()
