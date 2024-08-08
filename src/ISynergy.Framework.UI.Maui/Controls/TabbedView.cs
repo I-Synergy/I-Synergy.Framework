@@ -1,11 +1,12 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls;
 
-[Singleton(true)]
+[Lifetime(Lifetimes.Singleton)]
 public abstract class TabbedView : TabbedPage, IView
 {
     private IViewModel _viewModel;

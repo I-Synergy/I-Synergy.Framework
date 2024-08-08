@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -22,7 +23,7 @@ using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
 
-[Singleton(true)]
+[Lifetime(Lifetimes.Singleton)]
 public class AuthenticationViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;

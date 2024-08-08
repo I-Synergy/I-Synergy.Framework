@@ -1,10 +1,11 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using Sample.ViewModels;
 
 namespace Sample.Views;
 
-[Singleton(true)]
+[Lifetime(Lifetimes.Singleton)]
 public partial class SignInView
 {
     public SignInView(IContext context, SignInViewModel viewModel)
