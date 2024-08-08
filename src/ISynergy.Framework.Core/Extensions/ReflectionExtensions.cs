@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Enumerations;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -263,8 +264,8 @@ public static class ReflectionExtensions
     /// <returns></returns>
     public static bool IsSingleton(this Type _self)
     {
-        if (Attribute.GetCustomAttribute(_self, typeof(SingletonAttribute)) is SingletonAttribute attribute)
-            return attribute.IsSingleton;
+        if (Attribute.GetCustomAttribute(_self, typeof(LifetimeAttribute)) is LifetimeAttribute attribute)
+            return attribute.Lifetime == Lifetimes.Singleton;
         return false;
     }
 
@@ -275,8 +276,8 @@ public static class ReflectionExtensions
     /// <returns></returns>
     public static bool IsScoped(this Type _self)
     {
-        if (Attribute.GetCustomAttribute(_self, typeof(ScopedAttribute)) is ScopedAttribute attribute)
-            return attribute.IsScoped;
+        if (Attribute.GetCustomAttribute(_self, typeof(LifetimeAttribute)) is LifetimeAttribute attribute)
+            return attribute.Lifetime == Lifetimes.Scoped;
         return false;
 
     }

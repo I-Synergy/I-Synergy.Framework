@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ namespace Sample.ViewModels;
 /// Implements the <see cref="ViewModelNavigation{Object}" />
 /// </summary>
 /// <seealso cref="ViewModelNavigation{Object}" />
-[Scoped(true)]
+[Lifetime(Lifetimes.Scoped)]
 public class InfoViewModel : ViewModelNavigation<object>
 {
     /// <summary>

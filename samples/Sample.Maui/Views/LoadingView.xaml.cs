@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
@@ -9,7 +10,7 @@ using ISynergy.Framework.UI.ViewModels;
 
 namespace Sample.Views;
 
-[Singleton(true)]
+[Lifetime(Lifetimes.Singleton)]
 public partial class LoadingView : ILoadingView
 {
     public LoadingView(IContext context, LoadingViewModel viewModel)

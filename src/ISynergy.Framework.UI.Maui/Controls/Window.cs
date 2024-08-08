@@ -1,9 +1,10 @@
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.UI.Controls;
 
-[Scoped(true)]
+[Lifetime(Lifetimes.Scoped)]
 public class Window : ContentPage, IWindow
 {
     public static readonly BindableProperty ViewModelProperty = BindableProperty.Create(nameof(ViewModel), typeof(IViewModel), typeof(Window), null);
