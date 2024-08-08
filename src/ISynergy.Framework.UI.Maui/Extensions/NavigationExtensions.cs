@@ -35,15 +35,14 @@ public static class NavigationExtensions
 
         if (context.ScopedServices.ServiceProvider.GetRequiredService(viewType) is IView resolvedPage)
         {
+            if (viewModel is not null)
+                resolvedPage.ViewModel = viewModel;
+            
             if (resolvedPage.ViewModel is null)
-            {
-                if (viewModel is not null)
-                    resolvedPage.ViewModel = viewModel;
-                else
-                    resolvedPage.ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
+                resolvedPage.ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService<TViewModel>();
 
+            if (parameter is not null && resolvedPage.ViewModel is not null)
                 resolvedPage.ViewModel.Parameter = parameter;
-            }
 
             return resolvedPage;
         }
