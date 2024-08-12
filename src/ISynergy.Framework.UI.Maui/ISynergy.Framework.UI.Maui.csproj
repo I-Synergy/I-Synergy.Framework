@@ -28,6 +28,11 @@
 	  <EmbeddedResource Include="Resources\Fonts\opensans-regular.ttf" />
 	  <EmbeddedResource Include="Resources\Fonts\opensans-semibold.ttf" />
 	  <EmbeddedResource Include="Resources\Fonts\segoemdl2.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeui.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeuib.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeuil.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeuisb.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeuisl.ttf" />
 	</ItemGroup>
 
 	<ItemGroup>
