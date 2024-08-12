@@ -16,13 +16,13 @@
             <Label 
                 Text="Synchronize"
                 SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
+                FontSize="Title"
                 Margin="10"
                 HorizontalOptions="Center" />
 
             <Label 
                 Text="Sync your local SQLite database from your SQL Server through Web Api."
-                FontSize="12"
+                FontSize="Subtitle"
                 Margin="10,10,10,10"
                 HorizontalOptions="Center" />
 
