@@ -31,7 +31,7 @@
         
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
             <Label
-                FontSize="14" 
+                FontSize="Default" 
                 Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}" 
                 TextColor="{DynamicResource Primary}" 
                 IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}"/>

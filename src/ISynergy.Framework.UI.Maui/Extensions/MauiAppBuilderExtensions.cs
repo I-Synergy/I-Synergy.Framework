@@ -108,10 +108,16 @@ public static class MauiAppBuilderExtensions
         appBuilder
             .ConfigureFonts(fonts =>
             {
+                fonts.AddFont("segoeui.ttf", "SegoeUI");
+                fonts.AddFont("segoesb.ttf", "SegoeSemiBold");
+                fonts.AddFont("segoeuib.ttf", "SegoeUIBold");
+                fonts.AddFont("segoeuil.ttf", "SegoeUILight");
+                fonts.AddFont("segoeuisl.ttf", "SegoeUISemiLight");
+                fonts.AddFont("segoeuisb.ttf", "SegoeUISemiBold");
+                fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
                 fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
                 fonts.AddFont("opensans-regular.ttf", "OpenSansRegular");
                 fonts.AddFont("opensans-semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
                 fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
                 fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
             });

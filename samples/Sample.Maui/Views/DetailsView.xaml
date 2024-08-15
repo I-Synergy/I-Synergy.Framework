@@ -170,7 +170,7 @@
             Grid.RowSpan="2">
             <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.8"/>
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                <Label FontSize="14" Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}" TextColor="{DynamicResource Primary}" IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}"/>
+                <Label FontSize="Default" Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}" TextColor="{DynamicResource Primary}" IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}"/>
                 <ActivityIndicator x:Name="IsBusyProgressRing" IsRunning="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" Color="{DynamicResource Primary}" />
             </StackLayout>
         </Grid>

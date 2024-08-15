@@ -28,10 +28,15 @@
 	  <EmbeddedResource Include="Resources\Fonts\opensans-regular.ttf" />
 	  <EmbeddedResource Include="Resources\Fonts\opensans-semibold.ttf" />
 	  <EmbeddedResource Include="Resources\Fonts\segoemdl2.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeui.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeuib.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeuil.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeuisb.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\segoeuisl.ttf" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.7" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.8" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
