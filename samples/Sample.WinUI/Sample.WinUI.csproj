@@ -42,21 +42,17 @@
 
 	<ItemGroup>
 		<Manifest Include="$(ApplicationManifest)" />
-
+		<PackageReference Include="I-Synergy.Framework.UI.WinUI" Version="0.0.0" />
+		<PackageReference Include="I-Synergy.Framework.Update.WinUI" Version="0.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="26.2.8" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="26.2.8" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="26.2.8" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="26.2.9" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="26.2.9" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="26.2.9" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj" />
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
 

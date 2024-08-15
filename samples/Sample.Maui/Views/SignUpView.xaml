@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<c:View xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
-        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-        x:Class="Sample.Views.SignUpView"
-        xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
-        xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
-        x:DataType="viewmodels:SignUpViewModel"
-        Title="{Binding Title}">
+<c:View
+    x:Class="Sample.Views.SignUpView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+    Title="{Binding Title}"
+    x:DataType="viewmodels:SignUpViewModel">
 
     <Grid HorizontalOptions="Center">
         <Grid.RowDefinitions>
@@ -16,81 +17,108 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="350" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <Image
             Grid.Row="0"
             Grid.Column="1"
-            Source="dotnet_bot.png"
-            SemanticProperties.Description="Logo"
             Margin="10"
-            WidthRequest="400"
+            HorizontalOptions="Center"
+            SemanticProperties.Description="Logo"
+            Source="dotnet_bot.png"
             VerticalOptions="Start"
-            HorizontalOptions="Center"/>
+            WidthRequest="400" />
 
         <VerticalStackLayout
-            Spacing="5" 
-            Grid.Row="1" 
-            Grid.Column="1">
+            Grid.Row="1"
+            Grid.Column="1"
+            Spacing="5">
             <Label
-                Text="{m:GetString SignupTitle}"
-                SemanticProperties.HeadingLevel="Level1"
+                FontSize="Title"
                 HorizontalOptions="Center"
-                FontSize="24" 
-                FontAttributes="Bold" 
-                TextColor="{DynamicResource Primary}"
-                LineBreakMode="WordWrap" />
+                LineBreakMode="WordWrap"
+                SemanticProperties.HeadingLevel="Level1"
+                Text="{m:GetString SignupTitle}"
+                TextColor="{DynamicResource Primary}" />
 
             <Label
-                Text="{m:GetString SignupText}"
-                SemanticProperties.HeadingLevel="Level2"
+                FontSize="Default"
                 HorizontalOptions="Center"
-                TextColor="{DynamicResource Primary}"
-                LineBreakMode="WordWrap"/>
+                LineBreakMode="WordWrap"
+                SemanticProperties.HeadingLevel="Level2"
+                Text="{m:GetString SignupText}"
+                TextColor="{DynamicResource Primary}" />
         </VerticalStackLayout>
 
-        <ScrollView 
+        <ScrollView
             Grid.Row="2"
             Grid.Column="1"
             Margin="0,20">
             <VerticalStackLayout
+                MaximumWidthRequest="250"
                 Spacing="10"
-                VerticalOptions="Center"
-                MaximumWidthRequest="250">
-                <Entry Text="{Binding Name}" Placeholder="{m:GetString Fullname}"/>
-                <Entry Text="{Binding Mail}" Placeholder="{m:GetString EmailAddress}" Keyboard="Email">
+                VerticalOptions="Center">
+                <Entry Placeholder="{m:GetString Fullname}" Text="{Binding Name}" />
+                <Entry
+                    Keyboard="Email"
+                    Placeholder="{m:GetString EmailAddress}"
+                    Text="{Binding Mail}">
                     <!--<Entry.Behaviors>
-                        <toolkitbehaviors:UserStoppedTypingBehavior 
-                            Command="{Binding ValidateMailCommand}" 
+                        <toolkitbehaviors:UserStoppedTypingBehavior
+                            Command="{Binding ValidateMailCommand}"
                             StoppedTypingTimeThreshold="2500"
                             MinimumLengthThreshold="3"
                             ShouldDismissKeyboardAutomatically="True"/>
                     </Entry.Behaviors>-->
                 </Entry>
 
-                <Entry Text="{Binding Password}" Placeholder="{m:GetString Password}" IsPassword="True"/>
-                <Entry Text="{Binding PasswordCheck}" Placeholder="{m:GetString PasswordRetype}" IsPassword="True" />
+                <Entry
+                    IsPassword="True"
+                    Placeholder="{m:GetString Password}"
+                    Text="{Binding Password}" />
+                <Entry
+                    IsPassword="True"
+                    Placeholder="{m:GetString PasswordRetype}"
+                    Text="{Binding PasswordCheck}" />
 
-                <Picker Title="{m:GetString Modules}" ItemsSource="{Binding Modules}" SelectedItem="{Binding SelectedModules}" ItemDisplayBinding="{Binding Description}" IsEnabled="{Binding ArePickersAvailable}"/>
-                <Picker Title="{m:GetString Country}" ItemsSource="{Binding Countries}" SelectedItem="{Binding SelectedCountry}" ItemDisplayBinding="{Binding CountryISO}" IsEnabled="{Binding ArePickersAvailable}"/>
-                <Picker Title="{m:GetString TimeZone}" ItemsSource="{Binding TimeZones}" SelectedItem="{Binding SelectedTimeZone}" IsEnabled="{Binding ArePickersAvailable}"/>
+                <Picker
+                    Title="{m:GetString Modules}"
+                    IsEnabled="{Binding ArePickersAvailable}"
+                    ItemDisplayBinding="{Binding Description}"
+                    ItemsSource="{Binding Modules}"
+                    SelectedItem="{Binding SelectedModules}" />
+                <Picker
+                    Title="{m:GetString Country}"
+                    IsEnabled="{Binding ArePickersAvailable}"
+                    ItemDisplayBinding="{Binding CountryISO}"
+                    ItemsSource="{Binding Countries}"
+                    SelectedItem="{Binding SelectedCountry}" />
+                <Picker
+                    Title="{m:GetString TimeZone}"
+                    IsEnabled="{Binding ArePickersAvailable}"
+                    ItemsSource="{Binding TimeZones}"
+                    SelectedItem="{Binding SelectedTimeZone}" />
 
-                <Button Text="{m:GetString Register}" Command="{Binding SignUpCommand}" HorizontalOptions="Center" IsEnabled="{Binding ArePickersAvailable}"/>
+                <Button
+                    Command="{Binding SignUpCommand}"
+                    HorizontalOptions="Center"
+                    IsEnabled="{Binding ArePickersAvailable}"
+                    Text="{m:GetString Register}" />
             </VerticalStackLayout>
         </ScrollView>
 
         <StackLayout
             Grid.Row="3"
             Grid.Column="1"
-            Orientation="Horizontal" 
-            Spacing="5" 
-            HorizontalOptions="Center" 
-            Margin="30" 
+            Margin="30"
+            HorizontalOptions="Center"
+            Orientation="Horizontal"
+            Spacing="5"
             VerticalOptions="End">
-            <Label Text="{m:GetString LoginAccount}" TextColor="{DynamicResource Gray600}"/>
+            <Label Text="{m:GetString LoginAccount}" TextColor="{DynamicResource Gray600}" />
             <Label Text="{m:GetString SignInHere}" TextColor="{DynamicResource Primary}">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding SignInCommand}" />
@@ -99,9 +127,9 @@
         </StackLayout>
 
         <c:ErrorPresenter
-            Grid.Row="0" 
+            Grid.Row="0"
             Grid.RowSpan="4"
             Grid.Column="1"
-            VerticalOptions="Start"/>
+            VerticalOptions="Start" />
     </Grid>
 </c:View>

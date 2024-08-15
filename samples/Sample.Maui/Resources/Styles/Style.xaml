@@ -1,62 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary
+    x:Class="Sample.Resources.Styles.Style"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="Sample.Resources.Styles.Style"
-    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
-    xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     xmlns:models="clr-namespace:ISynergy.Framework.Core.Models;assembly=ISynergy.Framework.Core"
-    xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
-    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui">
+    xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core">
 
-    <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
+    <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter" />
     <converters:CurrencyConverter x:Key="CurrencyConverter" />
     <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-    <converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter"/>
+    <converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter" />
     <converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
     <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
     <converters:StringFormatConverter x:Key="StringFormatConverter" />
-    <converters:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
-    <converters:StringToIntegerConverter x:Key="StringToIntegerConverter"/>
-    <converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
-    <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
-    <converters:StringToIsVisibleConverter x:Key="StringToIsVisibleConverter"/>
-    <converters:StringToEnabledConverter x:Key="StringToEnabledConverter"/>
-    <converters:DateTimeOffsetToLocalDateTimeConverter x:Key="DateTimeOffsetToLocalDateTimeConverter"/>
+    <converters:StringToDecimalConverter x:Key="StringToDecimalConverter" />
+    <converters:StringToIntegerConverter x:Key="StringToIntegerConverter" />
+    <converters:DecimalToStringConverter x:Key="DecimalToStringConverter" />
+    <converters:IntegerToStringConverter x:Key="IntegerToStringConverter" />
+    <converters:StringToIsVisibleConverter x:Key="StringToIsVisibleConverter" />
+    <converters:StringToEnabledConverter x:Key="StringToEnabledConverter" />
+    <converters:DateTimeOffsetToLocalDateTimeConverter x:Key="DateTimeOffsetToLocalDateTimeConverter" />
     <converters:DateTimeOffsetToLocalDateTimeOffsetConverter x:Key="DateTimeOffsetToLocalDateTimeOffsetConverter" />
     <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter" />
-    <converters:BooleanToIsVisibleConverter x:Key="BooleanToIsVisibleConverter" True="True" False="False" />
-    <converters:BooleanToIsVisibleConverter x:Key="InverseBooleanToIsVisibleConverter" True="False" False="True"/>
-    <converters:BooleanToIsVisibleConverter x:Key="IsEditableToVisibleConverter" True="True" False="False" />
-    <converters:NullToIsVisibleConverter x:Key="NullToIsVisibleConverter"/>
-    <converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters"/>
-    <converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter"/>
-    <converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter"/>
-    <converters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
-    <converters:IntegerToDoubleConverter x:Key="IntegerToDoubleConverter"/>
-    <converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" True="{m:GetString Yes}" False="{m:GetString No}" />
-    <converters:SelectionModeConverter x:Key="SelectionModeConverter"/>
-    <converters:ListToStringConverter x:Key="ListToStringConverter"/>
+    <converters:BooleanToIsVisibleConverter
+        x:Key="BooleanToIsVisibleConverter"
+        False="False"
+        True="True" />
+    <converters:BooleanToIsVisibleConverter
+        x:Key="InverseBooleanToIsVisibleConverter"
+        False="True"
+        True="False" />
+    <converters:BooleanToIsVisibleConverter
+        x:Key="IsEditableToVisibleConverter"
+        False="False"
+        True="True" />
+    <converters:NullToIsVisibleConverter x:Key="NullToIsVisibleConverter" />
+    <converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters" />
+    <converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter" />
+    <converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter" />
+    <converters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter" />
+    <converters:IntegerToDoubleConverter x:Key="IntegerToDoubleConverter" />
+    <converters:BooleanToStringConverter
+        x:Key="BooleanToYesNoConverter"
+        False="{m:GetString No}"
+        True="{m:GetString Yes}" />
+    <converters:SelectionModeConverter x:Key="SelectionModeConverter" />
+    <converters:ListToStringConverter x:Key="ListToStringConverter" />
 
-    <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
+    <!--  Note: For Android please see also Platforms\Android\Resources\values\colors.xml  -->
 
-    <x:Double x:Key="DefaultFontSize">14</x:Double>
-   
+    <!--<x:Double x:Key="DefaultFontSize">14</x:Double>-->
+
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
     </Style>
 
     <Style TargetType="IndicatorView">
-        <Setter Property="IndicatorColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray500}}"/>
-        <Setter Property="SelectedIndicatorColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray100}}"/>
+        <Setter Property="IndicatorColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray500}}" />
+        <Setter Property="SelectedIndicatorColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray100}}" />
     </Style>
 
     <Style TargetType="Border">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray500}}" />
-        <Setter Property="StrokeShape" Value="Rectangle"/>
-        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="StrokeShape" Value="Rectangle" />
+        <Setter Property="StrokeThickness" Value="1" />
     </Style>
 
     <Style TargetType="BoxView">
@@ -67,13 +79,12 @@
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource PrimaryDarkText}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
-        <Setter Property="BorderWidth" Value="0"/>
-        <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}"/>
-        <Setter Property="Padding" Value="14,10"/>
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -118,10 +129,9 @@
     <Style TargetType="DatePicker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -139,11 +149,10 @@
     <Style TargetType="Editor">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Gray900}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
+        <Setter Property="FontSize" Value="Caption" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray500}}" />
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -161,11 +170,10 @@
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Gray900}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
+        <Setter Property="FontSize" Value="Caption" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray500}}" />
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -188,11 +196,11 @@
 
     <Style TargetType="ImageButton">
         <Setter Property="Opacity" Value="1" />
-        <Setter Property="BorderColor" Value="Transparent"/>
-        <Setter Property="BorderWidth" Value="0"/>
-        <Setter Property="CornerRadius" Value="0"/>
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -211,8 +219,7 @@
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
+        <Setter Property="FontSize" Value="Caption" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -231,16 +238,16 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
     </Style>
 
-    <Style TargetType="Label" x:Key="Headline">
+    <Style x:Key="Headline" TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource MidnightBlue}, Dark={DynamicResource White}}" />
-        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontSize" Value="Title" />
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
-    <Style TargetType="Label" x:Key="SubHeadline">
+    <Style x:Key="SubHeadline" TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource MidnightBlue}, Dark={DynamicResource White}}" />
-        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontSize" Value="Subtitle" />
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
@@ -254,10 +261,9 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="TitleColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -290,12 +296,11 @@
     </Style>
 
     <Style TargetType="RadioButton">
-        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -319,10 +324,9 @@
         <Setter Property="PlaceholderColor" Value="{DynamicResource Gray500}" />
         <Setter Property="CancelButtonColor" Value="{DynamicResource Gray500}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -342,8 +346,7 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="PlaceholderColor" Value="{DynamicResource Gray500}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
+        <Setter Property="FontSize" Value="Caption" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -376,9 +379,9 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="MinimumTrackColor" Value="{AppThemeBinding Light={DynamicResource Gray300}, Dark={DynamicResource Gray600}}"/>
-                            <Setter Property="MaximumTrackColor" Value="{AppThemeBinding Light={DynamicResource Gray300}, Dark={DynamicResource Gray600}}"/>
-                            <Setter Property="ThumbColor" Value="{AppThemeBinding Light={DynamicResource Gray300}, Dark={DynamicResource Gray600}}"/>
+                            <Setter Property="MinimumTrackColor" Value="{AppThemeBinding Light={DynamicResource Gray300}, Dark={DynamicResource Gray600}}" />
+                            <Setter Property="MaximumTrackColor" Value="{AppThemeBinding Light={DynamicResource Gray300}, Dark={DynamicResource Gray600}}" />
+                            <Setter Property="ThumbColor" Value="{AppThemeBinding Light={DynamicResource Gray300}, Dark={DynamicResource Gray600}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -421,11 +424,10 @@
 
     <Style TargetType="TimePicker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
-        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}"/>
-        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}"/>
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -440,12 +442,12 @@
         </Setter>
     </Style>
 
-    <Style TargetType="Page" ApplyToDerivedTypes="True">
-        <Setter Property="Padding" Value="0"/>
+    <Style ApplyToDerivedTypes="True" TargetType="Page">
+        <Setter Property="Padding" Value="0" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray000}, Dark={DynamicResource OffBlack}}" />
     </Style>
 
-    <Style TargetType="Shell" ApplyToDerivedTypes="True">
+    <Style ApplyToDerivedTypes="True" TargetType="Shell">
         <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource OffBlack}}" />
         <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={DynamicResource Primary}, Default={DynamicResource White}}" />
         <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
@@ -471,36 +473,46 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
     </Style>
 
-    <Style TargetType="syncfusion:SfAvatarView" x:Key="DefaultInitialsAvatar">
-        <Setter Property="HeightRequest" Value="60"/>
-        <Setter Property="WidthRequest" Value="60"/>
-        <Setter Property="CornerRadius" Value="30"/>
-        <Setter Property="ContentType" Value="Initials"/>
-        <Setter Property="InitialsType" Value="DoubleCharacter"/>
-        <Setter Property="Background" Value="{DynamicResource Primary}"/>
-        <Setter Property="Stroke" Value="White"/>
-        <Setter Property="StrokeThickness" Value="2"/>
-        <Setter Property="InitialsColor" Value="White"/>
-        <Setter Property="Margin" Value="10"/>
+    <Style x:Key="DefaultInitialsAvatar" TargetType="syncfusion:SfAvatarView">
+        <Setter Property="HeightRequest" Value="60" />
+        <Setter Property="WidthRequest" Value="60" />
+        <Setter Property="CornerRadius" Value="30" />
+        <Setter Property="ContentType" Value="Initials" />
+        <Setter Property="InitialsType" Value="DoubleCharacter" />
+        <Setter Property="Background" Value="{DynamicResource Primary}" />
+        <Setter Property="Stroke" Value="White" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="InitialsColor" Value="White" />
+        <Setter Property="Margin" Value="10" />
     </Style>
 
-    <DataTemplate x:DataType="models:NavigationItem" x:Key="DefaultMenuItemStyle">
-        <Grid Padding="10" ColumnSpacing="10" ColumnDefinitions="Auto,*">
+    <DataTemplate x:Key="DefaultMenuItemStyle" x:DataType="models:NavigationItem">
+        <Grid
+            Padding="10"
+            ColumnDefinitions="Auto,*"
+            ColumnSpacing="10">
             <Image
                 Grid.Column="0"
                 HeightRequest="18"
-                WidthRequest="18"
-                VerticalOptions="Center">
+                VerticalOptions="Center"
+                WidthRequest="18">
                 <Image.Source>
-                    <FontImageSource Glyph="{Binding Symbol}" FontFamily="fontawesome" Color="{DynamicResource Primary}"/>
+                    <FontImageSource
+                        FontFamily="fontawesome"
+                        Glyph="{Binding Symbol}"
+                        Color="{DynamicResource Primary}" />
                 </Image.Source>
             </Image>
-            <Label Grid.Column="1" Text="{Binding Name}" FontSize="{StaticResource DefaultFontSize}" VerticalOptions="Center" />
+            <Label
+                Grid.Column="1"
+                FontSize="Caption"
+                Text="{Binding Name}"
+                VerticalOptions="Center" />
             <Grid.GestureRecognizers>
                 <TapGestureRecognizer
-                    NumberOfTapsRequired="1" 
-                    Command="{Binding Command}" 
-                    CommandParameter="{Binding CommandParameter}"/>
+                    Command="{Binding Command}"
+                    CommandParameter="{Binding CommandParameter}"
+                    NumberOfTapsRequired="1" />
             </Grid.GestureRecognizers>
         </Grid>
     </DataTemplate>
