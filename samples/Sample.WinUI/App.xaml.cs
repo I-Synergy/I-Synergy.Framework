@@ -35,7 +35,7 @@ public sealed partial class App : BaseApplication
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        : base(() => ServiceLocator.Default.GetInstance<ILoadingView>())
+        : base() //(() => ServiceLocator.Default.GetInstance<ILoadingView>())
     {
         InitializeComponent();
 
