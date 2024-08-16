@@ -2,23 +2,23 @@
 
 public class PaginatedResult<T> : Result
 {
-    public List<T> Data { get; set; }
+    public IEnumerable<T> Data { get; }
 
-    public int CurrentPage { get; set; }
+    public int CurrentPage { get; }
 
-    public int TotalPages { get; set; }
+    public int TotalPages { get; }
 
-    public int TotalCount { get; set; }
+    public int TotalCount { get; }
 
-    public int PageSize { get; set; }
+    public int PageSize { get; }
 
-    public PaginatedResult(List<T> data)
+    public PaginatedResult(IEnumerable<T> data)
         : base()
     {
         Data = data;
     }
 
-    internal PaginatedResult(bool succeeded, List<T> data = default, List<string> messages = null, int count = 0, int page = 1, int pageSize = 10)
+    internal PaginatedResult(bool succeeded, IEnumerable<T> data = default, List<string> messages = null, int count = 0, int page = 1, int pageSize = 10)
     {
         Data = data;
         CurrentPage = page;
@@ -30,7 +30,7 @@ public class PaginatedResult<T> : Result
 
     public static PaginatedResult<T> Failure(List<string> messages) => new PaginatedResult<T>(false, default, messages);
 
-    public static PaginatedResult<T> Success(List<T> data, int count, int page, int pageSize) => new PaginatedResult<T>(true, data, null, count, page, pageSize);
+    public static PaginatedResult<T> Success(IEnumerable<T> data, int count, int page, int pageSize) => new PaginatedResult<T>(true, data, null, count, page, pageSize);
 
     public bool HasPreviousPage => CurrentPage > 1;
 
