@@ -40,7 +40,7 @@ public static class ClaimsPrincipalExtensions
     /// Get UserId from claims.
     /// </summary>
     /// <returns>Guid.</returns>
-    public static Guid GetUserId(this ClaimsPrincipal principal) => principal.GetSingleClaimAsGuid(ClaimTypes.UserIdType);
+    public static string GetUserId(this ClaimsPrincipal principal) => principal.GetSingleClaim(ClaimTypes.UserIdType);
 
     /// <summary>
     /// Get Username from claims.
@@ -64,7 +64,7 @@ public static class ClaimsPrincipalExtensions
     /// Get clientId from claims.
     /// </summary>
     /// <returns>Guid.</returns>
-    public static Guid GetClientId(this ClaimsPrincipal principal) => principal.GetSingleClaimAsGuid(ClaimTypes.ClientIdType);
+    public static string GetClientId(this ClaimsPrincipal principal) => principal.GetSingleClaim(ClaimTypes.ClientIdType);
 
     /// <summary>
     /// Gets the single claim.
@@ -74,15 +74,15 @@ public static class ClaimsPrincipalExtensions
     /// <returns>System.String.</returns>
     /// <exception cref="DuplicateClaimException"></exception>
     /// <exception cref="ClaimNotFoundException"></exception>
-    private static string GetSingleClaim(this ClaimsPrincipal principal, string claimType)
+    public static string GetSingleClaim(this ClaimsPrincipal principal, string claimType)
     {
         var claims = principal.GetClaims(claimType);
 
-        if (claims.Count > 1)
-            throw new DuplicateClaimException(claimType);
-
         if (claims is null || claims.Count == 0)
             throw new ClaimNotFoundException(claimType);
+
+        if (claims.Count > 1)
+            throw new DuplicateClaimException(claimType);
 
         return claims.Single();
     }
@@ -93,7 +93,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>List&lt;System.Int32&gt;.</returns>
-    private static List<int> GetClaimsAsInt(this ClaimsPrincipal principal, string claimType) =>
+    public static List<int> GetClaimsAsInt(this ClaimsPrincipal principal, string claimType) =>
         principal.GetClaimsAs<int>(claimType, int.TryParse);
 
     /// <summary>
@@ -103,7 +103,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>List&lt;T&gt;.</returns>
-    private static List<T> GetClaimsAsEnum<T>(this ClaimsPrincipal principal, string claimType) where T : struct =>
+    public static List<T> GetClaimsAsEnum<T>(this ClaimsPrincipal principal, string claimType) where T : struct =>
         principal.GetClaimsAs<T>(claimType, Enum.TryParse);
 
     /// <summary>
@@ -112,7 +112,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>System.Int32.</returns>
-    private static int GetSingleClaimAsInt(this ClaimsPrincipal principal, string claimType) =>
+    public static int GetSingleClaimAsInt(this ClaimsPrincipal principal, string claimType) =>
         principal.GetSingleClaimAs<int>(claimType, int.TryParse);
 
     /// <summary>
@@ -121,7 +121,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>Guid.</returns>
-    private static Guid GetSingleClaimAsGuid(this ClaimsPrincipal principal, string claimType) =>
+    public static Guid GetSingleClaimAsGuid(this ClaimsPrincipal principal, string claimType) =>
         principal.GetSingleClaimAs<Guid>(claimType, Guid.TryParse);
 
     /// <summary>
@@ -131,7 +131,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>T.</returns>
-    private static T GetSingleClaimAsEnum<T>(this ClaimsPrincipal principal, string claimType) where T : struct =>
+    public static T GetSingleClaimAsEnum<T>(this ClaimsPrincipal principal, string claimType) where T : struct =>
         principal.GetSingleClaimAs<T>(claimType, Enum.TryParse);
 
     /// <summary>

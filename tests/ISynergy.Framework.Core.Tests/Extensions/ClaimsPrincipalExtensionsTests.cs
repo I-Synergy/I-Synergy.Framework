@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests;
 [TestClass()]
 public class ClaimsPrincipalExtensionsTests
 {
-    private Guid userId = Guid.NewGuid();
+    private string userId = Guid.NewGuid().ToString();
     private string userName = "userName";
     private Guid groupName = Guid.NewGuid();
 
