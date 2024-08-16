@@ -4,12 +4,18 @@ namespace ISynergy.Framework.Core.Models.Results;
 
 public class Result<T> : Result, IResult<T>
 {
+    public T Data { get; }
+
     public Result()
         : base()
     {
     }
 
-    public T Data { get; set; }
+    public Result(T data)
+        : this()
+    {
+        Data = data;
+    }
 
     public new static Result<T> Fail() => new() { Succeeded = false };
 
@@ -27,17 +33,11 @@ public class Result<T> : Result, IResult<T>
 
     public new static Result<T> Success(string message) => new() { Succeeded = true, Messages = [message] };
 
-    public static Result<T> Success(T data) => new() { Succeeded = true, Data = data };
+    public static Result<T> Success(T data) => new(data) { Succeeded = true };
 
-    public static Result<T> Success(T data, string message) => new()
-    {
-        Succeeded = true,
-        Data = data,
-        Messages =
-        [message]
-    };
+    public static Result<T> Success(T data, string message) => new(data) { Succeeded = true, Messages = [message] };
 
-    public static Result<T> Success(T data, List<string> messages) => new() { Succeeded = true, Data = data, Messages = messages };
+    public static Result<T> Success(T data, List<string> messages) => new(data) { Succeeded = true, Messages = messages };
 
     public new static Task<Result<T>> SuccessAsync() => Task.FromResult(Success());
 
