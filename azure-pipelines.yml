@@ -80,7 +80,7 @@ stages:
           inputs:
             secureFile: 'intelligence-online.pfx'
 
-        - task: SonarCloudPrepare@1
+        - task: SonarCloudPrepare@2
           displayName: 'Prepare SonarCloud'
           inputs:
             SonarCloud: 'SonarCloud'
@@ -138,7 +138,7 @@ stages:
             artifactName: Output
             publishLocation: 'Container'
         
-        - task: SonarCloudAnalyze@1
+        - task: SonarCloudAnalyze@2
           displayName: 'Run SonarCloud analyzer'
 
         - bash: |
