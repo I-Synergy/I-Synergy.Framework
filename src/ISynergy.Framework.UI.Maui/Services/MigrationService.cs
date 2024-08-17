@@ -6,11 +6,11 @@ namespace ISynergy.Framework.UI.Services;
 
 public class MigrationService : IMigrationService
 {
-    private readonly IApplicationSettingsService _applicationSettingsService;
+    private readonly IBaseSettingsService _settingsService;
 
-    public MigrationService(IApplicationSettingsService applicationSettingsService)
+    public MigrationService(IBaseSettingsService settingsService)
     {
-        _applicationSettingsService = applicationSettingsService;
+        _settingsService = settingsService;
     }
 
     public async Task ApplyMigrationAsync<TMigration>()
@@ -18,12 +18,12 @@ public class MigrationService : IMigrationService
     {
         var migration = Activator.CreateInstance(typeof(TMigration)) as IMigration;
 
-        if (_applicationSettingsService.Settings.MigrationVersion < migration.MigrationVersion)
+        if (_settingsService.LocalSettings.MigrationVersion < migration.MigrationVersion)
         {
             await migration.UpAsync();
 
-            _applicationSettingsService.Settings.MigrationVersion = migration.MigrationVersion;
-            _applicationSettingsService.SaveSettings();
+            _settingsService.LocalSettings.MigrationVersion = migration.MigrationVersion;
+            _settingsService.SaveLocalSettings();
         }
     }
 
@@ -32,12 +32,12 @@ public class MigrationService : IMigrationService
     {
         var migration = Activator.CreateInstance(typeof(TMigration)) as IMigration;
 
-        if (_applicationSettingsService.Settings.MigrationVersion > migration.MigrationVersion)
+        if (_settingsService.LocalSettings.MigrationVersion > migration.MigrationVersion)
         {
             await migration.DownAsync();
 
-            _applicationSettingsService.Settings.MigrationVersion = migration.MigrationVersion;
-            _applicationSettingsService.SaveSettings();
+            _settingsService.LocalSettings.MigrationVersion = migration.MigrationVersion;
+            _settingsService.SaveLocalSettings();
         }
     }
 }

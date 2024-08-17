@@ -4,7 +4,8 @@ using ISynergy.Framework.Core.Enumerations;
 using System.Globalization;
 
 namespace Sample.Models;
-public class LocalSettings : ObservableClass, IApplicationSettings
+
+public class LocalSettings : ObservableClass, ILocalSettings
 {
     public Languages Language { get; set; } = Languages.English;
     public bool IsFullscreen { get; set; }
@@ -16,32 +17,6 @@ public class LocalSettings : ObservableClass, IApplicationSettings
     public bool IsAdvanced { get; set; }
     public int MigrationVersion { get; set; }
 
-    /// <summary>
-    /// Gets or sets the SynchronizationSetting property value.
-    /// </summary>
-    public SynchronizationSettings SynchronizationSetting
-    {
-        get => GetValue<SynchronizationSettings>();
-        set => SetValue(value);
-    }
-
-    /// <summary>
-    /// Gets or sets the IsSynchronizationEnabled property value.
-    /// </summary>
-    public bool IsSynchronizationEnabled
-    {
-        get => GetValue<bool>();
-        set
-        {
-            SetValue(value);
-
-            if (value && SynchronizationSetting is null)
-                SynchronizationSetting = new SynchronizationSettings();
-            else if (!value)
-                SynchronizationSetting = null;
-        }
-    }
-
     public LocalSettings()
     {
         Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
@@ -51,9 +26,6 @@ public class LocalSettings : ObservableClass, IApplicationSettings
             "fr" => Languages.French,
             _ => Languages.English,
         };
-
         MigrationVersion = 0;
-        IsSynchronizationEnabled = false;
-        SynchronizationSetting = default;
     }
 }

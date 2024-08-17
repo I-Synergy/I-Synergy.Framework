@@ -42,7 +42,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <value>The common services.</value>
     public ICommonServices CommonServices { get; }
 
-    public IApplicationSettingsService SettingsService { get; }
+    public IBaseSettingsService SettingsService { get; }
 
     /// <summary>
     /// Gets or sets the display command.
@@ -107,7 +107,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         IContext context,
         ICommonServices commonServices,
         INavigationService navigationService,
-        IApplicationSettingsService settingsService,
+        IBaseSettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
         IThemeService themeService,
@@ -160,21 +160,18 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
 
         SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, SignInCommand));
-
-
     }
 
     protected override async Task SignOutAsync()
     {
-        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
+        if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
         {
-            _applicationSettingsService.Settings.IsAutoLogin = false;
-            _applicationSettingsService.SaveSettings();
+            _settingsService.LocalSettings.IsAutoLogin = false;
+            _settingsService.SaveLocalSettings();
         }
 
         await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
-
 
     private Task OpenChartTestAsync() =>
         _navigationService.NavigateAsync<ChartsViewModel>();
