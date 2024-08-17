@@ -82,7 +82,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <summary>
     /// The settings service.
     /// </summary>
-    protected readonly IApplicationSettingsService _applicationSettingsService;
+    protected readonly IBaseSettingsService _settingsService;
 
     /// <summary>
     /// The theme selector
@@ -120,7 +120,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="applicationSettingsService">The settings services.</param>
+    /// <param name="settingsService">The settings services.</param>
     /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="themeService">The theme selector service.</param>
@@ -128,7 +128,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected BaseShellViewModel(
         IContext context,
         IBaseCommonServices commonServices,
-        IApplicationSettingsService applicationSettingsService,
+        IBaseSettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
         IThemeService themeService,
@@ -139,9 +139,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
 
-        _applicationSettingsService = applicationSettingsService;
-        _applicationSettingsService.LoadSettings();
-
+        _settingsService = settingsService;
         _authenticationService = authenticationService;
         _themeService = themeService;
         _localizationService = LocalizationService;
@@ -240,7 +238,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Language);
+        var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _settingsService.LocalSettings.Language);
         languageVM.Submitted += LanguageVM_Submitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
@@ -255,8 +253,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        _applicationSettingsService.Settings.Language = e.Result;
-        _applicationSettingsService.SaveSettings();
+        _settingsService.LocalSettings.Language = e.Result;
+        _settingsService.SaveLocalSettings();
         _localizationService.SetLocalizationLanguage(e.Result);
 
         if (await BaseCommonServices.DialogService.ShowMessageAsync(
@@ -276,7 +274,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = new ThemeViewModel(Context, BaseCommonServices, _applicationSettingsService, Logger);
+        var themeVM = new ThemeViewModel(Context, BaseCommonServices, _settingsService, Logger);
         themeVM.Submitted += ThemeVM_Submitted;
         return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
@@ -293,9 +291,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         if (e.Result is { } style)
         {
-            _applicationSettingsService.Settings.Theme = style.Theme;
-            _applicationSettingsService.Settings.Color = style.Color;
-            _applicationSettingsService.SaveSettings();
+            _settingsService.LocalSettings.Theme = style.Theme;
+            _settingsService.LocalSettings.Color = style.Color;
+            _settingsService.SaveLocalSettings();
 
             if (await BaseCommonServices.DialogService.ShowMessageAsync(
                     BaseCommonServices.LanguageService.GetString("WarningColorChange") +

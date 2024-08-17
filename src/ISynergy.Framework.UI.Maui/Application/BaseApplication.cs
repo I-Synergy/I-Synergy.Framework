@@ -14,6 +14,7 @@ using ISynergy.Framework.UI.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 
+
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
 using ISynergy.Framework.UI.Helpers;
@@ -39,7 +40,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
-    protected readonly IApplicationSettingsService _applicationSettingsService;
+    protected readonly IBaseSettingsService _settingsService;
     protected readonly INavigationService _navigationService;
     protected readonly IBaseCommonServices _commonServices;
 
@@ -108,13 +109,14 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
         _logger.LogTrace("Setting up application settings service.");
-        _applicationSettingsService = ServiceLocator.Default.GetInstance<IApplicationSettingsService>();
+        _settingsService = ServiceLocator.Default.GetInstance<IBaseSettingsService>();
+        _settingsService.LoadLocalSettings();
 
         _logger.LogTrace("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
 
-        if (_applicationSettingsService.Settings is not null)
-            _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
+        if (_settingsService.LocalSettings is not null)
+            _localizationService.SetLocalizationLanguage(_settingsService.LocalSettings.Language);
 
         MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
         {
@@ -200,7 +202,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
         numberFormat.CurrencyNegativePattern = 1;
         _context.NumberFormat = numberFormat;
-
         return Task.CompletedTask;
     }
 

@@ -19,7 +19,7 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly IContext _context;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IApplicationSettingsService _applicationSettingsService;
+    private readonly IBaseSettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
     /// <summary>
@@ -35,13 +35,12 @@ public class AuthenticationService : IAuthenticationService
     public AuthenticationService(
         IContext context,
         IServiceScopeFactory serviceScopeFactory,
-        IApplicationSettingsService applicationSettingsService,
+        IBaseSettingsService settingsService,
         ICredentialLockerService credentialLockerService)
     {
         _context = context;
         _serviceScopeFactory = serviceScopeFactory;
-        _applicationSettingsService = applicationSettingsService;
-        _applicationSettingsService.LoadSettings();
+        _settingsService = settingsService;
         _credentialLockerService = credentialLockerService;
     }
 
@@ -80,12 +79,12 @@ public class AuthenticationService : IAuthenticationService
 
         if (remember)
         {
-            if (!_applicationSettingsService.Settings.IsAutoLogin ||
-                _applicationSettingsService.Settings.DefaultUser != username)
+            if (!_settingsService.LocalSettings.IsAutoLogin ||
+                _settingsService.LocalSettings.DefaultUser != username)
             {
-                _applicationSettingsService.Settings.IsAutoLogin = true;
-                _applicationSettingsService.Settings.DefaultUser = username;
-                _applicationSettingsService.SaveSettings();
+                _settingsService.LocalSettings.IsAutoLogin = true;
+                _settingsService.LocalSettings.DefaultUser = username;
+                _settingsService.SaveLocalSettings();
             }
 
             await _credentialLockerService.AddCredentialToCredentialLockerAsync(username, password);

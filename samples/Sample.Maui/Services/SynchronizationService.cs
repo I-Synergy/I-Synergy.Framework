@@ -22,7 +22,7 @@ internal class SynchronizationService : ISynchronizationService
 {
     private readonly IContext _context;
     private readonly IMessageService _messageService;
-    private readonly LocalSettingsService _localSettingsService;
+    private readonly SettingsService _settingsService;
     private readonly ISynchronizationSettings _synchronizationSettings;
 
     public bool IsActive { get; }
@@ -37,12 +37,12 @@ internal class SynchronizationService : ISynchronizationService
     public SynchronizationService(
         IContext context,
         IMessageService messageService,
-        LocalSettingsService localSettingsService,
+        SettingsService settingsService,
         IOptions<ConfigurationOptions> configurationOptions)
     {
         _context = context;
         _messageService = messageService;
-        _localSettingsService = localSettingsService;
+        _settingsService = settingsService;
 
         if (!_context.IsAuthenticated)
             throw new InvalidOperationException("User is not authenticated");
@@ -50,11 +50,11 @@ internal class SynchronizationService : ISynchronizationService
         var options = configurationOptions.Value;
         var tenantId = _context.Profile.AccountId.ToString("N");
 
-        _synchronizationSettings = _localSettingsService.Settings.SynchronizationSetting;
+        _synchronizationSettings = _settingsService.RoamingSettings.SynchronizationSetting;
 
-        if (_synchronizationSettings is not null && _localSettingsService.Settings.IsSynchronizationEnabled)
+        if (_synchronizationSettings is not null && _settingsService.RoamingSettings.IsSynchronizationEnabled)
         {
-            IsActive = _localSettingsService.Settings.IsSynchronizationEnabled;
+            IsActive = _settingsService.RoamingSettings.IsSynchronizationEnabled;
 
             if (string.IsNullOrEmpty(_synchronizationSettings.SynchronizationFolder))
                 _synchronizationSettings.SynchronizationFolder = Path.Combine(FileSystem.AppDataDirectory, "Synchronization");

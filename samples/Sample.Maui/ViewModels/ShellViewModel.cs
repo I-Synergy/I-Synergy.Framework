@@ -41,7 +41,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <summary>
     /// Gets the settings service.
     /// </summary>
-    public IApplicationSettingsService SettingsService { get; }
+    public IBaseSettingsService SettingsService { get; }
 
     /// <summary>
     /// Gets or sets the display command.
@@ -76,7 +76,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     public ShellViewModel(
         IContext context,
         ICommonServices commonServices,
-        IApplicationSettingsService settingsService,
+        IBaseSettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
         IThemeService themeService,
@@ -122,10 +122,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         await base.SignOutAsync();
 
-        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
+        if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
         {
-            _applicationSettingsService.Settings.IsAutoLogin = false;
-            _applicationSettingsService.SaveSettings();
+            _settingsService.LocalSettings.IsAutoLogin = false;
+            _settingsService.SaveLocalSettings();
         }
     }
 

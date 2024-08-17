@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messages;
@@ -7,11 +6,12 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Windows.ApplicationModel;
 using ISynergy.Framework.UI.Styles;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 
 #if WINDOWS
 using Windows.UI;
+using ISynergy.Framework.Core.Abstractions.Services;
 #endif
 
 #if WINDOWS && !HAS_UNO
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.UI.Services;
 /// <seealso cref="IThemeService" />
 public class ThemeService : IThemeService
 {
-    private readonly IApplicationSettingsService _applicationSettingsService;
+    private readonly IBaseSettingsService _settingsService;
 
     /// <summary>
     /// Gets or sets the theme.
@@ -38,7 +38,7 @@ public class ThemeService : IThemeService
     /// <value>The theme.</value>
     public Style Style
     {
-        get => new(_applicationSettingsService.Settings.Color, _applicationSettingsService.Settings.Theme);
+        get => new(_settingsService.LocalSettings.Color, _settingsService.LocalSettings.Theme);
     }
 
     /// <summary>
@@ -55,11 +55,10 @@ public class ThemeService : IThemeService
     /// <summary>
     /// Default constructor.
     /// </summary>
-    /// <param name="applicationSettingsService"></param>
-    public ThemeService(IApplicationSettingsService applicationSettingsService)
+    /// <param name="settingsService"></param>
+    public ThemeService(IBaseSettingsService settingsService)
     {
-        _applicationSettingsService = applicationSettingsService;
-        _applicationSettingsService.LoadSettings();
+        _settingsService = settingsService;
     }
 
     /// <summary>

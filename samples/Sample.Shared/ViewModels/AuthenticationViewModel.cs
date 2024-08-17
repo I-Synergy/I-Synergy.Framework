@@ -28,7 +28,7 @@ public class AuthenticationViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;
     private readonly ILocalizationService _localizationService;
-    private readonly IApplicationSettingsService _applicationSettingsService;
+    private readonly IBaseSettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
     /// <summary>
@@ -195,7 +195,7 @@ public class AuthenticationViewModel : ViewModel
         IBaseCommonServices commonServices,
         ILocalizationService localizationService,
         IAuthenticationService authenticationService,
-        IApplicationSettingsService applicationSettingsService,
+        IBaseSettingsService settingsService,
         ICredentialLockerService credentialLockerService,
         ILogger logger,
         bool automaticValidation = false)
@@ -204,10 +204,8 @@ public class AuthenticationViewModel : ViewModel
         _authenticationService = authenticationService;
         _localizationService = localizationService;
         _credentialLockerService = credentialLockerService;
-
-        _applicationSettingsService = applicationSettingsService;
-        _applicationSettingsService.LoadSettings();
-
+        _settingsService = settingsService;
+        
         ShowSignInCommand = new RelayCommand(SetLoginVisibility);
         SignInCommand = new AsyncRelayCommand(SignInAsync);
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
@@ -289,16 +287,16 @@ public class AuthenticationViewModel : ViewModel
             if (Modules.FirstOrDefault() is { } module)
                 Registration_Modules.Add(module);
 
-            AutoLogin = _applicationSettingsService.Settings.IsAutoLogin;
+            AutoLogin = _settingsService.LocalSettings.IsAutoLogin;
 
             var users = await _credentialLockerService.GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();
             Usernames.AddRange(users);
 
-            if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser))
-                Username = _applicationSettingsService.Settings.DefaultUser;
+            if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
+                Username = _settingsService.LocalSettings.DefaultUser;
 
-            if (string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && Usernames.Count > 0)
+            if (string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && Usernames.Count > 0)
                 Username = Usernames[0];
 
             IsInitialized = true;

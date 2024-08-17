@@ -27,7 +27,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
-    protected readonly IApplicationSettingsService _applicationSettingsService;
+    protected readonly IBaseSettingsService _settingsService;
     protected readonly INavigationService _navigationService;
 
     private Task Initialize { get; set; }
@@ -65,14 +65,13 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
         _logger.LogInformation("Setting up application settings service.");
-        _applicationSettingsService = ServiceLocator.Default.GetInstance<IApplicationSettingsService>();
-        _applicationSettingsService.LoadSettings();
+        _settingsService = ServiceLocator.Default.GetInstance<IBaseSettingsService>();
 
         _logger.LogInformation("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
 
-        if (_applicationSettingsService.Settings is not null)
-            _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
+        if (_settingsService.LocalSettings is not null)
+            _localizationService.SetLocalizationLanguage(_settingsService.LocalSettings.Language);
 
         _logger.LogInformation("Setting style.");
         MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
