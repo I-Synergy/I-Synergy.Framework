@@ -24,14 +24,14 @@ public partial class App : BaseApplication
 
         bool navigateToAuthentication = true;
 
-        if (!string.IsNullOrEmpty(_applicationSettingsService.Settings.DefaultUser) && _applicationSettingsService.Settings.IsAutoLogin)
+        if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && _settingsService.LocalSettings.IsAutoLogin)
         {
-            string username = _applicationSettingsService.Settings.DefaultUser;
+            string username = _settingsService.LocalSettings.DefaultUser;
             string password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
             if (!string.IsNullOrEmpty(password))
             {
-                await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _applicationSettingsService.Settings.IsAutoLogin);
+                await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _settingsService.LocalSettings.IsAutoLogin);
                 navigateToAuthentication = false;
             }
         }

@@ -1,5 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using System.Runtime.InteropServices;
 using Windows.Security.Credentials;
 
 namespace ISynergy.Framework.UI.Services;
@@ -18,65 +20,48 @@ public class CredentialLockerService : ICredentialLockerService
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
-        string result = string.Empty;
-
-        try
+        return Task.FromResult(TryCatchUtility.IgnoreErrors<string, COMException>(() =>
         {
             PasswordVault vault = new();
             IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
 
             if (credentials.Count > 0)
-                result = vault.Retrieve(_infoService.ProductName, username)?.Password;
-        }
-        catch (Exception)
-        {
-            result = null;
-        }
+                return vault.Retrieve(_infoService.ProductName, username)?.Password;
 
-        return Task.FromResult(result);
+            return string.Empty;
+        }));
     }
 
     public Task<List<string>> GetUsernamesFromCredentialLockerAsync()
     {
-        List<string> result = [];
-
-        try
+        return Task.FromResult(TryCatchUtility.IgnoreErrors<List<string>, COMException>(() =>
         {
             PasswordVault vault = new();
             IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
-            result = credentials.Select(q => q.UserName).ToList();
-        }
-        catch (Exception)
-        {
-            result = null;
-        }
-
-        return Task.FromResult(result);
+            return credentials.Select(q => q.UserName).ToList();
+        }));
     }
 
-    public async Task AddCredentialToCredentialLockerAsync(string username, string password)
+    public Task AddCredentialToCredentialLockerAsync(string username, string password)
     {
-        PasswordVault vault = new();
-        string oldPassword = await GetPasswordFromCredentialLockerAsync(username);
-
-        if (oldPassword != password)
+        TryCatchUtility.IgnoreErrors<COMException>(async () =>
         {
-            await RemoveCredentialFromCredentialLockerAsync(username);
+            PasswordVault vault = new();
+            string oldPassword = await GetPasswordFromCredentialLockerAsync(username);
 
-            try
+            if (oldPassword != password)
             {
+                await RemoveCredentialFromCredentialLockerAsync(username);
                 vault.Add(new PasswordCredential(_infoService.ProductName, username, password));
             }
-            catch (Exception)
-            {
-                // Do nothing here...
-            }
-        }
+        });
+
+        return Task.CompletedTask;
     }
 
     public Task RemoveCredentialFromCredentialLockerAsync(string username)
     {
-        try
+        TryCatchUtility.IgnoreErrors<COMException>(() =>
         {
             PasswordVault vault = new();
             IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
@@ -84,12 +69,7 @@ public class CredentialLockerService : ICredentialLockerService
 
             if (credential is not null)
                 vault.Remove(credential);
-        }
-        catch (Exception)
-        {
-            // Do nothing here.
-            // Credentials are not found.
-        }
+        });
 
         return Task.CompletedTask;
     }

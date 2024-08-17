@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Enumerations;
 using System.Globalization;
 
 namespace Sample.Models;
-public class LocalSettings : IApplicationSettings
+public class LocalSettings : ILocalSettings
 {
     public Languages Language { get; set; } = Languages.English;
     public bool IsFullscreen { get; set; }

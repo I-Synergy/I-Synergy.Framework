@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests;

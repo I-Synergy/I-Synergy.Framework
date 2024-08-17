@@ -13,6 +13,7 @@ namespace ISynergy.Framework.UI.ViewModels;
 /// </summary>
 public class ThemeViewModel : ViewModelDialog<Style>
 {
+    private readonly IBaseSettingsService _settingsService;
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -34,18 +35,18 @@ public class ThemeViewModel : ViewModelDialog<Style>
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="applicationSettingsService"></param>
+    /// <param name="settingsService"></param>
     /// <param name="logger">The logger factory.</param>
     public ThemeViewModel(
         IContext context,
         IBaseCommonServices commonServices,
-        IApplicationSettingsService applicationSettingsService,
+        IBaseSettingsService settingsService,
         ILogger logger)
         : base(context, commonServices, logger)
     {
-        applicationSettingsService.LoadSettings();
-
+        _settingsService = settingsService;
+        
         ThemeColors = new ThemeColors();
-        SelectedItem = new Style(applicationSettingsService.Settings.Color, applicationSettingsService.Settings.Theme);
+        SelectedItem = new Style(_settingsService.LocalSettings.Color, _settingsService.LocalSettings.Theme);
     }
 }
