@@ -36,7 +36,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
-    protected readonly IApplicationSettingsService _applicationSettingsService;
+    protected readonly IBaseSettingsService _settingsService;
     protected readonly INavigationService _navigationService;
     protected readonly IBaseCommonServices _commonServices;
     protected readonly Func<ILoadingView> _initialView;
@@ -114,13 +114,13 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
         _logger.LogTrace("Setting up application settings service.");
-        _applicationSettingsService = ServiceLocator.Default.GetInstance<IApplicationSettingsService>();
+        _settingsService = ServiceLocator.Default.GetInstance<IBaseSettingsService>();
 
         _logger.LogTrace("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
 
-        if (_applicationSettingsService.Settings is not null)
-            _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Language);
+        if (_settingsService.LocalSettings is not null)
+            _localizationService.SetLocalizationLanguage(_settingsService.LocalSettings.Language);
 
         _logger.LogTrace("Starting initialization of application");
         InitializeApplication();

@@ -19,6 +19,8 @@ using Syncfusion.Maui.Core.Hosting;
 using System.Diagnostics;
 using System.Reflection;
 
+
+
 #if WINDOWS
 using ISynergy.Framework.Update.Extensions;
 #endif
@@ -40,7 +42,7 @@ public static class MauiProgram
             .Configuration
             .AddConfiguration(config);
 
-        var localSettingsService = new LocalSettingsService();
+        var settingsService = new SettingsService();
 
         builder
             .UseMauiApp<App>()
@@ -59,11 +61,9 @@ public static class MauiProgram
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 appBuilder.Services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
 
-                appBuilder.Services.TryAddSingleton(localSettingsService);
-                appBuilder.Services.TryAddSingleton<ILocalSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
-                appBuilder.Services.TryAddSingleton<IApplicationSettingsService>(s => s.GetRequiredService<LocalSettingsService>());
-
-                appBuilder.Services.TryAddSingleton<ISettingsService<GlobalSettings>, GlobalSettingsService>();
+                appBuilder.Services.TryAddSingleton(settingsService);
+                appBuilder.Services.TryAddSingleton<ISettingsService>(s => s.GetRequiredService<SettingsService>());
+                appBuilder.Services.TryAddSingleton<IBaseSettingsService>(s => s.GetRequiredService<SettingsService>());
 
                 appBuilder.Services.TryAddSingleton<CommonServices>();
                 appBuilder.Services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
@@ -93,7 +93,7 @@ public static class MauiProgram
             .ConfigureOfflineSynchronization(builder =>
             {
                 Debug.WriteLine("Configuring offline synchronization");
-                Debug.WriteLine(localSettingsService.Settings.IsSynchronizationEnabled);
+                Debug.WriteLine(settingsService.RoamingSettings.IsSynchronizationEnabled);
             })
             .ConfigureSyncfusionCore();
 

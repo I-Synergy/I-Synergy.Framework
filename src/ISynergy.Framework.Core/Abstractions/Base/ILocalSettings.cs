@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 /// <summary>
 /// Base class for application settings.
 /// </summary>
-public interface IApplicationSettings
+public interface ILocalSettings
 {
     /// <summary>
     /// Setting for maintaining the default culture used.
@@ -40,11 +40,7 @@ public interface IApplicationSettings
     /// </summary>
     bool IsAdvanced { get; set; }
     /// <summary>
-    /// Version of applied migration.
+    /// Setting for maintaining the last used migration version of the application.
     /// </summary>
     int MigrationVersion { get; set; }
-    /// <summary>
-    /// Synchronization enabeled property.
-    /// </summary>
-    bool IsSynchronizationEnabled { get; set; }
 }
