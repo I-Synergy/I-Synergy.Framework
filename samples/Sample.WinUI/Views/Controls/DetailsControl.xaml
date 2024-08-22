@@ -72,8 +72,8 @@
             ItemsSource="{Binding Items}"
             RelativePanel.AlignBottomWithPanel="True"
             RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.Below="MenuLayout"
             RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.Below="MenuLayout"
             SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="DoubleTapped">
@@ -101,20 +101,9 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <!--<Grid
-            x:Name="DisabledLayout"
-            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-            Opacity="0.75"
-            RelativePanel.AlignBottomWithPanel="True"
-            RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.AlignTopWithPanel="True"
-            Visibility="{Binding IsPaneVisible, Converter={StaticResource IsEditableToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-        <c:BladeView
+        <!--<c:BladeView
             x:Name="BladeDetails"
-            AutoCollapseCountThreshold="3"
-            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Blades="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             RelativePanel.AlignBottomWithPanel="True"
             RelativePanel.AlignRightWithPanel="True"
             RelativePanel.Below="MenuLayout" />-->
