@@ -16,8 +16,6 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
-    private readonly INavigationService _navigationService;
-
     /// <summary>
     /// Gets or sets the Version property value.
     /// </summary>
@@ -26,14 +24,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         get { return GetValue<Version>(); }
         set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the IsBackEnabled property value.
-    /// </summary>
-    public bool IsBackEnabled
-    {
-        get => _navigationService.CanGoBack;
     }
 
     /// <summary>
@@ -117,9 +107,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         CommonServices = commonServices;
         SettingsService = settingsService;
 
-        _navigationService = navigationService;
-        _navigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
-
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
 
@@ -170,35 +157,35 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             _settingsService.SaveLocalSettings();
         }
 
-        await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+        await BaseCommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
     private Task OpenChartTestAsync() =>
-        _navigationService.NavigateAsync<ChartsViewModel>();
+        BaseCommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
 
     private Task OpenTreenNodeTestAsync() =>
-        _navigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
+        BaseCommonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
 
     /// <summary>
     /// Opens the validation test asynchronous.
     /// </summary>
     /// <returns></returns>
     private Task OpenValidationTestAsync() =>
-        _navigationService.NavigateAsync<ValidationViewModel>();
+        BaseCommonServices.NavigationService.NavigateAsync<ValidationViewModel>();
 
     /// <summary>
     /// Opens the ListView test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenListViewTestAsync() =>
-        _navigationService.NavigateAsync<TestItemsListViewModel>();
+        BaseCommonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
 
     /// <summary>
     /// Opens the converters asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenConvertersAsync() =>
-        _navigationService.NavigateAsync<ConvertersViewModel>();
+        BaseCommonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
 
     /// <summary>
     /// browse file as an asynchronous operation.
@@ -217,21 +204,21 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenInfoAsync() =>
-        _navigationService.NavigateAsync<InfoViewModel>();
+        BaseCommonServices.NavigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
     /// Opens the display asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenDisplayAsync() =>
-        _navigationService.NavigateAsync<SlideShowViewModel>();
+        BaseCommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
 
     /// <summary>
     /// Opens the selection test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenSelectionTestAsync() =>
-       _navigationService.NavigateAsync<SelectionTestViewModel>();
+       BaseCommonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
 
     /// <summary>
     /// Opens the settings asynchronous.

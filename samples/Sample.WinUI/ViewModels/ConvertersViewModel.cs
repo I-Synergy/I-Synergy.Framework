@@ -1,8 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using Sample.Models;
 
 namespace Sample.ViewModels;
 
@@ -45,6 +47,9 @@ public class ConvertersViewModel : ViewModelNavigation<object>
         set => SetValue(value);
     }
 
+    public AsyncRelayCommand<TestItem> NavigateToDetailCommand { get; private set; }
+    public AsyncRelayCommand<TestItem> NavigateToPivotCommand { get; private set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
     /// </summary>
@@ -58,6 +63,8 @@ public class ConvertersViewModel : ViewModelNavigation<object>
         : base(context, commonServices, logger)
     {
         SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
+        NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
+        NavigateToPivotCommand = new AsyncRelayCommand<TestItem>(NavigateToPivotAsync);
     }
 
     /// <summary>
@@ -108,4 +115,15 @@ public class ConvertersViewModel : ViewModelNavigation<object>
         set => SetValue(value);
     }
 
+    private async Task NavigateToDetailAsync(TestItem item)
+    {
+        var detailsVm = new DetailsViewModel(Context, BaseCommonServices, Logger);
+        await BaseCommonServices.NavigationService.NavigateAsync(detailsVm);
+    }
+
+    private async Task NavigateToPivotAsync(TestItem item)
+    {
+        var detailsVm = new PivotViewModel(Context, BaseCommonServices, Logger);
+        await BaseCommonServices.NavigationService.NavigateAsync(detailsVm);
+    }
 }
