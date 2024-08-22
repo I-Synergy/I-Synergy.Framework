@@ -170,15 +170,22 @@ public partial class BladeView : ItemsControl
     /// <inheritdoc/>
     protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
     {
-        var blade = element as BladeItem;
-        if (blade != null)
+        try
         {
-            blade.VisibilityChanged += BladeOnVisibilityChanged;
-            blade.ParentBladeView = this;
-        }
+            var blade = element as BladeItem;
+            if (blade != null)
+            {
+                blade.VisibilityChanged += BladeOnVisibilityChanged;
+                blade.ParentBladeView = this;
+            }
 
-        base.PrepareContainerForItemOverride(element, item);
-        CycleBlades();
+            base.PrepareContainerForItemOverride(element, item);
+            CycleBlades();
+        }
+        catch
+        {
+        }
+        
     }
 
     /// <inheritdoc/>

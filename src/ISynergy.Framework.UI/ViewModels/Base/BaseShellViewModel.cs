@@ -27,6 +27,14 @@ namespace ISynergy.Framework.UI.ViewModels.Base;
 public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 {
     /// <summary>
+    /// Gets or sets the IsBackEnabled property value.
+    /// </summary>
+    public bool IsBackEnabled
+    {
+        get => BaseCommonServices.NavigationService.CanGoBack;
+    }
+
+    /// <summary>
     /// Gets or sets the restart update command.
     /// </summary>
     /// <value>The restart update command.</value>
@@ -135,6 +143,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         ILocalizationService LocalizationService)
         : base(context, commonServices, logger)
     {
+        BaseCommonServices.NavigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();

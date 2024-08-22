@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Sample.Views.ControlsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
-    x:DataType="viewmodels:ControlsViewModel"
     Title="ControlsView">
 
     <Grid>

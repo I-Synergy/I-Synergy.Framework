@@ -1,69 +1,73 @@
-﻿<c:View 
-    xmlns:c="using:ISynergy.Framework.UI.Controls" 
+﻿<c:View
     x:Class="Sample.Views.ConvertersView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:enums="using:ISynergy.Framework.Core.Enumerations"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical" Spacing="4">
         <StackPanel Orientation="Horizontal" Spacing="4">
             <ComboBox
-                Header="ComboBox with EnumToArrayConverter" 
-                ItemsSource="{Binding SoftwareEnvironments, Converter={StaticResource EnumToArrayConverter}}" 
-                DisplayMemberPath="Value" 
-                SelectedValuePath="Key" 
-                SelectedValue="{Binding SelectedSoftwareEnvironment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                DisplayMemberPath="Value"
+                Header="ComboBox with EnumToArrayConverter"
+                ItemsSource="{Binding SoftwareEnvironments, Converter={StaticResource EnumToArrayConverter}}"
+                SelectedValue="{Binding SelectedSoftwareEnvironment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="Key" />
 
-            <TextBlock
-                Text="{Binding SelectedSoftwareEnvironment, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}"
-                VerticalAlignment="Bottom"/>
+            <TextBlock VerticalAlignment="Bottom" Text="{Binding SelectedSoftwareEnvironment, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Spacing="4">
             <ComboBox
-                Header="ComboBox with EnumKeyValueCollectionExtension" 
+                DisplayMemberPath="Value"
+                Header="ComboBox with EnumKeyValueCollectionExtension"
                 ItemsSource="{m:EnumKeyValueCollection EnumType=enums:SoftwareEnvironments}"
-                DisplayMemberPath="Value" 
-                SelectedValuePath="Key" 
-                SelectedValue="{Binding SelectedSoftwareEnvironment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                SelectedValue="{Binding SelectedSoftwareEnvironment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="Key" />
 
-            <TextBlock
-                 Text="{Binding SelectedSoftwareEnvironment, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}"
-                 VerticalAlignment="Bottom"/>
+            <TextBlock VerticalAlignment="Bottom" Text="{Binding SelectedSoftwareEnvironment, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Spacing="4">
             <ComboBox
-                Header="ComboBox with EnumCollectionExtension" 
+                Header="ComboBox with EnumCollectionExtension"
                 ItemsSource="{m:EnumCollection EnumType=enums:SoftwareEnvironments}"
                 SelectedValue="{Binding SelectedSoftwareEnvironmentByEnum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <TextBlock
-                 Text="{Binding SelectedSoftwareEnvironmentByEnum, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}"
-                 VerticalAlignment="Bottom"/>
+            <TextBlock VerticalAlignment="Bottom" Text="{Binding SelectedSoftwareEnvironmentByEnum, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}" />
         </StackPanel>
 
         <NumberBox
+            HorizontalAlignment="Left"
             Header="NumberBox with integer binding"
-            HorizontalAlignment="Left"
-            Value="{Binding IntegerValue, Mode=TwoWay, Converter={StaticResource IntegerToDoubleConverter}}"
+            NumberFormatter="{StaticResource 0DecimalFormatter}"
             SpinButtonPlacementMode="Compact"
-            NumberFormatter="{StaticResource 0DecimalFormatter}"/>
-            
+            Value="{Binding IntegerValue, Mode=TwoWay, Converter={StaticResource IntegerToDoubleConverter}}" />
+
         <NumberBox
-            Header="NumberBox with decimal binding"
             HorizontalAlignment="Left"
-            Value="{Binding DecimalValue, Mode=TwoWay, Converter={StaticResource DecimalToDoubleConverter}}"
+            Header="NumberBox with decimal binding"
+            NumberFormatter="{StaticResource 1DecimalFormatter}"
             SpinButtonPlacementMode="Compact"
-            NumberFormatter="{StaticResource 1DecimalFormatter}"/>
+            Value="{Binding DecimalValue, Mode=TwoWay, Converter={StaticResource DecimalToDoubleConverter}}" />
+
+        <StackPanel Orientation="Vertical" Spacing="4">
+            <TextBlock Text="Master-Detail" />
+            <Button Command="{Binding NavigateToDetailCommand}" Content="Navigate to details" />
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" Spacing="4">
+            <TextBlock Text="Pivot Master-Detail" />
+            <Button Command="{Binding NavigateToPivotCommand}" Content="Navigate to pivot" />
+        </StackPanel>
 
         <c:ImageBrowser
             MaxHeight="500"
-            FileBytes="{Binding FileBytes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ContentType="{Binding ContentType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            ContentType="{Binding ContentType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            FileBytes="{Binding FileBytes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </StackPanel>
 </c:View>
