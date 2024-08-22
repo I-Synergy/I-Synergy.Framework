@@ -35,7 +35,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
+		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240821" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
@@ -55,30 +55,19 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Common\DeferredNavigation.cs" Link="Common\DeferredNavigation.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Common\UserThemeResourceLoader.cs" Link="Common\UserThemeResourceLoader.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Common\UserThemeResources.cs" Link="Common\UserThemeResources.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\BladeView\BladeItem.cs" Link="Controls\BladeView\BladeItem.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\BladeView\BladeItemAutomationPeer.cs" Link="Controls\BladeView\BladeItemAutomationPeer.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\BladeView\BladeMode.cs" Link="Controls\BladeView\BladeMode.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\BladeView\BladeView.xaml.cs" Link="Controls\BladeView\BladeView.xaml.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\BladeView\BladeViewAutomationPeer.cs" Link="Controls\BladeView\BladeViewAutomationPeer.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\BusyIndicator\BusyIndicatorControl.cs" Link="Controls\BusyIndicator\BusyIndicatorControl.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Buttons\BaseDialogButtons.xaml.cs" Link="Controls\Buttons\BaseDialogButtons.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Console\Console.xaml.cs" Link="Controls\Console\Console.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\ErrorPresenter\ErrorPresenter.xaml.cs" Link="Controls\ErrorPresenter\ErrorPresenter.xaml.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Expander\ExpandDirection.cs" Link="Controls\Expander\ExpandDirection.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Expander\Expander.xaml.cs" Link="Controls\Expander\Expander.xaml.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Expander\ExpanderAutomationPeer.cs" Link="Controls\Expander\ExpanderAutomationPeer.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\HeaderedContentControl\HeaderedContentControl.xaml.cs" Link="Controls\HeaderedContentControl\HeaderedContentControl.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\ImageBrowser\ImageBrowser.xaml.cs" Link="Controls\ImageBrowser\ImageBrowser.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\ImageView\ImageView.xaml.cs" Link="Controls\ImageView\ImageView.xaml.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\LayoutTransformControl\LayoutTransformControl.xaml.cs" Link="Controls\LayoutTransformControl\LayoutTransformControl.xaml.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\LayoutTransformControl\PropertyChangeEventSource.cs" Link="Controls\LayoutTransformControl\PropertyChangeEventSource.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Menu\BaseMenu.xaml.cs" Link="Controls\Menu\BaseMenu.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\RadioButton\IconRadioButton.cs" Link="Controls\RadioButton\IconRadioButton.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\TextBox\TextBoxAttached.cs" Link="Controls\TextBox\TextBoxAttached.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Tiles\Tile.xaml.cs" Link="Controls\Tiles\Tile.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\View.cs" Link="Controls\View.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Window.cs" Link="Controls\Window.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Controls\Wrappers\InlineCollectionWrapper.cs" Link="Controls\Wrappers\InlineCollectionWrapper.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\BladeConverters.cs" Link="Converters\BladeConverters.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\BooleanConverters.cs" Link="Converters\BooleanConverters.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Converters\ByteConverters.cs" Link="Converters\ByteConverters.cs" />
@@ -228,19 +217,10 @@
 		<Page Include="..\ISynergy.Framework.UI.WinUI\Controls\ErrorPresenter\ErrorPresenter.xaml" Link="Controls\ErrorPresenter\ErrorPresenter.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="..\ISynergy.Framework.UI.WinUI\Controls\Expander\Expander.xaml" Link="Controls\Expander\Expander.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="..\ISynergy.Framework.UI.WinUI\Controls\HeaderedContentControl\HeaderedContentControl.xaml" Link="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
 		<Page Include="..\ISynergy.Framework.UI.WinUI\Controls\ImageBrowser\ImageBrowser.xaml" Link="Controls\ImageBrowser\ImageBrowser.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="..\ISynergy.Framework.UI.WinUI\Controls\ImageView\ImageView.xaml" Link="Controls\ImageView\ImageView.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="..\ISynergy.Framework.UI.WinUI\Controls\LayoutTransformControl\LayoutTransformControl.xaml" Link="Controls\LayoutTransformControl\LayoutTransformControl.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="..\ISynergy.Framework.UI.WinUI\Controls\Menu\BaseMenu.xaml" Link="Controls\Menu\BaseMenu.xaml">

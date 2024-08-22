@@ -1,330 +1,98 @@
-using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System.Collections.ObjectModel;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 namespace ISynergy.Framework.UI.Controls;
 
-[Lifetime(Lifetimes.Scoped)]
-public partial class BladeView : ItemsControl
+public partial class BladeView : UserControl
 {
-    private ScrollViewer _scrollViewer;
-    private readonly Dictionary<BladeItem, Size> _cachedBladeItemSizes = new Dictionary<BladeItem, Size>();
+    public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(ObservableCollection<UIElement>), typeof(BladeView), new PropertyMetadata(new ObservableCollection<UIElement>()));
 
-    /// <summary>
-    /// Fires whenever a <see cref="BladeItem" /> is opened
-    /// </summary>
-    public event EventHandler<BladeItem> BladeOpened;
-
-    /// <summary>
-    /// Fires whenever a <see cref="BladeItem" /> is closed
-    /// </summary>
-    public event EventHandler<BladeItem> BladeClosed;
-
-    /// <summary>
-    /// Identifies the <see cref="ActiveBlades" /> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty ActiveBladesProperty = DependencyProperty.Register(nameof(ActiveBlades), typeof(IList<BladeItem>), typeof(BladeView), new PropertyMetadata(null));
-
-    /// <summary>
-    /// Identifies the <see cref="BladeMode" /> attached property.
-    /// </summary>
-    public static readonly DependencyProperty BladeModeProperty = DependencyProperty.RegisterAttached(nameof(BladeMode), typeof(BladeMode), typeof(BladeView), new PropertyMetadata(BladeMode.Normal, OnBladeModeChanged));
-
-    /// <summary>
-    /// Identifies the <see cref="AutoCollapseCountThreshold" /> attached property.
-    /// </summary>
-    public static readonly DependencyProperty AutoCollapseCountThresholdProperty = DependencyProperty.RegisterAttached(nameof(AutoCollapseCountThreshold), typeof(int), typeof(BladeView), new PropertyMetadata(int.MaxValue, OnOpenBladesChanged));
-
-    /// <summary>
-    /// Gets or sets a collection of visible blades
-    /// </summary>
-    /// <value>The active blades.</value>
-    public IList<BladeItem> ActiveBlades
+    public ObservableCollection<UIElement> ItemsSource
     {
-        get { return (IList<BladeItem>)GetValue(ActiveBladesProperty); }
-        set { SetValue(ActiveBladesProperty, value); }
+        get { return (ObservableCollection<UIElement>)GetValue(ItemsSourceProperty); }
+        set { SetValue(ItemsSourceProperty, value); }
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether blade mode (ex: whether blades are full screen or not)
-    /// </summary>
-    /// <value>The blade mode.</value>
-    public BladeMode BladeMode
+    public double DisabledOpacity
     {
-        get { return (BladeMode)GetValue(BladeModeProperty); }
-        set { SetValue(BladeModeProperty, value); }
+        get { return (double)GetValue(DisabledOpacityProperty); }
+        set { SetValue(DisabledOpacityProperty, value); }
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating what the overflow amount should be to start auto collapsing blade items
-    /// </summary>
-    /// <value>The automatic collapse count threshold.</value>
-    /// <example>
-    /// For example we put AutoCollapseCountThreshold = 2
-    /// This means that each time a blade is added to the bladeview collection,
-    /// we will validate the amount of added blades that have a title bar visible.
-    /// If this number get's bigger than AutoCollapseCountThreshold, we will collapse all blades but the last one
-    /// </example>
-    /// <remarks>We don't touch blade items that have no title bar</remarks>
-    public int AutoCollapseCountThreshold
+    public static readonly DependencyProperty DisabledOpacityProperty = DependencyProperty.Register(nameof(DisabledOpacity), typeof(double), typeof(BladeView), new PropertyMetadata(0.75));
+
+    public Brush DisabledBackground
     {
-        get { return (int)GetValue(AutoCollapseCountThresholdProperty); }
-        set { SetValue(AutoCollapseCountThresholdProperty, value); }
+        get { return (Brush)GetValue(DisabledBackgroundProperty); }
+        set { SetValue(DisabledBackgroundProperty, value); }
     }
 
-    /// <summary>
-    /// Handles the <see cref="E:BladeModeChanged" /> event.
-    /// </summary>
-    /// <param name="dependencyObject">The dependency object.</param>
-    /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-    private static void OnBladeModeChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+    public static readonly DependencyProperty DisabledBackgroundProperty = DependencyProperty.Register(nameof(DisabledBackground), typeof(Brush), typeof(BladeView), new PropertyMetadata(Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Style));
+
+    public double Spacing
     {
-        var bladeView = (BladeView)dependencyObject;
-        var bladeScrollViewer = bladeView.GetScrollViewer();
-
-        if (bladeView.BladeMode == BladeMode.Fullscreen)
-        {
-            // Cache previous values of blade items properties (width & height)
-            bladeView._cachedBladeItemSizes.Clear();
-
-            if (bladeView.Items != null)
-            {
-                foreach (var item in bladeView.Items.EnsureNotNull())
-                {
-                    var bladeItem = bladeView.GetBladeItem(item);
-                    bladeView._cachedBladeItemSizes.Add(bladeItem, new Size(bladeItem.Width, bladeItem.Height));
-                }
-            }
-
-            VisualStateManager.GoToState(bladeView, "FullScreen", false);
-        }
-
-        if (bladeView.BladeMode == BladeMode.Normal)
-        {
-            // Reset blade items properties & clear cache
-            foreach (var kvBladeItemSize in bladeView._cachedBladeItemSizes.EnsureNotNull())
-            {
-                kvBladeItemSize.Key.Width = kvBladeItemSize.Value.Width;
-                kvBladeItemSize.Key.Height = kvBladeItemSize.Value.Height;
-            }
-
-            bladeView._cachedBladeItemSizes.Clear();
-
-            VisualStateManager.GoToState(bladeView, "Normal", false);
-        }
-
-        // Execute change of blade item size
-        bladeView.AdjustBladeItemSize();
+        get { return (double)GetValue(SpacingProperty); }
+        set { SetValue(SpacingProperty, value); }
     }
 
-    /// <summary>
-    /// Handles the <see cref="E:OpenBladesChanged" /> event.
-    /// </summary>
-    /// <param name="dependencyObject">The dependency object.</param>
-    /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-    private static void OnOpenBladesChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+    public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BladeView), new PropertyMetadata(10));
+
+    public Orientation Orientation
     {
-        var bladeView = (BladeView)dependencyObject;
-        bladeView.CycleBlades();
+        get { return (Orientation)GetValue(OrientationProperty); }
+        set { SetValue(OrientationProperty, value); }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BladeView"/> class.
-    /// </summary>
+    public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(BladeView), new PropertyMetadata(Orientation.Horizontal));
+
+
+    public HorizontalAlignment HorizontalBladeAlignment
+    {
+        get { return (HorizontalAlignment)GetValue(HorizontalBladeAlignmentProperty); }
+        set { SetValue(HorizontalBladeAlignmentProperty, value); }
+    }
+
+    public static readonly DependencyProperty HorizontalBladeAlignmentProperty = DependencyProperty.Register(nameof(HorizontalBladeAlignment), typeof(HorizontalAlignment), typeof(BladeView), new PropertyMetadata(HorizontalAlignment.Right));
+
+
+    public Thickness InnerPadding
+    {
+        get { return (Thickness)GetValue(InnerMarginProperty); }
+        set { SetValue(InnerMarginProperty, value); }
+    }
+
+    public static readonly DependencyProperty InnerMarginProperty = DependencyProperty.Register(nameof(InnerPadding), typeof(Thickness), typeof(BladeView), new PropertyMetadata(8));
+
     public BladeView()
     {
-        InitializeComponent();
-
-        Items.VectorChanged += ItemsVectorChanged;
-        Loaded += (sender, e) => AdjustBladeItemSize();
-        SizeChanged += (sender, e) => AdjustBladeItemSize();
+        this.InitializeComponent();
+        this.Visibility = Visibility.Collapsed;
+        this.InnerPadding = new Thickness(8);
+        this.HorizontalBladeAlignment = HorizontalAlignment.Right;
+        this.Orientation = Orientation.Horizontal;
+        this.Spacing = 10;
+        this.DisabledBackground = Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Brush;
+        this.DisabledOpacity = 0.75;
+        this.DataContextChanged += BladeView_DataContextChanged;
     }
 
-    /// <inheritdoc/>
-    protected override void OnApplyTemplate()
+    private void BladeView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
-        base.OnApplyTemplate();
-        CycleBlades();
-        AdjustBladeItemSize();
+        if (this.DataContext is IViewModelBladeView bladeView)
+            bladeView.Blades.CollectionChanged += Blades_CollectionChanged;
     }
 
-    /// <inheritdoc/>
-    protected override DependencyObject GetContainerForItemOverride()
+    private void Blades_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        return new BladeItem();
-    }
-
-    /// <inheritdoc/>
-    protected override bool IsItemItsOwnContainerOverride(object item)
-    {
-        return item is BladeItem;
-    }
-
-    /// <inheritdoc/>
-    protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
-    {
-        try
+        if (this.DataContext is IViewModelBladeView bladeView)
         {
-            var blade = element as BladeItem;
-            if (blade != null)
-            {
-                blade.VisibilityChanged += BladeOnVisibilityChanged;
-                blade.ParentBladeView = this;
-            }
-
-            base.PrepareContainerForItemOverride(element, item);
-            CycleBlades();
-        }
-        catch
-        {
-        }
-        
-    }
-
-    /// <inheritdoc/>
-    protected override void ClearContainerForItemOverride(DependencyObject element, object item)
-    {
-        var blade = element as BladeItem;
-        if (blade != null)
-        {
-            blade.VisibilityChanged -= BladeOnVisibilityChanged;
-        }
-
-        base.ClearContainerForItemOverride(element, item);
-    }
-
-    /// <summary>
-    /// Creates AutomationPeer (<see cref="UIElement.OnCreateAutomationPeer"/>)
-    /// </summary>
-    /// <returns>An automation peer for this <see cref="BladeView"/>.</returns>
-    protected override AutomationPeer OnCreateAutomationPeer()
-    {
-        return new BladeViewAutomationPeer(this);
-    }
-
-    private void CycleBlades()
-    {
-        ActiveBlades = new ObservableCollection<BladeItem>();
-        foreach (var item in Items.EnsureNotNull())
-        {
-            BladeItem blade = GetBladeItem(item);
-            if (blade != null)
-            {
-                if (blade.IsOpen)
-                {
-                    ActiveBlades.Add(blade);
-                }
-            }
-        }
-
-        // For now we skip this feature when blade mode is set to fullscreen
-        if (AutoCollapseCountThreshold > 0 && BladeMode != BladeMode.Fullscreen && ActiveBlades.Any())
-        {
-            var openBlades = ActiveBlades.Where(item => item.TitleBarVisibility == Visibility.Visible).ToList();
-            if (openBlades.Count > AutoCollapseCountThreshold)
-            {
-                for (int i = 0; i < openBlades.Count - 1; i++)
-                {
-                    openBlades[i].IsExpanded = false;
-                }
-            }
-        }
-    }
-
-    private BladeItem GetBladeItem(object item)
-    {
-        BladeItem blade = item as BladeItem;
-        if (blade == null)
-        {
-            blade = (BladeItem)ContainerFromItem(item);
-        }
-
-        return blade;
-    }
-
-    private async void BladeOnVisibilityChanged(object sender, Visibility visibility)
-    {
-        var blade = sender as BladeItem;
-
-        if (visibility == Visibility.Visible)
-        {
-            if (Items == null)
-            {
-                return;
-            }
-
-            var item = ItemFromContainer(blade);
-            Items.Remove(item);
-            Items.Add(item);
-            BladeOpened?.Invoke(this, blade);
-            ActiveBlades.Add(blade);
-            UpdateLayout();
-
-            // Need to do this because of touch. See more information here: https://github.com/CommunityToolkit/WindowsCommunityToolkit/issues/760#issuecomment-276466464
-            await DispatcherQueue.EnqueueAsync(
-                () =>
-                {
-                    GetScrollViewer()?.ChangeView(_scrollViewer.ScrollableWidth, null, null);
-                }, Microsoft.UI.Dispatching.DispatcherQueuePriority.Low);
-
-            return;
-        }
-
-        BladeClosed?.Invoke(this, blade);
-        ActiveBlades.Remove(blade);
-
-        var lastBlade = ActiveBlades.LastOrDefault();
-        if (lastBlade != null && lastBlade.TitleBarVisibility == Visibility.Visible)
-        {
-            lastBlade.IsExpanded = true;
-        }
-    }
-
-    private ScrollViewer GetScrollViewer()
-    {
-        return _scrollViewer ?? (_scrollViewer = this.FindDescendant<ScrollViewer>());
-    }
-
-    private void AdjustBladeItemSize()
-    {
-        // Adjust blade items to be full screen
-        if (BladeMode == BladeMode.Fullscreen && GetScrollViewer() != null)
-        {
-            foreach (var item in Items.EnsureNotNull())
-            {
-                var blade = GetBladeItem(item);
-                blade.Width = _scrollViewer.ActualWidth;
-                blade.Height = _scrollViewer.ActualHeight;
-            }
-        }
-    }
-
-    private void ItemsVectorChanged(IObservableVector<object> sender, IVectorChangedEventArgs e)
-    {
-        if (BladeMode == BladeMode.Fullscreen)
-        {
-            var bladeItem = GetBladeItem(sender[(int)e.Index]);
-            if (bladeItem != null)
-            {
-                if (!_cachedBladeItemSizes.ContainsKey(bladeItem))
-                {
-                    // Execute change of blade item size when a blade item is added in Fullscreen mode
-                    _cachedBladeItemSizes.Add(bladeItem, new Size(bladeItem.Width, bladeItem.Height));
-                    AdjustBladeItemSize();
-                }
-            }
-        }
-        else if (e.CollectionChange == CollectionChange.ItemInserted)
-        {
-            UpdateLayout();
-            GetScrollViewer()?.ChangeView(_scrollViewer.ScrollableWidth, null, null);
+            if (bladeView.Blades.Count < 1)
+                this.Visibility = Visibility.Collapsed;
+            else
+                this.Visibility = Visibility.Visible;
         }
     }
 }
