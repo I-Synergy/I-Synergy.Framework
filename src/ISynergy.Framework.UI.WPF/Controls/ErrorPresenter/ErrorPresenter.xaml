@@ -1,34 +1,44 @@
 <UserControl
+    x:Class="ISynergy.Framework.UI.Controls.ErrorPresenter"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:Converters="clr-namespace:ISynergy.Framework.UI.Converters"
-    x:Class="ISynergy.Framework.UI.Controls.ErrorPresenter"
-    mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     HorizontalAlignment="Stretch"
-    VerticalAlignment="Top">
+    VerticalAlignment="Top"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Converters:BooleanToVisibilityConverter x:Key="ErrorPresenterConverter" True="Visible" False="Collapsed"/>
+            <Converters:BooleanToVisibilityConverter
+                x:Key="ErrorPresenterConverter"
+                False="Collapsed"
+                True="Visible" />
         </ResourceDictionary>
     </UserControl.Resources>
 
     <UserControl.Visibility>
-        <Binding Converter="{StaticResource ErrorPresenterConverter}" Path="HasErrors"/>
+        <Binding Converter="{StaticResource ErrorPresenterConverter}" Path="HasErrors" />
     </UserControl.Visibility>
 
-    <Border x:Name="RootBorder" CornerRadius="4" Background="Red">
+    <Border
+        x:Name="RootBorder"
+        Background="Red"
+        CornerRadius="4">
         <Grid x:Name="RootGrid" Margin="4">
             <ItemsControl ItemsSource="{Binding Errors}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Value}" Foreground="White" FontSize="12" FontWeight="Bold" />
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="{Binding Value}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

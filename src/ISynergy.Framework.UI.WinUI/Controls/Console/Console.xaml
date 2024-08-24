@@ -5,29 +5,31 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    mc:Ignorable="d">
 
-    <!-- Set some sensible default values for properties, which will be propagated to the RichTextBox. -->
+    <!--  Set some sensible default values for properties, which will be propagated to the RichTextBox.  -->
     <UserControl.FontFamily>Consolas</UserControl.FontFamily>
     <UserControl.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" >
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
             <GradientStop Offset="0" Color="#232323" />
             <GradientStop Offset="1" Color="#000000" />
         </LinearGradientBrush>
     </UserControl.Background>
     <UserControl.FontSize>12</UserControl.FontSize>
 
-    <!-- The internal rich text box for the console. -->
-    <ScrollViewer x:Name="RichTextBox_Scroll"
-                  ScrollViewer.VerticalScrollMode="Enabled"
-                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ScrollViewer.HorizontalScrollMode="Disabled">
-        <win:RichTextBlock x:Name="RichTextBox_Console"
-                Foreground="White"
-                FontFamily="{x:Bind FontFamily}"
-                FontSize="{x:Bind FontSize}">
+    <!--  The internal rich text box for the console.  -->
+    <ScrollViewer
+        x:Name="RichTextBox_Scroll"
+        ScrollViewer.HorizontalScrollMode="Disabled"
+        ScrollViewer.VerticalScrollBarVisibility="Auto"
+        ScrollViewer.VerticalScrollMode="Enabled">
+        <win:RichTextBlock
+            x:Name="RichTextBox_Console"
+            FontFamily="{x:Bind FontFamily}"
+            FontSize="{x:Bind FontSize}"
+            Foreground="White">
             <RichTextBlock.Resources>
                 <Style TargetType="Paragraph">
                     <Setter Property="Margin" Value="0" />

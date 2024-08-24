@@ -8,25 +8,35 @@
     x:Name="BladeViewControl"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid Background="{Binding DisabledBackground, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Opacity="{Binding DisabledOpacity, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-
-        <Border
-            Padding="{Binding InnerPadding, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-            Background="{ThemeResource SolidBackgroundFillColorBase}"
-            BorderBrush="{ThemeResource SurfaceStrokeColorDefault}"
-            BorderThickness="{ThemeResource ContentDialogBorderWidth}"
-            CornerRadius="{Binding CornerRadius, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-            <ItemsControl x:Name="BladesItemsSource" ItemsSource="{Binding ItemsSource, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel
-                            HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            Orientation="{Binding Orientation, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            Spacing="{Binding Spacing, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </Border>
+    <Grid Background="{Binding DisabledBackground, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Opacity="{Binding DisabledOpacity, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+        <ListBox Padding="{Binding InnerPadding, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ItemsSource, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel
+                        MaxHeight="{Binding BladeHeight, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        Orientation="{Binding Orientation, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        Spacing="{Binding Spacing, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border
+                                    HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Background="{ThemeResource SolidBackgroundFillColorBase}"
+                                    BorderBrush="{ThemeResource SurfaceStrokeColorDefault}"
+                                    BorderThickness="{ThemeResource ContentDialogBorderWidth}"
+                                    CornerRadius="{Binding CornerRadius, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ContentPresenter Margin="10" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </Grid>
 </UserControl>

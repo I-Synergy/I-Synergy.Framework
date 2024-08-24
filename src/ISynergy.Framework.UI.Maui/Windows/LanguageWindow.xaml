@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<c:Window xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
-          xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
-          xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-          xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
-          xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
-          xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
-          x:DataType="viewmodels:LanguageViewModel"
-          x:Class="ISynergy.Framework.UI.Windows.LanguageWindow"
-          Title="{Binding Title}">
+<c:Window
+    x:Class="ISynergy.Framework.UI.Windows.LanguageWindow"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+    xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
+    Title="{Binding Title}"
+    x:DataType="viewmodels:LanguageViewModel">
     <Grid>
         <Grid.GestureRecognizers>
-            <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding CancelCommand}" />
+            <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
         </Grid.GestureRecognizers>
 
-        <ContentView 
-            ControlTemplate="{StaticResource DefaultDialogTemplate}"
-            WidthRequest="{OnPlatform WinUI=400, Default=400}">
-        
+        <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}" WidthRequest="{OnPlatform WinUI=400, Default=400}">
+
             <VerticalStackLayout Margin="10" Spacing="10">
-                <RadioButton 
+                <RadioButton
                     Content="{m:GetString Key=Language_Dutch}"
-                    IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=Dutch}}"
-                    GroupName="Language"/>
-            
-                <RadioButton 
+                    GroupName="Language"
+                    IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=Dutch}}" />
+
+                <RadioButton
                     Content="{m:GetString Key=Language_English}"
-                    IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=English}}"
-                    GroupName="Language"/>
-            
+                    GroupName="Language"
+                    IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=English}}" />
+
                 <RadioButton
                     Content="{m:GetString Key=Language_German}"
+                    GroupName="Language"
                     IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=German}}"
-                    GroupName="Language" 
-                    IsEnabled="False"/>
-            
-                <RadioButton 
+                    IsEnabled="False" />
+
+                <RadioButton
                     Content="{m:GetString Key=Language_French}"
+                    GroupName="Language"
                     IsChecked="{Binding SelectedItem, Converter={converters:RadioButtonToLanguageConverter Language=French}}"
-                    GroupName="Language" 
-                    IsEnabled="False"/>
+                    IsEnabled="False" />
             </VerticalStackLayout>
         </ContentView>
     </Grid>
