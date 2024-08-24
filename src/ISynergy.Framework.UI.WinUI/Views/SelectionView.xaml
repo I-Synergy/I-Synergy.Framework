@@ -1,86 +1,91 @@
-﻿<c:View xmlns:c="using:ISynergy.Framework.UI.Controls"
+﻿<c:View
     x:Class="ISynergy.Framework.UI.SelectionView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
-    xmlns:Behaviors="using:ISynergy.Framework.UI.Behaviors"
-    xmlns:Extensions="using:ISynergy.Framework.UI.Extensions"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="500"
     mc:Ignorable="d">
 
     <c:View.Resources>
         <Converters:SelectionModeConverter x:Key="SelectionModeConverter" />
     </c:View.Resources>
-    
-    <Grid HorizontalAlignment="Center" Width="500">
-        <RelativePanel Margin="10,5">
-            <TextBlock x:Name="TextBlockTitle" 
-                       RelativePanel.AlignTopWithPanel="True" 
-                       RelativePanel.AlignLeftWithPanel="True" 
-                       RelativePanel.AlignRightWithPanel="True" 
-                       Text="{Binding Title}" 
-                       Style="{StaticResource TitleTextBlockStyle}" />
-            <RelativePanel x:Name="LayoutRoot"
-                           RelativePanel.AlignLeftWithPanel="True"
-                           RelativePanel.AlignRightWithPanel="True"
-                           RelativePanel.AlignBottomWithPanel="True"
-                           RelativePanel.Below="TextBlockTitle">
-                <AutoSuggestBox x:Name="SearchQuery"
-                                PlaceholderText="{m:LanguageResource Key=Search}" 
-                                RelativePanel.AlignLeftWithPanel="True" 
-                                RelativePanel.AlignRightWithPanel="True" 
-                                RelativePanel.AlignTopWithPanel="True"
-                                QueryIcon="Find" 
-                                IsTabStop="True">
-                    <i:Interaction.Behaviors>
-                        <ic:EventTriggerBehavior EventName="QuerySubmitted">
-                            <ic:InvokeCommandAction Command="{Binding RefreshCommand}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
-                        </ic:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </AutoSuggestBox>
 
-                <ListView RelativePanel.AlignLeftWithPanel="True" 
-                          RelativePanel.AlignRightWithPanel="True" 
-                          RelativePanel.Below="SearchQuery" 
-                          RelativePanel.Above="BottomLayout" 
-                          x:Name="DataSummary" 
-                          ItemsSource="{Binding Items}"
-                          SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
-                          Margin="1,4">
-                    <i:Interaction.Behaviors>
-                        <ic:EventTriggerBehavior EventName="DoubleTapped">
-                            <ic:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
-                        </ic:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </ListView>
+    <RelativePanel>
+        <TextBlock
+            x:Name="TextBlockTitle"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignTopWithPanel="True"
+            Style="{StaticResource TitleTextBlockStyle}"
+            Text="{Binding Title}" />
+        <RelativePanel
+            x:Name="LayoutRoot"
+            RelativePanel.AlignBottomWithPanel="True"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.Below="TextBlockTitle">
+            <AutoSuggestBox
+                x:Name="SearchQuery"
+                IsTabStop="True"
+                PlaceholderText="{m:LanguageResource Key=Search}"
+                QueryIcon="Find"
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.AlignTopWithPanel="True">
+                <i:Interaction.Behaviors>
+                    <ic:EventTriggerBehavior EventName="QuerySubmitted">
+                        <ic:InvokeCommandAction Command="{Binding RefreshCommand}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
+                    </ic:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </AutoSuggestBox>
 
-                <StackPanel Orientation="Horizontal" 
-                            x:Name="BottomLayout" 
-                            RelativePanel.AlignRightWithPanel="True" 
-                            RelativePanel.AlignBottomWithPanel="True">
-                    <Button x:Name="Select_Button" 
-                            Content="{m:LanguageResource Key=Select}" 
-                            HorizontalAlignment="Right" 
-                            Command="{Binding SubmitCommand}" 
-                            CommandParameter="{Binding SelectedItem}"
-                            Margin="{ThemeResource ContentDialogButton1HostMargin}"
-                            MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
-                            MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
-                            MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" />
-                    <Button x:Name="Cancel_Button" 
-                            Content="{m:LanguageResource Key=Cancel}" 
-                            HorizontalAlignment="Right" 
-                            Command="{Binding CancelCommand}"
-                            Margin="{ThemeResource ContentDialogButton2HostMargin}"
-                            MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
-                            MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
-                            MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}"/>
-                </StackPanel>
-            </RelativePanel>
+            <ListView
+                x:Name="DataSummary"
+                Margin="1,4"
+                ItemsSource="{Binding Items}"
+                RelativePanel.Above="BottomLayout"
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.Below="SearchQuery"
+                SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}">
+                <i:Interaction.Behaviors>
+                    <ic:EventTriggerBehavior EventName="DoubleTapped">
+                        <ic:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
+                    </ic:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </ListView>
+
+            <StackPanel
+                x:Name="BottomLayout"
+                Orientation="Horizontal"
+                RelativePanel.AlignBottomWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True">
+                <Button
+                    x:Name="Select_Button"
+                    MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
+                    MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
+                    MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}"
+                    Margin="{ThemeResource ContentDialogButton1HostMargin}"
+                    HorizontalAlignment="Right"
+                    Command="{Binding SubmitCommand}"
+                    CommandParameter="{Binding SelectedItem}"
+                    Content="{m:LanguageResource Key=Select}" />
+                <Button
+                    x:Name="Cancel_Button"
+                    MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
+                    MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
+                    MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}"
+                    Margin="{ThemeResource ContentDialogButton2HostMargin}"
+                    HorizontalAlignment="Right"
+                    Command="{Binding CancelCommand}"
+                    Content="{m:LanguageResource Key=Cancel}" />
+            </StackPanel>
         </RelativePanel>
-    </Grid>
+    </RelativePanel>
 </c:View>

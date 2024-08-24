@@ -8,7 +8,7 @@
     "dotnet": "8.0.401"
   },
   "msbuild-sdks": {
-    "Uno.Sdk": "5.3.96",
+    "Uno.Sdk": "5.3.99",
     "Microsoft.Build.NoTargets": "3.7.56"
   }
 }

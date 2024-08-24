@@ -4,14 +4,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
+    x:Name="ControlRoot"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    x:Name="ControlRoot">
+    mc:Ignorable="d">
 
     <Grid>
-        <Image x:Name="StagingImage" Visibility="Collapsed" Stretch="{Binding ElementName=ControlRoot, Path=Stretch}"/>
-        <Image x:Name="ActualImage" Source="{Binding ElementName=ControlRoot, Path=PlaceHolder}" Stretch="{Binding ElementName=ControlRoot, Path=Stretch}" />
+        <Image
+            x:Name="StagingImage"
+            Stretch="{Binding ElementName=ControlRoot, Path=Stretch}"
+            Visibility="Collapsed" />
+        <Image
+            x:Name="ActualImage"
+            Source="{Binding ElementName=ControlRoot, Path=PlaceHolder}"
+            Stretch="{Binding ElementName=ControlRoot, Path=Stretch}" />
         <Grid.Resources>
             <Storyboard x:Name="ImageFadeOut">
                 <FadeOutThemeAnimation Storyboard.TargetName="ActualImage" />

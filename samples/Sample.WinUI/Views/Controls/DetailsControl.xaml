@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserControl
+    x:Class="Sample.Views.Controls.DetailsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:local="using:Sample.Views.Controls"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <RelativePanel x:Name="LayoutRoot">
+        <CommandBar
+            x:Name="MenuLayout"
+            DefaultLabelPosition="Right"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignTopWithPanel="True"
+            Style="{StaticResource DefaultCommandBarStyle}">
+            <CommandBar.Content>
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{Binding Title}" />
+            </CommandBar.Content>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton
+                    Name="Button_Add"
+                    Command="{Binding AddCommand}"
+                    Label="{m:LanguageResource Key=Add}"
+                    ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource FontAwesomeLight}" Glyph="&#x2b;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    Name="Button_Edit"
+                    Command="{Binding EditCommand}"
+                    CommandParameter="{Binding SelectedItem}"
+                    IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBooleanConverter}}"
+                    Label="{m:LanguageResource Key=Edit}"
+                    ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource FontAwesomeLight}" Glyph="&#xf304;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    Name="Button_Delete"
+                    Command="{Binding DeleteCommand}"
+                    CommandParameter="{Binding SelectedItem}"
+                    IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBooleanConverter}}"
+                    Label="{m:LanguageResource Key=Delete}"
+                    ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource FontAwesomeLight}" Glyph="&#xf1f8;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    Name="Button_Refresh"
+                    Command="{Binding RefreshCommand}"
+                    Label="{m:LanguageResource Key=Refresh}"
+                    ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource FontAwesomeLight}" Glyph="&#xf021;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+
+        <ListView
+            x:Name="DataSummary"
+            ItemsSource="{Binding Items}"
+            RelativePanel.AlignBottomWithPanel="True"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.Below="MenuLayout"
+            SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Behaviors>
+                <ic:EventTriggerBehavior EventName="DoubleTapped">
+                    <ic:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
+                </ic:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Column="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            FontSize="32"
+                            FontWeight="Bold"
+                            Text="{Binding Description}" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!--<c:BladeView
+            x:Name="BladeDetails"
+            Blades="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            RelativePanel.AlignBottomWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.Below="MenuLayout" />-->
+    </RelativePanel>
+</UserControl>

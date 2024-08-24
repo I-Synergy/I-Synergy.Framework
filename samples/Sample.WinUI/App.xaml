@@ -7,7 +7,7 @@
     <app:BaseApplication.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="ms-appx:///Styles/Images.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Style.xaml" />
             </ResourceDictionary.MergedDictionaries>
