@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<c:Window xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
-          xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-          x:Class="ISynergy.Framework.UI.Windows.NoteWindow"
-          xmlns:viewmodels="clr-namespace:ISynergy.Framework.Mvvm.ViewModels;assembly=ISynergy.Framework.Mvvm"
-          xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
-          x:DataType="viewmodels:NoteViewModel"
-          Title="{Binding Title}">
+<c:Window
+    x:Class="ISynergy.Framework.UI.Windows.NoteWindow"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+    xmlns:viewmodels="clr-namespace:ISynergy.Framework.Mvvm.ViewModels;assembly=ISynergy.Framework.Mvvm"
+    Title="{Binding Title}"
+    x:DataType="viewmodels:NoteViewModel">
 
     <Grid>
         <Grid.GestureRecognizers>
-            <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding CancelCommand}" />
+            <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
         </Grid.GestureRecognizers>
 
-        <ContentView 
-            ControlTemplate="{StaticResource DefaultDialogTemplate}"
-            MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
+        <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}" MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
 
             <Grid Margin="4">
                 <Editor
-                    Text="{Binding SelectedItem, Mode=TwoWay}"
                     AutoSize="TextChanges"
-                    Placeholder="{m:GetString EnterNote}"
                     HeightRequest="250"
-                    MinimumWidthRequest="375"
                     IsSpellCheckEnabled="True"
-                    IsTextPredictionEnabled="True"/>
+                    IsTextPredictionEnabled="True"
+                    MinimumWidthRequest="375"
+                    Placeholder="{m:GetString EnterNote}"
+                    Text="{Binding SelectedItem, Mode=TwoWay}" />
             </Grid>
         </ContentView>
     </Grid>

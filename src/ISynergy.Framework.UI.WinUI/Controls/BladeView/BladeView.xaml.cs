@@ -48,7 +48,6 @@ public partial class BladeView : UserControl
 
     public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(BladeView), new PropertyMetadata(Orientation.Horizontal));
 
-
     public HorizontalAlignment HorizontalBladeAlignment
     {
         get { return (HorizontalAlignment)GetValue(HorizontalBladeAlignmentProperty); }
@@ -57,7 +56,6 @@ public partial class BladeView : UserControl
 
     public static readonly DependencyProperty HorizontalBladeAlignmentProperty = DependencyProperty.Register(nameof(HorizontalBladeAlignment), typeof(HorizontalAlignment), typeof(BladeView), new PropertyMetadata(HorizontalAlignment.Right));
 
-
     public Thickness InnerPadding
     {
         get { return (Thickness)GetValue(InnerMarginProperty); }
@@ -65,6 +63,14 @@ public partial class BladeView : UserControl
     }
 
     public static readonly DependencyProperty InnerMarginProperty = DependencyProperty.Register(nameof(InnerPadding), typeof(Thickness), typeof(BladeView), new PropertyMetadata(8));
+
+    public double BladeHeight
+    {
+        get { return (double)GetValue(BladeHeightProperty); }
+        set { SetValue(BladeHeightProperty, value); }
+    }
+
+    public static readonly DependencyProperty BladeHeightProperty = DependencyProperty.Register(nameof(BladeHeight), typeof(double), typeof(BladeView), new PropertyMetadata(0));
 
     public BladeView()
     {
@@ -77,6 +83,16 @@ public partial class BladeView : UserControl
         this.DisabledBackground = Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Brush;
         this.DisabledOpacity = 0.75;
         this.DataContextChanged += BladeView_DataContextChanged;
+        this.SizeChanged += BladeViewEx_SizeChanged;
+    }
+
+    private void BladeViewEx_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (e.NewSize.Height > 0)
+        {
+            BladeHeight = e.NewSize.Height -
+                (InnerPadding.Top + InnerPadding.Bottom + Margin.Top + Margin.Bottom);
+        }
     }
 
     private void BladeView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
