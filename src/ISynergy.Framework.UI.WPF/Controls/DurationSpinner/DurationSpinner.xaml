@@ -1,36 +1,49 @@
-﻿<UserControl x:Class="ISynergy.Framework.UI.Controls.DurationSpinner"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:ISynergy.Framework.UI.Controls"
-             xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
-             mc:Ignorable="d"
-             d:DesignHeight="26" d:DesignWidth="250">
+﻿<UserControl
+    x:Class="ISynergy.Framework.UI.Controls.DurationSpinner"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="26"
+    d:DesignWidth="250"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
-            <converters:MaskToRegexConverter x:Key="MaskToRegexConverter"/>
+            <converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
+            <converters:MaskToRegexConverter x:Key="MaskToRegexConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        
-        <local:MaskedTextBox 
-            IsMaskEnabled="True" 
-            Mask="{Binding Path=Mask, Mode=OneWay, Converter={StaticResource MaskToRegexConverter}}" 
+
+        <local:MaskedTextBox
+            IsMaskEnabled="True"
+            Mask="{Binding Path=Mask, Mode=OneWay, Converter={StaticResource MaskToRegexConverter}}"
             Text="{Binding Path=Value, Mode=TwoWay, Converter={StaticResource TimeSpanToStringConverter}}" />
-        <RepeatButton Grid.Column="1" Content="-" Click="RepeatButtonDecrease" Height="26" Width="26" Margin="2,0" />
-        <RepeatButton Grid.Column="2" Content="+" Click="RepeatButtonIncrease" Height="26" Width="26" />
+        <RepeatButton
+            Grid.Column="1"
+            Width="26"
+            Height="26"
+            Margin="2,0"
+            Click="RepeatButtonDecrease"
+            Content="-" />
+        <RepeatButton
+            Grid.Column="2"
+            Width="26"
+            Height="26"
+            Click="RepeatButtonIncrease"
+            Content="+" />
     </Grid>
 </UserControl>

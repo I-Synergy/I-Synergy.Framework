@@ -24,7 +24,11 @@
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
 	  <None Remove="Assets\gta.mp4" />
+	  <None Remove="Views\Controls\DetailsControl.xaml" />
+	  <None Remove="Views\DetailsView.xaml" />
+	  <None Remove="Views\DetailView.xaml" />
 	  <None Remove="Views\LoadingView.xaml" />
+	  <None Remove="Views\PivotView.xaml" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -45,9 +49,9 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="26.2.9" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="26.2.9" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="26.2.9" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="26.2.10" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="26.2.10" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="26.2.10" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -81,5 +85,25 @@
 	  <Content Update="Assets\gta.mp4">
 	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
 	  </Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Views\Controls\DetailsControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Views\PivotView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Views\DetailView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Views\DetailsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 </Project>

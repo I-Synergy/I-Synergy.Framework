@@ -71,9 +71,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.0.1" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.80" />
-		<PackageReference Include="Syncfusion.Maui.Core" Version="26.2.9" />
+		<PackageReference Include="Syncfusion.Maui.Core" Version="26.2.10" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>

@@ -1,45 +1,56 @@
 ﻿<c:Window
     x:Class="ISynergy.Framework.UI.ThemeWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="using:ISynergy.Framework.UI.Controls"
     xmlns:converters="using:ISynergy.Framework.UI.Converters"
-    mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding Title}"
     PrimaryButtonCommand="{Binding SubmitCommand}"
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
-    SecondaryButtonCommand="{Binding CancelCommand}"
     PrimaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
-    SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
+    SecondaryButtonCommand="{Binding CancelCommand}"
+    SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
+    mc:Ignorable="d">
 
     <c:Window.Resources>
-        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ISynergy.Framework.Core.Enumerations.Themes, ISynergy.Framework.Core"/>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ISynergy.Framework.Core.Enumerations.Themes, ISynergy.Framework.Core" />
         <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter" />
     </c:Window.Resources>
-    
+
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
-            <RadioButton GroupName="Theme" Content="System" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <RadioButton GroupName="Theme" Content="Light" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <RadioButton GroupName="Theme" Content="Dark" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <RadioButton
+                Content="System"
+                GroupName="Theme"
+                IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <RadioButton
+                Content="Light"
+                GroupName="Theme"
+                IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <RadioButton
+                Content="Dark"
+                GroupName="Theme"
+                IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
-        <GridView ItemsSource="{Binding ThemeColors.Colors}"
-                  HorizontalAlignment="Center"
-                  SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <GridView
+            HorizontalAlignment="Center"
+            ItemsSource="{Binding ThemeColors.Colors}"
+            SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="8" />
+                    <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Vertical" />
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
-                        Height="28" 
-                        Width="28" 
+                    <Border
+                        Width="28"
+                        Height="28"
+                        Background="{Binding Converter={StaticResource StringToColorBrushConverter}}"
                         CornerRadius="14"
-                        ToolTipService.ToolTip="{Binding}"/>
+                        ToolTipService.ToolTip="{Binding}" />
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

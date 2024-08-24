@@ -1,55 +1,61 @@
-﻿<CommandBar x:Name="BaseMenuInstance"
+﻿<CommandBar
     x:Class="ISynergy.Framework.UI.Controls.BaseMenu"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
-    mc:Ignorable="d" 
-    Background="Transparent" 
-    IsDynamicOverflowEnabled="False"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="BaseMenuInstance"
+    Background="Transparent"
     DefaultLabelPosition="Right"
-    OverflowButtonVisibility="Collapsed">
+    IsDynamicOverflowEnabled="False"
+    OverflowButtonVisibility="Collapsed"
+    mc:Ignorable="d">
 
     <CommandBar.Content>
-        <TextBlock x:Name="TextBlockTitle" 
-                   Text="{Binding Title}" 
-                   Style="{StaticResource TitleTextBlockStyle}" />
+        <TextBlock
+            x:Name="TextBlockTitle"
+            Style="{StaticResource TitleTextBlockStyle}"
+            Text="{Binding Title}" />
     </CommandBar.Content>
     <CommandBar.PrimaryCommands>
-        <AppBarButton x:Name="Button_Add" 
-                      Command="{Binding AddCommand}" 
-                      Label="{m:LanguageResource Key=Add}" 
-                      ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
+        <AppBarButton
+            x:Name="Button_Add"
+            Command="{Binding AddCommand}"
+            Label="{m:LanguageResource Key=Add}"
+            ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
             <AppBarButton.Icon>
-                <SymbolIcon Symbol="Add"/>
+                <SymbolIcon Symbol="Add" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Name="Button_Edit" 
-                      Command="{Binding EditCommand}" 
-                      CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
-                      Label="{m:LanguageResource Key=Edit}" 
-                      ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
+        <AppBarButton
+            x:Name="Button_Edit"
+            Command="{Binding EditCommand}"
+            CommandParameter="{Binding SelectedItem, Mode=OneWay}"
+            Label="{m:LanguageResource Key=Edit}"
+            ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
             <AppBarButton.Icon>
-                <SymbolIcon Symbol="Edit"/>
+                <SymbolIcon Symbol="Edit" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Name="Button_Delete" 
-                      Command="{Binding DeleteCommand}" 
-                      CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
-                      Label="{m:LanguageResource Key=Delete}" 
-                      ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
+        <AppBarButton
+            x:Name="Button_Delete"
+            Command="{Binding DeleteCommand}"
+            CommandParameter="{Binding SelectedItem, Mode=OneWay}"
+            Label="{m:LanguageResource Key=Delete}"
+            ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
             <AppBarButton.Icon>
-                <SymbolIcon Symbol="Delete"/>
+                <SymbolIcon Symbol="Delete" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Name="Button_Refresh" 
-                      Command="{Binding RefreshCommand}" 
-                      Label="{m:LanguageResource Key=Refresh}" 
-                      ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}" 
-                      Visibility="{Binding Refresh_Enabled, ElementName=BaseMenuInstance}">
+        <AppBarButton
+            x:Name="Button_Refresh"
+            Command="{Binding RefreshCommand}"
+            Label="{m:LanguageResource Key=Refresh}"
+            ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}"
+            Visibility="{Binding Refresh_Enabled, ElementName=BaseMenuInstance}">
             <AppBarButton.Icon>
-                <SymbolIcon Symbol="Refresh"/>
+                <SymbolIcon Symbol="Refresh" />
             </AppBarButton.Icon>
         </AppBarButton>
     </CommandBar.PrimaryCommands>
