@@ -25,14 +25,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     }
 
     /// <summary>
-    /// Gets or sets the IsBackEnabled property value.
-    /// </summary>
-    public bool IsBackEnabled
-    {
-        get => CommonServices.NavigationService.CanGoBack;
-    }
-
-    /// <summary>
     /// Gets the common services.
     /// </summary>
     /// <value>The common services.</value>

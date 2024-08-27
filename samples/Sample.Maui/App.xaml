@@ -1,11 +1,11 @@
-﻿<?xml version = "1.0" encoding = "UTF-8" ?>
-<c:BaseApplication 
-    xmlns:c="clr-namespace:ISynergy.Framework.UI;assembly=ISynergy.Framework.UI.Maui"
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<c:BaseApplication
+    x:Class="Sample.App"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:styles="clr-namespace:ISynergy.Framework.UI.Resources.Styles;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI;assembly=ISynergy.Framework.UI.Maui"
     xmlns:local="clr-namespace:Sample"
-    x:Class="Sample.App">
+    xmlns:styles="clr-namespace:ISynergy.Framework.UI.Resources.Styles;assembly=ISynergy.Framework.UI.Maui">
 
     <c:BaseApplication.Resources>
         <ResourceDictionary>
