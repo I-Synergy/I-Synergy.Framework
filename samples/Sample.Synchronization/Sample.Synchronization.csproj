@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dotmim.Sync.SqlServer.ChangeTracking" Version="1.0.2" />
-    <PackageReference Include="Dotmim.Sync.Web.Server" Version="1.0.2" />
+    <PackageReference Include="Dotmim.Sync.SqlServer.ChangeTracking" Version="1.2.0" />
+    <PackageReference Include="Dotmim.Sync.Web.Server" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -98,11 +98,6 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     public RelayCommand ClearCommand { get; private set; }
 
     /// <summary>
-    /// The search cancellationtoken
-    /// </summary>
-    private CancellationTokenSource SearchCancellationtoken = null;
-
-    /// <summary>
     /// Edits the asynchronous.
     /// </summary>
     /// <param name="e">The e.</param>

@@ -50,9 +50,12 @@ var setup = new SyncSetup(tables);
 var webServerOptions = new WebServerOptions();
 webServerOptions.SerializerFactories.Add(new MessagePackSerializerFactory());
 
+//var sqlChangeTrackingProvider = new SqlSyncChangeTrackingProvider(connectionString);
+var sqlProvider = new SqlSyncProvider(connectionString);
+
 // add a SqlSyncProvider acting as the server hub
-builder.Services.AddSyncServer<SqlSyncChangeTrackingProvider>(connectionString, setup, options, webServerOptions);
-//builder.Services.AddSyncServer<SqlSyncProvider>(connectionString, setup, options, webServerOptions);
+//builder.Services.AddSyncServer(sqlChangeTrackingProvider(sqlChangeTrackingProvider, setup, options, webServerOptions);
+builder.Services.AddSyncServer(sqlProvider, setup, options, webServerOptions);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => DefaultJsonSerializers.Web());
