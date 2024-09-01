@@ -2,8 +2,9 @@
 I-Synergy Framework for backend and frontend applications
 
 ## Documentation
- [I-Synergy Framework Library Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Libraries)
-
+ [I-Synergy Framework Library Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Libraries)\
+  [I-Synergy Framework Samples Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Samples)\
+ [Developers Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers)
 ___
 ## I-Synergy Framework Build Status
 
