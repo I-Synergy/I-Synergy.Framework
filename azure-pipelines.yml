@@ -107,7 +107,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Build I-Synergy Framework solution'
           inputs:
-            solution: 'I-Synergy.Framework.sln'
+            solution: 'I-Synergy.Framework.Default.slnf'
             msbuildArchitecture: 'x64'
             configuration: $(BuildConfiguration)
             msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true'

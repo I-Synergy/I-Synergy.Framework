@@ -1,12 +1,12 @@
-﻿using Dotmim.Sync.Enumerations;
+﻿using Dotmim.Sync;
 using ISynergy.Framework.Core.Messages.Base;
 
 namespace ISynergy.Framework.Synchronization.Messages;
 
-public sealed class SyncSessionStateChangedMessage : BaseMessage<SyncSessionState>
+public sealed class SyncSessionStateChangedMessage : BaseMessage<SyncSessionStateEventArgs>
 {
-    public SyncSessionStateChangedMessage(SyncSessionState sessionState)
-        : base(sessionState)
+    public SyncSessionStateChangedMessage(SyncSessionStateEventArgs sessionStateArgs)
+        : base(sessionStateArgs)
     {
     }
 }

@@ -16,9 +16,8 @@ public class TestExceptionViewModel : ViewModelDialog<object>
     {
     }
 
-    public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
+    public override Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
         throw new Exception("This is a test exception");
-        await base.SubmitAsync(e, validateUnderlayingProperties);
     }
 }
