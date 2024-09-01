@@ -45,12 +45,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Storage.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{600436D8-B218-4FC2-B2E0-90279B1D37D5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{298244B0-89FE-411C-816B-CE38C0E03DA1}"
-	ProjectSection(SolutionItems) = preProject
-		docs\maui.md = docs\maui.md
-		docs\readme.md = docs\readme.md
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCore.Authentication.Tests", "tests\ISynergy.Framework.AspNetCore.Authentication.Tests\ISynergy.Framework.AspNetCore.Authentication.Tests.csproj", "{10C32A17-857E-4FF9-94D6-755DEB531AF1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCore.Tests", "tests\ISynergy.Framework.AspNetCore.Tests\ISynergy.Framework.AspNetCore.Tests.csproj", "{8113C8D2-D1FC-48AD-81D3-905E11506F09}"
@@ -210,19 +204,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uno", "Uno", "{2D436347-7096-4D33-85C2-62BB4D4160E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno", "samples\Sample.Uno\Sample.Uno.csproj", "{5AC2FEE6-3773-4922-A818-8DDBB4121244}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISynergy.Framework.Core", "ISynergy.Framework.Core", "{97876BA9-D697-4624-AF13-F52BAF215C4B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{E954B812-433F-46E1-AE13-B0D498A0E0FA}"
-	ProjectSection(SolutionItems) = preProject
-		docs\ISynergy.Framework.Core\Extensions\Uuidv7.md = docs\ISynergy.Framework.Core\Extensions\Uuidv7.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISynergy.Framework.UI.Maui", "ISynergy.Framework.UI.Maui", "{371472B9-1A6C-4B81-9933-979B8FCD3192}"
-	ProjectSection(SolutionItems) = preProject
-		docs\ISynergy.Framework.UI.Maui\migrationservice.md = docs\ISynergy.Framework.UI.Maui\migrationservice.md
-		docs\ISynergy.Framework.UI.Maui\preferences.md = docs\ISynergy.Framework.UI.Maui\preferences.md
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1564,9 +1545,6 @@ Global
 		{672B6824-5103-477C-8363-1521E7691D9C} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{2D436347-7096-4D33-85C2-62BB4D4160E8} = {96FE3E8C-9992-481D-95B6-D8FC7BB09F1F}
 		{5AC2FEE6-3773-4922-A818-8DDBB4121244} = {2D436347-7096-4D33-85C2-62BB4D4160E8}
-		{97876BA9-D697-4624-AF13-F52BAF215C4B} = {298244B0-89FE-411C-816B-CE38C0E03DA1}
-		{E954B812-433F-46E1-AE13-B0D498A0E0FA} = {97876BA9-D697-4624-AF13-F52BAF215C4B}
-		{371472B9-1A6C-4B81-9933-979B8FCD3192} = {298244B0-89FE-411C-816B-CE38C0E03DA1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
