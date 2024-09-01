@@ -77,7 +77,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
         MessageService.Default.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
         MessageService.Default.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
-        MessageService.Default.Register<SyncSessionStateChangedMessage>(this, m => SyncCommandButtonEnabled = m.Content == SyncSessionState.Ready);
+        MessageService.Default.Register<SyncSessionStateChangedMessage>(this, m => SyncCommandButtonEnabled = m.Content.State == SyncSessionState.Ready);
     }
 
     private async Task CustomActionCommandExecuteAsync()
