@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Sample.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="500"
+    Width="400"
     mc:Ignorable="d">
 
     <Grid>
@@ -21,6 +21,7 @@
             <TextBlock Text="Description" />
             <TextBlock Text="{Binding SelectedItem.Description}" />
 
+            <Button Command="{Binding OpenNewBladeCommand}" Content="Open New Blade" />
             <Button Command="{Binding CancelCommand}" Content="Close" />
         </StackPanel>
     </Grid>
