@@ -24,14 +24,15 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
-                                <Border
+                                <Grid
                                     HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                     Background="{ThemeResource SolidBackgroundFillColorBase}"
                                     BorderBrush="{ThemeResource SurfaceStrokeColorDefault}"
                                     BorderThickness="{ThemeResource ContentDialogBorderWidth}"
-                                    CornerRadius="{Binding CornerRadius, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                                    <ContentPresenter Margin="10" />
-                                </Border>
+                                    CornerRadius="{Binding CornerRadius, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding Content.Visibility, ElementName=ItemContentPresenter, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ContentPresenter x:Name="ItemContentPresenter" Margin="10" />
+                                </Grid>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>

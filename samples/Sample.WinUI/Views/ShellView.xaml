@@ -76,10 +76,7 @@
             MenuItemTemplateSelector="{StaticResource ItemSelector}"
             MenuItemsSource="{Binding PrimaryItems}"
             PaneDisplayMode="Left">
-            <Frame
-                x:Name="ContentRootFrame"
-                Margin="10"
-                IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+            <Frame x:Name="ContentRootFrame" IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                 <not_wasm:Frame.ContentTransitions>
                     <not_wasm:TransitionCollection>
                         <not_wasm:NavigationThemeTransition />
