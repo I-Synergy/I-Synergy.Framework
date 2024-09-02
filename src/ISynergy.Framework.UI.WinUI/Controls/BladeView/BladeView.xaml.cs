@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -72,10 +73,19 @@ public partial class BladeView : UserControl
 
     public static readonly DependencyProperty BladeHeightProperty = DependencyProperty.Register(nameof(BladeHeight), typeof(double), typeof(BladeView), new PropertyMetadata(0));
 
+    public int AutoCollapseThreshold
+    {
+        get { return (int)GetValue(AutoCollapseThresholdProperty); }
+        set { SetValue(AutoCollapseThresholdProperty, value); }
+    }
+
+    public static readonly DependencyProperty AutoCollapseThresholdProperty = DependencyProperty.Register(nameof(AutoCollapseThreshold), typeof(int), typeof(BladeView), new PropertyMetadata(0));
+
     public BladeView()
     {
         this.InitializeComponent();
         this.Visibility = Visibility.Collapsed;
+        this.CornerRadius = new CornerRadius(8);
         this.InnerPadding = new Thickness(8);
         this.HorizontalBladeAlignment = HorizontalAlignment.Right;
         this.Orientation = Orientation.Horizontal;
@@ -109,6 +119,28 @@ public partial class BladeView : UserControl
                 this.Visibility = Visibility.Collapsed;
             else
                 this.Visibility = Visibility.Visible;
+
+            if (AutoCollapseThreshold > 0 && bladeView.Blades.Count > AutoCollapseThreshold)
+            {
+                for (int i = 0; i < (bladeView.Blades.Count - AutoCollapseThreshold); i++)
+                    ((UIElement)bladeView.Blades[i]).Visibility = Visibility.Collapsed;
+
+                for (int i = AutoCollapseThreshold - 1; i < bladeView.Blades.Count - 1; i++)
+                    ((UIElement)bladeView.Blades[i]).Visibility = Visibility.Visible;
+            }
+            else
+            {
+                foreach (UIElement item in bladeView.Blades.EnsureNotNull())
+                    item.Visibility = Visibility.Visible;
+            }
+
+            for (int i = 0; i < bladeView.Blades.Count - 1; i++)
+            {
+                if (i == bladeView.Blades.Count - 1)
+                    ((UIElement)bladeView.Blades[i]).Opacity = 1;
+                else
+                    ((UIElement)bladeView.Blades[i]).Opacity = DisabledOpacity;
+            }
         }
     }
 }

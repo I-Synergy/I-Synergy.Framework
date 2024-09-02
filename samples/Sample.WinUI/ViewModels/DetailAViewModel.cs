@@ -7,11 +7,11 @@ using Sample.Models;
 
 namespace Sample.ViewModels;
 
-public class DetailViewModel : ViewModelBlade<TestItem>
+public class DetailAViewModel : ViewModelBlade<TestItem>
 {
     public AsyncRelayCommand OpenNewBladeCommand { get; }
 
-    public DetailViewModel(
+    public DetailAViewModel(
         IContext context,
         IBaseCommonServices commonServices,
         ILogger logger,
@@ -26,7 +26,7 @@ public class DetailViewModel : ViewModelBlade<TestItem>
 
     private async Task OpenNewBladeAsync()
     {
-        var detailsVm = new DetailAViewModel(Context, BaseCommonServices, Logger, SelectedItem);
+        var detailsVm = new DetailBViewModel(Context, BaseCommonServices, Logger, SelectedItem);
         await BaseCommonServices.NavigationService.OpenBladeAsync(Owner, detailsVm);
     }
 
