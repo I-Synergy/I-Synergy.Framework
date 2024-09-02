@@ -7,18 +7,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:local="using:Sample.Views"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <RelativePanel x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
         <CommandBar
             x:Name="MenuLayout"
             DefaultLabelPosition="Right"
-            RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.AlignTopWithPanel="True"
             Style="{StaticResource DefaultCommandBarStyle}">
             <CommandBar.Content>
                 <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{Binding Title}" />
@@ -69,11 +70,8 @@
 
         <ListView
             x:Name="DataSummary"
+            Grid.Row="1"
             ItemsSource="{Binding Items}"
-            RelativePanel.AlignBottomWithPanel="True"
-            RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.Below="MenuLayout"
-            RelativePanel.LeftOf="BladeDetails"
             SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="DoubleTapped">
@@ -103,9 +101,7 @@
 
         <c:BladeView
             x:Name="BladeDetails"
-            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            RelativePanel.AlignBottomWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.Below="MenuLayout" />
-    </RelativePanel>
+            Grid.RowSpan="2"
+            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
 </c:View>

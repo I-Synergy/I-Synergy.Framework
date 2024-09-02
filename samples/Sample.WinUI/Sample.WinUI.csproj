@@ -25,6 +25,9 @@
 	  <None Remove="appsettings.json" />
 	  <None Remove="Assets\gta.mp4" />
 	  <None Remove="Views\Controls\DetailsControl.xaml" />
+	  <None Remove="Views\DetailAView.xaml" />
+	  <None Remove="Views\DetailBView.xaml" />
+	  <None Remove="Views\DetailCView.xaml" />
 	  <None Remove="Views\DetailsView.xaml" />
 	  <None Remove="Views\DetailView.xaml" />
 	  <None Remove="Views\LoadingView.xaml" />
@@ -89,6 +92,15 @@
 	<ItemGroup>
 	  <Page Update="Views\Controls\DetailsControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Update="Views\DetailAView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="Views\DetailBView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="Views\DetailCView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	  </Page>
 	</ItemGroup>
 	<ItemGroup>
