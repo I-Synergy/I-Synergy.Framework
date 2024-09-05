@@ -9,98 +9,94 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <RelativePanel>
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-        <ContentControl
-            IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}"
-            RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.AlignTopWithPanel="True">
-            <StackPanel Orientation="Horizontal">
-                <StackPanel Orientation="Vertical">
-                    <Button
-                        Width="200"
-                        Height="35"
-                        Margin="1"
-                        Command="{Binding SelectSingleCommand}"
-                        Content="Select single item..." />
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical">
+                <Button
+                    Width="200"
+                    Height="35"
+                    Margin="1"
+                    Command="{Binding SelectSingleCommand}"
+                    Content="Select single item..." />
 
-                    <Button
-                        Width="200"
-                        Height="35"
-                        Margin="1"
-                        Command="{Binding SelectMultipleCommand}"
-                        Content="Select multiple items..." />
+                <Button
+                    Width="200"
+                    Height="35"
+                    Margin="1"
+                    Command="{Binding SelectMultipleCommand}"
+                    Content="Select multiple items..." />
 
-                    <Button
-                        Width="200"
-                        Height="35"
-                        Margin="1,20,1,1"
-                        Command="{Binding ShowDialogYesNo}"
-                        Content="Show Yes/No dialog..." />
+                <Button
+                    Width="200"
+                    Height="35"
+                    Margin="1,20,1,1"
+                    Command="{Binding ShowDialogYesNo}"
+                    Content="Show Yes/No dialog..." />
 
-                    <Button
-                        Width="200"
-                        Height="35"
-                        Margin="1"
-                        Command="{Binding ShowDialogYesNoCancel}"
-                        Content="Show Yes/No/Cancel dialog..." />
+                <Button
+                    Width="200"
+                    Height="35"
+                    Margin="1"
+                    Command="{Binding ShowDialogYesNoCancel}"
+                    Content="Show Yes/No/Cancel dialog..." />
 
-                    <Button
-                        Width="200"
-                        Height="35"
-                        Margin="1"
-                        Command="{Binding ShowDialogOk}"
-                        Content="Show Ok dialog..." />
+                <Button
+                    Width="200"
+                    Height="35"
+                    Margin="1"
+                    Command="{Binding ShowDialogOk}"
+                    Content="Show Ok dialog..." />
 
-                    <Button
-                        Width="200"
-                        Height="35"
-                        Margin="1"
-                        Command="{Binding ShowDialogOkCancel}"
-                        Content="Show Ok/Cancel dialog..." />
-                </StackPanel>
-
-                <StackPanel Orientation="Vertical">
-                    <c:Tile
-                        Title="Title"
-                        Command="{Binding ShowUnitsCommand}"
-                        Icon="{StaticResource address}" />
-                    <c:Tile
-                        Title="Title"
-                        Command="{Binding ShowTestCommand}"
-                        Icon="{StaticResource accounting}" />
-                    <c:Tile
-                        Title="Title"
-                        Count="5"
-                        Header="Header"
-                        Icon="{StaticResource atm}" />
-                    <c:Tile
-                        Title="Title"
-                        Count="Count"
-                        Header="Header"
-                        Icon="{StaticResource admin}" />
-                    <c:Tile
-                        Title="Title"
-                        Count="Count"
-                        Header="Header (small)"
-                        Icon="{StaticResource admin}"
-                        Mode="Small" />
-                    <c:Tile
-                        Title="Title"
-                        Count="Count"
-                        Header="Header (wide)"
-                        Icon="{StaticResource admin}"
-                        Mode="Wide" />
-                </StackPanel>
+                <Button
+                    Width="200"
+                    Height="35"
+                    Margin="1"
+                    Command="{Binding ShowDialogOkCancel}"
+                    Content="Show Ok/Cancel dialog..." />
             </StackPanel>
-        </ContentControl>
+
+            <StackPanel Orientation="Vertical">
+                <c:Tile
+                    Title="Title"
+                    Command="{Binding ShowUnitsCommand}"
+                    Icon="{StaticResource address}" />
+                <c:Tile
+                    Title="Title"
+                    Command="{Binding ShowTestCommand}"
+                    Icon="{StaticResource accounting}" />
+                <c:Tile
+                    Title="Title"
+                    Count="5"
+                    Header="Header"
+                    Icon="{StaticResource atm}" />
+                <c:Tile
+                    Title="Title"
+                    Count="Count"
+                    Header="Header"
+                    Icon="{StaticResource admin}" />
+                <c:Tile
+                    Title="Title"
+                    Count="Count"
+                    Header="Header (small)"
+                    Icon="{StaticResource admin}"
+                    Mode="Small" />
+                <c:Tile
+                    Title="Title"
+                    Count="Count"
+                    Header="Header (wide)"
+                    Icon="{StaticResource admin}"
+                    Mode="Wide" />
+            </StackPanel>
+        </StackPanel>
 
         <c:BladeView
             x:Name="BladeDetails"
-            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            RelativePanel.AlignBottomWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.AlignTopWithPanel="True" />
-    </RelativePanel>
+            Grid.RowSpan="2"
+            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
 </c:View>
