@@ -11,62 +11,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid x:Name="LayoutRoot">
+    <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <CommandBar
-            x:Name="MenuLayout"
-            DefaultLabelPosition="Right"
-            Style="{StaticResource DefaultCommandBarStyle}">
-            <CommandBar.Content>
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{Binding Title}" />
-            </CommandBar.Content>
-            <CommandBar.PrimaryCommands>
-                <AppBarButton
-                    Name="Button_Add"
-                    Command="{Binding AddCommand}"
-                    Label="{m:LanguageResource Key=Add}"
-                    ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
-                    <AppBarButton.Icon>
-                        <FontIcon FontFamily="{StaticResource FontAwesomeLight}" Glyph="&#x2b;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton
-                    Name="Button_Edit"
-                    Command="{Binding EditCommand}"
-                    CommandParameter="{Binding SelectedItem}"
-                    IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBooleanConverter}}"
-                    Label="{m:LanguageResource Key=Edit}"
-                    ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
-                    <AppBarButton.Icon>
-                        <FontIcon FontFamily="{StaticResource FontAwesomeLight}" Glyph="&#xf304;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton
-                    Name="Button_Delete"
-                    Command="{Binding DeleteCommand}"
-                    CommandParameter="{Binding SelectedItem}"
-                    IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBooleanConverter}}"
-                    Label="{m:LanguageResource Key=Delete}"
-                    ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
-                    <AppBarButton.Icon>
-                        <FontIcon FontFamily="{StaticResource FontAwesomeLight}" Glyph="&#xf1f8;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton
-                    Name="Button_Refresh"
-                    Command="{Binding RefreshCommand}"
-                    Label="{m:LanguageResource Key=Refresh}"
-                    ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}">
-                    <AppBarButton.Icon>
-                        <FontIcon FontFamily="{StaticResource FontAwesomeLight}" Glyph="&#xf021;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-            </CommandBar.PrimaryCommands>
-        </CommandBar>
+        <c:BaseMenu x:Name="MenuLayout" IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}" />
 
         <ListView
             x:Name="DataSummary"

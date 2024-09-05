@@ -1,59 +1,62 @@
 ﻿<c:View
     x:Class="Sample.Views.TreeNodeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="using:ISynergy.Framework.UI.Controls"
     xmlns:converters="using:Sample.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <c:View.Resources>
         <DataTemplate x:Key="DocumentItemDataTemplate">
-            <TreeViewItem ItemsSource="{Binding Children}"
-                          IsSelected="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TreeViewItem IsSelected="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Children}">
                 <StackPanel Height="28" Orientation="Horizontal">
-                    <SymbolIcon Symbol="Document" Margin="0,0,8,0"/>
-                    <TextBlock Text="{Binding Data.Title}"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <SymbolIcon Margin="0,0,8,0" Symbol="Document" />
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="{Binding Data.Title}" />
                 </StackPanel>
             </TreeViewItem>
-            
+
         </DataTemplate>
         <DataTemplate x:Key="FolderItemDataTemplate">
-            <TreeViewItem ItemsSource="{Binding Children}" 
-                          IsSelected="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TreeViewItem IsSelected="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Children}">
                 <StackPanel Height="28" Orientation="Horizontal">
-                    <SymbolIcon Symbol="Folder" Margin="0,0,8,0"/>
-                    <TextBlock Text="{Binding Data.Title}"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <SymbolIcon Margin="0,0,8,0" Symbol="Folder" />
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="{Binding Data.Title}" />
                 </StackPanel>
             </TreeViewItem>
         </DataTemplate>
 
-        <converters:ProductionItemTemplateSelector x:Key="ProductionItemTemplateSelector" 
-                                                   DocumentTemplate="{StaticResource DocumentItemDataTemplate}"
-                                                   FolderTemplate="{StaticResource FolderItemDataTemplate}"/>
+        <converters:ProductionItemTemplateSelector
+            x:Key="ProductionItemTemplateSelector"
+            DocumentTemplate="{StaticResource DocumentItemDataTemplate}"
+            FolderTemplate="{StaticResource FolderItemDataTemplate}" />
     </c:View.Resources>
 
-    <Grid>
+    <Grid Margin="8">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TreeView ItemsSource="{Binding Publication}" 
-                  SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectionMode="Single"
-                  ItemTemplateSelector="{StaticResource ProductionItemTemplateSelector}"
-                  Margin="3"/>
+        <TreeView
+            Margin="3"
+            ItemTemplateSelector="{StaticResource ProductionItemTemplateSelector}"
+            ItemsSource="{Binding Publication}"
+            SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectionMode="Single" />
 
-        <TextBox Header="Selected node"
-                 Grid.Column="1"
-                 Text="{Binding SelectedItem.Data.Title}" />
+        <TextBox
+            Grid.Column="1"
+            Header="Selected node"
+            Text="{Binding SelectedItem.Data.Title}" />
     </Grid>
 </c:View>

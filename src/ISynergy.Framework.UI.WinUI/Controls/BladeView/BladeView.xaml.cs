@@ -63,7 +63,7 @@ public partial class BladeView : UserControl
         set { SetValue(InnerMarginProperty, value); }
     }
 
-    public static readonly DependencyProperty InnerMarginProperty = DependencyProperty.Register(nameof(InnerPadding), typeof(Thickness), typeof(BladeView), new PropertyMetadata(8));
+    public static readonly DependencyProperty InnerMarginProperty = DependencyProperty.Register(nameof(InnerPadding), typeof(Thickness), typeof(BladeView), new PropertyMetadata(new Thickness(8)));
 
     public double BladeHeight
     {
@@ -71,7 +71,7 @@ public partial class BladeView : UserControl
         set { SetValue(BladeHeightProperty, value); }
     }
 
-    public static readonly DependencyProperty BladeHeightProperty = DependencyProperty.Register(nameof(BladeHeight), typeof(double), typeof(BladeView), new PropertyMetadata(0));
+    public static readonly DependencyProperty BladeHeightProperty = DependencyProperty.Register(nameof(BladeHeight), typeof(double), typeof(BladeView), new PropertyMetadata(0d));
 
     public int AutoCollapseThreshold
     {

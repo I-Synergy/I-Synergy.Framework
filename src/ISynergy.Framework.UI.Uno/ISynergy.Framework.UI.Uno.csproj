@@ -1,6 +1,6 @@
 <Project Sdk="Uno.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-ios;net8.0-maccatalyst;net8.0-android;net8.0-windows10.0.22621;net8.0;net8.0-browserwasm;net8.0-desktop</TargetFrameworks>
+		<TargetFrameworks>net8.0-ios;net8.0-maccatalyst;net8.0-android;net8.0-windows10.0.26100;net8.0;net8.0-browserwasm;net8.0-desktop</TargetFrameworks>
 		<UnoSingleProject>true</UnoSingleProject>
 		<OutputType>Library</OutputType>
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
@@ -29,9 +29,9 @@
 		the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
 		must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
 		-->
-		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.26100.1" />
-		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.26100.1" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.26100.42" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.26100.42" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
 	</ItemGroup>
 
 	<ItemGroup>

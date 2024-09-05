@@ -2,7 +2,7 @@
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using System.Globalization;
-using Windows.UI;
+//using Windows.UI;
 
 namespace ISynergy.Framework.UI.Helpers;
 
@@ -16,7 +16,7 @@ public static class ColorHelper
     /// </summary>
     /// <param name="hexColor">a hex string: "FFFFFF", "#000000"</param>
     /// <returns>Color.</returns>
-    public static Color HexStringToColor(string hexColor)
+    public static Windows.UI.Color HexStringToColor(string hexColor)
     {
         var hc = hexColor.ExtractHexDigits();
 
@@ -42,7 +42,7 @@ public static class ColorHelper
             var bi
                = byte.Parse(b, NumberStyles.HexNumber);
 
-            color = Color.FromArgb(255, ri, gi, bi);
+            color = Windows.UI.Color.FromArgb(255, ri, gi, bi);
         }
         catch
         {
@@ -70,7 +70,7 @@ public static class ColorHelper
             var g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
             var b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
 
-            return new SolidColorBrush(Color.FromArgb(a, r, g, b));
+            return new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
         }
 
         if (hex.Length == 8)
@@ -80,7 +80,7 @@ public static class ColorHelper
             var g = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
             var b = byte.Parse(hex.Substring(6, 2), NumberStyles.HexNumber);
 
-            return new SolidColorBrush(Color.FromArgb(a, r, g, b));
+            return new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
         }
         throw new InvalidCastException("string is not an hex color code.");
     }
@@ -91,7 +91,7 @@ public static class ColorHelper
     /// <param name="hex">The hexadecimal.</param>
     /// <returns>Color.</returns>
     /// <exception cref="InvalidCastException">string is not an hex color code.</exception>
-    public static Color GetColorFromHexString(string hex)
+    public static Windows.UI.Color GetColorFromHexString(string hex)
     {
         hex = hex.Replace("#", string.Empty);
 
@@ -102,7 +102,7 @@ public static class ColorHelper
             var g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
             var b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
 
-            return Color.FromArgb(a, r, g, b);
+            return Windows.UI.Color.FromArgb(a, r, g, b);
         }
 
         if (hex.Length == 8)
@@ -112,7 +112,7 @@ public static class ColorHelper
             var g = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
             var b = byte.Parse(hex.Substring(6, 2), NumberStyles.HexNumber);
 
-            return Color.FromArgb(a, r, g, b);
+            return Windows.UI.Color.FromArgb(a, r, g, b);
         }
         throw new InvalidCastException("string is not an hex color code.");
     }

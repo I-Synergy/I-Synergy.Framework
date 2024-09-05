@@ -19,7 +19,7 @@ public partial class LoadingView : ILoadingView
         InitializeComponent();
 
         MessageService.Default.Register<ApplicationInitializedMessage>(this, ApplicationInitialized);
-        BackgroundMediaElement.Source = MediaSource.FromResource("gta.mp4");
+        BackgroundMediaElement.Source = MediaSource.FromResource("embed://gta.mp4");
     }
 
     public void ApplicationInitialized(ApplicationInitializedMessage message) =>
