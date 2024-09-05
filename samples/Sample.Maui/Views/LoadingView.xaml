@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<c:View 
-    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+<c:View
+    x:Class="Sample.Views.LoadingView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="Sample.Views.LoadingView"
-    xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
     x:DataType="viewmodels:LoadingViewModel"
     Loaded="View_Loaded"
-    Unloaded="View_Unloaded"
-    NavigationPage.HasNavigationBar="False"
     NavigationPage.HasBackButton="False"
-    NavigationPage.TitleView="{x:Null}">
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.TitleView="{x:Null}"
+    Unloaded="View_Unloaded">
 
     <Grid>
         <Grid.GestureRecognizers>
             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="TapGestureRecognizer_Tapped" />
         </Grid.GestureRecognizers>
-        
+
         <toolkit:MediaElement
             x:Name="BackgroundMediaElement"
-            MediaEnded="MediaElement_MediaEnded"
-            ShouldShowPlaybackControls="False"
-            ShouldAutoPlay="True"
+            Aspect="AspectFill"
             IsEnabled="False"
-            Aspect="AspectFill"/>
+            MediaEnded="MediaElement_MediaEnded"
+            ShouldShowPlaybackControls="False" />
 
-        <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.25"/>
-        
-        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.25" />
+
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
             <Label
-                FontSize="Default" 
-                Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}" 
-                TextColor="{DynamicResource Primary}" 
-                IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}"/>
-            <ActivityIndicator 
-                IsRunning="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" 
-                Color="{DynamicResource Primary}" />
+                FontSize="Default"
+                IsVisible="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}"
+                Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}"
+                TextColor="{DynamicResource Primary}" />
+            <ActivityIndicator IsRunning="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" Color="{DynamicResource Primary}" />
         </StackLayout>
 
         <Button
             x:Name="SignInButton"
-            Text="{m:GetString Skip}"
+            Margin="20"
+            Clicked="SignInClicked"
+            HorizontalOptions="Center"
             IsEnabled="False"
-            Clicked="SignInClicked" 
-            HorizontalOptions="Center" 
-            VerticalOptions="End" 
-            Margin="20">
+            Text="{m:GetString Skip}"
+            VerticalOptions="End">
             <FlyoutBase.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="{m:GetString SignIn}" Clicked="SignInClicked" IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type Button}}, Path=IsEnabled}">
+                    <MenuFlyoutItem
+                        Clicked="SignInClicked"
+                        IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type Button}}, Path=IsEnabled}"
+                        Text="{m:GetString SignIn}">
                         <MenuFlyoutItem.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="None" Key="Escape"/>
+                            <KeyboardAccelerator Key="Escape" Modifiers="None" />
                         </MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                 </MenuFlyout>

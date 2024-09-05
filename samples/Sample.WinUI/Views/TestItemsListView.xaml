@@ -8,30 +8,25 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <RelativePanel>
-        <c:BaseMenu
-            x:Name="MenuLayout"
-            IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}"
-            RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.AlignTopWithPanel="True" />
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <c:BaseMenu x:Name="MenuLayout" IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}" />
 
         <ScrollViewer
+            Grid.Row="1"
             HorizontalScrollBarVisibility="Auto"
             IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}"
-            RelativePanel.AlignBottomWithPanel="True"
-            RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.Below="MenuLayout"
-            RelativePanel.LeftOf="BladeDetails"
             VerticalScrollBarVisibility="Disabled">
             <base_controls:BaseList x:Name="DataSummary" />
         </ScrollViewer>
 
         <c:BladeView
             x:Name="BladeDetails"
-            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            RelativePanel.AlignBottomWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.Below="MenuLayout" />
-    </RelativePanel>
+            Grid.RowSpan="2"
+            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
 </c:View>

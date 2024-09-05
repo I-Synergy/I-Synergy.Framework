@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+		<TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 		<RootNamespace>Sample</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -19,6 +19,7 @@
 		<DefaultLanguage>en</DefaultLanguage>
 		<IsPackable>false</IsPackable>
 		<EnableMsixTooling>true</EnableMsixTooling>
+		<WindowsSdkPackageVersion>10.0.26100.42</WindowsSdkPackageVersion>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -51,7 +52,7 @@
 		<Manifest Include="$(ApplicationManifest)" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
 		<PackageReference Include="Syncfusion.Chart.WinUI" Version="26.2.13" />
 		<PackageReference Include="Syncfusion.Editors.WinUI" Version="26.2.13" />
 		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="26.2.13" />
