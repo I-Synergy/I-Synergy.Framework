@@ -24,14 +24,12 @@
 	
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
-	  <None Remove="Assets\gta.mp4" />
 	  <None Remove="Views\Controls\DetailsControl.xaml" />
 	  <None Remove="Views\DetailAView.xaml" />
 	  <None Remove="Views\DetailBView.xaml" />
 	  <None Remove="Views\DetailCView.xaml" />
 	  <None Remove="Views\DetailsView.xaml" />
 	  <None Remove="Views\DetailView.xaml" />
-	  <None Remove="Views\LoadingView.xaml" />
 	  <None Remove="Views\PivotView.xaml" />
 	</ItemGroup>
 	
@@ -64,7 +62,7 @@
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj" />
-		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
+		<ProjectReference Include="..\Sample.UI.Shared\Sample.UI.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -78,17 +76,6 @@
 	   package has not yet been restored -->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
-	</ItemGroup>
-	<ItemGroup>
-	  <CustomAdditionalCompileInputs Remove="Views\LoadingView.xaml" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Resource Remove="Views\LoadingView.xaml" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Update="Assets\gta.mp4">
-	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-	  </Content>
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="Views\Controls\DetailsControl.xaml">

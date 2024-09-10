@@ -4,12 +4,30 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.Extensions;
 
 public static class ReflectionExtensions
 {
+    /// <summary>
+    /// Get viewmodel types from assemblies.
+    /// </summary>
+    /// <param name="assemblies"></param>
+    /// <returns></returns>
+    public static IEnumerable<Type> ToViewModelTypes(this IEnumerable<Assembly> assemblies)
+    {
+        foreach (var assembly in assemblies)
+            foreach (var type in assembly.GetTypes())
+                if (type.GetInterface(nameof(IViewModel), false) is not null
+                    && (type.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(type.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+                    && type.Name != GenericConstants.ViewModel
+                    && !type.IsAbstract
+                    && !type.IsInterface)
+                    yield return type;
+    }
+
     /// <summary>
     /// Get viewmodel types from assemblies.
     /// </summary>
@@ -27,6 +45,24 @@ public static class ReflectionExtensions
     /// <summary>
     /// Get view types from assemblies.
     /// </summary>
+    /// <param name="assemblies"></param>
+    /// <returns></returns>
+    public static IEnumerable<Type> ToViewTypes(this IEnumerable<Assembly> assemblies)
+    {
+        foreach (var assembly in assemblies)
+            foreach (var type in assembly.GetTypes())
+                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
+                && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
+                && type.Name != GenericConstants.View
+                && type.Name != GenericConstants.Page
+                && !type.IsAbstract
+                && !type.IsInterface)
+                    yield return type;
+    }
+
+    /// <summary>
+    /// Get view types from assemblies.
+    /// </summary>
     /// <returns></returns>
     public static IEnumerable<Type> GetViewTypes() =>
         AppDomain.CurrentDomain.GetAssemblies()
@@ -39,6 +75,23 @@ public static class ReflectionExtensions
                 && type.Name != GenericConstants.Page
                 && !type.IsAbstract
                 && !type.IsInterface);
+
+    /// <summary>
+    /// Get window types from assemblies.
+    /// </summary>
+    /// <param name="assemblies"></param>
+    /// <returns></returns>
+    public static IEnumerable<Type> ToWindowTypes(this IEnumerable<Assembly> assemblies)
+    {
+        foreach (var assembly in assemblies)
+            foreach (var type in assembly.GetTypes())
+                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
+                && type.Name.EndsWith(GenericConstants.Window)
+                && type.Name != GenericConstants.Window
+                && !type.IsAbstract
+                && !type.IsInterface)
+                    yield return type;
+    }
 
     /// <summary>
     /// Get window types from assemblies.

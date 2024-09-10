@@ -66,7 +66,7 @@ public sealed partial class App : BaseApplication
                 services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
 
                 services.AddUpdatesIntegration();
-            });
+            }, f => f.Name.StartsWith(typeof(App).Namespace));
     }
 
     public override async Task InitializeApplicationAsync()
