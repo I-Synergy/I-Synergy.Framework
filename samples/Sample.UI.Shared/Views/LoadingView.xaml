@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View
+    x:Class="Sample.Views.LoadingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid
+        IsDoubleTapEnabled="False"
+        IsTapEnabled="{Binding IsEnabled, ElementName=SignInButton}"
+        Tapped="Grid_Tapped">
+        <MediaPlayerElement
+            x:Name="BackgroundMediaElement"
+            AreTransportControlsEnabled="False"
+            IsEnabled="False"
+            IsFullWindow="True"
+            Stretch="UniformToFill" />
+
+        <Grid Background="{ThemeResource SystemBaseMediumColor}" Opacity="0.10" />
+
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ProgressRing
+                x:Name="IsBusyProgressRing"
+                Width="48"
+                Height="48"
+                IsActive="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" />
+            <TextBlock
+                FontSize="16"
+                Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}"
+                Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}" />
+        </StackPanel>
+
+        <Button
+            x:Name="SignInButton"
+            Margin="20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Click="SignInClicked"
+            Content="{m:LanguageResource Key=Skip}"
+            IsEnabled="False">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator
+                    Key="Escape"
+                    IsEnabled="{Binding IsEnabled, ElementName=SignInButton}"
+                    Modifiers="None" />
+            </Button.KeyboardAccelerators>
+        </Button>
+    </Grid>
+</c:View>
