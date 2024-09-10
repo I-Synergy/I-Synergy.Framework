@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+	  <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+	  <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+	  <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+	  <RootNamespace>Sample</RootNamespace>
+	  <UseWinUI>true</UseWinUI>
+	  <EnableWindowsTargeting>true</EnableWindowsTargeting>
+	  <GenerateLibraryLayout>true</GenerateLibraryLayout>
+	  <EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
+	  <EnableMsixTooling>true</EnableMsixTooling>
+	  <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="Assets\gta.mp4" />
+    <Content Remove="Assets\sample.mp4" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\gta.mp4" />
+    <EmbeddedResource Include="Assets\sample.mp4" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.26100.42" />
+	  <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.26100.42" />
+	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
+	  <PackageReference Include="Syncfusion.Editors.WinUI" Version="26.2.14" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj" />
+		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
+	</ItemGroup>
+</Project>
