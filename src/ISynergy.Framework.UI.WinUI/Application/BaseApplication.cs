@@ -248,9 +248,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             themeService.SetStyle();
         }
 
-        if (_initialView is not null)
+        if (_initialView is not null && _initialView.Invoke() is View loadingView)
         {
-            var loadingView = _initialView.Invoke() as View;
             loadingView.ViewModel = ServiceLocator.Default.GetInstance<LoadingViewModel>();
             MainWindow.Content = loadingView;
         }

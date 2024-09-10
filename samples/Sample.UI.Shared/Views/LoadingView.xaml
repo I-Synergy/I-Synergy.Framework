@@ -18,7 +18,6 @@
             AreTransportControlsEnabled="False"
             IsEnabled="False"
             IsFullWindow="True"
-            Source="ms-appx:///Assets/gta.mp4"
             Stretch="UniformToFill" />
 
         <Grid Background="{ThemeResource SystemBaseMediumColor}" Opacity="0.10" />

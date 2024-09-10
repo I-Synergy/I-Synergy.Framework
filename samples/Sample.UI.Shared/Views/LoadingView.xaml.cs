@@ -6,7 +6,10 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using System.Reflection;
+using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage.Streams;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -29,6 +32,9 @@ public sealed partial class LoadingView : ILoadingView
 
     private void LoadingView_Loaded(object sender, RoutedEventArgs e)
     {
+        Assembly currentAssembly = Assembly.GetAssembly(typeof(LoadingView));
+        var stream = currentAssembly.GetManifestResourceStream("Sample.Assets.gta.mp4").AsRandomAccessStream();
+        BackgroundMediaElement.Source = MediaSource.CreateFromStream(stream, "video/mp4");
         BackgroundMediaElement.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
         BackgroundMediaElement.MediaPlayer.Play();
     }

@@ -95,7 +95,7 @@ public sealed partial class App : BaseApplication
                 services.TryAddSingleton<CommonServices>();
                 services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
                 services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
-            });
+            }, f => f.Name.StartsWith(typeof(App).Namespace));
 #if WINDOWS
         hostbuilder.ConfigureStoreUpdateIntegration();
 #endif
