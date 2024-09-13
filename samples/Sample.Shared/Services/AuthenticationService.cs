@@ -98,11 +98,6 @@ public class AuthenticationService : IAuthenticationService
         throw new NotImplementedException();
     }
 
-    public Task<bool> CheckRegistrationNameAsync(string name, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task<List<Country>> GetCountriesAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
