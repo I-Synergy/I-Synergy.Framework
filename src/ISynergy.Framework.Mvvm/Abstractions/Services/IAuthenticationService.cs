@@ -79,14 +79,6 @@ public interface IAuthenticationService
     Task<List<Country>> GetCountriesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Checks if license name is available.
-    /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    Task<bool> CheckRegistrationNameAsync(string name, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Checks if email address is available.
     /// </summary>
     /// <param name="email">The email.</param>
