@@ -306,7 +306,6 @@ public class SignUpViewModel : ViewModel
             }
 
             if (!HasErrors &&
-                await _authenticationService.CheckRegistrationNameAsync(Name) &&
                 await _authenticationService.CheckRegistrationEmailAsync(emailaddress) &&
                 PasswordCheck is not null && Password is not null &&
                 PasswordCheck.Equals(Password) &&
