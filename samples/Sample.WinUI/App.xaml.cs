@@ -65,6 +65,8 @@ public sealed partial class App : BaseApplication
                 services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
                 services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
 
+                services.TryAddSingleton<ICameraService, CameraService>();
+
                 services.AddUpdatesIntegration();
             }, f => f.Name.StartsWith(typeof(App).Namespace));
     }
