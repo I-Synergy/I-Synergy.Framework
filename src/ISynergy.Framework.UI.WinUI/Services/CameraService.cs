@@ -2,7 +2,12 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
+using Windows.Devices.Enumeration;
+using Windows.Graphics.Imaging;
 using Windows.Media.Capture;
+using Windows.Media.MediaProperties;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -38,24 +43,33 @@ public class CameraService : ICameraService
     /// <returns>FileResult.</returns>
     public async Task<FileResult> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024)
     {
-        CameraCaptureUI captureUI = new CameraCaptureUI();
-        captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Png;
-        captureUI.PhotoSettings.MaxResolution = CameraCaptureUIMaxPhotoResolution.MediumXga;
-        captureUI.PhotoSettings.AllowCropping = false;
+        var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+        DeviceInformation device = devices.FirstOrDefault(); // Finds one device, my webcam
 
-        if (await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo) is { } photo)
+        var settings = new MediaCaptureInitializationSettings();
+        settings.VideoDeviceId = device.Id;
+        settings.StreamingCaptureMode = StreamingCaptureMode.Video;
+        settings.PhotoCaptureSource = PhotoCaptureSource.Photo;
+
+        var mediaCapture = new MediaCapture();
+        await mediaCapture.InitializeAsync(settings);
+
+        var capture = await mediaCapture.PrepareLowLagPhotoCaptureAsync(ImageEncodingProperties.CreatePng()).AsTask();
+        var photo = await capture.CaptureAsync().AsTask();
+        var bitmap = photo.Frame.SoftwareBitmap;
+
+        if (photo.Frame is not null)
         {
-            var prop = await photo.GetBasicPropertiesAsync();
-
-            if (prop.Size.ToLong() <= maxFileSize)
+            if (photo.Frame.Size.ToLong() <= maxFileSize)
             {
+                var fileName = $"Capture {DateTime.Now}";
                 return new FileResult(
-                    photo.Path,
-                    photo.DisplayName,
-                    () => photo.OpenStreamForReadAsync().GetAwaiter().GetResult());
+                    $"{fileName}.png",
+                    fileName,
+                    () => photo.Frame.AsStreamForRead());
             }
 
-            await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("Warning_Document_SizeTooBig"), $"{maxFileSize} bytes"));
+            await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
         }
 
         return null;
