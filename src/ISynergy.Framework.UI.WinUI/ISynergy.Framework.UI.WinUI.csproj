@@ -30,7 +30,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
-		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240821" />
+		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
 	</ItemGroup>
 
 	<ItemGroup>
