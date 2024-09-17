@@ -11,40 +11,48 @@ public class VATTests
     /// <summary>
     /// Defines the test method CalcPriceExclVATTest.
     /// </summary>
-    [TestMethod]
-    public void CalculateAmountFromAmountExcludingVATTest()
+    [DataTestMethod]
+    [DataRow(100, 21, 121)]
+    [DataRow(0, 21, 0)]
+    public void CalculateAmountFromAmountExcludingVATTest(object amount, object percentage, object result)
     {
-        decimal result = VAT.CalculateAmountFromAmountExcludingVAT(21, 100);
-        Assert.AreEqual(121, result);
+        decimal assert = VAT.CalculateAmountFromAmountExcludingVAT(Convert.ToDecimal(percentage), Convert.ToDecimal(amount));
+        Assert.AreEqual(Convert.ToDecimal(result), assert);
     }
 
     /// <summary>
     /// Defines the test method CalcPriceInclVATTest.
     /// </summary>
-    [TestMethod]
-    public void CalculateAmountFromAmountIncludingVATTest()
+    [DataTestMethod]
+    [DataRow(121, 21, 100)]
+    [DataRow(0, 21, 0)]
+    public void CalculateAmountFromAmountIncludingVATTest(object amount, object percentage, object result)
     {
-        decimal result = VAT.CalculateAmountFromAmountIncludingVAT(21, 121);
-        Assert.AreEqual(100, result);
+        decimal assert = VAT.CalculateAmountFromAmountIncludingVAT(Convert.ToDecimal(percentage), Convert.ToDecimal(amount));
+        Assert.AreEqual(Convert.ToDecimal(result), assert);
     }
 
     /// <summary>
     /// Defines the test method CalcVATExclVATTest.
     /// </summary>
-    [TestMethod]
-    public void CalculateVATFromAmountExcludingVATTest()
+    [DataTestMethod]
+    [DataRow(100, 21, 21)]
+    [DataRow(0, 21, 0)]
+    public void CalculateVATFromAmountExcludingVATTest(object amount, object percentage, object result)
     {
-        decimal result = VAT.CalculateVATFromAmountExcludingVAT(21, 100);
-        Assert.AreEqual(21, result);
+        decimal assert = VAT.CalculateVATFromAmountExcludingVAT(Convert.ToDecimal(percentage), Convert.ToDecimal(amount));
+        Assert.AreEqual(Convert.ToDecimal(result), assert);
     }
 
     /// <summary>
     /// Defines the test method CalcVATInclVATTest.
     /// </summary>
-    [TestMethod]
-    public void CalculateVATFromAmountIncludingVATTest()
+    [DataTestMethod]
+    [DataRow(121, 21, 21)]
+    [DataRow(0, 21, 0)]
+    public void CalculateVATFromAmountIncludingVATTest(object amount, object percentage, object result)
     {
-        decimal result = VAT.CalculateVATFromAmountIncludingVAT(21, 121);
-        Assert.AreEqual(21, result);
+        decimal assert = VAT.CalculateVATFromAmountIncludingVAT(Convert.ToDecimal(percentage), Convert.ToDecimal(amount));
+        Assert.AreEqual(Convert.ToDecimal(result), assert);
     }
 }
