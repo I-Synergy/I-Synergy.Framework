@@ -43,20 +43,20 @@ public static class EnumerableExtensions
     /// </summary>
     /// <typeparam name="TSource">The type of the t source.</typeparam>
     /// <param name="source">The source.</param>
-    /// <param name="page">Has to be non-negative.</param>
+    /// <param name="pageIndex">Has to be non-negative.</param>
     /// <param name="pageSize">Has to be greater than 0.</param>
     /// <returns>IEnumerable&lt;TSource&gt;.</returns>
     /// <exception cref="ArgumentBelowZeroException">pageSize</exception>
     /// <exception cref="ArgumentOutOfRangeException">pageSize - Value must be greater than 0.</exception>
-    public static IEnumerable<TSource> ToPage<TSource>(this IEnumerable<TSource> source, int page, int pageSize = int.MaxValue)
+    public static IEnumerable<TSource> ToPage<TSource>(this IEnumerable<TSource> source, int pageIndex, int pageSize = int.MaxValue)
     {
-        if (page < 0)
+        if (pageIndex < 0)
             throw new ArgumentBelowZeroException(nameof(pageSize));
         if (pageSize < 1)
             throw new ArgumentOutOfRangeException(nameof(pageSize), "Value must be greater than 0.");
 
         return source
-            .Skip(page * pageSize)
+            .Skip(pageIndex * pageSize)
             .Take(pageSize);
     }
 
