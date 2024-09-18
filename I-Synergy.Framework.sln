@@ -205,7 +205,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uno", "Uno", "{2D436347-709
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno", "samples\Sample.Uno\Sample.Uno.csproj", "{5AC2FEE6-3773-4922-A818-8DDBB4121244}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.UI.Shared", "samples\Sample.UI.Shared\Sample.UI.Shared.csproj", "{84849F9B-6413-420D-9EA4-43EAD79791A1}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.UI.Shared", "samples\Sample.UI.Shared\Sample.UI.Shared.shproj", "{3273AFFF-1E44-4FC2-BBA7-2D862E91B8A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1452,22 +1452,6 @@ Global
 		{5AC2FEE6-3773-4922-A818-8DDBB4121244}.Release|x64.Build.0 = Release|Any CPU
 		{5AC2FEE6-3773-4922-A818-8DDBB4121244}.Release|x86.ActiveCfg = Release|Any CPU
 		{5AC2FEE6-3773-4922-A818-8DDBB4121244}.Release|x86.Build.0 = Release|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Debug|arm64.Build.0 = Debug|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Debug|x64.Build.0 = Debug|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Debug|x86.Build.0 = Debug|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Release|arm64.ActiveCfg = Release|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Release|arm64.Build.0 = Release|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Release|x64.ActiveCfg = Release|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Release|x64.Build.0 = Release|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Release|x86.ActiveCfg = Release|Any CPU
-		{84849F9B-6413-420D-9EA4-43EAD79791A1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1563,9 +1547,13 @@ Global
 		{672B6824-5103-477C-8363-1521E7691D9C} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{2D436347-7096-4D33-85C2-62BB4D4160E8} = {96FE3E8C-9992-481D-95B6-D8FC7BB09F1F}
 		{5AC2FEE6-3773-4922-A818-8DDBB4121244} = {2D436347-7096-4D33-85C2-62BB4D4160E8}
-		{84849F9B-6413-420D-9EA4-43EAD79791A1} = {7469441C-3D6A-42ED-8454-361F59779CFC}
+		{3273AFFF-1E44-4FC2-BBA7-2D862E91B8A7} = {7469441C-3D6A-42ED-8454-361F59779CFC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		samples\Sample.UI.Shared\Sample.UI.Shared.projitems*{3273afff-1e44-4fc2-bba7-2d862e91b8a7}*SharedItemsImports = 13
+		samples\Sample.UI.Shared\Sample.UI.Shared.projitems*{40f3aa9f-f3ae-4e90-a17e-c88356e3949b}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
