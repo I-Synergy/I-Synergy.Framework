@@ -19,7 +19,7 @@
 		<DefaultLanguage>en</DefaultLanguage>
 		<IsPackable>false</IsPackable>
 		<EnableMsixTooling>true</EnableMsixTooling>
-		<WindowsSdkPackageVersion>10.0.26100.42</WindowsSdkPackageVersion>
+		<WindowsSdkPackageVersion>10.0.26100.45</WindowsSdkPackageVersion>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -51,9 +51,9 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="26.2.14" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="26.2.14" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="26.2.14" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="27.1.48" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="27.1.48" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="27.1.48" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -62,7 +62,7 @@
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj" />
-		<ProjectReference Include="..\Sample.UI.Shared\Sample.UI.Shared.csproj" />
+		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -106,4 +106,5 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>
+	<Import Project="..\Sample.UI.Shared\Sample.UI.Shared.projitems" Label="Shared" />
 </Project>
