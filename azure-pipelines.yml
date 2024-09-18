@@ -169,6 +169,13 @@ stages:
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
+          displayName: 'Run EF Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.EntityFramework.Tests\ISynergy.Framework.EntityFramework.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
+        - task: DotNetCoreCLI@2
           displayName: 'Run IO Tests'
           inputs:
             command: test
