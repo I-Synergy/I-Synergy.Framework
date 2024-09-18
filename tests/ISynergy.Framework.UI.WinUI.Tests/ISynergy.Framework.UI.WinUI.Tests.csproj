@@ -8,7 +8,7 @@
 		<IsPackable>false</IsPackable>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
-		<WindowsSdkPackageVersion>10.0.26100.42</WindowsSdkPackageVersion>
+		<WindowsSdkPackageVersion>10.0.26100.45</WindowsSdkPackageVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
