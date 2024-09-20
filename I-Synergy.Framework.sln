@@ -207,6 +207,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Uno", "samples\Sampl
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.UI.Shared", "samples\Sample.UI.Shared\Sample.UI.Shared.shproj", "{3273AFFF-1E44-4FC2-BBA7-2D862E91B8A7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{10169381-AC96-4F48-9452-3CB8A0EC1EFE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagrams", "Diagrams", "{287D9078-9012-4082-A3A2-9F07E4B3F63D}"
+	ProjectSection(SolutionItems) = preProject
+		docs\diagrams\codemap.dgml = docs\diagrams\codemap.dgml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1548,6 +1555,7 @@ Global
 		{2D436347-7096-4D33-85C2-62BB4D4160E8} = {96FE3E8C-9992-481D-95B6-D8FC7BB09F1F}
 		{5AC2FEE6-3773-4922-A818-8DDBB4121244} = {2D436347-7096-4D33-85C2-62BB4D4160E8}
 		{3273AFFF-1E44-4FC2-BBA7-2D862E91B8A7} = {7469441C-3D6A-42ED-8454-361F59779CFC}
+		{287D9078-9012-4082-A3A2-9F07E4B3F63D} = {10169381-AC96-4F48-9452-3CB8A0EC1EFE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
