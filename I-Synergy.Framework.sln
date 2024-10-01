@@ -12,11 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		codecoverage.runsettings = codecoverage.runsettings
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		docfx.json = docfx.json
 		global.json = global.json
 		icon.png = icon.png
 		license.md = license.md
 		nuget.config = nuget.config
 		README.md = README.md
+		toc.yml = toc.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCore", "src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj", "{7189C677-1C79-4C43-A249-311FAE276591}"
