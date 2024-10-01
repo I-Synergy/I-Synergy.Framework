@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Messages;
@@ -27,7 +26,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
-    protected readonly IBaseSettingsService _settingsService;
+    protected readonly ISettingsService _settingsService;
     protected readonly INavigationService _navigationService;
 
     private Task Initialize { get; set; }
@@ -65,7 +64,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
         _logger.LogInformation("Setting up application settings service.");
-        _settingsService = ServiceLocator.Default.GetInstance<IBaseSettingsService>();
+        _settingsService = ServiceLocator.Default.GetInstance<ISettingsService>();
 
         _logger.LogInformation("Setting up localization service.");
         _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();

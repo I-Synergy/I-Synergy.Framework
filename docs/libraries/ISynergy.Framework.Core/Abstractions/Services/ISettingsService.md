@@ -1,6 +1,6 @@
-# IBaseSettingsService Interface Explanation:
+# ISettingsService Interface Explanation:
 
-The IBaseSettingsService interface defines a contract for managing different types of settings in an application. This interface is designed to provide a standardized way to handle local, roaming, and global settings.
+The ISettingsService interface defines a contract for managing different types of settings in an application. This interface is designed to provide a standardized way to handle local, roaming, and global settings.
 
 The purpose of this code is to create a blueprint for a settings service that can handle various types of settings. It doesn't implement the actual functionality but defines what methods and properties a class implementing this interface should have.
 

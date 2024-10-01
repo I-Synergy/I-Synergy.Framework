@@ -1,14 +1,14 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services;
 
 public class MigrationService : IMigrationService
 {
-    private readonly IBaseSettingsService _settingsService;
+    private readonly ISettingsService _settingsService;
 
-    public MigrationService(IBaseSettingsService settingsService)
+    public MigrationService(ISettingsService settingsService)
     {
         _settingsService = settingsService;
     }

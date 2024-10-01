@@ -7,11 +7,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using ISynergy.Framework.UI.Styles;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
-
-#if WINDOWS
 using ISynergy.Framework.Core.Abstractions.Services;
-#endif
 
 #if WINDOWS && !HAS_UNO
 using WinRT.Interop;
@@ -29,7 +25,7 @@ namespace ISynergy.Framework.UI.Services;
 /// <seealso cref="IThemeService" />
 public class ThemeService : IThemeService
 {
-    private readonly IBaseSettingsService _settingsService;
+    private readonly ISettingsService _settingsService;
 
     /// <summary>
     /// Gets or sets the theme.
@@ -55,7 +51,7 @@ public class ThemeService : IThemeService
     /// Default constructor.
     /// </summary>
     /// <param name="settingsService"></param>
-    public ThemeService(IBaseSettingsService settingsService)
+    public ThemeService(ISettingsService settingsService)
     {
         _settingsService = settingsService;
     }
