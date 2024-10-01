@@ -1,0 +1,15 @@
+<!-- mermaid support -->
+<script type="text/javascript" src="https://unpkg.com/mermaid@8.5.2/dist/mermaid.min.js"
+        integrity="sha384-dV0RNdYNgPqjamYrB83Q21NNeuYk1jpKyUBkKQrT+c7krNFk4k39ktYZV4mOdMV1"
+        crossorigin="anonymous"></script>
+<script>
+    mermaid.initialize({
+        startOnLoad: false
+    });
+    mermaid.init(undefined, ".lang-mermaid");
+</script>
+
+<!-- Copy code button -->
+<script type="text/javascript" src="{{_rel}}styles/docfx.js"></script>
+<script type="text/javascript" src="{{_rel}}styles/copyCodeButton.js"></script>
+<script type="text/javascript" src="{{_rel}}styles/main.js"></script>

@@ -1,0 +1,47 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../src",
+          "files": [
+            "**/*.csproj"
+          ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "templates/isynergy"
+    ],
+    "globalMetadata": {
+      "_appName": "I-Synergy Framework",
+      "_appTitle": "I-Synergy Framework",
+      "_appLogoPath": "assets/images/logo.svg",
+      "_appFaviconPath": "assets/favicon.ico",
+      "_enableSearch": true,
+      "pdf": true
+    }
+  }
+}
