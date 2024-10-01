@@ -13,6 +13,7 @@ using ISynergy.Framework.Synchronization.Messages;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
+using Sample.Models;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -22,7 +23,7 @@ internal class SynchronizationService : ISynchronizationService
 {
     private readonly IContext _context;
     private readonly IMessageService _messageService;
-    private readonly SettingsService _settingsService;
+    private readonly ISettingsService _settingsService;
     private readonly ISynchronizationSettings _synchronizationSettings;
 
     public bool IsActive { get; }
@@ -37,7 +38,7 @@ internal class SynchronizationService : ISynchronizationService
     public SynchronizationService(
         IContext context,
         IMessageService messageService,
-        SettingsService settingsService,
+        ISettingsService settingsService,
         IOptions<ConfigurationOptions> configurationOptions)
     {
         _context = context;
@@ -50,11 +51,11 @@ internal class SynchronizationService : ISynchronizationService
         var options = configurationOptions.Value;
         var tenantId = _context.Profile.AccountId.ToString("N");
 
-        _synchronizationSettings = _settingsService.RoamingSettings.SynchronizationSetting;
+        _synchronizationSettings = ((RoamingSettings)_settingsService.RoamingSettings).SynchronizationSetting;
 
-        if (_synchronizationSettings is not null && _settingsService.RoamingSettings.IsSynchronizationEnabled)
+        if (_synchronizationSettings is not null && ((RoamingSettings)_settingsService.RoamingSettings).IsSynchronizationEnabled)
         {
-            IsActive = _settingsService.RoamingSettings.IsSynchronizationEnabled;
+            IsActive = ((RoamingSettings)_settingsService.RoamingSettings).IsSynchronizationEnabled;
 
             if (string.IsNullOrEmpty(_synchronizationSettings.SynchronizationFolder))
                 _synchronizationSettings.SynchronizationFolder = Path.Combine(FileSystem.AppDataDirectory, "Synchronization");

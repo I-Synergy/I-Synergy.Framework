@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -35,7 +34,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <value>The common services.</value>
     public ICommonServices CommonServices { get; }
 
-    public IBaseSettingsService SettingsService { get; }
+    public ISettingsService SettingsService { get; }
 
     /// <summary>
     /// Gets or sets the display command.
@@ -100,7 +99,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         IContext context,
         ICommonServices commonServices,
         INavigationService navigationService,
-        IBaseSettingsService settingsService,
+        ISettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
         IThemeService themeService,

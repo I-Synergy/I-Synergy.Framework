@@ -9,6 +9,7 @@ public class LocalSettings : ObservableClass, ILocalSettings
 {
     public Languages Language { get; set; } = Languages.English;
     public bool IsFullscreen { get; set; }
+    public List<string> Users { get; set; } = new List<string>();
     public string DefaultUser { get; set; } = string.Empty;
     public string RefreshToken { get; set; } = string.Empty;
     public string Color { get; set; } = ThemeColors.Default;
