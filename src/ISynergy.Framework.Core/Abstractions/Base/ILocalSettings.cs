@@ -16,6 +16,10 @@ public interface ILocalSettings
     /// </summary>
     bool IsFullscreen { get; set; }
     /// <summary>
+    /// Setting for maintaining a list of users used.
+    /// </summary>
+    List<string> Users { get; set; }
+    /// <summary>
     /// Setting for maintaining last succesfull username logged in.
     /// </summary>
     string DefaultUser { get; set; }

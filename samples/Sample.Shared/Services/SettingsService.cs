@@ -1,29 +1,30 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using Sample.Abstractions.Services;
-using Sample.Models;
 using System.Text.Json;
 
 namespace Sample.Services;
 
-public class SettingsService : ISettingsService
+public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> : ISettingsService
+    where TLocalSettings : class, ILocalSettings, new()
+    where TRoamingSettings : class, IRoamingSettings, new()
+    where TGlobalSettings : class, IGlobalSettings, new()
 {
     private const string _fileName = "settings.json";
     private readonly string _settingsFolder;
 
-    private LocalSettings _localSettings;
-    private RoamingSettings _roamingSettings;
-    private GlobalSettings _globalSettings;
+    private TLocalSettings _localSettings;
+    private TRoamingSettings _roamingSettings;
+    private TGlobalSettings _globalSettings;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SettingsService"/> class.
+    /// Initializes a new instance of the <see cref="SettingsService{TLocalSettings, TRoamingSettings, TGlobalSettings}"/> class.
     /// </summary>
     public SettingsService()
     {
-        _localSettings = new LocalSettings();
-        _roamingSettings = new RoamingSettings();
-        _globalSettings = new GlobalSettings();
+        _localSettings = new TLocalSettings();
+        _roamingSettings = new TRoamingSettings();
+        _globalSettings = new TGlobalSettings();
 
         _settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Settings");
 
@@ -52,7 +53,7 @@ public class SettingsService : ISettingsService
                 SaveLocalSettings();
 
             string json = File.ReadAllText(file);
-            _localSettings = JsonSerializer.Deserialize<LocalSettings>(json);
+            _localSettings = JsonSerializer.Deserialize<TLocalSettings>(json);
         }
         catch (JsonException)
         {
@@ -60,7 +61,7 @@ public class SettingsService : ISettingsService
         }
         catch (FileNotFoundException)
         {
-            _localSettings = new LocalSettings();
+            _localSettings = new TLocalSettings();
         }
     }
 
@@ -99,11 +100,18 @@ public class SettingsService : ISettingsService
     public T GetGlobalSetting<T>(string name, T defaultvalue) where T : IComparable<T> =>
         _globalSettings.GetPropertyValue(name, defaultvalue);
 
-    public LocalSettings LocalSettings => _localSettings;
-    public RoamingSettings RoamingSettings => _roamingSettings;
-    public GlobalSettings GlobalSettings => _globalSettings;
 
-    ILocalSettings IBaseSettingsService.LocalSettings => _localSettings;
-    IRoamingSettings IBaseSettingsService.RoamingSettings => _roamingSettings;
-    IGlobalSettings IBaseSettingsService.GlobalSettings => _globalSettings;
+    public void ClearSettings()
+    {
+        _globalSettings = null;
+        _roamingSettings = null;
+    }
+
+    public TLocalSettings LocalSettings => _localSettings;
+    public TRoamingSettings RoamingSettings => _roamingSettings;
+    public TGlobalSettings GlobalSettings => _globalSettings;
+
+    ILocalSettings ISettingsService.LocalSettings => _localSettings;
+    IRoamingSettings ISettingsService.RoamingSettings => _roamingSettings;
+    IGlobalSettings ISettingsService.GlobalSettings => _globalSettings;
 }

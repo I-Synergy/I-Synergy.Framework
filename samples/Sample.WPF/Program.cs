@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Physics.Abstractions;
@@ -38,8 +38,8 @@ public static class Program
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
                 services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
+                services.TryAddSingleton<ISettingsService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>>();
 
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseSettingsService, SettingsService>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 

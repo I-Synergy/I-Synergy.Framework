@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -90,7 +89,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <summary>
     /// The settings service.
     /// </summary>
-    protected readonly IBaseSettingsService _settingsService;
+    protected readonly ISettingsService _settingsService;
 
     /// <summary>
     /// The theme selector
@@ -136,7 +135,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected BaseShellViewModel(
         IContext context,
         IBaseCommonServices commonServices,
-        IBaseSettingsService settingsService,
+        ISettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
         IThemeService themeService,

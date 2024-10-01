@@ -1,13 +1,14 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using System.Runtime;
 
-namespace ISynergy.Framework.Core.Abstractions.Services.Base;
+namespace ISynergy.Framework.Core.Abstractions.Services;
 
 /// <summary>
 /// Interface IBaseApplicationSettingsService
 /// </summary>
-public interface IBaseSettingsService
+public interface ISettingsService
 {
+    void ClearSettings();
     /// <summary>
     /// Gets the local settings.
     /// </summary>

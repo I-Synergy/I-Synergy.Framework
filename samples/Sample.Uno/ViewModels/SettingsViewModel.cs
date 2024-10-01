@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -17,7 +17,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
     public override string Title { get => BaseCommonServices.LanguageService.GetString("Settings"); }
 
     private readonly ICommonServices _commonServices;
-    private readonly IBaseSettingsService _settingsService;
+    private readonly ISettingsService _settingsService;
 
     /// <summary>
     /// Gets or sets the LocalSettings property value.
@@ -49,7 +49,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
     public SettingsViewModel(
         IContext context,
         ICommonServices commonServices,
-        IBaseSettingsService settingsService,
+        ISettingsService settingsService,
         ILogger logger,
         bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)

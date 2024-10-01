@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
@@ -28,7 +27,7 @@ public class AuthenticationViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;
     private readonly ILocalizationService _localizationService;
-    private readonly IBaseSettingsService _settingsService;
+    private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
     /// <summary>
@@ -195,7 +194,7 @@ public class AuthenticationViewModel : ViewModel
         IBaseCommonServices commonServices,
         ILocalizationService localizationService,
         IAuthenticationService authenticationService,
-        IBaseSettingsService settingsService,
+        ISettingsService settingsService,
         ICredentialLockerService credentialLockerService,
         ILogger logger,
         bool automaticValidation = false)

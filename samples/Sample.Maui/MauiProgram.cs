@@ -1,5 +1,5 @@
 using CommunityToolkit.Maui;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -18,6 +18,7 @@ using Sample.Views;
 using Syncfusion.Maui.Core.Hosting;
 using System.Diagnostics;
 using System.Reflection;
+
 
 
 
@@ -42,7 +43,7 @@ public static class MauiProgram
             .Configuration
             .AddConfiguration(config);
 
-        var settingsService = new SettingsService();
+        var settingsService = new SettingsService<LocalSettings, RoamingSettings, GlobalSettings>();
 
         builder
             .UseMauiApp<App>()
@@ -60,10 +61,7 @@ public static class MauiProgram
             {
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 appBuilder.Services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
-
-                appBuilder.Services.TryAddSingleton(settingsService);
-                appBuilder.Services.TryAddSingleton<ISettingsService>(s => s.GetRequiredService<SettingsService>());
-                appBuilder.Services.TryAddSingleton<IBaseSettingsService>(s => s.GetRequiredService<SettingsService>());
+                appBuilder.Services.TryAddSingleton<ISettingsService>(s => settingsService);
 
                 appBuilder.Services.TryAddSingleton<CommonServices>();
                 appBuilder.Services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());

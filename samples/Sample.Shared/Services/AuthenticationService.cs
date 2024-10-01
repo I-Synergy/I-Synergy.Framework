@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
@@ -19,7 +19,7 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly IContext _context;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IBaseSettingsService _settingsService;
+    private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
     /// <summary>
@@ -35,7 +35,7 @@ public class AuthenticationService : IAuthenticationService
     public AuthenticationService(
         IContext context,
         IServiceScopeFactory serviceScopeFactory,
-        IBaseSettingsService settingsService,
+        ISettingsService settingsService,
         ICredentialLockerService credentialLockerService)
     {
         _context = context;
