@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
@@ -22,7 +22,7 @@ namespace Sample.ViewModels;
 public class SignInViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly IBaseSettingsService _settingsService;
+    private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
     public override string Title { get { return BaseCommonServices.LanguageService.GetString("Login"); } }
@@ -71,7 +71,7 @@ public class SignInViewModel : ViewModel
         IContext context,
         IBaseCommonServices commonServices,
         IAuthenticationService authenticationService,
-        IBaseSettingsService settingsService,
+        ISettingsService settingsService,
         ICredentialLockerService credentialLockerService,
         ILogger logger,
         bool automaticValidation = false)

@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.UI.ViewModels;
 /// </summary>
 public class ThemeViewModel : ViewModelDialog<Style>
 {
-    private readonly IBaseSettingsService _settingsService;
+    private readonly ISettingsService _settingsService;
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -40,7 +40,7 @@ public class ThemeViewModel : ViewModelDialog<Style>
     public ThemeViewModel(
         IContext context,
         IBaseCommonServices commonServices,
-        IBaseSettingsService settingsService,
+        ISettingsService settingsService,
         ILogger logger)
         : base(context, commonServices, logger)
     {
