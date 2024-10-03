@@ -1,0 +1,19 @@
+# This is an automatically generated file
+items:
+- name: Developers
+  href: index.md
+- name: Azure devops
+  href: azure_devops/how_to_delete_azure_devops_project_wiki.md
+  items:
+  - name: How To Delete Azure Devops Project Wiki Through CLI
+    href: azure_devops/how_to_delete_azure_devops_project_wiki.md
+- name: Docfx
+  href: docfx/generate_toc_yml_files.md
+  items:
+  - name: How do i generate toc.yml files from the folder structure?
+    href: docfx/generate_toc_yml_files.md
+- name: Maui
+  href: maui/awesome_maui_libraries_and_samples.md
+  items:
+  - name: Awesome .NET MAUI !PRs Welcomehttps//img.shields.io/badge/PRs welcome brightgreen.svg?style=flat squarehttp//makeapullrequest.com
+    href: maui/awesome_maui_libraries_and_samples.md

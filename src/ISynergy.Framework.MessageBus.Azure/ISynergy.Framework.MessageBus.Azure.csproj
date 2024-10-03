@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     
     <PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
-        <Description>I-Synergy Framework Azure MessageBus for .net 8.0</Description>
+        <Description>I-Synergy Framework Azure MessageBus</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
     </PropertyGroup>
 

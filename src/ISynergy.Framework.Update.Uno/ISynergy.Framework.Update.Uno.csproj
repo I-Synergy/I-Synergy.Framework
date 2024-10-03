@@ -29,7 +29,7 @@
 		-->
 		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.26100.45" />
 		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.26100.45" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
 	</ItemGroup>
 
 	<ItemGroup>

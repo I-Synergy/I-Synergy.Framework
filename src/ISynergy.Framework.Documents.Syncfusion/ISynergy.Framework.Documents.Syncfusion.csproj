@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Documents.Syncfusion</PackageId>
-		<Description>I-Synergy Framework Documents with Syncfusion for .net 8.0</Description>
+		<Description>I-Synergy Framework Documents with Syncfusion</Description>
 		<PackageTags>I-Synergy, Framework, Documents, Syncfusion</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>ISynergy.Framework.Documents</RootNamespace>
