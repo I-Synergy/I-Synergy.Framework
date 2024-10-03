@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Update</PackageId>
 		<Description>I-Synergy Framework Update</Description>
 		<PackageTags>I-Synergy, Framework, Update</PackageTags>

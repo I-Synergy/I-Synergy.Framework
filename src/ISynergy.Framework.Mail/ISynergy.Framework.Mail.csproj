@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Mail</PackageId>
-		<Description>I-Synergy Framework Mail for .net 8.0</Description>
+		<Description>I-Synergy Framework Mail</Description>
 		<PackageTags>I-Synergy, Framework, Mail</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 	</PropertyGroup>

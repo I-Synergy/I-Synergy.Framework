@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+#if NET8_0_OR_GREATER
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
@@ -24,3 +25,4 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, Prob
         return true;
     }
 }
+#endif
