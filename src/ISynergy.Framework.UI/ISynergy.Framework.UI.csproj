@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 		
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Windows, Linux, Android and WebAssembly</Description>
