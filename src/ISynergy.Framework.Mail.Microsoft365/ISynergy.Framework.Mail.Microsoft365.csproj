@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Mail.Microsoft365</PackageId>
-		<Description>I-Synergy Framework Mail with Microsoft 365 for .net 8.0</Description>
+		<Description>I-Synergy Framework Mail with Microsoft 365</Description>
 		<PackageTags>I-Synergy, Framework, Mail, Microsoft, Graph, Office, 365</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>ISynergy.Framework.Mail</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Azure.Identity" Version="1.12.1" />
-		<PackageReference Include="Microsoft.Graph" Version="5.58.0" />
+		<PackageReference Include="Microsoft.Graph" Version="5.59.0" />
 		<PackageReference Include="System.Text.Json" Version="8.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />

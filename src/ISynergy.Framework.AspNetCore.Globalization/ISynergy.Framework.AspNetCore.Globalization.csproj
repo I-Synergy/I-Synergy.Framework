@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.AspNetCore.Globalization</PackageId>
-		<Description>I-Synergy Framework Globalization for .net 8.0</Description>
+		<Description>I-Synergy Framework Globalization</Description>
 		<PackageTags>I-Synergy, Framework, Globalization</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
     </PropertyGroup>

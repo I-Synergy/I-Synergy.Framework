@@ -1,0 +1,1158 @@
+# This is an automatically generated file
+items:
+- name: Libraries
+  href: index.md
+- name: ISynergy.Framework.AspNetCore
+  href: ISynergy.Framework.AspNetCore/index.md
+  items:
+  - name: ISynergy.Framework.AspNetCore
+    href: ISynergy.Framework.AspNetCore/index.md
+  - name: Abstractions
+    href: ISynergy.Framework.AspNetCore/Abstractions/IjwtTokenService.md
+    items:
+    - name: IJwtTokenService.cs
+      href: ISynergy.Framework.AspNetCore/Abstractions/IjwtTokenService.md
+  - name: Attributes
+    href: ISynergy.Framework.AspNetCore/Attributes/FormValueRequiredAttribute.md
+    items:
+    - name: FormValueRequiredAttribute
+      href: ISynergy.Framework.AspNetCore/Attributes/FormValueRequiredAttribute.md
+  - name: Binders
+    href: ISynergy.Framework.AspNetCore/Binders/DateTimeModelBinder.md
+    items:
+    - name: DateTimeModelBinder
+      href: ISynergy.Framework.AspNetCore/Binders/DateTimeModelBinder.md
+  - name: Conventions
+    href: ISynergy.Framework.AspNetCore/Conventions/DisableControllerConvention.md
+    items:
+    - name: DisabledControllerConvention.cs
+      href: ISynergy.Framework.AspNetCore/Conventions/DisableControllerConvention.md
+  - name: Enumerations
+    href: ISynergy.Framework.AspNetCore/Enumerations/MaxConcurrentRequestLimitExceedPolicy.md
+    items:
+    - name: MaxConcurrentRequestsLimitExceededPolicy Enumeration
+      href: ISynergy.Framework.AspNetCore/Enumerations/MaxConcurrentRequestLimitExceedPolicy.md
+  - name: Extensions
+    href: ISynergy.Framework.AspNetCore/Extensions/ConfigurationManagerExtensions.md
+    items:
+    - name: ConfigurationManagerExtensions.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/ConfigurationManagerExtensions.md
+    - name: EmailSenderExtension.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/EmailSenderExtensions.md
+    - name: EnviromentExtensions.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/EnvironmentExtensions.md
+    - name: ExceptionMiddlewareExtensions.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/ExceptionMiddlewareExtensions.md
+    - name: HtmlHelperExtensions.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/HtmlHelperExtensions.md
+    - name: HttpContentExtensions.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/HttpContentExtensions.md
+    - name: HttpContextExtensions.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/HttpContextExtensions.md
+    - name: HttpRequestExtensions.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/HttpRequestExtensions.md
+    - name: MaxConcurrentRequestsMiddlewareExtensions.cs 
+      href: ISynergy.Framework.AspNetCore/Extensions/MaxRequestMiddlewareExtensions.md
+    - name: ResultExtensions.cs
+      href: ISynergy.Framework.AspNetCore/Extensions/ResultExtensions.md
+    - name: The ImageHelperExtensions class is being explained here.
+      href: ISynergy.Framework.AspNetCore/Extensions/ImageHelperExtensions.md
+  - name: Filters
+    href: ISynergy.Framework.AspNetCore/Filters/NoCasheFilterAttribute.md
+    items:
+    - name: NoCacheFilterAttribute
+      href: ISynergy.Framework.AspNetCore/Filters/NoCasheFilterAttribute.md
+    - name: NoNullModelsFilterAttribute
+      href: ISynergy.Framework.AspNetCore/Filters/NoNullmodelsFilterAttribute.md
+    - name: NullResultFilterAttribute
+      href: ISynergy.Framework.AspNetCore/Filters/NullResultFilterAttribute.md
+    - name: RequestShouldBeLocalFilterAttribute
+      href: ISynergy.Framework.AspNetCore/Filters/RequestShouldBeLocalFilterAttribute.md
+    - name: ValidateModelFilterAttribute
+      href: ISynergy.Framework.AspNetCore/Filters/ValidateModelFilerAttribute.md
+  - name: Handlers
+    href: ISynergy.Framework.AspNetCore/Handlers/GlobalExceptionHandler.md
+    items:
+    - name: GlobalExceptionHandler
+      href: ISynergy.Framework.AspNetCore/Handlers/GlobalExceptionHandler.md
+  - name: Middleware
+    href: ISynergy.Framework.AspNetCore/Middleware/ExceptionMiddleware.md
+    items:
+    - name: ExceptionMiddleware
+      href: ISynergy.Framework.AspNetCore/Middleware/ExceptionMiddleware.md
+    - name: Internals
+      href: ISynergy.Framework.AspNetCore/Middleware/Internals/MaxConcurrentRequestsEnqueuer.md
+      items:
+      - name: MaxConcurrentRequestsEnqueuer
+        href: ISynergy.Framework.AspNetCore/Middleware/Internals/MaxConcurrentRequestsEnqueuer.md
+    - name: MaxConcurrentRequestsMiddleware
+      href: ISynergy.Framework.AspNetCore/Middleware/MaxConcurrentRequestsMiddleware.md
+  - name: Models
+    href: ISynergy.Framework.AspNetCore/Models/SwaggerEndpoint.md
+    items:
+    - name: SwaggerEndpoint.cs
+      href: ISynergy.Framework.AspNetCore/Models/SwaggerEndpoint.md
+  - name: Options
+    href: ISynergy.Framework.AspNetCore/Options/AuthenticationEndpointOptions.md
+    items:
+    - name: AuthenticationEndpointOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/AuthenticationEndpointOptions.md
+    - name: AzureOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/AzureOptions.md
+    - name: CORSOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/CORSOptions.md
+    - name: DataProtectionOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/DataProtectionOptions.md
+    - name: EnviromentalOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/EnviromentalOptions.md
+    - name: GatewayServiceOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/GatewayServiceOptions.md
+    - name: IntrospectionOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/IntrospectionOptions.md
+    - name: MaxConcurrentRequestsOptions Class Explanation
+      href: ISynergy.Framework.AspNetCore/Options/MaxConcurrentrequestsOptions.md
+    - name: PostcodeApiOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/PostcodeApiOptions.md
+    - name: WebsiteOptions.cs
+      href: ISynergy.Framework.AspNetCore/Options/WebsiteOptions.md
+  - name: Providers
+    href: ISynergy.Framework.AspNetCore/Providers/DateTimeModelBinderProvider.md
+    items:
+    - name: DateTimeModelBinderProvider
+      href: ISynergy.Framework.AspNetCore/Providers/DateTimeModelBinderProvider.md
+  - name: Routing
+    href: ISynergy.Framework.AspNetCore/Routing/RouteDataRequestCultureProvider.md
+    items:
+    - name: RouteDataRequestCultureProvider
+      href: ISynergy.Framework.AspNetCore/Routing/RouteDataRequestCultureProvider.md
+  - name: Senders
+    href: ISynergy.Framework.AspNetCore/Senders/IEmailSender.md
+    items:
+    - name: IEmailSender.cs
+      href: ISynergy.Framework.AspNetCore/Senders/IEmailSender.md
+    - name: ISmsSender.cs
+      href: ISynergy.Framework.AspNetCore/Senders/ISmsSender.md
+  - name: Startup
+    href: ISynergy.Framework.AspNetCore/Startup/BaseStartup.md
+    items:
+    - name: BaseStartup.cs
+      href: ISynergy.Framework.AspNetCore/Startup/BaseStartup.md
+  - name: Utilities
+    href: ISynergy.Framework.AspNetCore/Utilities/X509CertUtilities.md
+    items:
+    - name: X509CertUtilities.cs
+      href: ISynergy.Framework.AspNetCore/Utilities/X509CertUtilities.md
+- name: ISynergy.Framework.AspNetCore.Authentication
+  href: ISynergy.Framework.AspNetCore.Authentication/index.md
+  items:
+  - name: ISynergy.Framework.AspNetCore.Authentication
+    href: ISynergy.Framework.AspNetCore.Authentication/index.md
+  - name: Exceptions
+    href: ISynergy.Framework.AspNetCore.Authentication/Exceptions/ClaimNotFoundExceptionsFilterAttribute.md
+    items:
+    - name: ClaimNotFoundExceptionFilterAttribute
+      href: ISynergy.Framework.AspNetCore.Authentication/Exceptions/ClaimNotFoundExceptionsFilterAttribute.md
+  - name: Options
+    href: ISynergy.Framework.AspNetCore.Authentication/Options/IdentityPasswordOptions.md
+    items:
+    - name: IdentityPasswordOptions.cs
+      href: ISynergy.Framework.AspNetCore.Authentication/Options/IdentityPasswordOptions.md
+    - name: JwtOptions.cs
+      href: ISynergy.Framework.AspNetCore.Authentication/Options/JwtOptions.md
+  - name: Validators
+    href: ISynergy.Framework.AspNetCore.Authentication/Validators/IdentityPasswordvalidator.md
+    items:
+    - name: IdentityPasswordValidator
+      href: ISynergy.Framework.AspNetCore.Authentication/Validators/IdentityPasswordvalidator.md
+- name: ISynergy.Framework.AspNetCore.Globalization
+  href: ISynergy.Framework.AspNetCore.Globalization/index.md
+  items:
+  - name: ISynergy.Framework.AspNetCore.Globalization
+    href: ISynergy.Framework.AspNetCore.Globalization/index.md
+  - name: Extensions
+    href: ISynergy.Framework.AspNetCore.Globalization/Extensions/ServiceCollectionExtensions.md
+    items:
+    - name: ServiceCollectionExtensions.cs
+      href: ISynergy.Framework.AspNetCore.Globalization/Extensions/ServiceCollectionExtensions.md
+  - name: Services
+    href: ISynergy.Framework.AspNetCore.Globalization/Services/LanguageService.md
+    items:
+    - name: LanguageService
+      href: ISynergy.Framework.AspNetCore.Globalization/Services/LanguageService.md
+- name: ISynergy.Framework.AspNetCore.Monitoring
+  href: ISynergy.Framework.AspNetCore.Monitoring/index.md
+  items:
+  - name: ISynergy.Framework.AspNetCore.Monitoring
+    href: ISynergy.Framework.AspNetCore.Monitoring/index.md
+  - name: Extensions
+    href: ISynergy.Framework.AspNetCore.Monitoring/Extensions/ServiceCollectionExtensions.md
+    items:
+    - name: ServiceCollectionExtensions.cs
+      href: ISynergy.Framework.AspNetCore.Monitoring/Extensions/ServiceCollectionExtensions.md
+  - name: Hubs
+    href: ISynergy.Framework.AspNetCore.Monitoring/Hubs/MonitorHub.md
+    items:
+    - name: MonitorHub.cs
+      href: ISynergy.Framework.AspNetCore.Monitoring/Hubs/MonitorHub.md
+  - name: Services
+    href: ISynergy.Framework.AspNetCore.Monitoring/Services/MonitorService{TEntity}.md
+    items:
+    - name: MonitorService.cs
+      href: ISynergy.Framework.AspNetCore.Monitoring/Services/MonitorService{TEntity}.md
+- name: ISynergy.Framework.AspNetCore.MultiTenancy
+  href: ISynergy.Framework.AspNetCore.MultiTenancy/index.md
+  items:
+  - name: ISynergy.Framework.AspNetCore.MultiTenancy
+    href: ISynergy.Framework.AspNetCore.MultiTenancy/index.md
+  - name: Extension
+    href: ISynergy.Framework.AspNetCore.MultiTenancy/Extension/ServiceCollectionExtensions.md
+    items:
+    - name: ServiceCollectionExtensions.cs
+      href: ISynergy.Framework.AspNetCore.MultiTenancy/Extension/ServiceCollectionExtensions.md
+  - name: Services
+    href: ISynergy.Framework.AspNetCore.MultiTenancy/Services/TenantService.md
+    items:
+    - name: TenantService.cs
+      href: ISynergy.Framework.AspNetCore.MultiTenancy/Services/TenantService.md
+- name: ISynergy.Framework.Automations
+  href: ISynergy.Framework.Automations/Abstractions
+  items:
+  - name: Abstractions
+    href: ISynergy.Framework.Automations/Abstractions/IAction.md
+    items:
+    - name: IAction Interface
+      href: ISynergy.Framework.Automations/Abstractions/IAction.md
+    - name: IActionManager Interface
+      href: ISynergy.Framework.Automations/Abstractions/IActionManager.md
+    - name: IActionService Interface
+      href: ISynergy.Framework.Automations/Abstractions/IActionService.md
+    - name: IAutomationManager Interface
+      href: ISynergy.Framework.Automations/Abstractions/IAutomationManager.md
+    - name: IAutomationService.cs
+      href: ISynergy.Framework.Automations/Abstractions/IAutomationService.md
+    - name: ICondition.cs
+      href: ISynergy.Framework.Automations/Abstractions/ICondition.md
+    - name: IRepeatAction Interface
+      href: ISynergy.Framework.Automations/Abstractions/IRepeatAction.md
+    - name: IState.cs
+      href: ISynergy.Framework.Automations/Abstractions/IState.md
+    - name: IState.cs
+      href: ISynergy.Framework.Automations/Abstractions/IState{T}.md
+    - name: ITrigger Interface
+      href: ISynergy.Framework.Automations/Abstractions/ITrigger.md
+    - name: ITrigger Interface Explanation
+      href: ISynergy.Framework.Automations/Abstractions/ITrigger{T}.md
+  - name: Actions
+    href: ISynergy.Framework.Automations/Actions/ActionResult.md
+    items:
+    - name: ActionResult Class
+      href: ISynergy.Framework.Automations/Actions/ActionResult.md
+    - name: AutomationAction.cs
+      href: ISynergy.Framework.Automations/Actions/AutomationAction.md
+    - name: Base
+      href: ISynergy.Framework.Automations/Actions/Base/BaseAction.md
+      items:
+      - name: BaseAction.cs
+        href: ISynergy.Framework.Automations/Actions/Base/BaseAction.md
+    - name: CommandAction Class
+      href: ISynergy.Framework.Automations/Actions/CommandAction.md
+    - name: DelayAction.cs
+      href: ISynergy.Framework.Automations/Actions/DelayAction.md
+    - name: EventAction.cs
+      href: ISynergy.Framework.Automations/Actions/EventAction.md
+    - name: RepeatPreviousAction.cs
+      href: ISynergy.Framework.Automations/Actions/RepeatPreviousAction.md
+    - name: RepeatPreviousAction.cs
+      href: ISynergy.Framework.Automations/Actions/RepeatPreviousAction{T}.md
+    - name: ScheduledAction.cs
+      href: ISynergy.Framework.Automations/Actions/ScheduledAction.md
+  - name: AutomationId Property
+    href: ISynergy.Framework.Automations/Automation.md
+  - name: BackgroundServices
+    href: ISynergy.Framework.Automations/BackgroundServices/ActionQueuingBackgroundService.md
+    items:
+    - name: ActionQueuingBackgroundService
+      href: ISynergy.Framework.Automations/BackgroundServices/ActionQueuingBackgroundService.md
+    - name: AutomationBackgroundService
+      href: ISynergy.Framework.Automations/BackgroundServices/AutomationBackgroundService.md
+  - name: Base
+    href: ISynergy.Framework.Automations/Base/AutomationModel.md
+    items:
+    - name: AutomationModel.cs
+      href: ISynergy.Framework.Automations/Base/AutomationModel.md
+  - name: Conditions
+    href: ISynergy.Framework.Automations/Conditions/Condition.md
+    items:
+    - name: Condition.cs
+      href: ISynergy.Framework.Automations/Conditions/Condition.md
+    - name: ConditionValue
+      href: ISynergy.Framework.Automations/Conditions/ConditionValue.md
+  - name: Enumerations
+    href: ISynergy.Framework.Automations/Enumerations/ActionTypes.md
+    items:
+    - name: ActionTypes Enumeration Explanation
+      href: ISynergy.Framework.Automations/Enumerations/ActionTypes.md
+    - name: OperatorTypes.cs
+      href: ISynergy.Framework.Automations/Enumerations/OperatorTypes.md
+    - name: RepeatTypes.cs
+      href: ISynergy.Framework.Automations/Enumerations/RepeatTypes.md
+    - name: RunModes Enumeration
+      href: ISynergy.Framework.Automations/Enumerations/RunModes.md
+  - name: Extensions
+    href: ISynergy.Framework.Automations/Extensions/ActionExtensions.md
+    items:
+    - name: ActionExtensions.cs
+      href: ISynergy.Framework.Automations/Extensions/ActionExtensions.md
+    - name: ServiceCollectionExtensions.cs
+      href: ISynergy.Framework.Automations/Extensions/ServiceCollectionExtensions.md
+  - name: Options
+    href: ISynergy.Framework.Automations/Options/AutomationOptions.md
+    items:
+    - name: AutomationOptions.cs
+      href: ISynergy.Framework.Automations/Options/AutomationOptions.md
+  - name: Services
+    href: ISynergy.Framework.Automations/Services/ActionService.md
+    items:
+    - name: ActionService.cs
+      href: ISynergy.Framework.Automations/Services/ActionService.md
+    - name: GetTasksFromActionsAsync
+      href: ISynergy.Framework.Automations/Services/AutomationService.md
+  - name: States
+    href: ISynergy.Framework.Automations/States/Base
+    items:
+    - name: Base
+      href: ISynergy.Framework.Automations/States/Base/BaseNumericState{T}.md
+      items:
+      - name: BaseNumericState.cs
+        href: ISynergy.Framework.Automations/States/Base/BaseNumericState{T}.md
+      - name: BaseState.cs
+        href: ISynergy.Framework.Automations/States/Base/BaseState.md
+      - name: BaseState.cs
+        href: ISynergy.Framework.Automations/States/Base/BaseState{T}.md
+    - name: BooleanState
+      href: ISynergy.Framework.Automations/States/BooleanState.md
+    - name: EventState.cs
+      href: ISynergy.Framework.Automations/States/EventState.md
+    - name: NumericState.cs
+      href: ISynergy.Framework.Automations/States/NumericState.md
+    - name: ObjectState
+      href: ISynergy.Framework.Automations/States/ObjectState.md
+    - name: TimeState
+      href: ISynergy.Framework.Automations/States/TimeState.md
+  - name: Triggers
+    href: ISynergy.Framework.Automations/Triggers/Base
+    items:
+    - name: Base
+      href: ISynergy.Framework.Automations/Triggers/Base/BaseNumericTrigger{T}.md
+      items:
+      - name: BaseNumericTrigger.cs
+        href: ISynergy.Framework.Automations/Triggers/Base/BaseNumericTrigger{T}.md
+      - name: BaseTrigger.cs
+        href: ISynergy.Framework.Automations/Triggers/Base/BaseTrigger.md
+      - name: BaseTrigger.cs
+        href: ISynergy.Framework.Automations/Triggers/Base/BaseTrigger{T}.md
+    - name: EventTrigger.cs
+      href: ISynergy.Framework.Automations/Triggers/EventTrigger.md
+    - name: NumericTrigger.cs
+      href: ISynergy.Framework.Automations/Triggers/NumericTrigger.md
+    - name: StateTrigger.cs
+      href: ISynergy.Framework.Automations/Triggers/StateTrigger.md
+    - name: TimeTrigger.cs
+      href: ISynergy.Framework.Automations/Triggers/TimeTrigger.md
+- name: ISynergy.Framework.Core
+  href: ISynergy.Framework.Core/index.md
+  items:
+  - name: ISynergy.Framework.Core
+    href: ISynergy.Framework.Core/index.md
+  - name: Abstractions
+    href: ISynergy.Framework.Core/Abstractions/Async
+    items:
+    - name: Async
+      href: ISynergy.Framework.Core/Abstractions/Async/IAsyncInitialization.md
+      items:
+      - name: IAsyncInitialization Interface
+        href: ISynergy.Framework.Core/Abstractions/Async/IAsyncInitialization.md
+      - name: ISupportsCancellation Interface
+        href: ISynergy.Framework.Core/Abstractions/Async/ISupportsCancellation.md
+    - name: Base
+      href: ISynergy.Framework.Core/Abstractions/Base/IBindable.md
+      items:
+      - name: IBindable Interface Explanation
+        href: ISynergy.Framework.Core/Abstractions/Base/IBindable.md
+      - name: IClass
+        href: ISynergy.Framework.Core/Abstractions/Base/IClass.md
+      - name: IEntity Interface Explanation
+        href: ISynergy.Framework.Core/Abstractions/Base/IEntity.md
+      - name: IGlobalSettings Interface Explanation
+        href: ISynergy.Framework.Core/Abstractions/Base/IGlobalSettings.md
+      - name: ILocalSettings.cs
+        href: ISynergy.Framework.Core/Abstractions/Base/ILocalSettings.md
+      - name: IModel
+        href: ISynergy.Framework.Core/Abstractions/Base/IModel.md
+      - name: IObservableClass Interface
+        href: ISynergy.Framework.Core/Abstractions/Base/IObservableClass.md
+      - name: IProperty Interface
+        href: ISynergy.Framework.Core/Abstractions/Base/IProperty.md
+      - name: IProperty Interface Explanation
+        href: ISynergy.Framework.Core/Abstractions/Base/IPropertyT.md
+      - name: IRecord Interface
+        href: ISynergy.Framework.Core/Abstractions/Base/IRecord.md
+      - name: IRoamingSettings Interface
+        href: ISynergy.Framework.Core/Abstractions/Base/IRoamingSettings.md
+      - name: ITenantEntity.cs
+        href: ISynergy.Framework.Core/Abstractions/Base/ITenantEntity.md
+    - name: Collections
+      href: ISynergy.Framework.Core/Abstractions/Collections/IBinaryTreeNode.md
+      items:
+      - name: IBinaryTreeNode.cs
+        href: ISynergy.Framework.Core/Abstractions/Collections/IBinaryTreeNode.md
+    - name: Events
+      href: ISynergy.Framework.Core/Abstractions/Events/IExecuteWithObject.md
+      items:
+      - name: IExecuteWithObject
+        href: ISynergy.Framework.Core/Abstractions/Events/IExecuteWithObject.md
+      - name: IExecuteWithObjectAndResult Interface
+        href: ISynergy.Framework.Core/Abstractions/Events/IExecuteWithObjectAndResult.md
+    - name: IAddress Interface
+      href: ISynergy.Framework.Core/Abstractions/IAddress.md
+    - name: IContext Interface
+      href: ISynergy.Framework.Core/Abstractions/IContext.md
+    - name: IMigration Interface
+      href: ISynergy.Framework.Core/Abstractions/IMigration.md
+    - name: IProfile Interface
+      href: ISynergy.Framework.Core/Abstractions/IProfile.md
+    - name: IResult Interface
+      href: ISynergy.Framework.Core/Abstractions/IResult.md
+    - name: IResult Interface
+      href: ISynergy.Framework.Core/Abstractions/IResult{T}.md
+    - name: Options
+      href: ISynergy.Framework.Core/Abstractions/Options/IConfigurationOptions.md
+      items:
+      - name: IConfigurationOptions.cs
+        href: ISynergy.Framework.Core/Abstractions/Options/IConfigurationOptions.md
+    - name: Services
+      href: ISynergy.Framework.Core/Abstractions/Services/IExceptionHandlerService.md
+      items:
+      - name: IExceptionHandlerService.cs
+        href: ISynergy.Framework.Core/Abstractions/Services/IExceptionHandlerService.md
+      - name: IInfoService Interface Explanation
+        href: ISynergy.Framework.Core/Abstractions/Services/IInfoService.md
+      - name: ILanguageService Interface
+        href: ISynergy.Framework.Core/Abstractions/Services/ILanguageService.md
+      - name: ILocalizationService.cs
+        href: ISynergy.Framework.Core/Abstractions/Services/ILocalizationService.md
+      - name: IMessageService Interface
+        href: ISynergy.Framework.Core/Abstractions/Services/IMessageService.md
+      - name: ISettingsService Interface Explanation
+        href: ISynergy.Framework.Core/Abstractions/Services/ISettingsService.md
+      - name: ITenantService Interface
+        href: ISynergy.Framework.Core/Abstractions/Services/ITenantService.md
+    - name: Timers
+      href: ISynergy.Framework.Core/Abstractions/Timers/ITimer.md
+      items:
+      - name: ITimer
+        href: ISynergy.Framework.Core/Abstractions/Timers/ITimer.md
+  - name: Attributes
+    href: ISynergy.Framework.Core/Attributes/CallerArgumentExpressionAttribute.md
+    items:
+    - name: CallerArgumentExpressionAttribute
+      href: ISynergy.Framework.Core/Attributes/CallerArgumentExpressionAttribute.md
+    - name: DataTableIgnoreAttribute
+      href: ISynergy.Framework.Core/Attributes/DataTableIgnoreAttribute.md
+    - name: DescriptionAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/DescriptionAttribute.md
+    - name: FreeAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/FreeAttribute.md
+    - name: IdentityAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/IdentityAttribute.md
+    - name: IgnoreValidationAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/IgnoreValidationAttribute.md
+    - name: LifetimeAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/LifetimeAttribute.md
+    - name: LocalizedDescriptionAttribute
+      href: ISynergy.Framework.Core/Attributes/LocalizedDescriptionAttribute.md
+    - name: ParentIdentityAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/ParentIdentityAttribute.md
+    - name: PreferredConstructorAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/PreferredConstructorAttribute.md
+    - name: SymbolAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/SymbolAttribute.md
+    - name: TitleAttribute.cs
+      href: ISynergy.Framework.Core/Attributes/TitleAttribute.md
+  - name: Base
+    href: ISynergy.Framework.Core/Base/BaseClass.md
+    items:
+    - name: BaseClass.cs
+      href: ISynergy.Framework.Core/Base/BaseClass.md
+    - name: BaseRecord.cs
+      href: ISynergy.Framework.Core/Base/BaseRecord.md
+    - name: ObservableClass Explanation
+      href: ISynergy.Framework.Core/Base/ObservableClass.md
+    - name: Property Class Explanation
+      href: ISynergy.Framework.Core/Base/Property.md
+    - name: The Memo property in the BaseModel class
+      href: ISynergy.Framework.Core/Base/BaseModel.md
+  - name: Collections
+    href: ISynergy.Framework.Core/Collections/BinaryNode.md
+    items:
+    - name: BinaryNode.cs
+      href: ISynergy.Framework.Core/Collections/BinaryNode.md
+    - name: BinaryTree.cs
+      href: ISynergy.Framework.Core/Collections/BinaryTree.md
+    - name: ItemObservableCollection
+      href: ISynergy.Framework.Core/Collections/ItemObservableCollection{T}.md
+    - name: KeyValuePairComparer.cs
+      href: ISynergy.Framework.Core/Collections/KeyValuePairComparer.md
+    - name: ObservableConcurrentDictionary.cs
+      href: ISynergy.Framework.Core/Collections/ObservableConcurrentDictionary.md
+    - name: ObservableRangeCollection.cs
+      href: ISynergy.Framework.Core/Collections/ObservableRangeCollection.md
+    - name: OrderedDictionary<TKey, TValue>
+      href: ISynergy.Framework.Core/Collections/OrderedDictionary{T}.md
+    - name: RedBlackTree Class
+      href: ISynergy.Framework.Core/Collections/RedBlackTree{T}.md
+    - name: RedBlackTree<TKey, TValue> Class
+      href: ISynergy.Framework.Core/Collections/RedBlackTree{T1,T2}.md
+    - name: RedBlackTreeDictionary<TKey, TValue>
+      href: ISynergy.Framework.Core/Collections/RedBlackTreeDictionary{T}.md
+    - name: RedBlackTreeNode.cs
+      href: ISynergy.Framework.Core/Collections/RedBlackTreeNode.md
+    - name: Tree.cs
+      href: ISynergy.Framework.Core/Collections/Tree.md
+    - name: TreeNode<TKey, TModel> Class
+      href: ISynergy.Framework.Core/Collections/TreeNode{T}.md
+    - name: TreeTraversal.cs
+      href: ISynergy.Framework.Core/Collections/TreeTraversal.md
+  - name: Constants
+    href: ISynergy.Framework.Core/Constants/AuthorizationTypes.md
+    items:
+    - name: AuthenticationTypes.cs
+      href: ISynergy.Framework.Core/Constants/AuthorizationTypes.md
+    - name: AuthorizationPolicies.cs
+      href: ISynergy.Framework.Core/Constants/AuthorizationPolicies.md
+    - name: AutorizationRoles.cs
+      href: ISynergy.Framework.Core/Constants/AutorizationRoles.md
+    - name: ClaimTypes.cs
+      href: ISynergy.Framework.Core/Constants/ClaimTypes.md
+    - name: ExceptionConstants.cs
+      href: ISynergy.Framework.Core/Constants/ExceptionConstants.md
+    - name: GenericConstants.cs
+      href: ISynergy.Framework.Core/Constants/GenericConstants.md
+    - name: MasterData.cs
+      href: ISynergy.Framework.Core/Constants/MasterData.md
+    - name: RoleNames.cs
+      href: ISynergy.Framework.Core/Constants/RoleNames.md
+    - name: StringFormats.cs
+      href: ISynergy.Framework.Core/Constants/StringFormats.md
+  - name: Converters
+    href: ISynergy.Framework.Core/Converters/CustomDateTimeJsonConverter.md
+    items:
+    - name: CustomDateTimeJsonConverter
+      href: ISynergy.Framework.Core/Converters/CustomDateTimeJsonConverter.md
+    - name: DateTimeConverter Explanation
+      href: ISynergy.Framework.Core/Converters/DateTimeConverter.md
+    - name: DateTimeOffsetConverter
+      href: ISynergy.Framework.Core/Converters/DateTimeOffsetConverter.md
+    - name: TimeOnlyConverter
+      href: ISynergy.Framework.Core/Converters/TimeOnlyConverter.md
+  - name: Enumerations
+    href: ISynergy.Framework.Core/Enumerations/Week.md
+    items:
+    - name:  Week.cs
+      href: ISynergy.Framework.Core/Enumerations/Week.md
+    - name: CryptoKeySizes Enumeration
+      href: ISynergy.Framework.Core/Enumerations/CryptoKeySizes.md
+    - name: DepthBreadthTraversalTypes Enumeration
+      href: ISynergy.Framework.Core/Enumerations/DepthBreadthTraversalTypes.md
+    - name: DialogTypes Enumeration
+      href: ISynergy.Framework.Core/Enumerations/DialogTypes.md
+    - name: FileWatcherArgumentTypes Enumeration Explanation
+      href: ISynergy.Framework.Core/Enumerations/FileWatcherArgumentTypes.md
+    - name: ImageFormats Enum Explanation
+      href: ISynergy.Framework.Core/Enumerations/ImageFormats.md
+    - name: Languages.cs Explanation
+      href: ISynergy.Framework.Core/Enumerations/Languages.md
+    - name: Lifetimes Enumeration
+      href: ISynergy.Framework.Core/Enumerations/Lifetimes.md
+    - name: NodeChangeTypes.cs
+      href: ISynergy.Framework.Core/Enumerations/NodeChangeTypes.md
+    - name: NodeRelationTypes Enumeration Explanation
+      href: ISynergy.Framework.Core/Enumerations/NodeRelationTypes.md
+    - name: SettingTypes Enum Explanation
+      href: ISynergy.Framework.Core/Enumerations/SettingTypes.md
+    - name: SoftwareEnvironments Enumeration Explanation
+      href: ISynergy.Framework.Core/Enumerations/SoftwareEnvironments.md
+    - name: ThemeColors.cs
+      href: ISynergy.Framework.Core/Enumerations/ThemeColors.md
+    - name: Themes
+      href: ISynergy.Framework.Core/Enumerations/Themes.md
+    - name: UpDownTraversalTypes.cs
+      href: ISynergy.Framework.Core/Enumerations/UpDownTraversalTypes.md
+  - name: Events
+    href: ISynergy.Framework.Core/Events/ItemPropertyChangedEventArgs{T}.md
+    items:
+    - name: ItemPropertyChangedEventArgs Class Explanation
+      href: ISynergy.Framework.Core/Events/ItemPropertyChangedEventArgs{T}.md
+    - name: ReturnEventArgs.cs
+      href: ISynergy.Framework.Core/Events/ReturnEventArgs.md
+    - name: WeakAction Class Explanation
+      href: ISynergy.Framework.Core/Events/WeakAction.md
+    - name: WeakAction Class Explanation
+      href: ISynergy.Framework.Core/Events/WeakAction{T}.md
+    - name: WeakEventHandler.cs
+      href: ISynergy.Framework.Core/Events/WeakEventHandler.md
+    - name: WeakEventListener Class Explanation
+      href: ISynergy.Framework.Core/Events/WeakEventListener{T,T1,T2}.md
+    - name: WeakEventSource Class Explanation
+      href: ISynergy.Framework.Core/Events/WeakEventSource{T}.md
+    - name: WeakFunc Class Explanation
+      href: ISynergy.Framework.Core/Events/WeakFunc{T}.md
+    - name: WeakFunc<T, TResult> Class Explanation
+      href: ISynergy.Framework.Core/Events/WeakFunc{T,TResult}.md
+  - name: Exceptions
+    href: ISynergy.Framework.Core/Exceptions/ActivationException.md
+    items:
+    - name: ActivationException.cs
+      href: ISynergy.Framework.Core/Exceptions/ActivationException.md
+    - name: ArgumentBelowZeroException
+      href: ISynergy.Framework.Core/Exceptions/ArgumentBelowZeroException.md
+    - name: ClaimAuthorizationException.cs
+      href: ISynergy.Framework.Core/Exceptions/ClaimAuthorizationException.md
+    - name: ClaimNotFoundException.cs
+      href: ISynergy.Framework.Core/Exceptions/ClaimNotFoundException.md
+    - name: DuplicateClaimException
+      href: ISynergy.Framework.Core/Exceptions/DuplicateClaimException.md
+    - name: EntityNotFoundException
+      href: ISynergy.Framework.Core/Exceptions/EntityNotFoundException.md
+    - name: FeatureNotEnabledException
+      href: ISynergy.Framework.Core/Exceptions/FeatureNotEnabledException.md
+    - name: InvalidClaimValueException
+      href: ISynergy.Framework.Core/Exceptions/InvalidClaimValueException.md
+    - name: InvalidHandleEventException.cs
+      href: ISynergy.Framework.Core/Exceptions/InvalidHandleEventException.md
+    - name: UnexpectedEnumValueException
+      href: ISynergy.Framework.Core/Exceptions/UnexpectedEnumValueException.md
+    - name: ViewNotRegisteredException.cs
+      href: ISynergy.Framework.Core/Exceptions/ViewNotRegisteredException.md
+  - name: Extensions
+    href: ISynergy.Framework.Core/Extensions/ArrayExtensions.md
+    items:
+    - name: ArrayExtensions
+      href: ISynergy.Framework.Core/Extensions/ArrayExtensions.md
+    - name: AsyncEnumerableExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/AsyncEnumerableExtensions.md
+    - name: Base
+      href: ISynergy.Framework.Core/Extensions/Base/BaseCollectionExtensions.md
+      items:
+      - name: BaseCollectionExtensions
+        href: ISynergy.Framework.Core/Extensions/Base/BaseCollectionExtensions.md
+    - name: BinaryReaderExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/BinaryReaderExtensions.md
+    - name: BinaryWriterExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/BinaryWriterExtensions.md
+    - name: BitmapExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/BitmapExtensions.md
+    - name: ByteExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/ByteExtensions.md
+    - name: ClaimsPrincipalExtensions
+      href: ISynergy.Framework.Core/Extensions/ClaimsPrincipalExtensions.md
+    - name: CollectionExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/CollectionExtensions.md
+    - name: ConfigurationBinderExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/ConfigurationBinderExtensions.md
+    - name: DataColumnCollectionExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/DataColumnCollectionExtensions.md
+    - name: DataReaderExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/DataReaderExtensions.md
+    - name: DateTimeExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/DateTimeExtensions.md
+    - name: DateTimeOffsetExtensions
+      href: ISynergy.Framework.Core/Extensions/DateTimeOffsetExtensions.md
+    - name: DecimalExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/DecimalExtensions.md
+    - name: DoubleExtensions Class Explanation
+      href: ISynergy.Framework.Core/Extensions/DoubleExtensions.md
+    - name: EnumerableExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/EnumerableExtensions.md
+    - name: EnumExtensions.GetDescription Method Explanation
+      href: ISynergy.Framework.Core/Extensions/EnumExtensions.md
+    - name: ExceptionExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/ExceptionExtensions.md
+    - name: FileExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/FileExtensions.md
+    - name: FloatExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/FloatExtensions.md
+    - name: GuidExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/GuidExtensions.md
+    - name: IntegerExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/IntegerExtensions.md
+    - name: ListExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/ListExtensions.md
+    - name: LongExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/LongExtensions.md
+    - name: ObjectExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/ObjectExtensions.md
+    - name: ReflectionExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/ReflectionExtensions.md
+    - name: ResultExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/ResultExtensions.md
+    - name: SafeFireAndForgetExtensions
+      href: ISynergy.Framework.Core/Extensions/SafeFireAndForgetExtensions.md
+    - name: StreamExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/StreamExtensions.md
+    - name: StreamReaderExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/StreamReaderExtensions.md
+    - name: StringExtensions.HexStringToColor Method
+      href: ISynergy.Framework.Core/Extensions/StringExtensions.md
+    - name: TaskExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/TaskExtensions.md
+    - name: The DictionaryExtensions class is being explained here.
+      href: ISynergy.Framework.Core/Extensions/DictionaryExtensions.md
+    - name: TreeExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/TreeExtensions.md
+    - name: TypeExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/TypeExtensions.md
+    - name: UriExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/UriExtensions.md
+    - name: UUID v7
+      href: ISynergy.Framework.Core/Extensions/Uuidv7.md
+    - name: UuidExtensions.cs
+      href: ISynergy.Framework.Core/Extensions/UuidExtensions.md
+  - name: Helpers
+    href: ISynergy.Framework.Core/Helpers/ActionTimer.md
+    items:
+    - name: ActionTimer.cs
+      href: ISynergy.Framework.Core/Helpers/ActionTimer.md
+    - name: DelayTimer.cs
+      href: ISynergy.Framework.Core/Helpers/DelayTimer.md
+    - name: DesignerLibrary
+      href: ISynergy.Framework.Core/Helpers/DesignerLibrary.md
+    - name: NullScope.cs
+      href: ISynergy.Framework.Core/Helpers/NullScope.md
+  - name: Locators
+    href: ISynergy.Framework.Core/Locators/ServiceLocator.md
+    items:
+    - name: ServiceLocator.cs
+      href: ISynergy.Framework.Core/Locators/ServiceLocator.md
+  - name: Messages
+    href: ISynergy.Framework.Core/messages/ApplicationInitializedMessage.md
+    items:
+    - name: ApplicationInitializedMessage.cs
+      href: ISynergy.Framework.Core/messages/ApplicationInitializedMessage.md
+    - name: ApplicationLoadedMessage.cs
+      href: ISynergy.Framework.Core/messages/ApplicationLoadedMessage.md
+    - name: Base
+      href: ISynergy.Framework.Core/messages/Base/BaseMessage.md
+      items:
+      - name: BaseMessage Class Explanation
+        href: ISynergy.Framework.Core/messages/Base/BaseMessage.md
+      - name: BaseMessage Class Explanation
+        href: ISynergy.Framework.Core/messages/Base/BaseMessage{T}.md
+      - name: BasePropertyChangedMessage Class Explanation
+        href: ISynergy.Framework.Core/messages/Base/BasePropertyChangedMessage.md
+    - name: EnvironmentChangedMessage.cs
+      href: ISynergy.Framework.Core/messages/EnvironmentChangedMessage.md
+    - name: PropertyChangedMessage Class Explanation
+      href: ISynergy.Framework.Core/messages/PropertyChangedMessage{T}.md
+    - name: RefreshMessage.cs
+      href: ISynergy.Framework.Core/messages/RefreshMessage.md
+    - name: StyleChangedMessage.cs
+      href: ISynergy.Framework.Core/messages/StyleChangedMessage.md
+  - name: Models
+    href: ISynergy.Framework.Core/Models/Accounts
+    items:
+    - name: Accounts
+      href: ISynergy.Framework.Core/Models/Accounts/Account.md
+      items:
+      - name: Account.cs
+        href: ISynergy.Framework.Core/Models/Accounts/Account.md
+      - name: Module.cs
+        href: ISynergy.Framework.Core/Models/Accounts/Module.md
+      - name: Profile.cs
+        href: ISynergy.Framework.Core/Models/Accounts/Profile.md
+      - name: RegistrationData.cs
+        href: ISynergy.Framework.Core/Models/Accounts/RegistrationData.md
+      - name: RegistrationResult Record
+        href: ISynergy.Framework.Core/Models/Accounts/RegistrationResult.md
+      - name: Role.cs
+        href: ISynergy.Framework.Core/Models/Accounts/Role.md
+      - name: User.cs
+        href: ISynergy.Framework.Core/Models/Accounts/User.md
+    - name: ApiException.cs
+      href: ISynergy.Framework.Core/Models/ApiException.md
+    - name: Country.cs
+      href: ISynergy.Framework.Core/Models/Country.md
+    - name: Culture.cs
+      href: ISynergy.Framework.Core/Models/Culture.md
+    - name: Currency.cs
+      href: ISynergy.Framework.Core/Models/Currency.md
+    - name: ErrorDetail Class
+      href: ISynergy.Framework.Core/Models/ErrorDetail.md
+    - name: FileType.cs
+      href: ISynergy.Framework.Core/Models/FileType.md
+    - name: Grant
+      href: ISynergy.Framework.Core/Models/Grant.md
+    - name: NavigationItem Class Explanation
+      href: ISynergy.Framework.Core/Models/NavigationItem.md
+    - name: Results
+      href: ISynergy.Framework.Core/Models/Results/ImageResult.md
+      items:
+      - name: ImageResult Class Explanation
+        href: ISynergy.Framework.Core/Models/Results/ImageResult.md
+      - name: PaginatedResult Class Explanation
+        href: ISynergy.Framework.Core/Models/Results/PaginatedResult{T}.md
+      - name: Result Class Explanation
+        href: ISynergy.Framework.Core/Models/Results/Result{T}.md
+      - name: Result.cs
+        href: ISynergy.Framework.Core/Models/Results/Result.md
+    - name: Style
+      href: ISynergy.Framework.Core/Models/Style.md
+    - name: TileItem
+      href: ISynergy.Framework.Core/Models/TileItem.md
+    - name: Token.cs
+      href: ISynergy.Framework.Core/Models/Token.md
+    - name: TokenRequest Record
+      href: ISynergy.Framework.Core/Models/TokenRequest.md
+    - name: Year.cs
+      href: ISynergy.Framework.Core/Models/Year.md
+  - name: Points
+    href: ISynergy.Framework.Core/Points/Point.md
+    items:
+    - name: Point.cs
+      href: ISynergy.Framework.Core/Points/Point.md
+  - name: Policies
+    href: ISynergy.Framework.Core/Policies/JsonSnakeCaseNamingPolicy.md
+    items:
+    - name: JsonSnakeCaseNamingPolicy.cs
+      href: ISynergy.Framework.Core/Policies/JsonSnakeCaseNamingPolicy.md
+  - name: Properties
+    href: ISynergy.Framework.Core/Properties/Resources.Designer.md
+    items:
+    - name: Resources.Designer.cs
+      href: ISynergy.Framework.Core/Properties/Resources.Designer.md
+  - name: Ranges
+    href: ISynergy.Framework.Core/Ranges/NumericRange.md
+    items:
+    - name: NumericRange.cs
+      href: ISynergy.Framework.Core/Ranges/NumericRange.md
+  - name: Serializers
+    href: ISynergy.Framework.Core/Serializers/DefaultJsonSerializers.md
+    items:
+    - name: DefaultJsonSerializers.cs
+      href: ISynergy.Framework.Core/Serializers/DefaultJsonSerializers.md
+  - name: Services
+    href: ISynergy.Framework.Core/Services/InfoService.md
+    items:
+    - name: InfoService.cs
+      href: ISynergy.Framework.Core/Services/InfoService.md
+    - name: LanguageService Class Explanation
+      href: ISynergy.Framework.Core/Services/LanguageService.md
+    - name: MessageService.cs
+      href: ISynergy.Framework.Core/Services/MessageService.md
+  - name: Utilities
+    href: ISynergy.Framework.Core/Utilities/ByteUtility.md
+    items:
+    - name: ByteUtility.cs
+      href: ISynergy.Framework.Core/Utilities/ByteUtility.md
+    - name: CompareUtility
+      href: ISynergy.Framework.Core/Utilities/CompareUtility.md
+    - name: EnumUtility.cs
+      href: ISynergy.Framework.Core/Utilities/EnumUtility.md
+    - name: NetworkUtility Class Explanation
+      href: ISynergy.Framework.Core/Utilities/NetworkUtility.md
+    - name: RegexUtility.cs
+      href: ISynergy.Framework.Core/Utilities/RegexUtility.md
+    - name: SecretUtility.cs
+      href: ISynergy.Framework.Core/Utilities/SecretUtility.md
+    - name: StringUtility.ConvertStringToDecimal
+      href: ISynergy.Framework.Core/Utilities/StringUtility.md
+    - name: TryCatchUtility
+      href: ISynergy.Framework.Core/Utilities/TryCatchUtility.md
+    - name: TypeActivator.cs
+      href: ISynergy.Framework.Core/Utilities/TypeActivator.md
+  - name: Validation
+    href: ISynergy.Framework.Core/Validation/Argument.md
+    items:
+    - name: Argument
+      href: ISynergy.Framework.Core/Validation/Argument.md
+- name: ISynergy.Framework.Documents
+  href: ISynergy.Framework.Documents/index.md
+  items:
+  - name: ISynergy.Framework.Documents
+    href: ISynergy.Framework.Documents/index.md
+  - name: Enumerations
+    href: ISynergy.Framework.Documents/Enumerations/DocumentTypes.md
+    items:
+    - name: DocumentTypes Enumeration Explanation
+      href: ISynergy.Framework.Documents/Enumerations/DocumentTypes.md
+  - name: Models
+    href: ISynergy.Framework.Documents/Models/Base
+    items:
+    - name: Base
+      href: ISynergy.Framework.Documents/Models/Base/BaseRequest.md
+      items:
+      - name: BaseRequest.cs
+        href: ISynergy.Framework.Documents/Models/Base/BaseRequest.md
+    - name: DocumentRequest.cs
+      href: ISynergy.Framework.Documents/Models/DocumentRequest.md
+    - name: PreadsheetRequest.cs
+      href: ISynergy.Framework.Documents/Models/SpreadsheetRequest.md
+  - name: Options
+    href: ISynergy.Framework.Documents/Options/SyncfusionLicenseOptions.md
+    items:
+    - name: SyncfusionLicenseOptions.cs
+      href: ISynergy.Framework.Documents/Options/SyncfusionLicenseOptions.md
+- name: ISynergy.Framework.Documents.Syncfusion
+  href: ISynergy.Framework.Documents.Syncfusion/index.md
+  items:
+  - name: ISynergy.Framework.Documents.Syncfusion
+    href: ISynergy.Framework.Documents.Syncfusion/index.md
+  - name: Extensions
+    href: ISynergy.Framework.Documents.Syncfusion/Extensions/ServiceCollectionExtensions.md
+    items:
+    - name: ServiceCollectionExtensions.cs
+      href: ISynergy.Framework.Documents.Syncfusion/Extensions/ServiceCollectionExtensions.md
+  - name: Services
+    href: ISynergy.Framework.Documents.Syncfusion/Services/DocumentService.md
+    items:
+    - name: DocumentService
+      href: ISynergy.Framework.Documents.Syncfusion/Services/DocumentService.md
+- name: ISynergy.Framework.EntityFramework
+  href: ISynergy.Framework.EntityFramework/index.md
+  items:
+  - name: ISynergy.Framework.EntityFramework
+    href: ISynergy.Framework.EntityFramework/index.md
+  - name: Attributes
+    href: ISynergy.Framework.EntityFramework/Attributes/TenantAwareAttribute.md
+    items:
+    - name: TenantAwareAttribute Explanation
+      href: ISynergy.Framework.EntityFramework/Attributes/TenantAwareAttribute.md
+  - name: Base
+    href: ISynergy.Framework.EntityFramework/Base/BaseEntity.md
+    items:
+    - name: BaseEntity.cs
+      href: ISynergy.Framework.EntityFramework/Base/BaseEntity.md
+    - name: BaseTenantEntity.cs
+      href: ISynergy.Framework.EntityFramework/Base/BaseTenantEntity.md
+  - name: DataContext
+    href: ISynergy.Framework.EntityFramework/DataContext/BaseDataContext.md
+    items:
+    - name: BaseDataContext.cs
+      href: ISynergy.Framework.EntityFramework/DataContext/BaseDataContext.md
+  - name: Events
+    href: ISynergy.Framework.EntityFramework/Events/EntityDeletedEvent.md
+    items:
+    - name: EntityDeletedEvent.cs
+      href: ISynergy.Framework.EntityFramework/Events/EntityDeletedEvent.md
+    - name: EntityInsertedEvent.cs
+      href: ISynergy.Framework.EntityFramework/Events/EntityInsertedEvent.md
+    - name: EntityUpdatedEvent.cs
+      href: ISynergy.Framework.EntityFramework/Events/EntityUpdatedEvent.md
+  - name: Extensions
+    href: ISynergy.Framework.EntityFramework/Extensions/QueryableExtensions.md
+    items:
+    - name: QueryableExtensions
+      href: ISynergy.Framework.EntityFramework/Extensions/QueryableExtensions.md
+  - name: Repositories
+    href: ISynergy.Framework.EntityFramework/Repositories/BaseRepositoryManager.md
+    items:
+    - name: BaseRepositoryManager.cs
+      href: ISynergy.Framework.EntityFramework/Repositories/BaseRepositoryManager.md
+- name: ISynergy.Framework.Financial
+  href: ISynergy.Framework.Financial/index.md
+  items:
+  - name: ISynergy.Framework.Financial
+    href: ISynergy.Framework.Financial/index.md
+  - name: Percentage
+    href: ISynergy.Framework.Financial/Percentage.md
+  - name: The Banking.ElevenTest method is being explained here.
+    href: ISynergy.Framework.Financial/Banking.md
+  - name: VAT.cs
+    href: ISynergy.Framework.Financial/VAT.md
+- name: ISynergy.Framework.Geography
+  href: ISynergy.Framework.Geography/index.md
+  items:
+  - name: ISynergy.Framework.Geography
+    href: ISynergy.Framework.Geography/index.md
+  - name: Common
+    href: ISynergy.Framework.Geography/Common/Angle.md
+    items:
+    - name: Angle.cs
+      href: ISynergy.Framework.Geography/Common/Angle.md
+    - name: Ellipsoid.cs
+      href: ISynergy.Framework.Geography/Common/Ellipsoid.md
+    - name: EuclidianCoordinate
+      href: ISynergy.Framework.Geography/Common/EuclidianCoordinate.md
+  - name: Geodetic
+    href: ISynergy.Framework.Geography/Geodetic/GeodeticCalculator.md
+    items:
+    - name: GeodeticCalculator
+      href: ISynergy.Framework.Geography/Geodetic/GeodeticCalculator.md
+    - name: GeodeticCurve.cs
+      href: ISynergy.Framework.Geography/Geodetic/GeodeticCurve.md
+    - name: GeodeticMeasurement.cs
+      href: ISynergy.Framework.Geography/Geodetic/GeodeticMeasurement.md
+  - name: Global
+    href: ISynergy.Framework.Geography/Global/GlobalCoordinates.md
+    items:
+    - name: GlobalCoordinates
+      href: ISynergy.Framework.Geography/Global/GlobalCoordinates.md
+    - name: GlobalMercatorProjection Class
+      href: ISynergy.Framework.Geography/Global/GlobalMercatorProjection.md
+    - name: GlobalMesh
+      href: ISynergy.Framework.Geography/Global/GlobalMesh.md
+    - name: GlobalPosition
+      href: ISynergy.Framework.Geography/Global/GlobalPosition.md
+  - name: Projection
+    href: ISynergy.Framework.Geography/Projection/EllipticalMercatorProjection.md
+    items:
+    - name: EllipticalMercatorProjection
+      href: ISynergy.Framework.Geography/Projection/EllipticalMercatorProjection.md
+    - name: MercatorProjection
+      href: ISynergy.Framework.Geography/Projection/MercatorProjection.md
+    - name: SphericalMercatorProjection.cs
+      href: ISynergy.Framework.Geography/Projection/SphericalMercatorProjection.md
+  - name: Properties
+    href: ISynergy.Framework.Geography/Properties/Resources.Designer.md
+    items:
+    - name: Resources.Designer.cs
+      href: ISynergy.Framework.Geography/Properties/Resources.Designer.md
+  - name: Utm
+    href: ISynergy.Framework.Geography/Utm/UtmCoordinate.md
+    items:
+    - name: UtmCoordinate
+      href: ISynergy.Framework.Geography/Utm/UtmCoordinate.md
+    - name: UtmGrid.cs
+      href: ISynergy.Framework.Geography/Utm/UtmGrid.md
+    - name: UtmProjection
+      href: ISynergy.Framework.Geography/Utm/UtmProjection.md
+- name: ISynergy.Framework.IO
+  href: ISynergy.Framework.IO/index.md
+  items:
+  - name: ISynergy.Framework.IO
+    href: ISynergy.Framework.IO/index.md
+  - name: Analyzers
+    href: ISynergy.Framework.IO/Analyzers/Base
+    items:
+    - name: Base
+      href: ISynergy.Framework.IO/Analyzers/Base/BaseFileTypeAnalyzer.md
+      items:
+      - name: BaseFileTypeAnalyzer
+        href: ISynergy.Framework.IO/Analyzers/Base/BaseFileTypeAnalyzer.md
+    - name: CustomFileTypeAnalyzer
+      href: ISynergy.Framework.IO/Analyzers/CustomFileTypeAnalyzer.md
+    - name: FileTypeAnalyzer.cs
+      href: ISynergy.Framework.IO/Analyzers/FileTypeAnalyzer.md
+  - name: Events
+    href: ISynergy.Framework.IO/Events/Base
+    items:
+    - name: Base
+      href: ISynergy.Framework.IO/Events/Base/BaseEventArgs{T}.md
+      items:
+      - name: BaseEventArgs Class Explanation
+        href: ISynergy.Framework.IO/Events/Base/BaseEventArgs{T}.md
+    - name: PathAvailablitiyEventArgs.cs
+      href: ISynergy.Framework.IO/Events/PathAvailablitiyEventArgs.md
+    - name: WatcherEventArgs.cs
+      href: ISynergy.Framework.IO/Events/WatcherEventArgs.md
+    - name: WatcherExEventArgs.cs
+      href: ISynergy.Framework.IO/Events/WatcherExEventArgs.md
+  - name: Models
+    href: ISynergy.Framework.IO/Models/DriveInformation.md
+    items:
+    - name: DriveInformation
+      href: ISynergy.Framework.IO/Models/DriveInformation.md
+    - name: FileTypeInfo Class Explanation
+      href: ISynergy.Framework.IO/Models/FileTypeInfo.md
+    - name: WatcherInfo Class Explanation
+      href: ISynergy.Framework.IO/Models/WatcherInfo.md
+  - name: Watchers
+    href: ISynergy.Framework.IO/Watchers/Base
+    items:
+    - name: Base
+      href: ISynergy.Framework.IO/Watchers/Base/BaseWatcher.md
+      items:
+      - name: BaseWatcher.cs
+        href: ISynergy.Framework.IO/Watchers/Base/BaseWatcher.md
+    - name: FileSystemWatcherEx.cs
+      href: ISynergy.Framework.IO/Watchers/FileSystemWatcherEx.md
+    - name: Watcher
+      href: ISynergy.Framework.IO/Watchers/Watcher.md
+    - name: WatcherEx.cs
+      href: ISynergy.Framework.IO/Watchers/WatcherEx.md
+- name: ISynergy.Framework.Logging
+  href: ISynergy.Framework.Logging/index.md
+  items:
+  - name: ISynergy.Framework.Logging
+    href: ISynergy.Framework.Logging/index.md
+  - name: Base
+    href: ISynergy.Framework.Logging/Base/BaseLogger.md
+    items:
+    - name: BaseLogger.cs
+      href: ISynergy.Framework.Logging/Base/BaseLogger.md
+  - name: Extensions
+    href: ISynergy.Framework.Logging/Extensions/LogLevelExtensions.md
+    items:
+    - name: LogLevelExtensions.cs
+      href: ISynergy.Framework.Logging/Extensions/LogLevelExtensions.md
+  - name: Options
+    href: ISynergy.Framework.Logging/Options/LoggerOptions.md
+    items:
+    - name: LoggerOptions.cs
+      href: ISynergy.Framework.Logging/Options/LoggerOptions.md
+- name: ISynergy.Framework.Logging.AppCenter
+  href: ISynergy.Framework.Logging.AppCenter/index.md
+  items:
+  - name: ISynergy.Framework.Logging.AppCenter
+    href: ISynergy.Framework.Logging.AppCenter/index.md
+  - name: Extensions
+    href: ISynergy.Framework.Logging.AppCenter/Extensions/ServiceCollectionExtensions.md
+    items:
+    - name: ServiceCollectionExtensions.cs
+      href: ISynergy.Framework.Logging.AppCenter/Extensions/ServiceCollectionExtensions.md
+  - name: Options
+    href: ISynergy.Framework.Logging.AppCenter/Options/AppCenterOptions.md
+    items:
+    - name: AppCenterOptions.cs
+      href: ISynergy.Framework.Logging.AppCenter/Options/AppCenterOptions.md
+  - name: Services
+    href: ISynergy.Framework.Logging.AppCenter/Services/Logger.md
+    items:
+    - name: Logger.cs
+      href: ISynergy.Framework.Logging.AppCenter/Services/Logger.md
+- name: ISynergy.Framework.Logging.ApplicationInsights
+  href: ISynergy.Framework.Logging.ApplicationInsights/index.md
+  items:
+  - name: ISynergy.Framework.Logging.ApplicationInsights
+    href: ISynergy.Framework.Logging.ApplicationInsights/index.md
+  - name: Extensions
+    href: ISynergy.Framework.Logging.ApplicationInsights/Extensions/ServiceCollectionExtensions.md
+    items:
+    - name: ServiceCollectionExtensions
+      href: ISynergy.Framework.Logging.ApplicationInsights/Extensions/ServiceCollectionExtensions.md
+    - name: TelemetryPropertiesExtensions.cs
+      href: ISynergy.Framework.Logging.ApplicationInsights/Extensions/TelemetryPropertiesExtensions.md
+  - name: Initializers
+    href: ISynergy.Framework.Logging.ApplicationInsights/Initializers/DefaultTelemetryInitializer.md
+    items:
+    - name: DefaultTelemetryInitializer
+      href: ISynergy.Framework.Logging.ApplicationInsights/Initializers/DefaultTelemetryInitializer.md
+  - name: Options
+    href: ISynergy.Framework.Logging.ApplicationInsights/Options/ApplicationInsightsOptions.md
+    items:
+    - name: ApplicationInsightsOptions.cs
+      href: ISynergy.Framework.Logging.ApplicationInsights/Options/ApplicationInsightsOptions.md
+  - name: Services
+    href: ISynergy.Framework.Logging.ApplicationInsights/Services/Logger.md
+    items:
+    - name: Logger.cs
+      href: ISynergy.Framework.Logging.ApplicationInsights/Services/Logger.md
+- name: ISynergy.Framework.UI.Maui
+  href: ISynergy.Framework.UI.Maui/index.md
+  items:
+  - name: ISynergy.Framework.UI.Maui
+    href: ISynergy.Framework.UI.Maui/index.md
+  - name: MigrationService
+    href: ISynergy.Framework.UI.Maui/migrationservice.md
+  - name: Preferences
+    href: ISynergy.Framework.UI.Maui/preferences.md

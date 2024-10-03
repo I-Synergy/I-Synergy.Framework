@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Storage</PackageId>
-		<Description>I-Synergy Framework Storage for .net 8.0</Description>
+		<Description>I-Synergy Framework Storage</Description>
 		<PackageTags>I-Synergy, Framework, Storage</PackageTags>
 	</PropertyGroup>
 
