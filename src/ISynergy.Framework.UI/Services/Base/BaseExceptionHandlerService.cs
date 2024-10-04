@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
@@ -53,11 +52,7 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
             // Set busyIndicator to false if it's true.
             _busyService.EndBusy();
 
-            if (exception is ApiException apiException)
-            {
-                await _dialogService.ShowErrorAsync(apiException.Message);
-            }
-            else if (exception is NotImplementedException)
+            if (exception is NotImplementedException)
             {
                 await _dialogService.ShowInformationAsync(_languageService.GetString("WarningFutureModule"), "Features");
             }

@@ -111,9 +111,6 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\NavigationHelper.cs" Link="Helpers\NavigationHelper.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\ResourceHelper.cs" Link="Helpers\ResourceHelper.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Helpers\WindowHelper.cs" Link="Helpers\WindowHelper.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Hosting\CancelableApplication.cs" Link="Hosting\CancelableApplication.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Hosting\WindowsAppSdkHost.cs" Link="Hosting\WindowsAppSdkHost.cs" />
-		<Compile Include="..\ISynergy.Framework.UI.WinUI\Hosting\WindowsAppSdkHostBuilder.cs" Link="Hosting\WindowsAppSdkHostBuilder.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Markup\EnumCollection.cs" Link="Markup\EnumCollection.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Markup\EnumKeyValueCollection.cs" Link="Markup\EnumKeyValueCollection.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Markup\LanguageResource.cs" Link="Markup\LanguageResource.cs" />
@@ -180,6 +177,7 @@
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\DecimalDataTrigger.cs" Link="Triggers\DecimalDataTrigger.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\IntegerDataTrigger.cs" Link="Triggers\IntegerDataTrigger.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Triggers\ObjectDataTrigger.cs" Link="Triggers\ObjectDataTrigger.cs" />
+		<Compile Include="..\ISynergy.Framework.UI.WinUI\ViewModels\Base\BaseShellViewModel.cs" Link="ViewModels\Base\BaseShellViewModel.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Views\SelectionView.xaml.cs" Link="Views\SelectionView.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Windows\LanguageWindow.xaml.cs" Link="Windows\LanguageWindow.xaml.cs" />
 		<Compile Include="..\ISynergy.Framework.UI.WinUI\Windows\NoteWindow.xaml.cs" Link="Windows\NoteWindow.xaml.cs" />
