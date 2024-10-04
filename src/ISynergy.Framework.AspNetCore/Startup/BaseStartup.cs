@@ -100,8 +100,6 @@ public abstract class BaseStartup : IAsyncInitialization
             app.UseHttpsRedirection();
         }
 
-        app.ConfigureExceptionHandlerMiddleware();
-
         app.UseStaticFiles();
 
         app.UseRequestLocalization(
