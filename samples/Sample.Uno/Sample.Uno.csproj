@@ -34,7 +34,7 @@
 		the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
 		must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
 		-->
-		<WindowsSdkPackageVersion>10.0.26100.45</WindowsSdkPackageVersion>
+		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
 		<!--
 		UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
 		https://aka.platform.uno/singleproject-features
@@ -141,12 +141,13 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'browserwasm'">
-		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.4.27" />
+		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.4.38" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
