@@ -63,7 +63,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\Font Awesome 6 Free-Regular-400.otf" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Assets\Fonts\fontawesome6free-regular-400.otf" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Assets\gta.mp4" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Assets\sample.mp4" />
   </ItemGroup>
