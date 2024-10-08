@@ -53,7 +53,7 @@
     <formatters:DecimalFormatter x:Key="0DecimalFormatter" Decimals="0" />
 
     <FontFamily x:Key="ContentControlThemeFontFamily">XamlAutoFontFamily</FontFamily>
-    <FontFamily x:Key="FontAwesomeLight">/Assets/Fonts/Font Awesome 6 Free-Regular-400#Font Awesome 6 Free Regular</FontFamily>
+    <FontFamily x:Key="FontAwesomeLight">ms-appx:///Assets/Fonts/fontawesome6free-regular-400#Font Awesome 6 Free Regular</FontFamily>
 
     <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />

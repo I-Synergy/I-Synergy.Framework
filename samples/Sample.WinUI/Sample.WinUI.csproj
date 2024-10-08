@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
@@ -17,21 +17,11 @@
 		<Nullable>disable</Nullable>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		<DefaultLanguage>en</DefaultLanguage>
-		<IsPackable>false</IsPackable>
 		<EnableMsixTooling>true</EnableMsixTooling>
-		<WindowsSdkPackageVersion>10.0.26100.45</WindowsSdkPackageVersion>
+		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
+		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
-	
-	<ItemGroup>
-	  <None Remove="appsettings.json" />
-	  <None Remove="Views\Controls\DetailsControl.xaml" />
-	  <None Remove="Views\DetailAView.xaml" />
-	  <None Remove="Views\DetailBView.xaml" />
-	  <None Remove="Views\DetailCView.xaml" />
-	  <None Remove="Views\DetailsView.xaml" />
-	  <None Remove="Views\DetailView.xaml" />
-	  <None Remove="Views\PivotView.xaml" />
-	</ItemGroup>
 	
 	<ItemGroup>
 		<AppxManifest Include="Package.appxmanifest">
@@ -48,12 +38,12 @@
 
 	<ItemGroup>
 		<Manifest Include="$(ApplicationManifest)" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="27.1.51" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="27.1.51" />
-		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="27.1.51" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="27.1.52" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="27.1.52" />
+		<PackageReference Include="Syncfusion.Gauge.WinUI" Version="27.1.52" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -77,34 +67,6 @@
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Views\Controls\DetailsControl.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Update="Views\DetailAView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	  </Page>
-	  <Page Update="Views\DetailBView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	  </Page>
-	  <Page Update="Views\DetailCView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Views\PivotView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Views\DetailView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Views\DetailsView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
+	
 	<Import Project="..\Sample.UI.Shared\Sample.UI.Shared.projitems" Label="Shared" />
 </Project>
