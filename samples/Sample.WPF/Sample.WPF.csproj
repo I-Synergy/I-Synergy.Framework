@@ -40,8 +40,8 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
-		<PackageReference Include="Syncfusion.SfInput.WPF" Version="27.1.52" />
-		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="27.1.52" />
+		<PackageReference Include="Syncfusion.SfInput.WPF" Version="27.1.53" />
+		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="27.1.53" />
 	</ItemGroup>
 
 	<ItemGroup>
