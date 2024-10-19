@@ -64,7 +64,7 @@ public static class NavigationExtensions
     {
         var page = CreatePage<TViewModel>(context, viewModel, parameter);
 
-        if (!Application.Current.MainPage.GetType().Name.Equals(page.GetType().Name))
+        if (!Application.Current.Windows[0].GetType().Name.Equals(page.GetType().Name))
             await navigation.PushAsync((Page)page, true);
     }
 

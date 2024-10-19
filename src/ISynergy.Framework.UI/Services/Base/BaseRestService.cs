@@ -104,7 +104,11 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
+#if NET8_0_OR_GREATER
                     return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
+#else
+                    return await response.Content.ReadFromJsonAsync<T>();
+#endif
                 }
 
                 return default(T);
@@ -255,7 +259,11 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
+#if NET8_0_OR_GREATER
                     return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
+#else
+                    return await response.Content.ReadFromJsonAsync<T>();
+#endif
                 }
 
                 return default(T);
@@ -362,7 +370,11 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(T);
 
+#if NET8_0_OR_GREATER
                     return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
+#else
+                    return await response.Content.ReadFromJsonAsync<T>();
+#endif
                 }
 
                 return default(T);
@@ -410,7 +422,11 @@ public abstract class BaseRestService
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return 0;
 
+#if NET8_0_OR_GREATER
                     return await response.Content.ReadFromJsonAsync<int>(cancellationToken);
+#else
+                    return await response.Content.ReadFromJsonAsync<int>();
+#endif
                 }
 
                 return 0;
