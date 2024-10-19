@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Uno.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>
-			net8.0-android;
-			net8.0-ios;
-			net8.0-maccatalyst;
-			net8.0-windows10.0.26100;
-			net8.0-desktop;
-			net8.0-browserwasm;
+			net9.0-android;
+			net9.0-ios;
+			net9.0-maccatalyst;
+			net9.0-windows10.0.26100;
+			net9.0-desktop;
+			net9.0-browserwasm;
 		</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
@@ -45,7 +45,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="appsettings.json" />
-		<None Remove="Assets\Fonts\Font Awesome 6 Pro-Regular-400.otf" />
 		<None Remove="Assets\gta.mp4" />
 		<None Remove="Assets\sample.mp4" />
 		<None Remove="Styles\Images.xaml" />
@@ -128,26 +127,24 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
+	
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />
-	</ItemGroup>
-
-	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
+		<Content Include="Assets\Fonts\fontawesome6free-regular-400.otf" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'desktop'">
-		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
+		<PackageReference Include="VideoLAN.LibVLC.Windows" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'browserwasm'">
-		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.4.38" />
+		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 	</ItemGroup>
 
 	<ItemGroup>

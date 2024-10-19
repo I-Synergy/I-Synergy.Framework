@@ -1,11 +1,11 @@
 {
   "sdk": {
-    "version": "8.0.403",
-    "allowPrerelease": false,
+    "version": "9.0.100-rc.2.24474.11",
+    "allowPrerelease": true,
     "rollForward": "disable"
   },
   "tools": {
-    "dotnet": "8.0.403"
+    "dotnet": "9.0.100-rc.2.24474.11"
   },
   "msbuild-sdks": {
     "Uno.Sdk": "5.4.10",

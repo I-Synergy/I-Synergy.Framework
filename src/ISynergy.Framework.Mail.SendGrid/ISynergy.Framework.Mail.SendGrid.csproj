@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Mail.SendGrid</PackageId>
 		<Description>I-Synergy Framework Mail with SendGrid</Description>
 		<PackageTags>I-Synergy, Framework, Mail, SendGrid</PackageTags>
@@ -9,10 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="SendGrid" Version="9.29.3" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+        <PackageReference Include="SendGrid" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
 	</ItemGroup>
 
     <ItemGroup>

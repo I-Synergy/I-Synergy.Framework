@@ -14,7 +14,7 @@ public class DispatcherService : IDispatcherService
 {
     public bool Invoke(Action action)
     {
-        if (Application.Current.MainPage is not null && Application.Current.MainPage.Dispatcher is IDispatcher dispatcher)
+        if (Application.Current.Windows[0] is not null && Application.Current.Windows[0].Dispatcher is IDispatcher dispatcher)
             return dispatcher.Dispatch(action);
         else
             return Application.Current.Dispatcher.Dispatch(action);

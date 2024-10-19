@@ -5,6 +5,7 @@
     <app:BaseApplication.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />-->
                 <ResourceDictionary Source="Assets/Images.xaml" />
                 <ResourceDictionary Source="Styles/Style.xaml"/>
                 <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
