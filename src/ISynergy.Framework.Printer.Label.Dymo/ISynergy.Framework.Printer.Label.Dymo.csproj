@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Printer.Label.Dymo</PackageId>
 		<Description>I-Synergy Framework Dymo Label printer library</Description>
 		<PackageTags>I-Synergy, Framework, Printer, Label, Dymo</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="DYMO.Connect.SDK" Version="1.4.4.21" />
-		<PackageReference Include="SkiaSharp" Version="2.88.8" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+		<PackageReference Include="DYMO.Connect.SDK" />
+		<PackageReference Include="SkiaSharp" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>net6.0;net8.0;net9.0;netstandard2.0;netstandard2.1</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Core</PackageId>
 		<Description>I-Synergy Framework Core</Description>
 		<PackageTags>I-Synergy, Framework, Core</PackageTags>
@@ -8,16 +8,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
-		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />
-		<PackageReference Include="System.Text.Json" Version="8.0.5" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
+		<PackageReference Include="System.Drawing.Common" />
+		<PackageReference Include="System.Text.Json" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+		<PackageReference Include="Microsoft.Bcl.HashCode" />
 	</ItemGroup>
 
 	<ItemGroup>
