@@ -39,6 +39,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+#if NET8_0_OR_GREATER
     /// <summary>
     /// Adds monitoring with SignalR integration.
     /// </summary>
@@ -50,6 +51,7 @@ public static class ServiceCollectionExtensions
         builder.Services.AddMonitorSignalR<TEntity>(builder.Configuration);
         return builder;
     }
+#endif
 
     /// <summary>
     /// Uses monitoring with SignalR integration.

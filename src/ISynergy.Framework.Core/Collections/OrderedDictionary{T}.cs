@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿#if !NET9_0_OR_GREATER
+using ISynergy.Framework.Core.Extensions;
 using System.Collections;
 
 namespace ISynergy.Framework.Core.Collections;
@@ -317,3 +318,4 @@ public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         return GetEnumerator();
     }
 }
+#endif
