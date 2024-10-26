@@ -94,33 +94,33 @@ public abstract class BaseDataContext : DbContext
     /// </summary>
     protected virtual void OnBeforeSaving(Func<Guid> tenantId, Func<string> username)
     {
-        if (ChangeTracker.HasChanges())
+        if (!ChangeTracker.HasChanges())
+            return;
+
+        foreach (var entry in ChangeTracker.Entries<BaseTenantEntity>().Where(e => e.State == EntityState.Added).EnsureNotNull())
         {
-            foreach (var entry in ChangeTracker.Entries<BaseTenantEntity>().Where(e => e.State == EntityState.Added).EnsureNotNull())
-            {
-                entry.Entity.TenantId = tenantId.Invoke();
+            entry.Entity.TenantId = tenantId.Invoke();
 
-                if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
-                    entry.Entity.CreatedBy = username.Invoke();
+            if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
+                entry.Entity.CreatedBy = username.Invoke();
 
+            entry.Entity.CreatedDate = DateTimeOffset.UtcNow;
+            entry.Entity.Version = 1;
+        }
+
+        foreach (var entry in ChangeTracker.Entries<BaseTenantEntity>().Where(e => e.State == EntityState.Modified).EnsureNotNull())
+        {
+            if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
+                entry.Entity.CreatedBy = username.Invoke();
+
+            if (entry.Entity.CreatedDate == DateTimeOffset.MinValue)
                 entry.Entity.CreatedDate = DateTimeOffset.UtcNow;
-                entry.Entity.Version = 1;
-            }
 
-            foreach (var entry in ChangeTracker.Entries<BaseTenantEntity>().Where(e => e.State == EntityState.Modified).EnsureNotNull())
-            {
-                if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
-                    entry.Entity.CreatedBy = username.Invoke();
+            if (string.IsNullOrEmpty(entry.Entity.ChangedBy))
+                entry.Entity.ChangedBy = username.Invoke();
 
-                if (entry.Entity.CreatedDate == DateTimeOffset.MinValue)
-                    entry.Entity.CreatedDate = DateTimeOffset.UtcNow;
-
-                if (string.IsNullOrEmpty(entry.Entity.ChangedBy))
-                    entry.Entity.ChangedBy = username.Invoke();
-
-                entry.Entity.ChangedDate = DateTimeOffset.UtcNow;
-                entry.Entity.Version = entry.Entity.Version + 1;
-            }
+            entry.Entity.ChangedDate = DateTimeOffset.UtcNow;
+            entry.Entity.Version = entry.Entity.Version + 1;
         }
     }
 
