@@ -8,7 +8,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="DYMO.Connect.SDK" />
-		<PackageReference Include="SkiaSharp" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 	</ItemGroup>
 
