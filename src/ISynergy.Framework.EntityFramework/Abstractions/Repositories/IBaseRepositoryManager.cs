@@ -7,7 +7,7 @@ namespace ISynergy.Framework.EntityFramework.Abstractions.Repositories;
 /// <summary>
 /// Interface IBaseEntityManager
 /// </summary>
-public interface IBaseEntityManager
+public interface IBaseRepositoryManager
 {
     /// <summary>
     /// Adds the item asynchronous.
