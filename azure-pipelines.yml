@@ -58,9 +58,9 @@ stages:
             AddBuildTag: 'v$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
-          displayName: 'Install NuGet 6.10.1'
+          displayName: 'Install NuGet 6.12.1'
           inputs:
-            versionSpec: 6.10.1
+            versionSpec: 6.12.1
 
         - task: UseDotNet@2
           displayName: 'Install .Net Sdk'
@@ -80,15 +80,15 @@ stages:
           inputs:
             secureFile: 'intelligence-online.pfx'
 
-        - task: SonarCloudPrepare@2
+        - task: SonarCloudPrepare@3
           displayName: 'Prepare SonarCloud'
           inputs:
             SonarCloud: 'SonarCloud'
             organization: 'i-synergy'
-            scannerMode: 'MSBuild'
+            scannerMode: 'dotnet'
             projectKey: 'I-Synergy.Framework'
             projectName: 'I-Synergy.Framework'
-            projectVersion: '$(GitVersion.FullSemVer)'
+            projectVersion: '$(VersionPackage)'
 
         # - task: DotNetCoreCLI@2
         #   displayName: 'Build I-Synergy Framework solution'
@@ -110,7 +110,7 @@ stages:
             solution: 'I-Synergy.Framework.Default.slnf'
             msbuildArchitecture: 'x64'
             configuration: $(BuildConfiguration)
-            msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true'
+            msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true /nr:false' #this flag is important to avoid DLL lock for the 2nd build/analysis
 
         - task: CopyFiles@2
           inputs:
@@ -137,9 +137,14 @@ stages:
             pathtoPublish: '$(Build.ArtifactStagingDirectory)'
             artifactName: Output
             publishLocation: 'Container'
-        
-        - task: SonarCloudAnalyze@2
+
+        - task: SonarCloudAnalyze@3
           displayName: 'Run SonarCloud analyzer'
+
+        - task: SonarCloudPublish@3
+          displayName: 'Publish SonarCloud analysis'
+          inputs:
+            pollingTimeoutSec: '300'
 
         - bash: |
             git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \

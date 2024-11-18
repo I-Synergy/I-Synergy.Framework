@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
@@ -221,7 +220,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task&lt;List&lt;TestItem&gt;&gt;.</returns>
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>()
+        Items = new ObservableCollection<TestItem>(new List<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
             new TestItem { Id = 2, Description = "Test 2"},

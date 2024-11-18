@@ -5,19 +5,16 @@
 /// </summary>
 public enum SoftwareEnvironments
 {
-    //Environment to production backend
     /// <summary>
-    /// The production
+    /// The production environment
     /// </summary>
     Production = 0,
-    //Environment to testing backend
     /// <summary>
-    /// The test
+    /// The testing and acceptance environment
     /// </summary>
     Test = -1,
-    //Environment to local backend
     /// <summary>
-    /// The local
+    /// The local development environment
     /// </summary>
     Local = -2
 }

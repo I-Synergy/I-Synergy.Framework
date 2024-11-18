@@ -13,11 +13,11 @@ namespace ISynergy.Framework.EntityFramework.Repositories;
 
 /// <summary>
 /// Class BaseRepositoryManager.
-/// Implements the <see cref="IBaseEntityManager" />
+/// Implements the <see cref="IBaseRepositoryManager" />
 /// </summary>
 /// <typeparam name="TDbContext">The type of the t database context.</typeparam>
-/// <seealso cref="IBaseEntityManager" />
-public abstract class BaseRepositoryManager<TDbContext> : IBaseEntityManager
+/// <seealso cref="IBaseRepositoryManager" />
+public abstract class BaseRepositoryManager<TDbContext> : IBaseRepositoryManager
     where TDbContext : DbContext
 {
     /// <summary>
