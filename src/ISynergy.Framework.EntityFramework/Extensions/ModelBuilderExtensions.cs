@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.EntityFramework.Base;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -42,11 +43,11 @@ public static class ModelBuilderExtensions
     /// <summary>
     /// Applies the query filters.
     /// </summary>
-    public static ModelBuilder ApplyTenantFilters(this ModelBuilder modelBuilder, Guid tenantId)
+    public static ModelBuilder ApplyTenantFilters(this ModelBuilder modelBuilder, Func<Guid> tenantId)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
 
-        var tenantFilter = (Expression<Func<BaseTenantEntity, bool>>)(e => e.TenantId == tenantId);
+        var tenantFilter = (Expression<Func<BaseTenantEntity, bool>>)(e => e.TenantId == tenantId.Invoke());
 
         // Apply tenantFilter 
         foreach (var type in clrTypes.Where(t => typeof(BaseTenantEntity).IsAssignableFrom(t)).EnsureNotNull())
