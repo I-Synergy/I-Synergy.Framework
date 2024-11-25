@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests;
@@ -32,5 +33,21 @@ public class ObjectExtensionTests
     public void NullableTypeTest(Type type)
     {
         Assert.IsTrue(type.IsNullableType());
+    }
+
+    [TestMethod]
+    public void HasProperty_ReturnsTrue_WhenPropertyExists()
+    {
+        var testObject = new Product();
+        bool result = testObject.HasProperty(nameof(Product.Name));
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void HasProperty_ReturnsFalse_WhenPropertyDoesNotExist()
+    {
+        var testObject = new Product();
+        bool result = testObject.HasProperty("NonExistingProperty");
+        Assert.IsFalse(result);
     }
 }
