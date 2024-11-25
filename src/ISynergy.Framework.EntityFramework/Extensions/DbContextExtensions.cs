@@ -10,6 +10,8 @@ namespace ISynergy.Framework.EntityFramework.Extensions;
 
 public static class DbContextExtensions
 {
+    private const string ErrorEntity = "Entity does not have an identity value.";
+    private const string ErrorRecord = "Record does not have an identity value.";
 
     /// <summary>
     /// Check if item exists the asynchronous.
@@ -39,34 +41,31 @@ public static class DbContextExtensions
         where TId : struct
     {
         var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
-        Argument.IsNotNull(entityPropertyName);
 
-        if (entityPropertyName is not null)
-        {
-            var parameterExpression = Expression.Parameter(typeof(TEntity));
-            var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(id));
-            var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
+        if (entityPropertyName is null)
+            throw new ArgumentException(ErrorEntity);
 
-            var query = context
-                .Set<TEntity>()
-                .AsQueryable();
+        var parameterExpression = Expression.Parameter(typeof(TEntity));
+        var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(id));
+        var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
 
-            var navigations = context.Model
-                .FindEntityType(typeof(TEntity))
-                .GetDerivedTypesInclusive()
-                .SelectMany(t => t.GetNavigations())
-                .Distinct();
+        var query = context
+            .Set<TEntity>()
+            .AsQueryable();
 
-            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
+        var navigations = context.Model
+            .FindEntityType(typeof(TEntity))
+            .GetDerivedTypesInclusive()
+            .SelectMany(t => t.GetNavigations())
+            .Distinct();
 
-            var result = await query
-                .SingleOrDefaultAsync(predicate, cancellationToken)
-                .ConfigureAwait(false);
+        query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
 
-            return result;
-        }
+        var result = await query
+            .SingleOrDefaultAsync(predicate, cancellationToken)
+            .ConfigureAwait(false);
 
-        return null;
+        return result;
     }
 
     /// <summary>
@@ -134,41 +133,42 @@ public static class DbContextExtensions
         var result = 0;
 
         var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
-        Argument.IsNotNull(entityPropertyName);
+        
+        if (entityPropertyName is null)
+            throw new ArgumentException(ErrorEntity);
 
-        var modelPropertyValue = e.GetIdentityValue();
-        Argument.IsNotNull(modelPropertyValue);
+        var recordPropertyValue = e.GetIdentityValue();
+        
+        if (recordPropertyValue is null)
+            throw new ArgumentException(ErrorRecord);
 
-        if (entityPropertyName is not null && modelPropertyValue is not null)
-        {
-            var parameterExpression = Expression.Parameter(typeof(TEntity));
-            var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(modelPropertyValue));
-            var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
+        var parameterExpression = Expression.Parameter(typeof(TEntity));
+        var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(recordPropertyValue));
+        var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
 
-            var query = context
-                .Set<TEntity>()
-                .AsQueryable();
+        var query = context
+            .Set<TEntity>()
+            .AsQueryable();
 
-            var navigations = context.Model
-                .FindEntityType(typeof(TEntity))
-                .GetDerivedTypesInclusive()
-                .SelectMany(t => t.GetNavigations())
-                .Distinct();
+        var navigations = context.Model
+            .FindEntityType(typeof(TEntity))
+            .GetDerivedTypesInclusive()
+            .SelectMany(t => t.GetNavigations())
+            .Distinct();
 
-            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
+        query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
 
-            var target = await query
-                .SingleOrDefaultAsync(predicate, cancellationToken)
-                .ConfigureAwait(false);
+        var target = await query
+            .SingleOrDefaultAsync(predicate, cancellationToken)
+            .ConfigureAwait(false);
 
-            target = e.Adapt(target);
+        target = e.Adapt(target);
 
-            var updates = context.Update(target);
+        var updates = context.Update(target);
 
-            result = await context
-                .SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-        }
+        result = await context
+            .SaveChangesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return result;
     }
@@ -191,53 +191,54 @@ public static class DbContextExtensions
         var result = 0;
 
         var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
-        Argument.IsNotNull(entityPropertyName);
 
-        var modelPropertyValue = e.GetIdentityValue();
-        Argument.IsNotNull(modelPropertyValue);
+        if (entityPropertyName is null)
+            throw new ArgumentException(ErrorEntity);
 
-        if (entityPropertyName is not null && modelPropertyValue is not null)
+        var recordPropertyValue = e.GetIdentityValue();
+
+        if (recordPropertyValue is null)
+            throw new ArgumentException(ErrorRecord);
+
+        var parameterExpression = Expression.Parameter(typeof(TEntity));
+        var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(recordPropertyValue));
+        var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
+
+        var query = context
+            .Set<TEntity>()
+            .AsQueryable();
+
+        var navigations = context.Model
+            .FindEntityType(typeof(TEntity))
+            .GetDerivedTypesInclusive()
+            .SelectMany(t => t.GetNavigations())
+            .Distinct();
+
+        query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
+
+        var target = await query
+            .SingleOrDefaultAsync(predicate, cancellationToken)
+            .ConfigureAwait(false);
+
+        if (target is null)
         {
-            var parameterExpression = Expression.Parameter(typeof(TEntity));
-            var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(modelPropertyValue));
-            var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
+            target = e.Adapt<TRecord, TEntity>();
 
-            var query = context
-                .Set<TEntity>()
-                .AsQueryable();
+            var adds = context.Add(target);
 
-            var navigations = context.Model
-                .FindEntityType(typeof(TEntity))
-                .GetDerivedTypesInclusive()
-                .SelectMany(t => t.GetNavigations())
-                .Distinct();
-
-            query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
-
-            var target = await query
-                .SingleOrDefaultAsync(predicate, cancellationToken)
+            result = await context
+                .SaveChangesAsync(cancellationToken)
                 .ConfigureAwait(false);
+        }
+        else
+        {
+            target = e.Adapt(target);
 
-            if (target is null)
-            {
-                target = e.Adapt<TRecord, TEntity>();
+            var updates = context.Update(target);
 
-                var adds = context.Add(target);
-
-                result = await context
-                    .SaveChangesAsync(cancellationToken)
-                    .ConfigureAwait(false);
-            }
-            else
-            {
-                target = e.Adapt(target);
-
-                var updates = context.Update(target);
-
-                result = await context
-                    .SaveChangesAsync(cancellationToken)
-                    .ConfigureAwait(false);
-            }
+            result = await context
+                .SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
         }
 
         return result;
