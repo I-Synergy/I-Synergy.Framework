@@ -64,10 +64,10 @@ public class DbContextExtensionsTests
     {
         // Arrange
         var cancellationToken = new CancellationToken();
-        var testRecord = new TestRecord { Id = 4 };
+        var testRecord = new TestModel { Id = 4 };
 
         // Act
-        var result = await _dbContext.AddItemAsync<TestEntity, TestRecord>(testRecord, cancellationToken);
+        var result = await _dbContext.AddItemAsync<TestEntity, TestModel>(testRecord, cancellationToken);
 
         // Assert
         Assert.AreEqual(1, result);
@@ -79,10 +79,10 @@ public class DbContextExtensionsTests
     {
         // Arrange
         var cancellationToken = new CancellationToken();
-        var testRecord = new TestRecord { Id = 1 };
+        var testRecord = new TestModel { Id = 1 };
 
         // Act
-        var result = await _dbContext.UpdateItemAsync<TestEntity, TestRecord>(testRecord, cancellationToken);
+        var result = await _dbContext.UpdateItemAsync<TestEntity, TestModel>(testRecord, cancellationToken);
 
         // Assert
         Assert.AreEqual(1, result);
