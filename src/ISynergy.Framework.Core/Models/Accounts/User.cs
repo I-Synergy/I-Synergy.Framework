@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 /// Implements the <see cref="BaseModel" />
 /// </summary>
 /// <seealso cref="BaseModel" />
-public record User : BaseRecord
+public class User : BaseModel
 {
     /// <summary>
     /// Gets or sets the Id property value.
@@ -37,7 +37,7 @@ public record User : BaseRecord
 /// Implements the <see cref="User" />
 /// </summary>
 /// <seealso cref="User" />
-public record UserSelect : User
+public class UserSelect : User
 {
     /// <summary>
     /// Gets or sets the IsSelected property value.
@@ -51,7 +51,7 @@ public record UserSelect : User
 /// Implements the <see cref="User" />
 /// </summary>
 /// <seealso cref="User" />
-public record UserAdd : User
+public class UserAdd : User
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserAdd"/> class.
@@ -85,7 +85,7 @@ public record UserAdd : User
 /// Implements the <see cref="User" />
 /// </summary>
 /// <seealso cref="User" />
-public record UserEdit : User
+public class UserEdit : User
 {
     /// <summary>
     /// Gets or sets the IsConfirmed property value.
@@ -105,7 +105,7 @@ public record UserEdit : User
 /// Implements the <see cref="User" />
 /// </summary>
 /// <seealso cref="User" />
-public record UserFull : User
+public class UserFull : User
 {
     /// <summary>
     /// Gets or sets the Roles property value.

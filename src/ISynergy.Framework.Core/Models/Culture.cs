@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models;
 /// Culture model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public record Culture : BaseRecord
+public class Culture : BaseModel
 {
     /// <summary>
     /// Gets or sets the CultureId property value.

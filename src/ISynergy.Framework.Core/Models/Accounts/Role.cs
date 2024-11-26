@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 /// Implements the <see cref="BaseModel" />
 /// </summary>
 /// <seealso cref="BaseModel" />
-public record Role : BaseRecord
+public class Role : BaseModel
 {
     /// <summary>
     /// Gets or sets the Id property value.
