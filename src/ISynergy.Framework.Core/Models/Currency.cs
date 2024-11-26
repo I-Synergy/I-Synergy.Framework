@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models;
 /// Currency model which fully supports serialization, property changed notifications,
 /// backwards compatibility and error checking.
 /// </summary>
-public record Currency : BaseRecord
+public class Currency : BaseModel
 {
     /// <summary>
     /// Gets or sets the CurrencyId property value.

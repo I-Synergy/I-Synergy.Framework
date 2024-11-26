@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 /// Implements the <see cref="BaseModel" />
 /// </summary>
 /// <seealso cref="BaseModel" />
-public record Module : BaseRecord
+public class Module : BaseModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Module"/> class.
