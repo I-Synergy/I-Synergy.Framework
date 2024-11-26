@@ -72,19 +72,19 @@ public static class DbContextExtensions
     /// Get item by identifier as an asynchronous operation.
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <typeparam name="TRecord">The type of the t model.</typeparam>
+    /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <typeparam name="TId">The type of the t identifier.</typeparam>
     /// <param name="context"></param>
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;TModel&gt; representing the asynchronous operation.</returns>
-    public static async Task<TRecord> GetItemByIdAsync<TEntity, TRecord, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
+    public static async Task<TModel> GetItemByIdAsync<TEntity, TModel, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
-        where TRecord : BaseRecord, new()
+        where TModel : BaseModel, new()
         where TId : struct
     {
         if (await context.GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false) is { } result)
-            return result.Adapt<TRecord>();
+            return result.Adapt<TModel>();
 
         return null;
     }
@@ -93,18 +93,18 @@ public static class DbContextExtensions
     /// Adds the item asynchronous.
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <typeparam name="TRecord">The type of the t source.</typeparam>
+    /// <typeparam name="TModel">The type of the t source.</typeparam>
     /// <param name="context"></param>
     /// <param name="e">The e.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Int32&gt;.</returns>
-    public static async Task<int> AddItemAsync<TEntity, TRecord>(this DbContext context, TRecord e, CancellationToken cancellationToken)
+    public static async Task<int> AddItemAsync<TEntity, TModel>(this DbContext context, TModel e, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
-        where TRecord : BaseRecord, new()
+        where TModel : BaseModel, new()
     {
         Argument.IsNotNull(e);
 
-        var target = e.Adapt<TRecord, TEntity>();
+        var target = e.Adapt<TModel, TEntity>();
 
         context.Add(target);
 
@@ -119,14 +119,14 @@ public static class DbContextExtensions
     /// update item as an asynchronous operation.
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <typeparam name="TRecord">The type of the t source.</typeparam>
+    /// <typeparam name="TModel">The type of the t source.</typeparam>
     /// <param name="context"></param>
     /// <param name="e">The e.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
-    public static async Task<int> UpdateItemAsync<TEntity, TRecord>(this DbContext context, TRecord e, CancellationToken cancellationToken)
+    public static async Task<int> UpdateItemAsync<TEntity, TModel>(this DbContext context, TModel e, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
-        where TRecord : BaseRecord, new()
+        where TModel : BaseModel, new()
     {
         Argument.IsNotNull(e);
 
@@ -177,14 +177,14 @@ public static class DbContextExtensions
     /// add update item as an asynchronous operation.
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <typeparam name="TRecord">The type of the t source.</typeparam>
+    /// <typeparam name="TModel">The type of the t source.</typeparam>
     /// <param name="context"></param>
     /// <param name="e">The e.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
-    public static async Task<int> AddUpdateItemAsync<TEntity, TRecord>(this DbContext context, TRecord e, CancellationToken cancellationToken)
+    public static async Task<int> AddUpdateItemAsync<TEntity, TModel>(this DbContext context, TModel e, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
-        where TRecord : BaseRecord, new()
+        where TModel : BaseModel, new()
     {
         Argument.IsNotNull(e);
 
@@ -222,7 +222,7 @@ public static class DbContextExtensions
 
         if (target is null)
         {
-            target = e.Adapt<TRecord, TEntity>();
+            target = e.Adapt<TModel, TEntity>();
 
             var adds = context.Add(target);
 

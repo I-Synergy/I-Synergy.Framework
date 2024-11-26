@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models.Accounts;
 /// Implements the <see cref="BaseModel" />
 /// </summary>
 /// <seealso cref="BaseModel" />
-public record Account : BaseRecord
+public class Account : BaseModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Account"/> class.
@@ -90,7 +90,7 @@ public record Account : BaseRecord
 /// Implements the <see cref="Account" />
 /// </summary>
 /// <seealso cref="Account" />
-public record AccountFull : Account
+public class AccountFull : Account
 {
     /// <summary>
     /// Gets or sets the Users property value.
