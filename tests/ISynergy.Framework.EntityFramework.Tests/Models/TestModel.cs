@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
 
-namespace ISynergy.Framework.EntityFramework.Tests.Fixtures;
+namespace ISynergy.Framework.EntityFramework.Tests.Models;
 
 internal class TestModel : BaseModel
 {

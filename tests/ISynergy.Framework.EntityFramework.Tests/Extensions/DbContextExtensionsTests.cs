@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.EntityFramework.Tests.Fixtures;
+﻿using ISynergy.Framework.EntityFramework.Tests.Entities;
+using ISynergy.Framework.EntityFramework.Tests.Fixtures;
+using ISynergy.Framework.EntityFramework.Tests.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,17 +11,17 @@ namespace ISynergy.Framework.EntityFramework.Extensions.Tests;
 [TestClass]
 public class DbContextExtensionsTests
 {
-    private TestClassDataContext _dbContext;
+    private TestDataContext _dbContext;
 
     [TestInitialize]
     public void Initialize()
     {
-        var contextOptions = new DbContextOptionsBuilder<TestClassDataContext>()
+        var contextOptions = new DbContextOptionsBuilder<TestDataContext>()
            .UseInMemoryDatabase("DbContextExtensionsTests")
            .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
            .Options;
 
-        _dbContext = new TestClassDataContext(contextOptions);
+        _dbContext = new TestDataContext(contextOptions);
         _dbContext.Database.EnsureDeleted();
         _dbContext.Database.EnsureCreated();
 
@@ -28,7 +30,7 @@ public class DbContextExtensionsTests
             new TestEntity { Id = 2 },
             new TestEntity { Id = 3 }
         );
-        _dbContext.SaveChanges();   
+        _dbContext.SaveChanges();
     }
 
     [TestMethod]

@@ -1,7 +1,6 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <NoWarn>$(NoWarn);NU1507</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -17,8 +16,7 @@
     <PackageVersion Include="Dotmim.Sync.SqlServer.ChangeTracking" Version="1.2.0" />
     <PackageVersion Include="Dotmim.Sync.Web.Client" Version="1.2.0" />
     <PackageVersion Include="Dotmim.Sync.Web.Server" Version="1.2.0" />
-    <PackageVersion Include="DYMO.Connect.SDK" Version="1.4.4.21" />
-    <PackageVersion Include="lz4net" Version="1.0.15.93" />
+    <PackageVersion Include="DYMO.Connect.SDK" Version="1.4.5.9-beta" />
     <PackageVersion Include="Mapster" Version="7.4.0" />
     <PackageVersion Include="MessagePack" Version="2.5.192" />
     <PackageVersion Include="Microsoft.AppCenter" Version="5.0.6" />
@@ -29,7 +27,7 @@
     <PackageVersion Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.22.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.22.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.63.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.64.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
