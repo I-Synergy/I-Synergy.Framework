@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.EntityFramework.Base;
+using ISynergy.Framework.EntityFramework.Attributes;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -36,6 +34,31 @@ public static class ModelBuilderExtensions
     }
 
     /// <summary>
+    /// Applies the version to entity.
+    /// </summary>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <summary>
+    /// Applies the query filters.
+    /// </summary>
+    public static ModelBuilder ApplyVersioning(this ModelBuilder modelBuilder)
+    {
+        var clrTypes = modelBuilder.Model.GetEntityTypes()
+            .Select(et => et.ClrType)
+            .Where(t => typeof(IEntity).IsAssignableFrom(t) && !t.GetCustomAttributes(typeof(IgnoreVersioningAttribute), true).Any())
+            .ToList();
+
+        // Apply default version
+        foreach (var type in clrTypes.Where(t => typeof(IClass).IsAssignableFrom(t)).EnsureNotNull())
+        {
+            modelBuilder.Entity(type)
+                .Property<int>(nameof(IClass.Version))
+                .HasDefaultValue(1);
+        }
+
+        return modelBuilder;
+    }
+
+    /// <summary>
     /// Applies the query filters.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
@@ -47,13 +70,28 @@ public static class ModelBuilderExtensions
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
 
-        var tenantFilter = (Expression<Func<BaseTenantEntity, bool>>)(e => e.TenantId == tenantId.Invoke());
-
         // Apply tenantFilter 
-        foreach (var type in clrTypes.Where(t => typeof(BaseTenantEntity).IsAssignableFrom(t)).EnsureNotNull())
+        foreach (var type in clrTypes.Where(t => typeof(ITenantEntity).IsAssignableFrom(t)).EnsureNotNull())
         {
-            var filter = CombineQueryFilters(type, new LambdaExpression[] { tenantFilter });
-            modelBuilder.Entity(type).HasQueryFilter(filter);
+            // Create a properly typed parameter for the specific entity type
+            var parameter = Expression.Parameter(type, "e");
+            var tenantIdProperty = Expression.Property(parameter, nameof(ITenantEntity.TenantId));
+            var tenantIdCall = Expression.Call(Expression.Constant(tenantId.Target), tenantId.Method);
+            var equalExpression = Expression.Equal(tenantIdProperty, tenantIdCall);
+            var tenantFilter = Expression.Lambda(equalExpression, parameter);
+
+            var existingFilter = modelBuilder.Model.FindEntityType(type).GetQueryFilter();
+            if (existingFilter is null)
+            {
+                // Directly apply the tenant filter if no existing filter
+                modelBuilder.Entity(type).HasQueryFilter(tenantFilter);
+            }
+            else
+            {
+                // Combine with existing filter only if necessary
+                modelBuilder.Entity(type)
+                    .HasQueryFilter(CombineQueryFilters(type, new[] { existingFilter, tenantFilter }));
+            }
         }
 
         return modelBuilder;
@@ -68,36 +106,33 @@ public static class ModelBuilderExtensions
     /// </summary>
     public static ModelBuilder ApplySoftDeleteFilters(this ModelBuilder modelBuilder)
     {
-        var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
-        var softDeleteFilter = (Expression<Func<BaseClass, bool>>)(e => !e.IsDeleted);
+        var clrTypes = modelBuilder.Model.GetEntityTypes()
+            .Select(et => et.ClrType)
+            .Where(t => typeof(IEntity).IsAssignableFrom(t) && !t.GetCustomAttributes(typeof(IgnoreSoftDeleteAttribute), true).Any())
+            .ToList();
 
         // Apply softDeleteFilter 
-        foreach (var type in clrTypes.Where(t => typeof(BaseEntity).IsAssignableFrom(t)).EnsureNotNull())
+        foreach (var type in clrTypes.Where(t => typeof(IEntity).IsAssignableFrom(t)).EnsureNotNull())
         {
-            var filter = CombineQueryFilters(type, new LambdaExpression[] { softDeleteFilter });
-            modelBuilder.Entity(type).HasQueryFilter(filter);
-        }
+            // Create a properly typed parameter for the specific entity type
+            var parameter = Expression.Parameter(type, "e");
+            var isDeletedProperty = Expression.Property(parameter, nameof(IEntity.IsDeleted));
+            var notExpression = Expression.Not(isDeletedProperty);
+            var softDeleteFilter = Expression.Lambda(notExpression, parameter);
 
-        return modelBuilder;
-    }
+            var existingFilter = modelBuilder.Model.FindEntityType(type).GetQueryFilter();
 
-    /// <summary>
-    /// Applies the version query filters.
-    /// </summary>
-    /// <param name="modelBuilder">The model builder.</param>
-    /// <summary>
-    /// Applies the query filters.
-    /// </summary>
-    public static ModelBuilder ApplyVersionFilters(this ModelBuilder modelBuilder)
-    {
-        var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
-
-        // Apply default version
-        foreach (var type in clrTypes.Where(t => typeof(IClass).IsAssignableFrom(t)).EnsureNotNull())
-        {
-            modelBuilder.Entity(type)
-                .Property<int>(nameof(IClass.Version))
-                .HasDefaultValue(1);
+            if (existingFilter is null)
+            {
+                // Directly apply the soft delete filter if no existing filter
+                modelBuilder.Entity(type).HasQueryFilter(softDeleteFilter);
+            }
+            else
+            {
+                // Combine with existing filter only if necessary
+                modelBuilder.Entity(type)
+                    .HasQueryFilter(CombineQueryFilters(type, new[] { existingFilter, softDeleteFilter }));
+            }
         }
 
         return modelBuilder;
@@ -111,21 +146,36 @@ public static class ModelBuilderExtensions
     /// Combines the query filters.
     /// </summary>
     /// <param name="entityType">Type of the entity.</param>
-    /// <param name="andAlsoExpressions">The and also expressions.</param>
+    /// <param name="expressions">The and also expressions.</param>
     /// <returns>LambdaExpression.</returns>
-    public static LambdaExpression CombineQueryFilters(Type entityType, IEnumerable<LambdaExpression> andAlsoExpressions)
+    public static LambdaExpression CombineQueryFilters(Type entityType, IEnumerable<LambdaExpression> expressions)
     {
-        var newParam = Expression.Parameter(entityType);
+        var parameter = Expression.Parameter(entityType);
 
-        var andAlsoExprBase = (Expression<Func<BaseTenantEntity, bool>>)(_ => true);
-        var andAlsoExpr = ReplacingExpressionVisitor.Replace(andAlsoExprBase.Parameters.Single(), newParam, andAlsoExprBase.Body);
+        // Get the expressions list and ensure it's not null
+        var filterExpressions = expressions.EnsureNotNull().ToList();
 
-        foreach (var expressionBase in andAlsoExpressions.EnsureNotNull())
+        if (!filterExpressions.Any())
+            return Expression.Lambda(Expression.Constant(true), parameter);
+
+        // Start with the first expression
+        var firstExpr = filterExpressions[0];
+        var combinedExpr = ReplacingExpressionVisitor.Replace(
+            firstExpr.Parameters.Single(),
+            parameter,
+            firstExpr.Body);
+
+        // Combine the rest of the expressions with AndAlso
+        for (int i = 1; i < filterExpressions.Count; i++)
         {
-            var expression = ReplacingExpressionVisitor.Replace(expressionBase.Parameters.Single(), newParam, expressionBase.Body);
-            andAlsoExpr = Expression.AndAlso(andAlsoExpr, expression);
+            var expression = ReplacingExpressionVisitor.Replace(
+                filterExpressions[i].Parameters.Single(),
+                parameter,
+                filterExpressions[i].Body);
+
+            combinedExpr = Expression.AndAlso(combinedExpr, expression);
         }
 
-        return Expression.Lambda(andAlsoExpr, newParam);
+        return Expression.Lambda(combinedExpr, parameter);
     }
 }

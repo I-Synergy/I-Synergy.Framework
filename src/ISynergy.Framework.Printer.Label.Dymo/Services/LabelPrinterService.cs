@@ -19,7 +19,7 @@ internal class LabelPrinterService : ILabelPrinterService
     {
         DymoSDK.App.Init();
 
-        _label = DymoLabel.Instance;
+        _label = DymoLabel.LabelSharedInstance;
         _twinTurboRolls = ["Auto", "Left", "Right"];
     }
 

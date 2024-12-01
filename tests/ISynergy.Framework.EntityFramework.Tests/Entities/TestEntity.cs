@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.EntityFramework.Base;
 
-namespace ISynergy.Framework.EntityFramework.Tests.Fixtures;
+namespace ISynergy.Framework.EntityFramework.Tests.Entities;
 
 public class TestEntity : BaseEntity
 {
