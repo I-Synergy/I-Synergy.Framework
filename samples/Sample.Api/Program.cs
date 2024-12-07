@@ -1,6 +1,7 @@
-using ISynergy.Framework.Core.Converters;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using ISynergy.Framework.Core.Serializers;
+using Microsoft.EntityFrameworkCore;
+using Sample.Api.Data;
+using Sample.Api.Entities;
 
 namespace Sample.Api;
 
@@ -13,19 +14,10 @@ public class Program
         // Add services to the container.
         builder.Services
             .AddMvc()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
-                options.JsonSerializerOptions.AllowTrailingCommas = true;
-                options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
-                options.JsonSerializerOptions.ReferenceHandler = null;
+            .AddJsonOptions(options => DefaultJsonSerializers.Default());
 
-                options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
-                options.JsonSerializerOptions.Converters.Add(new DateTimeOffsetConverter());
-            });
+        builder.Services.AddDbContext<TestDbContext>(options =>
+            options.UseInMemoryDatabase("TestDb"));
 
         builder.Services.AddControllersWithViews();
         builder.Services.AddEndpointsApiExplorer();
@@ -40,6 +32,23 @@ public class Program
 
         app.UseOpenApi();
         app.UseSwaggerUi();
+
+        // Seed the database
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+            for (int i = 1; i <= 1000; i++)
+            {
+                dbContext.TestEntities.Add(new TestEntity
+                {
+                    Name = $"Test Entity {i}",
+                    Description = $"Description for entity {i}",
+                    CreatedDate = DateTime.UtcNow
+                });
+            }
+            dbContext.SaveChanges();
+        }
+
 
         app.Run();
     }

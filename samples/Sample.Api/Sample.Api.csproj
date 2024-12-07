@@ -5,6 +5,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="NSwag.AspNetCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"/>
 	</ItemGroup>
 
 	<ItemGroup>
