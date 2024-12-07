@@ -1,0 +1,17 @@
+{
+  "solution": {
+    "path": "I-Synergy.Framework.sln",
+    "projects": [
+      "samples\\Sample.Shared\\Sample.Shared.csproj",
+      "samples\\Sample.WinUI\\Sample.WinUI.csproj",
+      "src\\ISynergy.Framework.Core\\ISynergy.Framework.Core.csproj",
+      "src\\ISynergy.Framework.Logging\\ISynergy.Framework.Logging.csproj",
+      "src\\ISynergy.Framework.Mvvm\\ISynergy.Framework.Mvvm.csproj",
+      "src\\ISynergy.Framework.Synchronization\\ISynergy.Framework.Synchronization.csproj",
+      "src\\ISynergy.Framework.UI.WinUI\\ISynergy.Framework.UI.WinUI.csproj",
+      "src\\ISynergy.Framework.UI\\ISynergy.Framework.UI.csproj",
+      "src\\ISynergy.Framework.Update.WinUI\\ISynergy.Framework.Update.WinUI.csproj",
+      "src\\ISynergy.Framework.Update\\ISynergy.Framework.Update.csproj"
+    ]
+  }
+}

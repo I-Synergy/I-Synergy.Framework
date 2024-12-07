@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View 
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Sample.Views.SlideShowView"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels;assembly=Sample.Shared"
+    x:DataType="viewmodels:SlideShowViewModel"
+    Title="SlideShowView">
+
+    <c:View.Resources>
+        <converters:UriToImageSourceConverter x:Key="UriToImageSourceConverter"/>
+    </c:View.Resources>
+
+    <Grid>
+        <Image 
+            Source="{Binding SelectedItem.ImageUri, Mode=OneWay, Converter={StaticResource UriToImageSourceConverter}}"
+            Aspect="AspectFill" />
+    </Grid>
+</c:View>
