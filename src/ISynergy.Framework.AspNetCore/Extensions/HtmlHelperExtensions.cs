@@ -59,10 +59,15 @@ public static class HtmlHelperExtensions
         if (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
         {
             using var stream = env.WebRootFileProvider.GetFileInfo(path).CreateReadStream();
-            var array = new byte[stream.Length];
-            stream.Read(array, 0, array.Length);
+            var buffer = new byte[stream.Length];
 
-            return ConvertArrayToHtmlString(array, contentType, attributes);
+#if NET8_0_OR_GREATER
+            stream.ReadExactly(buffer);
+#else
+            stream.Read(buffer, 0, buffer.Length);
+#endif
+
+            return ConvertArrayToHtmlString(buffer, contentType, attributes);
         }
 
         return new HtmlString(string.Empty);
