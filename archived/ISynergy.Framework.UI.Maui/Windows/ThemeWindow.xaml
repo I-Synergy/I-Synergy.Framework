@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:Window
+    x:Class="ISynergy.Framework.UI.Windows.ThemeWindow"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+    xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
+    Title="{Binding Title}"
+    x:DataType="viewmodels:ThemeViewModel">
+
+    <c:Window.Resources>
+        <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter" />
+    </c:Window.Resources>
+
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
+        </Grid.GestureRecognizers>
+        <ContentView
+            ControlTemplate="{DynamicResource DefaultDialogTemplate}"
+            HeightRequest="600"
+            WidthRequest="400">
+
+            <VerticalStackLayout>
+                <Grid
+                    ColumnDefinitions="*,*"
+                    HorizontalOptions="EndAndExpand"
+                    WidthRequest="300">
+                    <RadioButton
+                        Grid.Column="0"
+                        Content="{m:GetString Light}"
+                        GroupName="Theme"
+                        HorizontalOptions="EndAndExpand"
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Light}, Mode=TwoWay}" />
+                    <RadioButton
+                        Grid.Column="1"
+                        Content="{m:GetString Dark}"
+                        GroupName="Theme"
+                        HorizontalOptions="StartAndExpand"
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Dark}, Mode=TwoWay}" />
+                </Grid>
+
+                <CollectionView
+                    HorizontalOptions="Center"
+                    ItemsSource="{Binding ThemeColors.Colors}"
+                    SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay}"
+                    SelectionMode="Single">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="6" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Grid>
+                                <Ellipse
+                                    Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}"
+                                    HeightRequest="32"
+                                    HorizontalOptions="Center"
+                                    ToolTipProperties.Text="{Binding}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="32" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ContentView>
+    </Grid>
+</c:Window>

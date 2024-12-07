@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="ISynergy.Framework.UI.Controls.ImageBrowser"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+    x:Name="ImageBrowserControl">
+
+    <ContentView.Resources>
+        <converters:BytesToImageSourceConverter x:Key="BytesToImageSourceConverter" />
+    </ContentView.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <VerticalStackLayout
+            Grid.Column="1"
+            Margin="8"
+            Spacing="8">
+            <ImageButton
+                x:Name="BrowseButton"
+                Clicked="BrowseButton_Clicked"
+                CornerRadius="{DynamicResource DefaultCornerRadius}"
+                HeightRequest="50"
+                MinimumHeightRequest="50"
+                MinimumWidthRequest="50"
+                ToolTipProperties.Text="{m:GetString Browse}"
+                VerticalOptions="End"
+                WidthRequest="50">
+                <ImageButton.Source>
+                    <FontImageSource
+                        FontFamily="SegoeMdl2"
+                        Glyph="&#xe721;"
+                        Size="14" />
+                </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton
+                x:Name="CameraButton"
+                Clicked="CameraButton_Clicked"
+                CornerRadius="{DynamicResource DefaultCornerRadius}"
+                HeightRequest="50"
+                MinimumHeightRequest="50"
+                MinimumWidthRequest="50"
+                ToolTipProperties.Text="{m:GetString TakePhoto}"
+                VerticalOptions="End"
+                WidthRequest="50">
+                <ImageButton.Source>
+                    <FontImageSource
+                        FontFamily="SegoeMdl2"
+                        Glyph="&#xe722;"
+                        Size="14" />
+                </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton
+                x:Name="PasteButton"
+                Clicked="PasteButton_Clicked"
+                CornerRadius="{DynamicResource DefaultCornerRadius}"
+                HeightRequest="50"
+                IsVisible="{OnPlatform Default=False,
+                                       WinUI=True}"
+                MinimumHeightRequest="50"
+                MinimumWidthRequest="50"
+                ToolTipProperties.Text="{m:GetString Paste}"
+                VerticalOptions="End"
+                WidthRequest="50">
+                <ImageButton.Source>
+                    <FontImageSource
+                        FontFamily="SegoeMdl2"
+                        Glyph="&#xe77f;"
+                        Size="14" />
+                </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton
+                x:Name="ClearButton"
+                Clicked="ClearButton_Clicked"
+                CornerRadius="{DynamicResource DefaultCornerRadius}"
+                HeightRequest="50"
+                MinimumHeightRequest="50"
+                MinimumWidthRequest="50"
+                ToolTipProperties.Text="{m:GetString Delete}"
+                VerticalOptions="End"
+                WidthRequest="50">
+                <ImageButton.Source>
+                    <FontImageSource
+                        FontFamily="SegoeMdl2"
+                        Glyph="&#xe74d;"
+                        Size="14" />
+                </ImageButton.Source>
+            </ImageButton>
+        </VerticalStackLayout>
+
+        <Border
+            Grid.Row="0"
+            Grid.Column="0"
+            Stroke="{DynamicResource Primary}"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="2">
+            <Image Aspect="AspectFill" Source="{Binding FileBytes, Source={x:Reference ImageBrowserControl}, Converter={StaticResource BytesToImageSourceConverter}}" />
+        </Border>
+    </Grid>
+</ContentView>
