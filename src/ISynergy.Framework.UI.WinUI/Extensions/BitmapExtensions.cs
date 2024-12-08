@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ISynergy.Framework.Core.Extensions;
+namespace ISynergy.Framework.UI.Extensions;
 
 public static class BitmapExtensions
 {
