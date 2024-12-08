@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+		<UseMaui>true</UseMaui>
+		<IsPackable>false</IsPackable>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Converters\BoolNegationConverterTests.cs" />
+	  <Compile Remove="Converters\BoolToStateConverterTests.cs" />
+	  <Compile Remove="Converters\ChangeTrackingConvertersTests.cs" />
+	  <Compile Remove="Converters\CollectionCountToBooleanConverterTests.cs" />
+	  <Compile Remove="Converters\CurrencyConverterTests.cs" />
+	  <Compile Remove="Converters\DateOffsetCollectionToDateTimeCollectionConverterTests.cs" />
+	  <Compile Remove="Converters\DateTimeConverterTests.cs" />
+	  <Compile Remove="Converters\DateTimeOffsetToLocalDateStringConverterTests.cs" />
+	  <Compile Remove="Converters\DateTimeOffsetToLocalDateTimeConverterTests.cs" />
+	  <Compile Remove="Converters\DateTimeOffsetToLocalDateTimeOffsetConverterTests.cs" />
+	  <Compile Remove="Converters\DateTimeOffsetToTimeSpanConverterTests.cs" />
+	  <Compile Remove="Converters\DateTimeToDateTimeOffsetConverterTests.cs" />
+	  <Compile Remove="Converters\DateTimeToLocalDateStringConverterTests.cs" />
+	  <Compile Remove="Converters\DateTimeToTimeSpanConverterTests.cs" />
+	  <Compile Remove="Converters\DecimalEqualsConverterTests.cs" />
+	  <Compile Remove="Converters\DecimalEqualsOrGreaterThenConverterTests.cs" />
+	  <Compile Remove="Converters\DecimalEqualsOrLesserThenConverterTests.cs" />
+	  <Compile Remove="Converters\DecimalGreaterThenConverterTests.cs" />
+	  <Compile Remove="Converters\DecimalLesserThenConverterTests.cs" />
+	  <Compile Remove="Converters\DecimalToDoubleConverterTests.cs" />
+	  <Compile Remove="Converters\DecimalToIsVisibleConverterTests.cs" />
+	  <Compile Remove="Converters\DecimalToStringConverterTests.cs" />
+	  <Compile Remove="Converters\DoubleIsGreaterOrEqualThenConverterTests.cs" />
+	  <Compile Remove="Converters\DoubleIsGreaterThenConverterTests.cs" />
+	  <Compile Remove="Converters\DoubleIsLesserOrEqualThenConverterTests.cs" />
+	  <Compile Remove="Converters\DoubleIsLesserThenConverterTests.cs" />
+	  <Compile Remove="Converters\DoubleOfDoubleConverterTests.cs" />
+	  <Compile Remove="Converters\DoubleToIsVisibleConverterTests.cs" />
+	  <Compile Remove="Converters\EnumToArrayConverterTests.cs" />
+	  <Compile Remove="Converters\EnumToBooleanConverterTests.cs" />
+	  <Compile Remove="Converters\EnumToDescriptionConverterTests.cs" />
+	  <Compile Remove="Converters\EnumToStringConverterTests.cs" />
+	  <Compile Remove="Converters\GuidToInversedIsVisibleConverterTests.cs" />
+	  <Compile Remove="Converters\GuidToIsVisibleConverterTests.cs" />
+	  <Compile Remove="Converters\IntegerToBrushConverterTests.cs" />
+	  <Compile Remove="Converters\IntegerToColorConverterTests.cs" />
+	  <Compile Remove="Converters\InverseBooleanConverterTests.cs" />
+	  <Compile Remove="Converters\NegativeCurrencyConverterTests.cs" />
+	  <Compile Remove="Converters\NullToBooleanConverterTests.cs" />
+	  <Compile Remove="Converters\SolidColorBrushToHexStringConverterTests.cs" />
+	  <Compile Remove="Converters\UserCollectionToUsernameConverterTests.cs" />
+	  <Compile Remove="Converters\ZeroDecimalToIsVisibleConverterTests.cs" />
+	  <Compile Remove="Converters\ZeroDoubleToIsVisibleConverterTests.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="MSTest.TestFramework" />
+		<PackageReference Include="MSTest.TestAdapter" />
+		<PackageReference Include="coverlet.collector">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
+	</ItemGroup>
+</Project>

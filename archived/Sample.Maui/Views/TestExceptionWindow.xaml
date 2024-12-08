@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:Window xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+          xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+          x:Class="Sample.Views.TestExceptionWindow"
+          Title="TestExceptionWindow">
+
+    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}" MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
+        <ScrollView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <c:ErrorPresenter />
+
+                <VerticalStackLayout Spacing="10" Grid.Row="1">
+                    <Label Text="{m:GetString Description}"/>
+                    <Entry Text="{Binding SelectedItem.Description}" MaxLength="50"/>
+
+                    <Label Text="{m:GetString Note}"/>
+                    <Editor Text="{Binding SelectedItem.Memo, Mode=TwoWay}" Style="{DynamicResource DefaultMemoStyle}" />
+
+                    <Label Text="{Binding SelectedItem, Converter={StaticResource ChangeTrackingConverters}}"/>
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+    </ContentView>
+</c:Window>
