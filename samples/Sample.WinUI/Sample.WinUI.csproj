@@ -21,6 +21,7 @@
 		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
 		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 	
 	<ItemGroup>
