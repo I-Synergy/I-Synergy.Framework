@@ -19,7 +19,7 @@ public sealed partial class ThemeWindow : ISynergy.Framework.UI.Controls.Window,
     {
         InitializeComponent();
 
-        PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Save");
-        SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Cancel");
+        PrimaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Save");
+        SecondaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Cancel");
     }
 }

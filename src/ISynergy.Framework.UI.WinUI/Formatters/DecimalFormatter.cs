@@ -12,7 +12,7 @@ public class DecimalFormatter : INumberFormatter2, INumberParser
 
     public DecimalFormatter()
     {
-        _context = ServiceLocator.Default.GetInstance<IContext>();
+        _context = ServiceLocator.Default.GetService<IContext>();
         Decimals = _context.NumberFormat.CurrencyDecimalDigits;
     }
 

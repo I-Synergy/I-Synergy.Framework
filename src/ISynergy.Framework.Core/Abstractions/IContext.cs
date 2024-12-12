@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
-using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 
 namespace ISynergy.Framework.Core.Abstractions;
@@ -44,9 +43,4 @@ public interface IContext
     /// </summary>
     /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
     bool IsAuthenticated { get; }
-
-    /// <summary>
-    /// Gets the service scopes.
-    /// </summary>
-    IServiceScope ScopedServices { get; set; }
 }

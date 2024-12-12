@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Storage.Azure.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Storage.Azure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -35,7 +36,7 @@ internal class Program
             services.AddStorageAzureIntegration<AzureBlobOptions>(config);
             services.TryAddScoped<Startup>();
 
-            ServiceProvider serviceProvider = services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProviderWithLocator();
             Startup application = serviceProvider.GetRequiredService<Startup>();
             application.RunAsync().GetAwaiter().GetResult();
         }

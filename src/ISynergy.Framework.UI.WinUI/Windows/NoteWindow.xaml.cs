@@ -16,7 +16,7 @@ public sealed partial class NoteWindow : ISynergy.Framework.UI.Controls.Window, 
     {
         InitializeComponent();
 
-        PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Ok");
-        SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Cancel");
+        PrimaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Ok");
+        SecondaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Cancel");
     }
 }

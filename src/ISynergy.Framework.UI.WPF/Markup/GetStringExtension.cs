@@ -22,7 +22,7 @@ public class GetStringExtension : MarkupExtension
 
         if (!string.IsNullOrEmpty(Key))
         {
-            result = ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
+            result = ServiceLocator.Default.GetService<ILanguageService>().GetString(Key);
         }
         else
         {

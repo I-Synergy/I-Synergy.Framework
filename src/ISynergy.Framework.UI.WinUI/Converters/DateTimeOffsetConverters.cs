@@ -243,7 +243,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 
             var offset = TimeZoneInfo.Local.BaseUtcOffset;
 
-            if (ServiceLocator.Default.GetInstance<IContext>() is { } context)
+            if (ServiceLocator.Default.GetService<IContext>() is { } context)
             {
                 offset = context.TimeZone.BaseUtcOffset;
             }

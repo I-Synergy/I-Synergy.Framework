@@ -56,6 +56,6 @@ public class EnumToArrayConverter : IValueConverter
     public static string GetDescription(Enum value)
     {
         Argument.IsNotNull(nameof(value));
-        return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(value.ToString());
+        return ServiceLocator.Default.GetService<ILanguageService>().GetString(value.ToString());
     }
 }

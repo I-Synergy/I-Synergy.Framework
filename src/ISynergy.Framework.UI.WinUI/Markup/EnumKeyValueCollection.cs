@@ -50,6 +50,6 @@ public class EnumKeyValueCollection : MarkupExtension
     private static string GetDescription(Enum value)
     {
         Argument.IsNotNull(value);
-        return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(value.ToString());
+        return ServiceLocator.Default.GetService<ILanguageService>().GetString(value.ToString());
     }
 }

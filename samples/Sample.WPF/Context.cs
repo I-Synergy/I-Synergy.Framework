@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -99,7 +98,7 @@ public sealed class Context : ObservableClass, IContext
     /// <param name="value">The value.</param>
     private void ApplyEnvironment(SoftwareEnvironments value)
     {
-        InfoService.Default.SetTitle(value);
+        //InfoService.Default.SetTitle(value);
 
         switch (value)
         {

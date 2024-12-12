@@ -35,7 +35,7 @@ public sealed partial class App : BaseApplication
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        : base(() => ServiceLocator.Default.GetInstance<ILoadingView>())
+        : base(() => ServiceLocator.Default.GetService<ILoadingView>())
     {
         InitializeComponent();
 
@@ -57,8 +57,8 @@ public sealed partial class App : BaseApplication
             .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-                services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
-                services.TryAddSingleton<ISettingsService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>>();
+                services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
+                services.TryAddScoped<ISettingsService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>>();
 
                 services.TryAddSingleton<CommonServices>();
                 services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
@@ -137,7 +137,7 @@ public sealed partial class App : BaseApplication
             if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && _settingsService.LocalSettings.IsAutoLogin)
             {
                 string username = _settingsService.LocalSettings.DefaultUser;
-                string password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+                string password = await _scopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
                 if (!string.IsNullOrEmpty(password))
                 {
@@ -169,6 +169,9 @@ public sealed partial class App : BaseApplication
         }
         else
         {
+            _logger.LogInformation("Clearing scoped dependecies");
+            _scopedContextService.CreateNewScope();
+
             _logger.LogInformation("Navigate to SignIn page");
             await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
         }

@@ -123,7 +123,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
         BaseCommonServices = commonServices;
         Logger = logger;
 
-        PropertyChanged += OnPropertyChanged;
+        //PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
 
         CloseCommand = new AsyncRelayCommand(CloseAsync);
@@ -217,17 +217,17 @@ public abstract class ViewModel : ObservableClass, IViewModel
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
+    ///// <summary>
+    ///// Releases unmanaged and - optionally - managed resources.
+    ///// </summary>
+    ///// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    //protected override void Dispose(bool disposing)
+    //{
+    //    base.Dispose(disposing);
 
-        if (disposing)
-        {
-            PropertyChanged -= OnPropertyChanged;
-        }
-    }
+    //    if (disposing)
+    //    {
+    //        PropertyChanged -= OnPropertyChanged;
+    //    }
+    //}
 }

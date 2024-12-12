@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ISynergy.Framework.Core.Services;
 
 namespace ISynergy.Framework.Core.Locators;
 
@@ -7,62 +7,36 @@ namespace ISynergy.Framework.Core.Locators;
 /// framework defines such an ambient container, use ServiceLocator.Current
 /// to get it.
 /// </summary>
-public class ServiceLocator
+public class ServiceLocator : ScopedContextService
 {
-    /// <summary>
-    /// The service provider
-    /// </summary>
-    private static IServiceProvider _serviceProvider;
+    private static IServiceProvider _staticServiceProvider;
+    private static ServiceLocator _default;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ServiceLocator"/> class.
     /// </summary>
     /// <param name="currentServiceProvider">The current service provider.</param>
     public ServiceLocator(IServiceProvider currentServiceProvider)
+        : base(currentServiceProvider)
     {
-        _serviceProvider = currentServiceProvider;
+        _staticServiceProvider = currentServiceProvider;
+        _default = this;
     }
 
     /// <summary>
     /// Gets the current.
     /// </summary>
     /// <value>The current.</value>
-    public static ServiceLocator Default
-    {
-        get
-        {
-            return new ServiceLocator(_serviceProvider);
-        }
-    }
+    public static ServiceLocator Default => _default ?? new ServiceLocator(_staticServiceProvider);
+
 
     /// <summary>
     /// Sets the locator provider.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    public static void SetLocatorProvider(IServiceProvider serviceProvider)
+    internal static void SetLocatorProvider(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
+        _staticServiceProvider = serviceProvider;
+        _default = new ServiceLocator(serviceProvider);
     }
-
-    /// <summary>
-    /// Gets the instance.
-    /// </summary>
-    /// <param name="serviceType">Type of the service.</param>
-    /// <returns>System.Object.</returns>
-    public object GetInstance(Type serviceType) =>
-        _serviceProvider.GetService(serviceType);
-
-    /// <summary>
-    /// Gets the instance.
-    /// </summary>
-    /// <typeparam name="TService">The type of the t service.</typeparam>
-    /// <returns>TService.</returns>
-    public TService GetInstance<TService>() =>
-        _serviceProvider.GetService<TService>();
-
-    /// <summary>
-    /// Gets an instance of the service provider.
-    /// </summary>
-    /// <returns></returns>
-    public IServiceProvider GetServiceProvider() => _serviceProvider;
 }
