@@ -10,7 +10,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 /// </summary>
 /// <seealso cref="IBindable" />
 /// <seealso cref="IDisposable" />
-public interface IObservableClass : IBindable, IDisposable, IDataErrorInfo, INotifyDataErrorInfo
+public interface IObservableClass : IBindable, IDisposable, IAsyncDisposable, IDataErrorInfo, INotifyDataErrorInfo
 {
     /// <summary>
     /// Validates this instance.
