@@ -37,8 +37,9 @@ public static class Program
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
-                services.TryAddSingleton<ICredentialLockerService, CredentialLockerService>();
-                services.TryAddSingleton<ISettingsService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>>();
+
+                services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
+                services.TryAddScoped<ISettingsService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>>();
 
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());

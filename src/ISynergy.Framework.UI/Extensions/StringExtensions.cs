@@ -14,5 +14,5 @@ public static class StringExtensions
     /// <param name="resourceKey">The resource key.</param>
     /// <returns>System.String.</returns>
     public static string GetLocalized(this string resourceKey) =>
-        ServiceLocator.Default.GetInstance<ILanguageService>().GetString(resourceKey);
+        ServiceLocator.Default.GetService<ILanguageService>().GetString(resourceKey);
 }

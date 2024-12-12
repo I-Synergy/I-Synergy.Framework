@@ -1,4 +1,4 @@
-using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
@@ -20,7 +20,7 @@ namespace ISynergy.Framework.UI.Services;
 /// <seealso cref="INavigationService" />
 public class NavigationService : INavigationService
 {
-    private readonly IContext _context;
+    private readonly IScopedContextService _scopedContextService;
     private readonly IThemeService _themeService;
 
     public event EventHandler BackStackChanged;
@@ -45,13 +45,13 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
-    /// <param name="context"></param>
+    /// <param name="scopedContextService"></param>
     /// <param name="themeService"></param>
     public NavigationService(
-        IContext context,
+        IScopedContextService scopedContextService,
         IThemeService themeService)
     {
-        _context = context;
+        _scopedContextService = scopedContextService;
         _themeService = themeService;
     }
 
@@ -83,7 +83,7 @@ public class NavigationService : INavigationService
         else
             viewType = view.GetRelatedViewType();
 
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
+        if (_scopedContextService.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
         {
             resolvedPage.ViewModel = viewModel;
 
@@ -165,7 +165,7 @@ public class NavigationService : INavigationService
 
             bladeVm.Closed += Viewmodel_Closed;
 
-            if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View view)
+            if (_scopedContextService.ServiceProvider.GetRequiredService(typeof(TView)) is View view)
             {
                 view.ViewModel = viewmodel;
 
@@ -260,7 +260,7 @@ public class NavigationService : INavigationService
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
-            NavigationExtensions.CreatePage<TViewModel>(_context, viewModel, parameter) is { } page)
+            NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter) is { } page)
         {
             switch (_themeService.Style.Theme)
             {
@@ -310,9 +310,9 @@ public class NavigationService : INavigationService
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
-            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
+            _scopedContextService.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
         {
-            if (viewModel is null && _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
+            if (viewModel is null && _scopedContextService.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
                 viewModel = resolvedViewModel;
 
             if (viewModel is not null && parameter is not null)
@@ -355,7 +355,7 @@ public class NavigationService : INavigationService
     public async Task NavigateModalAsync<TViewModel>(object parameter = null)
         where TViewModel : class, IViewModel
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(_context, parameter) is { } page &&
+        if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page &&
             Application.Current is BaseApplication baseApplication)
         {
             switch (_themeService.Style.Theme)

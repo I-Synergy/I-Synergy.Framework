@@ -5,8 +5,6 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Sample.Abstractions;
 
 namespace Sample.Services;
 
@@ -18,7 +16,7 @@ namespace Sample.Services;
 public class AuthenticationService : IAuthenticationService
 {
     private readonly IContext _context;
-    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly IScopedContextService _scopedContextService;
     private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
@@ -34,12 +32,12 @@ public class AuthenticationService : IAuthenticationService
 
     public AuthenticationService(
         IContext context,
-        IServiceScopeFactory serviceScopeFactory,
+        IScopedContextService scopedContextService,
         ISettingsService settingsService,
         ICredentialLockerService credentialLockerService)
     {
         _context = context;
-        _serviceScopeFactory = serviceScopeFactory;
+        _scopedContextService = scopedContextService;
         _settingsService = settingsService;
         _credentialLockerService = credentialLockerService;
     }
@@ -133,7 +131,7 @@ public class AuthenticationService : IAuthenticationService
 
     private void ValidateToken()
     {
-        _context.ScopedServices = _serviceScopeFactory.CreateScope();
+        _scopedContextService.CreateNewScope();
         OnAuthenticationChanged(new ReturnEventArgs<bool>(_context.IsAuthenticated));
     }
 }

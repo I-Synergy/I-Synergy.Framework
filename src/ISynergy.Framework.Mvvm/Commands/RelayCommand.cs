@@ -71,7 +71,7 @@ public sealed class RelayCommand : IRelayCommand
         }
         catch (Exception ex)
         {
-            var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+            var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
             var task = new Task(async () =>
             {
                 if (ex.InnerException != null)

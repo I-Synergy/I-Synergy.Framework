@@ -27,20 +27,20 @@ public class ChangeTrackingConverters : IValueConverter
         {
             var result = new StringBuilder();
 
-            var userCreated = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Unknown");
-            var userChanged = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Unknown");
+            var userCreated = ServiceLocator.Default.GetService<ILanguageService>().GetString("Unknown");
+            var userChanged = ServiceLocator.Default.GetService<ILanguageService>().GetString("Unknown");
 
             if (!string.IsNullOrEmpty(model.CreatedBy)) userCreated = model.CreatedBy;
 
-            result.AppendLine($"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("InputFirst")} " +
-                $"{model.CreatedDate.ToLocalTime():f} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userCreated}");
+            result.AppendLine($"{ServiceLocator.Default.GetService<ILanguageService>().GetString("InputFirst")} " +
+                $"{model.CreatedDate.ToLocalTime():f} {ServiceLocator.Default.GetService<ILanguageService>().GetString("By")} {userCreated}");
 
             if (model.ChangedDate.HasValue)
             {
                 if (!string.IsNullOrEmpty(model.ChangedBy)) userChanged = model.ChangedBy;
 
-                result.AppendLine($"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("InputLast")} " +
-                    $"{model.ChangedDate.Value.ToLocalTime():f} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userChanged}");
+                result.AppendLine($"{ServiceLocator.Default.GetService<ILanguageService>().GetString("InputLast")} " +
+                    $"{model.ChangedDate.Value.ToLocalTime():f} {ServiceLocator.Default.GetService<ILanguageService>().GetString("By")} {userChanged}");
             }
 
             return result.ToString();

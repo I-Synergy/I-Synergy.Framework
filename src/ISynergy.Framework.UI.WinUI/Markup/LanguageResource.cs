@@ -29,7 +29,7 @@ public class LanguageResource : MarkupExtension
     {
         if (!string.IsNullOrEmpty(Key) && !DesignMode.DesignMode2Enabled)
         {
-            return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
+            return ServiceLocator.Default.GetService<ILanguageService>().GetString(Key);
         }
 
         return $"[{Key}]";

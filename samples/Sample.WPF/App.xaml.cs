@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Events;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -14,7 +15,7 @@ namespace Sample;
 public partial class App : BaseApplication
 {
     public App()
-        : base()
+        : base(ServiceLocator.Default.GetService<IScopedContextService>())
     {
     }
 
@@ -27,7 +28,7 @@ public partial class App : BaseApplication
         if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && _settingsService.LocalSettings.IsAutoLogin)
         {
             string username = _settingsService.LocalSettings.DefaultUser;
-            string password = await ServiceLocator.Default.GetInstance<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+            string password = await _scopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
             if (!string.IsNullOrEmpty(password))
             {
