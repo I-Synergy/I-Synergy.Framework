@@ -57,6 +57,7 @@ public sealed partial class App : BaseApplication
             .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+
                 services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
                 services.TryAddScoped<ISettingsService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>>();
 
@@ -169,9 +170,6 @@ public sealed partial class App : BaseApplication
         }
         else
         {
-            _logger.LogInformation("Clearing scoped dependecies");
-            _scopedContextService.CreateNewScope();
-
             _logger.LogInformation("Navigate to SignIn page");
             await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
         }

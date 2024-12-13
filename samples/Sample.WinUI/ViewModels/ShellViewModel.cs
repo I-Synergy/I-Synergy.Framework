@@ -1,12 +1,15 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models.Accounts;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
+using Sample.Messages;
 
 namespace Sample.ViewModels;
 
@@ -120,15 +123,24 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         ChartCommand = new AsyncRelayCommand(OpenChartTestAsync);
 
         PopulateNavigationMenuItems();
+
+        MessageService.Default.Register<ShellLoadedMessage>(this, (m) =>
+        {
+            if (context.IsAuthenticated && PrimaryItems?.Count > 0)
+            {
+                if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
+                    PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
+
+                SelectedItem = PrimaryItems[0];
+            }
+        });
     }
 
     private void PopulateNavigationMenuItems()
     {
-        PrimaryItems.Clear();
-        SecondaryItems.Clear();
-
         if (Context.IsAuthenticated)
         {
+            PrimaryItems.Clear();
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, InfoCommand));
             PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _themeService.Style.Color, DisplayCommand));
             PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _themeService.Style.Color, BrowseCommand));
@@ -139,10 +151,13 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _themeService.Style.Color, TreeNodeTestCommand));
             PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _themeService.Style.Color, ChartCommand));
 
+            SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, HelpCommand));
             SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
             SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
-            SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
+
+            if (Context.IsAuthenticated && Context.Profile is Profile)
+                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
         }
 
         SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, SignInCommand));
@@ -150,13 +165,13 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     protected override async Task SignOutAsync()
     {
+        await base.SignOutAsync();
+
         if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
         {
             _settingsService.LocalSettings.IsAutoLogin = false;
             _settingsService.SaveLocalSettings();
         }
-
-        await BaseCommonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
     private Task OpenChartTestAsync() =>
@@ -225,4 +240,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
         BaseCommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
+
+    protected override void Dispose(bool disposing)
+    {
+        MessageService.Default.Unregister<ShellLoadedMessage>(this);
+        base.Dispose(disposing);
+    }
 }

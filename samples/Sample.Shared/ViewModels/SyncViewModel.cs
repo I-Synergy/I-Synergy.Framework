@@ -1,7 +1,5 @@
 ﻿using Dotmim.Sync.Enumerations;
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -14,7 +12,6 @@ using System.Data;
 
 namespace Sample.ViewModels;
 
-[Lifetime(Lifetimes.Scoped)]
 public class SyncViewModel : ViewModelNavigation<object>
 {
     public override string Title { get { return BaseCommonServices.LanguageService.GetString("Sync"); } }

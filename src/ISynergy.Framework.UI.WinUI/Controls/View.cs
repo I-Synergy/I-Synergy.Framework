@@ -13,7 +13,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// </summary>
 /// <seealso cref="IView" />
 [Bindable(true)]
-[Lifetime(Lifetimes.Singleton)]
+[Lifetime(Lifetimes.Scoped)]
 public abstract partial class View : Page, IView
 {
     private IViewModel _viewModel;

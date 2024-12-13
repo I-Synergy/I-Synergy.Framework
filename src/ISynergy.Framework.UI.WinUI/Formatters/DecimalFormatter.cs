@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using Windows.Globalization.NumberFormatting;
 
@@ -12,8 +13,9 @@ public class DecimalFormatter : INumberFormatter2, INumberParser
 
     public DecimalFormatter()
     {
-        _context = ServiceLocator.Default.GetService<IContext>();
-        Decimals = _context.NumberFormat.CurrencyDecimalDigits;
+        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
+        _context = scopedContextService.GetService<IContext>();
+        Decimals = _context?.NumberFormat?.CurrencyDecimalDigits ?? 2;
     }
 
     public DecimalFormatter(int decimals)

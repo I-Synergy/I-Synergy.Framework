@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -15,14 +13,12 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
 
-[Lifetime(Lifetimes.Singleton)]
 public class AuthenticationViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;
@@ -204,7 +200,7 @@ public class AuthenticationViewModel : ViewModel
         _localizationService = localizationService;
         _credentialLockerService = credentialLockerService;
         _settingsService = settingsService;
-        
+
         ShowSignInCommand = new RelayCommand(SetLoginVisibility);
         SignInCommand = new AsyncRelayCommand(SignInAsync);
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
