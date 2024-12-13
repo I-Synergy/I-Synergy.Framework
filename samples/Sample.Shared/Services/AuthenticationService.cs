@@ -30,16 +30,13 @@ public class AuthenticationService : IAuthenticationService
     /// </summary>
     public void OnAuthenticationChanged(ReturnEventArgs<bool> e) => AuthenticationChanged?.Invoke(this, e);
 
-    public AuthenticationService(
-        IContext context,
-        IScopedContextService scopedContextService,
-        ISettingsService settingsService,
-        ICredentialLockerService credentialLockerService)
+    public AuthenticationService(IScopedContextService scopedContextService)
     {
-        _context = context;
         _scopedContextService = scopedContextService;
-        _settingsService = settingsService;
-        _credentialLockerService = credentialLockerService;
+
+        _context = scopedContextService.GetService<IContext>();
+        _settingsService = scopedContextService.GetService<ISettingsService>();
+        _credentialLockerService = scopedContextService.GetService<ICredentialLockerService>();
     }
 
     public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
@@ -123,6 +120,8 @@ public class AuthenticationService : IAuthenticationService
 
     public Task SignOutAsync()
     {
+        _scopedContextService.CreateNewScope();
+
         _context.Profile = null;
 
         ValidateToken();
@@ -131,7 +130,6 @@ public class AuthenticationService : IAuthenticationService
 
     private void ValidateToken()
     {
-        _scopedContextService.CreateNewScope();
         OnAuthenticationChanged(new ReturnEventArgs<bool>(_context.IsAuthenticated));
     }
 }

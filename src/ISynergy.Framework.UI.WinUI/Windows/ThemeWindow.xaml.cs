@@ -9,7 +9,6 @@ namespace ISynergy.Framework.UI;
 /// <summary>
 /// Class ThemeWindow. This class cannot be inherited.
 /// </summary>
-[Lifetime(Lifetimes.Scoped)]
 public sealed partial class ThemeWindow : ISynergy.Framework.UI.Controls.Window, IThemeWindow
 {
     /// <summary>

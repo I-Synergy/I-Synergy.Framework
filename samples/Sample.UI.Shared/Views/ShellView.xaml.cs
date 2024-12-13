@@ -1,7 +1,9 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using Microsoft.UI.Xaml.Controls;
+using Sample.Messages;
 
 
 namespace Sample.Views;
@@ -21,6 +23,14 @@ public sealed partial class ShellView : View, IShellView
         InitializeComponent();
 
         _navigationService = navigationService;
+
+        Loaded += async (sender, e) =>
+        {
+            // Add delay to allow the view to be fully loaded
+            await Task.Delay(100);
+
+            MessageService.Default.Send(new ShellLoadedMessage());
+        };
     }
 
     private async void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) =>
