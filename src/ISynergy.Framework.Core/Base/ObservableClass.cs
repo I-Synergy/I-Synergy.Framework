@@ -23,6 +23,19 @@ public abstract class ObservableClass : IObservableClass
     private EventHandler<DataErrorsChangedEventArgs> _errorsChanged;
     private bool _disposed;
 
+
+    /// <summary>
+    /// Gets or sets the IsDisposed property value.
+    /// </summary>
+    [JsonIgnore]
+    [DataTableIgnore]
+    [XmlIgnore]
+    [Display(AutoGenerateField = false)]
+    public bool IsDisposed
+    {
+        get => _disposed;
+    }
+
     /// <summary>
     /// Automatic validation trigger.
     /// </summary>

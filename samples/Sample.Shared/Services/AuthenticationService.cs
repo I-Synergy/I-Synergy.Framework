@@ -15,7 +15,8 @@ namespace Sample.Services;
 /// <seealso cref="IAuthenticationService" />
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly IContext _context;
+    private IContext _context;
+
     private readonly IScopedContextService _scopedContextService;
     private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
@@ -122,6 +123,8 @@ public class AuthenticationService : IAuthenticationService
     {
         _scopedContextService.CreateNewScope();
 
+        // Get the context from the new scope
+        _context = _scopedContextService.GetService<IContext>();
         _context.Profile = null;
 
         ValidateToken();

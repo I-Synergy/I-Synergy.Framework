@@ -165,12 +165,23 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     protected override async Task SignOutAsync()
     {
-        await base.SignOutAsync();
-
-        if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
+        try
         {
-            _settingsService.LocalSettings.IsAutoLogin = false;
-            _settingsService.SaveLocalSettings();
+            if (!Context?.IsDisposed ?? false)
+            {
+                // Clear profile before base sign out
+                await base.SignOutAsync();
+
+                if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
+                {
+                    _settingsService.LocalSettings.IsAutoLogin = false;
+                    _settingsService.SaveLocalSettings();
+                }
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+            // Context already disposed, nothing to sign out
         }
     }
 
@@ -243,7 +254,21 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     protected override void Dispose(bool disposing)
     {
-        MessageService.Default.Unregister<ShellLoadedMessage>(this);
-        base.Dispose(disposing);
+        if (disposing)
+        {
+            (DisplayCommand as IDisposable)?.Dispose();
+            (InfoCommand as IDisposable)?.Dispose();
+            (BrowseCommand as IDisposable)?.Dispose();
+            (ConverterCommand as IDisposable)?.Dispose();
+            (SelectionTestCommand as IDisposable)?.Dispose();
+            (ListViewTestCommand as IDisposable)?.Dispose();
+            (ValidationTestCommand as IDisposable)?.Dispose();
+            (TreeNodeTestCommand as IDisposable)?.Dispose();
+            (ChartCommand as IDisposable)?.Dispose();
+
+            MessageService.Default.Unregister<ShellLoadedMessage>(this);
+
+            base.Dispose(disposing);
+        }
     }
 }
