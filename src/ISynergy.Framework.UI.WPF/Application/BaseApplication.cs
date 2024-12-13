@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -27,7 +28,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ISettingsService _settingsService;
-    protected readonly INavigationService _navigationService;
+    protected readonly IBaseCommonServices _commonServices;
 
     private Task Initialize { get; set; }
 
@@ -49,6 +50,14 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Setting up global exception handler.");
         SetGlobalExceptionHandler();
 
+        _logger.LogTrace("Starting initialization of application");
+
+        _logger.LogTrace("Setting up main page.");
+
+        _logger.LogTrace("Getting common services.");
+        _commonServices = _scopedContextService.GetService<IBaseCommonServices>();
+        _commonServices.BusyService.StartBusy();
+
         _logger.LogInformation("Setting up context.");
         _context = _scopedContextService.GetService<IContext>();
 
@@ -58,9 +67,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Setting up theming service.");
         _themeService = _scopedContextService.GetService<IThemeService>();
-
-        _logger.LogInformation("Setting up navigation service.");
-        _navigationService = _scopedContextService.GetService<INavigationService>();
 
         _logger.LogInformation("Setting up exception handler service.");
         _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
@@ -228,7 +234,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         rootFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
 
-        MainWindow.Title = _scopedContextService.GetService<IInfoService>().Title ?? string.Empty;
+        MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty;
         MainWindow.Show();
         MainWindow.Activate();
     }

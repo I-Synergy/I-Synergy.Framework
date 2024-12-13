@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
+using Microsoft.Extensions.Logging;
 using Sample.ViewModels;
 using System.Windows;
 
@@ -38,16 +39,29 @@ public partial class App : BaseApplication
         }
 
         if (navigateToAuthentication)
-            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+            await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
     }
 
     public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
     {
-        await _navigationService.CleanBackStackAsync();
+        // Suppress backstack change event during sign out
+        await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);
 
         if (e.Value)
-            await _navigationService.NavigateModalAsync<IShellViewModel>();
+        {
+            _logger.LogInformation("Set application title by environment");
+            _commonServices.InfoService.SetTitle(_context.Environment);
+
+            _logger.LogInformation("Navigate to Shell");
+            await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
+        }
         else
-            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+        {
+            _logger.LogInformation("Clear application title");
+            _commonServices.InfoService.SetTitle(default);
+
+            _logger.LogInformation("Navigate to SignIn page");
+            await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+        }
     }
 }

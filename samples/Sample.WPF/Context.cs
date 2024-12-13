@@ -84,8 +84,6 @@ public sealed class Context : ObservableClass, IContext
     /// <param name="value">The value.</param>
     private void ApplyEnvironment(SoftwareEnvironments value)
     {
-        //InfoService.Default.SetTitle(value);
-
         switch (value)
         {
             case SoftwareEnvironments.Local:

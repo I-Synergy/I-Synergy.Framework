@@ -37,7 +37,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ISettingsService _settingsService;
-    protected readonly INavigationService _navigationService;
     protected readonly IBaseCommonServices _commonServices;
     protected readonly Func<ILoadingView> _initialView;
 
@@ -106,9 +105,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             RequestedTheme = ApplicationTheme.Light;
         else
             RequestedTheme = ApplicationTheme.Dark;
-
-        _logger.LogTrace("Setting up navigation service.");
-        _navigationService = _scopedContextService.GetService<INavigationService>();
 
         _logger.LogTrace("Setting up exception handler service.");
         _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
@@ -272,8 +268,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (Environment.GetCommandLineArgs().Length > 1)
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
 
-        MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = _scopedContextService.GetService<IInfoService>().Title ?? string.Empty);
-        MainWindow.Title = _scopedContextService.GetService<IInfoService>().Title ?? string.Empty;
+        MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty);
+        MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty;
         MainWindow.Activate();
     }
 

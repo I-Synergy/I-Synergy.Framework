@@ -22,14 +22,49 @@ public class NavigationService : INavigationService
 {
     private readonly IScopedContextService _scopedContextService;
     private readonly IThemeService _themeService;
+    private EventHandler _backStackChanged;
 
-    public event EventHandler BackStackChanged;
+    public event EventHandler BackStackChanged
+    {
+        add
+        {
+            // Only add if not already subscribed
+            if (_backStackChanged is null ||
+                !_backStackChanged.GetInvocationList().Contains(value))
+            {
+                _backStackChanged += value;
+            }
+        }
+        remove
+        {
+            _backStackChanged -= value;
+        }
+    }
 
     /// <summary>
     /// Handles the <see cref="E:BackStackChanged" /> event.
     /// </summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
+    public virtual void OnBackStackChanged(EventArgs e)
+    {
+        // Create a copy to avoid modification during iteration
+        var handlers = _backStackChanged?.GetInvocationList();
+        if (handlers != null)
+        {
+            foreach (EventHandler handler in handlers)
+            {
+                try
+                {
+                    handler(this, e);
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Remove disposed subscribers
+                    _backStackChanged -= handler;
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Navigation backstack.
@@ -355,6 +390,9 @@ public class NavigationService : INavigationService
     public async Task NavigateModalAsync<TViewModel>(object parameter = null)
         where TViewModel : class, IViewModel
     {
+        // Unsubscribe old handlers before modal navigation
+        _backStackChanged = null;
+
         if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page &&
             Application.Current is BaseApplication baseApplication)
         {
@@ -378,10 +416,23 @@ public class NavigationService : INavigationService
         }
     }
 
-    public Task CleanBackStackAsync()
+    public Task CleanBackStackAsync(bool suppressEvent = false)
     {
         _backStack.Clear();
-        OnBackStackChanged(EventArgs.Empty);
+
+        if (!suppressEvent)
+        {
+            try
+            {
+                OnBackStackChanged(EventArgs.Empty);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Clear all handlers if we get a disposal exception
+                _backStackChanged = null;
+            }
+        }
+
         return Task.CompletedTask;
     }
 }

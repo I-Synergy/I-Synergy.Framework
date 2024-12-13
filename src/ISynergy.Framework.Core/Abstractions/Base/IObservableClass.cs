@@ -13,6 +13,10 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 public interface IObservableClass : IBindable, IDisposable, IAsyncDisposable, IDataErrorInfo, INotifyDataErrorInfo
 {
     /// <summary>
+    /// Gets or sets the IsDisposed property value.
+    /// </summary>
+    bool IsDisposed { get; }
+    /// <summary>
     /// Validates this instance.
     /// </summary>
     /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
