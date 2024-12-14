@@ -173,6 +173,9 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     {
         base.Cleanup();
 
+        Items?.Clear();
+        SelectedItems?.Clear();
+
         RefreshCommand?.Cancel();
         RefreshCommand = null;
     }

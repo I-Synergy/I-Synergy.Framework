@@ -34,7 +34,7 @@ public class ServiceLocator : ScopedContextService
     /// Sets the locator provider.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    internal static void SetLocatorProvider(IServiceProvider serviceProvider)
+    public static void SetLocatorProvider(IServiceProvider serviceProvider)
     {
         _staticServiceProvider = serviceProvider;
         _default = new ServiceLocator(serviceProvider);

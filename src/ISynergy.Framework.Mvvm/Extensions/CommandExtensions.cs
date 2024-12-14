@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Mvvm.Extensions;
 /// <summary>
 /// Extensions for the <see cref="IAsyncRelayCommand"/> type.
 /// </summary>
-public static class IAsyncRelayCommandExtensions
+public static class CommandExtensions
 {
     /// <summary>
     /// Creates an <see cref="ICommand"/> instance that can be used to cancel execution on the input command.
