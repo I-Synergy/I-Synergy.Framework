@@ -5,8 +5,6 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Sample.Abstractions;
 
 namespace Sample.Services;
 
@@ -17,8 +15,9 @@ namespace Sample.Services;
 /// <seealso cref="IAuthenticationService" />
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly IContext _context;
-    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private IContext _context;
+
+    private readonly IScopedContextService _scopedContextService;
     private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
@@ -32,16 +31,13 @@ public class AuthenticationService : IAuthenticationService
     /// </summary>
     public void OnAuthenticationChanged(ReturnEventArgs<bool> e) => AuthenticationChanged?.Invoke(this, e);
 
-    public AuthenticationService(
-        IContext context,
-        IServiceScopeFactory serviceScopeFactory,
-        ISettingsService settingsService,
-        ICredentialLockerService credentialLockerService)
+    public AuthenticationService(IScopedContextService scopedContextService)
     {
-        _context = context;
-        _serviceScopeFactory = serviceScopeFactory;
-        _settingsService = settingsService;
-        _credentialLockerService = credentialLockerService;
+        _scopedContextService = scopedContextService;
+
+        _context = scopedContextService.GetService<IContext>();
+        _settingsService = scopedContextService.GetService<ISettingsService>();
+        _credentialLockerService = scopedContextService.GetService<ICredentialLockerService>();
     }
 
     public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
@@ -125,6 +121,10 @@ public class AuthenticationService : IAuthenticationService
 
     public Task SignOutAsync()
     {
+        _scopedContextService.CreateNewScope();
+
+        // Get the context from the new scope
+        _context = _scopedContextService.GetService<IContext>();
         _context.Profile = null;
 
         ValidateToken();
@@ -133,7 +133,6 @@ public class AuthenticationService : IAuthenticationService
 
     private void ValidateToken()
     {
-        _context.ScopedServices = _serviceScopeFactory.CreateScope();
         OnAuthenticationChanged(new ReturnEventArgs<bool>(_context.IsAuthenticated));
     }
 }

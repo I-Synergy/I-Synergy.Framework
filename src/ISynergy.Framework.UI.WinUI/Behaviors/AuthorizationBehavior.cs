@@ -28,7 +28,7 @@ public class Authorization : Behavior<Control>
         if (!DesignMode.DesignModeEnabled)
         {
             if (_authenticationProvider is null)
-                _authenticationProvider = ServiceLocator.Default.GetInstance<IAuthenticationProvider>();
+                _authenticationProvider = ServiceLocator.Default.GetService<IAuthenticationProvider>();
 
             if (_authenticationProvider is null)
                 throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");

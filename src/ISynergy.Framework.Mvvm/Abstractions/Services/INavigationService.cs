@@ -8,8 +8,7 @@ public interface INavigationService
 
     bool CanGoBack { get; }
     Task GoBackAsync();
-
-    Task CleanBackStackAsync();
+    Task CleanBackStackAsync(bool suppressEvent = false);
 
     /// <summary>
     /// Navigates to a specified viewmodel asynchronous.

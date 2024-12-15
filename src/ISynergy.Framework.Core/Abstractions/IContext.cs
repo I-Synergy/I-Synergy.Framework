@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Core.Enumerations;
-using Microsoft.Extensions.DependencyInjection;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Enumerations;
 using System.Globalization;
 
 namespace ISynergy.Framework.Core.Abstractions;
@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Abstractions;
 /// <summary>
 /// Interface IContext
 /// </summary>
-public interface IContext
+public interface IContext : IObservableClass
 {
     /// <summary>
     /// Gets or sets the current profile.
@@ -44,9 +44,4 @@ public interface IContext
     /// </summary>
     /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
     bool IsAuthenticated { get; }
-
-    /// <summary>
-    /// Gets the service scopes.
-    /// </summary>
-    IServiceScope ScopedServices { get; set; }
 }

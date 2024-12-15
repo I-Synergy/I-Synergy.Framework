@@ -12,37 +12,11 @@ namespace ISynergy.Framework.Core.Services;
 [Bindable(BindableSupport.Yes)]
 public sealed class InfoService : IInfoService
 {
-    private static readonly object _creationLock = new object();
-    private static IInfoService _defaultInstance;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="InfoService" /> class.
     /// </summary>
     public InfoService()
     {
-    }
-
-    /// <summary>
-    /// Gets the Messenger's default instance, allowing
-    /// to register and send messages in a static manner.
-    /// </summary>
-    public static IInfoService Default
-    {
-        get
-        {
-            if (_defaultInstance is null)
-            {
-                lock (_creationLock)
-                {
-                    if (_defaultInstance is null)
-                    {
-                        _defaultInstance = new InfoService();
-                    }
-                }
-            }
-
-            return _defaultInstance;
-        }
     }
 
     /// <summary>

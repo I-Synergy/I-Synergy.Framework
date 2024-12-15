@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -22,7 +20,6 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModel" />
 /// <seealso cref="IViewModelBladeView" />
-[Lifetime(Lifetimes.Singleton)]
 public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeView
 {
     /// <summary>

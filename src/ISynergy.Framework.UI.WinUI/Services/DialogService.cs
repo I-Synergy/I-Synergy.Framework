@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
@@ -16,7 +15,7 @@ namespace ISynergy.Framework.UI.Services;
 public class DialogService : IDialogService
 {
     private readonly ILanguageService _languageService;
-    private readonly IContext _context;
+    private readonly IScopedContextService _scopedContextService;
     private readonly IThemeService _themeService;
 
     private Window _activeDialog = null;
@@ -24,15 +23,15 @@ public class DialogService : IDialogService
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
-    /// <param name="context"></param>
+    /// <param name="scopedContextService"></param>
     /// <param name="languageService">The language service.</param>
     /// <param name="themeService"></param>
     public DialogService(
-        IContext context,
+        IScopedContextService scopedContextService,
         ILanguageService languageService,
         IThemeService themeService)
     {
-        _context = context;
+        _scopedContextService = scopedContextService;
         _languageService = languageService;
         _themeService = themeService;
     }
@@ -194,8 +193,8 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+        if (_scopedContextService.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+            _scopedContextService.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -211,8 +210,8 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+        if (_scopedContextService.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+            _scopedContextService.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
         {
             viewmodel.SetSelectedItem(e);
             await CreateDialogAsync(dialog, viewmodel);
@@ -228,7 +227,7 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
+        if (_scopedContextService.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -241,7 +240,7 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(type) is Window dialog)
+        if (_scopedContextService.ServiceProvider.GetRequiredService(type) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 

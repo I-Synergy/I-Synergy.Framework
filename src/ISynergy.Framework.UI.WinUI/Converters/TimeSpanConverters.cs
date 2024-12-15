@@ -28,13 +28,13 @@ public class TimeSpanToStringConverter : IValueConverter
 
             if (timeSpan.Days > 0)
             {
-                result.Append($"{timeSpan.Days} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Day_s")}, ");
+                result.Append($"{timeSpan.Days} {ServiceLocator.Default.GetService<ILanguageService>().GetString("Day_s")}, ");
             }
 
             result.Append(
-                $"{timeSpan.Hours} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Hour_s")} " +
-                $"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("And")} " +
-                $"{timeSpan.Minutes} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Minute_s")}");
+                $"{timeSpan.Hours} {ServiceLocator.Default.GetService<ILanguageService>().GetString("Hour_s")} " +
+                $"{ServiceLocator.Default.GetService<ILanguageService>().GetString("And")} " +
+                $"{timeSpan.Minutes} {ServiceLocator.Default.GetService<ILanguageService>().GetString("Minute_s")}");
 
             return result.ToString();
         }

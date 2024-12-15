@@ -23,6 +23,6 @@ public class LocalizedDescriptionAttribute : Attribute
     /// <param name="resourceKey">The description.</param>
     public LocalizedDescriptionAttribute(string resourceKey)
     {
-        Description = ServiceLocator.Default.GetInstance<ILanguageService>().GetString(resourceKey);
+        Description = ServiceLocator.Default.GetService<ILanguageService>().GetString(resourceKey);
     }
 }
