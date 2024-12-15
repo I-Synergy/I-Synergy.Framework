@@ -29,7 +29,7 @@ public class CurrencyConverter : IValueConverter
         {
             if (decimal.TryParse(value.ToString(), out var amount))
             {
-                return ServiceLocator.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount);
+                return ServiceLocator.Default.GetService<IConverterService>().ConvertDecimalToCurrency(amount);
             }
         }
 
@@ -78,7 +78,7 @@ public class NegativeCurrencyConverter : IValueConverter
         {
             if (decimal.TryParse(value.ToString(), out var amount))
             {
-                return ServiceLocator.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount * -1);
+                return ServiceLocator.Default.GetService<IConverterService>().ConvertDecimalToCurrency(amount * -1);
             }
         }
 

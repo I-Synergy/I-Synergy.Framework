@@ -143,7 +143,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         ILocalizationService LocalizationService)
         : base(context, commonServices, logger)
     {
-        BaseCommonServices.NavigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
+        BaseCommonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
@@ -161,6 +161,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
     }
+
+    private void NavigationService_BackStackChanged(object sender, EventArgs e) => OnPropertyChanged(nameof(IsBackEnabled));
 
     /// <summary>
     /// Opens the settings asynchronous.
@@ -306,7 +308,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         }
     }
 
-    protected virtual Task OpenHelpAsync() => 
+    protected virtual Task OpenHelpAsync() =>
         throw new NotImplementedException();
 
     protected virtual Task OpenFeedbackAsync() =>
@@ -326,25 +328,25 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
     protected override void Dispose(bool disposing)
     {
-        Validator = null;
+        if (disposing)
+        {
+            // Remove navigation service event handlers first
+            if (BaseCommonServices.NavigationService is not null)
+                BaseCommonServices.NavigationService.BackStackChanged -= NavigationService_BackStackChanged;
 
-        RestartUpdateCommand?.Cancel();
-        RestartUpdateCommand = null;
-        SignInCommand?.Cancel();
-        SignInCommand = null;
-        LanguageCommand?.Cancel();
-        LanguageCommand = null;
-        ColorCommand?.Cancel();
-        ColorCommand = null;
-        HelpCommand?.Cancel();
-        HelpCommand = null;
-        SettingsCommand?.Cancel();
-        SettingsCommand = null;
-        BackgroundCommand?.Cancel();
-        BackgroundCommand = null;
-        FeedbackCommand?.Cancel();
-        FeedbackCommand = null;
+            Validator = null;
 
-        base.Dispose(disposing);
+            (RestartUpdateCommand as IDisposable)?.Dispose();
+            (SignInCommand as IDisposable)?.Dispose();
+            (LanguageCommand as IDisposable)?.Dispose();
+            (ColorCommand as IDisposable)?.Dispose();
+            (HelpCommand as IDisposable)?.Dispose();
+            (SettingsCommand as IDisposable)?.Dispose();
+            (BackgroundCommand as IDisposable)?.Dispose();
+            (FeedbackCommand as IDisposable)?.Dispose();
+
+            // Finally dispose context and other resources
+            base.Dispose(disposing);
+        }
     }
 }

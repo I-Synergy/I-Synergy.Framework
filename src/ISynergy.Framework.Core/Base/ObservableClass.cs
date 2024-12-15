@@ -19,6 +19,23 @@ namespace ISynergy.Framework.Core.Base;
 /// <seealso cref="IObservableClass" />
 public abstract class ObservableClass : IObservableClass
 {
+    private PropertyChangedEventHandler _propertyChanged;
+    private EventHandler<DataErrorsChangedEventArgs> _errorsChanged;
+    private bool _disposed;
+
+
+    /// <summary>
+    /// Gets or sets the IsDisposed property value.
+    /// </summary>
+    [JsonIgnore]
+    [DataTableIgnore]
+    [XmlIgnore]
+    [Display(AutoGenerateField = false)]
+    public bool IsDisposed
+    {
+        get => _disposed;
+    }
+
     /// <summary>
     /// Automatic validation trigger.
     /// </summary>
@@ -358,11 +375,23 @@ public abstract class ObservableClass : IObservableClass
 
     #region INotifyDataErrorInfo Members
 
-    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
+    {
+        add
+        {
+            ThrowIfDisposed();
+            _errorsChanged += value;
+        }
+        remove
+        {
+            _errorsChanged -= value;
+        }
+    }
 
     protected virtual void OnErrorsChanged([CallerMemberName] string propertyName = null)
     {
-        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        ThrowIfDisposed();
+        _errorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
     }
 
     public IEnumerable GetErrors(string propertyName)
@@ -398,7 +427,18 @@ public abstract class ObservableClass : IObservableClass
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged
+    {
+        add
+        {
+            ThrowIfDisposed();
+            _propertyChanged += value;
+        }
+        remove
+        {
+            _propertyChanged -= value;
+        }
+    }
 
     /// <summary>
     /// Called when [property changed].
@@ -406,11 +446,12 @@ public abstract class ObservableClass : IObservableClass
     /// <param name="propertyName">Name of the property.</param>
     public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        ThrowIfDisposed();
+        _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     #endregion
 
-    #region IDisposable
+    #region IDisposable & IAsyncDisposable
     // Dispose() calls Dispose(true)
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -428,18 +469,107 @@ public abstract class ObservableClass : IObservableClass
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
+        if (_disposed)
+            return;
+
         if (disposing)
         {
             // free managed resources
             Validator = null;
 
-            Properties?.Clear();
+            if (Properties is not null)
+            {
+                //Dispose of all properties that implement IDisposable
+                foreach (var property in Properties.Values)
+                {
+                    (property as IDisposable)?.Dispose();
+                }
+
+                Properties.Clear();
+            }
+
             Errors?.Clear();
 
-            ErrorsChanged -= ObservableClass_ErrorsChanged;
+            if (_errorsChanged is not null)
+            {
+                foreach (var @delegate in _errorsChanged.GetInvocationList())
+                {
+                    if (@delegate is not null)
+                        _errorsChanged -= (EventHandler<DataErrorsChangedEventArgs>)@delegate;
+                }
+            }
+
+            if (_propertyChanged is not null)
+            {
+                foreach (var @delegate in _propertyChanged.GetInvocationList())
+                {
+                    if (@delegate is not null)
+                        _propertyChanged -= (PropertyChangedEventHandler)@delegate;
+                }
+            }
         }
 
         // free native resources if there are any.
+        _disposed = true;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DisposeAsyncCore().ConfigureAwait(false);
+
+        Dispose(disposing: false);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual async ValueTask DisposeAsyncCore()
+    {
+        if (_disposed)
+            return;
+
+        //Async dispose of managed resources
+        Validator = null;
+
+        if (Properties is not null)
+        {
+            //Dispose of all properties that implement IAsyncDisposable
+            foreach (var property in Properties.Values)
+            {
+                if (property is IAsyncDisposable asyncDisposable)
+                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+            }
+
+            Properties.Clear();
+        }
+
+        Errors?.Clear();
+
+        if (_errorsChanged is not null)
+        {
+            foreach (var @delegate in _errorsChanged.GetInvocationList())
+            {
+                if (@delegate is not null)
+                    _errorsChanged -= (EventHandler<DataErrorsChangedEventArgs>)@delegate;
+            }
+        }
+
+        if (_propertyChanged is not null)
+        {
+            foreach (var @delegate in _propertyChanged.GetInvocationList())
+            {
+                if (@delegate is not null)
+                    _propertyChanged -= (PropertyChangedEventHandler)@delegate;
+            }
+        }
+
+        _disposed = true;
+    }
+
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
+        }
     }
     #endregion
 }

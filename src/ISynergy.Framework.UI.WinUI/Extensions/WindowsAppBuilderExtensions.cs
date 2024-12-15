@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
@@ -77,22 +76,23 @@ public static class WindowsAppBuilderExtensions
 
             services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
-            var infoService = InfoService.Default;
+            var infoService = new InfoService();
             infoService.LoadAssembly(mainAssembly);
 
-            var languageService = LanguageService.Default;
+            var languageService = new LanguageService();
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
             languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
             languageService.AddResourceManager(typeof(TResource));
 
-            services.TryAddSingleton<IInfoService>(s => InfoService.Default);
-            services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
+            services.TryAddSingleton<IInfoService>(s => infoService);
+            services.TryAddSingleton<ILanguageService>(s => languageService);
             services.TryAddSingleton<IMessageService>(s => MessageService.Default);
 
-            services.TryAddSingleton<TContext>();
-            services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
+            services.TryAddScoped<TContext>();
+            services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
 
             services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
+            services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
             services.TryAddSingleton<ILocalizationService, LocalizationService>();
             services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
@@ -108,7 +108,7 @@ public static class WindowsAppBuilderExtensions
 
             action.Invoke(services, context.Configuration);
 
-            ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
+            services.BuildServiceProviderWithLocator(true);
         });
 
         return windowsAppBuilder;

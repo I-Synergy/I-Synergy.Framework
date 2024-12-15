@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 
@@ -9,7 +7,6 @@ namespace ISynergy.Framework.UI;
 /// <summary>
 /// Class LanguageWindow. This class cannot be inherited.
 /// </summary>
-[Lifetime(Lifetimes.Scoped)]
 public partial class LanguageWindow : ISynergy.Framework.UI.Controls.Window, ILanguageWindow
 {
     /// <summary>
@@ -19,7 +16,7 @@ public partial class LanguageWindow : ISynergy.Framework.UI.Controls.Window, ILa
     {
         InitializeComponent();
 
-        PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Ok");
-        SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Cancel");
+        PrimaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Ok");
+        SecondaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Cancel");
     }
 }

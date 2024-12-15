@@ -1,10 +1,10 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -21,23 +21,26 @@ namespace ISynergy.Framework.UI;
 public abstract class BaseApplication : Application, IBaseApplication, IDisposable
 {
     protected readonly IExceptionHandlerService _exceptionHandlerService;
+    protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
     protected readonly IContext _context;
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ISettingsService _settingsService;
-    protected readonly INavigationService _navigationService;
+    protected readonly IBaseCommonServices _commonServices;
 
     private Task Initialize { get; set; }
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected BaseApplication()
+    protected BaseApplication(IScopedContextService scopedContextService)
         : base()
     {
-        _logger = ServiceLocator.Default.GetInstance<ILogger>();
+        _scopedContextService = scopedContextService;
+
+        _logger = _scopedContextService.GetService<ILogger>();
         _logger.LogInformation("Starting application");
 
         // Pass a timeout to limit the execution time.
@@ -47,27 +50,32 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Setting up global exception handler.");
         SetGlobalExceptionHandler();
 
+        _logger.LogTrace("Starting initialization of application");
+
+        _logger.LogTrace("Setting up main page.");
+
+        _logger.LogTrace("Getting common services.");
+        _commonServices = _scopedContextService.GetService<IBaseCommonServices>();
+        _commonServices.BusyService.StartBusy();
+
         _logger.LogInformation("Setting up context.");
-        _context = ServiceLocator.Default.GetInstance<IContext>();
+        _context = _scopedContextService.GetService<IContext>();
 
         _logger.LogInformation("Setting up authentication service.");
-        _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
+        _authenticationService = _scopedContextService.GetService<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
         _logger.LogInformation("Setting up theming service.");
-        _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
-
-        _logger.LogInformation("Setting up navigation service.");
-        _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
+        _themeService = _scopedContextService.GetService<IThemeService>();
 
         _logger.LogInformation("Setting up exception handler service.");
-        _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+        _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
 
         _logger.LogInformation("Setting up application settings service.");
-        _settingsService = ServiceLocator.Default.GetInstance<ISettingsService>();
+        _settingsService = _scopedContextService.GetService<ISettingsService>();
 
         _logger.LogInformation("Setting up localization service.");
-        _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
+        _localizationService = _scopedContextService.GetService<ILocalizationService>();
 
         if (_settingsService.LocalSettings is not null)
             _localizationService.SetLocalizationLanguage(_settingsService.LocalSettings.Language);
@@ -172,7 +180,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     ///     await base.InitializeApplicationAsync();
     ///     // wait 5 seconds before showing the main window...
     ///     await Task.Delay(5000);
-    ///     await ServiceLocator.Default.GetInstance{INavigationService}().ReplaceMainWindowAsync{IShellView}();
+    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
     /// </code>
     /// </example>
     /// <returns></returns>
@@ -226,7 +234,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         rootFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
 
-        MainWindow.Title = InfoService.Default.Title ?? string.Empty;
+        MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty;
         MainWindow.Show();
         MainWindow.Activate();
     }

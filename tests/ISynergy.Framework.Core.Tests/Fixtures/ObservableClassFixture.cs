@@ -9,6 +9,6 @@ namespace ISynergy.Framework.Core.Fixtures;
 /// </summary>
 /// <seealso cref="ObservableClass" />
 /// <seealso cref="IDisposable" />
-public class ObservableClassFixture : ObservableClass, IDisposable
+public class ObservableClassFixture : ObservableClass
 {
 }

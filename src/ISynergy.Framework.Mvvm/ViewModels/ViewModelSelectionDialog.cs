@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -18,7 +17,6 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// Implements the <see name="ViewModelDialog{List{object}}" />
 /// </summary>
 /// <seealso name="ViewModelDialog{List{object}}" />
-[Lifetime(Lifetimes.Scoped)]
 public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>, ISelectionViewModel
 {
     /// <summary>

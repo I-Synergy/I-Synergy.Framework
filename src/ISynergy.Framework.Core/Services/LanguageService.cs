@@ -10,9 +10,6 @@ namespace ISynergy.Framework.Core.Services;
 /// </summary>
 public sealed class LanguageService : ILanguageService
 {
-    private static readonly object _creationLock = new object();
-    private static ILanguageService _defaultInstance;
-
     /// <summary>
     /// The managers
     /// </summary>
@@ -24,29 +21,6 @@ public sealed class LanguageService : ILanguageService
     public LanguageService()
     {
         _managers = [new ResourceManager(typeof(ISynergy.Framework.Core.Properties.Resources))];
-    }
-
-    /// <summary>
-    /// Gets the Messenger's default instance, allowing
-    /// to register and send messages in a static manner.
-    /// </summary>
-    public static ILanguageService Default
-    {
-        get
-        {
-            if (_defaultInstance is null)
-            {
-                lock (_creationLock)
-                {
-                    if (_defaultInstance is null)
-                    {
-                        _defaultInstance = new LanguageService();
-                    }
-                }
-            }
-
-            return _defaultInstance;
-        }
     }
 
     /// <summary>

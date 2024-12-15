@@ -289,7 +289,7 @@ public sealed class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCo
         }
         catch (Exception ex)
         {
-            var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+            var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
 
             if (ex.InnerException != null)
                 await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
@@ -333,7 +333,7 @@ public sealed class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCo
         }
         catch (Exception ex)
         {
-            var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+            var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
 
             if (ex.InnerException != null)
                 await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);

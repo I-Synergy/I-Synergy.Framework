@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -13,6 +12,7 @@ using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.UI.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
@@ -30,13 +30,13 @@ namespace ISynergy.Framework.UI;
 public abstract class BaseApplication : Application, IBaseApplication, IDisposable
 {
     protected readonly IExceptionHandlerService _exceptionHandlerService;
+    protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
     protected readonly IContext _context;
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ISettingsService _settingsService;
-    protected readonly INavigationService _navigationService;
     protected readonly IBaseCommonServices _commonServices;
     protected readonly Func<ILoadingView> _initialView;
 
@@ -56,8 +56,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected BaseApplication(Func<ILoadingView> initialView = null)
         : base()
     {
-        _initialView = initialView;
-
         var host = CreateHostBuilder()
             .ConfigureLogging(config =>
             {
@@ -68,9 +66,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             })
             .Build();
 
-        ServiceLocator.SetLocatorProvider(host.Services);
+        _scopedContextService = host.Services.GetService<IScopedContextService>();
 
-        _logger = ServiceLocator.Default.GetInstance<ILogger>();
+        _initialView = initialView;
+
+        _logger = _scopedContextService.GetService<ILogger>();
         _logger.LogTrace("Setting up global exception handler.");
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
@@ -88,35 +88,32 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogTrace("Setting up main page.");
 
         _logger.LogTrace("Getting common services.");
-        _commonServices = ServiceLocator.Default.GetInstance<IBaseCommonServices>();
+        _commonServices = _scopedContextService.GetService<IBaseCommonServices>();
         _commonServices.BusyService.StartBusy();
 
         _logger.LogTrace("Setting up context.");
-        _context = ServiceLocator.Default.GetInstance<IContext>();
+        _context = _scopedContextService.GetService<IContext>();
 
         _logger.LogTrace("Setting up authentication service.");
-        _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
+        _authenticationService = _scopedContextService.GetService<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
         _logger.LogTrace("Setting up theming service.");
-        _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
+        _themeService = _scopedContextService.GetService<IThemeService>();
 
         if (_themeService.IsLightThemeEnabled)
             RequestedTheme = ApplicationTheme.Light;
         else
             RequestedTheme = ApplicationTheme.Dark;
 
-        _logger.LogTrace("Setting up navigation service.");
-        _navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
-
         _logger.LogTrace("Setting up exception handler service.");
-        _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+        _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
 
         _logger.LogTrace("Setting up application settings service.");
-        _settingsService = ServiceLocator.Default.GetInstance<ISettingsService>();
+        _settingsService = _scopedContextService.GetService<ISettingsService>();
 
         _logger.LogTrace("Setting up localization service.");
-        _localizationService = ServiceLocator.Default.GetInstance<ILocalizationService>();
+        _localizationService = _scopedContextService.GetService<ILocalizationService>();
 
         if (_settingsService.LocalSettings is not null)
             _localizationService.SetLocalizationLanguage(_settingsService.LocalSettings.Language);
@@ -196,7 +193,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     ///     await base.InitializeApplicationAsync();
     ///     // wait 5 seconds before showing the main window...
     ///     await Task.Delay(5000);
-    ///     await ServiceLocator.Default.GetInstance{INavigationService}().ReplaceMainWindowAsync{IShellView}();
+    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
     /// </code>
     /// </example>
     /// <returns></returns>
@@ -249,7 +246,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         if (_initialView is not null && _initialView.Invoke() is View loadingView)
         {
-            loadingView.ViewModel = ServiceLocator.Default.GetInstance<LoadingViewModel>();
+            loadingView.ViewModel = _scopedContextService.GetService<LoadingViewModel>();
             MainWindow.Content = loadingView;
         }
         else
@@ -271,8 +268,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (Environment.GetCommandLineArgs().Length > 1)
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
 
-        MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = InfoService.Default.Title ?? string.Empty);
-        MainWindow.Title = InfoService.Default.Title ?? string.Empty;
+        MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty);
+        MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty;
         MainWindow.Activate();
     }
 

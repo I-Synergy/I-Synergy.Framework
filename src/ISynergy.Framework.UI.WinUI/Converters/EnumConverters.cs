@@ -122,7 +122,7 @@ public class EnumToArrayConverter : IValueConverter
             throw new ArgumentNullException(nameof(value));
         }
 
-        return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(value.ToString());
+        return ServiceLocator.Default.GetService<ILanguageService>().GetString(value.ToString());
     }
 }
 
