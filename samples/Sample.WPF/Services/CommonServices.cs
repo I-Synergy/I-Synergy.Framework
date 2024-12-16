@@ -19,7 +19,6 @@ namespace Sample.Services;
 /// <param name="navigationService">The navigation service.</param>
 /// <param name="fileService">The file service.</param>
 /// <param name="infoService">The information service.</param>
-/// <param name="converterService">The converter service.</param>
 /// <param name="dispatcherService">The dispatcher service.</param>
 /// <param name="authenticationService">The authentication service.</param>
 public class CommonServices(
@@ -28,16 +27,15 @@ public class CommonServices(
     IDialogService dialogService,
     INavigationService navigationService,
     IInfoService infoService,
-    IConverterService converterService,
     IDispatcherService dispatcherService,
     IAuthenticationService authenticationService,
-    IFileService<FileResult> fileService) : BaseCommonService(busyService,
-         languageService,
-         dialogService,
-         navigationService,
-         infoService,
-         converterService,
-         dispatcherService), ICommonServices
+    IFileService<FileResult> fileService) : BaseCommonService(
+        busyService,
+        languageService,
+        dialogService,
+        navigationService,
+        infoService,
+        dispatcherService), ICommonServices
 {
     /// <summary>
     /// Gets the authentication service.

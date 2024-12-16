@@ -90,8 +90,6 @@ public static class WPFAppBuilderExtensions
             services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
             services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
-            services.TryAddSingleton<ILocalizationService, LocalizationService>();
-            services.TryAddSingleton<IConverterService, ConverterService>();
             services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.TryAddSingleton<IBusyService, BusyService>();
             services.TryAddSingleton<IDialogService, DialogService>();

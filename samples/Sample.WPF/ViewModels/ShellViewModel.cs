@@ -99,7 +99,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <param name="toastMessageService"></param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="themeService">The theme selector service.</param>
-    /// <param name="localizationService">The localization functions.</param>
     public ShellViewModel(
         IContext context,
         ICommonServices commonServices,
@@ -107,9 +106,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         IAuthenticationService authenticationService,
         IToastMessageService toastMessageService,
         ILogger logger,
-        IThemeService themeService,
-        ILocalizationService localizationService)
-        : base(context, commonServices, settingsService, authenticationService, logger, themeService, localizationService)
+        IThemeService themeService)
+        : base(context, commonServices, settingsService, authenticationService, logger, themeService)
     {
         CommonServices = commonServices;
         SettingsService = settingsService;

@@ -33,11 +33,6 @@ public interface IBaseCommonServices
     /// <value>The information service.</value>
     IInfoService InfoService { get; }
     /// <summary>
-    /// Gets the converter service.
-    /// </summary>
-    /// <value>The converter service.</value>
-    IConverterService ConverterService { get; }
-    /// <summary>
     /// Dispatcher service.
     /// </summary>
     IDispatcherService DispatcherService { get; }
