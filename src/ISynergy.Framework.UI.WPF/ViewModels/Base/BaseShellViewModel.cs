@@ -11,6 +11,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using Style = ISynergy.Framework.Core.Models.Style;
@@ -98,12 +99,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected readonly IThemeService _themeService;
 
     /// <summary>
-    /// The localization functions
-    /// </summary>
-    protected readonly ILocalizationService _localizationService;
-
-
-    /// <summary>
     /// Gets or sets the PrimaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
@@ -132,15 +127,13 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="themeService">The theme selector service.</param>
-    /// <param name="LocalizationService">The localization functions.</param>
     protected BaseShellViewModel(
         IContext context,
         IBaseCommonServices commonServices,
         ISettingsService settingsService,
         IAuthenticationService authenticationService,
         ILogger logger,
-        IThemeService themeService,
-        ILocalizationService LocalizationService)
+        IThemeService themeService)
         : base(context, commonServices, logger)
     {
         BaseCommonServices.NavigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
@@ -151,7 +144,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         _settingsService = settingsService;
         _authenticationService = authenticationService;
         _themeService = themeService;
-        _localizationService = LocalizationService;
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
@@ -264,7 +256,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         _settingsService.LocalSettings.Language = e.Result;
         _settingsService.SaveLocalSettings();
-        _localizationService.SetLocalizationLanguage(e.Result);
+        e.Result.SetLocalizationLanguage(Context);
 
         if (await BaseCommonServices.DialogService.ShowMessageAsync(
                     BaseCommonServices.LanguageService.GetString("WarningLanguageChange") +

@@ -3,7 +3,6 @@ using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 
 namespace ISynergy.Framework.Update.Extensions;
 
@@ -22,8 +21,5 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IUpdateService, UpdateService>();
         return services;
     }
-
-    public static IHostBuilder ConfigureStoreUpdateIntegration(this IHostBuilder hostbuilder) =>
-        hostbuilder.ConfigureServices((builder, services) => services.AddUpdatesIntegration());
 }
 #endif

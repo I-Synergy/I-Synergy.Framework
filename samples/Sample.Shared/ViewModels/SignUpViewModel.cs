@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
@@ -24,7 +23,6 @@ namespace Sample.ViewModels;
 public class SignUpViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly ILocalizationService _localizationService;
 
     /// <summary>
     /// Gets or sets the Name property value.
@@ -141,13 +139,11 @@ public class SignUpViewModel : ViewModel
         IContext context,
         IBaseCommonServices commonServices,
         IAuthenticationService authenticationService,
-        ILocalizationService localizationService,
         ILogger logger,
         bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
         _authenticationService = authenticationService;
-        _localizationService = localizationService;
 
         this.Validator = new Action<IObservableClass>(_ =>
         {
@@ -263,7 +259,7 @@ public class SignUpViewModel : ViewModel
         {
             if (SelectedCountry is not null)
             {
-                TimeZones = _localizationService.GetTimeZoneIds(SelectedCountry.ISO2Code);
+                TimeZones = SelectedCountry.ISO2Code.ToTimeZoneIds();
 
                 if (TimeZones.Count == 1)
                 {

@@ -44,4 +44,8 @@ public interface IContext : IObservableClass
     /// </summary>
     /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
     bool IsAuthenticated { get; }
+    /// <summary>
+    ///  Gets or sets the gateway service endpoint.
+    /// </summary>
+    string GatewayEndpoint { get; }
 }
