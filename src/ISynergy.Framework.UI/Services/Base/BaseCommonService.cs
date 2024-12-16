@@ -42,12 +42,6 @@ public abstract class BaseCommonService : IBaseCommonServices
     public IInfoService InfoService { get; }
 
     /// <summary>
-    /// Gets the converter service.
-    /// </summary>
-    /// <value>The converter service.</value>
-    public IConverterService ConverterService { get; }
-
-    /// <summary>
     /// Dispatcher service.
     /// </summary>
     public IDispatcherService DispatcherService { get; }
@@ -60,7 +54,6 @@ public abstract class BaseCommonService : IBaseCommonServices
     /// <param name="dialogService">The dialog.</param>
     /// <param name="navigationService">The navigation.</param>
     /// <param name="infoService">The information.</param>
-    /// <param name="converterService">The converter.</param>
     /// <param name="dispatcherService"></param>
     protected BaseCommonService(
         IBusyService busyService,
@@ -68,7 +61,6 @@ public abstract class BaseCommonService : IBaseCommonServices
         IDialogService dialogService,
         INavigationService navigationService,
         IInfoService infoService,
-        IConverterService converterService,
         IDispatcherService dispatcherService)
     {
         BusyService = busyService;
@@ -76,7 +68,6 @@ public abstract class BaseCommonService : IBaseCommonServices
         DialogService = dialogService;
         NavigationService = navigationService;
         InfoService = infoService;
-        ConverterService = converterService;
         DispatcherService = dispatcherService;
     }
 

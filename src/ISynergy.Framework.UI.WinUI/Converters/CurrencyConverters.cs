@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml.Data;
 using System.Globalization;
 using Windows.ApplicationModel;
@@ -29,7 +28,7 @@ public class CurrencyConverter : IValueConverter
         {
             if (decimal.TryParse(value.ToString(), out var amount))
             {
-                return ServiceLocator.Default.GetService<IConverterService>().ConvertDecimalToCurrency(amount);
+                return amount.ToCurrency();
             }
         }
 
@@ -78,7 +77,7 @@ public class NegativeCurrencyConverter : IValueConverter
         {
             if (decimal.TryParse(value.ToString(), out var amount))
             {
-                return ServiceLocator.Default.GetService<IConverterService>().ConvertDecimalToCurrency(amount * -1);
+                return (amount * -1).ToCurrency();
             }
         }
 

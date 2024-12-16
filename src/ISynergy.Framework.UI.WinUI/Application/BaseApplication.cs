@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
+using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.UI.ViewModels;
@@ -35,7 +36,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IContext _context;
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
-    protected readonly ILocalizationService _localizationService;
     protected readonly ISettingsService _settingsService;
     protected readonly IBaseCommonServices _commonServices;
     protected readonly Func<ILoadingView> _initialView;
@@ -113,10 +113,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _settingsService = _scopedContextService.GetService<ISettingsService>();
 
         _logger.LogTrace("Setting up localization service.");
-        _localizationService = _scopedContextService.GetService<ILocalizationService>();
-
         if (_settingsService.LocalSettings is not null)
-            _localizationService.SetLocalizationLanguage(_settingsService.LocalSettings.Language);
+            _settingsService.LocalSettings.Language.SetLocalizationLanguage(_context);
 
         _logger.LogTrace("Starting initialization of application");
         InitializeApplication();
