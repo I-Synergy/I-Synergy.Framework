@@ -23,7 +23,10 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IHostBuilder ConfigureStoreUpdateIntegration(this IHostBuilder hostbuilder) =>
+    public static IHostBuilder ConfigureStoreUpdateIntegration(this IHostBuilder hostbuilder)
+    {
         hostbuilder.ConfigureServices((builder, services) => services.AddUpdatesIntegration());
+        return hostbuilder;
+    }
 }
 #endif

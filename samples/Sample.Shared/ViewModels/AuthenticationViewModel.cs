@@ -12,6 +12,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -22,7 +23,6 @@ namespace Sample.ViewModels;
 public class AuthenticationViewModel : ViewModel
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly ILocalizationService _localizationService;
     private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
@@ -188,7 +188,6 @@ public class AuthenticationViewModel : ViewModel
     public AuthenticationViewModel(
         IContext context,
         IBaseCommonServices commonServices,
-        ILocalizationService localizationService,
         IAuthenticationService authenticationService,
         ISettingsService settingsService,
         ICredentialLockerService credentialLockerService,
@@ -197,7 +196,6 @@ public class AuthenticationViewModel : ViewModel
         : base(context, commonServices, logger, automaticValidation)
     {
         _authenticationService = authenticationService;
-        _localizationService = localizationService;
         _credentialLockerService = credentialLockerService;
         _settingsService = settingsService;
 
@@ -343,7 +341,7 @@ public class AuthenticationViewModel : ViewModel
         {
             if (Registration_Country is not null)
             {
-                TimeZones = _localizationService.GetTimeZoneIds(Registration_Country.ISO2Code);
+                TimeZones = Registration_Country.ISO2Code.ToTimeZoneIds();
 
                 if (TimeZones.Count == 1)
                     Registration_TimeZone = TimeZones[0];

@@ -6,6 +6,7 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Globalization;
@@ -26,7 +27,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IContext _context;
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
-    protected readonly ILocalizationService _localizationService;
     protected readonly ISettingsService _settingsService;
     protected readonly IBaseCommonServices _commonServices;
 
@@ -75,10 +75,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _settingsService = _scopedContextService.GetService<ISettingsService>();
 
         _logger.LogInformation("Setting up localization service.");
-        _localizationService = _scopedContextService.GetService<ILocalizationService>();
 
         if (_settingsService.LocalSettings is not null)
-            _localizationService.SetLocalizationLanguage(_settingsService.LocalSettings.Language);
+            _settingsService.LocalSettings.Language.SetLocalizationLanguage(_context);
 
         _logger.LogInformation("Setting style.");
         MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));

@@ -94,9 +94,7 @@ public static class WindowsAppBuilderExtensions
             services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
             services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
-            services.TryAddSingleton<ILocalizationService, LocalizationService>();
             services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
-            services.TryAddSingleton<IConverterService, ConverterService>();
             services.TryAddSingleton<IBusyService, BusyService>();
             services.TryAddSingleton<IDialogService, DialogService>();
             services.TryAddSingleton<IDispatcherService, DispatcherService>();
