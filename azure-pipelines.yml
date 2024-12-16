@@ -68,12 +68,12 @@ stages:
             packageType: 'sdk'
             useGlobalJson: true
 
-        - task: DotNetCoreCLI@2
-          displayName: 'Install MAUI workloads'
-          inputs:
-            command: custom
-            custom: 'workload '
-            arguments: 'install maui --source https://api.nuget.org/v3/index.json'
+        # - task: DotNetCoreCLI@2
+        #   displayName: 'Install MAUI workloads'
+        #   inputs:
+        #     command: custom
+        #     custom: 'workload '
+        #     arguments: 'install maui --source https://api.nuget.org/v3/index.json'
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
