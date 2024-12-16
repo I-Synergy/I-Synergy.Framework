@@ -46,14 +46,16 @@ public static class WPFAppBuilderExtensions
     /// </summary>
     /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
+    /// <typeparam name="TSettings"></typeparam>
     /// <typeparam name="TExceptionHandler"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="wpfAppBuilder"></param>
     /// <param name="action"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this IHostBuilder wpfAppBuilder, Action<IServiceCollection, IConfiguration> action)
+    public static IHostBuilder ConfigureServices<TApplication, TContext, TSettings, TExceptionHandler, TResource>(this IHostBuilder wpfAppBuilder, Action<IServiceCollection, IConfiguration> action)
         where TApplication : Application
         where TContext : class, IContext
+        where TSettings : class, ISettingsService
         where TExceptionHandler : class, IExceptionHandlerService
         where TResource : class
     {
@@ -87,16 +89,19 @@ public static class WPFAppBuilderExtensions
             services.TryAddScoped<TContext>();
             services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
 
+            services.TryAddScoped<ISettingsService, TSettings>();
+            services.TryAddScoped<IThemeService, ThemeService>();
+            services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
+            services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
+
             services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
             services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
-            services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.TryAddSingleton<IBusyService, BusyService>();
             services.TryAddSingleton<IDialogService, DialogService>();
             services.TryAddSingleton<IDispatcherService, DispatcherService>();
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<IToastMessageService, ToastMessageService>();
-            services.TryAddSingleton<IThemeService, ThemeService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
             services.RegisterAssemblies();
