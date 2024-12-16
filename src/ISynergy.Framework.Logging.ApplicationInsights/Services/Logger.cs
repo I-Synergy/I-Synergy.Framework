@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Base;
 using Microsoft.ApplicationInsights;
@@ -14,11 +13,6 @@ namespace ISynergy.Framework.Logging.Services;
 
 public class Logger : BaseLogger
 {
-    /// <summary>
-    /// The context
-    /// </summary>
-    private readonly IContext _context;
-
     /// <summary>
     /// The information service
     /// </summary>
@@ -37,20 +31,18 @@ public class Logger : BaseLogger
     /// <summary>
     /// Initializes a new instance of the <see cref="Logger" /> class.
     /// </summary>
-    /// <param name="context">The context.</param>
     /// <param name="infoService">The information service.</param>
-    /// <param name="telemetryInitializer"></param>
+    /// <param name="scopedContextService"></param>
     /// <param name="options">The options.</param>
-    public Logger(IContext context, IInfoService infoService, ITelemetryInitializer telemetryInitializer, IOptions<ApplicationInsightsOptions> options)
+    public Logger(IScopedContextService scopedContextService, IInfoService infoService, IOptions<ApplicationInsightsOptions> options)
         : base("Application Insights Logger")
     {
-        _context = context;
         _infoService = infoService;
         _applicationInsightsOptions = options.Value;
 
         var config = TelemetryConfiguration.CreateDefault();
         config.ConnectionString = _applicationInsightsOptions.ConnectionString;
-        config.TelemetryInitializers.Add(telemetryInitializer);
+        config.TelemetryInitializers.Add(scopedContextService.GetService<ITelemetryInitializer>());
 
         var temporaryLogFolder = Path.Combine(
             Path.GetTempPath(),
