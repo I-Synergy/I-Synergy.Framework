@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
     {
         builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection($"{prefix}{nameof(ApplicationInsightsOptions)}").BindWithReload);
 
-        builder.Services.TryAddSingleton<ITelemetryInitializer, DefaultTelemetryInitializer>();
+        builder.Services.TryAddScoped<ITelemetryInitializer, DefaultTelemetryInitializer>();
 
         builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<ILogger, Logger>();

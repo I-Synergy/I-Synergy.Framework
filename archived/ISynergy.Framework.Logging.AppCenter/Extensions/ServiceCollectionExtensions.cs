@@ -18,10 +18,11 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
+    /// <param name="prefix"></param>
     /// <returns></returns>
-    public static ILoggingBuilder AddAppCenterLogging(this ILoggingBuilder builder, IConfiguration configuration)
+    public static ILoggingBuilder AddAppCenterLogging(this ILoggingBuilder builder, IConfiguration configuration, string prefix = "")
     {
-        builder.Services.Configure<AppCenterOptions>(configuration.GetSection(nameof(AppCenterOptions)).BindWithReload);
+        builder.Services.Configure<AppCenterOptions>(configuration.GetSection($"{prefix}{nameof(AppCenterOptions)}").BindWithReload);
         builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<ILogger, Logger>();
 
