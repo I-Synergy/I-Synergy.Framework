@@ -25,15 +25,11 @@ public class DialogService : IDialogService
     /// </summary>
     /// <param name="scopedContextService"></param>
     /// <param name="languageService">The language service.</param>
-    /// <param name="themeService"></param>
-    public DialogService(
-        IScopedContextService scopedContextService,
-        ILanguageService languageService,
-        IThemeService themeService)
+    public DialogService(IScopedContextService scopedContextService, ILanguageService languageService)
     {
         _scopedContextService = scopedContextService;
         _languageService = languageService;
-        _themeService = themeService;
+        _themeService = scopedContextService.GetService<IThemeService>();
     }
 
     /// <summary>

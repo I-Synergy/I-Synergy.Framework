@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Messages;
@@ -55,12 +54,9 @@ public sealed partial class App : BaseApplication
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
             })
-            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
+            .ConfigureServices<App, Context, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-
-                services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
-                services.TryAddScoped<ISettingsService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>>();
 
                 services.TryAddSingleton<CommonServices>();
                 services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());

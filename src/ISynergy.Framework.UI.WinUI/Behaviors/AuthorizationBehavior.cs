@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,9 +15,6 @@ namespace ISynergy.Framework.UI.Behaviors;
 /// <seealso cref="Behavior{Control}" />
 public class Authorization : Behavior<Control>
 {
-    /// <summary>
-    /// The authentication provider.
-    /// </summary>
     private readonly IAuthenticationProvider _authenticationProvider;
 
     /// <summary>
@@ -27,8 +25,10 @@ public class Authorization : Behavior<Control>
     {
         if (!DesignMode.DesignModeEnabled)
         {
+            var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
+
             if (_authenticationProvider is null)
-                _authenticationProvider = ServiceLocator.Default.GetService<IAuthenticationProvider>();
+                _authenticationProvider = scopedContextService.GetService<IAuthenticationProvider>();
 
             if (_authenticationProvider is null)
                 throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");

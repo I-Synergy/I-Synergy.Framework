@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
@@ -28,11 +27,6 @@ public interface IViewModel : IObservableClass, ICleanup
     event EventHandler Closed;
     void OnClosed(EventArgs e);
 
-    /// <summary>
-    /// Gets the context.
-    /// </summary>
-    /// <value>The context.</value>
-    IContext Context { get; }
     /// <summary>
     /// Gets the base common services.
     /// </summary>
