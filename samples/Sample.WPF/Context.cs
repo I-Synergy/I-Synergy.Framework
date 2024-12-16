@@ -2,8 +2,6 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.UI.Options;
-using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace Sample;
@@ -17,16 +15,11 @@ namespace Sample;
 /// <seealso cref="IContext" />
 public sealed class Context : ObservableClass, IContext
 {
-    private readonly ConfigurationOptions _configurationOptions;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Context" /> class.
     /// </summary>
-    /// <param name="configurationOptions"></param>
-    public Context(IOptions<ConfigurationOptions> configurationOptions)
+    public Context()
     {
-        _configurationOptions = configurationOptions.Value;
-
         CurrencyCode = "EURO";
         CurrencySymbol = "€";
         Environment = SoftwareEnvironments.Production;
@@ -87,15 +80,9 @@ public sealed class Context : ObservableClass, IContext
         switch (value)
         {
             case SoftwareEnvironments.Local:
-                break;
             case SoftwareEnvironments.Test:
-                break;
             default:
-                _configurationOptions.ServiceEndpoint = @"https://localhost:5000/api";
-                _configurationOptions.SignalREndpoint = @"https://localhost:5000/monitor/";
-                _configurationOptions.AuthenticationEndpoint = @"https://localhost:5000/connect/token";
-                _configurationOptions.AccountEndpoint = @"https://localhost:5000/account";
-                _configurationOptions.WebEndpoint = @"https://localhost:5001";
+                GatewayEndpoint = @"https://localhost:5000";
                 break;
         }
     }
@@ -185,5 +172,15 @@ public sealed class Context : ObservableClass, IContext
     {
         get { return GetValue<CultureInfo>(); }
         set { SetValue(value); }
+    }
+
+    /// <summary>
+    /// Gets or sets the gateway service endpoint.
+    /// </summary>
+    /// <value>The service endpoint.</value>
+    public string GatewayEndpoint
+    {
+        get { return GetValue<string>(); }
+        private set { SetValue(value); }
     }
 }
