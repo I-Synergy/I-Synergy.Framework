@@ -11,9 +11,8 @@ namespace Sample.ViewModels;
 
 public class SettingsViewModel : ViewModelNavigation<object>
 {
-    public override string Title { get => BaseCommonServices.LanguageService.GetString("Settings"); }
+    public override string Title { get => base._commonServices.LanguageService.GetString("Settings"); }
 
-    private readonly ICommonServices _commonServices;
     private readonly ISettingsService _settingsService;
 
     /// <summary>
@@ -51,7 +50,6 @@ public class SettingsViewModel : ViewModelNavigation<object>
         bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
-        _commonServices = commonServices;
         _settingsService = settingsService;
 
         LocalSettings = new LocalSettings();

@@ -37,7 +37,7 @@
                 Margin ="5,25" 
                 HorizontalAlignment="Left" 
                 Command="{Binding SignUpCommand}"
-                IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}"
+                IsEnabled="{Binding CommonServices.BusyService.IsEnabled}"
                 Style="{StaticResource DefaultDialogButtonStyle}"/>
         </StackPanel>
     </Grid>

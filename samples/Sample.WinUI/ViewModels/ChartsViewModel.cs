@@ -12,7 +12,7 @@ public class ChartsViewModel : ViewModelNavigation<TestItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Converters"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Converters"); } }
 
     /// <summary>
     /// Gets or sets the categories with least demand property value.

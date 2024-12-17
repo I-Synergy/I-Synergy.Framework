@@ -26,8 +26,8 @@ public class DetailAViewModel : ViewModelBlade<TestItem>
 
     private async Task OpenNewBladeAsync()
     {
-        var detailsVm = new DetailBViewModel(Context, BaseCommonServices, Logger, SelectedItem);
-        await BaseCommonServices.NavigationService.OpenBladeAsync(Owner, detailsVm);
+        var detailsVm = new DetailBViewModel(_context, _commonServices, _logger, SelectedItem);
+        await _commonServices.NavigationService.OpenBladeAsync(Owner, detailsVm);
     }
 
     public override async Task InitializeAsync()

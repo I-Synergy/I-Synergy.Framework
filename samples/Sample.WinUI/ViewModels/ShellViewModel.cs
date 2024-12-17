@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
 using Sample.Messages;
+using Sample.Services;
 
 namespace Sample.ViewModels;
 
@@ -23,7 +24,6 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
-    private readonly ICommonServices _commonServices;
     private readonly DispatcherTimer _clockTimer;
 
     public AsyncRelayCommand InitializeFirstRunCommand { get; private set; }
@@ -57,8 +57,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         IThemeService themeService)
         : base(context, commonServices, settingsService, authenticationService, logger, themeService)
     {
-        _commonServices = commonServices;
-
         SetClock();
 
         _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
@@ -92,7 +90,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
-        if (Context.IsAuthenticated)
+        if (_context.IsAuthenticated)
         {
             PrimaryItems.Clear();
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, InfoCommand));
@@ -110,11 +108,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
             SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
 
-            if (Context.IsAuthenticated && Context.Profile is Profile)
+            if (_context.IsAuthenticated && _context.Profile is Profile)
                 SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
         }
 
-        SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, SignInCommand));
+        SecondaryItems.Add(new NavigationItem(_context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, SignInCommand));
     }
 
     protected override async Task SignOutAsync()
@@ -138,25 +136,25 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private async Task InitializeFirstRunAsync()
     {
-        if (_settingsService.GlobalSettings.IsFirstRun)
+        if (_settingsService.GlobalSettings.IsFirstRun && _commonServices is CommonServices commonServices)
         {
             if (await _commonServices.DialogService.ShowMessageAsync(
                 _commonServices.LanguageService.GetString("ChangeLanguage"),
                 _commonServices.LanguageService.GetString("Language"),
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _settingsService.LocalSettings.Language);
+                var languageVM = new LanguageViewModel(_context, base._commonServices, _logger, _settingsService.LocalSettings.Language);
                 languageVM.Submitted += (s, e) =>
                 {
                     _settingsService.LocalSettings.Language = e.Result;
                     _settingsService.SaveLocalSettings();
-                    e.Result.SetLocalizationLanguage(Context);
+                    e.Result.SetLocalizationLanguage(_context);
                     _commonServices.RestartApplication();
                 };
                 await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
-            var wizardVM = new SettingsViewModel(Context, _commonServices, _settingsService, Logger);
+            var wizardVM = new SettingsViewModel(_context, commonServices, _settingsService, _logger);
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();
@@ -172,34 +170,34 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void ClockTimerCallBack(object sender, object e) => SetClock();
 
-    private void SetClock() => Title = $"{BaseCommonServices.InfoService.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+    private void SetClock() => base.Title = $"{base._commonServices.InfoService.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
 
     private Task OpenChartTestAsync() =>
-        BaseCommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
+        base._commonServices.NavigationService.NavigateAsync<ChartsViewModel>();
 
     private Task OpenTreenNodeTestAsync() =>
-        BaseCommonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
+        base._commonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
 
     /// <summary>
     /// Opens the validation test asynchronous.
     /// </summary>
     /// <returns></returns>
     private Task OpenValidationTestAsync() =>
-        BaseCommonServices.NavigationService.NavigateAsync<ValidationViewModel>();
+        base._commonServices.NavigationService.NavigateAsync<ValidationViewModel>();
 
     /// <summary>
     /// Opens the ListView test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenListViewTestAsync() =>
-        BaseCommonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
+        base._commonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
 
     /// <summary>
     /// Opens the converters asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenConvertersAsync() =>
-        BaseCommonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
+        base._commonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
 
     /// <summary>
     /// browse file as an asynchronous operation.
@@ -209,7 +207,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
-        if (await _commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
+        if (_commonServices is CommonServices commonServices &&
+            await commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
             await _commonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
@@ -218,28 +217,28 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenInfoAsync() =>
-        BaseCommonServices.NavigationService.NavigateAsync<InfoViewModel>();
+        base._commonServices.NavigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
     /// Opens the display asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenDisplayAsync() =>
-        BaseCommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
+        base._commonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
 
     /// <summary>
     /// Opens the selection test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenSelectionTestAsync() =>
-       BaseCommonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
+       base._commonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
 
     /// <summary>
     /// Opens the settings asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        BaseCommonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
+        base._commonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
 
     protected override void Dispose(bool disposing)
     {

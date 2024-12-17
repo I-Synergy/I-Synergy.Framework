@@ -24,11 +24,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
-    protected readonly IContext _context;
     protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ISettingsService _settingsService;
     protected readonly IBaseCommonServices _commonServices;
+
+    protected IContext _context;
 
     private Task Initialize { get; set; }
 

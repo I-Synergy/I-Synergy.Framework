@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
 using Sample.Enumerations;
 using Sample.Models;
-using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
 
@@ -71,11 +70,6 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     }
 
     /// <summary>
-    /// The common services
-    /// </summary>
-    protected readonly ICommonServices CommonServices;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
@@ -84,7 +78,6 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     public TestItemsListViewModel(IContext context, ICommonServices commonService, ILogger logger)
         : base(context, commonService, logger)
     {
-        CommonServices = commonService;
         ClearCommand = new RelayCommand(ClearItems);
 
         Query = string.Empty;
@@ -110,7 +103,8 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
-    public override Task RetrieveItemsAsync(CancellationToken cancellationToken){
+    public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
+    {
         Items.AddNewRange(new List<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
@@ -152,7 +146,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(_context, CommonServices, _logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;
         return CommonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }

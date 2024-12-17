@@ -22,7 +22,7 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Password_Forgot"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Password_Forgot"); } }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ForgotPasswordViewModel" /> class.
@@ -82,12 +82,12 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
         {
             try
             {
-                BaseCommonServices.BusyService.StartBusy();
+                _commonServices.BusyService.StartBusy();
                 result = true;
             }
             finally
             {
-                BaseCommonServices.BusyService.EndBusy();
+                _commonServices.BusyService.EndBusy();
             }
         }
 

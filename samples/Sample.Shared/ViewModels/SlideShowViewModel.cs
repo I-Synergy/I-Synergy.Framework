@@ -18,7 +18,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Display"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Display"); } }
 
     /// <summary>
     /// Gets or sets the Items property value.
@@ -93,7 +93,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     {
         SlideshowTimer.Enabled = false;
 
-        BaseCommonServices.DispatcherService.Invoke(() =>
+        _commonServices.DispatcherService.Invoke(() =>
         {
             if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
             {

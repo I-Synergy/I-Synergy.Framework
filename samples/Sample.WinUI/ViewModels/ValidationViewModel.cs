@@ -17,7 +17,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Validation"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Validation"); } }
 
     /// <summary>
     /// Gets or sets the Test property value.
@@ -118,7 +118,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
 
         if (Validate())
         {
-            await BaseCommonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
+            await _commonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
         }
     }
 }

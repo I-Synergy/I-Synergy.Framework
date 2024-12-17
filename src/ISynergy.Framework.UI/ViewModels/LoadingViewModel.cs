@@ -14,14 +14,17 @@ namespace ISynergy.Framework.UI.ViewModels;
 [Lifetime(Lifetimes.Singleton)]
 public class LoadingViewModel : ObservableClass, IViewModel
 {
+    private readonly IBaseCommonServices _commonServices;
+    private readonly ILogger _logger;
+
     public LoadingViewModel(
         IBaseCommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
         : base(automaticValidation)
     {
-        BaseCommonServices = commonServices;
-        Logger = logger;
+        _commonServices = commonServices;
+        _logger = logger;
 
         //PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
@@ -29,7 +32,7 @@ public class LoadingViewModel : ObservableClass, IViewModel
         CloseCommand = new AsyncRelayCommand(CloseAsync);
         CancelCommand = new AsyncRelayCommand(CancelAsync);
 
-        Logger.LogTrace(GetType().Name);
+        _logger.LogTrace(GetType().Name);
     }
 
     /// <summary>
@@ -51,17 +54,6 @@ public class LoadingViewModel : ObservableClass, IViewModel
     /// </summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     public virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
-
-    /// <summary>
-    /// Gets the base common services.
-    /// </summary>
-    /// <value>The base common services.</value>
-    public IBaseCommonServices BaseCommonServices { get; }
-    /// <summary>
-    /// Gets the logger.
-    /// </summary>
-    /// <value>The logger.</value>
-    public ILogger Logger { get; }
 
     /// <summary>
     /// Gets or sets the close command.
@@ -119,7 +111,7 @@ public class LoadingViewModel : ObservableClass, IViewModel
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            Logger.LogTrace("{0} initialized.", GetType().Name);
+            _logger.LogTrace("{0} initialized.", GetType().Name);
 
         return Task.CompletedTask;
     }
@@ -139,7 +131,7 @@ public class LoadingViewModel : ObservableClass, IViewModel
 
         if (attributes is not null && attributes.Length > 0)
         {
-            description = BaseCommonServices.LanguageService.GetString(attributes[0].Description);
+            description = _commonServices.LanguageService.GetString(attributes[0].Description);
         }
 
         return description;
