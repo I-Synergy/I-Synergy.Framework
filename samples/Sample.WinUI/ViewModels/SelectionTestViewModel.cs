@@ -248,29 +248,22 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         base.Cleanup();
 
         SelectedTestItems?.Clear();
+    }
 
-        SelectSingleCommand?.Cancel();
-        SelectSingleCommand = null;
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            (SelectSingleCommand as IDisposable)?.Dispose();
+            (SelectMultipleCommand as IDisposable)?.Dispose();
+            (ShowDialogYesNo as IDisposable)?.Dispose();
+            (ShowDialogYesNoCancel as IDisposable)?.Dispose();
+            (ShowDialogOk as IDisposable)?.Dispose();
+            (ShowDialogOkCancel as IDisposable)?.Dispose();
+            (ShowUnitsCommand as IDisposable)?.Dispose();
+            (ShowTestCommand as IDisposable)?.Dispose();
 
-        SelectMultipleCommand?.Cancel();
-        SelectMultipleCommand = null;
-
-        ShowDialogYesNo?.Cancel();
-        ShowDialogYesNo = null;
-
-        ShowDialogYesNoCancel?.Cancel();
-        ShowDialogYesNoCancel = null;
-
-        ShowDialogOk?.Cancel();
-        ShowDialogOk = null;
-
-        ShowDialogOkCancel?.Cancel();
-        ShowDialogOkCancel = null;
-
-        ShowUnitsCommand?.Cancel();
-        ShowUnitsCommand = null;
-
-        ShowTestCommand?.Cancel();
-        ShowTestCommand = null;
+            base.Dispose(disposing);
+        }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Sample.Abstractions;
 using Sample.Messages;
 
 
@@ -14,28 +14,20 @@ namespace Sample.Views;
 /// </summary>
 public sealed partial class ShellView : View, IShellView
 {
-    private readonly INavigationService _navigationService;
+    private readonly ICommonServices _commonServices;
     private bool _isLoaded = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ShellView" /> class.
+    /// Initializes a new instance of the <see cref="ShellView"/> class.
     /// </summary>
-    public ShellView(INavigationService navigationService)
+    public ShellView(ICommonServices commonServices)
     {
         InitializeComponent();
 
-        _navigationService = navigationService;
+        _commonServices = commonServices;
 
         Loaded += OnViewLoaded;
         Unloaded += OnViewUnloaded;
-
-        //Loaded += async (sender, e) =>
-        //{
-        //    // Add delay to allow the view to be fully loaded
-        //    await Task.Delay(100);
-
-        //    MessageService.Default.Send(new ShellLoadedMessage());
-        //};
     }
 
     private async void OnViewLoaded(object sender, RoutedEventArgs e)
@@ -56,5 +48,5 @@ public sealed partial class ShellView : View, IShellView
     }
 
     private async void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) =>
-        await _navigationService.GoBackAsync();
+        await _commonServices.NavigationService.GoBackAsync();
 }

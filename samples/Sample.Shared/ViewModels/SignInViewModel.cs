@@ -154,11 +154,12 @@ public class SignInViewModel : ViewModel
 
     protected override void Dispose(bool disposing)
     {
-        SignInCommand?.Cancel();
-        SignInCommand = null;
-        SignUpCommand?.Cancel();
-        SignUpCommand = null;
+        if (disposing)
+        {
+            (SignInCommand as IDisposable)?.Dispose();
+            (SignUpCommand as IDisposable)?.Dispose();
 
-        base.Dispose(disposing);
+            base.Dispose(disposing);
+        }
     }
 }

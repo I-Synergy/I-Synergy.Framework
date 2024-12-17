@@ -237,20 +237,51 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         base.Cleanup();
 
         SelectedItem = default(TEntity);
-
         Items?.Clear();
+    }
 
-        AddCommand?.Cancel();
-        AddCommand = null;
-        EditCommand?.Cancel();
-        EditCommand = null;
-        DeleteCommand?.Cancel();
-        DeleteCommand = null;
-        RefreshCommand?.Cancel();
-        RefreshCommand = null;
-        SearchCommand?.Cancel();
-        SearchCommand = null;
-        SubmitCommand?.Cancel();
-        SubmitCommand = null;
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Dispose and clear commands
+            if (AddCommand is IDisposable addCommand)
+            {
+                addCommand.Dispose();
+                AddCommand = null;
+            }
+
+            if (EditCommand is IDisposable editCommand)
+            {
+                editCommand.Dispose();
+                EditCommand = null;
+            }
+
+            if (DeleteCommand is IDisposable deleteCommand)
+            {
+                deleteCommand.Dispose();
+                DeleteCommand = null;
+            }
+
+            if (RefreshCommand is IDisposable refreshCommand)
+            {
+                refreshCommand.Dispose();
+                RefreshCommand = null;
+            }
+
+            if (SearchCommand is IDisposable searchCommand)
+            {
+                searchCommand.Dispose();
+                SearchCommand = null;
+            }
+
+            if (SubmitCommand is IDisposable submitCommand)
+            {
+                submitCommand.Dispose();
+                SubmitCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

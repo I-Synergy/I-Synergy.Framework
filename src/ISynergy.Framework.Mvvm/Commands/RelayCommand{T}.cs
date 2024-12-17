@@ -15,65 +15,67 @@ namespace ISynergy.Framework.Mvvm.Commands;
 /// in the <see cref="Execute(T)"/> and <see cref="CanExecute(T)"/> callback methods.
 /// </summary>
 /// <typeparam name="T">The type of parameter being passed as input to the callbacks.</typeparam>
-public sealed class RelayCommand<T> : IRelayCommand<T>
+/// <summary>
+/// A generic command whose sole purpose is to relay its functionality to other
+/// objects by invoking delegates. The default return value for the CanExecute
+/// method is <see langword="true"/>. This class allows you to accept command parameters
+/// in the Execute(T) and CanExecute(T) callback methods.
+/// </summary>
+public sealed class RelayCommand<T> : IRelayCommand<T>, IDisposable
 {
-    /// <summary>
-    /// The <see cref="Action"/> to invoke when <see cref="Execute(T)"/> is used.
-    /// </summary>
     private readonly Action<T?> _execute;
-
-    /// <summary>
-    /// The optional action to invoke when <see cref="CanExecute(T)"/> is used.
-    /// </summary>
     private readonly Predicate<T?>? _canExecute;
+
+    private bool _disposed;
 
     /// <inheritdoc/>
     public event EventHandler? CanExecuteChanged;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class that can always _execute.
+    /// Initializes a new instance of the RelayCommand{T} class that can always execute.
     /// </summary>
     /// <param name="execute">The execution logic.</param>
-    /// <remarks>
-    /// Due to the fact that the <see cref="System.Windows.Input.ICommand"/> interface exposes methods that accept a
-    /// nullable <see cref="object"/> parameter, it is recommended that if <typeparamref name="T"/> is a reference type,
-    /// you should always declare it as nullable, and to always perform checks within <paramref name="execute"/>.
-    /// </remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if execute is null.</exception>
     public RelayCommand(Action<T?> execute)
     {
         Argument.IsNotNull(execute);
-
         _execute = execute;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
+    /// Initializes a new instance of the RelayCommand{T} class.
     /// </summary>
     /// <param name="execute">The execution logic.</param>
     /// <param name="canExecute">The execution status logic.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if execute or canExecute are null.</exception>
     public RelayCommand(Action<T?> execute, Predicate<T?> canExecute)
         : this(execute)
     {
         Argument.IsNotNull(canExecute);
-
         _canExecute = canExecute;
     }
 
     /// <inheritdoc/>
-    public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    public void NotifyCanExecuteChanged()
+    {
+        ThrowIfDisposed();
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool CanExecute(T? parameter) => _canExecute?.Invoke(parameter) != false;
+    public bool CanExecute(T? parameter)
+    {
+        ThrowIfDisposed();
+        return _canExecute?.Invoke(parameter) != false;
+    }
 
     /// <inheritdoc/>
     public bool CanExecute(object? parameter)
     {
-        // Special case a null value for a value type argument type.
-        // This ensures that no exceptions are thrown during initialization.
+        ThrowIfDisposed();
+
+        // Special case a null value for a value type argument type
         if (parameter is null && default(T) is not null)
             return false;
 
@@ -87,6 +89,8 @@ public sealed class RelayCommand<T> : IRelayCommand<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Execute(T? parameter)
     {
+        ThrowIfDisposed();
+
         try
         {
             _execute(parameter);
@@ -94,24 +98,29 @@ public sealed class RelayCommand<T> : IRelayCommand<T>
         catch (Exception ex)
         {
             var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-            var task = new Task(async () =>
+
+            if (ex.InnerException != null)
             {
-                if (ex.InnerException != null)
-                {
-                    await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
-                }
-                else
-                {
-                    await exceptionHandlerService.HandleExceptionAsync(ex);
-                }
-            });
-            task.RunSynchronously();
+                exceptionHandlerService.HandleExceptionAsync(ex.InnerException)
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
+            }
+            else
+            {
+                exceptionHandlerService.HandleExceptionAsync(ex)
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
+            }
         }
     }
 
     /// <inheritdoc/>
     public void Execute(object? parameter)
     {
+        ThrowIfDisposed();
+
         if (!TryGetCommandArgument(parameter, out T? result))
             ThrowArgumentExceptionForInvalidCommandArgument(parameter);
 
@@ -119,43 +128,32 @@ public sealed class RelayCommand<T> : IRelayCommand<T>
     }
 
     /// <summary>
-    /// Tries to get a _command argument of compatible type <typeparamref name="T"/> from an input <see cref="object"/>.
+    /// Tries to get a command argument of compatible type T from an input object.
     /// </summary>
-    /// <param name="parameter">The input parameter.</param>
-    /// <param name="result">The resulting <typeparamref name="T"/> value, if any.</param>
-    /// <returns>Whether or not a compatible _command argument could be retrieved.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool TryGetCommandArgument(object? parameter, out T? result)
     {
-        // If the argument is null and the default value of T is also null, then the
-        // argument is valid. T might be a reference type or a nullable value type.
+        // Handle null case for reference types or nullable value types
         if (parameter is null && default(T) is null)
         {
             result = default;
-
             return true;
         }
 
-        // Check if the argument is a T value, so either an instance of a type or a derived
-        // type of T is a reference type, an interface implementation if T is an interface,
-        // or a boxed value type in case T was a value type.
+        // Check if the argument is a T value
         if (parameter is T argument)
         {
             result = argument;
-
             return true;
         }
 
         result = default;
-
         return false;
     }
 
     /// <summary>
-    /// Throws an <see cref="ArgumentException"/> if an invalid _command argument is used.
+    /// Throws an ArgumentException if an invalid command argument is used.
     /// </summary>
-    /// <param name="parameter">The input parameter.</param>
-    /// <exception cref="ArgumentException">Thrown with an error message to give info on the invalid parameter.</exception>
     internal static void ThrowArgumentExceptionForInvalidCommandArgument(object? parameter)
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -168,5 +166,28 @@ public sealed class RelayCommand<T> : IRelayCommand<T>
         }
 
         throw GetException(parameter);
+    }
+
+    private void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(nameof(RelayCommand<T>));
+        }
+    }
+
+    /// <summary>
+    /// Disposes the command, cleaning up resources and preventing further execution.
+    /// </summary>
+    public void Dispose()
+    {
+        if (!_disposed)
+        {
+            _disposed = true;
+
+            // Clear event handlers
+            CanExecuteChanged = null;
+        }
+        GC.SuppressFinalize(this);
     }
 }

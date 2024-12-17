@@ -182,7 +182,30 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
     {
         base.Cleanup();
 
-        RefreshCommand?.Cancel();
-        RefreshCommand = null;
+        // Clear collections
+        //Items?.Clear();
+        //SelectedItems?.Clear();
+
+        // Dispose and clear commands
+        if (RefreshCommand is IDisposable refreshCommand)
+        {
+            refreshCommand.Dispose();
+            RefreshCommand = null;
+        }
+
+        // Reset selection state
+        //SelectionMode = SelectionModes.Single;
+        //Query = null;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Ensure cleanup is called during disposal
+            Cleanup();
+
+            base.Dispose(disposing);
+        }
     }
 }

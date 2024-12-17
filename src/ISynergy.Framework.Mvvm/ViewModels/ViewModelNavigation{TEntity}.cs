@@ -106,8 +106,20 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
         base.Cleanup();
 
         SelectedItem = default(TEntity);
+    }
 
-        SubmitCommand?.Cancel();
-        SubmitCommand = null;
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Clear commands
+            if (SubmitCommand is IDisposable submitCommand)
+            {
+                submitCommand.Dispose();
+                SubmitCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

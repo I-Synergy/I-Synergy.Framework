@@ -18,29 +18,14 @@ namespace ISynergy.Framework.Mvvm.Commands;
 public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationAwareCommand, IDisposable
 {
     private readonly List<CancellationTokenSource> _cancellationTokenSources = new List<CancellationTokenSource>();
-    private CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
-
-    /// <summary>
-    /// The <see cref="Func{TResult}"/> to invoke when <see cref="Execute(T)"/> is used.
-    /// </summary>
     private readonly Func<T?, Task>? _execute;
-
-    /// <summary>
-    /// The cancelable <see cref="Func{T1,T2,TResult}"/> to invoke when <see cref="Execute(object?)"/> is used.
-    /// </summary>
     private readonly Func<T?, CancellationToken, Task>? _cancelableExecute;
-
-    /// <summary>
-    /// The optional action to invoke when <see cref="CanExecute(T)"/> is used.
-    /// </summary>
     private readonly Predicate<T?>? _canExecute;
 
-    /// <summary>
-    /// The _options being set for the current _command.
-    /// </summary>
-    private readonly AsyncRelayCommandOptions _options;
-
+    private CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
     private Task? _executionTask;
+
+    private readonly AsyncRelayCommandOptions _options;
 
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -361,7 +346,7 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
             }
         }
 
-        // free native resources if there are any.
+        _executionTask = null;
     }
     #endregion
 }

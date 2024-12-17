@@ -14,6 +14,12 @@
     x:Name="MainWindow"
     mc:Ignorable="d">
 
+    <i:Interaction.Behaviors>
+        <ic:EventTriggerBehavior EventName="Loaded">
+            <ic:InvokeCommandAction Command="{Binding InitializeFirstRunCommand}" />
+        </ic:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+
     <c:View.Resources>
         <Converters:BooleanToVisibilityConverter
             x:Key="BooleanToVisibilityConverter"
@@ -60,7 +66,7 @@
             <TextBlock
                 Margin="18,0"
                 VerticalAlignment="Center"
-                Text="{Binding CommonServices.InfoService.Title}" />
+                Text="{Binding Title}" />
         </StackPanel>
 
         <NavigationView
@@ -70,13 +76,13 @@
             FooterMenuItemsSource="{Binding SecondaryItems}"
             IsBackButtonVisible="{Binding IsBackEnabled, Mode=OneWay, Converter={StaticResource NavigationViewBackButtonVisibleConverter}}"
             IsBackEnabled="{Binding IsBackEnabled, Mode=OneWay}"
-            IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            IsEnabled="{Binding BaseCommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}"
             IsSettingsVisible="False"
             IsTitleBarAutoPaddingEnabled="False"
             MenuItemTemplateSelector="{StaticResource ItemSelector}"
             MenuItemsSource="{Binding PrimaryItems}"
             PaneDisplayMode="Left">
-            <Frame x:Name="ContentRootFrame" IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+            <Frame x:Name="ContentRootFrame" IsEnabled="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                 <not_wasm:Frame.ContentTransitions>
                     <not_wasm:TransitionCollection>
                         <not_wasm:NavigationThemeTransition />
@@ -85,18 +91,18 @@
             </Frame>
         </NavigationView>
 
-        <Grid Grid.RowSpan="2" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
+        <Grid Grid.RowSpan="2" Visibility="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressRing
                     x:Name="IsBusyProgressRing"
                     Width="48"
                     Height="48"
-                    IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" />
+                    IsActive="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" />
                 <TextBlock
                     FontSize="16"
                     Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}"
-                    Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}"
-                    Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" />
+                    Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}"
+                    Visibility="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" />
             </StackPanel>
         </Grid>
     </Grid>
