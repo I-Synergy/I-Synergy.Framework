@@ -18,7 +18,7 @@ public class ThemeViewModel : ViewModelDialog<Style>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title => BaseCommonServices.LanguageService.GetString("Theme");
+    public override string Title => _commonServices.LanguageService.GetString("Theme");
 
 
     /// <summary>

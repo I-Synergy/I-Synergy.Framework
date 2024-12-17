@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
-using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -27,16 +25,6 @@ public interface IViewModel : IObservableClass, ICleanup
     event EventHandler Closed;
     void OnClosed(EventArgs e);
 
-    /// <summary>
-    /// Gets the base common services.
-    /// </summary>
-    /// <value>The base common services.</value>
-    IBaseCommonServices BaseCommonServices { get; }
-    /// <summary>
-    /// Gets the logger.
-    /// </summary>
-    /// <value>The logger.</value>
-    ILogger Logger { get; }
     /// <summary>
     /// Gets the close _command.
     /// </summary>

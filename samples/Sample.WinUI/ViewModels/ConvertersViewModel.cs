@@ -17,7 +17,7 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Converters"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Converters"); } }
 
 
     /// <summary>
@@ -117,13 +117,13 @@ public class ConvertersViewModel : ViewModelNavigation<object>
 
     private async Task NavigateToDetailAsync(TestItem item)
     {
-        var detailsVm = new DetailsViewModel(Context, BaseCommonServices, Logger);
-        await BaseCommonServices.NavigationService.NavigateAsync(detailsVm);
+        var detailsVm = new DetailsViewModel(_context, _commonServices, _logger);
+        await _commonServices.NavigationService.NavigateAsync(detailsVm);
     }
 
     private async Task NavigateToPivotAsync(TestItem item)
     {
-        var detailsVm = new PivotViewModel(Context, BaseCommonServices, Logger);
-        await BaseCommonServices.NavigationService.NavigateAsync(detailsVm);
+        var detailsVm = new PivotViewModel(_context, _commonServices, _logger);
+        await _commonServices.NavigationService.NavigateAsync(detailsVm);
     }
 }

@@ -202,9 +202,9 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
+        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_context, _commonServices, _logger, Modules, SelectedModules, SelectionModes.Multiple);
         selectionVM.Submitted += SelectionVM_Submitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
     }
 
     /// <summary>
@@ -230,7 +230,7 @@ public class SignUpViewModel : ViewModel
 
     private async Task ValidateMailAsync()
     {
-        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(Context)))
+        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_context)))
         {
             ArePickersAvailable = true;
 
@@ -251,7 +251,7 @@ public class SignUpViewModel : ViewModel
     }
 
     private Task SignInAsync() =>
-        BaseCommonServices.NavigationService.NavigateModalAsync<SignInViewModel>();
+        _commonServices.NavigationService.NavigateModalAsync<SignInViewModel>();
 
     public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
@@ -285,18 +285,18 @@ public class SignUpViewModel : ViewModel
             if (Mail.StartsWith(GenericConstants.UsernamePrefixTest, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixTest, "");
-                Context.Environment = SoftwareEnvironments.Test;
+                _context.Environment = SoftwareEnvironments.Test;
             }
             // remove this prefix and set environment to local.
             else if (Mail.StartsWith(GenericConstants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixLocal, "");
-                Context.Environment = SoftwareEnvironments.Local;
+                _context.Environment = SoftwareEnvironments.Local;
             }
             else
             {
                 emailaddress = Mail;
-                Context.Environment = SoftwareEnvironments.Production;
+                _context.Environment = SoftwareEnvironments.Production;
             }
 
             if (!HasErrors &&
@@ -319,7 +319,7 @@ public class SignUpViewModel : ViewModel
 
                 if (await _authenticationService.RegisterNewAccountAsync(registrationData))
                 {
-                    await BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("WarningRegistrationConfirmEmail"));
+                    await _commonServices.DialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("WarningRegistrationConfirmEmail"));
                     await SignInAsync();
                 }
             }

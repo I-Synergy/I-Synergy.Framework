@@ -45,10 +45,10 @@
                 Style="{StaticResource DefaultButtonStyle}"/>
         </StackPanel>
 
-        <Grid Visibility="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" Grid.RowSpan="3">
+        <Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Grid.RowSpan="3">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
-                <TextBlock FontSize="16" Text="{Binding BaseCommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding BaseCommonServices.BusyService.IsBusy, Mode=OneWay}"/>
+                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
+                <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
             </StackPanel>
         </Grid>
     </Grid>

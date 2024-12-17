@@ -30,7 +30,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Login"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Login"); } }
 
     /// <summary>
     /// Gets or sets the Usernames property value.
@@ -210,55 +210,55 @@ public class AuthenticationViewModel : ViewModel
             {
                 if (string.IsNullOrEmpty(Username) || (Username.Length <= 3))
                 {
-                    AddValidationError(nameof(Username), BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
+                    AddValidationError(nameof(Username), _commonServices.LanguageService.GetString("WarningUsernameSize"));
                 }
 
                 if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
-                    AddValidationError(nameof(Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
             }
             else
             {
                 if (string.IsNullOrEmpty(Registration_Name) || (Registration_Name.Length <= 3))
                 {
-                    AddValidationError(nameof(Registration_Name), BaseCommonServices.LanguageService.GetString("WarningLicenseNameSize"));
+                    AddValidationError(nameof(Registration_Name), _commonServices.LanguageService.GetString("WarningLicenseNameSize"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_Mail) || !NetworkUtility.IsValidEMail(Registration_Mail))
                 {
-                    AddValidationError(nameof(Registration_Mail), BaseCommonServices.LanguageService.GetString("WarningInvalidEmail"));
+                    AddValidationError(nameof(Registration_Mail), _commonServices.LanguageService.GetString("WarningInvalidEmail"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_TimeZone))
                 {
-                    AddValidationError(nameof(Registration_TimeZone), BaseCommonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
+                    AddValidationError(nameof(Registration_TimeZone), _commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_Password) || (Registration_Password.Length <= 6))
                 {
-                    AddValidationError(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
-                    AddValidationError(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_PasswordCheck) || (Registration_PasswordCheck.Length <= 6))
                 {
-                    AddValidationError(nameof(Registration_PasswordCheck), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Registration_PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (!string.IsNullOrEmpty(Registration_Password) && !string.IsNullOrEmpty(Registration_PasswordCheck) && !Registration_Password.Equals(Registration_PasswordCheck))
                 {
-                    AddValidationError(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordMatch"));
-                    AddValidationError(nameof(Registration_PasswordCheck), BaseCommonServices.LanguageService.GetString("WarningPasswordMatch"));
+                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
+                    AddValidationError(nameof(Registration_PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
                 }
 
                 if (Registration_Modules.Count < 1)
                 {
-                    AddValidationError(nameof(Registration_Modules), BaseCommonServices.LanguageService.GetString("WarningNoModulesSelected"));
+                    AddValidationError(nameof(Registration_Modules), _commonServices.LanguageService.GetString("WarningNoModulesSelected"));
                 }
             }
         });
@@ -310,9 +310,9 @@ public class AuthenticationViewModel : ViewModel
     /// <returns>Task.</returns>
     public Task ForgotPasswordAsync()
     {
-        ForgotPasswordViewModel forgotPasswordVM = new(Context, BaseCommonServices, _authenticationService, Logger);
+        ForgotPasswordViewModel forgotPasswordVM = new(_context, _commonServices, _authenticationService, _logger);
         forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }
 
     /// <summary>
@@ -327,11 +327,11 @@ public class AuthenticationViewModel : ViewModel
 
         if (e.Result)
         {
-            await BaseCommonServices.DialogService
-                    .ShowInformationAsync(BaseCommonServices.LanguageService.GetString("Warning_Reset_Password"));
+            await _commonServices.DialogService
+                    .ShowInformationAsync(_commonServices.LanguageService.GetString("Warning_Reset_Password"));
 
-            if (BaseCommonServices.NavigationService.CanGoBack)
-                await BaseCommonServices.NavigationService.GoBackAsync();
+            if (_commonServices.NavigationService.CanGoBack)
+                await _commonServices.NavigationService.GoBackAsync();
         }
     }
 

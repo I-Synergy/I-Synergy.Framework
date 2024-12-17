@@ -32,7 +32,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     public bool IsBackEnabled
     {
-        get => BaseCommonServices.NavigationService.CanGoBack;
+        get => _commonServices.NavigationService.CanGoBack;
     }
 
     /// <summary>
@@ -136,7 +136,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         IThemeService themeService)
         : base(context, commonServices, logger)
     {
-        BaseCommonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
+        _commonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
@@ -173,7 +173,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <returns>Task.</returns>
     protected Task ShowDialogRestartAfterUpdateAsync() =>
-        BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("UpdateRestart"));
+        _commonServices.DialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("UpdateRestart"));
 
     /// <summary>
     /// Gets or sets the LastSelectedItem property value.
@@ -231,9 +231,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _settingsService.LocalSettings.Language);
+        var languageVM = new LanguageViewModel(_context, _commonServices, _logger, _settingsService.LocalSettings.Language);
         languageVM.Submitted += LanguageVM_Submitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
 
     /// <summary>
@@ -249,16 +249,16 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         _settingsService.LocalSettings.Language = e.Result;
         _settingsService.SaveLocalSettings();
 
-        e.Result.SetLocalizationLanguage(Context);
+        e.Result.SetLocalizationLanguage(_context);
 
-        if (await BaseCommonServices.DialogService.ShowMessageAsync(
-                    BaseCommonServices.LanguageService.GetString("WarningLanguageChange") +
+        if (await _commonServices.DialogService.ShowMessageAsync(
+                    _commonServices.LanguageService.GetString("WarningLanguageChange") +
                     Environment.NewLine +
-                    BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    BaseCommonServices.LanguageService.GetString("TitleQuestion"),
+                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                    _commonServices.LanguageService.GetString("TitleQuestion"),
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
-            BaseCommonServices.RestartApplication();
+            _commonServices.RestartApplication();
         }
     }
 
@@ -268,9 +268,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = new ThemeViewModel(Context, BaseCommonServices, _settingsService, Logger);
+        var themeVM = new ThemeViewModel(_context, _commonServices, _settingsService, _logger);
         themeVM.Submitted += ThemeVM_Submitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
 
     /// <summary>
@@ -289,14 +289,14 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             _settingsService.LocalSettings.Color = style.Color;
             _settingsService.SaveLocalSettings();
 
-            if (await BaseCommonServices.DialogService.ShowMessageAsync(
-                    BaseCommonServices.LanguageService.GetString("WarningColorChange") +
+            if (await _commonServices.DialogService.ShowMessageAsync(
+                    _commonServices.LanguageService.GetString("WarningColorChange") +
                     Environment.NewLine +
-                    BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    BaseCommonServices.LanguageService.GetString("TitleQuestion"),
+                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                    _commonServices.LanguageService.GetString("TitleQuestion"),
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                BaseCommonServices.RestartApplication();
+                _commonServices.RestartApplication();
             }
         }
     }
@@ -324,8 +324,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         if (disposing)
         {
             // Remove navigation service event handlers first
-            if (BaseCommonServices.NavigationService is not null)
-                BaseCommonServices.NavigationService.BackStackChanged -= NavigationService_BackStackChanged;
+            if (_commonServices.NavigationService is not null)
+                _commonServices.NavigationService.BackStackChanged -= NavigationService_BackStackChanged;
 
             Validator = null;
 

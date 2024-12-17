@@ -200,12 +200,12 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         }
         else
         {
-            item = BaseCommonServices.LanguageService.GetString("ThisItem");
+            item = _commonServices.LanguageService.GetString("ThisItem");
         }
 
-        if (await BaseCommonServices.DialogService.ShowMessageAsync(
-            string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
-            BaseCommonServices.LanguageService.GetString("Delete"),
+        if (await _commonServices.DialogService.ShowMessageAsync(
+            string.Format(_commonServices.LanguageService.GetString("WarningItemRemove"), item),
+            _commonServices.LanguageService.GetString("Delete"),
             MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             await RemoveAsync(e);
