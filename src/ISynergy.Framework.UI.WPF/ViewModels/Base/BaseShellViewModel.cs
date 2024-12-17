@@ -321,25 +321,20 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
     protected override void Dispose(bool disposing)
     {
-        Validator = null;
+        if (disposing)
+        {
+            Validator = null;
 
-        RestartUpdateCommand?.Cancel();
-        RestartUpdateCommand = null;
-        SignInCommand?.Cancel();
-        SignInCommand = null;
-        LanguageCommand?.Cancel();
-        LanguageCommand = null;
-        ColorCommand?.Cancel();
-        ColorCommand = null;
-        HelpCommand?.Cancel();
-        HelpCommand = null;
-        SettingsCommand?.Cancel();
-        SettingsCommand = null;
-        BackgroundCommand?.Cancel();
-        BackgroundCommand = null;
-        FeedbackCommand?.Cancel();
-        FeedbackCommand = null;
+            (RestartUpdateCommand as IDisposable)?.Dispose();
+            (SignInCommand as IDisposable)?.Dispose();
+            (LanguageCommand as IDisposable)?.Dispose();
+            (ColorCommand as IDisposable)?.Dispose();
+            (HelpCommand as IDisposable)?.Dispose();
+            (SettingsCommand as IDisposable)?.Dispose();
+            (BackgroundCommand as IDisposable)?.Dispose();
+            (FeedbackCommand as IDisposable)?.Dispose();
 
-        base.Dispose(disposing);
+            base.Dispose(disposing);
+        }
     }
 }

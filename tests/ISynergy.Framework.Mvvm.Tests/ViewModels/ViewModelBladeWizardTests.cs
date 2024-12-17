@@ -172,7 +172,7 @@ public class ViewModelBladeWizardTests
         var viewModel = new TestBladeWizardViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
 
         // Act
-        viewModel.Cleanup();
+        viewModel.Dispose();
 
         // Assert
         Assert.IsNull(viewModel.BackCommand);

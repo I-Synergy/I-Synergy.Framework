@@ -120,9 +120,9 @@ public class ViewModelBladeViewTests
 
         // Act
         viewModel.Cleanup();
-
-        // Assert
         Assert.AreEqual(0, viewModel.Items.Count);
+
+        viewModel.Dispose();
         Assert.IsNull(viewModel.AddCommand);
         Assert.IsNull(viewModel.EditCommand);
         Assert.IsNull(viewModel.DeleteCommand);

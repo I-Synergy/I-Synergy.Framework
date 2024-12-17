@@ -67,12 +67,12 @@ public class LoadingViewModel : ObservableClass, IViewModel
     /// Gets or sets the close command.
     /// </summary>
     /// <value>The close command.</value>
-    public AsyncRelayCommand CloseCommand { get; }
+    public AsyncRelayCommand CloseCommand { get; private set; }
 
     /// <summary>
     /// /// Gets or sets the cancel command.
     /// </summary>
-    public AsyncRelayCommand CancelCommand { get; }
+    public AsyncRelayCommand CancelCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the Title property value.

@@ -95,7 +95,7 @@ public class ViewModelBaseTests
         var viewModel = new TestViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
 
         // Act
-        viewModel.Cleanup();
+        viewModel.Dispose();
 
         // Assert
         Assert.IsNull(viewModel.CloseCommand);

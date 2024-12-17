@@ -117,11 +117,10 @@ public class ViewModelBladeTests
         var viewModel = new TestBladeViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
         viewModel.SelectedItem = new TestEntity();
 
-        // Act
         viewModel.Cleanup();
+        Assert.AreEqual(default, viewModel.SelectedItem);
 
-        // Assert
-        Assert.IsNull(viewModel.SelectedItem);
+        viewModel.Dispose();
         Assert.IsNull(viewModel.SubmitCommand);
     }
 }

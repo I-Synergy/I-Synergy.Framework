@@ -173,10 +173,26 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     {
         base.Cleanup();
 
+        // Clear collections
         Items?.Clear();
         SelectedItems?.Clear();
 
-        RefreshCommand?.Cancel();
-        RefreshCommand = null;
+        // Reset selection state
+        SelectionMode = SelectionModes.Single;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Dispose and clear commands
+            if (RefreshCommand is IDisposable refreshCommand)
+            {
+                refreshCommand.Dispose();
+                RefreshCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

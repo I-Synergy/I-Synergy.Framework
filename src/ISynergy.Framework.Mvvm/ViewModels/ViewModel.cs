@@ -123,7 +123,6 @@ public abstract class ViewModel : ObservableClass, IViewModel
         BaseCommonServices = commonServices;
         Logger = logger;
 
-        //PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
 
         CloseCommand = new AsyncRelayCommand(CloseAsync);
@@ -191,8 +190,6 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// </summary>
     public virtual void Cleanup()
     {
-        CloseCommand = null;
-        CancelCommand = null;
     }
 
     /// <summary>
@@ -217,17 +214,25 @@ public abstract class ViewModel : ObservableClass, IViewModel
         return Task.CompletedTask;
     }
 
-    ///// <summary>
-    ///// Releases unmanaged and - optionally - managed resources.
-    ///// </summary>
-    ///// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    //protected override void Dispose(bool disposing)
-    //{
-    //    base.Dispose(disposing);
 
-    //    if (disposing)
-    //    {
-    //        PropertyChanged -= OnPropertyChanged;
-    //    }
-    //}
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Clear commands
+            if (CloseCommand is IDisposable closeCommand)
+            {
+                closeCommand.Dispose();
+                CloseCommand = null;
+            }
+
+            if (CancelCommand is IDisposable cancelCommand)
+            {
+                cancelCommand.Dispose();
+                CancelCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
+    }
 }

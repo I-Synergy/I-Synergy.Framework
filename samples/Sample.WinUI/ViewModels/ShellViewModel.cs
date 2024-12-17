@@ -5,9 +5,14 @@ using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Sample.Abstractions;
 using Sample.Messages;
 
@@ -18,70 +23,18 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
-    /// <summary>
-    /// Gets or sets the Version property value.
-    /// </summary>
-    /// <value>The version.</value>
-    public Version Version
-    {
-        get { return GetValue<Version>(); }
-        set { SetValue(value); }
-    }
+    private readonly ICommonServices _commonServices;
+    private readonly DispatcherTimer _clockTimer;
 
-    /// <summary>
-    /// Gets the common services.
-    /// </summary>
-    /// <value>The common services.</value>
-    public ICommonServices CommonServices { get; }
-
-    public ISettingsService SettingsService { get; }
-
-    /// <summary>
-    /// Gets or sets the display command.
-    /// </summary>
-    /// <value>The display command.</value>
+    public AsyncRelayCommand InitializeFirstRunCommand { get; private set; }
     public AsyncRelayCommand DisplayCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the information command.
-    /// </summary>
-    /// <value>The information command.</value>
     public AsyncRelayCommand InfoCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the browse command.
-    /// </summary>
-    /// <value>The browse command.</value>
     public AsyncRelayCommand BrowseCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the converter command.
-    /// </summary>
-    /// <value>The converter command.</value>
     public AsyncRelayCommand ConverterCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the selection test command.
-    /// </summary>
-    /// <value>The selection test command.</value>
     public AsyncRelayCommand SelectionTestCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the ListView test command.
-    /// </summary>
-    /// <value>The ListView test command.</value>
     public AsyncRelayCommand ListViewTestCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the Validation test command.
-    /// </summary>
     public AsyncRelayCommand ValidationTestCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the TreeNode test command.
-    /// </summary>
     public AsyncRelayCommand TreeNodeTestCommand { get; private set; }
-
     public AsyncRelayCommand ChartCommand { get; private set; }
 
     /// <summary>
@@ -104,12 +57,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         IThemeService themeService)
         : base(context, commonServices, settingsService, authenticationService, logger, themeService)
     {
-        CommonServices = commonServices;
-        SettingsService = settingsService;
+        _commonServices = commonServices;
 
-        Title = commonServices.InfoService.ProductName;
-        Version = commonServices.InfoService.ProductVersion;
+        SetClock();
 
+        _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
+        _clockTimer.Tick += ClockTimerCallBack;
+        _clockTimer.Start();
+
+        InitializeFirstRunCommand = new AsyncRelayCommand(InitializeFirstRunAsync);
         DisplayCommand = new AsyncRelayCommand(OpenDisplayAsync);
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
         BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
@@ -183,6 +139,44 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 
+    private async Task InitializeFirstRunAsync()
+    {
+        if (_settingsService.GlobalSettings.IsFirstRun)
+        {
+            if (await _commonServices.DialogService.ShowMessageAsync(
+                _commonServices.LanguageService.GetString("ChangeLanguage"),
+                _commonServices.LanguageService.GetString("Language"),
+                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _settingsService.LocalSettings.Language);
+                languageVM.Submitted += (s, e) =>
+                {
+                    _settingsService.LocalSettings.Language = e.Result;
+                    _settingsService.SaveLocalSettings();
+                    e.Result.SetLocalizationLanguage(Context);
+                    _commonServices.RestartApplication();
+                };
+                await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+            }
+
+            var wizardVM = new SettingsViewModel(Context, _commonServices, _settingsService, Logger);
+            wizardVM.Submitted += (s, e) =>
+            {
+                _commonServices.RestartApplication();
+            };
+            wizardVM.Cancelled += (s, e) =>
+            {
+                _commonServices.RestartApplication();
+            };
+
+            await _commonServices.NavigationService.OpenBladeAsync(this, wizardVM);
+        }
+    }
+
+    private void ClockTimerCallBack(object sender, object e) => SetClock();
+
+    private void SetClock() => Title = $"{BaseCommonServices.InfoService.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+
     private Task OpenChartTestAsync() =>
         BaseCommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
 
@@ -218,8 +212,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
-        if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
-            await CommonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
+        if (await _commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
+            await _commonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
     /// <summary>
@@ -254,6 +248,9 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         if (disposing)
         {
+            _clockTimer.Stop();
+            _clockTimer.Tick -= ClockTimerCallBack;
+
             (DisplayCommand as IDisposable)?.Dispose();
             (InfoCommand as IDisposable)?.Dispose();
             (BrowseCommand as IDisposable)?.Dispose();

@@ -159,7 +159,32 @@ public abstract class ViewModelBladeWizard<TEntity> : ViewModelBlade<TEntity>
     {
         base.Cleanup();
 
-        BackCommand = null;
-        NextCommand = null;
+        // Reset wizard state
+        Page = 1;
+        Pages = 0;
+        Next_IsEnabled = false;
+        Back_IsEnabled = false;
+        Submit_IsEnabled = false;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Dispose and clear navigation commands
+            if (BackCommand is IDisposable backCommand)
+            {
+                backCommand.Dispose();
+                BackCommand = null;
+            }
+
+            if (NextCommand is IDisposable nextCommand)
+            {
+                nextCommand.Dispose();
+                NextCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
