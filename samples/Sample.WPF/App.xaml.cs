@@ -49,17 +49,11 @@ public partial class App : BaseApplication
 
         if (e.Value)
         {
-            _logger.LogInformation("Set application title by environment");
-            _commonServices.InfoService.SetTitle(_context.Environment);
-
             _logger.LogInformation("Navigate to Shell");
             await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
         }
         else
         {
-            _logger.LogInformation("Clear application title");
-            _commonServices.InfoService.SetTitle(default);
-
             _logger.LogInformation("Navigate to SignIn page");
             await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
         }

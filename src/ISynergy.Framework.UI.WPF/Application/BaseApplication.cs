@@ -84,7 +84,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _themeService.SetStyle();
 
         _logger.LogInformation("Starting initialization of application");
+
         InitializeApplication();
+
         _logger.LogInformation("Finishing initialization of application");
     }
 
@@ -233,7 +235,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         rootFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
 
-        MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty;
+        MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
+        {
+            _commonServices.InfoService?.SetTitle(m.Content);
+        });
+
         MainWindow.Show();
         MainWindow.Activate();
     }
@@ -272,6 +278,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         {
             // free managed resources
             MessageService.Default.Unregister<StyleChangedMessage>(this);
+            MessageService.Default.Unregister<EnvironmentChangedMessage>(this);
 
             if (_authenticationService is not null)
                 _authenticationService.AuthenticationChanged -= AuthenticationChanged;

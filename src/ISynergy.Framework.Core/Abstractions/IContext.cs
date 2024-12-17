@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
 using System.Globalization;
 
 namespace ISynergy.Framework.Core.Abstractions;
@@ -7,7 +6,7 @@ namespace ISynergy.Framework.Core.Abstractions;
 /// <summary>
 /// Interface IContext
 /// </summary>
-public interface IContext : IObservableClass
+public interface IContext
 {
     /// <summary>
     /// Gets or sets the current profile.

@@ -121,16 +121,13 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         try
         {
-            if (!Context?.IsDisposed ?? false)
-            {
-                // Clear profile before base sign out
-                await base.SignOutAsync();
+            // Clear profile before base sign out
+            await base.SignOutAsync();
 
-                if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
-                {
-                    _settingsService.LocalSettings.IsAutoLogin = false;
-                    _settingsService.SaveLocalSettings();
-                }
+            if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
+            {
+                _settingsService.LocalSettings.IsAutoLogin = false;
+                _settingsService.SaveLocalSettings();
             }
         }
         catch (ObjectDisposedException)
