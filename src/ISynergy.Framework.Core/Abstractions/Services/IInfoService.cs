@@ -29,14 +29,14 @@ public interface IInfoService
     /// <value>The copy rights detail.</value>
     string Copyrights { get; }
     /// <summary>
-    /// Gets the application title.
-    /// </summary>
-    string Title { get; }
-    /// <summary>
     /// Gets the product version.
     /// </summary>
     /// <value>The product version.</value>
     Version ProductVersion { get; }
+    /// <summary>
+    /// Gets the application title.
+    /// </summary>
+    string Title { get; }
 
     /// <summary>
     /// Loads the assembly into the Version service.
@@ -45,7 +45,7 @@ public interface IInfoService
     void LoadAssembly(Assembly assembly);
 
     /// <summary>
-    /// Sets the title based on software environment.
+    /// Sets the title.
     /// </summary>
     /// <param name="environment"></param>
     void SetTitle(SoftwareEnvironments environment);

@@ -2,6 +2,8 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Core.Services;
 using System.Globalization;
 
 namespace Sample;
@@ -13,8 +15,10 @@ namespace Sample;
 /// </summary>
 /// <seealso cref="ObservableClass" />
 /// <seealso cref="IContext" />
-public sealed class Context : ObservableClass, IContext
+public sealed class Context : IContext
 {
+    private SoftwareEnvironments _environment;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Context" /> class.
     /// </summary>
@@ -29,16 +33,7 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets the current profile.
     /// </summary>
     /// <value>The current profile.</value>
-    public IProfile Profile
-    {
-        get { return GetValue<IProfile>(); }
-        set
-        {
-            SetValue(value);
-            OnPropertyChanged(nameof(IsAuthenticated));
-            OnPropertyChanged(nameof(IsUserAdministrator));
-        }
-    }
+    public IProfile Profile { get; set; }
 
     /// <summary>
     /// Gets the current time zone.
@@ -63,27 +58,21 @@ public sealed class Context : ObservableClass, IContext
     /// <value>The environment.</value>
     public SoftwareEnvironments Environment
     {
-        get { return GetValue<SoftwareEnvironments>(); }
+        get => _environment;
         set
         {
-            SetValue(value);
-            ApplyEnvironment(value);
-        }
-    }
+            _environment = value;
 
-    /// <summary>
-    /// Applies the environment.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    private void ApplyEnvironment(SoftwareEnvironments value)
-    {
-        switch (value)
-        {
-            case SoftwareEnvironments.Local:
-            case SoftwareEnvironments.Test:
-            default:
-                GatewayEndpoint = @"https://localhost:5000";
-                break;
+            switch (_environment)
+            {
+                case SoftwareEnvironments.Local:
+                case SoftwareEnvironments.Test:
+                default:
+                    GatewayEndpoint = @"https://localhost:5000";
+                    break;
+            }
+
+            MessageService.Default.Send(new EnvironmentChangedMessage(_environment));
         }
     }
 
@@ -91,21 +80,13 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets the currency symbol.
     /// </summary>
     /// <value>The currency symbol.</value>
-    public string CurrencySymbol
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string CurrencySymbol { get; set; }
 
     /// <summary>
     /// Gets or sets the currency code.
     /// </summary>
     /// <value>The currency code.</value>
-    public string CurrencyCode
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
+    public string CurrencyCode { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is authenticated.
@@ -145,42 +126,23 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets a value indicating whether this instance is offline.
     /// </summary>
     /// <value><c>true</c> if this instance is offline; otherwise, <c>false</c>.</value>
-    public bool IsOffline
-    {
-        get { return GetValue<bool>(); }
-        set
-        {
-            SetValue(value);
-        }
-    }
+    public bool IsOffline { get; set; }
 
     /// <summary>
     /// Gets or sets the NumberFormat property value.
     /// </summary>
     /// <value>The number format.</value>
-    public NumberFormatInfo NumberFormat
-    {
-        get { return GetValue<NumberFormatInfo>(); }
-        set { SetValue(value); }
-    }
+    public NumberFormatInfo NumberFormat { get; set; }
 
     /// <summary>
     /// Gets or sets the Culture property value.
     /// </summary>
     /// <value>The culture.</value>
-    public CultureInfo Culture
-    {
-        get { return GetValue<CultureInfo>(); }
-        set { SetValue(value); }
-    }
+    public CultureInfo Culture { get; set; }
 
     /// <summary>
     /// Gets or sets the gateway service endpoint.
     /// </summary>
     /// <value>The service endpoint.</value>
-    public string GatewayEndpoint
-    {
-        get { return GetValue<string>(); }
-        private set { SetValue(value); }
-    }
+    public string GatewayEndpoint { get; private set; }
 }

@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Messages;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -12,13 +11,6 @@ namespace ISynergy.Framework.Core.Services;
 [Bindable(BindableSupport.Yes)]
 public sealed class InfoService : IInfoService
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="InfoService" /> class.
-    /// </summary>
-    public InfoService()
-    {
-    }
-
     /// <summary>
     /// Gets the product version.
     /// </summary>
@@ -86,9 +78,9 @@ public sealed class InfoService : IInfoService
         }
     }
 
-    public void SetTitle(SoftwareEnvironments environment)
-    {
-        Title = $"{ProductName} v{ProductVersion} ({environment})";
-        MessageService.Default.Send(new EnvironmentChangedMessage(environment));
-    }
+    /// <summary>
+    /// Sets the title.
+    /// </summary>
+    /// <param name="environment"></param>
+    public void SetTitle(SoftwareEnvironments environment) => Title = $"{ProductName} v{ProductVersion} ({environment})";
 }

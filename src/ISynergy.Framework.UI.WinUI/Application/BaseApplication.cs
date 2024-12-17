@@ -116,10 +116,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (_settingsService.LocalSettings is not null)
             _settingsService.LocalSettings.Language.SetLocalizationLanguage(_context);
 
-        _logger.LogTrace("Starting initialization of application");
+        _logger.LogInformation("Starting initialization of application");
+
         InitializeApplication();
 
-        _logger.LogTrace("Finishing initialization of application");
+        _logger.LogInformation("Finishing initialization of application");
     }
 
     /// <summary>
@@ -266,8 +267,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (Environment.GetCommandLineArgs().Length > 1)
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
 
-        MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty);
-        MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty;
+        MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
+        {
+            _commonServices.InfoService?.SetTitle(m.Content);
+        });
+
         MainWindow.Activate();
     }
 
