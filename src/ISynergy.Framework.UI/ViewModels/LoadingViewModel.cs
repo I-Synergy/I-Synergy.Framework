@@ -17,6 +17,8 @@ public class LoadingViewModel : ObservableClass, IViewModel
     private readonly IBaseCommonServices _commonServices;
     private readonly ILogger _logger;
 
+    public IBaseCommonServices CommonServices => _commonServices;
+
     public LoadingViewModel(
         IBaseCommonServices commonServices,
         ILogger logger,
@@ -163,8 +165,6 @@ public class LoadingViewModel : ObservableClass, IViewModel
     /// </summary>
     public virtual void Cleanup()
     {
-        (CloseCommand as IDisposable)?.Dispose();
-        (CancelCommand as IDisposable)?.Dispose();
     }
 
     /// <summary>
@@ -200,6 +200,9 @@ public class LoadingViewModel : ObservableClass, IViewModel
         if (disposing)
         {
             PropertyChanged -= OnPropertyChanged;
+
+            (CloseCommand as IDisposable)?.Dispose();
+            (CancelCommand as IDisposable)?.Dispose();
         }
     }
 }
