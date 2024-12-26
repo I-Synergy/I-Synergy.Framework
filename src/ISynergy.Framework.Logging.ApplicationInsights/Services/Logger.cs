@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Base;
 using Microsoft.ApplicationInsights;
@@ -14,11 +15,6 @@ namespace ISynergy.Framework.Logging.Services;
 public class Logger : BaseLogger
 {
     /// <summary>
-    /// The information service
-    /// </summary>
-    private readonly IInfoService _infoService;
-
-    /// <summary>
     /// The application center options
     /// </summary>
     private readonly ApplicationInsightsOptions _applicationInsightsOptions;
@@ -31,13 +27,11 @@ public class Logger : BaseLogger
     /// <summary>
     /// Initializes a new instance of the <see cref="Logger" /> class.
     /// </summary>
-    /// <param name="infoService">The information service.</param>
     /// <param name="scopedContextService"></param>
     /// <param name="options">The options.</param>
-    public Logger(IScopedContextService scopedContextService, IInfoService infoService, IOptions<ApplicationInsightsOptions> options)
+    public Logger(IScopedContextService scopedContextService, IOptions<ApplicationInsightsOptions> options)
         : base("Application Insights Logger")
     {
-        _infoService = infoService;
         _applicationInsightsOptions = options.Value;
 
         var config = TelemetryConfiguration.CreateDefault();
@@ -61,8 +55,8 @@ public class Logger : BaseLogger
         config.TelemetryChannel = serverTelemetryChannel;
 
         _client = new TelemetryClient(config);
-        _client.Context.User.UserAgent = infoService.ProductName;
-        _client.Context.Component.Version = infoService.ProductVersion.ToString();
+        _client.Context.User.UserAgent = InfoService.Default.ProductName;
+        _client.Context.Component.Version = InfoService.Default.ProductVersion.ToString();
         _client.Context.Session.Id = Guid.NewGuid().ToString();
         _client.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
 
