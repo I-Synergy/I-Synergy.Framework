@@ -36,6 +36,11 @@ public interface ILocalSettings
     /// </summary>
     Themes Theme { get; set; }
     /// <summary>
+    /// Gets a value indicating whether this instance is light theme enabled.
+    /// </summary>
+    /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
+    bool IsLightThemeEnabled { get; }
+    /// <summary>
     /// If RefreshToken is available or user is available in Windows Credentials locker and setting is true, the application can login automatically. 
     /// </summary>
     bool IsAutoLogin { get; set; }
