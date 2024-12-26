@@ -24,7 +24,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
-    protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ISettingsService _settingsService;
     protected readonly IBaseCommonServices _commonServices;
@@ -66,9 +65,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _authenticationService = _scopedContextService.GetService<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
-        _logger.LogInformation("Setting up theming service.");
-        _themeService = _scopedContextService.GetService<IThemeService>();
-
         _logger.LogInformation("Setting up exception handler service.");
         _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
 
@@ -80,9 +76,17 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (_settingsService.LocalSettings is not null)
             _settingsService.LocalSettings.Language.SetLocalizationLanguage(_context);
 
-        _logger.LogInformation("Setting style.");
-        MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
-        _themeService.SetStyle();
+        //_logger.LogTrace("Setting up theming.");
+
+        //if (_settingsService.LocalSettings is not null)
+        //{
+        //    Application.Primary = Color.FromArgb(_settingsService.LocalSettings.Color);
+
+        //    if (_settingsService.LocalSettings.IsLightThemeEnabled)
+        //        Application.Current.Resources.ApplyLightTheme();
+        //    else
+        //        Application.Current.Resources.ApplyDarkTheme();
+        //}
 
         _logger.LogInformation("Starting initialization of application");
 
@@ -90,12 +94,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogInformation("Finishing initialization of application");
     }
-
-    /// <summary>
-    /// Handles the style changed event.
-    /// </summary>
-    /// <param name="m"></param>
-    public virtual void StyleChanged(StyleChangedMessage m) { }
 
     /// <summary>
     /// Handles the authentication changed event.   
@@ -238,7 +236,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
         {
-            _commonServices.InfoService?.SetTitle(m.Content);
+            InfoService.Default.SetTitle(m.Content);
         });
 
         MainWindow.Show();
@@ -278,7 +276,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
-            MessageService.Default.Unregister<StyleChangedMessage>(this);
             MessageService.Default.Unregister<EnvironmentChangedMessage>(this);
 
             if (_authenticationService is not null)

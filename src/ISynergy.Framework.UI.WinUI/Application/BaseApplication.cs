@@ -11,7 +11,6 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
-using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,7 +20,6 @@ using Microsoft.UI.Xaml.Navigation;
 using System.Globalization;
 using Windows.ApplicationModel.Activation;
 using Application = Microsoft.UI.Xaml.Application;
-using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI;
 
@@ -33,7 +31,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
-    protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ISettingsService _settingsService;
     protected readonly IBaseCommonServices _commonServices;
@@ -98,14 +95,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _authenticationService = _scopedContextService.GetService<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
-        _logger.LogTrace("Setting up theming service.");
-        _themeService = _scopedContextService.GetService<IThemeService>();
-
-        if (_themeService.IsLightThemeEnabled)
-            RequestedTheme = ApplicationTheme.Light;
-        else
-            RequestedTheme = ApplicationTheme.Dark;
-
         _logger.LogTrace("Setting up exception handler service.");
         _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
 
@@ -115,6 +104,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogTrace("Setting up localization service.");
         if (_settingsService.LocalSettings is not null)
             _settingsService.LocalSettings.Language.SetLocalizationLanguage(_context);
+
+        _logger.LogTrace("Setting up theming.");
+        if (_settingsService.LocalSettings is not null && _settingsService.LocalSettings.IsLightThemeEnabled)
+            RequestedTheme = ApplicationTheme.Light;
+        else
+            RequestedTheme = ApplicationTheme.Dark;
 
         _logger.LogInformation("Starting initialization of application");
 
@@ -220,9 +215,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="args">Event data for the event.</param>
     protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        MainWindow = WindowHelper.CreateWindow();
-
-        MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
+        MainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme, _settingsService.LocalSettings.Color);
 
         _logger.LogTrace("Loading custom resource dictionaries");
 
@@ -233,14 +226,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
                 if (!Application.Current.Resources.MergedDictionaries.Contains(item))
                     Application.Current.Resources.MergedDictionaries.Add(item);
             }
-        }
-
-        _logger.LogTrace("Loading theme");
-
-        if (_themeService is ThemeService themeService)
-        {
-            themeService.InitializeMainWindow(MainWindow);
-            themeService.SetStyle();
         }
 
         if (_initialView is not null && _initialView.Invoke() is View loadingView)
@@ -269,18 +254,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
         {
-            _commonServices.InfoService?.SetTitle(m.Content);
+            InfoService.Default.SetTitle(m.Content);
         });
 
         MainWindow.Activate();
-    }
-
-    /// <summary>
-    /// Handles the style changed event.
-    /// </summary>
-    /// <param name="m"></param>
-    public virtual void StyleChanged(StyleChangedMessage m)
-    {
     }
 
     /// <summary>
@@ -353,7 +330,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         {
             // free managed resources
             MessageService.Default.Unregister<EnvironmentChangedMessage>(this);
-            MessageService.Default.Unregister<StyleChangedMessage>(this);
 
             if (_authenticationService is not null)
                 _authenticationService.AuthenticationChanged += AuthenticationChanged;

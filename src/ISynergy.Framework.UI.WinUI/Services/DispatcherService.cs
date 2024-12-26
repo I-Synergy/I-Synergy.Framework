@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Application = Microsoft.UI.Xaml.Application;
 
@@ -9,6 +10,14 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class DispatcherService : IDispatcherService
 {
+    private readonly ILogger _logger;
+
+    public DispatcherService(ILogger<DispatcherService> logger)
+    {
+        _logger = logger;
+        _logger.LogDebug($"DispatcherService instance created with ID: {Guid.NewGuid()}");
+    }
+
     public object Dispatcher
     {
         get

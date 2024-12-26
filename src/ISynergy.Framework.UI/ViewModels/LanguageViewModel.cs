@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -18,7 +19,7 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title => _commonServices.LanguageService.GetString("Language");
+    public override string Title => LanguageService.Default.GetString("Language");
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.

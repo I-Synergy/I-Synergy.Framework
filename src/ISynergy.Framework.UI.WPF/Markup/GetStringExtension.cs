@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Services;
 using System.Windows.Data;
 using System.Windows.Markup;
 
@@ -22,7 +21,7 @@ public class GetStringExtension : MarkupExtension
 
         if (!string.IsNullOrEmpty(Key))
         {
-            result = ServiceLocator.Default.GetService<ILanguageService>().GetString(Key);
+            result = LanguageService.Default.GetString(Key);
         }
         else
         {

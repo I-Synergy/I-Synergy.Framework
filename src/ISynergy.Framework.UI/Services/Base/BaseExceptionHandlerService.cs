@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
@@ -8,26 +9,22 @@ namespace ISynergy.Framework.UI.Services.Base;
 
 public abstract class BaseExceptionHandlerService : IExceptionHandlerService
 {
-    private readonly IBusyService _busyService;
-    private readonly ILanguageService _languageService;
-    private readonly IDialogService _dialogService;
-    private readonly ILogger _logger;
+    protected readonly IBusyService _busyService;
+    protected readonly IDialogService _dialogService;
+    protected readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="busyService"></param>
     /// <param name="dialogService"></param>
-    /// <param name="languageService"></param>
     /// <param name="logger"></param>
     protected BaseExceptionHandlerService(
         IBusyService busyService,
         IDialogService dialogService,
-        ILanguageService languageService,
         ILogger<BaseExceptionHandlerService> logger)
     {
         _busyService = busyService;
-        _languageService = languageService;
         _dialogService = dialogService;
         _logger = logger;
     }
@@ -50,11 +47,11 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
 
 
             // Set busyIndicator to false if it's true.
-            _busyService.EndBusy();
+            _busyService.StopBusy();
 
             if (exception is NotImplementedException)
             {
-                await _dialogService.ShowInformationAsync(_languageService.GetString("WarningFutureModule"), "Features");
+                await _dialogService.ShowInformationAsync(LanguageService.Default.GetString("WarningFutureModule"), "Features");
             }
             else if (exception is UnauthorizedAccessException accessException)
             {
@@ -64,11 +61,11 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
             {
                 if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
                 {
-                    await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionFileInUse"));
+                    await _dialogService.ShowErrorAsync(LanguageService.Default.GetString("ExceptionFileInUse"));
                 }
                 else
                 {
-                    await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionDefault"));
+                    await _dialogService.ShowErrorAsync(LanguageService.Default.GetString("ExceptionDefault"));
                 }
             }
             else if (exception is ArgumentException argumentException)
@@ -81,7 +78,7 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
             }
             else
             {
-                await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionDefault"));
+                await _dialogService.ShowErrorAsync(LanguageService.Default.GetString("ExceptionDefault"));
             }
         }
         catch (Exception ex)
