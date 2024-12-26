@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -169,12 +170,12 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         }
         else
         {
-            item = _commonServices.LanguageService.GetString("ThisItem");
+            item = LanguageService.Default.GetString("ThisItem");
         }
 
         if (await _commonServices.DialogService.ShowMessageAsync(
-            string.Format(_commonServices.LanguageService.GetString("WarningItemRemove"), item),
-            _commonServices.LanguageService.GetString("Delete"),
+            string.Format(LanguageService.Default.GetString("WarningItemRemove"), item),
+            LanguageService.Default.GetString("Delete"),
             MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             await RemoveAsync(e);
