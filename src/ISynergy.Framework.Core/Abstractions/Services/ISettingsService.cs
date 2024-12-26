@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using System.Runtime;
 
 namespace ISynergy.Framework.Core.Abstractions.Services;
 
@@ -8,17 +7,23 @@ namespace ISynergy.Framework.Core.Abstractions.Services;
 /// </summary>
 public interface ISettingsService
 {
+    /// <summary>
+    /// Clears all settings.
+    /// </summary>
     void ClearSettings();
+
     /// <summary>
     /// Gets the local settings.
     /// </summary>
     /// <value>The settings.</value>
     ILocalSettings LocalSettings { get; }
+
     /// <summary>
     /// Gets the roaming settings.
     /// </summary>
     /// <value>The settings.</value>
     IRoamingSettings RoamingSettings { get; }
+
     /// <summary>
     /// Gets the global settings.
     /// </summary>
@@ -32,7 +37,7 @@ public interface ISettingsService
     /// <summary>
     /// Saves the local settings.
     /// </summary>
-    void SaveLocalSettings();
+    bool SaveLocalSettings();
     #endregion
 
     #region "Roaming Settings"
@@ -43,7 +48,7 @@ public interface ISettingsService
     /// <summary>
     /// Saves the roaming settings.
     /// </summary>
-    Task SaveRoamingSettingsAsync();
+    Task<bool> SaveRoamingSettingsAsync();
     #endregion
 
     #region "Global Settings"

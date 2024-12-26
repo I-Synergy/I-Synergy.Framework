@@ -1,42 +1,34 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Base;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Core.Services;
 
 /// <summary>
 /// Class BusyService.
-/// Implements the <see cref="ObservableClass" />
 /// Implements the <see cref="IBusyService" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
 /// <seealso cref="IBusyService" />
-public class BusyService : ObservableClass, IBusyService
+public class BusyService : IBusyService
 {
-    /// <summary>
-    /// The languageService service
-    /// </summary>
-    private readonly ILanguageService _languageService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BusyService"/> class.
-    /// </summary>
-    /// <param name="languageService">The languageService.</param>
-    public BusyService(ILanguageService languageService)
-    {
-        _languageService = languageService;
-        IsBusy = false;
-    }
+    private bool _isBusy = false;
+    private bool _isEnabled;
+    private string _busyMessage;
 
     /// <summary>
     /// Gets or sets the IsBusy property value.
     /// </summary>
     public bool IsBusy
     {
-        get => GetValue<bool>();
+        get => _isBusy;
         set
         {
-            SetValue(value);
-            IsEnabled = !value;
+            if (_isBusy != value)
+            {
+                _isBusy = value;
+                OnPropertyChanged(nameof(IsBusy));
+                IsEnabled = !value;
+            }
         }
     }
 
@@ -46,8 +38,15 @@ public class BusyService : ObservableClass, IBusyService
     /// <value><c>true</c> if this instance is enabled; otherwise, <c>false</c>.</value>
     public bool IsEnabled
     {
-        get => GetValue<bool>();
-        private set => SetValue(value);
+        get => _isEnabled;
+        set
+        {
+            if (_isEnabled != value)
+            {
+                _isEnabled = value;
+                OnPropertyChanged(nameof(IsEnabled));
+            }
+        }
     }
 
     /// <summary>
@@ -56,8 +55,15 @@ public class BusyService : ObservableClass, IBusyService
     /// <value>The busy message.</value>
     public string BusyMessage
     {
-        get => GetValue<string>();
-        set => SetValue(value);
+        get => _busyMessage;
+        set
+        {
+            if (_busyMessage != value)
+            {
+                _busyMessage = value;
+                OnPropertyChanged(nameof(BusyMessage));
+            }
+        }
     }
 
     /// <summary>
@@ -70,7 +76,7 @@ public class BusyService : ObservableClass, IBusyService
         if (!string.IsNullOrEmpty(message))
             BusyMessage = message;
         else
-            BusyMessage = _languageService.GetString("PleaseWait");
+            BusyMessage = LanguageService.Default.GetString("PleaseWait");
 
         IsBusy = true;
     }
@@ -79,5 +85,12 @@ public class BusyService : ObservableClass, IBusyService
     /// Ends the busy asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    public void EndBusy() => IsBusy = false;
+    public void StopBusy() => IsBusy = false;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

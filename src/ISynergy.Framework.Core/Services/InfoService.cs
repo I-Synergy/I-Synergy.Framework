@@ -11,6 +11,31 @@ namespace ISynergy.Framework.Core.Services;
 [Bindable(BindableSupport.Yes)]
 public sealed class InfoService : IInfoService
 {
+    private static readonly object _creationLock = new object();
+    private static IInfoService _defaultInstance;
+
+    /// <summary>
+    /// Gets the InfoService's default instance.
+    /// </summary>
+    public static IInfoService Default
+    {
+        get
+        {
+            if (_defaultInstance is null)
+            {
+                lock (_creationLock)
+                {
+                    if (_defaultInstance is null)
+                    {
+                        _defaultInstance = new InfoService();
+                    }
+                }
+            }
+
+            return _defaultInstance;
+        }
+    }
+
     /// <summary>
     /// Gets the product version.
     /// </summary>
