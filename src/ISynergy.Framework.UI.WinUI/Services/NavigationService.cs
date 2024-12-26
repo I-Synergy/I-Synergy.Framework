@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using View = ISynergy.Framework.UI.Controls.View;
@@ -21,7 +22,8 @@ namespace ISynergy.Framework.UI.Services;
 public class NavigationService : INavigationService
 {
     private readonly IScopedContextService _scopedContextService;
-    private readonly IThemeService _themeService;
+    private readonly ILogger _logger;
+
     private EventHandler _backStackChanged;
 
     public event EventHandler BackStackChanged
@@ -81,13 +83,13 @@ public class NavigationService : INavigationService
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="scopedContextService"></param>
-    /// <param name="themeService"></param>
-    public NavigationService(
-        IScopedContextService scopedContextService,
-        IThemeService themeService)
+    /// <param name="logger"></param>
+    public NavigationService(IScopedContextService scopedContextService, ILogger<NavigationService> logger)
     {
+        _logger = logger;
+        _logger.LogDebug($"NavigationService instance created with ID: {Guid.NewGuid()}");
+
         _scopedContextService = scopedContextService;
-        _themeService = themeService;
     }
 
     /// <summary>
@@ -294,10 +296,11 @@ public class NavigationService : INavigationService
     {
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
+            _scopedContextService.GetService<ISettingsService>() is ISettingsService settingsService &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
             NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter) is { } page)
         {
-            switch (_themeService.Style.Theme)
+            switch (settingsService.LocalSettings.Theme)
             {
                 case Core.Enumerations.Themes.Light:
                     frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
@@ -345,6 +348,7 @@ public class NavigationService : INavigationService
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
+            _scopedContextService.GetService<ISettingsService>() is ISettingsService settingsService &&
             _scopedContextService.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
         {
             if (viewModel is null && _scopedContextService.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
@@ -355,7 +359,7 @@ public class NavigationService : INavigationService
 
             page.ViewModel = viewModel;
 
-            switch (_themeService.Style.Theme)
+            switch (settingsService.LocalSettings.Theme)
             {
                 case Core.Enumerations.Themes.Light:
                     frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
@@ -394,9 +398,10 @@ public class NavigationService : INavigationService
         _backStackChanged = null;
 
         if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page &&
-            Application.Current is BaseApplication baseApplication)
+            Application.Current is BaseApplication baseApplication &&
+            _scopedContextService.GetService<ISettingsService>() is ISettingsService settingsService)
         {
-            switch (_themeService.Style.Theme)
+            switch (settingsService.LocalSettings.Theme)
             {
                 case Core.Enumerations.Themes.Light:
                     page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;

@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -14,7 +15,6 @@ using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using Style = ISynergy.Framework.Core.Models.Style;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
 
@@ -94,11 +94,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected readonly ISettingsService _settingsService;
 
     /// <summary>
-    /// The theme selector
-    /// </summary>
-    protected readonly IThemeService _themeService;
-
-    /// <summary>
     /// Gets or sets the PrimaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
@@ -126,14 +121,12 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="settingsService">The settings services.</param>
     /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
-    /// <param name="themeService">The theme selector service.</param>
     protected BaseShellViewModel(
         IContext context,
         IBaseCommonServices commonServices,
         ISettingsService settingsService,
         IAuthenticationService authenticationService,
-        ILogger logger,
-        IThemeService themeService)
+        ILogger logger)
         : base(context, commonServices, logger)
     {
         _commonServices.NavigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
@@ -143,7 +136,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         _settingsService = settingsService;
         _authenticationService = authenticationService;
-        _themeService = themeService;
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
@@ -171,7 +163,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected Task ShowDialogRestartAfterUpdateAsync() =>
-        _commonServices.DialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("UpdateRestart"));
+        _commonServices.DialogService.ShowInformationAsync(LanguageService.Default.GetString("UpdateRestart"));
 
     /// <summary>
     /// Gets or sets the LastSelectedItem property value.
@@ -259,10 +251,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         e.Result.SetLocalizationLanguage(_context);
 
         if (await _commonServices.DialogService.ShowMessageAsync(
-                    _commonServices.LanguageService.GetString("WarningLanguageChange") +
+                    LanguageService.Default.GetString("WarningLanguageChange") +
                     Environment.NewLine +
-                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    _commonServices.LanguageService.GetString("TitleQuestion"),
+                    LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
+                    LanguageService.Default.GetString("TitleQuestion"),
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             _commonServices.RestartApplication();
@@ -294,13 +286,12 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         {
             _settingsService.LocalSettings.Theme = style.Theme;
             _settingsService.LocalSettings.Color = style.Color;
-            _settingsService.SaveLocalSettings();
 
-            if (await _commonServices.DialogService.ShowMessageAsync(
-                    _commonServices.LanguageService.GetString("WarningColorChange") +
+            if (_settingsService.SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+                    LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
-                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    _commonServices.LanguageService.GetString("TitleQuestion"),
+                    LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
+                    LanguageService.Default.GetString("TitleQuestion"),
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 _commonServices.RestartApplication();

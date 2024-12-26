@@ -1,13 +1,11 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
+using Microsoft.Extensions.Logging;
 using Windows.Devices.Enumeration;
-using Windows.Graphics.Imaging;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
-using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -16,24 +14,20 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class CameraService : ICameraService
 {
-    /// <summary>
-    /// The dialog service
-    /// </summary>
     private readonly IDialogService _dialogService;
-    /// <summary>
-    /// The language service
-    /// </summary>
-    private readonly ILanguageService _languageService;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CameraService"/> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="languageService">The language service.</param>
-    public CameraService(IDialogService dialogService, ILanguageService languageService)
+    /// <param name="logger"></param>
+    public CameraService(IDialogService dialogService, ILogger<CameraService> logger)
     {
+        _logger = logger;
+        _logger.LogDebug($"CameraService instance created with ID: {Guid.NewGuid()}");
+
         _dialogService = dialogService;
-        _languageService = languageService;
     }
 
     /// <summary>
@@ -69,7 +63,7 @@ public class CameraService : ICameraService
                     () => photo.Frame.AsStreamForRead());
             }
 
-            await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
+            await _dialogService.ShowErrorAsync(string.Format(LanguageService.Default.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
         }
 
         return null;

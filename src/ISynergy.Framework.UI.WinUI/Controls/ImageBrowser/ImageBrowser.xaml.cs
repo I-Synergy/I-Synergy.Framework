@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using Microsoft.UI.Xaml;
@@ -69,10 +69,9 @@ public sealed partial class ImageBrowser : UserControl
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     private async void Button_Browse_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ServiceLocator.Default.GetService<ILanguageService>() is { } languageService &&
-            ServiceLocator.Default.GetService<IFileService<FileResult>>() is { } fileService)
+        if (ServiceLocator.Default.GetService<IFileService<FileResult>>() is { } fileService)
         {
-            var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp");
+            var result = await fileService.BrowseFileAsync($"{LanguageService.Default.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp");
 
             if (result is not null && result.Count > 0)
             {

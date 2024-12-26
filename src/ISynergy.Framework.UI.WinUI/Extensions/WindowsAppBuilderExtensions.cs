@@ -78,10 +78,10 @@ public static class WindowsAppBuilderExtensions
 
             services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
-            var infoService = new InfoService();
+            var infoService = InfoService.Default;
             infoService.LoadAssembly(mainAssembly);
 
-            var languageService = new LanguageService();
+            var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
             languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
             languageService.AddResourceManager(typeof(TResource));
@@ -94,7 +94,6 @@ public static class WindowsAppBuilderExtensions
             services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
 
             services.TryAddScoped<ISettingsService, TSettings>();
-            services.TryAddScoped<IThemeService, ThemeService>();
             services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
             services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
 
