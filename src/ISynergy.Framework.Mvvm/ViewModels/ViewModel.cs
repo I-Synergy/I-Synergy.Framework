@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -148,7 +149,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
         if (attributes is not null && attributes.Length > 0)
         {
-            description = _commonServices.LanguageService.GetString(attributes[0].Description);
+            description = LanguageService.Default.GetString(attributes[0].Description);
         }
 
         return description;
