@@ -35,7 +35,7 @@ internal class MailService : IMailService
     /// <param name="logger">The logger.</param>
     public MailService(
         IOptions<MailOptions> mailOptions,
-        ILogger logger)
+        ILogger<MailService> logger)
     {
         _mailOptions = mailOptions.Value;
         _logger = logger;
