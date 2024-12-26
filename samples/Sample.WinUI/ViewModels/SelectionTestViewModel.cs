@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
@@ -22,7 +23,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return _commonServices.LanguageService.GetString("Converters"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
 
     /// <summary>
     /// Gets or sets the select single command.

@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -21,7 +22,7 @@ public class SignInViewModel : ViewModel
     private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
-    public override string Title { get { return _commonServices.LanguageService.GetString("Login"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Login"); } }
 
     /// <summary>
     /// Gets or sets the Usernames property value.
@@ -83,10 +84,10 @@ public class SignInViewModel : ViewModel
         Validator = new Action<IObservableClass>(_ =>
         {
             if (string.IsNullOrEmpty(Username) || (!string.IsNullOrEmpty(Username) && Username.Length <= 3))
-                AddValidationError(nameof(Username), _commonServices.LanguageService.GetString("WarningUsernameSize"));
+                AddValidationError(nameof(Username), LanguageService.Default.GetString("WarningUsernameSize"));
 
             if (string.IsNullOrEmpty(Password) || (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100))))
-                AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordSize"));
         });
 
         Usernames = [];
@@ -139,7 +140,7 @@ public class SignInViewModel : ViewModel
         if (e.Result)
         {
             await _commonServices.DialogService
-                    .ShowInformationAsync(_commonServices.LanguageService.GetString("Warning_Reset_Password"));
+                    .ShowInformationAsync(LanguageService.Default.GetString("Warning_Reset_Password"));
 
             if (_commonServices.NavigationService.CanGoBack)
                 await _commonServices.NavigationService.GoBackAsync();
@@ -148,8 +149,14 @@ public class SignInViewModel : ViewModel
 
     private async Task SignInAsync()
     {
+        _commonServices.BusyService.StartBusy();
+
+        await Task.Delay(5000);
+
         if (Validate())
             await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+
+        _commonServices.BusyService.StopBusy();
     }
 
     protected override void Dispose(bool disposing)

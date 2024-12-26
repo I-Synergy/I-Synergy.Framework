@@ -78,14 +78,14 @@ public sealed partial class App : BaseApplication
 
             try
             {
-                _commonServices.BusyService.BusyMessage = _commonServices.LanguageService.GetString("UpdateCheckForUpdates");
+                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
 
                 if (await ServiceLocator.Default.GetService<IUpdateService>().CheckForUpdateAsync() && await _commonServices.DialogService.ShowMessageAsync(
-                    _commonServices.LanguageService.GetString("UpdateFoundNewUpdate") + Environment.NewLine + _commonServices.LanguageService.GetString("UpdateExecuteNow"),
+                    LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
                     "Update",
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    _commonServices.BusyService.BusyMessage = _commonServices.LanguageService.GetString("UpdateDownloadAndInstall");
+                    _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
                     await ServiceLocator.Default.GetService<IUpdateService>().DownloadAndInstallUpdateAsync();
                     Environment.Exit(Environment.ExitCode);
                 }
@@ -126,7 +126,7 @@ public sealed partial class App : BaseApplication
         }
         finally
         {
-            _commonServices.BusyService.EndBusy();
+            _commonServices.BusyService.StopBusy();
         }
     }
 
@@ -135,14 +135,14 @@ public sealed partial class App : BaseApplication
         try
         {
 #if WINDOWS
-            //commonServices.BusyService.StartBusy(commonServices.LanguageService.GetString("UpdateCheckForUpdates"));
+            //commonServices.BusyService.StartBusy(LanguageService.Default.GetString("UpdateCheckForUpdates"));
 
             //if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await commonServices.DialogService.ShowMessageAsync(
-            //    commonServices.LanguageService.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + commonServices.LanguageService.GetString("UpdateExecuteNow"),
+            //    LanguageService.Default.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
             //    "Update",
             //    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             //{
-            //    commonServices.BusyService.BusyMessage = commonServices.LanguageService.GetString("UpdateDownloadAndInstall");
+            //    commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
             //    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
             //    Environment.Exit(Environment.ExitCode);
             //}
@@ -173,7 +173,7 @@ public sealed partial class App : BaseApplication
         }
         finally
         {
-            _commonServices.BusyService.EndBusy();
+            _commonServices.BusyService.StopBusy();
         }
     }
 

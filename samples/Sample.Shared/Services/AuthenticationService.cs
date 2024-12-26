@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Sample.Services;
 
@@ -20,6 +21,7 @@ public class AuthenticationService : IAuthenticationService
     private readonly IScopedContextService _scopedContextService;
     private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Occurs when authentication changed.
@@ -31,13 +33,16 @@ public class AuthenticationService : IAuthenticationService
     /// </summary>
     public void OnAuthenticationChanged(ReturnEventArgs<bool> e) => AuthenticationChanged?.Invoke(this, e);
 
-    public AuthenticationService(IScopedContextService scopedContextService)
+    public AuthenticationService(IScopedContextService scopedContextService, ILogger<AuthenticationService> logger)
     {
         _scopedContextService = scopedContextService;
 
         _context = scopedContextService.GetService<IContext>();
         _settingsService = scopedContextService.GetService<ISettingsService>();
         _credentialLockerService = scopedContextService.GetService<ICredentialLockerService>();
+
+        _logger = logger;
+        _logger.LogDebug($"AuthenticationService instance created with ID: {Guid.NewGuid()}");
     }
 
     public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)

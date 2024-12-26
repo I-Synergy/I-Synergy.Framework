@@ -14,6 +14,7 @@ public class LocalSettings : ObservableClass, ILocalSettings
     public string RefreshToken { get; set; } = string.Empty;
     public string Color { get; set; } = ThemeColors.Default;
     public Themes Theme { get; set; } = Themes.Dark;
+    public bool IsLightThemeEnabled => Theme == Themes.Light;
     public bool IsAutoLogin { get; set; }
     public bool IsAdvanced { get; set; }
     public int MigrationVersion { get; set; }

@@ -1,7 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Physics.Abstractions;
+﻿using ISynergy.Framework.Physics.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace ISynergy.Framework.Physics.Services.Tests;
 
@@ -19,8 +17,7 @@ public class UnitConversionServiceTests
     [TestInitialize]
     public void InitializeTest()
     {
-        ILanguageService languageServiceMock = Mock.Of<ILanguageService>();
-        _unitConversionService = new UnitConversionService(languageServiceMock);
+        _unitConversionService = new UnitConversionService();
     }
 
     /// <summary>

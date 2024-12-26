@@ -14,7 +14,7 @@ namespace Sample.ViewModels;
 
 public class SyncViewModel : ViewModelNavigation<object>
 {
-    public override string Title { get { return _commonServices.LanguageService.GetString("Sync"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Sync"); } }
 
     private readonly ISynchronizationService _synchronizationService;
 
@@ -92,7 +92,7 @@ public class SyncViewModel : ViewModelNavigation<object>
         }
         finally
         {
-            _commonServices.BusyService.EndBusy();
+            _commonServices.BusyService.StopBusy();
         }
     }
 
@@ -111,7 +111,7 @@ public class SyncViewModel : ViewModelNavigation<object>
         }
         finally
         {
-            _commonServices.BusyService.EndBusy();
+            _commonServices.BusyService.StopBusy();
         }
     }
 

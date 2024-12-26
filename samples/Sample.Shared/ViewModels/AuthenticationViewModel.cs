@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -30,7 +31,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return _commonServices.LanguageService.GetString("Login"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Login"); } }
 
     /// <summary>
     /// Gets or sets the Usernames property value.
@@ -210,55 +211,55 @@ public class AuthenticationViewModel : ViewModel
             {
                 if (string.IsNullOrEmpty(Username) || (Username.Length <= 3))
                 {
-                    AddValidationError(nameof(Username), _commonServices.LanguageService.GetString("WarningUsernameSize"));
+                    AddValidationError(nameof(Username), LanguageService.Default.GetString("WarningUsernameSize"));
                 }
 
                 if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
-                    AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordSize"));
                 }
             }
             else
             {
                 if (string.IsNullOrEmpty(Registration_Name) || (Registration_Name.Length <= 3))
                 {
-                    AddValidationError(nameof(Registration_Name), _commonServices.LanguageService.GetString("WarningLicenseNameSize"));
+                    AddValidationError(nameof(Registration_Name), LanguageService.Default.GetString("WarningLicenseNameSize"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_Mail) || !NetworkUtility.IsValidEMail(Registration_Mail))
                 {
-                    AddValidationError(nameof(Registration_Mail), _commonServices.LanguageService.GetString("WarningInvalidEmail"));
+                    AddValidationError(nameof(Registration_Mail), LanguageService.Default.GetString("WarningInvalidEmail"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_TimeZone))
                 {
-                    AddValidationError(nameof(Registration_TimeZone), _commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
+                    AddValidationError(nameof(Registration_TimeZone), LanguageService.Default.GetString("WarningNoTimeZoneSelected"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_Password) || (Registration_Password.Length <= 6))
                 {
-                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Registration_Password), LanguageService.Default.GetString("WarningPasswordSize"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
-                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Registration_Password), LanguageService.Default.GetString("WarningPasswordSize"));
                 }
 
                 if (string.IsNullOrEmpty(Registration_PasswordCheck) || (Registration_PasswordCheck.Length <= 6))
                 {
-                    AddValidationError(nameof(Registration_PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Registration_PasswordCheck), LanguageService.Default.GetString("WarningPasswordSize"));
                 }
 
                 if (!string.IsNullOrEmpty(Registration_Password) && !string.IsNullOrEmpty(Registration_PasswordCheck) && !Registration_Password.Equals(Registration_PasswordCheck))
                 {
-                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
-                    AddValidationError(nameof(Registration_PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
+                    AddValidationError(nameof(Registration_Password), LanguageService.Default.GetString("WarningPasswordMatch"));
+                    AddValidationError(nameof(Registration_PasswordCheck), LanguageService.Default.GetString("WarningPasswordMatch"));
                 }
 
                 if (Registration_Modules.Count < 1)
                 {
-                    AddValidationError(nameof(Registration_Modules), _commonServices.LanguageService.GetString("WarningNoModulesSelected"));
+                    AddValidationError(nameof(Registration_Modules), LanguageService.Default.GetString("WarningNoModulesSelected"));
                 }
             }
         });
@@ -328,7 +329,7 @@ public class AuthenticationViewModel : ViewModel
         if (e.Result)
         {
             await _commonServices.DialogService
-                    .ShowInformationAsync(_commonServices.LanguageService.GetString("Warning_Reset_Password"));
+                    .ShowInformationAsync(LanguageService.Default.GetString("Warning_Reset_Password"));
 
             if (_commonServices.NavigationService.CanGoBack)
                 await _commonServices.NavigationService.GoBackAsync();
@@ -364,13 +365,15 @@ public class AuthenticationViewModel : ViewModel
         return Task.CompletedTask;
     }
 
-    private Task SignInAsync()
+    private async Task SignInAsync()
     {
-        if (Validate())
-        {
-            return _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
-        }
+        _commonServices.BusyService.StartBusy();
 
-        return Task.CompletedTask;
+        await Task.Delay(1000);
+
+        if (Validate())
+            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+
+        _commonServices.BusyService.StopBusy();
     }
 }
