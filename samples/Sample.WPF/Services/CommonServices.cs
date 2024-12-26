@@ -14,27 +14,21 @@ namespace Sample.Services;
 /// Initializes a new instance of the <see cref="CommonServices" /> class.
 /// </remarks>
 /// <param name="busyService">The busy indicator service.</param>
-/// <param name="languageService">The language service.</param>
 /// <param name="dialogService">The dialog service.</param>
 /// <param name="navigationService">The navigation service.</param>
 /// <param name="fileService">The file service.</param>
-/// <param name="infoService">The information service.</param>
 /// <param name="dispatcherService">The dispatcher service.</param>
 /// <param name="authenticationService">The authentication service.</param>
 public class CommonServices(
     IBusyService busyService,
-    ILanguageService languageService,
     IDialogService dialogService,
     INavigationService navigationService,
-    IInfoService infoService,
     IDispatcherService dispatcherService,
     IAuthenticationService authenticationService,
     IFileService<FileResult> fileService) : BaseCommonService(
         busyService,
-        languageService,
         dialogService,
         navigationService,
-        infoService,
         dispatcherService), ICommonServices
 {
     /// <summary>

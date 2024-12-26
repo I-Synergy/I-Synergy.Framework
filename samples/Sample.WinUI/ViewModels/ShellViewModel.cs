@@ -46,16 +46,14 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <param name="settingsService">The settings services.</param>
     /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
-    /// <param name="themeService">The theme selector service.</param>
     public ShellViewModel(
         IContext context,
         ICommonServices commonServices,
         INavigationService navigationService,
         ISettingsService settingsService,
         IAuthenticationService authenticationService,
-        ILogger logger,
-        IThemeService themeService)
-        : base(context, commonServices, settingsService, authenticationService, logger, themeService)
+        ILogger<ShellViewModel> logger)
+        : base(context, commonServices, settingsService, authenticationService, logger)
     {
         SetClock();
 
@@ -93,26 +91,26 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         if (_context.IsAuthenticated)
         {
             PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _themeService.Style.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _themeService.Style.Color, DisplayCommand));
-            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _themeService.Style.Color, BrowseCommand));
-            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _themeService.Style.Color, ConverterCommand));
-            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _themeService.Style.Color, SelectionTestCommand));
-            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _themeService.Style.Color, ListViewTestCommand));
-            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _themeService.Style.Color, ValidationTestCommand));
-            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _themeService.Style.Color, TreeNodeTestCommand));
-            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _themeService.Style.Color, ChartCommand));
+            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _settingsService.LocalSettings.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _settingsService.LocalSettings.Color, DisplayCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _settingsService.LocalSettings.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _settingsService.LocalSettings.Color, ConverterCommand));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _settingsService.LocalSettings.Color, SelectionTestCommand));
+            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _settingsService.LocalSettings.Color, ListViewTestCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _settingsService.LocalSettings.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _settingsService.LocalSettings.Color, TreeNodeTestCommand));
+            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _settingsService.LocalSettings.Color, ChartCommand));
 
             SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _themeService.Style.Color, HelpCommand));
-            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _themeService.Style.Color, LanguageCommand));
-            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _themeService.Style.Color, ColorCommand));
+            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _settingsService.LocalSettings.Color, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _settingsService.LocalSettings.Color, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _settingsService.LocalSettings.Color, ColorCommand));
 
             if (_context.IsAuthenticated && _context.Profile is Profile)
-                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _themeService.Style.Color, SettingsCommand));
+                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _settingsService.LocalSettings.Color, SettingsCommand));
         }
 
-        SecondaryItems.Add(new NavigationItem(_context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _themeService.Style.Color, SignInCommand));
+        SecondaryItems.Add(new NavigationItem(_context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _settingsService.LocalSettings.Color, SignInCommand));
     }
 
     protected override async Task SignOutAsync()
@@ -139,8 +137,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         if (_settingsService.GlobalSettings.IsFirstRun && _commonServices is CommonServices commonServices)
         {
             if (await _commonServices.DialogService.ShowMessageAsync(
-                _commonServices.LanguageService.GetString("ChangeLanguage"),
-                _commonServices.LanguageService.GetString("Language"),
+                LanguageService.Default.GetString("ChangeLanguage"),
+                LanguageService.Default.GetString("Language"),
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 var languageVM = new LanguageViewModel(_context, base._commonServices, _logger, _settingsService.LocalSettings.Language);
@@ -170,7 +168,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void ClockTimerCallBack(object sender, object e) => SetClock();
 
-    private void SetClock() => base.Title = $"{base._commonServices.InfoService.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+    private void SetClock() => base.Title = $"{InfoService.Default.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
 
     private Task OpenChartTestAsync() =>
         base._commonServices.NavigationService.NavigateAsync<ChartsViewModel>();

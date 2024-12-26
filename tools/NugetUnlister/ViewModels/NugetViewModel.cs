@@ -97,7 +97,7 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
             _commonServices.BusyService.BusyMessage = $"Processed package ({item.Version}) {i} from {count}...";
         }
 
-        _commonServices.BusyService.EndBusy();
+        _commonServices.BusyService.StopBusy();
     }
 
     private async Task ListVersionAsync()

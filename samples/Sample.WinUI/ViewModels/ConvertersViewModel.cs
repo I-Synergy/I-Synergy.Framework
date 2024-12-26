@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -17,7 +18,7 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return _commonServices.LanguageService.GetString("Converters"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
 
 
     /// <summary>
