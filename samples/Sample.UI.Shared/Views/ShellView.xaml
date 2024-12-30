@@ -14,12 +14,6 @@
     x:Name="MainWindow"
     mc:Ignorable="d">
 
-    <i:Interaction.Behaviors>
-        <ic:EventTriggerBehavior EventName="Loaded">
-            <ic:InvokeCommandAction Command="{Binding InitializeFirstRunCommand}" />
-        </ic:EventTriggerBehavior>
-    </i:Interaction.Behaviors>
-
     <c:View.Resources>
         <Converters:BooleanToVisibilityConverter
             x:Key="BooleanToVisibilityConverter"
