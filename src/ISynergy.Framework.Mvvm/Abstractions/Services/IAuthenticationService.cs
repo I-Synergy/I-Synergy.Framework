@@ -60,7 +60,7 @@ public interface IAuthenticationService
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default);
 
-    Task SignOutAsync();
+    void SignOut();
 
     string GetEnvironmentalAuthToken(string token);
 

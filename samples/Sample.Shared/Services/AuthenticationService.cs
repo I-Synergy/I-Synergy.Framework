@@ -1,9 +1,12 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 
@@ -17,10 +20,10 @@ namespace Sample.Services;
 public class AuthenticationService : IAuthenticationService
 {
     private IContext _context;
+    private ISettingsService _settingsService;
+    private ICredentialLockerService _credentialLockerService;
 
     private readonly IScopedContextService _scopedContextService;
-    private readonly ISettingsService _settingsService;
-    private readonly ICredentialLockerService _credentialLockerService;
     private readonly ILogger _logger;
 
     /// <summary>
@@ -37,12 +40,10 @@ public class AuthenticationService : IAuthenticationService
     {
         _scopedContextService = scopedContextService;
 
-        _context = scopedContextService.GetService<IContext>();
-        _settingsService = scopedContextService.GetService<ISettingsService>();
-        _credentialLockerService = scopedContextService.GetService<ICredentialLockerService>();
-
         _logger = logger;
         _logger.LogDebug($"AuthenticationService instance created with ID: {Guid.NewGuid()}");
+
+        SignOut();
     }
 
     public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
@@ -63,6 +64,7 @@ public class AuthenticationService : IAuthenticationService
     public async Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
     {
         _context.Environment = SoftwareEnvironments.Test;
+
         _context.Profile = new Profile(
             new Token(),
             Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
@@ -91,7 +93,7 @@ public class AuthenticationService : IAuthenticationService
             await _credentialLockerService.AddCredentialToCredentialLockerAsync(username, password);
         }
 
-        ValidateToken();
+        ValidateToken(new Token());
     }
 
     public Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default)
@@ -106,7 +108,7 @@ public class AuthenticationService : IAuthenticationService
 
     public string GetEnvironmentalAuthToken(string token)
     {
-        throw new NotImplementedException();
+        return $"{GenericConstants.UsernamePrefixTest}{token}";
     }
 
     public Task<List<Module>> GetModulesAsync(CancellationToken cancellationToken = default)
@@ -124,20 +126,49 @@ public class AuthenticationService : IAuthenticationService
         throw new NotImplementedException();
     }
 
-    public Task SignOutAsync()
+    public void SignOut()
     {
         _scopedContextService.CreateNewScope();
 
-        // Get the context from the new scope
+        _settingsService = _scopedContextService.GetService<ISettingsService>();
+        _credentialLockerService = _scopedContextService.GetService<ICredentialLockerService>();
+
         _context = _scopedContextService.GetService<IContext>();
         _context.Profile = null;
 
-        ValidateToken();
-        return Task.CompletedTask;
+        ValidateToken(null);
     }
 
-    private void ValidateToken()
+    private void ValidateToken(Token token)
     {
-        OnAuthenticationChanged(new ReturnEventArgs<bool>(_context.IsAuthenticated));
+        if (token is not null)
+        {
+            _context.Profile = new Profile(
+                token,
+                Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
+                "Test",
+                "Europe/Amsterdam",
+                "NL",
+                Guid.NewGuid(),
+                "admin",
+                "admin@demo.com",
+                ["Administrator"],
+                [],
+                DateTimeOffset.Now.AddDays(7),
+                1,
+                DateTime.Now.AddHours(24));
+
+            _settingsService.LocalSettings.RefreshToken = GetEnvironmentalAuthToken(token?.RefreshToken);
+            _settingsService.SaveLocalSettings();
+
+            OnAuthenticationChanged(new ReturnEventArgs<bool>(_context.IsAuthenticated));
+
+            MessageService.Default.Send(new EnvironmentChangedMessage(_context.Environment));
+        }
+        else
+        {
+            OnAuthenticationChanged(new ReturnEventArgs<bool>(false));
+        }
+
     }
 }
