@@ -2,8 +2,6 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
 using System.Globalization;
 
 namespace Sample;
@@ -71,8 +69,6 @@ public sealed class Context : IContext
                     GatewayEndpoint = @"https://localhost:5000";
                     break;
             }
-
-            MessageService.Default.Send(new EnvironmentChangedMessage(_environment));
         }
     }
 
