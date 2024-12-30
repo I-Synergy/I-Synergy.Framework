@@ -113,12 +113,12 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SecondaryItems.Add(new NavigationItem(_context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _settingsService.LocalSettings.Color, SignInCommand));
     }
 
-    protected override async Task SignOutAsync()
+    protected override void SignOut()
     {
         try
         {
             // Clear profile before base sign out
-            await base.SignOutAsync();
+            base.SignOut();
 
             if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
             {

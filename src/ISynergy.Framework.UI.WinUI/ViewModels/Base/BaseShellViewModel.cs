@@ -45,7 +45,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Gets or sets the login command.
     /// </summary>
     /// <value>The login command.</value>
-    public AsyncRelayCommand SignInCommand { get; private set; }
+    public RelayCommand SignInCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the language command.
@@ -138,7 +138,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         _authenticationService = authenticationService;
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
-        SignInCommand = new AsyncRelayCommand(SignOutAsync);
+        SignInCommand = new RelayCommand(SignOut);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
         ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
@@ -158,7 +158,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Sign out.
     /// </summary>
     /// <returns></returns>
-    protected virtual Task SignOutAsync() => _authenticationService.SignOutAsync();
+    protected virtual void SignOut() => _authenticationService.SignOut();
 
     /// <summary>
     /// Shows the dialog restart after update asynchronous.
