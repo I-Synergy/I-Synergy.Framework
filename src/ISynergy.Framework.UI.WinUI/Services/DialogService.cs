@@ -7,7 +7,6 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Application = Microsoft.UI.Xaml.Application;
 using Window = ISynergy.Framework.UI.Controls.Window;
@@ -114,9 +113,6 @@ public class DialogService : IDialogService
 
         if (Application.Current is BaseApplication baseApplication)
             dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
-
-        if (_scopedContextService.GetService<ISettingsService>() is ISettingsService settingsService)
-            dialog.RequestedTheme = settingsService.LocalSettings.IsLightThemeEnabled ? ElementTheme.Light : ElementTheme.Dark;
 
         switch (buttons)
         {
@@ -255,9 +251,6 @@ public class DialogService : IDialogService
         {
             if (Application.Current is BaseApplication baseApplication)
                 window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
-
-            if (_scopedContextService.GetService<ISettingsService>() is ISettingsService settingsService)
-                window.RequestedTheme = settingsService.LocalSettings.IsLightThemeEnabled ? ElementTheme.Light : ElementTheme.Dark;
 
             window.ViewModel = viewmodel;
 

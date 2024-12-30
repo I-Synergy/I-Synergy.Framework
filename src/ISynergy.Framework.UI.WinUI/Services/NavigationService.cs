@@ -296,23 +296,9 @@ public class NavigationService : INavigationService
     {
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
-            _scopedContextService.GetService<ISettingsService>() is ISettingsService settingsService &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
             NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter) is { } page)
         {
-            switch (settingsService.LocalSettings.Theme)
-            {
-                case Core.Enumerations.Themes.Light:
-                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                    break;
-                case Core.Enumerations.Themes.Dark:
-                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                    break;
-                default:
-                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                    break;
-            }
-
             // Check if actual page is the same as destination page.
             if (frame.Content is View originalView)
             {
@@ -348,7 +334,6 @@ public class NavigationService : INavigationService
         if (Application.Current is BaseApplication baseApplication &&
             baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
-            _scopedContextService.GetService<ISettingsService>() is ISettingsService settingsService &&
             _scopedContextService.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
         {
             if (viewModel is null && _scopedContextService.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
@@ -358,19 +343,6 @@ public class NavigationService : INavigationService
                 viewModel.Parameter = parameter;
 
             page.ViewModel = viewModel;
-
-            switch (settingsService.LocalSettings.Theme)
-            {
-                case Core.Enumerations.Themes.Light:
-                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                    break;
-                case Core.Enumerations.Themes.Dark:
-                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                    break;
-                default:
-                    frame.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                    break;
-            }
 
             // Check if actual page is the same as destination page.
             if (frame.Content is View originalView)
@@ -398,22 +370,8 @@ public class NavigationService : INavigationService
         _backStackChanged = null;
 
         if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page &&
-            Application.Current is BaseApplication baseApplication &&
-            _scopedContextService.GetService<ISettingsService>() is ISettingsService settingsService)
+            Application.Current is BaseApplication baseApplication)
         {
-            switch (settingsService.LocalSettings.Theme)
-            {
-                case Core.Enumerations.Themes.Light:
-                    page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Light;
-                    break;
-                case Core.Enumerations.Themes.Dark:
-                    page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Dark;
-                    break;
-                default:
-                    page.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-                    break;
-            }
-
             baseApplication.MainWindow.Content = page;
 
             if (!page.ViewModel.IsInitialized)
