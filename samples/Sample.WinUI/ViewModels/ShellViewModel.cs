@@ -26,7 +26,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
 
-    public AsyncRelayCommand InitializeFirstRunCommand { get; private set; }
     public AsyncRelayCommand DisplayCommand { get; private set; }
     public AsyncRelayCommand InfoCommand { get; private set; }
     public AsyncRelayCommand BrowseCommand { get; private set; }
@@ -61,7 +60,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         _clockTimer.Tick += ClockTimerCallBack;
         _clockTimer.Start();
 
-        InitializeFirstRunCommand = new AsyncRelayCommand(InitializeFirstRunAsync);
         DisplayCommand = new AsyncRelayCommand(OpenDisplayAsync);
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
         BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
@@ -74,7 +72,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         PopulateNavigationMenuItems();
 
-        MessageService.Default.Register<ShellLoadedMessage>(this, (m) =>
+        MessageService.Default.Register<ShellLoadedMessage>(this, async (m) =>
         {
             if (context.IsAuthenticated && PrimaryItems?.Count > 0)
             {
@@ -83,6 +81,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
                 SelectedItem = PrimaryItems[0];
             }
+
+            await InitializeFirstRunAsync();
         });
     }
 
