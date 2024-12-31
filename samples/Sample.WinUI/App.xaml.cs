@@ -9,11 +9,10 @@ using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
-using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +38,7 @@ public sealed partial class App : BaseApplication
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        : base()
+        : base(() => ServiceLocator.Default.GetService<ILoadingView>())
     {
         InitializeComponent();
 
@@ -79,24 +78,24 @@ public sealed partial class App : BaseApplication
         {
             _commonServices.BusyService.StartBusy();
 
-            try
-            {
-                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
+            //try
+            //{
+            //    _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
 
-                if (await ServiceLocator.Default.GetService<IUpdateService>().CheckForUpdateAsync() && await _commonServices.DialogService.ShowMessageAsync(
-                    LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-                    "Update",
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-                    await ServiceLocator.Default.GetService<IUpdateService>().DownloadAndInstallUpdateAsync();
-                    Environment.Exit(Environment.ExitCode);
-                }
-            }
-            catch (Exception)
-            {
-                await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
-            }
+            //    if (await ServiceLocator.Default.GetService<IUpdateService>().CheckForUpdateAsync() && await _commonServices.DialogService.ShowMessageAsync(
+            //        LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
+            //        "Update",
+            //        MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            //    {
+            //        _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
+            //        await ServiceLocator.Default.GetService<IUpdateService>().DownloadAndInstallUpdateAsync();
+            //        Environment.Exit(Environment.ExitCode);
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //    await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
+            //}
 
             await base.InitializeApplicationAsync();
 
