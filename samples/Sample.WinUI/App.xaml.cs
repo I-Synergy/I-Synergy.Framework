@@ -1,3 +1,5 @@
+using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
@@ -154,14 +156,16 @@ public sealed partial class App : BaseApplication
 
             _logger.LogInformation("Retrieve default user and check for auto login");
 
-            if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && _settingsService.LocalSettings.IsAutoLogin)
+            var settingsService = _scopedContextService.GetService<ISettingsService>();
+
+            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser) && settingsService.LocalSettings.IsAutoLogin)
             {
-                string username = _settingsService.LocalSettings.DefaultUser;
+                string username = settingsService.LocalSettings.DefaultUser;
                 string password = await _scopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
                 if (!string.IsNullOrEmpty(password))
                 {
-                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _settingsService.LocalSettings.IsAutoLogin);
+                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, settingsService.LocalSettings.IsAutoLogin);
                     navigateToAuthentication = false;
                 }
             }
@@ -186,8 +190,12 @@ public sealed partial class App : BaseApplication
         if (e.Value)
         {
             _logger.LogInformation("Saving refresh token");
-            _settingsService.LocalSettings.RefreshToken = _context.ToEnvironmentalRefreshToken();
-            _settingsService.SaveLocalSettings();
+
+            var settingsService = _scopedContextService.GetService<ISettingsService>();
+            var context = _scopedContextService.GetService<IContext>();
+
+            settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
+            settingsService.SaveLocalSettings();
 
             _logger.LogInformation("Navigate to Shell");
             await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();

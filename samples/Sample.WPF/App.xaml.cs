@@ -39,14 +39,16 @@ public partial class App : BaseApplication
 
             _logger.LogInformation("Retrieve default user and check for auto login");
 
-            if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && _settingsService.LocalSettings.IsAutoLogin)
+            var settingsService = _scopedContextService.GetService<ISettingsService>();
+
+            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser) && settingsService.LocalSettings.IsAutoLogin)
             {
-                string username = _settingsService.LocalSettings.DefaultUser;
+                string username = settingsService.LocalSettings.DefaultUser;
                 string password = await _scopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
                 if (!string.IsNullOrEmpty(password))
                 {
-                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _settingsService.LocalSettings.IsAutoLogin);
+                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, settingsService.LocalSettings.IsAutoLogin);
                     navigateToAuthentication = false;
                 }
             }

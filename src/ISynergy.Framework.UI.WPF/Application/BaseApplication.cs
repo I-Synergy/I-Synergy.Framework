@@ -25,10 +25,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
     protected readonly IAuthenticationService _authenticationService;
-    protected readonly ISettingsService _settingsService;
     protected readonly IBaseCommonServices _commonServices;
-
-    protected IContext _context;
 
     private Task Initialize { get; set; }
 
@@ -59,7 +56,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices.BusyService.StartBusy();
 
         _logger.LogInformation("Setting up context.");
-        _context = _scopedContextService.GetService<IContext>();
+        var context = _scopedContextService.GetService<IContext>();
 
         _logger.LogInformation("Setting up authentication service.");
         _authenticationService = _scopedContextService.GetService<IAuthenticationService>();
@@ -69,12 +66,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
 
         _logger.LogInformation("Setting up application settings service.");
-        _settingsService = _scopedContextService.GetService<ISettingsService>();
+        var settingsService = _scopedContextService.GetService<ISettingsService>();
 
         _logger.LogInformation("Setting up localization service.");
 
-        if (_settingsService.LocalSettings is not null)
-            _settingsService.LocalSettings.Language.SetLocalizationLanguage(_context);
+        if (settingsService.LocalSettings is not null)
+            settingsService.LocalSettings.Language.SetLocalizationLanguage(context);
 
         //_logger.LogTrace("Setting up theming.");
 
@@ -188,9 +185,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     {
         var culture = CultureInfo.CurrentCulture;
         var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
-        numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+        var context = _scopedContextService.GetService<IContext>();
+        numberFormat.CurrencySymbol = $"{context.CurrencySymbol} ";
         numberFormat.CurrencyNegativePattern = 1;
-        _context.NumberFormat = numberFormat;
+        context.NumberFormat = numberFormat;
 
         return Task.CompletedTask;
     }

@@ -32,11 +32,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
     protected readonly IAuthenticationService _authenticationService;
-    protected readonly ISettingsService _settingsService;
     protected readonly IBaseCommonServices _commonServices;
     protected readonly Func<ILoadingView> _initialView;
 
-    protected IContext _context;
     private int lastErrorMessage = 0;
 
     private Task Initialize { get; set; }
@@ -89,7 +87,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices.BusyService.StartBusy();
 
         _logger.LogTrace("Setting up context.");
-        _context = _scopedContextService.GetService<IContext>();
+        var context = _scopedContextService.GetService<IContext>();
 
         _logger.LogTrace("Setting up authentication service.");
         _authenticationService = _scopedContextService.GetService<IAuthenticationService>();
@@ -99,14 +97,14 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
 
         _logger.LogTrace("Setting up application settings service.");
-        _settingsService = _scopedContextService.GetService<ISettingsService>();
+        var settingsService = _scopedContextService.GetService<ISettingsService>();
 
         _logger.LogTrace("Setting up localization service.");
-        if (_settingsService.LocalSettings is not null)
-            _settingsService.LocalSettings.Language.SetLocalizationLanguage(_context);
+        if (settingsService.LocalSettings is not null)
+            settingsService.LocalSettings.Language.SetLocalizationLanguage(context);
 
         _logger.LogTrace("Setting up theming.");
-        if (_settingsService.LocalSettings is not null && _settingsService.LocalSettings.IsLightThemeEnabled)
+        if (settingsService.LocalSettings is not null && settingsService.LocalSettings.IsLightThemeEnabled)
             RequestedTheme = ApplicationTheme.Light;
         else
             RequestedTheme = ApplicationTheme.Dark;
@@ -195,9 +193,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     {
         var culture = CultureInfo.CurrentCulture;
         var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
-        numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+        var context = _scopedContextService.GetService<IContext>();
+        numberFormat.CurrencySymbol = $"{context.CurrencySymbol} ";
         numberFormat.CurrencyNegativePattern = 1;
-        _context.NumberFormat = numberFormat;
+        context.NumberFormat = numberFormat;
 
         return Task.CompletedTask;
     }
@@ -215,7 +214,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="args">Event data for the event.</param>
     protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        MainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme, _settingsService.LocalSettings.Color);
+        var settingsService = _scopedContextService.GetService<ISettingsService>();
+        MainWindow = WindowHelper.CreateWindow(settingsService.LocalSettings.Theme, settingsService.LocalSettings.Color);
 
         _logger.LogTrace("Loading custom resource dictionaries");
 
