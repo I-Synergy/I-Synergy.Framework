@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Windows.ApplicationModel.Activation;
 using Application = Microsoft.UI.Xaml.Application;
 
@@ -136,10 +137,25 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     public virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
+        if (e?.Exception == null)
+            return;
+
+        // Ignore the exception if it is a TaskCanceledException and the cancellation token is requested
+        if (e.Exception is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested)
+            return;
+
+        // Ignore the exception if it is a TaskCanceledException inside an aggregated exception and the cancellation token is requested
+        if (e.Exception is AggregateException ae && ae.InnerExceptions?.Any(ex => ex is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested) == true)
+            return;
+
+        // Ignore the exception if it is a COMException and the message contains "Cannot find credential in Vault"
+        if (e.Exception is COMException ce && ce.Message.Contains("Cannot find credential in Vault"))
+            return;
+
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
-            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger?.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
