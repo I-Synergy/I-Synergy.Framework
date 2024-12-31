@@ -1,10 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -33,13 +31,10 @@ public static class Program
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
             })
-            .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
+            .ConfigureServices<App, Context, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
-
-                services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
-                services.TryAddScoped<ISettingsService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>>();
 
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                 services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());

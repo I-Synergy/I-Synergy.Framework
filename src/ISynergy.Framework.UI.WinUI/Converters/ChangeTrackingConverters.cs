@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using Microsoft.UI.Xaml.Data;
 using System.Text;
 
@@ -27,20 +26,20 @@ public class ChangeTrackingConverters : IValueConverter
         {
             var result = new StringBuilder();
 
-            var userCreated = ServiceLocator.Default.GetService<ILanguageService>().GetString("Unknown");
-            var userChanged = ServiceLocator.Default.GetService<ILanguageService>().GetString("Unknown");
+            var userCreated = LanguageService.Default.GetString("Unknown");
+            var userChanged = LanguageService.Default.GetString("Unknown");
 
             if (!string.IsNullOrEmpty(model.CreatedBy)) userCreated = model.CreatedBy;
 
-            result.AppendLine($"{ServiceLocator.Default.GetService<ILanguageService>().GetString("InputFirst")} " +
-                $"{model.CreatedDate.ToLocalTime():f} {ServiceLocator.Default.GetService<ILanguageService>().GetString("By")} {userCreated}");
+            result.AppendLine($"{LanguageService.Default.GetString("InputFirst")} " +
+                $"{model.CreatedDate.ToLocalTime():f} {LanguageService.Default.GetString("By")} {userCreated}");
 
             if (model.ChangedDate.HasValue)
             {
                 if (!string.IsNullOrEmpty(model.ChangedBy)) userChanged = model.ChangedBy;
 
-                result.AppendLine($"{ServiceLocator.Default.GetService<ILanguageService>().GetString("InputLast")} " +
-                    $"{model.ChangedDate.Value.ToLocalTime():f} {ServiceLocator.Default.GetService<ILanguageService>().GetString("By")} {userChanged}");
+                result.AppendLine($"{LanguageService.Default.GetString("InputLast")} " +
+                    $"{model.ChangedDate.Value.ToLocalTime():f} {LanguageService.Default.GetString("By")} {userChanged}");
             }
 
             return result.ToString();

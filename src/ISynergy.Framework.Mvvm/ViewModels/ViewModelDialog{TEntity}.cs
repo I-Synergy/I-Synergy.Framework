@@ -106,9 +106,25 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     {
         base.Cleanup();
 
+        // Clear the selected item
         SelectedItem = default(TEntity);
 
-        SubmitCommand?.Cancel();
-        SubmitCommand = null;
+        // Reset dialog state
+        IsUpdate = false;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Dispose and clear submit command
+            if (SubmitCommand is IDisposable submitCommand)
+            {
+                submitCommand.Dispose();
+                SubmitCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

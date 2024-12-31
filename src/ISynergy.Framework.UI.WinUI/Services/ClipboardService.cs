@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.Logging;
 using System.Drawing.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 
@@ -12,6 +13,14 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class ClipboardService : IClipboardService
 {
+    private readonly ILogger _logger;
+
+    public ClipboardService(ILogger<ClipboardService> logger)
+    {
+        _logger = logger;
+        _logger.LogDebug($"ClipboardService instance created with ID: {Guid.NewGuid()}");
+    }
+
     /// <summary>
     /// Gets image (bytes and content type) from clipboard.
     /// </summary>

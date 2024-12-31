@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="DYMO.Connect.SDK" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 	</ItemGroup>
 
 	<ItemGroup>

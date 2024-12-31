@@ -38,7 +38,7 @@ public class ViewModelDialogWizardTests
             OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public new void Validate()
+        public void Validate()
         {
             base.Validate();
         }
@@ -215,7 +215,7 @@ public class ViewModelDialogWizardTests
         var viewModel = new TestDialogWizardViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
 
         // Act
-        viewModel.Cleanup();
+        viewModel.Dispose();
 
         // Assert
         Assert.IsNull(viewModel.BackCommand);

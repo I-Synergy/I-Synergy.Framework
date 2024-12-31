@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -15,29 +16,11 @@ namespace ISynergy.Framework.UI.Services.Base;
 /// </summary>
 public abstract class BaseRestService
 {
-    /// <summary>
-    /// The context
-    /// </summary>
     protected readonly IContext _context;
-    /// <summary>
-    /// The http client factory
-    /// </summary>
+    protected readonly ILogger _logger;
     protected readonly IHttpClientFactory _httpClientFactory;
-    /// <summary>
-    /// Authentication service.
-    /// </summary>
     protected readonly IAuthenticationService _authenticationService;
-    /// <summary>
-    /// The language service
-    /// </summary>
-    protected readonly ILanguageService _languageService;
-    /// <summary>
-    /// The exception handler service.
-    /// </summary>
     protected readonly IExceptionHandlerService _exceptionHandlerService;
-    /// <summary>
-    /// The configuration options
-    /// </summary>
     protected readonly ConfigurationOptions _configurationOptions;
 
     /// <summary>
@@ -46,21 +29,21 @@ public abstract class BaseRestService
     /// <param name="context">The context.</param>
     /// <param name="httpClientFactory"></param>
     /// <param name="authenticationService"></param>
-    /// <param name="languageService">The language service.</param>
     /// <param name="exceptionHandlerService">The exception handler service.</param>
     /// <param name="configurationOptions">The configuration options.</param>
+    /// <param name="logger"></param>
     protected BaseRestService(
         IContext context,
         IHttpClientFactory httpClientFactory,
         IAuthenticationService authenticationService,
-        ILanguageService languageService,
         IExceptionHandlerService exceptionHandlerService,
-        IOptions<ConfigurationOptions> configurationOptions)
+        IOptions<ConfigurationOptions> configurationOptions,
+        ILogger<BaseRestService> logger)
     {
         _context = context;
+        _logger = logger;
         _httpClientFactory = httpClientFactory;
         _authenticationService = authenticationService;
-        _languageService = languageService;
         _exceptionHandlerService = exceptionHandlerService;
         _configurationOptions = configurationOptions.Value;
     }

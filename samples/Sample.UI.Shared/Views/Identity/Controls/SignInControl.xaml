@@ -39,7 +39,7 @@
                     Margin ="5,25" 
                     HorizontalAlignment="Right" 
                     Command="{Binding SignInCommand}"
-                    IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}"
+                    IsEnabled="{Binding CommonServices.BusyService.IsEnabled}"
                     Style="{StaticResource DefaultDialogButtonStyle}"/>
         </StackPanel>
     </Grid>

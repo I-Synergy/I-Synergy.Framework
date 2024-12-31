@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@ public class InfoViewModel : ViewModelNavigation<object>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Info"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Info"); } }
 
     /// <summary>
     /// Gets or sets the CompanyName property value.
@@ -79,10 +80,10 @@ public class InfoViewModel : ViewModelNavigation<object>
         ILogger logger)
         : base(context, commonServices, logger)
     {
-        CompanyName = commonServices.InfoService.CompanyName;
-        ProductName = commonServices.InfoService.ProductName;
-        Version = commonServices.InfoService.ProductVersion;
-        Copyrights = commonServices.InfoService.Copyrights;
+        CompanyName = InfoService.Default.CompanyName;
+        ProductName = InfoService.Default.ProductName;
+        Version = InfoService.Default.ProductVersion;
+        Copyrights = InfoService.Default.Copyrights;
         Startup = context.Environment.ToString();
     }
 }

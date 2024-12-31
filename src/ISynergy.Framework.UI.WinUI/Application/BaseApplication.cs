@@ -11,7 +11,6 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
-using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,9 +18,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Windows.ApplicationModel.Activation;
 using Application = Microsoft.UI.Xaml.Application;
-using IThemeService = ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService;
 
 namespace ISynergy.Framework.UI;
 
@@ -33,10 +32,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
-    protected readonly IContext _context;
-    protected readonly IThemeService _themeService;
     protected readonly IAuthenticationService _authenticationService;
-    protected readonly ISettingsService _settingsService;
     protected readonly IBaseCommonServices _commonServices;
     protected readonly Func<ILoadingView> _initialView;
 
@@ -92,34 +88,33 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices.BusyService.StartBusy();
 
         _logger.LogTrace("Setting up context.");
-        _context = _scopedContextService.GetService<IContext>();
+        var context = _scopedContextService.GetService<IContext>();
 
         _logger.LogTrace("Setting up authentication service.");
         _authenticationService = _scopedContextService.GetService<IAuthenticationService>();
         _authenticationService.AuthenticationChanged += AuthenticationChanged;
 
-        _logger.LogTrace("Setting up theming service.");
-        _themeService = _scopedContextService.GetService<IThemeService>();
-
-        if (_themeService.IsLightThemeEnabled)
-            RequestedTheme = ApplicationTheme.Light;
-        else
-            RequestedTheme = ApplicationTheme.Dark;
-
         _logger.LogTrace("Setting up exception handler service.");
         _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
 
         _logger.LogTrace("Setting up application settings service.");
-        _settingsService = _scopedContextService.GetService<ISettingsService>();
+        var settingsService = _scopedContextService.GetService<ISettingsService>();
 
         _logger.LogTrace("Setting up localization service.");
-        if (_settingsService.LocalSettings is not null)
-            _settingsService.LocalSettings.Language.SetLocalizationLanguage(_context);
+        if (settingsService.LocalSettings is not null)
+            settingsService.LocalSettings.Language.SetLocalizationLanguage(context);
 
-        _logger.LogTrace("Starting initialization of application");
+        _logger.LogTrace("Setting up theming.");
+        if (settingsService.LocalSettings is not null && settingsService.LocalSettings.IsLightThemeEnabled)
+            RequestedTheme = ApplicationTheme.Light;
+        else
+            RequestedTheme = ApplicationTheme.Dark;
+
+        _logger.LogInformation("Starting initialization of application");
+
         InitializeApplication();
 
-        _logger.LogTrace("Finishing initialization of application");
+        _logger.LogInformation("Finishing initialization of application");
     }
 
     /// <summary>
@@ -142,10 +137,25 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     public virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
+        if (e?.Exception == null)
+            return;
+
+        // Ignore the exception if it is a TaskCanceledException and the cancellation token is requested
+        if (e.Exception is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested)
+            return;
+
+        // Ignore the exception if it is a TaskCanceledException inside an aggregated exception and the cancellation token is requested
+        if (e.Exception is AggregateException ae && ae.InnerExceptions?.Any(ex => ex is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested) == true)
+            return;
+
+        // Ignore the exception if it is a COMException and the message contains "Cannot find credential in Vault"
+        if (e.Exception is COMException ce && ce.Message.Contains("Cannot find credential in Vault"))
+            return;
+
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
-            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger?.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -199,9 +209,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     {
         var culture = CultureInfo.CurrentCulture;
         var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
-        numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+        var context = _scopedContextService.GetService<IContext>();
+        numberFormat.CurrencySymbol = $"{context.CurrencySymbol} ";
         numberFormat.CurrencyNegativePattern = 1;
-        _context.NumberFormat = numberFormat;
+        context.NumberFormat = numberFormat;
 
         return Task.CompletedTask;
     }
@@ -219,9 +230,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="args">Event data for the event.</param>
     protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        MainWindow = WindowHelper.CreateWindow();
-
-        MessageService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
+        var settingsService = _scopedContextService.GetService<ISettingsService>();
+        MainWindow = WindowHelper.CreateWindow(settingsService.LocalSettings.Theme, settingsService.LocalSettings.Color);
 
         _logger.LogTrace("Loading custom resource dictionaries");
 
@@ -232,14 +242,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
                 if (!Application.Current.Resources.MergedDictionaries.Contains(item))
                     Application.Current.Resources.MergedDictionaries.Add(item);
             }
-        }
-
-        _logger.LogTrace("Loading theme");
-
-        if (_themeService is ThemeService themeService)
-        {
-            themeService.InitializeMainWindow(MainWindow);
-            themeService.SetStyle();
         }
 
         if (_initialView is not null && _initialView.Invoke() is View loadingView)
@@ -266,17 +268,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (Environment.GetCommandLineArgs().Length > 1)
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
 
-        MessageService.Default.Register<EnvironmentChangedMessage>(this, m => MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty);
-        MainWindow.Title = _commonServices.InfoService.Title ?? string.Empty;
-        MainWindow.Activate();
-    }
+        MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
+        {
+            InfoService.Default.SetTitle(m.Content);
+        });
 
-    /// <summary>
-    /// Handles the style changed event.
-    /// </summary>
-    /// <param name="m"></param>
-    public virtual void StyleChanged(StyleChangedMessage m)
-    {
+        MainWindow.Activate();
     }
 
     /// <summary>
@@ -349,7 +346,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         {
             // free managed resources
             MessageService.Default.Unregister<EnvironmentChangedMessage>(this);
-            MessageService.Default.Unregister<StyleChangedMessage>(this);
 
             if (_authenticationService is not null)
                 _authenticationService.AuthenticationChanged += AuthenticationChanged;

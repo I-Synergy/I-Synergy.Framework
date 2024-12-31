@@ -20,7 +20,7 @@ public static class Argument
     {
         if (value is null)
         {
-            var error = new LanguageService().GetString("WarningNull");
+            var error = LanguageService.Default.GetString("WarningNull");
             throw new ArgumentNullException(name, error);
         }
     }
@@ -36,7 +36,7 @@ public static class Argument
     {
         if (string.IsNullOrEmpty(value))
         {
-            var error = new LanguageService().GetString("WarningNullOrEmpty");
+            var error = LanguageService.Default.GetString("WarningNullOrEmpty");
             throw new ArgumentNullException(name, error);
         }
     }
@@ -52,7 +52,7 @@ public static class Argument
     {
         if (value == Guid.Empty)
         {
-            var error = new LanguageService().GetString("WarningGuidEmpty");
+            var error = LanguageService.Default.GetString("WarningGuidEmpty");
             throw new ArgumentException(error, name);
         }
     }
@@ -69,7 +69,7 @@ public static class Argument
     {
         if (!value.HasValue || value.Value == Guid.Empty)
         {
-            var error = new LanguageService().GetString("WarningNullGuidEmpty");
+            var error = LanguageService.Default.GetString("WarningNullGuidEmpty");
             throw new ArgumentNullException(name, error);
         }
     }
@@ -86,7 +86,7 @@ public static class Argument
     {
         if (string.IsNullOrEmpty(value) || (string.CompareOrdinal(value.Trim(), string.Empty) == 0))
         {
-            var error = new LanguageService().GetString("WarningNullWhitespace");
+            var error = LanguageService.Default.GetString("WarningNullWhitespace");
             throw new ArgumentNullException(name, error);
         }
     }
@@ -103,7 +103,7 @@ public static class Argument
     {
         if ((value is null) || (value.Length == 0))
         {
-            var error = new LanguageService().GetString("WarningNullEmptyArray");
+            var error = LanguageService.Default.GetString("WarningNullEmptyArray");
             throw new ArgumentNullException(name, error);
         }
     }
@@ -121,7 +121,7 @@ public static class Argument
     {
         if ((value is null) || (value.Count == 0))
         {
-            var error = new LanguageService().GetString("WarningNullEmptyList");
+            var error = LanguageService.Default.GetString("WarningNullEmptyList");
             throw new ArgumentNullException(name, error);
         }
     }
@@ -138,7 +138,7 @@ public static class Argument
     {
         if (value is null || !typeof(T).IsEnum)
         {
-            var error = new LanguageService().GetString("WarningEnum");
+            var error = LanguageService.Default.GetString("WarningEnum");
             throw new ArgumentException(error, name);
         }
     }
@@ -185,7 +185,7 @@ public static class Argument
 
         if (!validation(value, minimumValue, maximumValue))
         {
-            var error = string.Format(new LanguageService().GetString("WarningBetween"), minimumValue, maximumValue);
+            var error = string.Format(LanguageService.Default.GetString("WarningBetween"), minimumValue, maximumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }
@@ -226,7 +226,7 @@ public static class Argument
 
         if (!validation(value, minimumValue))
         {
-            var error = string.Format(new LanguageService().GetString("WarningMinimum"), minimumValue);
+            var error = string.Format(LanguageService.Default.GetString("WarningMinimum"), minimumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }
@@ -264,7 +264,7 @@ public static class Argument
     {
         if (!validation(value, maximumValue))
         {
-            var error = string.Format(new LanguageService().GetString("WarningMaximum"), maximumValue);
+            var error = string.Format(LanguageService.Default.GetString("WarningMaximum"), maximumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }

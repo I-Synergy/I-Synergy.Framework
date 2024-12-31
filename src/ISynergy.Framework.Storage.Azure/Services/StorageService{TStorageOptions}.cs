@@ -4,6 +4,7 @@ using Azure.Storage.Blobs.Models;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Storage.Abstractions.Options;
 using ISynergy.Framework.Storage.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ISynergy.Framework.Storage.Azure.Services;
@@ -17,19 +18,19 @@ namespace ISynergy.Framework.Storage.Azure.Services;
 internal class StorageService<TStorageOptions> : IStorageService
     where TStorageOptions : class, IStorageOptions, new()
 {
-    /// <summary>
-    /// The azure document options
-    /// </summary>
+    private readonly ILogger _logger;
     private readonly TStorageOptions _storageOptions;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}"/> class.
     /// </summary>
     /// <param name="storageOptions">The azure BLOB options.</param>
-    public StorageService(IOptions<TStorageOptions> storageOptions)
+    /// <param name="logger"></param>
+    public StorageService(IOptions<TStorageOptions> storageOptions, ILogger<StorageService<TStorageOptions>> logger)
     {
         Argument.IsNotNull(storageOptions.Value);
         _storageOptions = storageOptions.Value;
+        _logger = logger;
     }
 
     /// <summary>

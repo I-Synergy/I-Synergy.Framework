@@ -130,9 +130,9 @@ public class ViewModelDialogTests
 
         // Act
         viewModel.Cleanup();
-
-        // Assert
         Assert.IsNull(viewModel.SelectedItem);
+
+        viewModel.Dispose();
         Assert.IsNull(viewModel.SubmitCommand);
     }
 }

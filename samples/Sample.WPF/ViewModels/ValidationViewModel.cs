@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -17,7 +18,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Validation"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Validation"); } }
 
     /// <summary>
     /// Gets or sets the Test property value.
@@ -83,7 +84,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
     {
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";
-        Description = commonServices.LanguageService.GetString("ValidationDescription");
+        Description = LanguageService.Default.GetString("ValidationDescription");
 
         Validator = new Action<IObservableClass>(_ =>
         {
@@ -118,7 +119,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
 
         if (Validate())
         {
-            await BaseCommonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
+            await _commonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
         }
     }
 }

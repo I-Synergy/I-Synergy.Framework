@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -14,7 +15,6 @@ using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using Style = ISynergy.Framework.Core.Models.Style;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
 
@@ -32,7 +32,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     public bool IsBackEnabled
     {
-        get => BaseCommonServices.NavigationService.CanGoBack;
+        get => _commonServices.NavigationService.CanGoBack;
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Gets or sets the login command.
     /// </summary>
     /// <value>The login command.</value>
-    public AsyncRelayCommand SignInCommand { get; private set; }
+    public RelayCommand SignInCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the language command.
@@ -94,11 +94,6 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     protected readonly ISettingsService _settingsService;
 
     /// <summary>
-    /// The theme selector
-    /// </summary>
-    protected readonly IThemeService _themeService;
-
-    /// <summary>
     /// Gets or sets the PrimaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
@@ -126,27 +121,24 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <param name="settingsService">The settings services.</param>
     /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
-    /// <param name="themeService">The theme selector service.</param>
     protected BaseShellViewModel(
         IContext context,
         IBaseCommonServices commonServices,
         ISettingsService settingsService,
         IAuthenticationService authenticationService,
-        ILogger logger,
-        IThemeService themeService)
+        ILogger<BaseShellViewModel> logger)
         : base(context, commonServices, logger)
     {
-        BaseCommonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
+        _commonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
 
         _settingsService = settingsService;
         _authenticationService = authenticationService;
-        _themeService = themeService;
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
-        SignInCommand = new AsyncRelayCommand(SignOutAsync);
+        SignInCommand = new RelayCommand(SignOut);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
         ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
@@ -166,14 +158,14 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Sign out.
     /// </summary>
     /// <returns></returns>
-    protected virtual Task SignOutAsync() => _authenticationService.SignOutAsync();
+    protected virtual void SignOut() => _authenticationService.SignOut();
 
     /// <summary>
     /// Shows the dialog restart after update asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     protected Task ShowDialogRestartAfterUpdateAsync() =>
-        BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("UpdateRestart"));
+        _commonServices.DialogService.ShowInformationAsync(LanguageService.Default.GetString("UpdateRestart"));
 
     /// <summary>
     /// Gets or sets the LastSelectedItem property value.
@@ -231,9 +223,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _settingsService.LocalSettings.Language);
+        var languageVM = new LanguageViewModel(_context, _commonServices, _logger, _settingsService.LocalSettings.Language);
         languageVM.Submitted += LanguageVM_Submitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
 
     /// <summary>
@@ -249,16 +241,16 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         _settingsService.LocalSettings.Language = e.Result;
         _settingsService.SaveLocalSettings();
 
-        e.Result.SetLocalizationLanguage(Context);
+        e.Result.SetLocalizationLanguage(_context);
 
-        if (await BaseCommonServices.DialogService.ShowMessageAsync(
-                    BaseCommonServices.LanguageService.GetString("WarningLanguageChange") +
+        if (await _commonServices.DialogService.ShowMessageAsync(
+                    LanguageService.Default.GetString("WarningLanguageChange") +
                     Environment.NewLine +
-                    BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    BaseCommonServices.LanguageService.GetString("TitleQuestion"),
+                    LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
+                    LanguageService.Default.GetString("TitleQuestion"),
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
-            BaseCommonServices.RestartApplication();
+            _commonServices.RestartApplication();
         }
     }
 
@@ -268,9 +260,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = new ThemeViewModel(Context, BaseCommonServices, _settingsService, Logger);
+        var themeVM = new ThemeViewModel(_context, _commonServices, _settingsService, _logger);
         themeVM.Submitted += ThemeVM_Submitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
 
     /// <summary>
@@ -287,16 +279,15 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         {
             _settingsService.LocalSettings.Theme = style.Theme;
             _settingsService.LocalSettings.Color = style.Color;
-            _settingsService.SaveLocalSettings();
 
-            if (await BaseCommonServices.DialogService.ShowMessageAsync(
-                    BaseCommonServices.LanguageService.GetString("WarningColorChange") +
+            if (_settingsService.SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+                    LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
-                    BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    BaseCommonServices.LanguageService.GetString("TitleQuestion"),
+                    LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
+                    LanguageService.Default.GetString("TitleQuestion"),
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                BaseCommonServices.RestartApplication();
+                _commonServices.RestartApplication();
             }
         }
     }
@@ -324,8 +315,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         if (disposing)
         {
             // Remove navigation service event handlers first
-            if (BaseCommonServices.NavigationService is not null)
-                BaseCommonServices.NavigationService.BackStackChanged -= NavigationService_BackStackChanged;
+            if (_commonServices.NavigationService is not null)
+                _commonServices.NavigationService.BackStackChanged -= NavigationService_BackStackChanged;
 
             Validator = null;
 

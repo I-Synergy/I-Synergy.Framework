@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ public class ChartsViewModel : ViewModelNavigation<TestItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Converters"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
 
     /// <summary>
     /// Gets or sets the categories with least demand property value.

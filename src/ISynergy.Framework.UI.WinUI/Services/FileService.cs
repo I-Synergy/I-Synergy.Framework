@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
+using Microsoft.Extensions.Logging;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
@@ -17,25 +18,20 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class FileService : IFileService<FileResult>
 {
-    /// <summary>
-    /// The dialog service.
-    /// </summary>
+    private readonly ILogger _logger;
     private readonly IDialogService _dialogService;
-
-    /// <summary>
-    /// The language service.
-    /// </summary>
-    private readonly ILanguageService _languageService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FileService" /> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="languageService">The language service.</param>
-    public FileService(IDialogService dialogService, ILanguageService languageService)
+    /// <param name="logger"></param>
+    public FileService(IDialogService dialogService, ILogger<FileService> logger)
     {
+        _logger = logger;
+        _logger.LogDebug($"FileService instance created with ID: {Guid.NewGuid()}");
+
         _dialogService = dialogService;
-        _languageService = languageService;
     }
 
     /// <summary>
@@ -80,7 +76,7 @@ public class FileService : IFileService<FileResult>
             }
             else
             {
-                await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
+                await _dialogService.ShowErrorAsync(string.Format(LanguageService.Default.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
             }
         }
 

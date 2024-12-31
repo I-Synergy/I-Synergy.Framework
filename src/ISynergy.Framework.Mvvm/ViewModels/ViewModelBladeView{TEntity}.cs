@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -200,12 +201,12 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         }
         else
         {
-            item = BaseCommonServices.LanguageService.GetString("ThisItem");
+            item = LanguageService.Default.GetString("ThisItem");
         }
 
-        if (await BaseCommonServices.DialogService.ShowMessageAsync(
-            string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
-            BaseCommonServices.LanguageService.GetString("Delete"),
+        if (await _commonServices.DialogService.ShowMessageAsync(
+            string.Format(LanguageService.Default.GetString("WarningItemRemove"), item),
+            LanguageService.Default.GetString("Delete"),
             MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             await RemoveAsync(e);
@@ -265,23 +266,50 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
 
         Items?.Clear();
         Blades?.Clear();
+    }
 
-        AddCommand?.Cancel();
-        AddCommand = null;
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Dispose and clear all commands
+            if (AddCommand is IDisposable addCommand)
+            {
+                addCommand.Dispose();
+                AddCommand = null;
+            }
 
-        EditCommand?.Cancel();
-        EditCommand = null;
+            if (EditCommand is IDisposable editCommand)
+            {
+                editCommand.Dispose();
+                EditCommand = null;
+            }
 
-        DeleteCommand?.Cancel();
-        DeleteCommand = null;
+            if (DeleteCommand is IDisposable deleteCommand)
+            {
+                deleteCommand.Dispose();
+                DeleteCommand = null;
+            }
 
-        RefreshCommand?.Cancel();
-        RefreshCommand = null;
+            if (RefreshCommand is IDisposable refreshCommand)
+            {
+                refreshCommand.Dispose();
+                RefreshCommand = null;
+            }
 
-        SearchCommand?.Cancel();
-        SearchCommand = null;
+            if (SearchCommand is IDisposable searchCommand)
+            {
+                searchCommand.Dispose();
+                SearchCommand = null;
+            }
 
-        SubmitCommand?.Cancel();
-        SubmitCommand = null;
+            if (SubmitCommand is IDisposable submitCommand)
+            {
+                submitCommand.Dispose();
+                SubmitCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

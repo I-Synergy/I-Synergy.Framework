@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Messages;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -12,11 +11,29 @@ namespace ISynergy.Framework.Core.Services;
 [Bindable(BindableSupport.Yes)]
 public sealed class InfoService : IInfoService
 {
+    private static readonly object _creationLock = new object();
+    private static IInfoService _defaultInstance;
+
     /// <summary>
-    /// Initializes a new instance of the <see cref="InfoService" /> class.
+    /// Gets the InfoService's default instance.
     /// </summary>
-    public InfoService()
+    public static IInfoService Default
     {
+        get
+        {
+            if (_defaultInstance is null)
+            {
+                lock (_creationLock)
+                {
+                    if (_defaultInstance is null)
+                    {
+                        _defaultInstance = new InfoService();
+                    }
+                }
+            }
+
+            return _defaultInstance;
+        }
     }
 
     /// <summary>
@@ -86,9 +103,9 @@ public sealed class InfoService : IInfoService
         }
     }
 
-    public void SetTitle(SoftwareEnvironments environment)
-    {
-        Title = $"{ProductName} v{ProductVersion} ({environment})";
-        MessageService.Default.Send(new EnvironmentChangedMessage(environment));
-    }
+    /// <summary>
+    /// Sets the title.
+    /// </summary>
+    /// <param name="environment"></param>
+    public void SetTitle(SoftwareEnvironments environment) => Title = $"{ProductName} v{ProductVersion} ({environment})";
 }

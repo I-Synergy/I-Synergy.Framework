@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ public class TreeNodeViewModel : ViewModelNavigation<TreeNode<Guid, PublicationI
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("TreeNode"); } }
+    public override string Title { get { return LanguageService.Default.GetString("TreeNode"); } }
 
     /// <summary>
     /// Gets or sets the Publication property value.

@@ -13,11 +13,6 @@ public interface IBaseCommonServices
     /// <value>The busy service.</value>
     IBusyService BusyService { get; }
     /// <summary>
-    /// Gets the language service.
-    /// </summary>
-    /// <value>The language service.</value>
-    ILanguageService LanguageService { get; }
-    /// <summary>
     /// Gets the dialog service.
     /// </summary>
     /// <value>The dialog service.</value>
@@ -27,11 +22,6 @@ public interface IBaseCommonServices
     /// </summary>
     /// <value>The navigation service.</value>
     INavigationService NavigationService { get; }
-    /// <summary>
-    /// Gets the information service.
-    /// </summary>
-    /// <value>The information service.</value>
-    IInfoService InfoService { get; }
     /// <summary>
     /// Dispatcher service.
     /// </summary>

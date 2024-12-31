@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -10,8 +9,6 @@ using Sample.Models;
 namespace Sample.ViewModels;
 public class DetailsViewModel : ViewModelBladeView<TestItem>
 {
-    private readonly IBaseCommonServices _commonServices;
-
     public DetailsViewModel(
         IContext context,
         IBaseCommonServices commonServices,
@@ -20,7 +17,6 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
         bool automaticValidation = false)
         : base(context, commonServices, logger, refreshOnInitialization, automaticValidation)
     {
-        _commonServices = commonServices;
     }
 
     public override Task AddAsync()
@@ -60,7 +56,7 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = new DetailViewModel(Context, _commonServices, Logger, e);
+        var detailsVm = new DetailViewModel(_context, _commonServices, _logger, e);
         await _commonServices.NavigationService.OpenBladeAsync(this, detailsVm);
     }
 }

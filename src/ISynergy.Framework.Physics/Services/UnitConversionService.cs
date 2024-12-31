@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Validation;
+﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Enumerations;
 using ISynergy.Framework.Physics.Extensions;
@@ -12,17 +11,10 @@ namespace ISynergy.Framework.Physics.Services;
 public partial class UnitConversionService : IUnitConversionService
 {
     /// <summary>
-    /// Private service for accessing resource files for localization.
-    /// </summary>
-    private readonly ILanguageService _languageService;
-
-    /// <summary>
     /// Default constructor of the Unit Service.
     /// </summary>
-    public UnitConversionService(ILanguageService languageService)
+    public UnitConversionService()
     {
-        _languageService = languageService;
-
         DefineSIUnits();
         DefineUnits();
     }

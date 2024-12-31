@@ -30,23 +30,38 @@ public sealed partial class LoadingView : ILoadingView
         MessageService.Default.Register<ApplicationInitializedMessage>(this, ApplicationInitialized);
     }
 
-    private void LoadingView_Loaded(object sender, RoutedEventArgs e)
+    private async void LoadingView_Loaded(object sender, RoutedEventArgs e)
     {
-        Assembly currentAssembly = Assembly.GetAssembly(typeof(LoadingView));
-        var stream = currentAssembly.GetManifestResourceStream("Sample.Assets.gta.mp4").AsRandomAccessStream();
-        BackgroundMediaElement.Source = MediaSource.CreateFromStream(stream, "video/mp4");
+        var currentAssembly = Assembly.GetAssembly(typeof(LoadingView));
+        using var stream = currentAssembly.GetManifestResourceStream("Sample.Assets.gta.mp4");
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        memoryStream.Position = 0;
+
+        var randomAccessStream = new InMemoryRandomAccessStream();
+        var outputStream = randomAccessStream.GetOutputStreamAt(0);
+        var dataWriter = new DataWriter(outputStream);
+
+        dataWriter.WriteBytes(memoryStream.ToArray());
+        await dataWriter.StoreAsync();
+        await outputStream.FlushAsync();
+
+        BackgroundMediaElement.Source = MediaSource.CreateFromStream(randomAccessStream, "video/mp4");
         BackgroundMediaElement.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
         BackgroundMediaElement.MediaPlayer.Play();
     }
 
     private void LoadingView_Unloaded(object sender, RoutedEventArgs e)
     {
-        BackgroundMediaElement.MediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
-        BackgroundMediaElement.MediaPlayer.Dispose();
+        if (BackgroundMediaElement?.MediaPlayer != null)
+        {
+            BackgroundMediaElement.MediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
+            BackgroundMediaElement.MediaPlayer.Dispose();
+        }
     }
 
     public void ApplicationInitialized(ApplicationInitializedMessage message) =>
-        SignInButton.IsEnabled = true;
+        DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => SignInButton.IsEnabled = true);
 
     private void MediaPlayer_MediaEnded(MediaPlayer sender, object args) =>
         DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => Complete());

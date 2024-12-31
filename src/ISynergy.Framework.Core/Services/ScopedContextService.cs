@@ -6,8 +6,8 @@ namespace ISynergy.Framework.Core.Services;
 
 public class ScopedContextService : IScopedContextService
 {
-    protected IServiceProvider _serviceProvider;
-    protected IServiceScope _serviceScope;
+    private readonly IServiceProvider _serviceProvider;
+    private IServiceScope _serviceScope;
 
     public ScopedContextService(IServiceProvider serviceProvider)
     {

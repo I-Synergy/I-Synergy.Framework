@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-		<TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Storage.Azure</PackageId>
         <Description>I-Synergy Framework Azure Storage</Description>
         <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>
@@ -8,9 +8,10 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Storage.Blobs" />
-		<PackageReference Include="Microsoft.Extensions.Options" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" />
-	</ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Options" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj" />

@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -20,6 +21,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 [Bindable(true)]
 public abstract class ViewModel : ObservableClass, IViewModel
 {
+    protected readonly IContext _context;
+    protected readonly IBaseCommonServices _commonServices;
+    protected readonly ILogger _logger;
+
+    public IBaseCommonServices CommonServices => _commonServices;
+
     /// <summary>
     /// Occurs when [cancelled].
     /// </summary>
@@ -39,22 +46,6 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// </summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     public virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
-
-    /// <summary>
-    /// Gets the context.
-    /// </summary>
-    /// <value>The context.</value>
-    public IContext Context { get; }
-    /// <summary>
-    /// Gets the base common services.
-    /// </summary>
-    /// <value>The base common services.</value>
-    public IBaseCommonServices BaseCommonServices { get; }
-    /// <summary>
-    /// Gets the logger.
-    /// </summary>
-    /// <value>The logger.</value>
-    public ILogger Logger { get; }
 
     /// <summary>
     /// Gets or sets the close command.
@@ -119,17 +110,16 @@ public abstract class ViewModel : ObservableClass, IViewModel
         bool automaticValidation = false)
         : base(automaticValidation)
     {
-        Context = context;
-        BaseCommonServices = commonServices;
-        Logger = logger;
+        _context = context;
+        _commonServices = commonServices;
+        _logger = logger;
 
-        //PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
 
         CloseCommand = new AsyncRelayCommand(CloseAsync);
         CancelCommand = new AsyncRelayCommand(CancelAsync);
 
-        Logger.LogTrace(GetType().Name);
+        _logger.LogTrace(GetType().Name);
     }
 
     /// <summary>
@@ -139,7 +129,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            Logger.LogTrace("{0} initialized.", GetType().Name);
+            _logger.LogTrace("{0} initialized.", GetType().Name);
 
         return Task.CompletedTask;
     }
@@ -159,7 +149,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
         if (attributes is not null && attributes.Length > 0)
         {
-            description = BaseCommonServices.LanguageService.GetString(attributes[0].Description);
+            description = LanguageService.Default.GetString(attributes[0].Description);
         }
 
         return description;
@@ -191,8 +181,6 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// </summary>
     public virtual void Cleanup()
     {
-        CloseCommand = null;
-        CancelCommand = null;
     }
 
     /// <summary>
@@ -217,17 +205,25 @@ public abstract class ViewModel : ObservableClass, IViewModel
         return Task.CompletedTask;
     }
 
-    ///// <summary>
-    ///// Releases unmanaged and - optionally - managed resources.
-    ///// </summary>
-    ///// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    //protected override void Dispose(bool disposing)
-    //{
-    //    base.Dispose(disposing);
 
-    //    if (disposing)
-    //    {
-    //        PropertyChanged -= OnPropertyChanged;
-    //    }
-    //}
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Clear commands
+            if (CloseCommand is IDisposable closeCommand)
+            {
+                closeCommand.Dispose();
+                CloseCommand = null;
+            }
+
+            if (CancelCommand is IDisposable cancelCommand)
+            {
+                cancelCommand.Dispose();
+                CancelCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
+    }
 }

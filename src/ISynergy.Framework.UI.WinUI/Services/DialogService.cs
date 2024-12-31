@@ -1,11 +1,12 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Application = Microsoft.UI.Xaml.Application;
 using Window = ISynergy.Framework.UI.Controls.Window;
@@ -14,9 +15,8 @@ namespace ISynergy.Framework.UI.Services;
 
 public class DialogService : IDialogService
 {
-    private readonly ILanguageService _languageService;
     private readonly IScopedContextService _scopedContextService;
-    private readonly IThemeService _themeService;
+    private readonly ILogger _logger;
 
     private Window _activeDialog = null;
 
@@ -24,16 +24,13 @@ public class DialogService : IDialogService
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="scopedContextService"></param>
-    /// <param name="languageService">The language service.</param>
-    /// <param name="themeService"></param>
-    public DialogService(
-        IScopedContextService scopedContextService,
-        ILanguageService languageService,
-        IThemeService themeService)
+    /// <param name="logger"></param>
+    public DialogService(IScopedContextService scopedContextService, ILogger<DialogService> logger)
     {
+        _logger = logger;
+        _logger.LogDebug($"DialogService instance created with ID: {Guid.NewGuid()}");
+
         _scopedContextService = scopedContextService;
-        _languageService = languageService;
-        _themeService = themeService;
     }
 
     /// <summary>
@@ -43,7 +40,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "") =>
-        ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK);
+        ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleError"), MessageBoxButton.OK);
 
     /// <summary>
     /// Shows the error asynchronous.
@@ -52,7 +49,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleError"), MessageBoxButton.OK);
 
     /// <summary>
     /// Shows the information asynchronous.
@@ -61,7 +58,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButton.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleInfo"), MessageBoxButton.OK);
 
     /// <summary>
     /// Shows the warning asynchronous.
@@ -70,7 +67,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButton.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleWarning"), MessageBoxButton.OK);
 
     /// <summary>
     /// Shows the greeting asynchronous.
@@ -81,22 +78,22 @@ public class DialogService : IDialogService
     {
         if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
         {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
+            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Night"), name),
+                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
 
         if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
         {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
+            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Morning"), name),
+                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
         if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
         {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
+            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Afternoon"), name),
+                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButton.OK);
         }
-        return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
-            _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
+        return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Evening"), name),
+            LanguageService.Default.GetString("TitleWelcome"), MessageBoxButton.OK);
     }
 
     /// <summary>
@@ -117,32 +114,30 @@ public class DialogService : IDialogService
         if (Application.Current is BaseApplication baseApplication)
             dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
 
-        dialog.RequestedTheme = _themeService.IsLightThemeEnabled ? ElementTheme.Light : ElementTheme.Dark;
-
         switch (buttons)
         {
             case MessageBoxButton.OKCancel:
-                dialog.PrimaryButtonText = _languageService.GetString("Ok");
-                dialog.CloseButtonText = _languageService.GetString("Cancel");
+                dialog.PrimaryButtonText = LanguageService.Default.GetString("Ok");
+                dialog.CloseButtonText = LanguageService.Default.GetString("Cancel");
                 dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 break;
             case MessageBoxButton.YesNoCancel:
-                dialog.PrimaryButtonText = _languageService.GetString("Yes");
-                dialog.SecondaryButtonText = _languageService.GetString("No");
-                dialog.CloseButtonText = _languageService.GetString("Cancel");
+                dialog.PrimaryButtonText = LanguageService.Default.GetString("Yes");
+                dialog.SecondaryButtonText = LanguageService.Default.GetString("No");
+                dialog.CloseButtonText = LanguageService.Default.GetString("Cancel");
                 dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 break;
             case MessageBoxButton.YesNo:
-                dialog.PrimaryButtonText = _languageService.GetString("Yes");
-                dialog.CloseButtonText = _languageService.GetString("No");
+                dialog.PrimaryButtonText = LanguageService.Default.GetString("Yes");
+                dialog.CloseButtonText = LanguageService.Default.GetString("No");
                 dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 break;
             default:
-                dialog.CloseButtonText = _languageService.GetString("Ok");
+                dialog.CloseButtonText = LanguageService.Default.GetString("Ok");
                 dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                 break;
         }
@@ -256,8 +251,6 @@ public class DialogService : IDialogService
         {
             if (Application.Current is BaseApplication baseApplication)
                 window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
-
-            window.RequestedTheme = _themeService.IsLightThemeEnabled ? ElementTheme.Light : ElementTheme.Dark;
 
             window.ViewModel = viewmodel;
 

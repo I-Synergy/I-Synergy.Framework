@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -23,7 +24,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Selection"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Selection"); } }
 
     /// <summary>
     /// Gets or sets the raw items.
@@ -94,10 +95,10 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         Validator = new Action<IObservableClass>(arg =>
         {
             if (SelectionMode == SelectionModes.Single && SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
+                AddValidationError(nameof(SelectedItems), LanguageService.Default.GetString("WarningSelectItem"));
 
             if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
+                AddValidationError(nameof(SelectedItems), LanguageService.Default.GetString("WarningSelectItem"));
         });
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
@@ -173,10 +174,26 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     {
         base.Cleanup();
 
+        // Clear collections
         Items?.Clear();
         SelectedItems?.Clear();
 
-        RefreshCommand?.Cancel();
-        RefreshCommand = null;
+        // Reset selection state
+        SelectionMode = SelectionModes.Single;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Dispose and clear commands
+            if (RefreshCommand is IDisposable refreshCommand)
+            {
+                refreshCommand.Dispose();
+                RefreshCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

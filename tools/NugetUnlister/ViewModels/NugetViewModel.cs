@@ -84,7 +84,7 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
     {
         Argument.IsNotNullOrEmpty(PackageId);
 
-        BaseCommonServices.BusyService.StartBusy();
+        _commonServices.BusyService.StartBusy();
 
         int i = 0;
         System.Collections.Generic.IEnumerable<PackageVersion> selected = Items.Where(q => q.Selected);
@@ -94,10 +94,10 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
         {
             i++;
             await _nugetService.UnlistPackageAsync(item.PackageId, item.Version);
-            BaseCommonServices.BusyService.BusyMessage = $"Processed package ({item.Version}) {i} from {count}...";
+            _commonServices.BusyService.BusyMessage = $"Processed package ({item.Version}) {i} from {count}...";
         }
 
-        BaseCommonServices.BusyService.EndBusy();
+        _commonServices.BusyService.StopBusy();
     }
 
     private async Task ListVersionAsync()

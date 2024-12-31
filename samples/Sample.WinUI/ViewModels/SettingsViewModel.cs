@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -11,9 +12,8 @@ namespace Sample.ViewModels;
 
 public class SettingsViewModel : ViewModelNavigation<object>
 {
-    public override string Title { get => BaseCommonServices.LanguageService.GetString("Settings"); }
+    public override string Title { get => LanguageService.Default.GetString("Settings"); }
 
-    private readonly ICommonServices _commonServices;
     private readonly ISettingsService _settingsService;
 
     /// <summary>
@@ -51,7 +51,6 @@ public class SettingsViewModel : ViewModelNavigation<object>
         bool automaticValidation = false)
         : base(context, commonServices, logger, automaticValidation)
     {
-        _commonServices = commonServices;
         _settingsService = settingsService;
 
         LocalSettings = new LocalSettings();
@@ -95,7 +94,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
         }
         finally
         {
-            _commonServices.BusyService.EndBusy();
+            _commonServices.BusyService.StopBusy();
         }
     }
 
@@ -119,7 +118,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
         }
         finally
         {
-            _commonServices.BusyService.EndBusy();
+            _commonServices.BusyService.StopBusy();
         }
 
         await base.SubmitAsync(e, validateUnderlayingProperties);

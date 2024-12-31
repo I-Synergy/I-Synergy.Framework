@@ -1,1 +1,0 @@
-# I-Synergy Framework Logging AppCenter
