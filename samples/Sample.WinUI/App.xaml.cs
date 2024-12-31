@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
@@ -184,6 +185,10 @@ public sealed partial class App : BaseApplication
 
         if (e.Value)
         {
+            _logger.LogInformation("Saving refresh token");
+            _settingsService.LocalSettings.RefreshToken = _context.ToEnvironmentalRefreshToken();
+            _settingsService.SaveLocalSettings();
+
             _logger.LogInformation("Navigate to Shell");
             await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
         }
