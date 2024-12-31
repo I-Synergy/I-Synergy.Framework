@@ -11,7 +11,7 @@
 
     <Grid
         IsDoubleTapEnabled="False"
-        IsTapEnabled="{Binding IsEnabled, ElementName=SignInButton}"
+        IsTapEnabled="{Binding IsEnabled, ElementName=SignInButton, UpdateSourceTrigger=PropertyChanged}"
         Tapped="Grid_Tapped">
         <MediaPlayerElement
             x:Name="BackgroundMediaElement"
@@ -25,16 +25,16 @@
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+            Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
             <ProgressRing
                 x:Name="IsBusyProgressRing"
                 Width="48"
                 Height="48"
-                IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" />
+                IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock
                 FontSize="16"
-                Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}"
-                Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" />
+                Foreground="{Binding Foreground, ElementName=IsBusyProgressRing, UpdateSourceTrigger=PropertyChanged}"
+                Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
 
         <Button
@@ -48,7 +48,7 @@
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="Escape"
-                    IsEnabled="{Binding IsEnabled, ElementName=SignInButton}"
+                    IsEnabled="{Binding IsEnabled, ElementName=SignInButton, UpdateSourceTrigger=PropertyChanged}"
                     Modifiers="None" />
             </Button.KeyboardAccelerators>
         </Button>
