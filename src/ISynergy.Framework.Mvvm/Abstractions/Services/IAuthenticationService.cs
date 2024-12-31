@@ -62,8 +62,6 @@ public interface IAuthenticationService
 
     void SignOut();
 
-    string GetEnvironmentalAuthToken(string token);
-
     /// <summary>
     /// Gets the modules asynchronous.
     /// </summary>
