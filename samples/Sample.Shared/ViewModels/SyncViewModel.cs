@@ -14,7 +14,7 @@ namespace Sample.ViewModels;
 
 public class SyncViewModel : ViewModelNavigation<object>
 {
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Sync"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Sync"); } }
 
     private readonly ISynchronizationService _synchronizationService;
 
@@ -79,7 +79,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task CustomActionCommandExecuteAsync()
     {
-        BaseCommonServices.BusyService.StartBusy();
+        _commonServices.BusyService.StartBusy();
 
         try
         {
@@ -88,17 +88,17 @@ public class SyncViewModel : ViewModelNavigation<object>
         }
         catch (Exception ex)
         {
-            await BaseCommonServices.DialogService.ShowErrorAsync(ex.Message);
+            await _commonServices.DialogService.ShowErrorAsync(ex.Message);
         }
         finally
         {
-            BaseCommonServices.BusyService.EndBusy();
+            _commonServices.BusyService.StopBusy();
         }
     }
 
     private async Task ExecuteSyncCommand(SyncType syncType)
     {
-        BaseCommonServices.BusyService.StartBusy();
+        _commonServices.BusyService.StartBusy();
 
         try
         {
@@ -107,11 +107,11 @@ public class SyncViewModel : ViewModelNavigation<object>
         }
         catch (Exception ex)
         {
-            await BaseCommonServices.DialogService.ShowErrorAsync(ex.Message);
+            await _commonServices.DialogService.ShowErrorAsync(ex.Message);
         }
         finally
         {
-            BaseCommonServices.BusyService.EndBusy();
+            _commonServices.BusyService.StopBusy();
         }
     }
 

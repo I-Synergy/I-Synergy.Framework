@@ -187,6 +187,14 @@ stages:
             projects: 'tests\ISynergy.Framework.IO.Tests\ISynergy.Framework.IO.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Mvvm Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Mvvm.Tests\ISynergy.Framework.Mvvm.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
         # - task: DotNetCoreCLI@2
         #   displayName: 'Run Automations Tests'
         #   inputs:

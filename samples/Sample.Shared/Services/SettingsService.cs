@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace Sample.Services;
@@ -12,6 +13,7 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
 {
     private const string _fileName = "settings.json";
     private readonly string _settingsFolder;
+    private readonly ILogger _logger;
 
     private TLocalSettings _localSettings;
     private TRoamingSettings _roamingSettings;
@@ -20,8 +22,11 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsService{TLocalSettings, TRoamingSettings, TGlobalSettings}"/> class.
     /// </summary>
-    public SettingsService()
+    public SettingsService(ILogger<SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings>> logger)
     {
+        _logger = logger;
+        _logger.LogDebug($"SettingsService instance created with ID: {Guid.NewGuid()}");
+
         _localSettings = new TLocalSettings();
         _roamingSettings = new TRoamingSettings();
         _globalSettings = new TGlobalSettings();
@@ -65,14 +70,23 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
         }
     }
 
-    public void SaveLocalSettings()
+    public bool SaveLocalSettings()
     {
-        if (!Directory.Exists(_settingsFolder))
-            Directory.CreateDirectory(_settingsFolder);
+        try
+        {
+            if (!Directory.Exists(_settingsFolder))
+                Directory.CreateDirectory(_settingsFolder);
 
-        string file = Path.Combine(_settingsFolder, _fileName);
-        string json = JsonSerializer.Serialize(_localSettings);
-        File.WriteAllText(file, json);
+            string file = Path.Combine(_settingsFolder, _fileName);
+            string json = JsonSerializer.Serialize(_localSettings);
+            File.WriteAllText(file, json);
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     public Task LoadRoamingSettingsAsync()
@@ -80,7 +94,7 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
         throw new NotImplementedException();
     }
 
-    public Task SaveRoamingSettingsAsync()
+    public Task<bool> SaveRoamingSettingsAsync()
     {
         throw new NotImplementedException();
     }

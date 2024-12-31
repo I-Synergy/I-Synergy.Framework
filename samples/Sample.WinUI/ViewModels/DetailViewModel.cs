@@ -9,7 +9,7 @@ namespace Sample.ViewModels;
 
 public class DetailViewModel : ViewModelBlade<TestItem>
 {
-    public AsyncRelayCommand OpenNewBladeCommand { get; }
+    public AsyncRelayCommand OpenNewBladeCommand { get; private set; }
 
     public DetailViewModel(
         IContext context,
@@ -26,8 +26,8 @@ public class DetailViewModel : ViewModelBlade<TestItem>
 
     private async Task OpenNewBladeAsync()
     {
-        var detailsVm = new DetailAViewModel(Context, BaseCommonServices, Logger, SelectedItem);
-        await BaseCommonServices.NavigationService.OpenBladeAsync(Owner, detailsVm);
+        var detailsVm = new DetailAViewModel(_context, _commonServices, _logger, SelectedItem);
+        await _commonServices.NavigationService.OpenBladeAsync(Owner, detailsVm);
     }
 
     public override async Task InitializeAsync()

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
@@ -15,7 +14,6 @@ public class ViewModelBaseTests
     private Mock<IContext> _mockContext;
     private Mock<IBaseCommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
-    private Mock<ILanguageService> _mockLanguageService;
 
     [TestInitialize]
     public void Setup()
@@ -23,8 +21,6 @@ public class ViewModelBaseTests
         _mockContext = new Mock<IContext>();
         _mockCommonServices = new Mock<IBaseCommonServices>();
         _mockLogger = new Mock<ILogger>();
-        _mockLanguageService = new Mock<ILanguageService>();
-        _mockCommonServices.Setup(x => x.LanguageService).Returns(_mockLanguageService.Object);
     }
 
     private class TestViewModel : ViewModel
@@ -95,7 +91,7 @@ public class ViewModelBaseTests
         var viewModel = new TestViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
 
         // Act
-        viewModel.Cleanup();
+        viewModel.Dispose();
 
         // Assert
         Assert.IsNull(viewModel.CloseCommand);
@@ -118,14 +114,12 @@ public class ViewModelBaseTests
     {
         // Arrange
         var viewModel = new TestViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
-        _mockLanguageService.Setup(x => x.GetString("TestDescription")).Returns("LocalizedDescription");
 
         // Act
         var result = viewModel.GetEnumDescription(TestEnum.TestValue);
 
         // Assert
-        Assert.AreEqual("LocalizedDescription", result);
-        _mockLanguageService.Verify(x => x.GetString("TestDescription"), Times.Once);
+        Assert.AreEqual("[TestDescription]", result);
     }
 
     [TestMethod]
@@ -139,7 +133,6 @@ public class ViewModelBaseTests
 
         // Assert
         Assert.AreEqual("OK", result);
-        _mockLanguageService.Verify(x => x.GetString(It.IsAny<string>()), Times.Never);
     }
 
     [TestMethod]

@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -149,47 +150,47 @@ public class SignUpViewModel : ViewModel
         {
             if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
             {
-                AddValidationError(nameof(Name), commonServices.LanguageService.GetString("WarningLicenseNameSize"));
+                AddValidationError(nameof(Name), LanguageService.Default.GetString("WarningLicenseNameSize"));
             }
 
             if (string.IsNullOrEmpty(Mail) || !NetworkUtility.IsValidEMail(Mail))
             {
-                AddValidationError(nameof(Mail), commonServices.LanguageService.GetString("WarningInvalidEmail"));
+                AddValidationError(nameof(Mail), LanguageService.Default.GetString("WarningInvalidEmail"));
             }
 
             if (string.IsNullOrEmpty(SelectedTimeZone))
             {
-                AddValidationError(nameof(SelectedTimeZone), commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
+                AddValidationError(nameof(SelectedTimeZone), LanguageService.Default.GetString("WarningNoTimeZoneSelected"));
             }
 
             if (string.IsNullOrEmpty(Password) || (Password.Length <= 6))
             {
-                AddValidationError(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordSize"));
             }
 
             if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             {
-                AddValidationError(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordSize"));
             }
 
             if (string.IsNullOrEmpty(PasswordCheck) || (PasswordCheck.Length <= 6))
             {
-                AddValidationError(nameof(PasswordCheck), commonServices.LanguageService.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(PasswordCheck), LanguageService.Default.GetString("WarningPasswordSize"));
             }
 
             if (!string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(PasswordCheck) && !Password.Equals(PasswordCheck))
             {
-                AddValidationError(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordMatch"));
-                AddValidationError(nameof(PasswordCheck), commonServices.LanguageService.GetString("WarningPasswordMatch"));
+                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordMatch"));
+                AddValidationError(nameof(PasswordCheck), LanguageService.Default.GetString("WarningPasswordMatch"));
             }
 
             if (SelectedModules.Count < 1)
             {
-                AddValidationError(nameof(SelectedModules), commonServices.LanguageService.GetString("WarningNoModulesSelected"));
+                AddValidationError(nameof(SelectedModules), LanguageService.Default.GetString("WarningNoModulesSelected"));
             }
 
             if (SelectedCountry is null)
-                AddValidationError(nameof(SelectedCountry), commonServices.LanguageService.GetString("WarningNoCountrySelected"));
+                AddValidationError(nameof(SelectedCountry), LanguageService.Default.GetString("WarningNoCountrySelected"));
         });
 
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
@@ -202,9 +203,9 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
+        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_context, _commonServices, _logger, Modules, SelectedModules, SelectionModes.Multiple);
         selectionVM.Submitted += SelectionVM_Submitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
     }
 
     /// <summary>
@@ -230,7 +231,7 @@ public class SignUpViewModel : ViewModel
 
     private async Task ValidateMailAsync()
     {
-        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(Context)))
+        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_context)))
         {
             ArePickersAvailable = true;
 
@@ -251,7 +252,7 @@ public class SignUpViewModel : ViewModel
     }
 
     private Task SignInAsync() =>
-        BaseCommonServices.NavigationService.NavigateModalAsync<SignInViewModel>();
+        _commonServices.NavigationService.NavigateModalAsync<SignInViewModel>();
 
     public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
@@ -285,18 +286,18 @@ public class SignUpViewModel : ViewModel
             if (Mail.StartsWith(GenericConstants.UsernamePrefixTest, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixTest, "");
-                Context.Environment = SoftwareEnvironments.Test;
+                _context.Environment = SoftwareEnvironments.Test;
             }
             // remove this prefix and set environment to local.
             else if (Mail.StartsWith(GenericConstants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixLocal, "");
-                Context.Environment = SoftwareEnvironments.Local;
+                _context.Environment = SoftwareEnvironments.Local;
             }
             else
             {
                 emailaddress = Mail;
-                Context.Environment = SoftwareEnvironments.Production;
+                _context.Environment = SoftwareEnvironments.Production;
             }
 
             if (!HasErrors &&
@@ -319,7 +320,7 @@ public class SignUpViewModel : ViewModel
 
                 if (await _authenticationService.RegisterNewAccountAsync(registrationData))
                 {
-                    await BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("WarningRegistrationConfirmEmail"));
+                    await _commonServices.DialogService.ShowInformationAsync(LanguageService.Default.GetString("WarningRegistrationConfirmEmail"));
                     await SignInAsync();
                 }
             }

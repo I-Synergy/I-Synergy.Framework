@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
@@ -14,7 +13,6 @@ public class ViewModelSelectionBladeTests
     private Mock<IContext> _mockContext;
     private Mock<IBaseCommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
-    private Mock<ILanguageService> _mockLanguageService;
 
     [TestInitialize]
     public void Setup()
@@ -22,9 +20,6 @@ public class ViewModelSelectionBladeTests
         _mockContext = new Mock<IContext>();
         _mockCommonServices = new Mock<IBaseCommonServices>();
         _mockLogger = new Mock<ILogger>();
-        _mockLanguageService = new Mock<ILanguageService>();
-        _mockCommonServices.Setup(x => x.LanguageService).Returns(_mockLanguageService.Object);
-        _mockLanguageService.Setup(x => x.GetString("Selection")).Returns("Selection");
     }
 
     private class TestEntity
@@ -66,8 +61,10 @@ public class ViewModelSelectionBladeTests
         Assert.IsNotNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
         Assert.AreEqual(0, viewModel.SelectedItems.Count, "SelectedItems should be empty after cleanup");
         Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
-        Assert.IsNull(viewModel.RefreshCommand, "RefreshCommand should be null after cleanup");
-        Assert.IsNull(viewModel.SubmitCommand, "SubmitCommand should be null after cleanup");
+
+        viewModel.Dispose();
+        Assert.IsNull(viewModel.RefreshCommand, "RefreshCommand should be null after dispose");
+        Assert.IsNull(viewModel.SubmitCommand, "SubmitCommand should be null after dispose");
     }
 
     [TestMethod]
@@ -97,7 +94,7 @@ public class ViewModelSelectionBladeTests
         Assert.AreEqual(1, viewModel.SelectedItems.Count);
         Assert.AreEqual(SelectionModes.Single, viewModel.SelectionMode);
         Assert.IsNotNull(viewModel.RefreshCommand);
-        Assert.AreEqual("Selection", viewModel.Title);
+        Assert.AreEqual("[Selection]", viewModel.Title);
     }
 
     [TestMethod]
@@ -124,8 +121,10 @@ public class ViewModelSelectionBladeTests
         Assert.IsNotNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
         Assert.AreEqual(0, viewModel.SelectedItems.Count, "SelectedItems should be empty after cleanup");
         Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
-        Assert.IsNull(viewModel.RefreshCommand, "RefreshCommand should be null after cleanup");
-        Assert.IsNull(viewModel.SubmitCommand, "SubmitCommand should be null after cleanup");
+
+        viewModel.Dispose();
+        Assert.IsNull(viewModel.RefreshCommand, "RefreshCommand should be null after dispose");
+        Assert.IsNull(viewModel.SubmitCommand, "SubmitCommand should be null after dispose");
     }
 
     [TestMethod]
@@ -217,9 +216,6 @@ public class ViewModelSelectionBladeTests
             new List<TestEntity>(),
             SelectionModes.Single);
 
-        _mockLanguageService.Setup(x => x.GetString("WarningSelectItem"))
-            .Returns("Please select an item");
-
         // Act
         bool isValid = viewModel.Validate();
 
@@ -244,9 +240,6 @@ public class ViewModelSelectionBladeTests
             items,
             new List<TestEntity>(),
             SelectionModes.Multiple);
-
-        _mockLanguageService.Setup(x => x.GetString("WarningSelectItem"))
-            .Returns("Please select at least one item");
 
         // Act
         bool isValid = viewModel.Validate();

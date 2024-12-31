@@ -6,14 +6,36 @@ using System.Resources;
 namespace ISynergy.Framework.Core.Services;
 
 /// <summary>
-/// Class _languageService.
+/// Class LanguageService.Default.
 /// </summary>
 public sealed class LanguageService : ILanguageService
 {
-    /// <summary>
-    /// The managers
-    /// </summary>
     private readonly List<ResourceManager> _managers;
+
+    private static readonly object _creationLock = new object();
+    private static ILanguageService _defaultInstance;
+
+    /// <summary>
+    /// Gets the LanguageService's default instance.
+    /// </summary>
+    public static ILanguageService Default
+    {
+        get
+        {
+            if (_defaultInstance is null)
+            {
+                lock (_creationLock)
+                {
+                    if (_defaultInstance is null)
+                    {
+                        _defaultInstance = new LanguageService();
+                    }
+                }
+            }
+
+            return _defaultInstance;
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageService"/> class.

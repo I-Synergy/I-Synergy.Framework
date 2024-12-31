@@ -1,7 +1,8 @@
 ﻿#if WINDOWS
-using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Update.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 using Windows.Services.Store;
 
 namespace ISynergy.Framework.Update.Services;
@@ -11,28 +12,19 @@ namespace ISynergy.Framework.Update.Services;
 /// </summary>
 internal class UpdateService : IUpdateService
 {
-    /// <summary>
-    /// Gets the dialog service.
-    /// </summary>
-    /// <value>The dialog service.</value>
+    private readonly ILogger _logger;
     private readonly IDialogService _dialogService;
-    /// <summary>
-    /// Gets the language service.
-    /// </summary>
-    /// <value>The language service.</value>
-    private readonly ILanguageService _languageService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
     /// </summary>
-    /// <param name="languageService">The language service.</param>
     /// <param name="dialogService">The dialog service.</param>
-    public UpdateService(
-        ILanguageService languageService,
-        IDialogService dialogService)
+    /// <param name="logger"></param>
+    public UpdateService(IDialogService dialogService, ILogger<UpdateService> logger)
     {
-        _languageService = languageService;
         _dialogService = dialogService;
+        _logger = logger;
+        _logger.LogDebug($"UpdateService instance created with ID: {Guid.NewGuid()}");
     }
 
     /// <summary>
@@ -170,7 +162,7 @@ internal class UpdateService : IUpdateService
     private Task HandleMandatoryPackageErrorAsync()
     {
         return _dialogService.ShowErrorAsync(
-                    _languageService.GetString("WarningMandatoryUpdateFailed"));
+            LanguageService.Default.GetString("WarningMandatoryUpdateFailed"));
     }
 }
 #endif

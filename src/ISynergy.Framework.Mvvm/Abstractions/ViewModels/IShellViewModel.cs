@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 public interface IShellViewModel : IViewModel
 {
     AsyncRelayCommand SettingsCommand { get; }
-    AsyncRelayCommand SignInCommand { get; }
+    RelayCommand SignInCommand { get; }
     ObservableCollection<NavigationItem> PrimaryItems { get; }
     ObservableCollection<NavigationItem> SecondaryItems { get; }
 }

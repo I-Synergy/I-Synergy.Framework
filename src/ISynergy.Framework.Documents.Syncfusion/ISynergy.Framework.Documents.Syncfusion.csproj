@@ -19,5 +19,6 @@
 		<PackageReference Include="Syncfusion.Pdf.Net.Core" />
 		<PackageReference Include="Syncfusion.XlsIO.Net.Core" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 	</ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Logging.AppCenter</PackageId>
 		<Description>I-Synergy Framework AppCenter Logging library for Windows and Android</Description>
 		<PackageTags>I-Synergy, Framework, Logging, AppCenter, Windows, Android, Uno</PackageTags>
@@ -10,10 +10,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AppCenter"  />
-		<PackageReference Include="Microsoft.AppCenter.Analytics"  />
-		<PackageReference Include="Microsoft.AppCenter.Crashes"  />
-		<PackageReference Include="Microsoft.Extensions.Options"  />
+		<PackageReference Include="Microsoft.AppCenter" />
+		<PackageReference Include="Microsoft.AppCenter.Analytics" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
 	</ItemGroup>
 
 	<ItemGroup>

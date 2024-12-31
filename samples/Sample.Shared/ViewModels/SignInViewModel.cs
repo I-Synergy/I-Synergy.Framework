@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -21,7 +22,7 @@ public class SignInViewModel : ViewModel
     private readonly ISettingsService _settingsService;
     private readonly ICredentialLockerService _credentialLockerService;
 
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Login"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Login"); } }
 
     /// <summary>
     /// Gets or sets the Usernames property value.
@@ -83,10 +84,10 @@ public class SignInViewModel : ViewModel
         Validator = new Action<IObservableClass>(_ =>
         {
             if (string.IsNullOrEmpty(Username) || (!string.IsNullOrEmpty(Username) && Username.Length <= 3))
-                AddValidationError(nameof(Username), BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
+                AddValidationError(nameof(Username), LanguageService.Default.GetString("WarningUsernameSize"));
 
             if (string.IsNullOrEmpty(Password) || (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100))))
-                AddValidationError(nameof(Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordSize"));
         });
 
         Usernames = [];
@@ -113,7 +114,7 @@ public class SignInViewModel : ViewModel
     }
 
     private Task SignUpAsync() =>
-        BaseCommonServices.NavigationService.NavigateModalAsync<SignUpViewModel>();
+        _commonServices.NavigationService.NavigateModalAsync<SignUpViewModel>();
 
     /// <summary>
     /// Forgots the password asynchronous.
@@ -121,9 +122,9 @@ public class SignInViewModel : ViewModel
     /// <returns>Task.</returns>
     public Task ForgotPasswordAsync()
     {
-        ForgotPasswordViewModel forgotPasswordVM = new ForgotPasswordViewModel(Context, BaseCommonServices, _authenticationService, Logger);
+        ForgotPasswordViewModel forgotPasswordVM = new ForgotPasswordViewModel(_context, _commonServices, _authenticationService, _logger);
         forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }
 
     /// <summary>
@@ -138,27 +139,34 @@ public class SignInViewModel : ViewModel
 
         if (e.Result)
         {
-            await BaseCommonServices.DialogService
-                    .ShowInformationAsync(BaseCommonServices.LanguageService.GetString("Warning_Reset_Password"));
+            await _commonServices.DialogService
+                    .ShowInformationAsync(LanguageService.Default.GetString("Warning_Reset_Password"));
 
-            if (BaseCommonServices.NavigationService.CanGoBack)
-                await BaseCommonServices.NavigationService.GoBackAsync();
+            if (_commonServices.NavigationService.CanGoBack)
+                await _commonServices.NavigationService.GoBackAsync();
         }
     }
 
     private async Task SignInAsync()
     {
+        _commonServices.BusyService.StartBusy();
+
+        await Task.Delay(5000);
+
         if (Validate())
             await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+
+        _commonServices.BusyService.StopBusy();
     }
 
     protected override void Dispose(bool disposing)
     {
-        SignInCommand?.Cancel();
-        SignInCommand = null;
-        SignUpCommand?.Cancel();
-        SignUpCommand = null;
+        if (disposing)
+        {
+            (SignInCommand as IDisposable)?.Dispose();
+            (SignUpCommand as IDisposable)?.Dispose();
 
-        base.Dispose(disposing);
+            base.Dispose(disposing);
+        }
     }
 }

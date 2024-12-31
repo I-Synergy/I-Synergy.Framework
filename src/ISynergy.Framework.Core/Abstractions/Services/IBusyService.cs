@@ -1,9 +1,11 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Services;
+﻿using System.ComponentModel;
+
+namespace ISynergy.Framework.Core.Abstractions.Services;
 
 /// <summary>
 /// Interface IBusyService
 /// </summary>
-public interface IBusyService
+public interface IBusyService : INotifyPropertyChanged
 {
     /// <summary>
     /// Starts the busy.
@@ -13,7 +15,7 @@ public interface IBusyService
     /// <summary>
     /// Ends the busy.
     /// </summary>
-    void EndBusy();
+    void StopBusy();
     /// <summary>
     /// Gets or sets the busy message.
     /// </summary>

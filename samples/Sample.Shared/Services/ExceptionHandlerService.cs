@@ -5,10 +5,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Sample.Services;
 
-public class ExceptionHandlerService(
-    IBusyService busyService,
-    IDialogService dialogService,
-    ILanguageService languageService,
-    ILogger<BaseExceptionHandlerService> logger) : BaseExceptionHandlerService(busyService, dialogService, languageService, logger)
+public class ExceptionHandlerService : BaseExceptionHandlerService
 {
+    public ExceptionHandlerService(
+        IBusyService busyService,
+        IDialogService dialogService,
+        ILogger<BaseExceptionHandlerService> logger)
+        : base(busyService, dialogService, logger)
+    {
+        _logger.LogDebug($"ExceptionHandlerService instance created with ID: {Guid.NewGuid()}");
+    }
 }

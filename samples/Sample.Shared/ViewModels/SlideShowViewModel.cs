@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return BaseCommonServices.LanguageService.GetString("Display"); } }
+    public override string Title { get { return LanguageService.Default.GetString("Display"); } }
 
     /// <summary>
     /// Gets or sets the Items property value.
@@ -93,7 +94,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     {
         SlideshowTimer.Enabled = false;
 
-        BaseCommonServices.DispatcherService.Invoke(() =>
+        _commonServices.DispatcherService.Invoke(() =>
         {
             if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
             {

@@ -26,7 +26,6 @@ public class ViewModelSummaryTests
         _mockLogger = new Mock<ILogger>();
         _mockLanguageService = new Mock<ILanguageService>();
         _mockDialogService = new Mock<IDialogService>();
-        _mockCommonServices.Setup(x => x.LanguageService).Returns(_mockLanguageService.Object);
         _mockCommonServices.Setup(x => x.DialogService).Returns(_mockDialogService.Object);
     }
 

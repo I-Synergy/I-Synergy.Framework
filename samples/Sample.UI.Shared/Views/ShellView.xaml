@@ -60,7 +60,7 @@
             <TextBlock
                 Margin="18,0"
                 VerticalAlignment="Center"
-                Text="{Binding CommonServices.InfoService.Title}" />
+                Text="{Binding Title}" />
         </StackPanel>
 
         <NavigationView

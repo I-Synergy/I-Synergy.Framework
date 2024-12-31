@@ -1,6 +1,7 @@
-using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices;
 using Windows.Security.Credentials;
 
@@ -11,11 +12,12 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class CredentialLockerService : ICredentialLockerService
 {
-    private readonly IInfoService _infoService;
+    private readonly ILogger _logger;
 
-    public CredentialLockerService(IInfoService infoService)
+    public CredentialLockerService(ILogger<CredentialLockerService> logger)
     {
-        _infoService = infoService;
+        _logger = logger;
+        _logger.LogDebug($"CredentialLockerService instance created with ID: {Guid.NewGuid()}");
     }
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
@@ -23,10 +25,10 @@ public class CredentialLockerService : ICredentialLockerService
         return Task.FromResult(TryCatchUtility.IgnoreErrors<string, COMException>(() =>
         {
             PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
+            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(InfoService.Default.ProductName);
 
             if (credentials.Count > 0)
-                return vault.Retrieve(_infoService.ProductName, username)?.Password;
+                return vault.Retrieve(InfoService.Default.ProductName, username)?.Password;
 
             return string.Empty;
         }));
@@ -37,7 +39,7 @@ public class CredentialLockerService : ICredentialLockerService
         return Task.FromResult(TryCatchUtility.IgnoreErrors<List<string>, COMException>(() =>
         {
             PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
+            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(InfoService.Default.ProductName);
             return credentials.Select(q => q.UserName).ToList();
         }));
     }
@@ -52,7 +54,7 @@ public class CredentialLockerService : ICredentialLockerService
             if (oldPassword != password)
             {
                 await RemoveCredentialFromCredentialLockerAsync(username);
-                vault.Add(new PasswordCredential(_infoService.ProductName, username, password));
+                vault.Add(new PasswordCredential(InfoService.Default.ProductName, username, password));
             }
         });
 
@@ -64,7 +66,7 @@ public class CredentialLockerService : ICredentialLockerService
         TryCatchUtility.IgnoreErrors<COMException>(() =>
         {
             PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
+            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(InfoService.Default.ProductName);
             PasswordCredential credential = credentials.FirstOrDefault(q => q.UserName == username);
 
             if (credential is not null)

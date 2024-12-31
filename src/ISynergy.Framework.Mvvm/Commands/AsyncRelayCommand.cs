@@ -20,7 +20,17 @@ namespace ISynergy.Framework.Mvvm.Commands;
 public sealed class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCommand, IDisposable
 {
     private readonly List<CancellationTokenSource> _cancellationTokenSources = new List<CancellationTokenSource>();
+    private readonly Func<Task>? _execute;
+    private readonly Func<CancellationToken, Task>? _cancelableExecute;
+    private readonly Func<bool>? _canExecute;
+
     private CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
+    private Task? _executionTask;
+
+    /// <summary>
+    /// The _options being set for the current _command.
+    /// </summary>
+    private readonly AsyncRelayCommandOptions _options;
 
     /// <summary>
     /// The cached <see cref="PropertyChangedEventArgs"/> for <see cref="ExecutionTask"/>.
@@ -41,32 +51,6 @@ public sealed class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCo
     /// The cached <see cref="PropertyChangedEventArgs"/> for <see cref="IsRunning"/>.
     /// </summary>
     internal static readonly PropertyChangedEventArgs IsRunningChangedEventArgs = new(nameof(IsRunning));
-
-    /// <summary>
-    /// The <see cref="Func{TResult}"/> to invoke when <see cref="Execute"/> is used.
-    /// </summary>
-    private readonly Func<Task>? _execute;
-
-    /// <summary>
-    /// Execution task.
-    /// </summary>
-    private Task? _executionTask;
-
-    /// <summary>
-    /// The cancelable <see cref="Func{T,TResult}"/> to invoke when <see cref="Execute"/> is used.
-    /// </summary>
-    /// <remarks>Only one between this and <see cref="_execute"/> is not <see langword="null"/>.</remarks>
-    private readonly Func<CancellationToken, Task>? _cancelableExecute;
-
-    /// <summary>
-    /// The optional action to invoke when <see cref="CanExecute"/> is used.
-    /// </summary>
-    private readonly Func<bool>? _canExecute;
-
-    /// <summary>
-    /// The _options being set for the current _command.
-    /// </summary>
-    private readonly AsyncRelayCommandOptions _options;
 
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -382,7 +366,7 @@ public sealed class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCo
             }
         }
 
-        // free native resources if there are any.
+        _executionTask = null;
     }
     #endregion
 }

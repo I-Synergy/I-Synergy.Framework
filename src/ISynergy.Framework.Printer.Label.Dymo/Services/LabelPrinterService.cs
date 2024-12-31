@@ -1,6 +1,7 @@
 ﻿using DymoSDK.Implementations;
 using DymoSDK.Interfaces;
 using ISynergy.Framework.Printer.Label.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Printer.Label.Dymo.Services;
 
@@ -9,14 +10,17 @@ namespace ISynergy.Framework.Printer.Label.Dymo.Services;
 /// </summary>
 internal class LabelPrinterService : ILabelPrinterService
 {
+    private readonly ILogger _logger;
     private readonly IDymoLabel _label;
     private readonly List<string> _twinTurboRolls;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public LabelPrinterService()
+    public LabelPrinterService(ILogger<LabelPrinterService> logger)
     {
+        _logger = logger;
+
         DymoSDK.App.Init();
 
         _label = DymoLabel.LabelSharedInstance;

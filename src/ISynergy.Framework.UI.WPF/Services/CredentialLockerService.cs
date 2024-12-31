@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Win32;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -9,16 +10,16 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class CredentialLockerService : ICredentialLockerService
 {
-    private readonly IInfoService _infoService;
+    private readonly ILogger _logger;
 
-    public CredentialLockerService(IInfoService infoService)
+    public CredentialLockerService(ILogger<CredentialLockerService> logger)
     {
-        _infoService = infoService;
+        _logger = logger;
     }
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
-        ISynergy.Framework.UI.Models.Credential result = CredentialManager.ReadCredential(_infoService.ProductName, username);
+        ISynergy.Framework.UI.Models.Credential result = CredentialManager.ReadCredential(InfoService.Default.ProductName, username);
 
         if (result is not null)
             return Task.FromResult(result.Password);
@@ -34,13 +35,13 @@ public class CredentialLockerService : ICredentialLockerService
 
     public Task AddCredentialToCredentialLockerAsync(string username, string password)
     {
-        CredentialManager.WriteCredential(_infoService.ProductName, username, password);
+        CredentialManager.WriteCredential(InfoService.Default.ProductName, username, password);
         return Task.CompletedTask;
     }
 
     public Task RemoveCredentialFromCredentialLockerAsync(string username)
     {
-        CredentialManager.DeleteCredential(_infoService.ProductName);
+        CredentialManager.DeleteCredential(InfoService.Default.ProductName);
         return Task.CompletedTask;
     }
 }

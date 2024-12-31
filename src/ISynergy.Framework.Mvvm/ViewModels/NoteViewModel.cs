@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,7 @@ public class NoteViewModel : ViewModelDialog<string>
     {
         get
         {
-            return BaseCommonServices.LanguageService.GetString("Note");
+            return LanguageService.Default.GetString("Note");
         }
     }
 

@@ -111,9 +111,22 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     {
         base.Cleanup();
 
+        // Clear the selected item
         SelectedItem = default(TEntity);
+    }
 
-        SubmitCommand?.Cancel();
-        SubmitCommand = null;
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Dispose and clear the submit command
+            if (SubmitCommand is IDisposable submitCommand)
+            {
+                submitCommand.Dispose();
+                SubmitCommand = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

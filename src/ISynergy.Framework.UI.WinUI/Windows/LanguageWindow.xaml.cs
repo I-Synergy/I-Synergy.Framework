@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 
 namespace ISynergy.Framework.UI;
@@ -16,7 +15,7 @@ public partial class LanguageWindow : ISynergy.Framework.UI.Controls.Window, ILa
     {
         InitializeComponent();
 
-        PrimaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Ok");
-        SecondaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Cancel");
+        PrimaryButtonText = LanguageService.Default.GetString("Ok");
+        SecondaryButtonText = LanguageService.Default.GetString("Cancel");
     }
 }

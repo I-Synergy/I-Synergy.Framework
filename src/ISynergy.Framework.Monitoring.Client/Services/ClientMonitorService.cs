@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Monitoring.Client.Abstractions.Services;
 using ISynergy.Framework.Monitoring.Enumerations;
 using ISynergy.Framework.Monitoring.Messages;
@@ -20,10 +20,6 @@ internal class ClientMonitorService : IClientMonitorService
     /// </summary>
     protected readonly IDialogService _dialogService;
     /// <summary>
-    /// The language service
-    /// </summary>
-    protected readonly ILanguageService _languageService;
-    /// <summary>
     /// The logger
     /// </summary>
     protected readonly ILogger _logger;
@@ -41,17 +37,14 @@ internal class ClientMonitorService : IClientMonitorService
     /// Initializes a new instance of the <see cref="ClientMonitorService"/> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="languageService">The language service.</param>
     /// <param name="configurationOptions">The configuration options.</param>
     /// <param name="logger">The logger factory.</param>
     public ClientMonitorService(
         IDialogService dialogService,
-        ILanguageService languageService,
         IOptions<ClientMonitorOptions> configurationOptions,
         ILogger<ClientMonitorService> logger)
     {
         _dialogService = dialogService;
-        _languageService = languageService;
         _configurationOptions = configurationOptions.Value;
         _logger = logger;
     }
@@ -77,14 +70,14 @@ internal class ClientMonitorService : IClientMonitorService
         {
             // User has logged in. 
             await _dialogService.ShowInformationAsync(
-                string.Format(_languageService.GetString("WarningUserLoggedin"), m.Data.ToString()));
+                string.Format(LanguageService.Default.GetString("WarningUserLoggedin"), m.Data.ToString()));
         });
 
         _connection.On<HubMessage>(nameof(MonitorEvents.Disconnected), async (m) =>
         {
             // User has logged out. 
             await _dialogService.ShowInformationAsync(
-                string.Format(_languageService.GetString("WarningUserLoggedout"), m.Data.ToString()));
+                string.Format(LanguageService.Default.GetString("WarningUserLoggedout"), m.Data.ToString()));
         });
 
         // Set up additional handlers

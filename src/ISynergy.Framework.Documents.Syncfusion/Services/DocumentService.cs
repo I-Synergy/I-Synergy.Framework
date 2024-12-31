@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Models;
 using ISynergy.Framework.Documents.Options;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
@@ -17,17 +17,16 @@ namespace ISynergy.Framework.Documents.Services;
 /// </summary>
 internal class DocumentService : IDocumentService
 {
-    private readonly ILanguageService _languageService;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    /// <param name="languageService"></param>
     /// <param name="options"></param>
-    public DocumentService(ILanguageService languageService, IOptions<SyncfusionLicenseOptions> options)
+    /// <param name="logger"></param>
+    public DocumentService(IOptions<SyncfusionLicenseOptions> options, ILogger<DocumentService> logger)
     {
-        _languageService = languageService;
-
+        _logger = logger;
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
     }
 

@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
@@ -19,11 +18,6 @@ public class FileService : IFileService<FileResult>
     /// </summary>
     private readonly IDialogService _dialogService;
 
-    /// <summary>
-    /// The language service.
-    /// </summary>
-    private readonly ILanguageService _languageService;
-
     public string Filter { get; set; }
     public bool AddExtension { get; set; }
     public bool CheckFileExists { get; set; }
@@ -37,11 +31,9 @@ public class FileService : IFileService<FileResult>
     /// Initializes a new instance of the <see cref="FileService" /> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="languageService">The language service.</param>
-    public FileService(IDialogService dialogService, ILanguageService languageService)
+    public FileService(IDialogService dialogService)
     {
         _dialogService = dialogService;
-        _languageService = languageService;
 
         AddExtension = true;
         CheckFileExists = false;

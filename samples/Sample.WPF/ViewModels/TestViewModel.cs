@@ -16,9 +16,9 @@ public class TestViewModel(
 {
     public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
-        Test2ViewModel testVm = new Test2ViewModel(Context, BaseCommonServices, Logger);
+        Test2ViewModel testVm = new Test2ViewModel(_context, _commonServices, _logger);
         testVm.Submitted += new WeakEventHandler<SubmitEventArgs<object>>(TestVm_Submitted).Handler;
-        await BaseCommonServices.DialogService.ShowDialogAsync(typeof(Test2Window), testVm);
+        await _commonServices.DialogService.ShowDialogAsync(typeof(Test2Window), testVm);
     }
 
     private void TestVm_Submitted(object sender, ISynergy.Framework.Mvvm.Events.SubmitEventArgs<object> e)

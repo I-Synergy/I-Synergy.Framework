@@ -21,6 +21,6 @@
             </syncfusion:SfNavigationDrawer.ContentView>
         </syncfusion:SfNavigationDrawer>
 
-        <c:LoadingSpinner Visibility="{Binding BaseCommonServices.BusyService.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Message="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" />
+        <c:LoadingSpinner Visibility="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Message="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" />
     </Grid>
 </c:View>

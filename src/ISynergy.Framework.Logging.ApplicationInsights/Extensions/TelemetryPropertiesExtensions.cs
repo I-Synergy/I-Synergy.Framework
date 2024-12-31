@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.ApplicationInsights.DataContracts;
 
@@ -7,11 +7,10 @@ namespace ISynergy.Framework.Logging.Extensions;
 
 public static class TelemetryPropertiesExtensions
 {
-    public static void AddDefaultProperties(this IDictionary<string, string> properties, TelemetryContext telemetryContext, IContext context, IInfoService infoService)
+    public static void AddDefaultProperties(this IDictionary<string, string> properties, TelemetryContext telemetryContext, IContext context)
     {
         Argument.IsNotNull(properties);
         Argument.IsNotNull(context);
-        Argument.IsNotNull(infoService);
 
         SetUserProfile(telemetryContext, context.IsAuthenticated, context.Profile);
 
@@ -29,8 +28,8 @@ public static class TelemetryPropertiesExtensions
             properties.Add(nameof(profile.TimeZoneId), profile.TimeZoneId);
         }
 
-        properties.Add(nameof(infoService.ProductName), infoService.ProductName);
-        properties.Add(nameof(infoService.ProductVersion), infoService.ProductVersion.ToString());
+        properties.Add(nameof(InfoService.Default.ProductName), InfoService.Default.ProductName);
+        properties.Add(nameof(InfoService.Default.ProductVersion), InfoService.Default.ProductVersion.ToString());
     }
 
     /// <summary>

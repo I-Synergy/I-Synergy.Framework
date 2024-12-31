@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
 using Sample.Abstractions;
 using Sample.Models;
+using Sample.Services;
 using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
@@ -52,11 +54,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <value>The selected test items.</value>
     public ObservableCollection<TestItem> SelectedTestItems { get; set; }
 
-    /// <summary>
-    /// Gets the common services.
-    /// </summary>
-    /// <value>The common services.</value>
-    public ICommonServices CommonServices { get; }
     public ISettingsService SettingsService { get; }
 
     /// <summary>
@@ -98,24 +95,21 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <param name="authenticationService"></param>
     /// <param name="toastMessageService"></param>
     /// <param name="logger">The logger factory.</param>
-    /// <param name="themeService">The theme selector service.</param>
     public ShellViewModel(
         IContext context,
         ICommonServices commonServices,
         ISettingsService settingsService,
         IAuthenticationService authenticationService,
         IToastMessageService toastMessageService,
-        ILogger logger,
-        IThemeService themeService)
-        : base(context, commonServices, settingsService, authenticationService, logger, themeService)
+        ILogger<ShellViewModel> logger)
+        : base(context, commonServices, settingsService, authenticationService, logger)
     {
-        CommonServices = commonServices;
         SettingsService = settingsService;
 
         _toastMessageService = toastMessageService;
 
-        Title = commonServices.InfoService.ProductName;
-        Version = commonServices.InfoService.ProductVersion;
+        Title = InfoService.Default.ProductName;
+        Version = InfoService.Default.ProductVersion;
 
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
         BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
@@ -143,20 +137,20 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         PrimaryItems.Clear();
 
-        if (Context.IsAuthenticated)
+        if (_context.IsAuthenticated)
         {
-            PrimaryItems.Add(new NavigationItem("Info", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("Browse", (Application.Current.Resources["search"] as string).ToPath(), _themeService.Style.Color, BrowseCommand));
-            PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _themeService.Style.Color, EditableComboCommand));
-            PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _themeService.Style.Color, ValidationTestCommand));
-            PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _themeService.Style.Color, UnitConversionCommand));
-            PrimaryItems.Add(new NavigationItem("Select single item", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectSingleCommand));
-            PrimaryItems.Add(new NavigationItem("Select multiple items", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, SelectMultipleCommand));
-            PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, NugetUnlisterCommand));
-            PrimaryItems.Add(new NavigationItem("Show toast message", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, ShowToastMessageCommand));
+            PrimaryItems.Add(new NavigationItem("Info", (Application.Current.Resources["info"] as string).ToPath(), _settingsService.LocalSettings.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", (Application.Current.Resources["search"] as string).ToPath(), _settingsService.LocalSettings.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _settingsService.LocalSettings.Color, EditableComboCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _settingsService.LocalSettings.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _settingsService.LocalSettings.Color, UnitConversionCommand));
+            PrimaryItems.Add(new NavigationItem("Select single item", (Application.Current.Resources["info"] as string).ToPath(), _settingsService.LocalSettings.Color, SelectSingleCommand));
+            PrimaryItems.Add(new NavigationItem("Select multiple items", (Application.Current.Resources["info"] as string).ToPath(), _settingsService.LocalSettings.Color, SelectMultipleCommand));
+            PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _settingsService.LocalSettings.Color, NugetUnlisterCommand));
+            PrimaryItems.Add(new NavigationItem("Show toast message", (Application.Current.Resources["info"] as string).ToPath(), _settingsService.LocalSettings.Color, ShowToastMessageCommand));
         }
 
-        PrimaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _themeService.Style.Color, SignInCommand));
+        PrimaryItems.Add(new NavigationItem(_context.IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _settingsService.LocalSettings.Color, SignInCommand));
     }
 
     private Task ShowToastMessageAsync()
@@ -170,9 +164,9 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private Task SelectSingleAsync()
     {
-        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
+        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(_context, _commonServices, _logger, Items, SelectedTestItems, SelectionModes.Single);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
     private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
@@ -180,14 +174,14 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
 
-        await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
+        await _commonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
     }
 
     private Task SelectMultipleAsync()
     {
-        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
+        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(_context, _commonServices, _logger, Items, SelectedTestItems, SelectionModes.Multiple);
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-        return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
     private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
@@ -198,7 +192,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SelectedTestItems = new ObservableCollection<TestItem>();
         SelectedTestItems.AddRange(e.Result);
 
-        await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
+        await _commonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
     }
 
     private Task UnlistNugetAsync() =>
@@ -241,7 +235,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
-        if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
+        if (_commonServices is CommonServices commonServices &&
+            await commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
             await CommonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 

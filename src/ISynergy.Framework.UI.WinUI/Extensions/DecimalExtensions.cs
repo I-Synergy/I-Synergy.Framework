@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using System.Globalization;
 
@@ -12,7 +13,9 @@ public static class DecimalExtensions
     /// <returns>System.String.</returns>
     public static string ToCurrency(this decimal value)
     {
-        if (ServiceLocator.Default.GetService<IContext>() is IContext context)
+        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
+
+        if (scopedContextService.GetService<IContext>() is IContext context)
         {
             var currencySymbol = context.CurrencySymbol ?? "$";
             var info = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
