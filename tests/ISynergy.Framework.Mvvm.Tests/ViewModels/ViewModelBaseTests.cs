@@ -4,7 +4,9 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 
@@ -25,8 +27,25 @@ public class ViewModelBaseTests
 
     private class TestViewModel : ViewModel
     {
+        /// <summary>
+        /// Gets or sets the TestProperty property value.
+        /// </summary>
+        public string TestProperty
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
+
         public TestViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation) { }
+
+        public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(TestProperty))
+            {
+                Debug.WriteLine("TestProperty changed");
+            }
+        }
     }
 
     private enum TestEnum
@@ -147,5 +166,25 @@ public class ViewModelBaseTests
         // Assert
         // Base implementation should not set IsInitialized
         Assert.IsFalse(viewModel.IsInitialized);
+    }
+
+    [TestMethod]
+    public void TestIfPropertyChangedIsRaised()
+    {
+        // Arrange
+        var propertyChangedRaised = false;
+        var viewModel = new TestViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+
+        viewModel.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(viewModel.TestProperty))
+                propertyChangedRaised = true;
+        };
+
+        // Act
+        viewModel.TestProperty = "Test";
+
+        // Assert
+        Assert.IsTrue(propertyChangedRaised);
     }
 }
