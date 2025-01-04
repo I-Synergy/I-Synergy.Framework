@@ -114,6 +114,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
         _commonServices = commonServices;
         _logger = logger;
 
+        PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
 
         CloseCommand = new AsyncRelayCommand(CloseAsync);
@@ -210,6 +211,8 @@ public abstract class ViewModel : ObservableClass, IViewModel
     {
         if (disposing)
         {
+            PropertyChanged -= OnPropertyChanged;
+
             // Clear commands
             if (CloseCommand is IDisposable closeCommand)
             {
