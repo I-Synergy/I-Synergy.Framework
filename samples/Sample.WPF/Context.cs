@@ -35,8 +35,8 @@ public sealed class Context : ObservableClass, IContext
         set
         {
             SetValue(value);
-            OnPropertyChanged(nameof(IsAuthenticated));
-            OnPropertyChanged(nameof(IsUserAdministrator));
+            RaisePropertyChanged(nameof(IsAuthenticated));
+            RaisePropertyChanged(nameof(IsUserAdministrator));
         }
     }
 

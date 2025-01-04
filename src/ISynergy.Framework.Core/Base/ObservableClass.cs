@@ -185,8 +185,8 @@ public abstract class ObservableClass : IObservableClass
 
     private void ObservableClass_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
     {
-        OnPropertyChanged(nameof(HasErrors));
-        OnPropertyChanged(nameof(Errors));
+        RaisePropertyChanged(nameof(HasErrors));
+        RaisePropertyChanged(nameof(Errors));
     }
 
     /// <summary>
@@ -225,7 +225,7 @@ public abstract class ObservableClass : IObservableClass
             {
                 property.Value = value;
 
-                OnPropertyChanged(propertyName);
+                RaisePropertyChanged(propertyName);
 
                 if (AutomaticValidationTrigger)
                     Validate();
@@ -253,7 +253,7 @@ public abstract class ObservableClass : IObservableClass
             {
                 field = value;
 
-                OnPropertyChanged(propertyName);
+                RaisePropertyChanged(propertyName);
 
                 if (AutomaticValidationTrigger)
                     Validate();
@@ -269,7 +269,7 @@ public abstract class ObservableClass : IObservableClass
     {
         Errors.Clear();
 
-        OnPropertyChanged(nameof(IsValid));
+        RaisePropertyChanged(nameof(IsValid));
         OnErrorsChanged(nameof(Errors));
 
         return IsValid;
@@ -298,7 +298,7 @@ public abstract class ObservableClass : IObservableClass
 
         Validator?.Invoke(this);
 
-        OnPropertyChanged(nameof(IsValid));
+        RaisePropertyChanged(nameof(IsValid));
         OnErrorsChanged(nameof(Errors));
 
         return IsValid;
@@ -334,7 +334,7 @@ public abstract class ObservableClass : IObservableClass
         Errors.Add(new KeyValuePair<string, string>(propertyName, errorMessage));
 
         OnErrorsChanged(nameof(Errors));
-        OnPropertyChanged(nameof(IsValid));
+        RaisePropertyChanged(nameof(IsValid));
     }
 
 
@@ -444,7 +444,7 @@ public abstract class ObservableClass : IObservableClass
     /// Called when [property changed].
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
-    public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    public virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
     {
         ThrowIfDisposed();
         _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
