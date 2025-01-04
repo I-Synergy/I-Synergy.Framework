@@ -114,7 +114,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
             SelectedItems.Add(item);
         }
 
-        OnPropertyChanged(nameof(SelectedItems));
+        RaisePropertyChanged(nameof(SelectedItems));
 
         IsInitialized = true;
     }

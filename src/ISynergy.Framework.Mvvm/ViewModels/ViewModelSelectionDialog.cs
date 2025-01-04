@@ -123,7 +123,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
             SelectedItems.Add(item);
         }
 
-        OnPropertyChanged(nameof(SelectedItems));
+        RaisePropertyChanged(nameof(SelectedItems));
 
         IsInitialized = true;
     }

@@ -3,7 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.ComponentModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 
@@ -32,11 +31,6 @@ public class ViewModelBladeWizardTests
     {
         public TestBladeWizardViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation) { }
-
-        public void RaisePropertyChanged(string propertyName)
-        {
-            OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
     [TestMethod]
@@ -49,7 +43,9 @@ public class ViewModelBladeWizardTests
         Assert.IsNotNull(viewModel.BackCommand);
         Assert.IsNotNull(viewModel.NextCommand);
         Assert.IsNotNull(viewModel.SubmitCommand);
+
         Assert.AreEqual(1, viewModel.Page);
+
         Assert.IsFalse(viewModel.Back_IsEnabled);
         Assert.IsFalse(viewModel.Next_IsEnabled);
         Assert.IsFalse(viewModel.Submit_IsEnabled);
@@ -69,6 +65,7 @@ public class ViewModelBladeWizardTests
         // Assert
         Assert.IsFalse(viewModel.Back_IsEnabled);
         Assert.IsFalse(viewModel.Next_IsEnabled);
+
         Assert.IsTrue(viewModel.Submit_IsEnabled);
     }
 
