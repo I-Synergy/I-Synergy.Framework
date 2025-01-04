@@ -31,7 +31,7 @@ internal class TestObservableClass : ObservableClass
 
     public void TriggerPropertyChanged(string propertyName)
     {
-        OnPropertyChanged(propertyName);
+        RaisePropertyChanged(propertyName);
     }
 
     public void TriggerErrorsChanged(string propertyName)

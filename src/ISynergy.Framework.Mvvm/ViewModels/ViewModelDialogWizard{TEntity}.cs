@@ -108,32 +108,11 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
     {
         base.OnPropertyChanged(sender, e);
 
-        if (e.PropertyName == nameof(Page))
+        if (e.PropertyName == nameof(Page) || e.PropertyName == nameof(Pages))
         {
-            if (Page == 1 && Page != Pages)
-            {
-                Back_IsEnabled = false;
-                Next_IsEnabled = true;
-                Submit_IsEnabled = false;
-            }
-            else if (Page == Pages && Page != 1)
-            {
-                Back_IsEnabled = true;
-                Next_IsEnabled = false;
-                Submit_IsEnabled = true;
-            }
-            else if (Page == Pages && Page == 1)
-            {
-                Back_IsEnabled = false;
-                Next_IsEnabled = false;
-                Submit_IsEnabled = true;
-            }
-            else
-            {
-                Back_IsEnabled = true;
-                Next_IsEnabled = true;
-                Submit_IsEnabled = false;
-            }
+            Back_IsEnabled = Page > 1;
+            Next_IsEnabled = Page < Pages;
+            Submit_IsEnabled = Pages > 0 && Page == Pages;
         }
     }
 
