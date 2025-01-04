@@ -1,4 +1,4 @@
-Copyright (c) 2008-2024 International Intelligence
+Copyright (c) 2008-2025 International Intelligence
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

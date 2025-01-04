@@ -146,7 +146,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
     }
 
-    private void NavigationService_BackStackChanged(object sender, EventArgs e) => OnPropertyChanged(nameof(IsBackEnabled));
+    private void NavigationService_BackStackChanged(object sender, EventArgs e) => RaisePropertyChanged(nameof(IsBackEnabled));
 
     /// <summary>
     /// Opens the settings asynchronous.

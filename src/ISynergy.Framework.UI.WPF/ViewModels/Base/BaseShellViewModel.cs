@@ -129,7 +129,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         ILogger logger)
         : base(context, commonServices, logger)
     {
-        _commonServices.NavigationService.BackStackChanged += (s, e) => OnPropertyChanged(nameof(IsBackEnabled));
+        _commonServices.NavigationService.BackStackChanged += (s, e) => RaisePropertyChanged(nameof(IsBackEnabled));
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
