@@ -12,7 +12,9 @@ public class ScopedContextService : IScopedContextService
     public ScopedContextService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        CreateNewScope();
+
+        if (_serviceScope is null)
+            _serviceScope = _serviceProvider.CreateScope();
     }
 
     public void CreateNewScope()
