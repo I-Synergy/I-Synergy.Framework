@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
 
-namespace ISynergy.Framework.Core.Tests.Converters;
+namespace ISynergy.Framework.Core.Converters.Tests;
 
 [TestClass]
 public class TimeOnlyConverterTests
