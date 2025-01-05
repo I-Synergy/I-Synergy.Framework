@@ -1,14 +1,8 @@
-﻿using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Core.Tests.Attributes;
+namespace ISynergy.Framework.Core.Attributes.Tests;
 
 [TestClass]
 public class LifetimeAttributeTests

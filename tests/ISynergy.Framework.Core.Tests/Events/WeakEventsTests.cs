@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Tests.Data.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Tests.Events;
+namespace ISynergy.Framework.Core.Events.Tests;
 
 [TestClass]
 public class WeakEventsTests

@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.UI.Converters;
-using ISynergy.Framework.UI.WinUI.Tests.Enumerations;
+﻿using ISynergy.Framework.UI.WinUI.Tests.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.UI.WinUI.Converters.Tests;
+namespace ISynergy.Framework.UI.Converters.Tests;
 
 [TestClass]
 public class EnumConverterTests
