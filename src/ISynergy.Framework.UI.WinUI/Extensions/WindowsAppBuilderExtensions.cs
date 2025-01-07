@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using System.Reflection;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -153,5 +154,21 @@ public static class WindowsAppBuilderExtensions
         services.RegisterViewModels(viewModelTypes);
         services.RegisterViews(viewTypes);
         services.RegisterWindows(windowTypes);
+    }
+
+    public static ResourceDictionary AddToResourceDictionary<T>(this ResourceDictionary resources, IScopedContextService scopedContextService, string key = null, Func<T> implementation = null)
+    {
+        if (string.IsNullOrEmpty(key))
+            key = typeof(T).Name;
+
+        if (resources.ContainsKey(key))
+            resources.Remove(key);
+
+        if (implementation is not null)
+            resources.Add(key, implementation.Invoke());
+        else
+            resources.Add(key, scopedContextService.GetService<T>());
+
+        return resources;
     }
 }

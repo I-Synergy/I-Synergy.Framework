@@ -9,7 +9,6 @@ using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -71,7 +70,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Setting up localization service.");
 
         if (settingsService.LocalSettings is not null)
-            settingsService.LocalSettings.Language.SetLocalizationLanguage(context);
+            settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
         //_logger.LogTrace("Setting up theming.");
 
@@ -181,17 +180,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </code>
     /// </example>
     /// <returns></returns>
-    public virtual Task InitializeApplicationAsync()
-    {
-        var culture = CultureInfo.CurrentCulture;
-        var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
-        var context = _scopedContextService.GetService<IContext>();
-        numberFormat.CurrencySymbol = $"{context.CurrencySymbol} ";
-        numberFormat.CurrencyNegativePattern = 1;
-        context.NumberFormat = numberFormat;
-
-        return Task.CompletedTask;
-    }
+    public abstract Task InitializeApplicationAsync();
 
     /// <summary>
     /// Get a new list of additional resource dictionaries which can be merged.

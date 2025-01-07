@@ -241,7 +241,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         _settingsService.LocalSettings.Language = e.Result;
         _settingsService.SaveLocalSettings();
 
-        e.Result.SetLocalizationLanguage(_context);
+        e.Result.SetLocalizationLanguage();
 
         if (await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningLanguageChange") +
