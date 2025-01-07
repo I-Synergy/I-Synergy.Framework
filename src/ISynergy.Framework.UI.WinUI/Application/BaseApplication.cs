@@ -17,7 +17,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using Windows.ApplicationModel.Activation;
 using Application = Microsoft.UI.Xaml.Application;
@@ -102,7 +101,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogTrace("Setting up localization service.");
         if (settingsService.LocalSettings is not null)
-            settingsService.LocalSettings.Language.SetLocalizationLanguage(context);
+            settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
         _logger.LogTrace("Setting up theming.");
         if (settingsService.LocalSettings is not null && settingsService.LocalSettings.IsLightThemeEnabled)
@@ -194,7 +193,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     private void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
     /// <summary>
-    /// LoadAssembly the application.
+    /// Initializing the application.
     /// </summary>
     /// <example>
     /// <code>
@@ -205,17 +204,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </code>
     /// </example>
     /// <returns></returns>
-    public virtual Task InitializeApplicationAsync()
-    {
-        var culture = CultureInfo.CurrentCulture;
-        var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
-        var context = _scopedContextService.GetService<IContext>();
-        numberFormat.CurrencySymbol = $"{context.CurrencySymbol} ";
-        numberFormat.CurrencyNegativePattern = 1;
-        context.NumberFormat = numberFormat;
-
-        return Task.CompletedTask;
-    }
+    public abstract Task InitializeApplicationAsync();
 
     /// <summary>
     /// Get a new list of additional resource dictionaries which can be merged.

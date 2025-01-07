@@ -88,8 +88,6 @@ public partial class App : BaseApplication
         {
             _commonServices.BusyService.StartBusy();
 
-            await base.InitializeApplicationAsync();
-
             try
             {
                 _commonServices.BusyService.BusyMessage = "Start doing important stuff";

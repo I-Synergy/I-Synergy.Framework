@@ -1,33 +1,14 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using System.Globalization;
+﻿using System.Globalization;
 using Windows.Globalization.NumberFormatting;
 
 namespace ISynergy.Framework.UI.Formatters;
 
 public class DecimalFormatter : INumberFormatter2, INumberParser
 {
-    private readonly IContext _context;
-    private readonly NumberFormatInfo _numberFormat;
-
-    public int Decimals { get; set; }
+    public int Decimals { get; set; } = 2;
 
     public DecimalFormatter()
     {
-        try
-        {
-            var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-            _context = scopedContextService?.GetService<IContext>();
-            _numberFormat = _context?.NumberFormat ?? CultureInfo.CurrentCulture.NumberFormat;
-            Decimals = _context?.NumberFormat?.CurrencyDecimalDigits ?? 2;
-        }
-        catch
-        {
-            // Fallback to system defaults if service resolution fails
-            _numberFormat = CultureInfo.CurrentCulture.NumberFormat;
-            Decimals = 2;
-        }
     }
 
     public DecimalFormatter(int decimals)
@@ -36,29 +17,14 @@ public class DecimalFormatter : INumberFormatter2, INumberParser
         Decimals = decimals;
     }
 
-    public string FormatDouble(double value)
-    {
-        if (_numberFormat == null)
-            return value.ToString($"N{Decimals}");
+    public string FormatDouble(double value) =>
+        value.ToString($"N{Decimals}", CultureInfo.CurrentCulture.NumberFormat);
 
-        return value.ToString($"N{Decimals}", _numberFormat);
-    }
+    public string FormatInt(long value) =>
+        value.ToString($"N{Decimals}", CultureInfo.CurrentCulture.NumberFormat);
 
-    public string FormatInt(long value)
-    {
-        if (_numberFormat == null)
-            return value.ToString($"N{Decimals}");
-
-        return value.ToString($"N{Decimals}", _numberFormat);
-    }
-
-    public string FormatUInt(ulong value)
-    {
-        if (_numberFormat == null)
-            return value.ToString($"N{Decimals}");
-
-        return value.ToString($"N{Decimals}", _numberFormat);
-    }
+    public string FormatUInt(ulong value) =>
+        value.ToString($"N{Decimals}", CultureInfo.CurrentCulture.NumberFormat);
 
     public double? ParseDouble(string text)
     {
@@ -67,7 +33,7 @@ public class DecimalFormatter : INumberFormatter2, INumberParser
 
         try
         {
-            var numberFormat = _numberFormat ?? CultureInfo.CurrentCulture.NumberFormat;
+            var numberFormat = CultureInfo.CurrentCulture.NumberFormat;
             var decimalSeparator = numberFormat.NumberDecimalSeparator;
             var groupSeparator = numberFormat.NumberGroupSeparator;
 
@@ -104,7 +70,7 @@ public class DecimalFormatter : INumberFormatter2, INumberParser
 
         try
         {
-            var numberFormat = _numberFormat ?? CultureInfo.CurrentCulture.NumberFormat;
+            var numberFormat = CultureInfo.CurrentCulture.NumberFormat;
             var decimalSeparator = numberFormat.NumberDecimalSeparator;
             var groupSeparator = numberFormat.NumberGroupSeparator;
 
@@ -144,7 +110,7 @@ public class DecimalFormatter : INumberFormatter2, INumberParser
 
         try
         {
-            var numberFormat = _numberFormat ?? CultureInfo.CurrentCulture.NumberFormat;
+            var numberFormat = CultureInfo.CurrentCulture.NumberFormat;
             var decimalSeparator = numberFormat.NumberDecimalSeparator;
             var groupSeparator = numberFormat.NumberGroupSeparator;
 
