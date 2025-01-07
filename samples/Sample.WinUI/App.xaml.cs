@@ -195,14 +195,23 @@ public sealed partial class App : BaseApplication
             settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
             settingsService.SaveLocalSettings();
 
-            var culture = CultureInfo.CurrentCulture.Clone() as CultureInfo;
+            _logger.LogInformation("Setting culture");
+            if (settingsService.GlobalSettings is not null)
+            {
+                var culture = CultureInfo.DefaultThreadCurrentCulture.Clone() as CultureInfo;
 
-            culture.NumberFormat.CurrencySymbol = "€";
-            culture.NumberFormat.CurrencyNegativePattern = 1;
-            culture.NumberFormat.NumberNegativePattern = 1;
+                culture.NumberFormat.CurrencySymbol = "€";
 
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
+                culture.NumberFormat.CurrencyDecimalDigits = settingsService.GlobalSettings.Decimals;
+                culture.NumberFormat.NumberDecimalDigits = settingsService.GlobalSettings.Decimals;
+
+                culture.NumberFormat.CurrencyNegativePattern = 1;
+                culture.NumberFormat.NumberNegativePattern = 1;
+                culture.NumberFormat.PercentNegativePattern = 1;
+
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+            }
 
             _logger.LogInformation("Navigate to Shell");
             await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
