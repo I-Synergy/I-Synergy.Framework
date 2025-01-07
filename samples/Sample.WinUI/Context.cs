@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using System.Globalization;
 
 namespace Sample;
 
@@ -22,8 +21,6 @@ public sealed class Context : IContext
     /// </summary>
     public Context()
     {
-        CurrencyCode = "EURO";
-        CurrencySymbol = "€";
         Environment = SoftwareEnvironments.Production;
     }
 
@@ -73,18 +70,6 @@ public sealed class Context : IContext
     }
 
     /// <summary>
-    /// Gets or sets the currency symbol.
-    /// </summary>
-    /// <value>The currency symbol.</value>
-    public string CurrencySymbol { get; set; }
-
-    /// <summary>
-    /// Gets or sets the currency code.
-    /// </summary>
-    /// <value>The currency code.</value>
-    public string CurrencyCode { get; set; }
-
-    /// <summary>
     /// Gets a value indicating whether this instance is authenticated.
     /// </summary>
     /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
@@ -123,18 +108,6 @@ public sealed class Context : IContext
     /// </summary>
     /// <value><c>true</c> if this instance is offline; otherwise, <c>false</c>.</value>
     public bool IsOffline { get; set; }
-
-    /// <summary>
-    /// Gets or sets the NumberFormat property value.
-    /// </summary>
-    /// <value>The number format.</value>
-    public NumberFormatInfo NumberFormat { get; set; }
-
-    /// <summary>
-    /// Gets or sets the Culture property value.
-    /// </summary>
-    /// <value>The culture.</value>
-    public CultureInfo Culture { get; set; }
 
     /// <summary>
     /// Gets or sets the gateway service endpoint.

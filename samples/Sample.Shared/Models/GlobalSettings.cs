@@ -16,5 +16,11 @@ public class GlobalSettings : BaseModel, IGlobalSettings
         get { return GetValue<int>(); }
         set { SetValue(value); }
     }
+
+    public int CurrencyId
+    {
+        get { return GetValue<int>(); }
+        set { SetValue(value); }
+    }
 }
 

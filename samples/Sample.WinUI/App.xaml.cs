@@ -23,6 +23,7 @@ using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 
@@ -96,8 +97,6 @@ public sealed partial class App : BaseApplication
             //{
             //    await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
             //}
-
-            await base.InitializeApplicationAsync();
 
             try
             {
@@ -195,6 +194,24 @@ public sealed partial class App : BaseApplication
 
             settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
             settingsService.SaveLocalSettings();
+
+            _logger.LogInformation("Setting culture");
+            if (settingsService.GlobalSettings is not null)
+            {
+                var culture = CultureInfo.DefaultThreadCurrentCulture.Clone() as CultureInfo;
+
+                culture.NumberFormat.CurrencySymbol = "€";
+
+                culture.NumberFormat.CurrencyDecimalDigits = settingsService.GlobalSettings.Decimals;
+                culture.NumberFormat.NumberDecimalDigits = settingsService.GlobalSettings.Decimals;
+
+                culture.NumberFormat.CurrencyNegativePattern = 1;
+                culture.NumberFormat.NumberNegativePattern = 1;
+                culture.NumberFormat.PercentNegativePattern = 1;
+
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+            }
 
             _logger.LogInformation("Navigate to Shell");
             await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();

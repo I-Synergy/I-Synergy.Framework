@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml.Data;
-using System.Globalization;
 using Windows.ApplicationModel;
 
 namespace ISynergy.Framework.UI.Converters;
@@ -22,21 +21,13 @@ public class CurrencyConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        var currencySymbol = "$";
-
         if (!DesignMode.DesignModeEnabled)
         {
             if (decimal.TryParse(value.ToString(), out var amount))
-            {
                 return amount.ToCurrency();
-            }
         }
 
-        var info = CultureInfo.CurrentCulture.NumberFormat;
-        info.CurrencySymbol = $"{currencySymbol} ";
-        info.CurrencyNegativePattern = 1;
-
-        return string.Format(info, "{0:C2}", 0);
+        return 0m.ToCurrency();
     }
 
     /// <summary>
@@ -71,21 +62,13 @@ public class NegativeCurrencyConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        var currencySymbol = "$";
-
         if (!DesignMode.DesignModeEnabled)
         {
             if (decimal.TryParse(value.ToString(), out var amount))
-            {
                 return (amount * -1).ToCurrency();
-            }
         }
 
-        var info = CultureInfo.CurrentCulture.NumberFormat;
-        info.CurrencySymbol = $"{currencySymbol} ";
-        info.CurrencyNegativePattern = 1;
-
-        return string.Format(info, "{0:C2}", 0);
+        return 0m.ToCurrency();
     }
 
     /// <summary>

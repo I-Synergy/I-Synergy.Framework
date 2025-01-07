@@ -59,7 +59,7 @@
                 XBindingPath="Description"
                 YBindingPath="Value">
                 <charts:ColumnSeries.DataLabelSettings>
-                    <charts:CartesianDataLabelSettings Format="c2" Position="Inner" />
+                    <charts:CartesianDataLabelSettings Format="c2" Position="Inner"  />
                 </charts:ColumnSeries.DataLabelSettings>
             </charts:ColumnSeries>
         </charts:SfCartesianChart>
