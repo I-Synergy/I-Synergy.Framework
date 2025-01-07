@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.UI.Models.Tests;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Formatters.Tests;
@@ -13,31 +6,27 @@ namespace ISynergy.Framework.UI.Formatters.Tests;
 [TestClass]
 public class DecimalFormatterTests
 {
-    private IServiceProvider CreateTestServiceProvider()
-    {
-        var services = new ServiceCollection();
-
-        // Register test services
-        services.AddSingleton<IScopedContextService, ScopedContextService>();
-        services.AddScoped<IContext, Context>();
-
-        return services.BuildServiceProviderWithLocator(true);
-    }
+    private CultureInfo _originalCulture;
 
     [TestInitialize]
     public void Setup()
     {
-        var serviceProvider = CreateTestServiceProvider();
-        var locator = ServiceLocator.Default;
+        _originalCulture = CultureInfo.CurrentCulture;
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        // Restore original culture
+        CultureInfo.CurrentCulture = _originalCulture;
     }
 
     [TestMethod]
     public void Constructor_WithDefaultParameters_SetsDefaultDecimals()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
 
         // Act
         var formatter = new DecimalFormatter();
@@ -50,9 +39,8 @@ public class DecimalFormatterTests
     public void Constructor_WithCustomDecimals_SetsSpecifiedDecimals()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
 
         // Act
         var formatter = new DecimalFormatter(4);
@@ -76,9 +64,8 @@ public class DecimalFormatterTests
     public void FormatDouble_WithInvariantCulture_FormatsCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
 
         var formatter = new DecimalFormatter(2);
         var value = 1234.5678;
@@ -94,10 +81,9 @@ public class DecimalFormatterTests
     public void FormatDouble_WithCustomCulture_FormatsCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        var culture = new CultureInfo("nl-NL");
-        context.NumberFormat = culture.NumberFormat;
+        var currentCulture = new CultureInfo("nl-NL");
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter(2);
         var value = 1234.5678;
 
@@ -112,9 +98,9 @@ public class DecimalFormatterTests
     public void FormatInt_WithInvariantCulture_FormatsCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter(2);
         long value = 1234567;
 
@@ -129,9 +115,9 @@ public class DecimalFormatterTests
     public void FormatUInt_WithInvariantCulture_FormatsCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter(2);
         ulong value = 1234567;
 
@@ -146,9 +132,9 @@ public class DecimalFormatterTests
     public void ParseDouble_WithInvariantCulture_ParsesCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter();
         var text = "1,234.56";
 
@@ -163,10 +149,9 @@ public class DecimalFormatterTests
     public void ParseDouble_WithCustomCulture_ParsesCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        var culture = new CultureInfo("nl-NL");
-        context.NumberFormat = culture.NumberFormat;
+        var currentCulture = new CultureInfo("nl-NL");
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter();
         var text = "1.234,56";
 
@@ -181,9 +166,9 @@ public class DecimalFormatterTests
     public void ParseDouble_WithEmptyString_ReturnsZero()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter();
 
         // Act
@@ -197,9 +182,9 @@ public class DecimalFormatterTests
     public void ParseDouble_WithInvalidFormat_ReturnsZero()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter();
 
         // Act
@@ -213,9 +198,9 @@ public class DecimalFormatterTests
     public void ParseInt_WithInvariantCulture_ParsesCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter();
         var text = "1,234";
 
@@ -230,9 +215,9 @@ public class DecimalFormatterTests
     public void ParseUInt_WithInvariantCulture_ParsesCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter();
         var text = "1,234";
 
@@ -247,9 +232,9 @@ public class DecimalFormatterTests
     public void ParseDouble_WithLeadingDecimalSeparator_ParsesCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter();
         var text = ".56";
 
@@ -261,29 +246,12 @@ public class DecimalFormatterTests
     }
 
     [TestMethod]
-    public void FormatDouble_WithNullNumberFormat_UsesSystemDefaults()
-    {
-        // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = null;
-        var formatter = new DecimalFormatter(2);
-        var value = 1234.5678;
-
-        // Act
-        var result = formatter.FormatDouble(value);
-
-        // Assert
-        Assert.IsFalse(string.IsNullOrEmpty(result));
-    }
-
-    [TestMethod]
     public void ParseInt_WithDecimalValue_RoundsCorrectly()
     {
         // Arrange
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-        var context = scopedContextService.GetService<IContext>();
-        context.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        var currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        CultureInfo.CurrentCulture = currentCulture;
+
         var formatter = new DecimalFormatter();
 
         // Act & Assert

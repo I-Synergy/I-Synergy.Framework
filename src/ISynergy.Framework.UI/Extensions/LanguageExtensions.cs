@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
 using NodaTime.TimeZones;
 using System.Globalization;
 
@@ -11,10 +10,9 @@ public static class LanguageExtensions
     /// Sets the localization language.
     /// </summary>
     /// <param name="language">The iso language.</param>
-    /// <param name="context"></param>
-    public static void SetLocalizationLanguage(this Languages language, IContext context)
+    public static void SetLocalizationLanguage(this Languages language)
     {
-        var systemCulture = CultureInfo.CurrentCulture;
+        var systemCulture = CultureInfo.CurrentCulture.Clone() as CultureInfo;
 
         if (systemCulture.TwoLetterISOLanguageName.Equals(language))
         {
@@ -38,15 +36,9 @@ public static class LanguageExtensions
             else
                 applicationCulture = new CultureInfo("en");
 
-            applicationCulture.NumberFormat = systemCulture.NumberFormat;
-
             CultureInfo.CurrentCulture = applicationCulture;
             CultureInfo.CurrentUICulture = applicationCulture;
         }
-
-        // Currency Symbol is retrieved from Current Culture. 
-        // Alternatively, could be also a deployment wide setting. 
-        context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
     }
 
     /// <summary>

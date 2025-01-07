@@ -146,7 +146,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 {
                     _settingsService.LocalSettings.Language = e.Result;
                     _settingsService.SaveLocalSettings();
-                    e.Result.SetLocalizationLanguage(_context);
+                    e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };
                 await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
