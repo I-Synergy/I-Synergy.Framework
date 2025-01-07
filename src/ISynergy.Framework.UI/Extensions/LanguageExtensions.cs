@@ -16,8 +16,8 @@ public static class LanguageExtensions
 
         if (systemCulture.TwoLetterISOLanguageName.Equals(language))
         {
-            CultureInfo.CurrentCulture = systemCulture;
-            CultureInfo.CurrentUICulture = systemCulture;
+            CultureInfo.DefaultThreadCurrentCulture = systemCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = systemCulture;
         }
         else
         {
@@ -36,8 +36,8 @@ public static class LanguageExtensions
             else
                 applicationCulture = new CultureInfo("en");
 
-            CultureInfo.CurrentCulture = applicationCulture;
-            CultureInfo.CurrentUICulture = applicationCulture;
+            CultureInfo.DefaultThreadCurrentCulture = applicationCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = applicationCulture;
         }
     }
 

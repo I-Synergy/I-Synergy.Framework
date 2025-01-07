@@ -55,6 +55,10 @@
             SpinButtonPlacementMode="Compact"
             Value="{Binding DecimalValue, Mode=TwoWay, Converter={StaticResource DecimalToDoubleConverter}}" />
 
+        <TextBlock
+            HorizontalAlignment="Left"
+            Text="{Binding DecimalValue, Converter={StaticResource CurrencyConverter}}" />
+
         <StackPanel Orientation="Vertical" Spacing="4">
             <TextBlock Text="Master-Detail" />
             <Button Command="{Binding NavigateToDetailCommand}" Content="Navigate to details" />
