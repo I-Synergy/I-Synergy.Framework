@@ -46,17 +46,19 @@ public static class WPFAppBuilderExtensions
     /// </summary>
     /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TSettings"></typeparam>
-    /// <typeparam name="TExceptionHandler"></typeparam>
+    /// <typeparam name="TCommonServices"></typeparam>
+    /// <typeparam name="TAuthenticationService"></typeparam>
+    /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="wpfAppBuilder"></param>
     /// <param name="action"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TApplication, TContext, TSettings, TExceptionHandler, TResource>(this IHostBuilder wpfAppBuilder, Action<IServiceCollection, IConfiguration> action)
+    public static IHostBuilder ConfigureServices<TApplication, TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(this IHostBuilder wpfAppBuilder, Action<IServiceCollection, IConfiguration> action)
         where TApplication : Application
         where TContext : class, IContext
-        where TSettings : class, ISettingsService
-        where TExceptionHandler : class, IExceptionHandlerService
+        where TCommonServices : class, ICommonServices
+        where TSettingsService : class, ISettingsService
+        where TAuthenticationService : class, IAuthenticationService
         where TResource : class
     {
         wpfAppBuilder.ConfigureServices((context, services) =>
@@ -89,11 +91,11 @@ public static class WPFAppBuilderExtensions
             services.TryAddScoped<TContext>();
             services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
 
-            services.TryAddScoped<ISettingsService, TSettings>();
+            services.TryAddScoped<ISettingsService, TSettingsService>();
             services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
             services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
 
-            services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
+            services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
             services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
             services.TryAddSingleton<IBusyService, BusyService>();
@@ -102,6 +104,9 @@ public static class WPFAppBuilderExtensions
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<IToastMessageService, ToastMessageService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
+
+            services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
+            services.TryAddSingleton<ICommonServices, TCommonServices>();
 
             services.RegisterAssemblies();
 

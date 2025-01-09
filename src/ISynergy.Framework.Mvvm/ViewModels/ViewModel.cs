@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
@@ -21,11 +21,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 [Bindable(true)]
 public abstract class ViewModel : ObservableClass, IViewModel
 {
-    protected readonly IContext _context;
-    protected readonly IBaseCommonServices _commonServices;
+    protected readonly IScopedContextService _scopedContextService;
+    protected readonly ICommonServices _commonServices;
     protected readonly ILogger _logger;
 
-    public IBaseCommonServices CommonServices => _commonServices;
+    public ICommonServices CommonServices => _commonServices;
 
     /// <summary>
     /// Occurs when [cancelled].
@@ -99,18 +99,18 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="automaticValidation">The validation.</param>
     protected ViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
         : base(automaticValidation)
     {
-        _context = context;
+        _scopedContextService = scopedContextService;
         _commonServices = commonServices;
         _logger = logger;
 

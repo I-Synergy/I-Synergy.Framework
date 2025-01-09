@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 
@@ -49,14 +49,14 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// <summary>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     public ConvertersViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger)
-        : base(context, commonServices, logger)
+        : base(scopedContextService, commonServices, logger)
     {
         SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
     }

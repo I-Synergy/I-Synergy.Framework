@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -24,17 +24,16 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
-    /// <param name="language"></param>
     public LanguageViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        ILogger logger,
-        Languages language)
-        : base(context, commonServices, logger)
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
+        ILogger logger)
+        : base(scopedContextService, commonServices, logger)
     {
-        SelectedItem = language;
+        var settingsService = scopedContextService.GetService<ISettingsService>();
+        SelectedItem = settingsService.LocalSettings.Language;
     }
 }

@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -12,12 +12,12 @@ public class DetailBViewModel : ViewModelBlade<TestItem>
     public AsyncRelayCommand OpenNewBladeCommand { get; private set; }
 
     public DetailBViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger,
         TestItem item,
         bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
+        : base(scopedContextService, commonServices, logger, automaticValidation)
     {
         SelectedItem = item;
 
@@ -26,7 +26,7 @@ public class DetailBViewModel : ViewModelBlade<TestItem>
 
     private async Task OpenNewBladeAsync()
     {
-        var detailsVm = new DetailCViewModel(_context, _commonServices, _logger, SelectedItem);
+        var detailsVm = new DetailCViewModel(_scopedContextService, _commonServices, _logger, SelectedItem);
         await _commonServices.NavigationService.OpenBladeAsync(Owner, detailsVm);
     }
 

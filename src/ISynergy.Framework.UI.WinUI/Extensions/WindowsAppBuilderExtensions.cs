@@ -46,21 +46,23 @@ public static class WindowsAppBuilderExtensions
     /// </summary>
     /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TSettings"></typeparam>
-    /// <typeparam name="TExceptionHandler"></typeparam>
+    /// <typeparam name="TCommonServices"></typeparam>
+    /// <typeparam name="TAuthenticationService"></typeparam>
+    /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="windowsAppBuilder"></param>
     /// <param name="action"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TApplication, TContext, TSettings, TExceptionHandler, TResource>(
+    public static IHostBuilder ConfigureServices<TApplication, TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
         this IHostBuilder windowsAppBuilder,
         Action<IServiceCollection, IConfiguration> action,
         Func<AssemblyName, bool> assemblyFilter)
         where TApplication : Microsoft.UI.Xaml.Application
         where TContext : class, IContext
-        where TSettings : class, ISettingsService
-        where TExceptionHandler : class, IExceptionHandlerService
+        where TCommonServices : class, ICommonServices
+        where TSettingsService : class, ISettingsService
+        where TAuthenticationService : class, IAuthenticationService
         where TResource : class
     {
         windowsAppBuilder.ConfigureServices((context, services) =>
@@ -94,11 +96,11 @@ public static class WindowsAppBuilderExtensions
             services.TryAddScoped<TContext>();
             services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
 
-            services.TryAddScoped<ISettingsService, TSettings>();
+            services.TryAddScoped<ISettingsService, TSettingsService>();
             services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
             services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
 
-            services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
+            services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
             services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
             services.TryAddSingleton<IBusyService, BusyService>();
@@ -106,6 +108,9 @@ public static class WindowsAppBuilderExtensions
             services.TryAddSingleton<IDispatcherService, DispatcherService>();
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
+
+            services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
+            services.TryAddSingleton<ICommonServices, TCommonServices>();
 
             services.RegisterAssemblies(mainAssembly, assemblyFilter);
 

@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -95,18 +95,18 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelSummary{TEntity}"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelSummary(
-        IContext context,
-        IBaseCommonServices commonServices,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
+        : base(scopedContextService, commonServices, logger, automaticValidation)
     {
         RefreshOnInitialization = refreshOnInitialization;
 
