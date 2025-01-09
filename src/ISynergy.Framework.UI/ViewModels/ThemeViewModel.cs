@@ -32,18 +32,16 @@ public class ThemeViewModel : ViewModelDialog<Style>
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     public ThemeViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         ThemeColors = new ThemeColors();
 
-        var settingsService = scopedContextService.GetService<ISettingsService>();
+        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
         SelectedItem = new Style(settingsService.LocalSettings.Color, settingsService.LocalSettings.Theme);
     }
 }

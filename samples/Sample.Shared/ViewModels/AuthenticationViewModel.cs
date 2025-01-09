@@ -181,11 +181,10 @@ public class AuthenticationViewModel : ViewModel
     public AsyncRelayCommand ForgotPasswordCommand { get; private set; }
 
     public AuthenticationViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         ShowSignInCommand = new RelayCommand(SetLoginVisibility);
         SignInCommand = new AsyncRelayCommand(SignInAsync);
@@ -268,8 +267,8 @@ public class AuthenticationViewModel : ViewModel
             if (Modules.FirstOrDefault() is { } module)
                 Registration_Modules.Add(module);
 
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
-            var credentialLockerService = _scopedContextService.GetService<ICredentialLockerService>();
+            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
+            var credentialLockerService = _commonServices.ScopedContextService.GetService<ICredentialLockerService>();
 
             AutoLogin = settingsService.LocalSettings.IsAutoLogin;
 
@@ -301,7 +300,7 @@ public class AuthenticationViewModel : ViewModel
     /// <returns>Task.</returns>
     public Task ForgotPasswordAsync()
     {
-        ForgotPasswordViewModel forgotPasswordVM = new(_scopedContextService, _commonServices, _logger);
+        ForgotPasswordViewModel forgotPasswordVM = new(_commonServices, _logger);
         forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }

@@ -59,11 +59,10 @@ public class SignInViewModel : ViewModel
     public AsyncRelayCommand SignUpCommand { get; private set; }
 
     public SignInViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         SignInCommand = new AsyncRelayCommand(SignInAsync);
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
@@ -86,8 +85,8 @@ public class SignInViewModel : ViewModel
 
         if (!IsInitialized)
         {
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
-            var credentialLockerService = _scopedContextService.GetService<ICredentialLockerService>();
+            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
+            var credentialLockerService = _commonServices.ScopedContextService.GetService<ICredentialLockerService>();
 
             AutoLogin = settingsService.LocalSettings.IsAutoLogin;
             var users = await credentialLockerService.GetUsernamesFromCredentialLockerAsync();
@@ -112,7 +111,7 @@ public class SignInViewModel : ViewModel
     /// <returns>Task.</returns>
     public Task ForgotPasswordAsync()
     {
-        ForgotPasswordViewModel forgotPasswordVM = new ForgotPasswordViewModel(_scopedContextService, _commonServices, _logger);
+        ForgotPasswordViewModel forgotPasswordVM = new ForgotPasswordViewModel(_commonServices, _logger);
         forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }

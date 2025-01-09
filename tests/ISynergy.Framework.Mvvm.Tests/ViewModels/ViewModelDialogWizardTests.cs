@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -10,14 +9,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelDialogWizardTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
 
     [TestInitialize]
     public void Setup()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
         _mockLogger = new Mock<ILogger>();
     }
@@ -30,8 +27,8 @@ public class ViewModelDialogWizardTests
 
     private class TestDialogWizardViewModel : ViewModelDialogWizard<TestEntity>
     {
-        public TestDialogWizardViewModel(IScopedContextService scopedContextService, ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
-            : base(scopedContextService, commonServices, logger, automaticValidation) { }
+        public TestDialogWizardViewModel(ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
+            : base(commonServices, logger, automaticValidation) { }
 
         public void RaisePropertyChanged(string propertyName)
         {
@@ -48,7 +45,7 @@ public class ViewModelDialogWizardTests
     public void Constructor_InitializesWizardProperties()
     {
         // Arrange & Act
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.BackCommand);
@@ -64,7 +61,7 @@ public class ViewModelDialogWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_FirstPage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         viewModel.Pages = 3;
@@ -81,7 +78,7 @@ public class ViewModelDialogWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_MiddlePage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         viewModel.Pages = 3;
@@ -98,7 +95,7 @@ public class ViewModelDialogWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_LastPage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         viewModel.Pages = 3;
@@ -115,7 +112,7 @@ public class ViewModelDialogWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_SinglePage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         viewModel.Pages = 1;
@@ -132,7 +129,7 @@ public class ViewModelDialogWizardTests
     public void BackCommand_DecreasesPage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.Pages = 3;
         viewModel.Page = 2;
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
@@ -148,7 +145,7 @@ public class ViewModelDialogWizardTests
     public void NextCommand_IncreasesPage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.Pages = 3;
         viewModel.Page = 1;
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
@@ -164,7 +161,7 @@ public class ViewModelDialogWizardTests
     public void NextCommand_ValidatesBeforePageChange()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
         var validationCalled = false;
         viewModel.Pages = 3;
         viewModel.Page = 1;
@@ -188,7 +185,7 @@ public class ViewModelDialogWizardTests
     public void BackCommand_ValidatesBeforePageChange()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
         var validationCalled = false;
         viewModel.Pages = 3;
         viewModel.Page = 2;
@@ -212,7 +209,7 @@ public class ViewModelDialogWizardTests
     public void Cleanup_ClearsNavigationCommands()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         viewModel.Dispose();

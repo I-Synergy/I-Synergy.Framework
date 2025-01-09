@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Constants;
+﻿using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -57,16 +56,14 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelNavigation{TEntity}"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="automaticValidation">Validation trigger.</param>
     protected ViewModelNavigation(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e));
     }

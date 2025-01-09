@@ -38,16 +38,16 @@ public class ViewModelExtensionTests
     }
     private class TestViewModel : ViewModel
     {
-        public TestViewModel(IScopedContextService scopedContextService, ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
-            : base(scopedContextService, commonServices, logger, automaticValidation)
+        public TestViewModel(ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
+            : base(commonServices, logger, automaticValidation)
         {
         }
     }
 
     private class GenericViewModel<T> : TestViewModel
     {
-        public GenericViewModel(IScopedContextService scopedContextService, ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
-            : base(scopedContextService, commonServices, logger, automaticValidation)
+        public GenericViewModel(ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
+            : base(commonServices, logger, automaticValidation)
         {
         }
     }
@@ -103,7 +103,7 @@ public class ViewModelExtensionTests
     public void GetViewModelName_FromInstance_ReturnsCorrectName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         var result = viewModel.GetViewModelName();
@@ -116,7 +116,7 @@ public class ViewModelExtensionTests
     public void GetViewModelFullName_FromInstance_ReturnsCorrectFullName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         var result = viewModel.GetViewModelFullName();
@@ -142,7 +142,7 @@ public class ViewModelExtensionTests
     public void GetRelatedView_FromViewModelInstance_ReturnsViewName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         var result = viewModel.GetRelatedView();

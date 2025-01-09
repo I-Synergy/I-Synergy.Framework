@@ -1,5 +1,4 @@
 ﻿using Dotmim.Sync.Enumerations;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
@@ -52,16 +51,15 @@ public class SyncViewModel : ViewModelNavigation<object>
 
 
     public SyncViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         SyncProgressionText = "Ready...";
         SyncCommandButtonEnabled = true;
 
-        var synchronizationService = _scopedContextService.GetService<ISynchronizationService>();
+        var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
 
         SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal), () => synchronizationService.IsActive);
         SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize), () => synchronizationService.IsActive);
@@ -99,7 +97,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
         try
         {
-            var synchronizationService = _scopedContextService.GetService<ISynchronizationService>();
+            var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
 
             if (synchronizationService.IsActive)
                 await synchronizationService.SynchronizeAsync(syncType);
@@ -116,7 +114,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private void CustomActionInsertProductRow()
     {
-        var synchronizationService = _scopedContextService.GetService<ISynchronizationService>();
+        var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
 
         if (synchronizationService.IsActive)
         {
@@ -194,7 +192,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task ProvisionClientAsync()
     {
-        var synchronizationService = _scopedContextService.GetService<ISynchronizationService>();
+        var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
 
         if (synchronizationService.IsActive)
         {
@@ -206,7 +204,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task DeprovisionClientAsync()
     {
-        var synchronizationService = _scopedContextService.GetService<ISynchronizationService>();
+        var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
 
         if (synchronizationService.IsActive)
         {

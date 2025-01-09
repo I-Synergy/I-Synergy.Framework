@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
@@ -135,11 +134,10 @@ public class SignUpViewModel : ViewModel
     public AsyncRelayCommand SelectModulesCommand { get; private set; }
 
     public SignUpViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         this.Validator = new Action<IObservableClass>(_ =>
         {
@@ -198,7 +196,7 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_scopedContextService, _commonServices, _logger, Modules, SelectedModules, SelectionModes.Multiple);
+        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_commonServices, _logger, Modules, SelectedModules, SelectionModes.Multiple);
         selectionVM.Submitted += SelectionVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
     }
@@ -226,7 +224,7 @@ public class SignUpViewModel : ViewModel
 
     private async Task ValidateMailAsync()
     {
-        var context = _scopedContextService.GetService<IContext>();
+        var context = _commonServices.ScopedContextService.GetService<IContext>();
 
         if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(context)))
         {
@@ -276,7 +274,7 @@ public class SignUpViewModel : ViewModel
     {
         if (Validate())
         {
-            var context = _scopedContextService.GetService<IContext>();
+            var context = _commonServices.ScopedContextService.GetService<IContext>();
             string emailaddress;
 
             // if email starts with "test:" or "local:"

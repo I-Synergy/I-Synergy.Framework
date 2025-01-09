@@ -41,11 +41,10 @@ public class SettingsViewModel : ViewModelNavigation<object>
     }
 
     public SettingsViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
@@ -73,7 +72,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
             if (!IsInitialized)
             {
-                var settingsService = _scopedContextService.GetService<ISettingsService>();
+                var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
                 settingsService.LoadLocalSettings();
 
                 if (settingsService.LocalSettings is LocalSettings localSetting)
@@ -105,7 +104,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
         {
             _commonServices.BusyService.StartBusy();
 
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
+            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
 
             if (settingsService.LocalSettings is LocalSettings)
                 settingsService.SaveLocalSettings();

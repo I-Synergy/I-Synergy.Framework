@@ -56,7 +56,7 @@ public class ConvertersViewModel : ViewModelNavigation<object>
         IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
     }

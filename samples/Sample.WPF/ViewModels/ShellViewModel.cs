@@ -85,16 +85,14 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="toastMessageService"></param>
     /// <param name="logger">The logger factory.</param>
     public ShellViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         IToastMessageService toastMessageService,
         ILogger<ShellViewModel> logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         _toastMessageService = toastMessageService;
 
@@ -127,8 +125,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         PrimaryItems.Clear();
 
-        var context = _scopedContextService.GetService<IContext>();
-        var settingsService = _scopedContextService.GetService<ISettingsService>();
+        var context = _commonServices.ScopedContextService.GetService<IContext>();
+        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
 
         if (context.IsAuthenticated)
         {
@@ -157,7 +155,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private Task SelectSingleAsync()
     {
-        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(_scopedContextService, _commonServices, _logger, Items, SelectedTestItems, SelectionModes.Single);
+        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(_commonServices, _logger, Items, SelectedTestItems, SelectionModes.Single);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
@@ -172,7 +170,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private Task SelectMultipleAsync()
     {
-        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(_scopedContextService, _commonServices, _logger, Items, SelectedTestItems, SelectionModes.Multiple);
+        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(_commonServices, _logger, Items, SelectedTestItems, SelectionModes.Multiple);
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }

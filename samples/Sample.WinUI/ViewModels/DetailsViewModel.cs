@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -10,12 +9,11 @@ namespace Sample.ViewModels;
 public class DetailsViewModel : ViewModelBladeView<TestItem>
 {
     public DetailsViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, refreshOnInitialization, automaticValidation)
+        : base(commonServices, logger, refreshOnInitialization, automaticValidation)
     {
     }
 
@@ -56,7 +54,7 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = new DetailViewModel(_scopedContextService, _commonServices, _logger, e);
+        var detailsVm = new DetailViewModel(_commonServices, _logger, e);
         await _commonServices.NavigationService.OpenBladeAsync(this, detailsVm);
     }
 }

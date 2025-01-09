@@ -108,7 +108,6 @@ public static class WindowsAppBuilderExtensions
             services.TryAddSingleton<IDispatcherService, DispatcherService>();
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
-
             services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
             services.TryAddSingleton<ICommonServices, TCommonServices>();
 

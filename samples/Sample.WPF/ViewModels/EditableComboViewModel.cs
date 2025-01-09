@@ -62,7 +62,7 @@ public class EditableComboViewModel : ViewModelNavigation<object>
         IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         MaskExpression = "9999aa";
         RegexExpression = "0000>LL"; //1111Ab 0000Xx

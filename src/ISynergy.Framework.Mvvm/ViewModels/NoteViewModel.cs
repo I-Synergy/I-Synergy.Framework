@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
@@ -34,17 +33,15 @@ public class NoteViewModel : ViewModelDialog<string>
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="note">The note.</param>
     [PreferredConstructor]
     public NoteViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         string note)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         SelectedItem = note;
     }
@@ -52,18 +49,16 @@ public class NoteViewModel : ViewModelDialog<string>
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="note">The note.</param>
     /// <param name="targetProperty">The target property.</param>
     public NoteViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         string note,
         string targetProperty)
-        : this(scopedContextService, commonServices, logger, note)
+        : this(commonServices, logger, note)
     {
         _targetProperty = targetProperty;
     }

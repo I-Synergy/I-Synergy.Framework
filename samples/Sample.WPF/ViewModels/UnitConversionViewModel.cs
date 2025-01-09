@@ -88,7 +88,7 @@ public class UnitConversionViewModel : ViewModelNavigation<object>
         ICommonServices commonServices,
         ILogger logger,
         IUnitConversionService unitConversionService)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         _unitConversionService = unitConversionService;
 
