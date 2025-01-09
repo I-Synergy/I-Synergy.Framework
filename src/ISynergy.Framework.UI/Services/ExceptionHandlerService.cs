@@ -5,13 +5,13 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
 
-namespace ISynergy.Framework.UI.Services.Base;
+namespace ISynergy.Framework.UI.Services;
 
-public abstract class BaseExceptionHandlerService : IExceptionHandlerService
+public class ExceptionHandlerService : IExceptionHandlerService
 {
-    protected readonly IBusyService _busyService;
-    protected readonly IDialogService _dialogService;
-    protected readonly ILogger _logger;
+    private readonly IBusyService _busyService;
+    private readonly IDialogService _dialogService;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
@@ -19,10 +19,10 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
     /// <param name="busyService"></param>
     /// <param name="dialogService"></param>
     /// <param name="logger"></param>
-    protected BaseExceptionHandlerService(
+    public ExceptionHandlerService(
         IBusyService busyService,
         IDialogService dialogService,
-        ILogger<BaseExceptionHandlerService> logger)
+        ILogger<ExceptionHandlerService> logger)
     {
         _busyService = busyService;
         _dialogService = dialogService;

@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
@@ -8,7 +9,6 @@ using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -23,8 +23,6 @@ namespace Sample.ViewModels;
 
 public class SignUpViewModel : ViewModel
 {
-    private readonly IAuthenticationService _authenticationService;
-
     /// <summary>
     /// Gets or sets the Name property value.
     /// </summary>
@@ -137,15 +135,12 @@ public class SignUpViewModel : ViewModel
     public AsyncRelayCommand SelectModulesCommand { get; private set; }
 
     public SignUpViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        IAuthenticationService authenticationService,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
+        : base(scopedContextService, commonServices, logger, automaticValidation)
     {
-        _authenticationService = authenticationService;
-
         this.Validator = new Action<IObservableClass>(_ =>
         {
             if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
@@ -203,7 +198,7 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_context, _commonServices, _logger, Modules, SelectedModules, SelectionModes.Multiple);
+        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_scopedContextService, _commonServices, _logger, Modules, SelectedModules, SelectionModes.Multiple);
         selectionVM.Submitted += SelectionVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
     }
@@ -231,12 +226,14 @@ public class SignUpViewModel : ViewModel
 
     private async Task ValidateMailAsync()
     {
-        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_context)))
+        var context = _scopedContextService.GetService<IContext>();
+
+        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(context)))
         {
             ArePickersAvailable = true;
 
-            List<Module> modules = await _authenticationService.GetModulesAsync();
-            List<Country> countries = await _authenticationService.GetCountriesAsync();
+            List<Module> modules = await _commonServices.AuthenticationService.GetModulesAsync();
+            List<Country> countries = await _commonServices.AuthenticationService.GetCountriesAsync();
 
             Modules = modules.OrderBy(o => o.ModuleId).ToList();
 
@@ -279,6 +276,7 @@ public class SignUpViewModel : ViewModel
     {
         if (Validate())
         {
+            var context = _scopedContextService.GetService<IContext>();
             string emailaddress;
 
             // if email starts with "test:" or "local:"
@@ -286,22 +284,22 @@ public class SignUpViewModel : ViewModel
             if (Mail.StartsWith(GenericConstants.UsernamePrefixTest, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixTest, "");
-                _context.Environment = SoftwareEnvironments.Test;
+                context.Environment = SoftwareEnvironments.Test;
             }
             // remove this prefix and set environment to local.
             else if (Mail.StartsWith(GenericConstants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixLocal, "");
-                _context.Environment = SoftwareEnvironments.Local;
+                context.Environment = SoftwareEnvironments.Local;
             }
             else
             {
                 emailaddress = Mail;
-                _context.Environment = SoftwareEnvironments.Production;
+                context.Environment = SoftwareEnvironments.Production;
             }
 
             if (!HasErrors &&
-                await _authenticationService.CheckRegistrationEmailAsync(emailaddress) &&
+                await _commonServices.AuthenticationService.CheckRegistrationEmailAsync(emailaddress) &&
                 PasswordCheck is not null && Password is not null &&
                 PasswordCheck.Equals(Password) &&
                 Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
@@ -318,7 +316,7 @@ public class SignUpViewModel : ViewModel
                     TimeZoneId = SelectedTimeZone
                 };
 
-                if (await _authenticationService.RegisterNewAccountAsync(registrationData))
+                if (await _commonServices.AuthenticationService.RegisterNewAccountAsync(registrationData))
                 {
                     await _commonServices.DialogService.ShowInformationAsync(LanguageService.Default.GetString("WarningRegistrationConfirmEmail"));
                     await SignInAsync();

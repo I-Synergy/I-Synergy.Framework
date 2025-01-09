@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 
@@ -34,17 +34,17 @@ public class NoteViewModel : ViewModelDialog<string>
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="note">The note.</param>
     [PreferredConstructor]
     public NoteViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger,
         string note)
-        : base(context, commonServices, logger)
+        : base(scopedContextService, commonServices, logger)
     {
         SelectedItem = note;
     }
@@ -52,18 +52,18 @@ public class NoteViewModel : ViewModelDialog<string>
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="note">The note.</param>
     /// <param name="targetProperty">The target property.</param>
     public NoteViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger,
         string note,
         string targetProperty)
-        : this(context, commonServices, logger, note)
+        : this(scopedContextService, commonServices, logger, note)
     {
         _targetProperty = targetProperty;
     }

@@ -1,10 +1,9 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions;
 using Sample.Models;
 using System.Collections.ObjectModel;
 
@@ -13,8 +12,6 @@ namespace Sample.ViewModels;
 public class SettingsViewModel : ViewModelNavigation<object>
 {
     public override string Title { get => LanguageService.Default.GetString("Settings"); }
-
-    private readonly ISettingsService _settingsService;
 
     /// <summary>
     /// Gets or sets the LocalSettings property value.
@@ -44,15 +41,12 @@ public class SettingsViewModel : ViewModelNavigation<object>
     }
 
     public SettingsViewModel(
-        IContext context,
+        IScopedContextService scopedContextService,
         ICommonServices commonServices,
-        ISettingsService settingsService,
         ILogger logger,
         bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
+        : base(scopedContextService, commonServices, logger, automaticValidation)
     {
-        _settingsService = settingsService;
-
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
 
@@ -79,14 +73,15 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
             if (!IsInitialized)
             {
-                _settingsService.LoadLocalSettings();
+                var settingsService = _scopedContextService.GetService<ISettingsService>();
+                settingsService.LoadLocalSettings();
 
-                if (_settingsService.LocalSettings is LocalSettings localSetting)
+                if (settingsService.LocalSettings is LocalSettings localSetting)
                     LocalSettings = localSetting;
 
-                await _settingsService.LoadGlobalSettingsAsync();
+                await settingsService.LoadGlobalSettingsAsync();
 
-                if (_settingsService.GlobalSettings is GlobalSettings globalSetting)
+                if (settingsService.GlobalSettings is GlobalSettings globalSetting)
                     GlobalSettings = globalSetting;
 
                 IsInitialized = true;
@@ -110,11 +105,13 @@ public class SettingsViewModel : ViewModelNavigation<object>
         {
             _commonServices.BusyService.StartBusy();
 
-            if (_settingsService.LocalSettings is LocalSettings)
-                _settingsService.SaveLocalSettings();
+            var settingsService = _scopedContextService.GetService<ISettingsService>();
 
-            if (_settingsService.GlobalSettings is GlobalSettings globalSetting)
-                await _settingsService.AddOrUpdateGlobalSettingsAsync(globalSetting);
+            if (settingsService.LocalSettings is LocalSettings)
+                settingsService.SaveLocalSettings();
+
+            if (settingsService.GlobalSettings is GlobalSettings globalSetting)
+                await settingsService.AddOrUpdateGlobalSettingsAsync(globalSetting);
         }
         finally
         {

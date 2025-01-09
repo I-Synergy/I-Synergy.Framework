@@ -1,10 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -84,16 +82,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     public AsyncRelayCommand FeedbackCommand { get; private set; }
 
     /// <summary>
-    /// Authentication service.
-    /// </summary>
-    protected readonly IAuthenticationService _authenticationService;
-
-    /// <summary>
-    /// The settings service.
-    /// </summary>
-    protected readonly ISettingsService _settingsService;
-
-    /// <summary>
     /// Gets or sets the PrimaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
@@ -116,26 +104,19 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="settingsService">The settings services.</param>
-    /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
     protected BaseShellViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        ISettingsService settingsService,
-        IAuthenticationService authenticationService,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger)
-        : base(context, commonServices, logger)
+        : base(scopedContextService, commonServices, logger)
     {
         _commonServices.NavigationService.BackStackChanged += (s, e) => RaisePropertyChanged(nameof(IsBackEnabled));
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
-
-        _settingsService = settingsService;
-        _authenticationService = authenticationService;
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new RelayCommand(SignOut);
@@ -156,7 +137,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Sign out.
     /// </summary>
     /// <returns></returns>
-    protected virtual void SignOut() => _authenticationService.SignOut();
+    protected virtual void SignOut() => _commonServices.AuthenticationService.SignOut();
 
     /// <summary>
     /// Shows the dialog restart after update asynchronous.
@@ -231,7 +212,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = new LanguageViewModel(_context, _commonServices, _logger, _settingsService.LocalSettings.Language);
+        var languageVM = new LanguageViewModel(_scopedContextService, _commonServices, _logger);
         languageVM.Submitted += LanguageVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
@@ -246,8 +227,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        _settingsService.LocalSettings.Language = e.Result;
-        _settingsService.SaveLocalSettings();
+        var settingsService = _scopedContextService.GetService<ISettingsService>();
+        settingsService.LocalSettings.Language = e.Result;
+        settingsService.SaveLocalSettings();
+
         e.Result.SetLocalizationLanguage();
 
         if (await _commonServices.DialogService.ShowMessageAsync(
@@ -267,7 +250,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = new ThemeViewModel(_context, _commonServices, _settingsService, _logger);
+        var themeVM = new ThemeViewModel(_scopedContextService, _commonServices, _logger);
         themeVM.Submitted += ThemeVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
@@ -284,10 +267,11 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         if (e.Result is { } style)
         {
-            _settingsService.LocalSettings.Theme = style.Theme;
-            _settingsService.LocalSettings.Color = style.Color;
+            var settingsService = _scopedContextService.GetService<ISettingsService>();
+            settingsService.LocalSettings.Theme = style.Theme;
+            settingsService.LocalSettings.Color = style.Color;
 
-            if (_settingsService.SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+            if (settingsService.SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),

@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -67,7 +67,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="items">The items.</param>
@@ -75,14 +75,14 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// <param name="selectionMode">The selection mode.</param>
     /// <param name="automaticValidation"></param>
     public ViewModelSelectionBlade(
-        IContext context,
-        IBaseCommonServices commonServices,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger,
         IEnumerable<TEntity> items,
         IEnumerable<TEntity> selectedItems,
         SelectionModes selectionMode = SelectionModes.Single,
         bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
+        : base(scopedContextService, commonServices, logger, automaticValidation)
     {
         if (items is null)
             items = items.EnsureNotNull();

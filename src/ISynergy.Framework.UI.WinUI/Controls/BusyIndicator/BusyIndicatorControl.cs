@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -9,9 +9,9 @@ namespace ISynergy.Framework.UI.Controls;
 
 public partial class BusyIndicatorControl : Grid
 {
-    private readonly IBaseCommonServices _commonServices;
+    private readonly ICommonServices _commonServices;
 
-    public BusyIndicatorControl(IBaseCommonServices commonServices)
+    public BusyIndicatorControl(ICommonServices commonServices)
     {
         _commonServices = commonServices;
 

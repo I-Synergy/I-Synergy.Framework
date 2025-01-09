@@ -1,6 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,16 +10,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectionDialogTests
 {
-    private Mock<IContext> _mockContext;
-    private Mock<IBaseCommonServices> _mockCommonServices;
+    private Mock<IScopedContextService> _mockScopedContextService;
+    private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
     private Mock<ILanguageService> _mockLanguageService;
 
     [TestInitialize]
     public void Setup()
     {
-        _mockContext = new Mock<IContext>();
-        _mockCommonServices = new Mock<IBaseCommonServices>();
+        _mockScopedContextService = new Mock<IScopedContextService>();
+        _mockCommonServices = new Mock<ICommonServices>();
         _mockLogger = new Mock<ILogger>();
         _mockLanguageService = new Mock<ILanguageService>();
     }
@@ -45,7 +44,7 @@ public class ViewModelSelectionDialogTests
 
         // Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockContext.Object,
+            _mockScopedContextService.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -71,7 +70,7 @@ public class ViewModelSelectionDialogTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockContext.Object,
+            _mockScopedContextService.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -95,7 +94,7 @@ public class ViewModelSelectionDialogTests
                 new TestEntity { Id = 2, Name = "Different" }
             };
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockContext.Object,
+            _mockScopedContextService.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -115,7 +114,7 @@ public class ViewModelSelectionDialogTests
     {
         // Arrange & Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockContext.Object,
+            _mockScopedContextService.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             null,
@@ -134,7 +133,7 @@ public class ViewModelSelectionDialogTests
     {
         // Arrange
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockContext.Object,
+            _mockScopedContextService.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             new List<TestEntity>(),

@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 
@@ -14,8 +13,6 @@ namespace ISynergy.Framework.UI.ViewModels;
 /// </summary>
 public class ThemeViewModel : ViewModelDialog<Style>
 {
-    private readonly ISettingsService _settingsService;
-
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -35,20 +32,18 @@ public class ThemeViewModel : ViewModelDialog<Style>
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="settingsService"></param>
     /// <param name="logger">The logger factory.</param>
     public ThemeViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        ISettingsService settingsService,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger)
-        : base(context, commonServices, logger)
+        : base(scopedContextService, commonServices, logger)
     {
-        _settingsService = settingsService;
-
         ThemeColors = new ThemeColors();
-        SelectedItem = new Style(_settingsService.LocalSettings.Color, _settingsService.LocalSettings.Theme);
+
+        var settingsService = scopedContextService.GetService<ISettingsService>();
+        SelectedItem = new Style(settingsService.LocalSettings.Color, settingsService.LocalSettings.Theme);
     }
 }

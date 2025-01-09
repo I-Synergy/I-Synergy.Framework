@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
@@ -85,18 +85,18 @@ public class MapsViewModel : ViewModelDialog<object>
     /// <summary>
     /// Initializes a new instance of the <see cref="MapsViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="name">The name.</param>
     /// <param name="address">The address.</param>
     public MapsViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
+        IScopedContextService scopedContextService,
+        ICommonServices commonServices,
         ILogger logger,
         string name,
         string address)
-        : base(context, commonServices, logger)
+        : base(scopedContextService, commonServices, logger)
     {
         Locations = new ObservableCollection<object>();
         Title = address;

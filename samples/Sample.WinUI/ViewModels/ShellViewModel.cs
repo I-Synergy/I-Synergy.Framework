@@ -15,7 +15,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
 using Sample.Messages;
-using Sample.Services;
 
 namespace Sample.ViewModels;
 
@@ -39,20 +38,14 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
-    /// <param name="context">The context.</param>
+    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="navigationService"></param>
-    /// <param name="settingsService">The settings services.</param>
-    /// <param name="authenticationService"></param>
     /// <param name="logger">The logger factory.</param>
     public ShellViewModel(
-        IContext context,
+        IScopedContextService scopedContextService,
         ICommonServices commonServices,
-        INavigationService navigationService,
-        ISettingsService settingsService,
-        IAuthenticationService authenticationService,
         ILogger<ShellViewModel> logger)
-        : base(context, commonServices, settingsService, authenticationService, logger)
+        : base(scopedContextService, commonServices, logger)
     {
         SetClock();
 
@@ -74,6 +67,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         MessageService.Default.Register<ShellLoadedMessage>(this, async (m) =>
         {
+            var context = _scopedContextService.GetService<IContext>();
+
             if (context.IsAuthenticated && PrimaryItems?.Count > 0)
             {
                 if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
@@ -88,29 +83,32 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
-        if (_context.IsAuthenticated)
+        var context = _scopedContextService.GetService<IContext>();
+        var settingsService = _scopedContextService.GetService<ISettingsService>();
+
+        if (context.IsAuthenticated)
         {
             PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _settingsService.LocalSettings.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _settingsService.LocalSettings.Color, DisplayCommand));
-            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _settingsService.LocalSettings.Color, BrowseCommand));
-            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _settingsService.LocalSettings.Color, ConverterCommand));
-            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _settingsService.LocalSettings.Color, SelectionTestCommand));
-            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _settingsService.LocalSettings.Color, ListViewTestCommand));
-            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _settingsService.LocalSettings.Color, ValidationTestCommand));
-            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _settingsService.LocalSettings.Color, TreeNodeTestCommand));
-            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _settingsService.LocalSettings.Color, ChartCommand));
+            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, settingsService.LocalSettings.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, settingsService.LocalSettings.Color, DisplayCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, settingsService.LocalSettings.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, settingsService.LocalSettings.Color, ConverterCommand));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, settingsService.LocalSettings.Color, SelectionTestCommand));
+            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, settingsService.LocalSettings.Color, ListViewTestCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, settingsService.LocalSettings.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, settingsService.LocalSettings.Color, TreeNodeTestCommand));
+            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, settingsService.LocalSettings.Color, ChartCommand));
 
             SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _settingsService.LocalSettings.Color, HelpCommand));
-            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _settingsService.LocalSettings.Color, LanguageCommand));
-            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _settingsService.LocalSettings.Color, ColorCommand));
+            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, settingsService.LocalSettings.Color, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, settingsService.LocalSettings.Color, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, settingsService.LocalSettings.Color, ColorCommand));
 
-            if (_context.IsAuthenticated && _context.Profile is Profile)
-                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _settingsService.LocalSettings.Color, SettingsCommand));
+            if (context.IsAuthenticated && context.Profile is Profile)
+                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, settingsService.LocalSettings.Color, SettingsCommand));
         }
 
-        SecondaryItems.Add(new NavigationItem(_context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _settingsService.LocalSettings.Color, SignInCommand));
+        SecondaryItems.Add(new NavigationItem(context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, settingsService.LocalSettings.Color, SignInCommand));
     }
 
     protected override void SignOut()
@@ -120,10 +118,12 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             // Clear profile before base sign out
             base.SignOut();
 
-            if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
+            var settingsService = _scopedContextService.GetService<ISettingsService>();
+
+            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser))
             {
-                _settingsService.LocalSettings.IsAutoLogin = false;
-                _settingsService.SaveLocalSettings();
+                settingsService.LocalSettings.IsAutoLogin = false;
+                settingsService.SaveLocalSettings();
             }
         }
         catch (ObjectDisposedException)
@@ -134,25 +134,27 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private async Task InitializeFirstRunAsync()
     {
-        if (_settingsService.GlobalSettings.IsFirstRun && _commonServices is CommonServices commonServices)
+        var settingsService = _scopedContextService.GetService<ISettingsService>();
+
+        if (settingsService.GlobalSettings.IsFirstRun)
         {
             if (await _commonServices.DialogService.ShowMessageAsync(
                 LanguageService.Default.GetString("ChangeLanguage"),
                 LanguageService.Default.GetString("Language"),
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                var languageVM = new LanguageViewModel(_context, base._commonServices, _logger, _settingsService.LocalSettings.Language);
+                var languageVM = new LanguageViewModel(_scopedContextService, _commonServices, _logger);
                 languageVM.Submitted += (s, e) =>
                 {
-                    _settingsService.LocalSettings.Language = e.Result;
-                    _settingsService.SaveLocalSettings();
+                    settingsService.LocalSettings.Language = e.Result;
+                    settingsService.SaveLocalSettings();
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };
                 await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
-            var wizardVM = new SettingsViewModel(_context, commonServices, _settingsService, _logger);
+            var wizardVM = new SettingsViewModel(_scopedContextService, _commonServices, _logger);
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();
@@ -205,8 +207,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
-        if (_commonServices is CommonServices commonServices &&
-            await commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
+        if (await _commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
             await _commonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 

@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -13,16 +12,16 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests;
 [TestClass]
 public class ViewModelExtensionTests
 {
-    private Mock<IContext> _mockContext;
-    private Mock<IBaseCommonServices> _mockCommonServices;
+    private Mock<IScopedContextService> _mockScopedContextService;
+    private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
     private Mock<ILanguageService> _mockLanguageService;
 
     [TestInitialize]
     public void Setup()
     {
-        _mockContext = new Mock<IContext>();
-        _mockCommonServices = new Mock<IBaseCommonServices>();
+        _mockScopedContextService = new Mock<IScopedContextService>();
+        _mockCommonServices = new Mock<ICommonServices>();
         _mockLogger = new Mock<ILogger>();
         _mockLanguageService = new Mock<ILanguageService>();
     }
@@ -39,16 +38,16 @@ public class ViewModelExtensionTests
     }
     private class TestViewModel : ViewModel
     {
-        public TestViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool automaticValidation = false)
-            : base(context, commonServices, logger, automaticValidation)
+        public TestViewModel(IScopedContextService scopedContextService, ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
+            : base(scopedContextService, commonServices, logger, automaticValidation)
         {
         }
     }
 
     private class GenericViewModel<T> : TestViewModel
     {
-        public GenericViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool automaticValidation = false)
-            : base(context, commonServices, logger, automaticValidation)
+        public GenericViewModel(IScopedContextService scopedContextService, ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
+            : base(scopedContextService, commonServices, logger, automaticValidation)
         {
         }
     }
@@ -104,7 +103,7 @@ public class ViewModelExtensionTests
     public void GetViewModelName_FromInstance_ReturnsCorrectName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        IViewModel viewModel = new TestViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         var result = viewModel.GetViewModelName();
@@ -117,7 +116,7 @@ public class ViewModelExtensionTests
     public void GetViewModelFullName_FromInstance_ReturnsCorrectFullName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        IViewModel viewModel = new TestViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         var result = viewModel.GetViewModelFullName();
@@ -143,7 +142,7 @@ public class ViewModelExtensionTests
     public void GetRelatedView_FromViewModelInstance_ReturnsViewName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        IViewModel viewModel = new TestViewModel(_mockScopedContextService.Object, _mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         var result = viewModel.GetRelatedView();
