@@ -13,12 +13,6 @@ public class ExceptionHandlerService : IExceptionHandlerService
     private readonly IDialogService _dialogService;
     private readonly ILogger _logger;
 
-    /// <summary>
-    /// Default constructor.
-    /// </summary>
-    /// <param name="busyService"></param>
-    /// <param name="dialogService"></param>
-    /// <param name="logger"></param>
     public ExceptionHandlerService(
         IBusyService busyService,
         IDialogService dialogService,
@@ -29,10 +23,6 @@ public class ExceptionHandlerService : IExceptionHandlerService
         _logger = logger;
     }
 
-    /// <summary>
-    /// Handles the exception.
-    /// </summary>
-    /// <param name="exception"></param>
     public virtual async Task HandleExceptionAsync(Exception exception)
     {
         try
@@ -45,17 +35,20 @@ public class ExceptionHandlerService : IExceptionHandlerService
             if (exception.Message.Equals(@"A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. ()"))
                 return;
 
-
-            // Set busyIndicator to false if it's true.
             _busyService.StopBusy();
 
             if (exception is NotImplementedException)
             {
                 await _dialogService.ShowInformationAsync(LanguageService.Default.GetString("WarningFutureModule"), "Features");
             }
-            else if (exception is UnauthorizedAccessException accessException)
+            else if (exception is UnauthorizedAccessException unauthorizedAccessException)
             {
-                await _dialogService.ShowErrorAsync(accessException.Message);
+                var message = unauthorizedAccessException.Message;
+
+                if (message.StartsWith("[") && message.EndsWith("]"))
+                    message = LanguageService.Default.GetString(message.Substring(1, message.Length - 2));
+
+                await _dialogService.ShowErrorAsync(message);
             }
             else if (exception is IOException iOException)
             {
