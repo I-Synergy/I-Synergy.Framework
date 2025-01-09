@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -27,14 +26,12 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
     /// <summary>
     /// Initializes a new instance of the <see cref="ForgotPasswordViewModel" /> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     public ForgotPasswordViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         Validator = new Action<IObservableClass>(arg =>
         {

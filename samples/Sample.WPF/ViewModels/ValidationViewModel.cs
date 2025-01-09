@@ -80,7 +80,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
         IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";

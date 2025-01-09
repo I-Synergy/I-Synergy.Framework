@@ -40,6 +40,12 @@ public class CommonServices : ICommonServices
     /// </summary>
     /// <value>The authentication service.</value>
     public IAuthenticationService AuthenticationService { get; }
+
+    /// <summary>
+    /// Gets the scoped context service.
+    /// </summary>
+    public IScopedContextService ScopedContextService { get; }
+
     /// <summary>
     /// Gets the file service.
     /// </summary>
@@ -53,6 +59,7 @@ public class CommonServices : ICommonServices
     /// <param name="dialogService">The dialog.</param>
     /// <param name="navigationService">The navigation.</param>
     /// <param name="authenticationService"></param>
+    /// <param name="scopedContextService"></param>
     /// <param name="fileService"></param>
     /// <param name="dispatcherService"></param>
     public CommonServices(
@@ -60,6 +67,7 @@ public class CommonServices : ICommonServices
         IDialogService dialogService,
         INavigationService navigationService,
         IAuthenticationService authenticationService,
+        IScopedContextService scopedContextService,
         IFileService<FileResult> fileService,
         IDispatcherService dispatcherService)
     {
@@ -67,6 +75,7 @@ public class CommonServices : ICommonServices
         DialogService = dialogService;
         NavigationService = navigationService;
         AuthenticationService = authenticationService;
+        ScopedContextService = scopedContextService;
         FileService = fileService;
         DispatcherService = dispatcherService;
     }

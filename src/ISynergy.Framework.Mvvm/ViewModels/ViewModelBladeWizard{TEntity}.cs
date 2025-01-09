@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
@@ -78,16 +77,14 @@ public abstract class ViewModelBladeWizard<TEntity> : ViewModelBlade<TEntity>
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBladeWizard{TEntity}"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelBladeWizard(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         BackCommand = new RelayCommand(PerformBackAction);
         NextCommand = new RelayCommand(PerformNextAction);

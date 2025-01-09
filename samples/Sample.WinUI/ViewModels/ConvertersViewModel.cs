@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
@@ -54,14 +53,12 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// <summary>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     public ConvertersViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
         NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
@@ -118,13 +115,13 @@ public class ConvertersViewModel : ViewModelNavigation<object>
 
     private async Task NavigateToDetailAsync(TestItem item)
     {
-        var detailsVm = new DetailsViewModel(_scopedContextService, _commonServices, _logger);
+        var detailsVm = new DetailsViewModel(_commonServices, _logger);
         await _commonServices.NavigationService.NavigateAsync(detailsVm);
     }
 
     private async Task NavigateToPivotAsync(TestItem item)
     {
-        var detailsVm = new PivotViewModel(_scopedContextService, _commonServices, _logger);
+        var detailsVm = new PivotViewModel(_commonServices, _logger);
         await _commonServices.NavigationService.NavigateAsync(detailsVm);
     }
 }

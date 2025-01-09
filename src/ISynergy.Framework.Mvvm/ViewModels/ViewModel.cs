@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -21,7 +20,6 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 [Bindable(true)]
 public abstract class ViewModel : ObservableClass, IViewModel
 {
-    protected readonly IScopedContextService _scopedContextService;
     protected readonly ICommonServices _commonServices;
     protected readonly ILogger _logger;
 
@@ -99,18 +97,15 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="automaticValidation">The validation.</param>
     protected ViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
         : base(automaticValidation)
     {
-        _scopedContextService = scopedContextService;
         _commonServices = commonServices;
         _logger = logger;
 

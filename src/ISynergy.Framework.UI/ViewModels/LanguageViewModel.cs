@@ -24,16 +24,14 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     public LanguageViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
-        var settingsService = scopedContextService.GetService<ISettingsService>();
+        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
         SelectedItem = settingsService.LocalSettings.Language;
     }
 }

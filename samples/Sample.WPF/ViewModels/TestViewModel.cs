@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
+﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -9,14 +8,13 @@ using Sample.Views;
 namespace Sample.ViewModels;
 
 public class TestViewModel(
-    IScopedContextService scopedContextService,
     ICommonServices commonServices,
     ILogger logger,
-    bool automaticValidation = false) : ViewModelDialog<object>(scopedContextService, commonServices, logger, automaticValidation)
+    bool automaticValidation = false) : ViewModelDialog<object>(commonServices, logger, automaticValidation)
 {
     public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
-        Test2ViewModel testVm = new Test2ViewModel(_scopedContextService, _commonServices, _logger);
+        Test2ViewModel testVm = new Test2ViewModel(_commonServices, _logger);
         testVm.Submitted += new WeakEventHandler<SubmitEventArgs<object>>(TestVm_Submitted).Handler;
         await _commonServices.DialogService.ShowDialogAsync(typeof(Test2Window), testVm);
     }

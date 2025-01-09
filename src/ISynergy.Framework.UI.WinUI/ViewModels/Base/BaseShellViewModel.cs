@@ -104,14 +104,12 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     protected BaseShellViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger<BaseShellViewModel> logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         _commonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
 
@@ -204,7 +202,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = new LanguageViewModel(_scopedContextService, _commonServices, _logger);
+        var languageVM = new LanguageViewModel(_commonServices, _logger);
         languageVM.Submitted += LanguageVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
@@ -219,7 +217,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        var settingsService = _scopedContextService.GetService<ISettingsService>();
+        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
         settingsService.LocalSettings.Language = e.Result;
         settingsService.SaveLocalSettings();
 
@@ -242,7 +240,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = new ThemeViewModel(_scopedContextService, _commonServices, _logger);
+        var themeVM = new ThemeViewModel(_commonServices, _logger);
         themeVM.Submitted += ThemeVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
@@ -259,7 +257,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
         if (e.Result is { } style)
         {
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
+            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
             settingsService.LocalSettings.Theme = style.Theme;
             settingsService.LocalSettings.Color = style.Color;
 

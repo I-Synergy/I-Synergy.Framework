@@ -32,6 +32,10 @@ public interface ICommonServices
     /// </summary>
     IAuthenticationService AuthenticationService { get; }
     /// <summary>
+    /// Gets the scoped context service.
+    /// </summary>
+    IScopedContextService ScopedContextService { get; }
+    /// <summary>
     /// Gets the file service.
     /// </summary>
     /// <value>The file service.</value>

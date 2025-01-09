@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -72,21 +71,19 @@ public class InfoViewModel : ViewModelNavigation<object>
     /// <summary>
     /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     public InfoViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         CompanyName = InfoService.Default.CompanyName;
         ProductName = InfoService.Default.ProductName;
         Version = InfoService.Default.ProductVersion;
         Copyrights = InfoService.Default.Copyrights;
 
-        var context = scopedContextService.GetService<IContext>();
+        var context = _commonServices.ScopedContextService.GetService<IContext>();
         Startup = context.Environment.ToString();
     }
 }

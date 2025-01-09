@@ -38,14 +38,12 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     public ShellViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger<ShellViewModel> logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         SetClock();
 
@@ -67,7 +65,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         MessageService.Default.Register<ShellLoadedMessage>(this, async (m) =>
         {
-            var context = _scopedContextService.GetService<IContext>();
+            var context = _commonServices.ScopedContextService.GetService<IContext>();
 
             if (context.IsAuthenticated && PrimaryItems?.Count > 0)
             {
@@ -83,8 +81,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
-        var context = _scopedContextService.GetService<IContext>();
-        var settingsService = _scopedContextService.GetService<ISettingsService>();
+        var context = _commonServices.ScopedContextService.GetService<IContext>();
+        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
 
         if (context.IsAuthenticated)
         {
@@ -118,7 +116,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             // Clear profile before base sign out
             base.SignOut();
 
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
+            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
 
             if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser))
             {
@@ -134,7 +132,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private async Task InitializeFirstRunAsync()
     {
-        var settingsService = _scopedContextService.GetService<ISettingsService>();
+        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
 
         if (settingsService.GlobalSettings.IsFirstRun)
         {
@@ -143,7 +141,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 LanguageService.Default.GetString("Language"),
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                var languageVM = new LanguageViewModel(_scopedContextService, _commonServices, _logger);
+                var languageVM = new LanguageViewModel(_commonServices, _logger);
                 languageVM.Submitted += (s, e) =>
                 {
                     settingsService.LocalSettings.Language = e.Result;
@@ -154,7 +152,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
-            var wizardVM = new SettingsViewModel(_scopedContextService, _commonServices, _logger);
+            var wizardVM = new SettingsViewModel(_commonServices, _logger);
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();

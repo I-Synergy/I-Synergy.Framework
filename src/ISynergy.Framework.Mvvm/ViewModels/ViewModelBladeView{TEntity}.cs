@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
@@ -125,18 +124,16 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelBladeView(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(scopedContextService, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         RefreshOnInitialization = refreshOnInitialization;
 

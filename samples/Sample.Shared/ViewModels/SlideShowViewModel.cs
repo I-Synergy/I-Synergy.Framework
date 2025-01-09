@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -54,14 +53,12 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// <summary>
     /// Initializes a new instance of the <see cref="SlideShowViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger">The logger factory.</param>
     public SlideShowViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         UpdateSourceTimer = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
         UpdateSourceTimer.Elapsed += UpdateSourceTimer_Tick;

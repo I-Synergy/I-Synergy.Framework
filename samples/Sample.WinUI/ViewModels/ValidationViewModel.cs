@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -73,14 +72,12 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// <summary>
     /// Default constructor.
     /// </summary>
-    /// <param name="scopedContextService"></param>
     /// <param name="commonServices"></param>
     /// <param name="logger"></param>
     public ValidationViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
         ILogger logger)
-        : base(scopedContextService, commonServices, logger)
+        : base(commonServices, logger)
     {
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";
