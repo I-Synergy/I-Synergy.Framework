@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,15 +9,13 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectionBladeTests
 {
-    private Mock<IContext> _mockContext;
-    private Mock<IBaseCommonServices> _mockCommonServices;
+    private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
 
     [TestInitialize]
     public void Setup()
     {
-        _mockContext = new Mock<IContext>();
-        _mockCommonServices = new Mock<IBaseCommonServices>();
+        _mockCommonServices = new Mock<ICommonServices>();
         _mockLogger = new Mock<ILogger>();
     }
 
@@ -39,7 +36,6 @@ public class ViewModelSelectionBladeTests
             };
         var selectedItems = new List<TestEntity> { items[0] };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -80,7 +76,6 @@ public class ViewModelSelectionBladeTests
 
         // Act
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -106,7 +101,6 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" }
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -137,7 +131,6 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Different" }
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -157,7 +150,6 @@ public class ViewModelSelectionBladeTests
     {
         // Arrange & Act
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             null,
@@ -180,7 +172,6 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" }
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -209,7 +200,6 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" }
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -234,7 +224,6 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -259,7 +248,6 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -283,7 +271,6 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,
@@ -307,7 +294,6 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockContext.Object,
             _mockCommonServices.Object,
             _mockLogger.Object,
             items,

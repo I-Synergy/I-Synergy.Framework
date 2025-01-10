@@ -1,15 +1,11 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Physics.Abstractions;
+﻿using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.Extensions;
-using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
 using System.Reflection;
@@ -31,13 +27,9 @@ public static class Program
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
             })
-            .ConfigureServices<App, Context, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
+            .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
             {
-                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
-
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
-                services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
                 services.AddNugetServiceIntegrations(configuration);
             })

@@ -48,7 +48,7 @@ public partial class App : BaseApplication
 
                 if (!string.IsNullOrEmpty(password))
                 {
-                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, settingsService.LocalSettings.IsAutoLogin);
+                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, settingsService.LocalSettings.IsAutoLogin);
                     navigateToAuthentication = false;
                 }
             }

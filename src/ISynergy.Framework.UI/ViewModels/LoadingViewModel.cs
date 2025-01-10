@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
@@ -15,13 +15,13 @@ namespace ISynergy.Framework.UI.ViewModels;
 [Lifetime(Lifetimes.Singleton)]
 public class LoadingViewModel : ObservableClass, IViewModel
 {
-    private readonly IBaseCommonServices _commonServices;
+    private readonly ICommonServices _commonServices;
     private readonly ILogger _logger;
 
-    public IBaseCommonServices CommonServices => _commonServices;
+    public ICommonServices CommonServices => _commonServices;
 
     public LoadingViewModel(
-        IBaseCommonServices commonServices,
+        ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
         : base(automaticValidation)

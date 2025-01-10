@@ -1,13 +1,12 @@
 ﻿using Dotmim.Sync.Enumerations;
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.Synchronization.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Messages;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions;
 using System.Data;
 
 namespace Sample.ViewModels;
@@ -15,8 +14,6 @@ namespace Sample.ViewModels;
 public class SyncViewModel : ViewModelNavigation<object>
 {
     public override string Title { get { return LanguageService.Default.GetString("Sync"); } }
-
-    private readonly ISynchronizationService _synchronizationService;
 
     /// <summary>
     /// Gets or sets the SyncProgressionText property value.
@@ -54,23 +51,21 @@ public class SyncViewModel : ViewModelNavigation<object>
 
 
     public SyncViewModel(
-        IContext context,
         ICommonServices commonServices,
-        ISynchronizationService synchronizationService,
         ILogger logger,
         bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
-        _synchronizationService = synchronizationService;
-
         SyncProgressionText = "Ready...";
         SyncCommandButtonEnabled = true;
 
-        SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal), () => _synchronizationService.IsActive);
-        SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize), () => _synchronizationService.IsActive);
-        CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync, () => _synchronizationService.IsActive);
-        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync, () => _synchronizationService.IsActive);
-        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync, () => _synchronizationService.IsActive);
+        var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
+
+        SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal), () => synchronizationService.IsActive);
+        SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize), () => synchronizationService.IsActive);
+        CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync, () => synchronizationService.IsActive);
+        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync, () => synchronizationService.IsActive);
+        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync, () => synchronizationService.IsActive);
 
         MessageService.Default.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
         MessageService.Default.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
@@ -102,8 +97,10 @@ public class SyncViewModel : ViewModelNavigation<object>
 
         try
         {
-            if (_synchronizationService.IsActive)
-                await _synchronizationService.SynchronizeAsync(syncType);
+            var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
+
+            if (synchronizationService.IsActive)
+                await synchronizationService.SynchronizeAsync(syncType);
         }
         catch (Exception ex)
         {
@@ -117,10 +114,12 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private void CustomActionInsertProductRow()
     {
-        if (_synchronizationService.IsActive)
+        var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
+
+        if (synchronizationService.IsActive)
         {
             var connectionstringbuilder = new SqliteConnectionStringBuilder();
-            connectionstringbuilder.DataSource = _synchronizationService.OfflineDatabase;
+            connectionstringbuilder.DataSource = synchronizationService.OfflineDatabase;
 
             using var sqliteConnection = new SqliteConnection(connectionstringbuilder.ConnectionString);
             var c = new SqliteCommand($"Insert into ProductCategory(ProductcategoryId, Name, rowguid, ModifiedDate, IsActive) Values (@productcategoryId, @name, @rowguid, @modifiedDate, @isactive)")
@@ -193,9 +192,11 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task ProvisionClientAsync()
     {
-        if (_synchronizationService.IsActive)
+        var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
+
+        if (synchronizationService.IsActive)
         {
-            var agent = _synchronizationService.SynchronizationAgent;
+            var agent = synchronizationService.SynchronizationAgent;
             var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
             await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
         }
@@ -203,9 +204,11 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task DeprovisionClientAsync()
     {
-        if (_synchronizationService.IsActive)
+        var synchronizationService = _commonServices.ScopedContextService.GetService<ISynchronizationService>();
+
+        if (synchronizationService.IsActive)
         {
-            var agent = _synchronizationService.SynchronizationAgent;
+            var agent = synchronizationService.SynchronizationAgent;
             await agent.LocalOrchestrator.DeprovisionAsync();
         }
     }

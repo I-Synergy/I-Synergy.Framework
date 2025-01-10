@@ -1,7 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,8 +10,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSummaryTests
 {
-    private Mock<IContext> _mockContext;
-    private Mock<IBaseCommonServices> _mockCommonServices;
+    private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
     private Mock<ILanguageService> _mockLanguageService;
     private Mock<IDialogService> _mockDialogService;
@@ -21,8 +18,7 @@ public class ViewModelSummaryTests
     [TestInitialize]
     public void Setup()
     {
-        _mockContext = new Mock<IContext>();
-        _mockCommonServices = new Mock<IBaseCommonServices>();
+        _mockCommonServices = new Mock<ICommonServices>();
         _mockLogger = new Mock<ILogger>();
         _mockLanguageService = new Mock<ILanguageService>();
         _mockDialogService = new Mock<IDialogService>();
@@ -38,8 +34,8 @@ public class ViewModelSummaryTests
 
     private class TestSummaryViewModel : ViewModelSummary<TestEntity>
     {
-        public TestSummaryViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool refreshOnInitialization = true)
-            : base(context, commonServices, logger, refreshOnInitialization) { }
+        public TestSummaryViewModel(ICommonServices commonServices, ILogger logger, bool refreshOnInitialization = true)
+            : base(commonServices, logger, refreshOnInitialization) { }
 
         public override Task AddAsync()
         {
@@ -66,7 +62,7 @@ public class ViewModelSummaryTests
     public void Constructor_InitializesCollectionsAndCommands()
     {
         // Arrange & Act
-        var viewModel = new TestSummaryViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -82,7 +78,7 @@ public class ViewModelSummaryTests
     public async Task InitializeAsync_WithRefreshOnInitialization_RefreshesItems()
     {
         // Arrange
-        var viewModel = new TestSummaryViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object, true);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, _mockLogger.Object, true);
 
         // Act
         await viewModel.InitializeAsync();
@@ -95,7 +91,7 @@ public class ViewModelSummaryTests
     public async Task DeleteAsync_WithConfirmation_RemovesItem()
     {
         // Arrange
-        var viewModel = new TestSummaryViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, _mockLogger.Object);
         var entity = new TestEntity { Id = 1, Description = "Test" };
         _mockLanguageService.Setup(x => x.GetString(It.IsAny<string>())).Returns("Test");
         _mockDialogService.Setup(x => x.ShowMessageAsync(

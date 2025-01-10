@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
@@ -8,7 +7,6 @@ using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
@@ -23,10 +21,6 @@ namespace Sample.ViewModels;
 
 public class AuthenticationViewModel : ViewModel
 {
-    private readonly IAuthenticationService _authenticationService;
-    private readonly ISettingsService _settingsService;
-    private readonly ICredentialLockerService _credentialLockerService;
-
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -187,19 +181,11 @@ public class AuthenticationViewModel : ViewModel
     public AsyncRelayCommand ForgotPasswordCommand { get; private set; }
 
     public AuthenticationViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        IAuthenticationService authenticationService,
-        ISettingsService settingsService,
-        ICredentialLockerService credentialLockerService,
+        ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
-        _authenticationService = authenticationService;
-        _credentialLockerService = credentialLockerService;
-        _settingsService = settingsService;
-
         ShowSignInCommand = new RelayCommand(SetLoginVisibility);
         SignInCommand = new AsyncRelayCommand(SignInAsync);
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
@@ -276,21 +262,24 @@ public class AuthenticationViewModel : ViewModel
 
         if (!IsInitialized)
         {
-            Modules = await _authenticationService.GetModulesAsync();
+            Modules = await _commonServices.AuthenticationService.GetModulesAsync();
 
             if (Modules.FirstOrDefault() is { } module)
                 Registration_Modules.Add(module);
 
-            AutoLogin = _settingsService.LocalSettings.IsAutoLogin;
+            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
+            var credentialLockerService = _commonServices.ScopedContextService.GetService<ICredentialLockerService>();
 
-            var users = await _credentialLockerService.GetUsernamesFromCredentialLockerAsync();
+            AutoLogin = settingsService.LocalSettings.IsAutoLogin;
+
+            var users = await credentialLockerService.GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();
             Usernames.AddRange(users);
 
-            if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
-                Username = _settingsService.LocalSettings.DefaultUser;
+            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser))
+                Username = settingsService.LocalSettings.DefaultUser;
 
-            if (string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && Usernames.Count > 0)
+            if (string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser) && Usernames.Count > 0)
                 Username = Usernames[0];
 
             IsInitialized = true;
@@ -311,7 +300,7 @@ public class AuthenticationViewModel : ViewModel
     /// <returns>Task.</returns>
     public Task ForgotPasswordAsync()
     {
-        ForgotPasswordViewModel forgotPasswordVM = new(_context, _commonServices, _authenticationService, _logger);
+        ForgotPasswordViewModel forgotPasswordVM = new(_commonServices, _logger);
         forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }
@@ -372,7 +361,7 @@ public class AuthenticationViewModel : ViewModel
         await Task.Delay(1000);
 
         if (Validate())
-            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+            await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
 
         _commonServices.BusyService.StopBusy();
     }
