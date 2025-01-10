@@ -1,11 +1,12 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Models;
 
-namespace ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
 /// <summary>
 /// Interface IBaseCommonServices
 /// </summary>
-public interface IBaseCommonServices
+public interface ICommonServices
 {
     /// <summary>
     /// Gets the busy service.
@@ -26,6 +27,19 @@ public interface IBaseCommonServices
     /// Dispatcher service.
     /// </summary>
     IDispatcherService DispatcherService { get; }
+    /// <summary>
+    /// Gets the authentication service.
+    /// </summary>
+    IAuthenticationService AuthenticationService { get; }
+    /// <summary>
+    /// Gets the scoped context service.
+    /// </summary>
+    IScopedContextService ScopedContextService { get; }
+    /// <summary>
+    /// Gets the file service.
+    /// </summary>
+    /// <value>The file service.</value>
+    IFileService<FileResult> FileService { get; }
     /// <summary>
     /// Restarts application.
     /// </summary>

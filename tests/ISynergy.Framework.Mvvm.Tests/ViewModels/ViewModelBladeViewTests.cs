@@ -1,6 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,24 +10,22 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelBladeViewTests
 {
-    private Mock<IContext> _mockContext;
-    private Mock<IBaseCommonServices> _mockCommonServices;
+    private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
     private Mock<ILanguageService> _mockLanguageService;
 
     [TestInitialize]
     public void Setup()
     {
-        _mockContext = new Mock<IContext>();
-        _mockCommonServices = new Mock<IBaseCommonServices>();
+        _mockCommonServices = new Mock<ICommonServices>();
         _mockLogger = new Mock<ILogger>();
         _mockLanguageService = new Mock<ILanguageService>();
     }
 
     private class TestBladeViewModel : ViewModelBladeView<TestEntity>
     {
-        public TestBladeViewModel(IContext context, IBaseCommonServices commonServices, ILogger logger, bool refreshOnInitialization = true)
-            : base(context, commonServices, logger, refreshOnInitialization) { }
+        public TestBladeViewModel(ICommonServices commonServices, ILogger logger, bool refreshOnInitialization = true)
+            : base(commonServices, logger, refreshOnInitialization) { }
 
         public override Task AddAsync()
         {
@@ -68,7 +65,7 @@ public class ViewModelBladeViewTests
     public void Constructor_InitializesCollectionsAndCommands()
     {
         // Arrange & Act
-        var viewModel = new TestBladeViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -86,7 +83,7 @@ public class ViewModelBladeViewTests
     public async Task Initialize_WithRefreshOnInitialization_CallsRefresh()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         await viewModel.InitializeAsync();
@@ -99,7 +96,7 @@ public class ViewModelBladeViewTests
     public void SetSelectedItem_UpdatesPropertyAndFlag()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLogger.Object);
         var entity = new TestEntity { Id = 1, Description = "Test" };
 
         // Act
@@ -114,7 +111,7 @@ public class ViewModelBladeViewTests
     public void Cleanup_ClearsCollectionsAndCommands()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.Items.Add(new TestEntity());
 
         // Act
@@ -134,7 +131,7 @@ public class ViewModelBladeViewTests
     public async Task DeleteAsync_WithConfirmation_RemovesItem()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLogger.Object);
         var entity = new TestEntity { Id = 1, Description = "Test" };
         _mockLanguageService.Setup(x => x.GetString(It.IsAny<string>())).Returns("Test");
         _mockCommonServices.Setup(x => x.DialogService.ShowMessageAsync(
@@ -153,7 +150,7 @@ public class ViewModelBladeViewTests
     public async Task RetrieveItemsAsync_PopulatesItems()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockContext.Object, _mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLogger.Object);
 
         // Act
         await viewModel.RetrieveItemsAsync(CancellationToken.None);

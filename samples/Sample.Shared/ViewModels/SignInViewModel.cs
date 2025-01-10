@@ -1,11 +1,9 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
@@ -18,10 +16,6 @@ namespace Sample.ViewModels;
 
 public class SignInViewModel : ViewModel
 {
-    private readonly IAuthenticationService _authenticationService;
-    private readonly ISettingsService _settingsService;
-    private readonly ICredentialLockerService _credentialLockerService;
-
     public override string Title { get { return LanguageService.Default.GetString("Login"); } }
 
     /// <summary>
@@ -65,19 +59,11 @@ public class SignInViewModel : ViewModel
     public AsyncRelayCommand SignUpCommand { get; private set; }
 
     public SignInViewModel(
-        IContext context,
-        IBaseCommonServices commonServices,
-        IAuthenticationService authenticationService,
-        ISettingsService settingsService,
-        ICredentialLockerService credentialLockerService,
+        ICommonServices commonServices,
         ILogger logger,
         bool automaticValidation = false)
-        : base(context, commonServices, logger, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
-        _authenticationService = authenticationService;
-        _credentialLockerService = credentialLockerService;
-        _settingsService = settingsService;
-
         SignInCommand = new AsyncRelayCommand(SignInAsync);
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
 
@@ -99,14 +85,17 @@ public class SignInViewModel : ViewModel
 
         if (!IsInitialized)
         {
-            AutoLogin = _settingsService.LocalSettings.IsAutoLogin;
-            var users = await _credentialLockerService.GetUsernamesFromCredentialLockerAsync();
+            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
+            var credentialLockerService = _commonServices.ScopedContextService.GetService<ICredentialLockerService>();
+
+            AutoLogin = settingsService.LocalSettings.IsAutoLogin;
+            var users = await credentialLockerService.GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();
             Usernames.AddRange(users);
 
-            if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser))
-                Username = _settingsService.LocalSettings.DefaultUser;
-            if (string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && Usernames.Count > 0)
+            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser))
+                Username = settingsService.LocalSettings.DefaultUser;
+            if (string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser) && Usernames.Count > 0)
                 Username = Usernames[0];
 
             IsInitialized = true;
@@ -122,7 +111,7 @@ public class SignInViewModel : ViewModel
     /// <returns>Task.</returns>
     public Task ForgotPasswordAsync()
     {
-        ForgotPasswordViewModel forgotPasswordVM = new ForgotPasswordViewModel(_context, _commonServices, _authenticationService, _logger);
+        ForgotPasswordViewModel forgotPasswordVM = new ForgotPasswordViewModel(_commonServices, _logger);
         forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }
@@ -154,7 +143,7 @@ public class SignInViewModel : ViewModel
         await Task.Delay(5000);
 
         if (Validate())
-            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+            await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
 
         _commonServices.BusyService.StopBusy();
     }

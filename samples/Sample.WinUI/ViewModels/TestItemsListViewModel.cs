@@ -1,12 +1,11 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions;
 using Sample.Enumerations;
 using Sample.Models;
 
@@ -72,11 +71,10 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}" /> class.
     /// </summary>
-    /// <param name="context">The context.</param>
     /// <param name="commonService">The common service.</param>
     /// <param name="logger">The logger factory.</param>
-    public TestItemsListViewModel(IContext context, ICommonServices commonService, ILogger logger)
-        : base(context, commonService, logger)
+    public TestItemsListViewModel(ICommonServices commonService, ILogger logger)
+        : base(commonService, logger)
     {
         ClearCommand = new RelayCommand(ClearItems);
 
@@ -146,7 +144,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(_context, CommonServices, _logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(_commonServices, _logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;
         return CommonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }

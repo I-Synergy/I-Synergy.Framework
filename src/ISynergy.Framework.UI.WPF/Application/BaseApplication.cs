@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
@@ -23,8 +22,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
-    protected readonly IAuthenticationService _authenticationService;
-    protected readonly IBaseCommonServices _commonServices;
+    protected readonly ICommonServices _commonServices;
 
     private Task Initialize { get; set; }
 
@@ -51,15 +49,14 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogTrace("Setting up main page.");
 
         _logger.LogTrace("Getting common services.");
-        _commonServices = _scopedContextService.GetService<IBaseCommonServices>();
+        _commonServices = _scopedContextService.GetService<ICommonServices>();
         _commonServices.BusyService.StartBusy();
 
         _logger.LogInformation("Setting up context.");
         var context = _scopedContextService.GetService<IContext>();
 
         _logger.LogInformation("Setting up authentication service.");
-        _authenticationService = _scopedContextService.GetService<IAuthenticationService>();
-        _authenticationService.AuthenticationChanged += AuthenticationChanged;
+        _commonServices.AuthenticationService.AuthenticationChanged += AuthenticationChanged;
 
         _logger.LogInformation("Setting up exception handler service.");
         _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
@@ -265,8 +262,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             // free managed resources
             MessageService.Default.Unregister<EnvironmentChangedMessage>(this);
 
-            if (_authenticationService is not null)
-                _authenticationService.AuthenticationChanged -= AuthenticationChanged;
+            if (_commonServices.AuthenticationService is not null)
+                _commonServices.AuthenticationService.AuthenticationChanged -= AuthenticationChanged;
 
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;

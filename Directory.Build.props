@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<LangVersion>12</LangVersion>
+		<LangVersion>13</LangVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<DefaultLanguage>en-US</DefaultLanguage>
 		<UseRidGraph>true</UseRidGraph>

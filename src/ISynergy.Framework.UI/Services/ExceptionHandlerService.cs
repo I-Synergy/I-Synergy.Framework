@@ -5,34 +5,24 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
 
-namespace ISynergy.Framework.UI.Services.Base;
+namespace ISynergy.Framework.UI.Services;
 
-public abstract class BaseExceptionHandlerService : IExceptionHandlerService
+public class ExceptionHandlerService : IExceptionHandlerService
 {
-    protected readonly IBusyService _busyService;
-    protected readonly IDialogService _dialogService;
-    protected readonly ILogger _logger;
+    private readonly IBusyService _busyService;
+    private readonly IDialogService _dialogService;
+    private readonly ILogger _logger;
 
-    /// <summary>
-    /// Default constructor.
-    /// </summary>
-    /// <param name="busyService"></param>
-    /// <param name="dialogService"></param>
-    /// <param name="logger"></param>
-    protected BaseExceptionHandlerService(
+    public ExceptionHandlerService(
         IBusyService busyService,
         IDialogService dialogService,
-        ILogger<BaseExceptionHandlerService> logger)
+        ILogger<ExceptionHandlerService> logger)
     {
         _busyService = busyService;
         _dialogService = dialogService;
         _logger = logger;
     }
 
-    /// <summary>
-    /// Handles the exception.
-    /// </summary>
-    /// <param name="exception"></param>
     public virtual async Task HandleExceptionAsync(Exception exception)
     {
         try
@@ -45,17 +35,20 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
             if (exception.Message.Equals(@"A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. ()"))
                 return;
 
-
-            // Set busyIndicator to false if it's true.
             _busyService.StopBusy();
 
             if (exception is NotImplementedException)
             {
                 await _dialogService.ShowInformationAsync(LanguageService.Default.GetString("WarningFutureModule"), "Features");
             }
-            else if (exception is UnauthorizedAccessException accessException)
+            else if (exception is UnauthorizedAccessException unauthorizedAccessException)
             {
-                await _dialogService.ShowErrorAsync(accessException.Message);
+                var message = unauthorizedAccessException.Message;
+
+                if (message.StartsWith("[") && message.EndsWith("]"))
+                    message = LanguageService.Default.GetString(message.Substring(1, message.Length - 2));
+
+                await _dialogService.ShowErrorAsync(message);
             }
             else if (exception is IOException iOException)
             {

@@ -7,7 +7,6 @@ using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
@@ -15,11 +14,9 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
@@ -59,14 +56,8 @@ public sealed partial class App : BaseApplication
                 logging.SetMinimumLevel(LogLevel.Trace);
                 logging.AddApplicationInsightsLogging(configuration);
             })
-            .ConfigureServices<App, Context, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, ExceptionHandlerService, Properties.Resources>((services, configuration) =>
+            .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
             {
-                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-
-                services.TryAddSingleton<CommonServices>();
-                services.TryAddSingleton<IBaseCommonServices>(s => s.GetRequiredService<CommonServices>());
-                services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
-
                 services.TryAddSingleton<ICameraService, CameraService>();
 
                 services.AddUpdatesIntegration();
@@ -163,7 +154,7 @@ public sealed partial class App : BaseApplication
 
                 if (!string.IsNullOrEmpty(password))
                 {
-                    await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, settingsService.LocalSettings.IsAutoLogin);
+                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, settingsService.LocalSettings.IsAutoLogin);
                     navigateToAuthentication = false;
                 }
             }
