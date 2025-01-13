@@ -11,13 +11,24 @@
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <c:BaseMenu x:Name="MenuLayout" IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}" />
 
-        <ScrollViewer
+        <ComboBox
+            x:Name="ComboBoxYear"
             Grid.Row="1"
+            Width="150"
+            Margin="2"
+            VerticalAlignment="Bottom"
+            DisplayMemberPath="Description"
+            ItemsSource="{Binding Years}"
+            SelectedItem="{Binding SelectedYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <ScrollViewer
+            Grid.Row="2"
             HorizontalScrollBarVisibility="Auto"
             IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}"
             VerticalScrollBarVisibility="Disabled">
@@ -26,7 +37,7 @@
 
         <c:BladeView
             x:Name="BladeDetails"
-            Grid.RowSpan="2"
+            Grid.RowSpan="3"
             ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </c:View>

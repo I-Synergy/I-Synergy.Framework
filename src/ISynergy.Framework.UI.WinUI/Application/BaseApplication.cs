@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
@@ -27,8 +26,6 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class BaseApplication : Application, IBaseApplication, IDisposable
 {
-    protected readonly IExceptionHandlerService _exceptionHandlerService;
-    protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
     protected readonly Func<ILoadingView> _initialView;
@@ -59,11 +56,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             })
             .Build();
 
-        _scopedContextService = host.Services.GetService<IScopedContextService>();
-
         _initialView = initialView;
 
-        _logger = _scopedContextService.GetService<ILogger>();
+        _logger = host.Services.GetService<ILogger>();
         _logger.LogTrace("Setting up global exception handler.");
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
@@ -78,30 +73,22 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogTrace("Starting initialization of application");
 
-        _logger.LogTrace("Setting up main page.");
-
         _logger.LogTrace("Getting common services.");
-        _commonServices = _scopedContextService.GetService<ICommonServices>();
-        _commonServices.BusyService.StartBusy();
+        _commonServices = host.Services.GetService<ICommonServices>();
 
-        _logger.LogTrace("Setting up context.");
-        var context = _scopedContextService.GetService<IContext>();
+        _logger.LogTrace("Setting up main page.");
+        _commonServices.BusyService.StartBusy();
 
         _logger.LogTrace("Setting up authentication service.");
         _commonServices.AuthenticationService.AuthenticationChanged += AuthenticationChanged;
 
-        _logger.LogTrace("Setting up exception handler service.");
-        _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
-
-        _logger.LogTrace("Setting up application settings service.");
-        var settingsService = _scopedContextService.GetService<ISettingsService>();
-
         _logger.LogTrace("Setting up localization service.");
-        if (settingsService.LocalSettings is not null)
-            settingsService.LocalSettings.Language.SetLocalizationLanguage();
+        if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is not null)
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language.SetLocalizationLanguage();
 
         _logger.LogTrace("Setting up theming.");
-        if (settingsService.LocalSettings is not null && settingsService.LocalSettings.IsLightThemeEnabled)
+        if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is not null &&
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsLightThemeEnabled)
             RequestedTheme = ApplicationTheme.Light;
         else
             RequestedTheme = ApplicationTheme.Dark;
@@ -162,8 +149,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     public virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
-        if (_exceptionHandlerService is not null)
-            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+        if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
+            await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -178,8 +165,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     public virtual async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
-            if (_exceptionHandlerService is not null)
-                await _exceptionHandlerService.HandleExceptionAsync(exception);
+            if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
+                await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(exception);
             else
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
@@ -216,8 +203,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="args">Event data for the event.</param>
     protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        var settingsService = _scopedContextService.GetService<ISettingsService>();
-        MainWindow = WindowHelper.CreateWindow(settingsService.LocalSettings.Theme, settingsService.LocalSettings.Color);
+        MainWindow = WindowHelper.CreateWindow(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color);
 
         _logger.LogTrace("Loading custom resource dictionaries");
 
@@ -232,7 +218,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         if (_initialView is not null && _initialView.Invoke() is View loadingView)
         {
-            loadingView.ViewModel = _scopedContextService.GetService<LoadingViewModel>();
+            loadingView.ViewModel = _commonServices.ScopedContextService.GetService<LoadingViewModel>();
             MainWindow.Content = loadingView;
         }
         else
