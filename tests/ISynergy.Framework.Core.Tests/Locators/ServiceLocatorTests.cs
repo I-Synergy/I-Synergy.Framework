@@ -1,6 +1,11 @@
 ﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System.Collections.Concurrent;
+using static ISynergy.Framework.Core.Services.Tests.ScopedContextServiceTests;
 
 namespace ISynergy.Framework.Core.Locators.Tests;
 
@@ -8,8 +13,15 @@ namespace ISynergy.Framework.Core.Locators.Tests;
 public class ServiceLocatorTests
 {
     #region Test interfaces and implementations
-    public interface ITestScopedService { }
-    public class TestScopedService : ITestScopedService { }
+    public interface ITestScopedService
+    {
+        string InstanceId { get; }
+    }
+
+    public class TestScopedService : ITestScopedService
+    {
+        public string InstanceId { get; } = Guid.NewGuid().ToString();
+    }
 
     public interface ITestSingletonService { }
     public class TestSingletonService : ITestSingletonService { }
@@ -18,9 +30,22 @@ public class ServiceLocatorTests
     public class TestTransientService : ITestTransientService { }
 
     public interface INonExistentService { }
+
+    public interface INestedScopeTestService
+    {
+        string ScopeId { get; }
+    }
+    public class NestedScopeTestService : INestedScopeTestService
+    {
+        public string ScopeId { get; } = Guid.NewGuid().ToString();
+    }
     #endregion
 
-    private IServiceProvider CreateTestServiceProvider()
+    private IServiceProvider _serviceProvider;
+    private ServiceLocator _locator;
+
+    [TestInitialize]
+    public void Setup()
     {
         var services = new ServiceCollection();
 
@@ -28,16 +53,23 @@ public class ServiceLocatorTests
         services.AddScoped<ITestScopedService, TestScopedService>();
         services.AddSingleton<ITestSingletonService, TestSingletonService>();
         services.AddTransient<ITestTransientService, TestTransientService>();
+        services.AddScoped<ITestService, TestService>();
+        services.AddScoped<INestedScopeTestService, NestedScopeTestService>();
 
-        return services.BuildServiceProviderWithLocator(true);
+        _serviceProvider = services.BuildServiceProviderWithLocator(true);
+        _locator = new ServiceLocator(_serviceProvider);
+        ServiceLocator.SetLocatorProvider(_serviceProvider);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _locator?.Dispose();
     }
 
     [TestMethod]
     public void ServiceLocator_SetLocatorProvider_ShouldInitializeCorrectly()
     {
-        // Arrange
-        var serviceProvider = CreateTestServiceProvider();
-
         // Act
         var locator = ServiceLocator.Default;
 
@@ -47,14 +79,25 @@ public class ServiceLocatorTests
     }
 
     [TestMethod]
-    public void ServiceLocator_GetInstance_Generic_ShouldResolveService()
+    public void ServiceLocator_Default_ReturnsSameInstance()
     {
-        // Arrange
-        var serviceProvider = CreateTestServiceProvider();
-        var locator = ServiceLocator.Default;
+        // Arrange - ensure ServiceLocator is initialized
+        Assert.IsNotNull(_serviceProvider, "ServiceProvider should be initialized");
 
         // Act
-        var scopedService = locator.GetService<ITestScopedService>();
+        var instance1 = ServiceLocator.Default;
+        var instance2 = ServiceLocator.Default;
+
+        // Assert
+        Assert.IsNotNull(instance1);
+        Assert.AreSame(instance1, instance2);
+    }
+
+    [TestMethod]
+    public void ServiceLocator_GetService_Generic_ShouldResolveService()
+    {
+        // Act
+        var scopedService = _locator.GetService<ITestScopedService>();
 
         // Assert
         Assert.IsNotNull(scopedService);
@@ -62,14 +105,10 @@ public class ServiceLocatorTests
     }
 
     [TestMethod]
-    public void ServiceLocator_GetInstance_Type_ShouldResolveService()
+    public void ServiceLocator_GetService_Type_ShouldResolveService()
     {
-        // Arrange
-        var serviceProvider = CreateTestServiceProvider();
-        var locator = ServiceLocator.Default;
-
         // Act
-        var scopedService = locator.GetService(typeof(ITestScopedService));
+        var scopedService = _locator.GetService(typeof(ITestScopedService));
 
         // Assert
         Assert.IsNotNull(scopedService);
@@ -79,30 +118,98 @@ public class ServiceLocatorTests
     [TestMethod]
     public void ServiceLocator_CreateNewScope_ShouldCreateNewInstances()
     {
-        // Arrange
-        var serviceProvider = CreateTestServiceProvider();
-        var locator = ServiceLocator.Default;
-
         // Act
-        var firstScopedService = locator.GetService<ITestScopedService>();
-        locator.CreateNewScope();
-        var secondScopedService = locator.GetService<ITestScopedService>();
+        var firstScopedService = _locator.GetService<ITestScopedService>();
+        _locator.CreateNewScope();
+        var secondScopedService = _locator.GetService<ITestScopedService>();
 
         // Assert
         Assert.AreNotSame(firstScopedService, secondScopedService);
     }
 
     [TestMethod]
-    public void ServiceLocator_SingletonService_ShouldMaintainInstance()
+    public void ServiceLocator_NestedScopes_ShouldMaintainCorrectHierarchy()
     {
         // Arrange
-        var serviceProvider = CreateTestServiceProvider();
-        var locator = ServiceLocator.Default;
+        var services = new List<INestedScopeTestService>();
 
         // Act
-        var firstSingletonService = locator.GetService<ITestSingletonService>();
-        locator.CreateNewScope();
-        var secondSingletonService = locator.GetService<ITestSingletonService>();
+        services.Add(_locator.GetService<INestedScopeTestService>()); // Root scope
+
+        _locator.CreateNewScope(); // Level 1
+        services.Add(_locator.GetService<INestedScopeTestService>());
+
+        _locator.CreateNewScope(); // Level 2
+        services.Add(_locator.GetService<INestedScopeTestService>());
+
+        // Assert
+        Assert.AreEqual(3, services.Select(s => s.ScopeId).Distinct().Count(),
+            "Each nested scope should have its own unique service instance");
+        Assert.AreNotEqual(services[0].ScopeId, services[1].ScopeId);
+        Assert.AreNotEqual(services[1].ScopeId, services[2].ScopeId);
+    }
+
+    [TestMethod]
+    public async Task ServiceLocator_ConcurrentAccess_ShouldBeThreadSafe()
+    {
+        // Arrange
+        int concurrentTasks = 10;
+        var tasks = new List<Task<(ServiceLocator locator, string instanceId)>>();
+        var instanceIds = new ConcurrentBag<string>();
+
+        // Act
+        for (int i = 0; i < concurrentTasks; i++)
+        {
+            tasks.Add(Task.Run(() =>
+            {
+                // Create a new ServiceLocator for each task to ensure proper isolation
+                var taskLocator = new ServiceLocator(_serviceProvider);
+                var service = taskLocator.GetService<ITestScopedService>();
+                var instanceId = service.InstanceId;
+                instanceIds.Add(instanceId);
+                return (taskLocator, instanceId);
+            }));
+        }
+
+        var results = await Task.WhenAll(tasks);
+
+        try
+        {
+            // Assert
+            Assert.AreEqual(concurrentTasks, results.Length,
+                "All concurrent requests should successfully retrieve a service");
+
+            var uniqueInstanceIds = results.Select(r => r.instanceId).Distinct().ToList();
+
+            // Diagnostic information
+            Console.WriteLine($"Total results: {results.Length}");
+            Console.WriteLine($"Unique instances: {uniqueInstanceIds.Count}");
+            Console.WriteLine("Instance IDs:");
+            foreach (var (_, id) in results)
+            {
+                Console.WriteLine($"  {id}");
+            }
+
+            Assert.AreEqual(concurrentTasks, uniqueInstanceIds.Count,
+                "Each concurrent request should get a unique instance due to scoping");
+        }
+        finally
+        {
+            // Cleanup
+            foreach (var (locator, _) in results)
+            {
+                locator?.Dispose();
+            }
+        }
+    }
+
+    [TestMethod]
+    public void ServiceLocator_SingletonService_ShouldMaintainInstance()
+    {
+        // Act
+        var firstSingletonService = _locator.GetService<ITestSingletonService>();
+        _locator.CreateNewScope();
+        var secondSingletonService = _locator.GetService<ITestSingletonService>();
 
         // Assert
         Assert.AreSame(firstSingletonService, secondSingletonService);
@@ -111,13 +218,9 @@ public class ServiceLocatorTests
     [TestMethod]
     public void ServiceLocator_TransientService_ShouldCreateNewInstancesEachTime()
     {
-        // Arrange
-        var serviceProvider = CreateTestServiceProvider();
-        var locator = ServiceLocator.Default;
-
         // Act
-        var firstTransientService = locator.GetService<ITestTransientService>();
-        var secondTransientService = locator.GetService<ITestTransientService>();
+        var firstTransientService = _locator.GetService<ITestTransientService>();
+        var secondTransientService = _locator.GetService<ITestTransientService>();
 
         // Assert
         Assert.AreNotSame(firstTransientService, secondTransientService);
@@ -125,30 +228,99 @@ public class ServiceLocatorTests
 
     [TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
-    public void ServiceLocator_GetNonExistentService_ShouldReturnNull()
+    public void ServiceLocator_GetNonExistentService_ShouldThrowException()
     {
-        // Arrange
-        var serviceProvider = CreateTestServiceProvider();
-        var locator = ServiceLocator.Default;
-
-        // Act
-        var nonExistentService = locator.GetService<INonExistentService>();
+        _locator.GetService<INonExistentService>();
     }
 
     [TestMethod]
     public void ServiceLocator_Dispose_ShouldCleanupCorrectly()
     {
         // Arrange
-        var serviceProvider = CreateTestServiceProvider();
-        var locator = ServiceLocator.Default;
+        var localLocator = new ServiceLocator(_serviceProvider);
 
         // Act
-        var scopedService = locator.GetService<ITestScopedService>();
+        var scopedService = localLocator.GetService<ITestScopedService>();
+        localLocator.Dispose();
+
+        // Get a new instance after disposal
+        var newLocator = new ServiceLocator(_serviceProvider);
+        var newScopedService = newLocator.GetService<ITestScopedService>();
+
+        // Assert
+        Assert.IsNotNull(newScopedService);
+        Assert.AreNotSame(scopedService, newScopedService);
+
+        // Cleanup
+        newLocator.Dispose();
+    }
+
+    [TestMethod]
+    public void ServiceLocator_SetLocatorProvider_UpdatesDefaultInstance()
+    {
+        // Arrange
+        var oldInstance = ServiceLocator.Default;
+        var newServiceProvider = new ServiceCollection().BuildServiceProvider();
+
+        // Act
+        ServiceLocator.SetLocatorProvider(newServiceProvider);
+        var newInstance = ServiceLocator.Default;
+
+        // Assert
+        Assert.AreNotSame(oldInstance, newInstance);
+    }
+
+    [TestMethod]
+    public void ServiceLocator_CreateNewScope_NotifiesOfChange()
+    {
+        // Arrange
+        var eventRaised = false;
+        var eventArgs = false;
+
+        MessageService.Default.Register<ScopeChangedMessage>(this, m =>
+        {
+            eventRaised = true;
+            eventArgs = m.Content;
+        });
+
+        // Act
+        _locator.CreateNewScope();
+
+        // Assert
+        Assert.IsTrue(eventRaised);
+        Assert.IsTrue(eventArgs);
+
+        MessageService.Default.Unregister<ScopeChangedMessage>(this);
+    }
+
+    [TestMethod]
+    public void ServiceLocator_Dispose_CleansUpServices()
+    {
+        // Arrange
+        var disposableService = new Mock<IDisposableTestService>();
+        var services = new ServiceCollection();
+        services.AddScoped<IDisposableTestService>(s => disposableService.Object);
+        var provider = services.BuildServiceProvider();
+        var locator = new ServiceLocator(provider);
+
+        // Get service to ensure it's created
+        var service = locator.GetService<IDisposableTestService>();
+
+        // Act
         locator.Dispose();
 
-        // Assert - Verify that getting a new instance works after dispose
-        locator.CreateNewScope();
-        var newScopedService = locator.GetService<ITestScopedService>();
-        Assert.IsNotNull(newScopedService);
+        // Assert
+        disposableService.Verify(s => s.Dispose(), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ObjectDisposedException))]
+    public void ServiceLocator_GetServiceAfterDispose_ThrowsException()
+    {
+        // Arrange
+        _locator.Dispose();
+
+        // Act
+        _locator.GetService<ITestService>();
     }
 }

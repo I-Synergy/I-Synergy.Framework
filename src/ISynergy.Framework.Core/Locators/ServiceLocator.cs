@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 
 namespace ISynergy.Framework.Core.Locators;
 
@@ -7,36 +8,35 @@ namespace ISynergy.Framework.Core.Locators;
 /// framework defines such an ambient container, use ServiceLocator.Current
 /// to get it.
 /// </summary>
-public class ServiceLocator : ScopedContextService
+public class ServiceLocator
 {
     private static IServiceProvider _staticServiceProvider;
     private static ServiceLocator _default;
+    private readonly IScopedContextService _scopedContextService;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ServiceLocator"/> class.
-    /// </summary>
-    /// <param name="currentServiceProvider">The current service provider.</param>
     public ServiceLocator(IServiceProvider currentServiceProvider)
-        : base(currentServiceProvider)
     {
         _staticServiceProvider = currentServiceProvider;
+        _scopedContextService = new ScopedContextService(currentServiceProvider);
         _default = this;
     }
 
-    /// <summary>
-    /// Gets the current.
-    /// </summary>
-    /// <value>The current.</value>
     public static ServiceLocator Default => _default ?? new ServiceLocator(_staticServiceProvider);
 
-
-    /// <summary>
-    /// Sets the locator provider.
-    /// </summary>
-    /// <param name="serviceProvider">The service provider.</param>
     public static void SetLocatorProvider(IServiceProvider serviceProvider)
     {
         _staticServiceProvider = serviceProvider;
         _default = new ServiceLocator(serviceProvider);
     }
+
+    // Delegate methods to _scopedContextService
+    public TService GetService<TService>() => _scopedContextService.GetService<TService>();
+
+    public object GetService(Type serviceType) => _scopedContextService.GetService(serviceType);
+
+    public void CreateNewScope() => _scopedContextService.CreateNewScope();
+
+    public IServiceProvider ServiceProvider => _scopedContextService.ServiceProvider;
+
+    public void Dispose() => _scopedContextService.Dispose();
 }
