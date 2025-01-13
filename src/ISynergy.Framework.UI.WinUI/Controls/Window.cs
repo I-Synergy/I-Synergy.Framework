@@ -147,7 +147,6 @@ public partial class Window : ContentDialog, IWindow
         {
             // free managed resources
             ViewModel?.Dispose();
-            ViewModel = null;
         }
 
         // free native resources if there are any.
@@ -165,7 +164,6 @@ public partial class Window : ContentDialog, IWindow
         {
             // free managed resources
             ViewModel?.Dispose();
-            ViewModel = null;
         }
 
         // free native resources if there are any.

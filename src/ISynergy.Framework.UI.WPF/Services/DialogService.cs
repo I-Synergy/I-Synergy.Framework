@@ -217,8 +217,6 @@ public class DialogService : IDialogService
                     vm.Closed -= ViewModelClosedHandler;
 
                 window.ViewModel?.Dispose();
-                window.ViewModel = null;
-
                 window.Close();
             };
 
