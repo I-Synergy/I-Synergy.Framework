@@ -117,11 +117,8 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
         if (disposing)
         {
             // Dispose and clear the submit command
-            if (SubmitCommand is IDisposable submitCommand)
-            {
-                submitCommand.Dispose();
-                SubmitCommand = null;
-            }
+            SubmitCommand?.Dispose();
+            SubmitCommand = null;
 
             base.Dispose(disposing);
         }

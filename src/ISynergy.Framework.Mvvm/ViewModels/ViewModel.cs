@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -107,6 +108,24 @@ public abstract class ViewModel : ObservableClass, IViewModel
         : base(automaticValidation)
     {
         _commonServices = commonServices;
+
+        MessageService.Default.Register<ScopeChangedMessage>(this, async (m) =>
+        {
+            if (m.Content)
+            {
+                IsInitialized = false;
+
+                // Clear existing data
+                Cleanup();
+
+                // Reinitialize with new scope if needed
+                if (!IsDisposed)
+                {
+                    await InitializeAsync();
+                }
+            }
+        });
+
         _logger = logger;
 
         PropertyChanged += OnPropertyChanged;
@@ -206,20 +225,15 @@ public abstract class ViewModel : ObservableClass, IViewModel
     {
         if (disposing)
         {
+            MessageService.Default.Unregister<ScopeChangedMessage>(this);
+
             PropertyChanged -= OnPropertyChanged;
 
             // Clear commands
-            if (CloseCommand is IDisposable closeCommand)
-            {
-                closeCommand.Dispose();
-                CloseCommand = null;
-            }
-
-            if (CancelCommand is IDisposable cancelCommand)
-            {
-                cancelCommand.Dispose();
-                CancelCommand = null;
-            }
+            CloseCommand?.Dispose();
+            CloseCommand = null;
+            CancelCommand?.Dispose();
+            CancelCommand = null;
 
             base.Dispose(disposing);
         }
