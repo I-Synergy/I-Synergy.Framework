@@ -225,9 +225,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
-        settingsService.LocalSettings.Language = e.Result;
-        settingsService.SaveLocalSettings();
+        _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language = e.Result;
+        _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
 
         e.Result.SetLocalizationLanguage();
 
@@ -265,11 +264,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         if (e.Result is { } style)
         {
-            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
-            settingsService.LocalSettings.Theme = style.Theme;
-            settingsService.LocalSettings.Color = style.Color;
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme = style.Theme;
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color = style.Color;
 
-            if (settingsService.SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+            if (_commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
@@ -298,14 +296,17 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         {
             Validator = null;
 
-            (RestartUpdateCommand as IDisposable)?.Dispose();
-            (SignInCommand as IDisposable)?.Dispose();
-            (LanguageCommand as IDisposable)?.Dispose();
-            (ColorCommand as IDisposable)?.Dispose();
-            (HelpCommand as IDisposable)?.Dispose();
-            (SettingsCommand as IDisposable)?.Dispose();
-            (BackgroundCommand as IDisposable)?.Dispose();
-            (FeedbackCommand as IDisposable)?.Dispose();
+            PrimaryItems?.Clear();
+            SecondaryItems?.Clear();
+
+            RestartUpdateCommand?.Dispose();
+            SignInCommand?.Dispose();
+            LanguageCommand?.Dispose();
+            ColorCommand?.Dispose();
+            HelpCommand?.Dispose();
+            SettingsCommand?.Dispose();
+            BackgroundCommand?.Dispose();
+            FeedbackCommand?.Dispose();
 
             base.Dispose(disposing);
         }

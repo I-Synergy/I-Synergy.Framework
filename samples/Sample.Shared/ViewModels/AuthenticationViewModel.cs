@@ -267,19 +267,16 @@ public class AuthenticationViewModel : ViewModel
             if (Modules.FirstOrDefault() is { } module)
                 Registration_Modules.Add(module);
 
-            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
-            var credentialLockerService = _commonServices.ScopedContextService.GetService<ICredentialLockerService>();
+            AutoLogin = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin;
 
-            AutoLogin = settingsService.LocalSettings.IsAutoLogin;
-
-            var users = await credentialLockerService.GetUsernamesFromCredentialLockerAsync();
+            var users = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();
             Usernames.AddRange(users);
 
-            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser))
-                Username = settingsService.LocalSettings.DefaultUser;
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser))
+                Username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
 
-            if (string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser) && Usernames.Count > 0)
+            if (string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && Usernames.Count > 0)
                 Username = Usernames[0];
 
             IsInitialized = true;

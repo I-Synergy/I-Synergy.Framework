@@ -224,9 +224,7 @@ public class SignUpViewModel : ViewModel
 
     private async Task ValidateMailAsync()
     {
-        var context = _commonServices.ScopedContextService.GetService<IContext>();
-
-        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(context)))
+        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_commonServices.ScopedContextService.GetService<IContext>())))
         {
             ArePickersAvailable = true;
 
@@ -274,7 +272,6 @@ public class SignUpViewModel : ViewModel
     {
         if (Validate())
         {
-            var context = _commonServices.ScopedContextService.GetService<IContext>();
             string emailaddress;
 
             // if email starts with "test:" or "local:"
@@ -282,18 +279,18 @@ public class SignUpViewModel : ViewModel
             if (Mail.StartsWith(GenericConstants.UsernamePrefixTest, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixTest, "");
-                context.Environment = SoftwareEnvironments.Test;
+                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Test;
             }
             // remove this prefix and set environment to local.
             else if (Mail.StartsWith(GenericConstants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixLocal, "");
-                context.Environment = SoftwareEnvironments.Local;
+                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Local;
             }
             else
             {
                 emailaddress = Mail;
-                context.Environment = SoftwareEnvironments.Production;
+                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Production;
             }
 
             if (!HasErrors &&
