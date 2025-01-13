@@ -31,7 +31,6 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
         ILogger logger)
         : base(commonServices, logger)
     {
-        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
-        SelectedItem = settingsService.LocalSettings.Language;
+        SelectedItem = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language;
     }
 }
