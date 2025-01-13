@@ -567,9 +567,7 @@ public abstract class ObservableClass : IObservableClass
     protected void ThrowIfDisposed()
     {
         if (_disposed)
-        {
             throw new ObjectDisposedException(GetType().Name);
-        }
     }
     #endregion
 }
