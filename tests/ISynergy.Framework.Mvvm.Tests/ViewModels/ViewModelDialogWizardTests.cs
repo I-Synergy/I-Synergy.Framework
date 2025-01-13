@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -9,13 +10,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelDialogWizardTests
 {
+    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
 
     [TestInitialize]
     public void Setup()
     {
+        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
+        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
         _mockLogger = new Mock<ILogger>();
     }
 
@@ -217,5 +221,6 @@ public class ViewModelDialogWizardTests
         // Assert
         Assert.IsNull(viewModel.BackCommand);
         Assert.IsNull(viewModel.NextCommand);
+        Assert.IsTrue(viewModel.IsDisposed);
     }
 }

@@ -346,6 +346,7 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
             }
         }
 
+        _executionTask?.Dispose();
         _executionTask = null;
     }
     #endregion

@@ -184,11 +184,8 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         if (disposing)
         {
             // Dispose and clear commands
-            if (RefreshCommand is IDisposable refreshCommand)
-            {
-                refreshCommand.Dispose();
-                RefreshCommand = null;
-            }
+            RefreshCommand?.Dispose();
+            RefreshCommand = null;
 
             base.Dispose(disposing);
         }

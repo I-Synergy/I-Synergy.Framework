@@ -156,17 +156,10 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
         if (disposing)
         {
             // Dispose and clear navigation commands
-            if (BackCommand is IDisposable backCommand)
-            {
-                backCommand.Dispose();
-                BackCommand = null;
-            }
-
-            if (NextCommand is IDisposable nextCommand)
-            {
-                nextCommand.Dispose();
-                NextCommand = null;
-            }
+            BackCommand?.Dispose();
+            BackCommand = null;
+            NextCommand?.Dispose();
+            NextCommand = null;
 
             base.Dispose(disposing);
         }

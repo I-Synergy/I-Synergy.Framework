@@ -243,41 +243,18 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         if (disposing)
         {
             // Dispose and clear commands
-            if (AddCommand is IDisposable addCommand)
-            {
-                addCommand.Dispose();
-                AddCommand = null;
-            }
-
-            if (EditCommand is IDisposable editCommand)
-            {
-                editCommand.Dispose();
-                EditCommand = null;
-            }
-
-            if (DeleteCommand is IDisposable deleteCommand)
-            {
-                deleteCommand.Dispose();
-                DeleteCommand = null;
-            }
-
-            if (RefreshCommand is IDisposable refreshCommand)
-            {
-                refreshCommand.Dispose();
-                RefreshCommand = null;
-            }
-
-            if (SearchCommand is IDisposable searchCommand)
-            {
-                searchCommand.Dispose();
-                SearchCommand = null;
-            }
-
-            if (SubmitCommand is IDisposable submitCommand)
-            {
-                submitCommand.Dispose();
-                SubmitCommand = null;
-            }
+            AddCommand?.Dispose();
+            AddCommand = null;
+            EditCommand?.Dispose();
+            EditCommand = null;
+            DeleteCommand?.Dispose();
+            DeleteCommand = null;
+            RefreshCommand?.Dispose();
+            RefreshCommand = null;
+            SearchCommand?.Dispose();
+            SearchCommand = null;
+            SubmitCommand?.Dispose();
+            SubmitCommand = null;
 
             base.Dispose(disposing);
         }

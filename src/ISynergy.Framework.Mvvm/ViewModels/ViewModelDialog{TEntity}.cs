@@ -115,11 +115,8 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
         if (disposing)
         {
             // Dispose and clear submit command
-            if (SubmitCommand is IDisposable submitCommand)
-            {
-                submitCommand.Dispose();
-                SubmitCommand = null;
-            }
+            SubmitCommand?.Dispose();
+            SubmitCommand = null;
 
             base.Dispose(disposing);
         }
