@@ -5,8 +5,10 @@ namespace ISynergy.Framework.Core.Models;
 /// <summary>
 /// Class NavigationItem.
 /// </summary>
-public partial class NavigationItem
+public partial class NavigationItem : IDisposable
 {
+    private bool _disposed = false;
+
     /// <summary>
     /// Gets or sets a value indicating whether this instance is selected.
     /// </summary>
@@ -66,4 +68,36 @@ public partial class NavigationItem
         Command = command;
         CommandParameter = commandParameter;
     }
+
+    #region IDisposable & IAsyncDisposable
+    // Dispose() calls Dispose(true)
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    // The bulk of the clean-up code is implemented in Dispose(bool)
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            // free managed resources
+            Command = null;
+        }
+
+        // free native resources if there are any.
+        _disposed = true;
+    }
+    #endregion
 }
