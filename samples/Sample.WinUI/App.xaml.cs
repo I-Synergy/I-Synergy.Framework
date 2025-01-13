@@ -145,16 +145,14 @@ public sealed partial class App : BaseApplication
 
             _logger.LogInformation("Retrieve default user and check for auto login");
 
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
-
-            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser) && settingsService.LocalSettings.IsAutoLogin)
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin)
             {
-                string username = settingsService.LocalSettings.DefaultUser;
-                string password = await _scopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+                string username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
+                string password = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
                 if (!string.IsNullOrEmpty(password))
                 {
-                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, settingsService.LocalSettings.IsAutoLogin);
+                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin);
                     navigateToAuthentication = false;
                 }
             }
@@ -180,21 +178,18 @@ public sealed partial class App : BaseApplication
         {
             _logger.LogInformation("Saving refresh token");
 
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
-            var context = _scopedContextService.GetService<IContext>();
-
-            settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
-            settingsService.SaveLocalSettings();
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetService<IContext>().ToEnvironmentalRefreshToken();
+            _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
 
             _logger.LogInformation("Setting culture");
-            if (settingsService.GlobalSettings is not null)
+            if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings is not null)
             {
                 var culture = CultureInfo.DefaultThreadCurrentCulture.Clone() as CultureInfo;
 
                 culture.NumberFormat.CurrencySymbol = "€";
 
-                culture.NumberFormat.CurrencyDecimalDigits = settingsService.GlobalSettings.Decimals;
-                culture.NumberFormat.NumberDecimalDigits = settingsService.GlobalSettings.Decimals;
+                culture.NumberFormat.CurrencyDecimalDigits = _commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.Decimals;
+                culture.NumberFormat.NumberDecimalDigits = _commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.Decimals;
 
                 culture.NumberFormat.CurrencyNegativePattern = 1;
                 culture.NumberFormat.NumberNegativePattern = 1;

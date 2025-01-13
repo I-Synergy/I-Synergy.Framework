@@ -18,7 +18,7 @@ namespace Sample;
 public partial class App : BaseApplication
 {
     public App()
-        : base(ServiceLocator.Default.GetService<IScopedContextService>())
+        : base(ServiceLocator.Default.GetService<ICommonServices>())
     {
         MessageService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
     }
@@ -39,16 +39,14 @@ public partial class App : BaseApplication
 
             _logger.LogInformation("Retrieve default user and check for auto login");
 
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
-
-            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser) && settingsService.LocalSettings.IsAutoLogin)
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin)
             {
-                string username = settingsService.LocalSettings.DefaultUser;
-                string password = await _scopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+                string username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
+                string password = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
                 if (!string.IsNullOrEmpty(password))
                 {
-                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, settingsService.LocalSettings.IsAutoLogin);
+                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin);
                     navigateToAuthentication = false;
                 }
             }
