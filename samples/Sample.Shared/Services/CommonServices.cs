@@ -31,11 +31,6 @@ public class CommonServices : ICommonServices
     public INavigationService NavigationService { get; }
 
     /// <summary>
-    /// Dispatcher service.
-    /// </summary>
-    public IDispatcherService DispatcherService { get; }
-
-    /// <summary>
     /// Gets the authentication service.
     /// </summary>
     /// <value>The authentication service.</value>
@@ -61,15 +56,13 @@ public class CommonServices : ICommonServices
     /// <param name="authenticationService"></param>
     /// <param name="scopedContextService"></param>
     /// <param name="fileService"></param>
-    /// <param name="dispatcherService"></param>
     public CommonServices(
         IBusyService busyService,
         IDialogService dialogService,
         INavigationService navigationService,
         IAuthenticationService authenticationService,
         IScopedContextService scopedContextService,
-        IFileService<FileResult> fileService,
-        IDispatcherService dispatcherService)
+        IFileService<FileResult> fileService)
     {
         BusyService = busyService;
         DialogService = dialogService;
@@ -77,7 +70,6 @@ public class CommonServices : ICommonServices
         AuthenticationService = authenticationService;
         ScopedContextService = scopedContextService;
         FileService = fileService;
-        DispatcherService = dispatcherService;
     }
 
     /// <summary>

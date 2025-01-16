@@ -2,6 +2,7 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Dispatching;
 using Sample.Models;
 using System.Collections.ObjectModel;
 using System.Timers;
@@ -91,7 +92,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     {
         SlideshowTimer.Enabled = false;
 
-        _commonServices.DispatcherService.Invoke(() =>
+        DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>
         {
             if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
             {

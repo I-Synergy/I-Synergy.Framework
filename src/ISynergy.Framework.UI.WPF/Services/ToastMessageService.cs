@@ -18,12 +18,10 @@ namespace ISynergy.Framework.UI.Services;
 public class ToastMessageService : IToastMessageService
 {
     private readonly Notifier _notifier;
-    private readonly IDispatcherService _dispatcherService;
     private readonly ToastMessageOptions _options;
 
-    public ToastMessageService(IDispatcherService dispatcherService, IOptions<ToastMessageOptions> options)
+    public ToastMessageService(IOptions<ToastMessageOptions> options)
     {
-        _dispatcherService = dispatcherService;
         _options = options.Value;
 
         _notifier = new Notifier(cfg =>
