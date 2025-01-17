@@ -366,7 +366,13 @@ public sealed class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCo
             }
         }
 
-        _executionTask?.Dispose();
+        if (_executionTask?.Status == TaskStatus.RanToCompletion ||
+            _executionTask?.Status == TaskStatus.Canceled ||
+            _executionTask?.Status == TaskStatus.Faulted)
+        {
+            _executionTask?.Dispose();
+        }
+
         _executionTask = null;
     }
     #endregion
