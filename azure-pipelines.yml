@@ -49,7 +49,6 @@ stages:
               tests/**/*.csproj
             InsertAttributes: true
             WriteBOM: true
-            GeneratePackageOnBuild: true
             VersionNumber: '$(VersionNumber)'
             FileVersionNumber: '$(VersionFile)'
             InformationalVersion: '$(VersionInformational)'
