@@ -162,6 +162,21 @@
 		<Content Include="Styles\Themeff4343.xaml" />
 		<Content Include="Styles\Themeff8c00.xaml" />
 		<Content Include="Styles\Themeffb900.xaml" />
+		<Content Include="Assets\Fonts\isynergy.ttf"/>
+		<Content Include="Assets\Fonts\opendyslexic3-bold.ttf"/>
+		<Content Include="Assets\Fonts\opendyslexic3-regular.ttf"/>
+		<Content Include="Assets\Fonts\segmdl2.ttf"/>
+		<Content Include="Assets\Fonts\segoesb.ttf"/>
+		<Content Include="Assets\Fonts\segoeui.ttf"/>
+		<Content Include="Assets\Fonts\segoeuib.ttf"/>
+		<Content Include="Assets\Fonts\segoeuil.ttf"/>
+		<Content Include="Assets\Fonts\segoeuisl.ttf"/>
+		<Content Include="Assets\Fonts\seguisb.ttf"/>
+		<Content Include="Assets\Images\Error.png"/>
+		<Content Include="Assets\Images\Information.png"/>
+		<Content Include="Assets\Images\Question.png"/>
+		<Content Include="Assets\Images\Refresh.png"/>
+		<Content Include="Assets\Images\Warning.png"/>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -345,53 +360,5 @@
 		<Page Include="Windows\ThemeWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Update="Assets\Fonts\isynergy.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\opendyslexic3-bold.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\opendyslexic3-regular.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segmdl2.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoesb.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeui.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuib.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuil.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuisl.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\seguisb.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Error.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Information.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Question.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Refresh.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Warning.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
 	</ItemGroup>
 </Project>
