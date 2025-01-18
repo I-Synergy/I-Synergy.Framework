@@ -13,7 +13,6 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
-		<!--<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>-->
 		<UseWinUI>true</UseWinUI>
 		<EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
 		<EnableMsixTooling>true</EnableMsixTooling>
@@ -21,14 +20,6 @@
 		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
 	</PropertyGroup>
 	
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
-		<None Include="bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pri" Pack="true" PackagePath="lib/net8.0-windows10.0.26100" />
-	</ItemGroup>
-
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0'))">
-		<None Include="bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pri" Pack="true" PackagePath="lib/net9.0-windows10.0.26100" />
-	</ItemGroup>
-		
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
@@ -49,16 +40,6 @@
 		<None Remove="Controls\ImageView\ImageView.xaml" />
 		<None Remove="Controls\Menu\BaseMenu.xaml" />
 		<None Remove="Controls\Tiles\Tile.xaml" />
-		<None Remove="Assets\Fonts\ISynergy.ttf" />
-		<None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
-		<None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
-		<None Remove="Assets\Fonts\SegMDL2.ttf" />
-		<None Remove="Assets\Fonts\segoesb.ttf" />
-		<None Remove="Assets\Fonts\segoeui.ttf" />
-		<None Remove="Assets\Fonts\segoeuib.ttf" />
-		<None Remove="Assets\Fonts\segoeuil.ttf" />
-		<None Remove="Assets\Fonts\segoeuisl.ttf" />
-		<None Remove="Assets\Fonts\seguisb.ttf" />
 		<None Remove="Styles\Theme0063b1.xaml" />
 		<None Remove="Styles\Theme0078d7.xaml" />
 		<None Remove="Styles\Theme0099bc.xaml" />
@@ -162,23 +143,37 @@
 		<Content Include="Styles\Themeff4343.xaml" />
 		<Content Include="Styles\Themeff8c00.xaml" />
 		<Content Include="Styles\Themeffb900.xaml" />
-		<Content Include="Assets\Fonts\isynergy.ttf"/>
-		<Content Include="Assets\Fonts\opendyslexic3-bold.ttf"/>
-		<Content Include="Assets\Fonts\opendyslexic3-regular.ttf"/>
-		<Content Include="Assets\Fonts\segmdl2.ttf"/>
-		<Content Include="Assets\Fonts\segoesb.ttf"/>
-		<Content Include="Assets\Fonts\segoeui.ttf"/>
-		<Content Include="Assets\Fonts\segoeuib.ttf"/>
-		<Content Include="Assets\Fonts\segoeuil.ttf"/>
-		<Content Include="Assets\Fonts\segoeuisl.ttf"/>
-		<Content Include="Assets\Fonts\seguisb.ttf"/>
-		<Content Include="Assets\Images\Error.png"/>
-		<Content Include="Assets\Images\Information.png"/>
-		<Content Include="Assets\Images\Question.png"/>
-		<Content Include="Assets\Images\Refresh.png"/>
-		<Content Include="Assets\Images\Warning.png"/>
 	</ItemGroup>
 
+	<ItemGroup>
+		<Content Include="Assets\Fonts\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>Assets\Fonts\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</Content>
+		<Content Include="Assets\Images\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>Assets\Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</Content>
+	</ItemGroup>
+
+	<Target Name="AddPackageContent" BeforeTargets="GenerateNuspec">
+		<ItemGroup>
+			<_TargetFrameworks Include="$(TargetFrameworks)" />
+		</ItemGroup>
+		<ItemGroup>
+			<_PackageFiles Include="Assets\Fonts\*.*" Condition="'%(_TargetFrameworks.Identity)' != ''">
+				<BuildAction>Content</BuildAction>
+				<CopyToOutput>true</CopyToOutput>
+				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\Assets\Fonts</PackagePath>
+			</_PackageFiles>
+			<_PackageFiles Include="Assets\Images\*.*" Condition="'%(_TargetFrameworks.Identity)' != ''">
+				<BuildAction>Content</BuildAction>
+				<CopyToOutput>true</CopyToOutput>
+				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\Assets\Images</PackagePath>
+			</_PackageFiles>
+		</ItemGroup>
+	</Target>
+	
 	<ItemGroup>
 		<Page Include="Controls\BladeView\BladeView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
