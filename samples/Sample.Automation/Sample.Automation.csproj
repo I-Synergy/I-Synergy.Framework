@@ -4,6 +4,7 @@
 		<AssemblyName>ISynergy.Framework.AspNetCore.Sample</AssemblyName>
 		<RootNamespace>ISynergy.Framework.AspNetCore.Sample</RootNamespace>
 		<IsPackable>false</IsPackable>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
