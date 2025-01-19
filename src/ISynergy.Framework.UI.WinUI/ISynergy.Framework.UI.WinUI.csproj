@@ -161,28 +161,14 @@
 			<_TargetFrameworks Include="$(TargetFrameworks)" />
 		</ItemGroup>
 		<ItemGroup>
-			<_PackageFiles Include="Assets\Fonts\*.*" Condition="'%(_TargetFrameworks.Identity)' != ''">
+			<_PackageFiles Include="Assets\**\*.*" Condition="'%(_TargetFrameworks.Identity)' != ''">
 				<BuildAction>Content</BuildAction>
 				<CopyToOutput>true</CopyToOutput>
-				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\Assets\Fonts</PackagePath>
-			</_PackageFiles>
-			
-			<_PackageFiles Include="Assets\Images\*.*" Condition="'%(_TargetFrameworks.Identity)' != ''">
-				<BuildAction>Content</BuildAction>
-				<CopyToOutput>true</CopyToOutput>
-				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\Assets\Images</PackagePath>
+				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\Assets</PackagePath>
 			</_PackageFiles>
 
-			<_PackageFiles Include="bin\$(Configuration)\%(_TargetFrameworks.Identity)\runtimes\win-arm64\native\WebView2Loader.dll" Condition="'%(_TargetFrameworks.Identity)' != ''">
-				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\runtimes\win-arm64\native</PackagePath>
-			</_PackageFiles>
-
-			<_PackageFiles Include="bin\$(Configuration)\%(_TargetFrameworks.Identity)\runtimes\win-x64\native\WebView2Loader.dll" Condition="'%(_TargetFrameworks.Identity)' != ''">
-				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\runtimes\win-x64\native</PackagePath>
-			</_PackageFiles>
-
-			<_PackageFiles Include="bin\$(Configuration)\%(_TargetFrameworks.Identity)\runtimes\win-x86\native\WebView2Loader.dll" Condition="'%(_TargetFrameworks.Identity)' != ''">
-				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\runtimes\win-x86\native</PackagePath>
+			<_PackageFiles Include="bin\$(Configuration)\%(_TargetFrameworks.Identity)\runtimes\**\*.*" Condition="'%(_TargetFrameworks.Identity)' != ''">
+				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\runtimes</PackagePath>
 			</_PackageFiles>
 		</ItemGroup>
 	</Target>

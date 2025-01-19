@@ -29,7 +29,7 @@ public enum AsyncRelayCommandOptions
     /// Note that additional considerations should be taken into account in this case:
     /// <list type="bullet">
     ///     <item>If the _command supports cancellation, previous invocations will automatically be canceled if a new one is started.</item>
-    ///     <item>The <see cref="AsyncRelayCommand.ExecutionTask"/> property will always represent the operation that was started last.</item>
+    ///     <item>The ExecutionTask property will always represent the operation that was started last.</item>
     /// </list>
     /// </para>
     /// </summary>
@@ -42,7 +42,7 @@ public enum AsyncRelayCommandOptions
     /// be rethrown on the calling context (as it is not awaited there). Instead, it will flow to <see cref="System.Threading.Tasks.TaskScheduler.UnobservedTaskException"/>.
     /// </para>
     /// <para>
-    /// This option enables more advanced scenarios, where the <see cref="AsyncRelayCommand.ExecutionTask"/> property can be used to inspect the state of an operation
+    /// This option enables more advanced scenarios, where the ExecutionTask property can be used to inspect the state of an operation
     /// that was queued. That is, even if the operation failed or was canceled, the details of that can be retrieved at a later time by accessing this property.
     /// </para>
     /// </summary>

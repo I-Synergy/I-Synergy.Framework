@@ -135,8 +135,6 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         bool automaticValidation = false)
         : base(commonServices, logger, automaticValidation)
     {
-        _commonServices.BladeLifecycleService.RegisterBladeView(this);
-
         RefreshOnInitialization = refreshOnInitialization;
 
         Items = new ObservableCollection<TEntity>();
@@ -282,8 +280,6 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     {
         if (disposing)
         {
-            _commonServices.BladeLifecycleService.UnregisterBladeView(this);
-
             // Make sure cleanup is done before disposal
             if (!IsInCleanup)
             {
