@@ -76,10 +76,13 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
 
     protected void MonitorTask(Task task)
     {
+        // Schedule state update after task completion
         _ = task.ContinueWith(t =>
         {
+            // Only update if this is still the current task
             if (ReferenceEquals(_executionTask, t))
             {
+                // First notify about completion
                 PropertyChanged?.Invoke(this, ExecutionTaskChangedEventArgs);
                 PropertyChanged?.Invoke(this, IsRunningChangedEventArgs);
 
@@ -89,7 +92,14 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                 if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
                     OnCanExecuteChanged();
 
-                _executionTask = null;
+                // Then clear the task reference after a small delay to allow completion checks
+                Task.Delay(100).ContinueWith(_ =>
+                {
+                    if (ReferenceEquals(_executionTask, t))
+                    {
+                        _executionTask = null;
+                    }
+                }, TaskScheduler.Current);
             }
         }, TaskScheduler.Current);
     }

@@ -96,7 +96,7 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
 
     public override async Task ExecuteAsync(object? parameter)
     {
-        if (IsRunning)
+        if (IsRunning && (_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
             return;
 
         try
