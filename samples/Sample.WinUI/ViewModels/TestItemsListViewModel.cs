@@ -65,9 +65,9 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// Gets or sets the SelectedQueryType property value.
     /// </summary>
     /// <value>The type of the selected query.</value>
-    public int SelectedQueryType
+    public QueryTypes SelectedQueryType
     {
-        get { return GetValue<int>(); }
+        get { return GetValue<QueryTypes>(); }
         set { SetValue(value); }
     }
 
