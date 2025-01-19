@@ -1,10 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
+using ISynergy.Framework.Mvvm.Commands.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 #nullable enable
@@ -15,196 +14,70 @@ namespace ISynergy.Framework.Mvvm.Commands;
 /// A generic _command that provides a more specific version of <see cref="AsyncRelayCommand"/>.
 /// </summary>
 /// <typeparam name="T">The type of parameter being passed as input to the callbacks.</typeparam>
-public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationAwareCommand, IDisposable
+public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCommand<T>
 {
-    private readonly List<CancellationTokenSource> _cancellationTokenSources = new List<CancellationTokenSource>();
     private readonly Func<T?, Task>? _execute;
     private readonly Func<T?, CancellationToken, Task>? _cancelableExecute;
     private readonly Predicate<T?>? _canExecute;
 
-    private CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
-    private Task? _executionTask;
+    protected override bool IsBaseExecute => _execute is not null;
 
-    private readonly AsyncRelayCommandOptions _options;
-
-    /// <inheritdoc/>
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    /// <inheritdoc/>
-    public event EventHandler? CanExecuteChanged;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
-    /// </summary>
-    /// <param name="execute">The execution logic.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
     public AsyncRelayCommand(Func<T?, Task> execute)
+        : base(AsyncRelayCommandOptions.None)
     {
         Argument.IsNotNull(execute);
-
         _execute = execute;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
-    /// </summary>
-    /// <param name="execute">The execution logic.</param>
-    /// <param name="options">The _options to use to configure the async _command.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
     public AsyncRelayCommand(Func<T?, Task> execute, AsyncRelayCommandOptions options)
-        : this(execute)
+        : base(options)
     {
-        _options = options;
+        Argument.IsNotNull(execute);
+        _execute = execute;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
-    /// </summary>
-    /// <param name="cancelableExecute">The cancelable execution logic.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="cancelableExecute"/> is <see langword="null"/>.</exception>
     public AsyncRelayCommand(Func<T?, CancellationToken, Task> cancelableExecute)
+        : base(AsyncRelayCommandOptions.None)
     {
         Argument.IsNotNull(cancelableExecute);
-
         _cancelableExecute = cancelableExecute;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
-    /// </summary>
-    /// <param name="cancelableExecute">The cancelable execution logic.</param>
-    /// <param name="options">The _options to use to configure the async _command.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="cancelableExecute"/> is <see langword="null"/>.</exception>
     public AsyncRelayCommand(Func<T?, CancellationToken, Task> cancelableExecute, AsyncRelayCommandOptions options)
-        : this(cancelableExecute)
+        : base(options)
     {
-        _options = options;
+        Argument.IsNotNull(cancelableExecute);
+        _cancelableExecute = cancelableExecute;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
-    /// </summary>
-    /// <param name="execute">The execution logic.</param>
-    /// <param name="canExecute">The execution status logic.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
     public AsyncRelayCommand(Func<T?, Task> execute, Predicate<T?> canExecute)
         : this(execute)
     {
         Argument.IsNotNull(canExecute);
-
         _canExecute = canExecute;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
-    /// </summary>
-    /// <param name="execute">The execution logic.</param>
-    /// <param name="canExecute">The execution status logic.</param>
-    /// <param name="options">The _options to use to configure the async _command.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
     public AsyncRelayCommand(Func<T?, Task> execute, Predicate<T?> canExecute, AsyncRelayCommandOptions options)
-        : this(execute, canExecute)
+        : this(execute, options)
     {
-        _options = options;
+        Argument.IsNotNull(canExecute);
+        _canExecute = canExecute;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
-    /// </summary>
-    /// <param name="cancelableExecute">The cancelable execution logic.</param>
-    /// <param name="canExecute">The execution status logic.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="cancelableExecute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
     public AsyncRelayCommand(Func<T?, CancellationToken, Task> cancelableExecute, Predicate<T?> canExecute)
         : this(cancelableExecute)
     {
         Argument.IsNotNull(canExecute);
-
         _canExecute = canExecute;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
-    /// </summary>
-    /// <param name="cancelableExecute">The cancelable execution logic.</param>
-    /// <param name="canExecute">The execution status logic.</param>
-    /// <param name="options">The _options to use to configure the async _command.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="cancelableExecute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
     public AsyncRelayCommand(Func<T?, CancellationToken, Task> cancelableExecute, Predicate<T?> canExecute, AsyncRelayCommandOptions options)
-        : this(cancelableExecute, canExecute)
+        : this(cancelableExecute, options)
     {
-        _options = options;
+        Argument.IsNotNull(canExecute);
+        _canExecute = canExecute;
     }
 
-    /// <inheritdoc/>
-    public Task? ExecutionTask
-    {
-        get => _executionTask;
-        private set
-        {
-            if (ReferenceEquals(_executionTask, value))
-                return;
-
-            _executionTask = value;
-
-            PropertyChanged?.Invoke(this, AsyncRelayCommand.ExecutionTaskChangedEventArgs);
-            PropertyChanged?.Invoke(this, AsyncRelayCommand.IsRunningChangedEventArgs);
-
-            bool isAlreadyCompletedOrNull = value?.IsCompleted ?? true;
-
-            if (_cancellationTokenSource is not null)
-            {
-                PropertyChanged?.Invoke(this, AsyncRelayCommand.CanBeCanceledChangedEventArgs);
-                PropertyChanged?.Invoke(this, AsyncRelayCommand.IsCancellationRequestedChangedEventArgs);
-            }
-
-            if (isAlreadyCompletedOrNull)
-                return;
-
-            void MonitorTask(AsyncRelayCommand<T> @this, Task task)
-            {
-                task.GetAwaitableWithoutEndValidation().GetAwaiter().GetResult();
-
-                if (ReferenceEquals(@this._executionTask, task))
-                {
-                    @this.PropertyChanged?.Invoke(@this, AsyncRelayCommand.ExecutionTaskChangedEventArgs);
-                    @this.PropertyChanged?.Invoke(@this, AsyncRelayCommand.IsRunningChangedEventArgs);
-
-                    if (@this._cancellationTokenSource is not null)
-                        @this.PropertyChanged?.Invoke(@this, AsyncRelayCommand.CanBeCanceledChangedEventArgs);
-
-                    if ((@this._options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
-                        @this.CanExecuteChanged?.Invoke(@this, EventArgs.Empty);
-                }
-            }
-
-            MonitorTask(this, value!);
-        }
-    }
-
-    /// <inheritdoc/>
-    public bool CanBeCanceled => IsRunning && _cancellationTokenSource is { IsCancellationRequested: false };
-
-    /// <inheritdoc/>
-    public bool IsCancellationRequested => _cancellationTokenSource is { IsCancellationRequested: true };
-
-    /// <inheritdoc/>
-    public bool IsRunning => ExecutionTask is { IsCompleted: false };
-
-    /// <inheritdoc/>
-    bool ICancellationAwareCommand.IsCancellationSupported => _execute is null;
-
-    /// <inheritdoc/>
-    public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-
-    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool CanExecute(T? parameter)
     {
@@ -212,11 +85,8 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
         return canExecute && ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0 || ExecutionTask is not { IsCompleted: false });
     }
 
-    /// <inheritdoc/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool CanExecute(object? parameter)
+    public override bool CanExecute(object? parameter)
     {
-        // Special case, see RelayCommand<T>.CanExecute(object?) for more info
         if (parameter is null && default(T) is not null)
             return false;
 
@@ -226,18 +96,15 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
         return CanExecute(result);
     }
 
-    /// <inheritdoc/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Execute(T? parameter)
     {
         Task executionTask = ExecuteAsync(parameter);
 
         if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
-            AsyncRelayCommand.AwaitAndThrowIfFailed(executionTask);
+            AwaitAndThrowIfFailed(executionTask);
     }
 
-    /// <inheritdoc/>
-    public void Execute(object? parameter)
+    public override void Execute(object? parameter)
     {
         if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result))
             RelayCommand<T>.ThrowArgumentExceptionForInvalidCommandArgument(parameter);
@@ -245,115 +112,53 @@ public sealed class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICancellationA
         Execute(result);
     }
 
-    /// <inheritdoc/>
     public async Task ExecuteAsync(T? parameter)
     {
+        if (IsRunning)
+            return;
+
         try
         {
             Task executionTask;
 
             if (_execute is not null)
             {
-                // Non cancelable _command delegate
-                executionTask = ExecutionTask = _execute(parameter);
+                executionTask = _execute(parameter);
             }
             else
             {
-                // Cancel the previous operation, if one is pending
                 _cancellationTokenSource?.Cancel();
                 var cancellationTokenSource = _cancellationTokenSource = new();
                 _cancellationTokenSources.Add(cancellationTokenSource);
 
-                // Invoke the cancelable _command delegate with a new linked token
-                executionTask = ExecutionTask = _cancelableExecute!(parameter, cancellationTokenSource.Token);
+                executionTask = _cancelableExecute!(parameter, cancellationTokenSource.Token);
             }
 
+            ExecutionTask = executionTask;
             await executionTask;
-
-            // If concurrent executions are disabled, notify the can _execute change as well
-            if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
-                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
         {
             var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-
             if (ex.InnerException != null)
                 await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
             else
                 await exceptionHandlerService.HandleExceptionAsync(ex);
         }
+        finally
+        {
+            ExecutionTask = null;
+
+            if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
+                OnCanExecuteChanged();
+        }
     }
 
-    /// <inheritdoc/>
-    public Task ExecuteAsync(object? parameter)
+    public override async Task ExecuteAsync(object? parameter)
     {
         if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result))
             RelayCommand<T>.ThrowArgumentExceptionForInvalidCommandArgument(parameter);
 
-        return ExecuteAsync(result);
+        await ExecuteAsync(result);
     }
-
-    /// <inheritdoc/>
-    public void Cancel()
-    {
-        if (_cancellationTokenSource is { IsCancellationRequested: false } cancellationTokenSource)
-        {
-            cancellationTokenSource.Cancel();
-
-            PropertyChanged?.Invoke(this, AsyncRelayCommand.CanBeCanceledChangedEventArgs);
-            PropertyChanged?.Invoke(this, AsyncRelayCommand.IsCancellationRequestedChangedEventArgs);
-        }
-    }
-
-    #region IDisposable
-    // Dispose() calls Dispose(true)
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    // The bulk of the clean-up code is implemented in Dispose(bool)
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    private void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            if (_cancellationTokenSources is not null)
-            {
-                foreach (var cancellationTokenSource in _cancellationTokenSources.EnsureNotNull())
-                {
-                    cancellationTokenSource.Cancel();
-                    cancellationTokenSource.Dispose();
-                }
-
-                _cancellationTokenSources.Clear();
-            }
-
-            // free managed resources
-            if (_cancellationTokenSource is not null)
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
-            }
-        }
-
-        if (_executionTask?.Status == TaskStatus.RanToCompletion ||
-            _executionTask?.Status == TaskStatus.Canceled ||
-            _executionTask?.Status == TaskStatus.Faulted)
-        {
-            _executionTask?.Dispose();
-        }
-
-        _executionTask = null;
-    }
-    #endregion
 }
