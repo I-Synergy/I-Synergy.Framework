@@ -232,16 +232,33 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
 
     public override void Cleanup()
     {
-        base.Cleanup();
+        try
+        {
+            // Set flag to prevent property change notifications during cleanup
+            IsInCleanup = true;
 
-        SelectedItem = default(TEntity);
-        Items?.Clear();
+            // Clear selected item first
+            SelectedItem = default;
+            Items?.Clear();
+
+            base.Cleanup();
+        }
+        finally
+        {
+            IsInCleanup = false;
+        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            // Make sure cleanup is done before disposal
+            if (!IsInCleanup)
+            {
+                Cleanup();
+            }
+
             // Dispose and clear commands
             AddCommand?.Dispose();
             AddCommand = null;

@@ -135,6 +135,8 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         bool automaticValidation = false)
         : base(commonServices, logger, automaticValidation)
     {
+        _commonServices.BladeLifecycleService.RegisterBladeView(this);
+
         RefreshOnInitialization = refreshOnInitialization;
 
         Items = new ObservableCollection<TEntity>();
@@ -257,18 +259,37 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
 
     public override void Cleanup()
     {
-        base.Cleanup();
+        try
+        {
+            // Set flag to prevent property change notifications during cleanup
+            IsInCleanup = true;
 
-        SelectedItem = default(TEntity);
+            // Clear selected item first
+            SelectedItem = default;
 
-        Items?.Clear();
-        Blades?.Clear();
+            Items?.Clear();
+            Blades?.Clear();
+
+            base.Cleanup();
+        }
+        finally
+        {
+            IsInCleanup = false;
+        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            _commonServices.BladeLifecycleService.UnregisterBladeView(this);
+
+            // Make sure cleanup is done before disposal
+            if (!IsInCleanup)
+            {
+                Cleanup();
+            }
+
             // Dispose and clear all commands
             AddCommand?.Dispose();
             AddCommand = null;

@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 public class ViewModelBladeViewTests
 {
     private Mock<IScopedContextService> _mockScopedContextService;
+    private Mock<IBladeLifecycleService> _mockBladeLifecycleService;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
     private Mock<ILanguageService> _mockLanguageService;
@@ -19,8 +21,12 @@ public class ViewModelBladeViewTests
     public void Setup()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
+        _mockBladeLifecycleService = new Mock<IBladeLifecycleService>();
+
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
+        _mockCommonServices.SetupGet(s => s.BladeLifecycleService).Returns(_mockBladeLifecycleService.Object);
+
         _mockLogger = new Mock<ILogger>();
         _mockLanguageService = new Mock<ILanguageService>();
     }
