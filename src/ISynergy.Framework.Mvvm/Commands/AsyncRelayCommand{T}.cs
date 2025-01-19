@@ -114,7 +114,7 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
 
     public async Task ExecuteAsync(T? parameter)
     {
-        if (IsRunning)
+        if (IsRunning && (_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
             return;
 
         try
