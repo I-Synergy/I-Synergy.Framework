@@ -41,7 +41,6 @@ public class ThemeViewModel : ViewModelDialog<Style>
     {
         ThemeColors = new ThemeColors();
 
-        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
-        SelectedItem = new Style(settingsService.LocalSettings.Color, settingsService.LocalSettings.Theme);
+        SelectedItem = new Style(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme);
     }
 }

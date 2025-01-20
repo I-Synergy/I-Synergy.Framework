@@ -37,8 +37,6 @@ public class AuthenticationService : IAuthenticationService
 
         _logger = logger;
         _logger.LogDebug($"AuthenticationService instance created with ID: {Guid.NewGuid()}");
-
-        SignOut();
     }
 
     public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
@@ -58,10 +56,8 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
     {
-        var context = _scopedContextService.GetService<IContext>();
-        context.Environment = SoftwareEnvironments.Test;
-
-        context.Profile = new Profile(
+        _scopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Test;
+        _scopedContextService.GetService<IContext>().Profile = new Profile(
             new Token(),
             Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
             "Test",
@@ -78,17 +74,14 @@ public class AuthenticationService : IAuthenticationService
 
         if (remember)
         {
-            var settingsService = _scopedContextService.GetService<ISettingsService>();
-
-            if (settingsService.LocalSettings.DefaultUser != username)
+            if (_scopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser != username)
             {
-                settingsService.LocalSettings.IsAutoLogin = true;
-                settingsService.LocalSettings.DefaultUser = username;
-                settingsService.SaveLocalSettings();
+                _scopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin = true;
+                _scopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser = username;
+                _scopedContextService.GetService<ISettingsService>().SaveLocalSettings();
             }
 
-            var credentialLockerService = _scopedContextService.GetService<ICredentialLockerService>();
-            await credentialLockerService.AddCredentialToCredentialLockerAsync(username, password);
+            await _scopedContextService.GetService<ICredentialLockerService>().AddCredentialToCredentialLockerAsync(username, password);
         }
 
         ValidateToken(new Token());
@@ -129,8 +122,7 @@ public class AuthenticationService : IAuthenticationService
     {
         if (token is not null)
         {
-            var context = _scopedContextService.GetService<IContext>();
-            context.Profile = new Profile(
+            _scopedContextService.GetService<IContext>().Profile = new Profile(
                 token,
                 Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
                 "Test",
@@ -145,9 +137,9 @@ public class AuthenticationService : IAuthenticationService
                 1,
                 DateTime.Now.AddHours(24));
 
-            OnAuthenticationChanged(new ReturnEventArgs<bool>(context.IsAuthenticated));
+            OnAuthenticationChanged(new ReturnEventArgs<bool>(_scopedContextService.GetService<IContext>().IsAuthenticated));
 
-            MessageService.Default.Send(new EnvironmentChangedMessage(context.Environment));
+            MessageService.Default.Send(new EnvironmentChangedMessage(_scopedContextService.GetService<IContext>().Environment));
         }
         else
         {

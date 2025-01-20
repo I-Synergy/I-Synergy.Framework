@@ -101,25 +101,38 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
 
     public override void Cleanup()
     {
-        base.Cleanup();
+        try
+        {
+            // Set flag to prevent property change notifications during cleanup
+            IsInCleanup = true;
 
-        // Clear the selected item
-        SelectedItem = default(TEntity);
+            // Clear selected item first
+            SelectedItem = default;
 
-        // Reset dialog state
-        IsUpdate = false;
+            // Reset dialog state
+            IsUpdate = false;
+
+            base.Cleanup();
+        }
+        finally
+        {
+            IsInCleanup = false;
+        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            // Dispose and clear submit command
-            if (SubmitCommand is IDisposable submitCommand)
+            // Make sure cleanup is done before disposal
+            if (!IsInCleanup)
             {
-                submitCommand.Dispose();
-                SubmitCommand = null;
+                Cleanup();
             }
+
+            // Dispose and clear submit command
+            SubmitCommand?.Dispose();
+            SubmitCommand = null;
 
             base.Dispose(disposing);
         }

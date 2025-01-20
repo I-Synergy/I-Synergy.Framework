@@ -1,7 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Commands;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Commands.Base;
 using System.Runtime.CompilerServices;
 
 #nullable enable
@@ -14,32 +12,17 @@ namespace ISynergy.Framework.Mvvm.Commands;
 /// method is <see langword="true"/>. This type does not allow you to accept _command parameters
 /// in the <see cref="Execute"/> and <see cref="CanExecute"/> callback methods.
 /// </summary>
-public sealed class RelayCommand : IRelayCommand, IDisposable
+public sealed class RelayCommand : BaseRelayCommand
 {
     private readonly Action _execute;
     private readonly Func<bool>? _canExecute;
-    private bool _disposed;
 
-    /// <inheritdoc/>
-    public event EventHandler? CanExecuteChanged;
-
-    /// <summary>
-    /// Initializes a new instance of the RelayCommand class that can always execute.
-    /// </summary>
-    /// <param name="execute">The execution logic.</param>
-    /// <exception cref="ArgumentNullException">Thrown if execute is null.</exception>
     public RelayCommand(Action execute)
     {
         Argument.IsNotNull(execute);
         _execute = execute;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the RelayCommand class.
-    /// </summary>
-    /// <param name="execute">The execution logic.</param>
-    /// <param name="canExecute">The execution status logic.</param>
-    /// <exception cref="ArgumentNullException">Thrown if execute or canExecute are null.</exception>
     public RelayCommand(Action execute, Func<bool> canExecute)
         : this(execute)
     {
@@ -47,23 +30,14 @@ public sealed class RelayCommand : IRelayCommand, IDisposable
         _canExecute = canExecute;
     }
 
-    /// <inheritdoc/>
-    public void NotifyCanExecuteChanged()
-    {
-        ThrowIfDisposed();
-        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-    }
-
-    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool CanExecute(object? parameter)
+    public override bool CanExecute(object? parameter)
     {
         ThrowIfDisposed();
         return _canExecute?.Invoke() != false;
     }
 
-    /// <inheritdoc/>
-    public void Execute(object? parameter)
+    public override void Execute(object? parameter)
     {
         ThrowIfDisposed();
 
@@ -73,46 +47,7 @@ public sealed class RelayCommand : IRelayCommand, IDisposable
         }
         catch (Exception ex)
         {
-            var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-
-            if (ex.InnerException != null)
-            {
-                exceptionHandlerService.HandleExceptionAsync(ex.InnerException)
-                    .ConfigureAwait(false)
-                    .GetAwaiter()
-                    .GetResult();
-            }
-            else
-            {
-                exceptionHandlerService.HandleExceptionAsync(ex)
-                    .ConfigureAwait(false)
-                    .GetAwaiter()
-                    .GetResult();
-            }
+            HandleException(ex);
         }
-    }
-
-    private void ThrowIfDisposed()
-    {
-        if (_disposed)
-        {
-            throw new ObjectDisposedException(nameof(RelayCommand));
-        }
-    }
-
-    /// <summary>
-    /// Disposes the command, cleaning up resources and preventing further execution.
-    /// </summary>
-    public void Dispose()
-    {
-        if (!_disposed)
-        {
-            _disposed = true;
-
-            // Clear event handlers
-            CanExecuteChanged = null;
-        }
-
-        GC.SuppressFinalize(this);
     }
 }

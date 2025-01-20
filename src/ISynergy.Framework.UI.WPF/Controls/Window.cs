@@ -108,7 +108,6 @@ public partial class Window : System.Windows.Window, IWindow
         {
             // free managed resources
             ViewModel?.Dispose();
-            ViewModel = null;
         }
 
         // free native resources if there are any.

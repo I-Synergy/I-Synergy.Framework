@@ -66,7 +66,6 @@ public abstract partial class View : Page, IView
         {
             // free managed resources
             ViewModel?.Dispose();
-            ViewModel = null;
         }
 
         // free native resources if there are any.

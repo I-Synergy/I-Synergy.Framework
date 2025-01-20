@@ -176,32 +176,12 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
         }
     }
 
-    public override void Cleanup()
-    {
-        base.Cleanup();
-
-        // Clear collections
-        //Items?.Clear();
-        //SelectedItems?.Clear();
-
-        // Dispose and clear commands
-        if (RefreshCommand is IDisposable refreshCommand)
-        {
-            refreshCommand.Dispose();
-            RefreshCommand = null;
-        }
-
-        // Reset selection state
-        //SelectionMode = SelectionModes.Single;
-        //Query = null;
-    }
-
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            // Ensure cleanup is called during disposal
-            Cleanup();
+            RefreshCommand?.Dispose();
+            RefreshCommand = null;
 
             base.Dispose(disposing);
         }

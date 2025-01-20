@@ -22,38 +22,65 @@ public class CredentialLockerService : ICredentialLockerService
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
-        return Task.FromResult(TryCatchUtility.IgnoreErrors<string, COMException>(() =>
+        return Task.FromResult(TryCatchUtility.IgnoreErrors<string, COMException>(
+        () =>
         {
-            PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(InfoService.Default.ProductName);
+            try
+            {
+                PasswordVault vault = new();
+                IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(InfoService.Default.ProductName);
 
-            if (credentials.Count > 0)
-                return vault.Retrieve(InfoService.Default.ProductName, username)?.Password;
+                if (credentials.Count > 0)
+                    return vault.Retrieve(InfoService.Default.ProductName, username)?.Password;
 
-            return string.Empty;
-        }));
+                return string.Empty;
+            }
+            catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
+            {
+                return string.Empty;
+            }
+        },
+        string.Empty));
     }
 
     public Task<List<string>> GetUsernamesFromCredentialLockerAsync()
     {
-        return Task.FromResult(TryCatchUtility.IgnoreErrors<List<string>, COMException>(() =>
+        return Task.FromResult(TryCatchUtility.IgnoreErrors<List<string>, COMException>(
+        () =>
         {
-            PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(InfoService.Default.ProductName);
-            return credentials.Select(q => q.UserName).ToList();
-        }));
+            try
+            {
+                var vault = new PasswordVault();
+                var credentials = vault.FindAllByResource(InfoService.Default.ProductName);
+                return credentials.Select(q => q.UserName).ToList();
+            }
+            catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
+            {
+                return new List<string>();
+            }
+        },
+        new List<string>()));
     }
 
     public Task AddCredentialToCredentialLockerAsync(string username, string password)
     {
         TryCatchUtility.IgnoreErrors<COMException>(async () =>
         {
-            PasswordVault vault = new();
-            string oldPassword = await GetPasswordFromCredentialLockerAsync(username);
+            var vault = new PasswordVault();
 
-            if (oldPassword != password)
+            // Use nested try-catch for handling the specific "not found" case
+            try
             {
-                await RemoveCredentialFromCredentialLockerAsync(username);
+                string oldPassword = await GetPasswordFromCredentialLockerAsync(username);
+                if (oldPassword != password)
+                {
+                    await RemoveCredentialFromCredentialLockerAsync(username);
+                    vault.Add(new PasswordCredential(InfoService.Default.ProductName, username, password));
+                }
+            }
+            catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
+            {
+                // No existing credential found, just add new one
                 vault.Add(new PasswordCredential(InfoService.Default.ProductName, username, password));
             }
         });
@@ -65,12 +92,22 @@ public class CredentialLockerService : ICredentialLockerService
     {
         TryCatchUtility.IgnoreErrors<COMException>(() =>
         {
-            PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(InfoService.Default.ProductName);
-            PasswordCredential credential = credentials.FirstOrDefault(q => q.UserName == username);
+            var vault = new PasswordVault();
 
-            if (credential is not null)
-                vault.Remove(credential);
+            try
+            {
+                var credentials = vault.FindAllByResource(InfoService.Default.ProductName);
+                var credential = credentials.FirstOrDefault(q => q.UserName == username);
+
+                if (credential is not null)
+                {
+                    vault.Remove(credential);
+                }
+            }
+            catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
+            {
+                // No credentials found, nothing to remove
+            }
         });
 
         return Task.CompletedTask;

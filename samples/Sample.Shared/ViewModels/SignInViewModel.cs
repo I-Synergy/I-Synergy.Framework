@@ -85,17 +85,14 @@ public class SignInViewModel : ViewModel
 
         if (!IsInitialized)
         {
-            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
-            var credentialLockerService = _commonServices.ScopedContextService.GetService<ICredentialLockerService>();
-
-            AutoLogin = settingsService.LocalSettings.IsAutoLogin;
-            var users = await credentialLockerService.GetUsernamesFromCredentialLockerAsync();
+            AutoLogin = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin;
+            var users = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();
             Usernames.AddRange(users);
 
-            if (!string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser))
-                Username = settingsService.LocalSettings.DefaultUser;
-            if (string.IsNullOrEmpty(settingsService.LocalSettings.DefaultUser) && Usernames.Count > 0)
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser))
+                Username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
+            if (string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && Usernames.Count > 0)
                 Username = Usernames[0];
 
             IsInitialized = true;

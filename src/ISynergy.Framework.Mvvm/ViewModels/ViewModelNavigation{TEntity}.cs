@@ -100,21 +100,35 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
 
     public override void Cleanup()
     {
-        base.Cleanup();
+        try
+        {
+            // Set flag to prevent property change notifications during cleanup
+            IsInCleanup = true;
 
-        SelectedItem = default(TEntity);
+            // Clear selected item first
+            SelectedItem = default;
+
+            base.Cleanup();
+        }
+        finally
+        {
+            IsInCleanup = false;
+        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            // Clear commands
-            if (SubmitCommand is IDisposable submitCommand)
+            // Make sure cleanup is done before disposal
+            if (!IsInCleanup)
             {
-                submitCommand.Dispose();
-                SubmitCommand = null;
+                Cleanup();
             }
+
+            // Clear commands
+            SubmitCommand?.Dispose();
+            SubmitCommand = null;
 
             base.Dispose(disposing);
         }
