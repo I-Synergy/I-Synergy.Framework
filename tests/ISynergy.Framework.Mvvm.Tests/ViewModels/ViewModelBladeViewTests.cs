@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
@@ -10,6 +10,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelBladeViewTests
 {
+    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
     private Mock<ILanguageService> _mockLanguageService;
@@ -17,7 +18,11 @@ public class ViewModelBladeViewTests
     [TestInitialize]
     public void Setup()
     {
+        _mockScopedContextService = new Mock<IScopedContextService>();
+
         _mockCommonServices = new Mock<ICommonServices>();
+        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
+
         _mockLogger = new Mock<ILogger>();
         _mockLanguageService = new Mock<ILanguageService>();
     }
@@ -125,6 +130,7 @@ public class ViewModelBladeViewTests
         Assert.IsNull(viewModel.RefreshCommand);
         Assert.IsNull(viewModel.SearchCommand);
         Assert.IsNull(viewModel.SubmitCommand);
+        Assert.IsTrue(viewModel.IsDisposed);
     }
 
     [TestMethod]

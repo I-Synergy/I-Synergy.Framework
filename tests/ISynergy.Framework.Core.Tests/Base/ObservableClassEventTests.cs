@@ -178,8 +178,8 @@ public class ObservableClassEventTests
         observable.Dispose();
 
         // Verify events are cleaned up
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerPropertyChanged("test"));
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerErrorsChanged("test"));
+        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerPropertyChanged("TestProperty"));
+        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerErrorsChanged("TestProperty"));
 
         // No events should have been added to disposalOrder during disposal
         Assert.AreEqual(0, disposalOrder.Count);

@@ -13,7 +13,6 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
-		<!--<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>-->
 		<UseWinUI>true</UseWinUI>
 		<EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
 		<EnableMsixTooling>true</EnableMsixTooling>
@@ -21,14 +20,6 @@
 		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
 	</PropertyGroup>
 	
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
-		<None Include="bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pri" Pack="true" PackagePath="lib/net8.0-windows10.0.26100" />
-	</ItemGroup>
-
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0'))">
-		<None Include="bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pri" Pack="true" PackagePath="lib/net9.0-windows10.0.26100" />
-	</ItemGroup>
-		
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
@@ -49,16 +40,6 @@
 		<None Remove="Controls\ImageView\ImageView.xaml" />
 		<None Remove="Controls\Menu\BaseMenu.xaml" />
 		<None Remove="Controls\Tiles\Tile.xaml" />
-		<None Remove="Assets\Fonts\ISynergy.ttf" />
-		<None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
-		<None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
-		<None Remove="Assets\Fonts\SegMDL2.ttf" />
-		<None Remove="Assets\Fonts\segoesb.ttf" />
-		<None Remove="Assets\Fonts\segoeui.ttf" />
-		<None Remove="Assets\Fonts\segoeuib.ttf" />
-		<None Remove="Assets\Fonts\segoeuil.ttf" />
-		<None Remove="Assets\Fonts\segoeuisl.ttf" />
-		<None Remove="Assets\Fonts\seguisb.ttf" />
 		<None Remove="Styles\Theme0063b1.xaml" />
 		<None Remove="Styles\Theme0078d7.xaml" />
 		<None Remove="Styles\Theme0099bc.xaml" />
@@ -164,6 +145,34 @@
 		<Content Include="Styles\Themeffb900.xaml" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Content Include="Assets\Fonts\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>Assets\Fonts\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</Content>
+		<Content Include="Assets\Images\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>Assets\Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</Content>
+	</ItemGroup>
+
+	<Target Name="AddPackageContent" BeforeTargets="GenerateNuspec">
+		<ItemGroup>
+			<_TargetFrameworks Include="$(TargetFrameworks)" />
+		</ItemGroup>
+		<ItemGroup>
+			<_PackageFiles Include="Assets\**\*.*" Condition="'%(_TargetFrameworks.Identity)' != ''">
+				<BuildAction>Content</BuildAction>
+				<CopyToOutput>true</CopyToOutput>
+				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\Assets</PackagePath>
+			</_PackageFiles>
+
+			<_PackageFiles Include="bin\$(Configuration)\%(_TargetFrameworks.Identity)\runtimes\**\*.*" Condition="'%(_TargetFrameworks.Identity)' != ''">
+				<PackagePath>lib\$([System.Text.RegularExpressions.Regex]::Replace('%(_TargetFrameworks.Identity)','\.0$',''))\$(AssemblyName)\runtimes</PackagePath>
+			</_PackageFiles>
+		</ItemGroup>
+	</Target>
+	
 	<ItemGroup>
 		<Page Include="Controls\BladeView\BladeView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
@@ -345,53 +354,5 @@
 		<Page Include="Windows\ThemeWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Update="Assets\Fonts\isynergy.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\opendyslexic3-bold.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\opendyslexic3-regular.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segmdl2.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoesb.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeui.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuib.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuil.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\segoeuisl.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Fonts\seguisb.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Error.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Information.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Question.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Refresh.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Assets\Images\Warning.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
 	</ItemGroup>
 </Project>

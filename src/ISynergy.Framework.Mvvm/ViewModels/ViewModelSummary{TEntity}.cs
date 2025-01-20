@@ -232,52 +232,46 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
 
     public override void Cleanup()
     {
-        base.Cleanup();
+        try
+        {
+            // Set flag to prevent property change notifications during cleanup
+            IsInCleanup = true;
 
-        SelectedItem = default(TEntity);
-        Items?.Clear();
+            // Clear selected item first
+            SelectedItem = default;
+            Items?.Clear();
+
+            base.Cleanup();
+        }
+        finally
+        {
+            IsInCleanup = false;
+        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            // Make sure cleanup is done before disposal
+            if (!IsInCleanup)
+            {
+                Cleanup();
+            }
+
             // Dispose and clear commands
-            if (AddCommand is IDisposable addCommand)
-            {
-                addCommand.Dispose();
-                AddCommand = null;
-            }
-
-            if (EditCommand is IDisposable editCommand)
-            {
-                editCommand.Dispose();
-                EditCommand = null;
-            }
-
-            if (DeleteCommand is IDisposable deleteCommand)
-            {
-                deleteCommand.Dispose();
-                DeleteCommand = null;
-            }
-
-            if (RefreshCommand is IDisposable refreshCommand)
-            {
-                refreshCommand.Dispose();
-                RefreshCommand = null;
-            }
-
-            if (SearchCommand is IDisposable searchCommand)
-            {
-                searchCommand.Dispose();
-                SearchCommand = null;
-            }
-
-            if (SubmitCommand is IDisposable submitCommand)
-            {
-                submitCommand.Dispose();
-                SubmitCommand = null;
-            }
+            AddCommand?.Dispose();
+            AddCommand = null;
+            EditCommand?.Dispose();
+            EditCommand = null;
+            DeleteCommand?.Dispose();
+            DeleteCommand = null;
+            RefreshCommand?.Dispose();
+            RefreshCommand = null;
+            SearchCommand?.Dispose();
+            SearchCommand = null;
+            SubmitCommand?.Dispose();
+            SubmitCommand = null;
 
             base.Dispose(disposing);
         }

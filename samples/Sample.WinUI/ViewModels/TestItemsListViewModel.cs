@@ -1,4 +1,6 @@
 ﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -8,6 +10,7 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;
+using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
 
@@ -62,9 +65,29 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// Gets or sets the SelectedQueryType property value.
     /// </summary>
     /// <value>The type of the selected query.</value>
-    public int SelectedQueryType
+    public QueryTypes SelectedQueryType
     {
-        get { return GetValue<int>(); }
+        get { return GetValue<QueryTypes>(); }
+        set { SetValue(value); }
+    }
+
+    /// <summary>
+    /// Gets or sets the Years property value.
+    /// </summary>
+    /// <value>The years.</value>
+    public ObservableCollection<Year> Years
+    {
+        get { return GetValue<ObservableCollection<Year>>(); }
+        set { SetValue(value); }
+    }
+
+    /// <summary>
+    /// Gets or sets the Selected Year property value.
+    /// </summary>
+    /// <value>The selected year.</value>
+    public Year SelectedYear
+    {
+        get { return GetValue<Year>(); }
         set { SetValue(value); }
     }
 
@@ -77,9 +100,31 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
         : base(commonService, logger)
     {
         ClearCommand = new RelayCommand(ClearItems);
+    }
+
+    public override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
 
         Query = string.Empty;
         Items = [];
+
+        Years =
+        [
+         new Year { Value = DateTime.Now.Date.Year, Description = DateTime.Now.Date.Year.ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 1, Description = (DateTime.Now.Date.Year - 1).ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 2, Description = (DateTime.Now.Date.Year - 2).ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 3, Description = (DateTime.Now.Date.Year - 3).ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 4, Description = (DateTime.Now.Date.Year - 4).ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 5, Description = (DateTime.Now.Date.Year - 5).ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 6, Description = (DateTime.Now.Date.Year - 6).ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 7, Description = (DateTime.Now.Date.Year - 7).ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 8, Description = (DateTime.Now.Date.Year - 8).ToString() },
+          new Year { Value = DateTime.Now.Date.Year - 9, Description = (DateTime.Now.Date.Year - 9).ToString() },
+          new Year { Value = 0, Description = LanguageService.Default.GetString("SearchAll") }
+        ];
+
+        SelectedYear = Years.FirstOrDefault(e => e.Value == DateTime.Now.Date.Year);
     }
 
     /// <summary>

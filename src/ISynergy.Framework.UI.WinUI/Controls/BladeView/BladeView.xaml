@@ -16,7 +16,7 @@
                         MaxHeight="{Binding BladeHeight, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         Orientation="{Binding Orientation, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                        Spacing="{Binding Spacing, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Spacing="{Binding BladeSpacing, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemContainerStyle>

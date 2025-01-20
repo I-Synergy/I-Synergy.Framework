@@ -169,26 +169,39 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
     public override void Cleanup()
     {
-        base.Cleanup();
+        try
+        {
+            // Set flag to prevent property change notifications during cleanup
+            IsInCleanup = true;
 
-        // Clear collections
-        Items?.Clear();
-        SelectedItems?.Clear();
+            // Clear collections
+            Items?.Clear();
+            SelectedItems?.Clear();
 
-        // Reset selection state
-        SelectionMode = SelectionModes.Single;
+            // Reset selection state
+            SelectionMode = SelectionModes.Single;
+
+            base.Cleanup();
+        }
+        finally
+        {
+            IsInCleanup = false;
+        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            // Dispose and clear commands
-            if (RefreshCommand is IDisposable refreshCommand)
+            // Make sure cleanup is done before disposal
+            if (!IsInCleanup)
             {
-                refreshCommand.Dispose();
-                RefreshCommand = null;
+                Cleanup();
             }
+
+            // Dispose and clear commands
+            RefreshCommand?.Dispose();
+            RefreshCommand = null;
 
             base.Dispose(disposing);
         }

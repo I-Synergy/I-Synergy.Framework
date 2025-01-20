@@ -4,6 +4,7 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<RootNamespace>ISynergy.Framework.MessageBus.Performance</RootNamespace>
 		<IsPackable>false</IsPackable>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messages;
@@ -19,8 +18,6 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class BaseApplication : Application, IBaseApplication, IDisposable
 {
-    protected readonly IExceptionHandlerService _exceptionHandlerService;
-    protected readonly IScopedContextService _scopedContextService;
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
 
@@ -29,12 +26,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected BaseApplication(IScopedContextService scopedContextService)
+    protected BaseApplication(ICommonServices commonServices)
         : base()
     {
-        _scopedContextService = scopedContextService;
+        _commonServices = commonServices;
 
-        _logger = _scopedContextService.GetService<ILogger>();
+        _logger = _commonServices.ScopedContextService.GetService<ILogger>();
         _logger.LogInformation("Starting application");
 
         // Pass a timeout to limit the execution time.
@@ -49,25 +46,15 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogTrace("Setting up main page.");
 
         _logger.LogTrace("Getting common services.");
-        _commonServices = _scopedContextService.GetService<ICommonServices>();
         _commonServices.BusyService.StartBusy();
-
-        _logger.LogInformation("Setting up context.");
-        var context = _scopedContextService.GetService<IContext>();
 
         _logger.LogInformation("Setting up authentication service.");
         _commonServices.AuthenticationService.AuthenticationChanged += AuthenticationChanged;
 
-        _logger.LogInformation("Setting up exception handler service.");
-        _exceptionHandlerService = _scopedContextService.GetService<IExceptionHandlerService>();
-
-        _logger.LogInformation("Setting up application settings service.");
-        var settingsService = _scopedContextService.GetService<ISettingsService>();
-
         _logger.LogInformation("Setting up localization service.");
 
-        if (settingsService.LocalSettings is not null)
-            settingsService.LocalSettings.Language.SetLocalizationLanguage();
+        if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is not null)
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language.SetLocalizationLanguage();
 
         //_logger.LogTrace("Setting up theming.");
 
@@ -113,8 +100,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     public virtual async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
-        if (_exceptionHandlerService is not null)
-            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+        if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
+            await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -138,8 +125,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="e"></param>
     public virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
-        if (_exceptionHandlerService is not null)
-            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+        if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
+            await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -154,8 +141,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     public virtual async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
-            if (_exceptionHandlerService is not null)
-                await _exceptionHandlerService.HandleExceptionAsync(exception);
+            if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
+                await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(exception);
             else
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
@@ -173,7 +160,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     ///     await base.InitializeApplicationAsync();
     ///     // wait 5 seconds before showing the main window...
     ///     await Task.Delay(5000);
-    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
+    ///     await _commonServices.ScopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
     /// </code>
     /// </example>
     /// <returns></returns>

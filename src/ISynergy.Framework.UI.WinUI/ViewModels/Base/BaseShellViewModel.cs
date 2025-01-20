@@ -217,9 +217,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
-        settingsService.LocalSettings.Language = e.Result;
-        settingsService.SaveLocalSettings();
+        _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language = e.Result;
+        _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
 
         e.Result.SetLocalizationLanguage();
 
@@ -257,11 +256,10 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
         if (e.Result is { } style)
         {
-            var settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
-            settingsService.LocalSettings.Theme = style.Theme;
-            settingsService.LocalSettings.Color = style.Color;
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme = style.Theme;
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color = style.Color;
 
-            if (settingsService.SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+            if (_commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
@@ -300,6 +298,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
                 _commonServices.NavigationService.BackStackChanged -= NavigationService_BackStackChanged;
 
             Validator = null;
+
+            PrimaryItems?.Clear();
+            SecondaryItems?.Clear();
 
             (RestartUpdateCommand as IDisposable)?.Dispose();
             (SignInCommand as IDisposable)?.Dispose();

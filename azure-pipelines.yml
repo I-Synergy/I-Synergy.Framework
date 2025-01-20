@@ -25,7 +25,7 @@ stages:
     displayName: 'Build'
     jobs:
     - job: BuildJob
-      displayName: 'Build and pack assemblies'
+      displayName: 'Build, test and pack assemblies'
       timeoutInMinutes: 120
       steps:
         - task: PowerShell@2
@@ -49,7 +49,6 @@ stages:
               tests/**/*.csproj
             InsertAttributes: true
             WriteBOM: true
-            GeneratePackageOnBuild: true
             VersionNumber: '$(VersionNumber)'
             FileVersionNumber: '$(VersionFile)'
             InformationalVersion: '$(VersionInformational)'
@@ -90,20 +89,6 @@ stages:
             projectName: 'I-Synergy.Framework'
             projectVersion: '$(VersionPackage)'
 
-        # - task: DotNetCoreCLI@2
-        #   displayName: 'Build I-Synergy Framework solution'
-        #   inputs:
-        #     command: build
-        #     projects: 'I-Synergy.Framework.sln'
-        #     arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true'
-
-        # - task: NuGetCommand@2
-        #   displayName: 'Restore Nuget packages'
-        #   inputs:
-        #     command: 'restore'
-        #     restoreSolution: 'I-Synergy.Framework.sln'
-        #     feedsToUse: 'config'
-
         - task: MSBuild@1
           displayName: 'Build I-Synergy Framework solution'
           inputs:
@@ -111,6 +96,70 @@ stages:
             msbuildArchitecture: 'x64'
             configuration: $(BuildConfiguration)
             msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true /nr:false' #this flag is important to avoid DLL lock for the 2nd build/analysis
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Core Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Core.Tests\ISynergy.Framework.Core.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run EF Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.EntityFramework.Tests\ISynergy.Framework.EntityFramework.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run IO Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.IO.Tests\ISynergy.Framework.IO.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Mvvm Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Mvvm.Tests\ISynergy.Framework.Mvvm.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run AspNetCore Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.AspNetCore.Tests\ISynergy.Framework.AspNetCore.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Financial Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Financial.Tests\ISynergy.Framework.Financial.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Geography Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Geography.Tests\ISynergy.Framework.Geography.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Physics Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Physics.Tests\ISynergy.Framework.Physics.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Mathematics Tests'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Mathematics.Tests\ISynergy.Framework.Mathematics.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: CopyFiles@2
           inputs:
@@ -151,98 +200,6 @@ stages:
                 +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
           displayName: 'Copy source to Github'
           # condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-
-  - stage: TestStage
-    displayName: 'Test'
-    dependsOn: BuildStage
-    condition: succeeded()
-    jobs:
-    - job: TestJob
-      displayName: 'Test assemblies'
-      timeoutInMinutes: 120
-      steps:
-        - task: UseDotNet@2
-          inputs:
-            packageType: 'sdk'
-            useGlobalJson: true
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Core Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Core.Tests\ISynergy.Framework.Core.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run EF Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.EntityFramework.Tests\ISynergy.Framework.EntityFramework.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run IO Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.IO.Tests\ISynergy.Framework.IO.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Mvvm Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Mvvm.Tests\ISynergy.Framework.Mvvm.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-        # - task: DotNetCoreCLI@2
-        #   displayName: 'Run Automations Tests'
-        #   inputs:
-        #     command: test
-        #     projects: 'tests\ISynergy.Framework.Automations.Tests\ISynergy.Framework.Automations.Tests.csproj'
-        #     arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run AspNetCore Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.AspNetCore.Tests\ISynergy.Framework.AspNetCore.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Financial Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Financial.Tests\ISynergy.Framework.Financial.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Geography Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Geography.Tests\ISynergy.Framework.Geography.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Physics Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Physics.Tests\ISynergy.Framework.Physics.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Mathematics Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Mathematics.Tests\ISynergy.Framework.Mathematics.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-        #- task: DotNetCoreCLI@2
-        #  displayName: 'Run Test: I-Synergy.Framework.Payment'
-        #  inputs:
-        #    command: test
-        #    projects: 'tests\ISynergy.Framework.Payment.Tests\ISynergy.Framework.Payment.Tests.csproj'
-        #    arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
   # - stage: DocStage
   #   displayName: 'Documentation'
@@ -305,7 +262,7 @@ stages:
 
   - stage: Release
     displayName: 'Release'
-    dependsOn: TestStage
+    dependsOn: BuildStage
     condition: succeeded()
     jobs:
     - job: ArtifactsJob

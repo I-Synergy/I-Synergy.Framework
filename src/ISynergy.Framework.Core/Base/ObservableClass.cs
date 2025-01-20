@@ -206,6 +206,8 @@ public abstract class ObservableClass : IObservableClass
         return default;
     }
 
+    protected bool IsInCleanup { get; set; }
+
     /// <summary>
     /// Sets the value.
     /// </summary>
@@ -214,23 +216,7 @@ public abstract class ObservableClass : IObservableClass
     /// <param name="propertyName">Name of the property.</param>
     protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
     {
-        if (propertyName != null && !Properties.ContainsKey(propertyName))
-            Properties.Add(propertyName, new Property<T>(propertyName));
-
-        if (propertyName != null && Properties[propertyName] is IProperty<T> property)
-        {
-            var previous = property.Value;
-
-            if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType() && value is null)
-            {
-                property.Value = value;
-
-                RaisePropertyChanged(propertyName);
-
-                if (AutomaticValidationTrigger)
-                    Validate();
-            }
-        }
+        SetValueCore<T>(value, propertyName, !IsInCleanup);
     }
 
     /// <summary>
@@ -242,22 +228,41 @@ public abstract class ObservableClass : IObservableClass
     /// <param name="propertyName">Name of the property.</param>
     protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
-        if (propertyName != null && !Properties.ContainsKey(propertyName))
+        SetValueCore<T>(value, propertyName, !IsInCleanup);
+        field = value;
+    }
+
+    private void SetValueCore<T>(T value, string propertyName, bool shouldRaiseEvents)
+    {
+        if (propertyName is null)
+            return;
+
+        if (!Properties.ContainsKey(propertyName))
             Properties.Add(propertyName, new Property<T>(propertyName));
 
-        if (propertyName != null && Properties[propertyName] is IProperty<T> property)
+        if (Properties[propertyName] is not IProperty<T> property) return;
+
+        // During cleanup or when events are suppressed, just set the value
+        if (!shouldRaiseEvents || IsInCleanup)
         {
-            var previous = field;
+            property.Value = value;
+            return;
+        }
 
-            if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType() && value is null)
-            {
-                field = value;
+        ThrowIfDisposed();
 
-                RaisePropertyChanged(propertyName);
+        var previous = property.Value;
+        bool shouldUpdate = !property.IsOriginalSet ||
+                           !Equals(value, previous) ||
+                           (typeof(T).IsNullableType() && value is null);
 
-                if (AutomaticValidationTrigger)
-                    Validate();
-            }
+        if (shouldUpdate)
+        {
+            property.Value = value;
+            RaisePropertyChanged(propertyName);
+
+            if (AutomaticValidationTrigger)
+                Validate();
         }
     }
 
@@ -567,9 +572,7 @@ public abstract class ObservableClass : IObservableClass
     protected void ThrowIfDisposed()
     {
         if (_disposed)
-        {
             throw new ObjectDisposedException(GetType().Name);
-        }
     }
     #endregion
 }
