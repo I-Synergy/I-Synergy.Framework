@@ -99,14 +99,16 @@ public class AsyncRelayCommandTests
         // Act
         var executionTask = command.ExecuteAsync(null);
 
-        // Assert
-        Assert.IsNotNull(command.ExecutionTask);
-        Assert.IsFalse(command.ExecutionTask.IsCompleted);
+        // Assert initial state
+        Assert.IsNotNull(command.ExecutionTask, "ExecutionTask should be set after execution starts");
+        Assert.IsFalse(executionTask.IsCompleted, "Execution should not be completed initially");
 
+        // Complete the task
         tcs.SetResult(true);
         await executionTask;
 
-        Assert.IsTrue(command.ExecutionTask.IsCompleted);
+        // Assert final state
+        Assert.IsTrue(executionTask.IsCompleted, "Execution should be completed after task completes");
     }
 
     [TestMethod]

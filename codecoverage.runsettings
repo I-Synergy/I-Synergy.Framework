@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-    <DataCollectionRunSettings>
-        <DataCollectors>
-            <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Culture=neutral">
-                <Configuration>
-                    <CodeCoverage>
-                        <!-- Match assembly file paths: -->
-                        <ModulePaths>
-                            <Include>
-                                <ModulePath>.*\ISynergy.Framework.AspNetCore.Authentication.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.AspNetCore.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.Core.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.EntityFramework.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.Financial.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.Geography.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.IO.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.Mathematics.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.MessageBus.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.AspNetCore.Monitoring.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.Mvvm.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.Physics.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.Storage.Azure.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.Storage.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.UI.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.UI.WinUI.dll</ModulePath>
-                                <ModulePath>.*\ISynergy.Framework.UI.Wpf.dll</ModulePath>
-                            </Include>
-                            <Exclude>
-                                <ModulePath>.*tests.dll</ModulePath>
-                            </Exclude>
-                        </ModulePaths>
-                    </CodeCoverage>
-                </Configuration>
-            </DataCollector>
-        </DataCollectors>
-    </DataCollectionRunSettings>
+	<DataCollectionRunSettings>
+		<DataCollectors>
+			<DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Culture=neutral">
+				<Configuration>
+					<CodeCoverage>
+						<!-- Match assembly file paths: -->
+						<ModulePaths>
+							<Include>
+								<ModulePath>.*\ISynergy.Framework.AspNetCore.Authentication.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.AspNetCore.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.AspNetCore.Monitoring.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.Core.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.EntityFramework.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.Financial.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.Geography.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.IO.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.Mathematics.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.MessageBus.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.Mvvm.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.Physics.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.Storage.Azure.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.Storage.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.UI.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.UI.WinUI.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.UI.Wpf.dll</ModulePath>
+							</Include>
+							<Exclude>
+								<ModulePath>.*tests.dll</ModulePath>
+							</Exclude>
+						</ModulePaths>
+					</CodeCoverage>
+				</Configuration>
+			</DataCollector>
+		</DataCollectors>
+	</DataCollectionRunSettings>
 </RunSettings>

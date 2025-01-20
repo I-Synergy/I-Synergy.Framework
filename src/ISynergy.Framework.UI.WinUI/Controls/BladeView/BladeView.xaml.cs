@@ -1,20 +1,47 @@
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace ISynergy.Framework.UI.Controls;
 
 public partial class BladeView : UserControl, IDisposable
 {
-    public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(ObservableCollection<UIElement>), typeof(BladeView), new PropertyMetadata(new ObservableCollection<UIElement>()));
+    #region Properties
+    public static readonly DependencyProperty ItemsSourceProperty =
+        DependencyProperty.Register(nameof(ItemsSource),
+            typeof(ObservableCollection<IView>),
+            typeof(BladeView),
+            new PropertyMetadata(null, OnBladesChanged));
 
-    public ObservableCollection<UIElement> ItemsSource
+    public ObservableCollection<IView> ItemsSource
     {
-        get { return (ObservableCollection<UIElement>)GetValue(ItemsSourceProperty); }
+        get { return (ObservableCollection<IView>)GetValue(ItemsSourceProperty); }
         set { SetValue(ItemsSourceProperty, value); }
+    }
+
+    private static void OnBladesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is BladeView bladeView)
+        {
+            // When old collection exists, unsubscribe
+            if (e.OldValue is ObservableCollection<IView> oldCollection)
+            {
+                oldCollection.CollectionChanged -= bladeView.Blades_CollectionChanged;
+            }
+
+            // Subscribe to new collection
+            if (e.NewValue is ObservableCollection<IView> newCollection)
+            {
+                newCollection.CollectionChanged += bladeView.Blades_CollectionChanged;
+                bladeView.UpdateBladeVisibility();
+            }
+        }
     }
 
     public double DisabledOpacity
@@ -31,15 +58,7 @@ public partial class BladeView : UserControl, IDisposable
         set { SetValue(DisabledBackgroundProperty, value); }
     }
 
-    public static readonly DependencyProperty DisabledBackgroundProperty = DependencyProperty.Register(nameof(DisabledBackground), typeof(Brush), typeof(BladeView), new PropertyMetadata(Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Style));
-
-    public double Spacing
-    {
-        get { return (double)GetValue(SpacingProperty); }
-        set { SetValue(SpacingProperty, value); }
-    }
-
-    public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BladeView), new PropertyMetadata(10));
+    public static readonly DependencyProperty DisabledBackgroundProperty = DependencyProperty.Register(nameof(DisabledBackground), typeof(Brush), typeof(BladeView), new PropertyMetadata(Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Brush));
 
     public Orientation Orientation
     {
@@ -48,6 +67,14 @@ public partial class BladeView : UserControl, IDisposable
     }
 
     public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(BladeView), new PropertyMetadata(Orientation.Horizontal));
+
+    public double BladeSpacing
+    {
+        get { return (double)GetValue(BladeSpacingProperty); }
+        set { SetValue(BladeSpacingProperty, value); }
+    }
+
+    public static readonly DependencyProperty BladeSpacingProperty = DependencyProperty.Register(nameof(BladeSpacing), typeof(double), typeof(BladeView), new PropertyMetadata(10.0));
 
     public HorizontalAlignment HorizontalBladeAlignment
     {
@@ -81,22 +108,42 @@ public partial class BladeView : UserControl, IDisposable
 
     public static readonly DependencyProperty AutoCollapseThresholdProperty = DependencyProperty.Register(nameof(AutoCollapseThreshold), typeof(int), typeof(BladeView), new PropertyMetadata(0));
 
-    public BladeView()
+    #endregion
+
+    private readonly Dictionary<IView, BladeState> _bladeStates = new();
+    private readonly ILogger<BladeView>? _logger;
+    private bool _isInternalUpdate;
+    private int _viewModelHashCode;
+    private bool _isDisposed;
+
+    private class BladeState
     {
-        this.InitializeComponent();
-        this.Visibility = Visibility.Collapsed;
-        this.CornerRadius = new CornerRadius(8);
-        this.InnerPadding = new Thickness(8);
-        this.HorizontalBladeAlignment = HorizontalAlignment.Right;
-        this.Orientation = Orientation.Horizontal;
-        this.Spacing = 10;
-        this.DisabledBackground = Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Brush;
-        this.DisabledOpacity = 0.75;
-        this.DataContextChanged += BladeView_DataContextChanged;
-        this.SizeChanged += BladeViewEx_SizeChanged;
+        public bool IsRemoving { get; set; }
+        public Guid MessageToken { get; set; }
+        public WeakReference<IViewModel> ViewModel { get; set; }
+        public DateTime RegisteredAt { get; set; }
     }
 
-    private void BladeViewEx_SizeChanged(object sender, SizeChangedEventArgs e)
+    public BladeView()
+    {
+        InitializeComponent();
+        InitializeDefaultValues();
+        InitializeBladeManagement();
+    }
+
+    private void InitializeDefaultValues()
+    {
+        this.Visibility = Visibility.Collapsed;
+        this.CornerRadius = new CornerRadius(8);
+        this.Padding = new Thickness(8);
+        this.HorizontalAlignment = HorizontalAlignment.Stretch;
+        this.Orientation = Orientation.Horizontal;
+        this.BladeSpacing = 10;
+        this.DisabledBackground = Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Brush;
+        this.DisabledOpacity = 0.75;
+    }
+
+    private void BladeView_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (e.NewSize.Height > 0)
         {
@@ -105,110 +152,184 @@ public partial class BladeView : UserControl, IDisposable
         }
     }
 
-    private void BladeView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+    private void InitializeBladeManagement()
     {
-        if (this.DataContext is IViewModelBladeView bladeView)
-            bladeView.Blades.CollectionChanged += Blades_CollectionChanged;
+        this.SizeChanged += BladeView_SizeChanged;
     }
 
-    private void Blades_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void Blades_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        if (this.DataContext is IViewModelBladeView bladeView)
+        try
         {
-            if (bladeView.Blades.Count < 1)
-                this.Visibility = Visibility.Collapsed;
-            else
-                this.Visibility = Visibility.Visible;
-
-            if (AutoCollapseThreshold > 0 && bladeView.Blades.Count > AutoCollapseThreshold)
+            if (!_isInternalUpdate)
             {
-                for (int i = 0; i < (bladeView.Blades.Count - AutoCollapseThreshold); i++)
-                    ((UIElement)bladeView.Blades[i]).Visibility = Visibility.Collapsed;
-
-                for (int i = AutoCollapseThreshold - 1; i < bladeView.Blades.Count - 1; i++)
-                    ((UIElement)bladeView.Blades[i]).Visibility = Visibility.Visible;
+                HandleCollectionChanged(e);
             }
-            else
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error handling blade collection change");
+            ResetBladeStates();
+        }
+    }
+
+    private void HandleCollectionChanged(NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (UIElement item in e.OldItems)
             {
-                foreach (UIElement item in bladeView.Blades.EnsureNotNull())
-                    item.Visibility = Visibility.Visible;
+                if (item is IView view)
+                {
+                    UnregisterBlade(view);
+                }
+            }
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (UIElement item in e.NewItems)
+            {
+                if (item is IView view)
+                {
+                    RegisterBlade(view);
+                }
+            }
+        }
+
+        UpdateBladeVisibility();
+    }
+
+    private void RegisterBlade(IView view)
+    {
+        if (view.ViewModel == null) return;
+
+        var token = Guid.NewGuid();
+        _bladeStates[view] = new BladeState
+        {
+            MessageToken = token,
+            ViewModel = new WeakReference<IViewModel>(view.ViewModel),
+            RegisteredAt = DateTime.UtcNow
+        };
+    }
+
+    private void UnregisterBlade(IView view)
+    {
+        if (_bladeStates.TryGetValue(view, out var state))
+        {
+            _bladeStates.Remove(view);
+        }
+    }
+
+    private void RemoveBlade(IView view)
+    {
+        if (!_bladeStates.TryGetValue(view, out var state) || state.IsRemoving)
+            return;
+
+        try
+        {
+            state.IsRemoving = true;
+            _isInternalUpdate = true;
+
+            if (this.DataContext is IViewModelBladeView bladeView)
+            {
+                bladeView.Blades.Remove(view);
             }
 
-            for (int i = 0; i < bladeView.Blades.Count - 1; i++)
+            if (view is IDisposable disposableView)
             {
-                if (i == bladeView.Blades.Count - 1)
-                    ((UIElement)bladeView.Blades[i]).Opacity = 1;
-                else
-                    ((UIElement)bladeView.Blades[i]).Opacity = DisabledOpacity;
+                disposableView.Dispose();
+            }
+
+            if (state.ViewModel.TryGetTarget(out var viewModel) &&
+                viewModel is IDisposable disposableViewModel)
+            {
+                disposableViewModel.Dispose();
+            }
+
+            UnregisterBlade(view);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error removing blade");
+        }
+        finally
+        {
+            _isInternalUpdate = false;
+            UpdateBladeVisibility();
+        }
+    }
+
+    private void UpdateBladeVisibility()
+    {
+        if (this.DataContext is not IViewModelBladeView bladeView)
+            return;
+
+        this.Visibility = bladeView.Blades.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        if (bladeView.Blades.Count > 0)
+        {
+            for (int i = 0; i < bladeView.Blades.Count; i++)
+            {
+                var blade = bladeView.Blades[i];
+                if (blade is UIElement element)
+                {
+                    element.Opacity = i == bladeView.Blades.Count - 1 ? 1.0 : DisabledOpacity;
+                }
             }
         }
     }
 
-    #region IDisposable
-    // Dispose() calls Dispose(true)
-#if WINDOWS
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
+    private void ResetBladeStates()
+    {
+        _isInternalUpdate = false;
+        foreach (var state in _bladeStates.Values)
+        {
+            state.IsRemoving = false;
+        }
+        UpdateBladeVisibility();
+    }
+
+    private void CleanupBlades()
+    {
+        if (this.DataContext is IViewModelBladeView bladeView)
+        {
+            foreach (var view in bladeView.Blades.OfType<IView>().ToList())
+            {
+                RemoveBlade(view);
+            }
+
+            if (bladeView.Blades is ObservableCollection<IView> collection)
+            {
+                collection.CollectionChanged -= Blades_CollectionChanged;
+            }
+        }
+
+        _bladeStates.Clear();
+    }
+
+    protected void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        CleanupBlades();
+    }
+
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-#else
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public new void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-        base.Dispose();
-    }
-#endif
 
-    // The bulk of the clean-up code is implemented in Dispose(bool)
-
-#if IOS || MACCATALYST || ANDROID
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    protected virtual new void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            // free managed resources
-            if (this.DataContext is IViewModelBladeView bladeView && bladeView.Blades is not null)
-                bladeView.Blades.CollectionChanged -= Blades_CollectionChanged;
-
-            this.DataContextChanged -= BladeView_DataContextChanged;
-            this.SizeChanged -= BladeViewEx_SizeChanged;
-        }
-
-        // free native resources if there are any.
-
-        base.Dispose(disposing);
-    }
-#else
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
+        if (_isDisposed)
+            return;
+
         if (disposing)
         {
-            // free managed resources
-            if (this.DataContext is IViewModelBladeView bladeView && bladeView.Blades is not null)
-                bladeView.Blades.CollectionChanged -= Blades_CollectionChanged;
-
-            this.DataContextChanged -= BladeView_DataContextChanged;
-            this.SizeChanged -= BladeViewEx_SizeChanged;
+            this.SizeChanged -= BladeView_SizeChanged;
+            CleanupBlades();
         }
 
-        // free native resources if there are any.
+        _isDisposed = true;
     }
-#endif
-    #endregion
 }
