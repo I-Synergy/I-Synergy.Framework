@@ -38,6 +38,7 @@
         <c:BladeView
             x:Name="BladeDetails"
             Grid.RowSpan="3"
+            Margin="-8"
             ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </c:View>

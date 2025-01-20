@@ -24,10 +24,6 @@ public interface ICommonServices
     /// <value>The navigation service.</value>
     INavigationService NavigationService { get; }
     /// <summary>
-    /// Dispatcher service.
-    /// </summary>
-    IDispatcherService DispatcherService { get; }
-    /// <summary>
     /// Gets the authentication service.
     /// </summary>
     IAuthenticationService AuthenticationService { get; }

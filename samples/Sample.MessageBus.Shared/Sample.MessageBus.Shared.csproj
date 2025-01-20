@@ -5,6 +5,7 @@
 		<RootNamespace>Sample.MessageBus</RootNamespace>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>

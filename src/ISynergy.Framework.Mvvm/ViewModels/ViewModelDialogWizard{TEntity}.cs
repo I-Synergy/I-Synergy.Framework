@@ -141,20 +141,37 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
 
     public override void Cleanup()
     {
-        base.Cleanup();
+        try
+        {
+            // Set flag to prevent property change notifications during cleanup
+            IsInCleanup = true;
 
-        // Reset wizard state
-        Page = 1;
-        Pages = 0;
-        Next_IsEnabled = false;
-        Back_IsEnabled = false;
-        Submit_IsEnabled = false;
+            // Reset wizard state
+            Page = 1;
+            Pages = 0;
+            Next_IsEnabled = false;
+            Back_IsEnabled = false;
+            Submit_IsEnabled = false;
+
+            base.Cleanup();
+        }
+        finally
+        {
+            IsInCleanup = false;
+
+        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            // Make sure cleanup is done before disposal
+            if (!IsInCleanup)
+            {
+                Cleanup();
+            }
+
             // Dispose and clear navigation commands
             BackCommand?.Dispose();
             BackCommand = null;

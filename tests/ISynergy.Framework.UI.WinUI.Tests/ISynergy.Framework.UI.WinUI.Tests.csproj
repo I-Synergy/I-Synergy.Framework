@@ -9,6 +9,7 @@
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>

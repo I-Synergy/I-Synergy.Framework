@@ -6,6 +6,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <UserSecretsId>856ca46a-6c76-4d30-beff-69f3e12a0dc0</UserSecretsId>
         <IsPackable>false</IsPackable>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
