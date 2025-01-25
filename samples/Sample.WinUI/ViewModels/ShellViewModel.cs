@@ -246,7 +246,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             }
 
             if (_commonServices.AuthenticationService is not null)
-                _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
+                _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
 
             (DisplayCommand as IDisposable)?.Dispose();
             (InfoCommand as IDisposable)?.Dispose();
