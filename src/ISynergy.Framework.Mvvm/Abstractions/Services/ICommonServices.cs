@@ -9,6 +9,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 public interface ICommonServices
 {
     /// <summary>
+    /// Gets the info service.
+    /// </summary>
+    IInfoService InfoService { get; }
+    /// <summary>
     /// Gets the busy service.
     /// </summary>
     /// <value>The busy service.</value>

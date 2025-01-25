@@ -1,5 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Services;
@@ -14,7 +16,6 @@ using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
-using Sample.Messages;
 
 namespace Sample.ViewModels;
 
@@ -45,6 +46,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         ILogger<ShellViewModel> logger)
         : base(commonServices, logger)
     {
+        _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
+
         SetClock();
 
         _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
@@ -62,20 +65,24 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         ChartCommand = new AsyncRelayCommand(OpenChartTestAsync);
 
         PopulateNavigationMenuItems();
-
-        MessageService.Default.Register<ShellLoadedMessage>(this, async (m) =>
-        {
-            if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
-            {
-                if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
-                    PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
-
-                SelectedItem = PrimaryItems[0];
-            }
-
-            await InitializeFirstRunAsync();
-        });
     }
+
+    public async Task ShellLoadedAsync()
+    {
+        await Task.Delay(100);
+
+        if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
+        {
+            if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
+                PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
+
+            SelectedItem = PrimaryItems[0];
+        }
+
+        await InitializeFirstRunAsync();
+    }
+
+    private void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e) => SetClock();
 
     private void PopulateNavigationMenuItems()
     {
@@ -123,7 +130,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 
-    private async Task InitializeFirstRunAsync()
+    public async Task InitializeFirstRunAsync()
     {
         if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.IsFirstRun)
         {
@@ -159,7 +166,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void ClockTimerCallBack(object sender, object e) => SetClock();
 
-    private void SetClock() => base.Title = $"{InfoService.Default.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+    private void SetClock() => base.Title = $"{_commonServices.InfoService.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
 
     private Task OpenChartTestAsync() =>
         base._commonServices.NavigationService.NavigateAsync<ChartsViewModel>();
@@ -238,6 +245,9 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _clockTimer.Tick -= ClockTimerCallBack;
             }
 
+            if (_commonServices.AuthenticationService is not null)
+                _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
+
             (DisplayCommand as IDisposable)?.Dispose();
             (InfoCommand as IDisposable)?.Dispose();
             (BrowseCommand as IDisposable)?.Dispose();
@@ -247,8 +257,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             (ValidationTestCommand as IDisposable)?.Dispose();
             (TreeNodeTestCommand as IDisposable)?.Dispose();
             (ChartCommand as IDisposable)?.Dispose();
-
-            MessageService.Default.Unregister<ShellLoadedMessage>(this);
 
             base.Dispose(disposing);
         }

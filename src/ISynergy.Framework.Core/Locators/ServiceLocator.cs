@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Services;
 
 namespace ISynergy.Framework.Core.Locators;
@@ -14,10 +15,15 @@ public class ServiceLocator
     private static ServiceLocator _default;
     private readonly IScopedContextService _scopedContextService;
 
+    public event EventHandler<ReturnEventArgs<bool>> ScopedChanged;
+
     public ServiceLocator(IServiceProvider currentServiceProvider)
     {
         _staticServiceProvider = currentServiceProvider;
+
         _scopedContextService = new ScopedContextService(currentServiceProvider);
+        _scopedContextService.ScopedChanged += (s, e) => ScopedChanged?.Invoke(s, e);
+
         _default = this;
     }
 

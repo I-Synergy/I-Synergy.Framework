@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Events;
+﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 
@@ -9,16 +10,8 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 /// </summary>
 public interface IAuthenticationService
 {
-    /// <summary>
-    /// Occurs when authentication changed.
-    /// </summary>
     event EventHandler<ReturnEventArgs<bool>> AuthenticationChanged;
-
-    /// <summary>
-    /// Handles the <see cref="E:AuthenticationChanged" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="ReturnEventArgs{Profile}"/> instance containing the event data.</param>
-    void OnAuthenticationChanged(ReturnEventArgs<bool> e);
+    event EventHandler<ReturnEventArgs<SoftwareEnvironments>> SoftwareEnvironmentChanged;
 
     /// <summary>
     /// authenticate with username password as an asynchronous operation.

@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Extensions;
@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 
 namespace ISynergy.Framework.UI;
 
@@ -20,6 +19,19 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 {
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
+
+    public event EventHandler<ReturnEventArgs<bool>> ApplicationInitialized;
+    public event EventHandler<ReturnEventArgs<bool>> ApplicationLoaded;
+
+    public virtual void RaiseApplicationInitialized()
+    {
+        ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
+    }
+
+    public virtual void RaiseApplicationLoaded()
+    {
+        ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
+    }
 
     private Task Initialize { get; set; }
 
@@ -33,6 +45,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger = _commonServices.ScopedContextService.GetService<ILogger>();
         _logger.LogInformation("Starting application");
+
+        this.ApplicationLoaded += OnApplicationLoaded;
 
         // Pass a timeout to limit the execution time.
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -49,7 +63,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices.BusyService.StartBusy();
 
         _logger.LogInformation("Setting up authentication service.");
-        _commonServices.AuthenticationService.AuthenticationChanged += AuthenticationChanged;
+        _commonServices.AuthenticationService.AuthenticationChanged += OnAuthenticationChanged;
+        _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
 
         _logger.LogInformation("Setting up localization service.");
 
@@ -75,12 +90,13 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger.LogInformation("Finishing initialization of application");
     }
 
-    /// <summary>
-    /// Handles the authentication changed event.   
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public abstract void AuthenticationChanged(object sender, Core.Events.ReturnEventArgs<bool> e);
+    protected abstract void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e);
+    protected abstract void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e);
+
+    protected virtual void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e)
+    {
+        _commonServices.InfoService.SetTitle(e.Value);
+    }
 
     /// <summary>
     /// Sets the global exception handler.
@@ -203,12 +219,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             MainWindow.Content = rootFrame;
         }
 
-        rootFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
-
-        MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
-        {
-            InfoService.Default.SetTitle(m.Content);
-        });
+        rootFrame.NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden;
 
         MainWindow.Show();
         MainWindow.Activate();
@@ -220,7 +231,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>
     /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
-    private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
+    private void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e) =>
         throw new Exception($"Failed to load {e.Uri}: {e.Exception}");
 
     public virtual Task HandleCommandLineArgumentsAsync(string[] e) =>
@@ -247,15 +258,18 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
-            MessageService.Default.Unregister<EnvironmentChangedMessage>(this);
-
             if (_commonServices.AuthenticationService is not null)
-                _commonServices.AuthenticationService.AuthenticationChanged -= AuthenticationChanged;
+            {
+                _commonServices.AuthenticationService.AuthenticationChanged -= OnAuthenticationChanged;
+                _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
+            }
 
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
             DispatcherUnhandledException -= BaseApplication_DispatcherUnhandledException;
+
+            this.ApplicationLoaded -= OnApplicationLoaded;
         }
 
         // free native resources if there are any.

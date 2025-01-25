@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -96,8 +95,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         _toastMessageService = toastMessageService;
 
-        Title = InfoService.Default.ProductName;
-        Version = InfoService.Default.ProductVersion;
+        Title = _commonServices.InfoService.ProductName;
+        Version = _commonServices.InfoService.ProductVersion;
 
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
         BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);

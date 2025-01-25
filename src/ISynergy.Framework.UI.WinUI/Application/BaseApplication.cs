@@ -1,8 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
@@ -29,6 +28,19 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
     protected readonly Func<ILoadingView> _initialView;
+
+    public event EventHandler<ReturnEventArgs<bool>> ApplicationInitialized;
+    public event EventHandler<ReturnEventArgs<bool>> ApplicationLoaded;
+
+    public virtual void RaiseApplicationInitialized()
+    {
+        ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
+    }
+
+    public virtual void RaiseApplicationLoaded()
+    {
+        ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
+    }
 
     private int lastErrorMessage = 0;
 
@@ -61,6 +73,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _logger = host.Services.GetService<ILogger>();
         _logger.LogTrace("Setting up global exception handler.");
 
+        this.ApplicationLoaded += OnApplicationLoaded;
+
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
@@ -80,7 +94,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices.BusyService.StartBusy();
 
         _logger.LogTrace("Setting up authentication service.");
-        _commonServices.AuthenticationService.AuthenticationChanged += AuthenticationChanged;
+        _commonServices.AuthenticationService.AuthenticationChanged += OnAuthenticationChanged;
+        _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
 
         _logger.LogTrace("Setting up localization service.");
         if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is not null)
@@ -106,12 +121,13 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <returns></returns>
     protected abstract IHostBuilder CreateHostBuilder();
 
-    /// <summary>
-    /// Handles the authentication changed event.   
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public abstract void AuthenticationChanged(object sender, ReturnEventArgs<bool> e);
+    protected abstract void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e);
+    protected abstract void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e);
+
+    protected virtual void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e)
+    {
+        _commonServices.InfoService.SetTitle(e.Value);
+    }
 
     /// <summary>
     /// Handles the first chance exception event.
@@ -240,11 +256,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (Environment.GetCommandLineArgs().Length > 1)
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
 
-        MessageService.Default.Register<EnvironmentChangedMessage>(this, m =>
-        {
-            InfoService.Default.SetTitle(m.Content);
-        });
-
         MainWindow.Activate();
     }
 
@@ -317,14 +328,17 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         if (disposing)
         {
             // free managed resources
-            MessageService.Default.Unregister<EnvironmentChangedMessage>(this);
-
             if (_commonServices.AuthenticationService is not null)
-                _commonServices.AuthenticationService.AuthenticationChanged += AuthenticationChanged;
+            {
+                _commonServices.AuthenticationService.AuthenticationChanged -= OnAuthenticationChanged;
+                _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
+            }
 
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+
+            this.ApplicationLoaded -= OnApplicationLoaded;
         }
 
         // free native resources if there are any.

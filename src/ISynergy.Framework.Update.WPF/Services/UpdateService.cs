@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -17,6 +18,7 @@ namespace ISynergy.Framework.Update.Services;
 internal class UpdateService : IUpdateService
 {
     private readonly ILogger _logger;
+    private readonly IInfoService _infoService;
     private readonly IDialogService _dialogService;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly UpdateOptions _updateOptions;
@@ -25,11 +27,13 @@ internal class UpdateService : IUpdateService
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
     /// </summary>
     /// <param name="httpClientFactory"></param>
+    /// <param name="infoService"></param>
     /// <param name="dialogService">The dialog service.</param>
     /// <param name="options"></param>
     /// <param name="logger"></param>
     public UpdateService(
         IHttpClientFactory httpClientFactory,
+        IInfoService infoService,
         IDialogService dialogService,
         IOptions<UpdateOptions> options,
         ILogger<UpdateService> logger)
@@ -37,6 +41,7 @@ internal class UpdateService : IUpdateService
         Argument.IsNotNull(options);
 
         _httpClientFactory = httpClientFactory;
+        _infoService = infoService;
         _dialogService = dialogService;
         _updateOptions = options.Value;
         _logger = logger;
@@ -88,10 +93,10 @@ internal class UpdateService : IUpdateService
 
         if (!string.IsNullOrEmpty(version))
         {
-            int intCurrentMajor = InfoService.Default.ProductVersion.Major;
-            int intCurrentMinor = InfoService.Default.ProductVersion.Minor;
-            int intCurrentBuild = InfoService.Default.ProductVersion.Build;
-            int intCurrentRevision = InfoService.Default.ProductVersion.Revision;
+            int intCurrentMajor = _infoService.ProductVersion.Major;
+            int intCurrentMinor = _infoService.ProductVersion.Minor;
+            int intCurrentBuild = _infoService.ProductVersion.Build;
+            int intCurrentRevision = _infoService.ProductVersion.Revision;
 
             string[] intUpdate = version.Split('.');
             int intUpdateMajor = int.Parse(intUpdate[0]);
