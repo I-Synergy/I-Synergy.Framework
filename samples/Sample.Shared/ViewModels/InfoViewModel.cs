@@ -78,10 +78,10 @@ public class InfoViewModel : ViewModelNavigation<object>
         ILogger logger)
         : base(commonServices, logger)
     {
-        CompanyName = InfoService.Default.CompanyName;
-        ProductName = InfoService.Default.ProductName;
-        Version = InfoService.Default.ProductVersion;
-        Copyrights = InfoService.Default.Copyrights;
+        CompanyName = _commonServices.InfoService.CompanyName;
+        ProductName = _commonServices.InfoService.ProductName;
+        Version = _commonServices.InfoService.ProductVersion;
+        Copyrights = _commonServices.InfoService.Copyrights;
 
         Startup = _commonServices.ScopedContextService.GetService<IContext>().Environment.ToString();
     }

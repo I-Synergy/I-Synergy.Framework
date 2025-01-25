@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
@@ -20,16 +18,15 @@ public partial class App : BaseApplication
     public App()
         : base(ServiceLocator.Default.GetService<ICommonServices>())
     {
-        MessageService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        MessageService.Default.Send(new ApplicationLoadedMessage());
+        RaiseApplicationLoaded();
     }
 
-    private async Task ApplicationLoadedAsync(ApplicationLoadedMessage message)
+    protected override async void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e)
     {
         try
         {
@@ -63,7 +60,7 @@ public partial class App : BaseApplication
         }
     }
 
-    public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
         await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);
@@ -111,7 +108,7 @@ public partial class App : BaseApplication
                 await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
             }
 
-            MessageService.Default.Send(new ApplicationInitializedMessage());
+            RaiseApplicationInitialized();
         }
         finally
         {

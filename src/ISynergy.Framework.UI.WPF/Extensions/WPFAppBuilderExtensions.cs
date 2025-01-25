@@ -76,7 +76,7 @@ public static class WPFAppBuilderExtensions
 
             services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
-            var infoService = InfoService.Default;
+            var infoService = new InfoService();
             infoService.LoadAssembly(mainAssembly);
 
             var languageService = LanguageService.Default;

@@ -13,6 +13,10 @@ namespace Sample.Services;
 public class CommonServices : ICommonServices
 {
     /// <summary>
+    /// Gets the info service.
+    /// </summary>
+    public IInfoService InfoService { get; }
+    /// <summary>
     /// Gets the busy service.
     /// </summary>
     /// <value>The busy service.</value>
@@ -50,6 +54,7 @@ public class CommonServices : ICommonServices
     /// <summary>
     /// Initializes a new instance of the <see cref="CommonServices"/> class.
     /// </summary>
+    /// <param name="infoService"></param>
     /// <param name="busyService">The busy.</param>
     /// <param name="dialogService">The dialog.</param>
     /// <param name="navigationService">The navigation.</param>
@@ -57,6 +62,7 @@ public class CommonServices : ICommonServices
     /// <param name="scopedContextService"></param>
     /// <param name="fileService"></param>
     public CommonServices(
+        IInfoService infoService,
         IBusyService busyService,
         IDialogService dialogService,
         INavigationService navigationService,
@@ -64,6 +70,7 @@ public class CommonServices : ICommonServices
         IScopedContextService scopedContextService,
         IFileService<FileResult> fileService)
     {
+        InfoService = infoService;
         BusyService = busyService;
         DialogService = dialogService;
         NavigationService = navigationService;

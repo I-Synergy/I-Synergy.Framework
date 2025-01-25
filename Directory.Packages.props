@@ -26,14 +26,14 @@
     <PackageVersion Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.22.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.22.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.22.0" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.68.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.69.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.67.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="3.7.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.7.1" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.7.2" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.7.2" />
     <PackageVersion Include="NodaTime" Version="3.2.1" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.2.0" />
     <PackageVersion Include="NuGet.Commands" Version="6.12.1" />

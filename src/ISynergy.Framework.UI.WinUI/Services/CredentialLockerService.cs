@@ -1,4 +1,4 @@
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
@@ -13,9 +13,11 @@ namespace ISynergy.Framework.UI.Services;
 public class CredentialLockerService : ICredentialLockerService
 {
     private readonly ILogger _logger;
+    private readonly IInfoService _infoService;
 
-    public CredentialLockerService(ILogger<CredentialLockerService> logger)
+    public CredentialLockerService(IInfoService infoService, ILogger<CredentialLockerService> logger)
     {
+        _infoService = infoService;
         _logger = logger;
         _logger.LogDebug($"CredentialLockerService instance created with ID: {Guid.NewGuid()}");
     }
@@ -28,10 +30,10 @@ public class CredentialLockerService : ICredentialLockerService
             try
             {
                 PasswordVault vault = new();
-                IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(InfoService.Default.ProductName);
+                IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
 
                 if (credentials.Count > 0)
-                    return vault.Retrieve(InfoService.Default.ProductName, username)?.Password;
+                    return vault.Retrieve(_infoService.ProductName, username)?.Password;
 
                 return string.Empty;
             }
@@ -51,7 +53,7 @@ public class CredentialLockerService : ICredentialLockerService
             try
             {
                 var vault = new PasswordVault();
-                var credentials = vault.FindAllByResource(InfoService.Default.ProductName);
+                var credentials = vault.FindAllByResource(_infoService.ProductName);
                 return credentials.Select(q => q.UserName).ToList();
             }
             catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
@@ -75,13 +77,13 @@ public class CredentialLockerService : ICredentialLockerService
                 if (oldPassword != password)
                 {
                     await RemoveCredentialFromCredentialLockerAsync(username);
-                    vault.Add(new PasswordCredential(InfoService.Default.ProductName, username, password));
+                    vault.Add(new PasswordCredential(_infoService.ProductName, username, password));
                 }
             }
             catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
             {
                 // No existing credential found, just add new one
-                vault.Add(new PasswordCredential(InfoService.Default.ProductName, username, password));
+                vault.Add(new PasswordCredential(_infoService.ProductName, username, password));
             }
         });
 
@@ -96,7 +98,7 @@ public class CredentialLockerService : ICredentialLockerService
 
             try
             {
-                var credentials = vault.FindAllByResource(InfoService.Default.ProductName);
+                var credentials = vault.FindAllByResource(_infoService.ProductName);
                 var credential = credentials.FirstOrDefault(q => q.UserName == username);
 
                 if (credential is not null)

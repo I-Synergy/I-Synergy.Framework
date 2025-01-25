@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -27,7 +27,13 @@ public sealed partial class LoadingView : ILoadingView
         this.Loaded += LoadingView_Loaded;
         this.Unloaded += LoadingView_Unloaded;
 
-        MessageService.Default.Register<ApplicationInitializedMessage>(this, ApplicationInitialized);
+        if (Application.Current is IBaseApplication baseApplication)
+            baseApplication.ApplicationInitialized += ApplicationInitialized;
+    }
+
+    private void ApplicationInitialized(object sender, ReturnEventArgs<bool> e)
+    {
+        DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => SignInButton.IsEnabled = true);
     }
 
     private async void LoadingView_Loaded(object sender, RoutedEventArgs e)
@@ -60,9 +66,6 @@ public sealed partial class LoadingView : ILoadingView
         }
     }
 
-    public void ApplicationInitialized(ApplicationInitializedMessage message) =>
-        DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => SignInButton.IsEnabled = true);
-
     private void MediaPlayer_MediaEnded(MediaPlayer sender, object args) =>
         DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => Complete());
 
@@ -81,7 +84,8 @@ public sealed partial class LoadingView : ILoadingView
             BackgroundMediaElement.MediaPlayer.CurrentState != MediaPlayerState.Stopped)
             BackgroundMediaElement.MediaPlayer.Pause();
 
-        MessageService.Default.Send(new ApplicationLoadedMessage());
+        if (Application.Current is IBaseApplication baseApplication)
+            baseApplication.RaiseApplicationLoaded();
     }
 
     protected override void Dispose(bool disposing)
@@ -93,7 +97,8 @@ public sealed partial class LoadingView : ILoadingView
             this.Loaded -= LoadingView_Loaded;
             this.Unloaded -= LoadingView_Unloaded;
 
-            MessageService.Default.Unregister<ApplicationInitializedMessage>(this);
+            if (Application.Current is IBaseApplication baseApplication)
+                baseApplication.ApplicationInitialized -= ApplicationInitialized;
         }
     }
 }

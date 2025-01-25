@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Locators.Tests;
-using ISynergy.Framework.Core.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -48,20 +47,18 @@ public class ScopedContextServiceTests
         var eventRaised = false;
         var eventArgs = false;
 
-        MessageService.Default.Register<ScopeChangedMessage>(this, m =>
+        // Act
+        _scopedContextService.ScopedChanged += (s, e) =>
         {
             eventRaised = true;
-            eventArgs = m.Content;
-        });
+            eventArgs = e.Value;
+        };
 
-        // Act
         _scopedContextService.CreateNewScope();
 
         // Assert
         Assert.IsTrue(eventRaised);
         Assert.IsTrue(eventArgs);
-
-        MessageService.Default.Unregister<ScopeChangedMessage>(this);
     }
 
     [TestMethod]
@@ -146,19 +143,20 @@ public class ScopedContextServiceTests
     public void ScopedContextService_Dispose_CleansUpServicesAndEvents()
     {
         // Arrange
+        bool eventRaised = false;
+
         var disposableService = new Mock<IDisposableTestService>();
         var services = new ServiceCollection();
         services.AddScoped<IDisposableTestService>(_ => disposableService.Object);
         var provider = services.BuildServiceProvider();
+
         var scopedService = new ScopedContextService(provider);
-        var service = scopedService.GetService<IDisposableTestService>();
-
-        bool eventRaised = false;
-
-        MessageService.Default.Register<ScopeChangedMessage>(this, m =>
+        scopedService.ScopedChanged += (s, e) =>
         {
             eventRaised = true;
-        });
+        };
+
+        var service = scopedService.GetService<IDisposableTestService>();
 
         // Act
         scopedService.Dispose();
@@ -166,8 +164,6 @@ public class ScopedContextServiceTests
         // Assert
         disposableService.Verify(s => s.Dispose(), Times.Once);
         Assert.IsFalse(eventRaised);
-
-        MessageService.Default.Unregister<ScopeChangedMessage>(this);
     }
 
     [TestMethod]
@@ -207,13 +203,14 @@ public class ScopedContextServiceTests
     public void ScopedContextService_EventHandlerCleanup_RemovesAllHandlers()
     {
         // Arrange
-        var scopedService = new ScopedContextService(_serviceProvider);
         int eventCounter = 0;
 
-        MessageService.Default.Register<ScopeChangedMessage>(this, m =>
+        var scopedService = new ScopedContextService(_serviceProvider);
+
+        scopedService.ScopedChanged += (s, e) =>
         {
             eventCounter++;
-        });
+        };
 
         // Act
         scopedService.CreateNewScope(); // Should trigger event
@@ -233,8 +230,6 @@ public class ScopedContextServiceTests
 
         // Assert
         Assert.AreEqual(1, eventCounter, "Event should not have been triggered after disposal");
-
-        MessageService.Default.Unregister<ScopeChangedMessage>(this);
     }
 
     // Test interfaces and classes

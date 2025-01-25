@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -108,23 +107,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
         : base(automaticValidation)
     {
         _commonServices = commonServices;
-
-        MessageService.Default.Register<ScopeChangedMessage>(this, async (m) =>
-        {
-            if (m.Content)
-            {
-                IsInitialized = false;
-
-                // Clear existing data
-                Cleanup();
-
-                // Reinitialize with new scope if needed
-                if (!IsDisposed)
-                {
-                    await InitializeAsync();
-                }
-            }
-        });
+        _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;
 
         _logger = logger;
 
@@ -135,6 +118,23 @@ public abstract class ViewModel : ObservableClass, IViewModel
         CancelCommand = new AsyncRelayCommand(CancelAsync);
 
         _logger.LogTrace(GetType().Name);
+    }
+
+    private async void ScopedContextService_ScopedChanged(object sender, Core.Events.ReturnEventArgs<bool> e)
+    {
+        if (e.Value)
+        {
+            IsInitialized = false;
+
+            // Clear existing data
+            Cleanup();
+
+            // Reinitialize with new scope if needed
+            if (!IsDisposed)
+            {
+                await InitializeAsync();
+            }
+        }
     }
 
     /// <summary>
@@ -225,7 +225,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     {
         if (disposing)
         {
-            MessageService.Default.Unregister<ScopeChangedMessage>(this);
+            _commonServices.ScopedContextService.ScopedChanged -= ScopedContextService_ScopedChanged;
 
             PropertyChanged -= OnPropertyChanged;
 

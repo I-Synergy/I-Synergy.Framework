@@ -33,52 +33,14 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         get => _commonServices.NavigationService.CanGoBack;
     }
 
-    /// <summary>
-    /// Gets or sets the restart update command.
-    /// </summary>
-    /// <value>The restart update command.</value>
+    public AsyncRelayCommand GoBackCommand { get; private set; }
     public AsyncRelayCommand RestartUpdateCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the login command.
-    /// </summary>
-    /// <value>The login command.</value>
     public RelayCommand SignInCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the language command.
-    /// </summary>
-    /// <value>The language command.</value>
     public AsyncRelayCommand LanguageCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the color command.
-    /// </summary>
-    /// <value>The color command.</value>
     public AsyncRelayCommand ColorCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the help command.
-    /// </summary>
-    /// <value>The help command.</value>
     public AsyncRelayCommand HelpCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the settings command.
-    /// </summary>
-    /// <value>The settings command.</value>
     public AsyncRelayCommand SettingsCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the background command.
-    /// </summary>
-    /// <value>The background command.</value>
     public AsyncRelayCommand BackgroundCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the feedback command.
-    /// </summary>
-    /// <value>The feedback command.</value>
     public AsyncRelayCommand FeedbackCommand { get; private set; }
 
     /// <summary>
@@ -116,6 +78,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
 
+        GoBackCommand = new AsyncRelayCommand(async () => await _commonServices.NavigationService.GoBackAsync());
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new RelayCommand(SignOut);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
