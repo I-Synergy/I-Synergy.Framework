@@ -2,8 +2,6 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -37,8 +35,6 @@ public sealed partial class App : BaseApplication
         : base() //(() => ServiceLocator.Default.GetService<ILoadingView>())
     {
         InitializeComponent();
-
-        MessageService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
     }
 
     protected override IHostBuilder CreateHostBuilder()
@@ -60,6 +56,53 @@ public sealed partial class App : BaseApplication
 
                 services.AddUpdatesIntegration();
             }, f => f.Name.StartsWith(typeof(App).Namespace));
+    }
+
+    protected override async void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e)
+    {
+        try
+        {
+#if WINDOWS
+            //commonServices.BusyService.StartBusy(LanguageService.Default.GetString("UpdateCheckForUpdates"));
+
+            //if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await commonServices.DialogService.ShowMessageAsync(
+            //    LanguageService.Default.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
+            //    "Update",
+            //    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            //{
+            //    commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
+            //    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
+            //    Environment.Exit(Environment.ExitCode);
+            //}
+#endif
+            _commonServices.BusyService.StartBusy();
+
+            bool navigateToAuthentication = true;
+
+            _logger.LogInformation("Retrieve default user and check for auto login");
+
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin)
+            {
+                string username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
+                string password = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+
+                if (!string.IsNullOrEmpty(password))
+                {
+                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin);
+                    navigateToAuthentication = false;
+                }
+            }
+
+            if (navigateToAuthentication)
+            {
+                _logger.LogInformation("Navigate to SignIn page");
+                await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+            }
+        }
+        finally
+        {
+            _commonServices.BusyService.StopBusy();
+        }
     }
 
     public override async Task InitializeApplicationAsync()
@@ -112,7 +155,7 @@ public sealed partial class App : BaseApplication
                 await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
             }
 
-            MessageService.Default.Send(new ApplicationInitializedMessage());
+            RaiseApplicationInitialized();
         }
         finally
         {
@@ -120,54 +163,7 @@ public sealed partial class App : BaseApplication
         }
     }
 
-    private async Task ApplicationLoadedAsync(ApplicationLoadedMessage message)
-    {
-        try
-        {
-#if WINDOWS
-            //commonServices.BusyService.StartBusy(LanguageService.Default.GetString("UpdateCheckForUpdates"));
-
-            //if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await commonServices.DialogService.ShowMessageAsync(
-            //    LanguageService.Default.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-            //    "Update",
-            //    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //{
-            //    commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-            //    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
-            //    Environment.Exit(Environment.ExitCode);
-            //}
-#endif
-            _commonServices.BusyService.StartBusy();
-
-            bool navigateToAuthentication = true;
-
-            _logger.LogInformation("Retrieve default user and check for auto login");
-
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin)
-            {
-                string username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
-                string password = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
-
-                if (!string.IsNullOrEmpty(password))
-                {
-                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin);
-                    navigateToAuthentication = false;
-                }
-            }
-
-            if (navigateToAuthentication)
-            {
-                _logger.LogInformation("Navigate to SignIn page");
-                await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
-            }
-        }
-        finally
-        {
-            _commonServices.BusyService.StopBusy();
-        }
-    }
-
-    public override async void AuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
         await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);
@@ -205,14 +201,6 @@ public sealed partial class App : BaseApplication
             _logger.LogInformation("Navigate to SignIn page");
             await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-
-        if (disposing)
-            MessageService.Default.Unregister<ApplicationLoadedMessage>(this);
     }
 
     public override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)

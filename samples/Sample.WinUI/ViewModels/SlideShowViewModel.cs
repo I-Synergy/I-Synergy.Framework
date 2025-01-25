@@ -15,6 +15,8 @@ namespace Sample.ViewModels;
 /// </summary>
 public class SlideShowViewModel : ViewModelNavigation<MediaItem>
 {
+    private readonly DispatcherQueue _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -92,16 +94,20 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     {
         SlideshowTimer.Enabled = false;
 
-        DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>
+
+        Task.Run(() =>
         {
-            if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
+            _dispatcherQueue.TryEnqueue(() =>
             {
-                SelectedItem = Items[0];
-            }
-            else if (SelectedItem.Index < Items.Count - 1)
-            {
-                SelectedItem = Items.Single(q => q.Index == SelectedItem.Index + 1);
-            }
+                if ((SelectedItem is null && Items is not null) || (SelectedItem is not null && Items is not null && SelectedItem.Index == Items.Count - 1))
+                {
+                    SelectedItem = Items[0];
+                }
+                else if (SelectedItem is not null && Items is not null && SelectedItem.Index < (Items.Count - 1))
+                {
+                    SelectedItem = Items.Single(q => q.Index == SelectedItem.Index + 1);
+                }
+            });
         });
 
         SlideshowTimer.Enabled = true;

@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -277,20 +275,18 @@ public class ServiceLocatorTests
         var eventRaised = false;
         var eventArgs = false;
 
-        MessageService.Default.Register<ScopeChangedMessage>(this, m =>
+        // Act
+        _locator.ScopedChanged += (s, e) =>
         {
             eventRaised = true;
-            eventArgs = m.Content;
-        });
+            eventArgs = e.Value;
+        };
 
-        // Act
         _locator.CreateNewScope();
 
         // Assert
         Assert.IsTrue(eventRaised);
         Assert.IsTrue(eventArgs);
-
-        MessageService.Default.Unregister<ScopeChangedMessage>(this);
     }
 
     [TestMethod]

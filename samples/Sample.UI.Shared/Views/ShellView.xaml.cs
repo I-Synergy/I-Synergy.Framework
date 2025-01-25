@@ -1,10 +1,9 @@
-﻿using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Sample.Messages;
+using Sample.ViewModels;
 
 
 namespace Sample.Views;
@@ -36,7 +35,12 @@ public sealed partial class ShellView : View, IShellView
         {
             _isLoaded = true;
             await Task.Delay(100);
-            MessageService.Default.Send(new ShellLoadedMessage());
+
+            if (DataContext is ShellViewModel viewModel)
+            {
+                await viewModel.ShellLoadedAsync();
+                await viewModel.InitializeFirstRunAsync();
+            }
         }
     }
 

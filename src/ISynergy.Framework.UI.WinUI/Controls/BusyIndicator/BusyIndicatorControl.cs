@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -50,13 +50,25 @@ public partial class BusyIndicatorControl : Grid
         BindingOperations.SetBinding(textBlock, TextBlock.TextProperty, busyMessageBinding);
         BindingOperations.SetBinding(textBlock, TextBlock.VisibilityProperty, isBusyBinding);
 
-        Loaded += (s, e) =>
-            MessageService.Default.Register<ApplicationInitializedMessage>(this, (m) =>
-            {
-                MessageService.Default.Send(new ApplicationLoadedMessage());
-            });
+        Loaded += BusyIndicatorControl_Loaded;
+        Unloaded += BusyIndicatorControl_Unloaded;
+    }
 
-        Unloaded += (s, e) =>
-            MessageService.Default.Unregister<ApplicationInitializedMessage>(this);
+    private void BusyIndicatorControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (Application.Current is IBaseApplication baseApplication)
+            baseApplication.ApplicationInitialized += ApplicationInitialized;
+    }
+
+    private void BusyIndicatorControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (Application.Current is IBaseApplication baseApplication)
+            baseApplication.ApplicationInitialized -= ApplicationInitialized;
+    }
+
+    private void ApplicationInitialized(object sender, ReturnEventArgs<bool> e)
+    {
+        if (Application.Current is IBaseApplication baseApplication)
+            baseApplication.RaiseApplicationLoaded();
     }
 }
