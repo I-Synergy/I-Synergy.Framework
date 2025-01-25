@@ -2,10 +2,8 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 
@@ -21,15 +19,11 @@ public class AuthenticationService : IAuthenticationService
     private readonly IScopedContextService _scopedContextService;
     private readonly ILogger _logger;
 
-    /// <summary>
-    /// Occurs when authentication changed.
-    /// </summary>
+    public event EventHandler<ReturnEventArgs<SoftwareEnvironments>> SoftwareEnvironmentChanged;
     public event EventHandler<ReturnEventArgs<bool>> AuthenticationChanged;
 
-    /// <summary>
-    /// Handles the <see cref="E:AuthenticationChanged" /> event.
-    /// </summary>
-    public void OnAuthenticationChanged(ReturnEventArgs<bool> e) => AuthenticationChanged?.Invoke(this, e);
+    private void RaiseSoftwareEnvironmentChanged(SoftwareEnvironments softwareEnvironment) => SoftwareEnvironmentChanged?.Invoke(this, new ReturnEventArgs<SoftwareEnvironments>(softwareEnvironment));
+    private void RaiseAuthenticationChanged(bool e) => AuthenticationChanged?.Invoke(this, new ReturnEventArgs<bool>(e));
 
     public AuthenticationService(IScopedContextService scopedContextService, ILogger<AuthenticationService> logger)
     {
@@ -137,13 +131,12 @@ public class AuthenticationService : IAuthenticationService
                 1,
                 DateTime.Now.AddHours(24));
 
-            OnAuthenticationChanged(new ReturnEventArgs<bool>(_scopedContextService.GetService<IContext>().IsAuthenticated));
-
-            MessageService.Default.Send(new EnvironmentChangedMessage(_scopedContextService.GetService<IContext>().Environment));
+            RaiseAuthenticationChanged(_scopedContextService.GetService<IContext>().IsAuthenticated);
+            RaiseSoftwareEnvironmentChanged(_scopedContextService.GetService<IContext>().Environment);
         }
         else
         {
-            OnAuthenticationChanged(new ReturnEventArgs<bool>(false));
+            RaiseAuthenticationChanged(false);
         }
 
     }

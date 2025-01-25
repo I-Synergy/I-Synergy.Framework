@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Messages;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.Core.Services;
@@ -10,6 +10,10 @@ public class ScopedContextService : IScopedContextService
     private readonly IServiceProvider _serviceProvider;
     private IServiceScope _serviceScope;
     private bool _disposed;
+
+    public event EventHandler<ReturnEventArgs<bool>> ScopedChanged;
+
+    private void RaiseScopedChanged() => ScopedChanged?.Invoke(this, new ReturnEventArgs<bool>(true));
 
     public ScopedContextService(IServiceProvider serviceProvider)
     {
@@ -34,7 +38,7 @@ public class ScopedContextService : IScopedContextService
         _serviceScope = newScope;
 
         // Notify of scope change before disposal
-        MessageService.Default.Send(new ScopeChangedMessage(true));
+        RaiseScopedChanged();
 
         // Dispose old scope if it exists
         if (oldScope != null)
