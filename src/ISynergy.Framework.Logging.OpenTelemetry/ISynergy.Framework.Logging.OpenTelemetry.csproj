@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Logging.OpenTelemetry</PackageId>
+		<Description>I-Synergy Framework OpenTelemetry Logging library for Windows</Description>
+		<PackageTags>I-Synergy, Framework, Logging, OpenTelemetry, Windows, Uno</PackageTags>
+		<RootNamespace>ISynergy.Framework.Logging</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnableMsixTooling>true</EnableMsixTooling>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+	  <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+	  <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+	  <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+	  <PackageReference Include="OpenTelemetry.Instrumentation.Process" />
+	  <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Logging\ISynergy.Framework.Logging.csproj" />
+	</ItemGroup>
+</Project>
