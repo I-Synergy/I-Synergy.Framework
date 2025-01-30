@@ -25,6 +25,8 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" />
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" />
+		<PackageReference Include="System.Private.Uri"/>
+		<PackageReference Include="System.Drawing.Common" />
 	</ItemGroup>
 
 	<ItemGroup>
