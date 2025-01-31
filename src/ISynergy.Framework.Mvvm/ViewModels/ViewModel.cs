@@ -102,7 +102,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// <param name="automaticValidation">The validation.</param>
     protected ViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILogger<ViewModel> logger,
         bool automaticValidation = false)
         : base(automaticValidation)
     {

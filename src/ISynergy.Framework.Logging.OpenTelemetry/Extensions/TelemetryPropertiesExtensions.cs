@@ -1,0 +1,30 @@
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Validation;
+
+namespace ISynergy.Framework.Logging.Extensions;
+public static class TelemetryPropertiesExtensions
+{
+    public static void AddDefaultProperties(this IDictionary<string, object> properties, IInfoService infoService, IContext context)
+    {
+        Argument.IsNotNull(properties);
+        Argument.IsNotNull(context);
+
+        if (context.IsAuthenticated && context.Profile is { } profile)
+        {
+            properties.Add(nameof(profile.Username), profile.Username);
+            properties.Add(nameof(profile.UserId), profile.UserId.ToString());
+
+            properties.Add(nameof(profile.AccountId), profile.AccountId.ToString());
+            properties.Add(nameof(profile.AccountDescription), profile.AccountDescription);
+            properties.Add(nameof(profile.LicenseExpration), profile.LicenseExpration.ToString());
+            properties.Add(nameof(profile.LicenseUsers), profile.LicenseUsers.ToString());
+
+            properties.Add(nameof(profile.CountryCode), profile.CountryCode);
+            properties.Add(nameof(profile.TimeZoneId), profile.TimeZoneId);
+        }
+
+        properties.Add(nameof(infoService.ProductName), infoService.ProductName);
+        properties.Add(nameof(infoService.ProductVersion), infoService.ProductVersion.ToString());
+    }
+}
