@@ -6,11 +6,15 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="NSwag.AspNetCore" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry\ISynergy.Framework.Logging.OpenTelemetry.csproj" />
 	</ItemGroup>
 
 

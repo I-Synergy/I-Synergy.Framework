@@ -19,6 +19,7 @@ public class BadAsyncController : ControllerBase
     [HttpGet]
     public List<TestEntity> Get()
     {
+        //throw new Exception("This is a test exception");
         return _context.TestEntities
             .OrderByDescending(e => e.CreatedDate)
             .Take(100)

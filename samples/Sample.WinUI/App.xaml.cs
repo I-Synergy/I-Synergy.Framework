@@ -43,23 +43,27 @@ public sealed partial class App : BaseApplication
 
     protected override IHostBuilder CreateHostBuilder()
     {
+        var mainAssembly = Assembly.GetAssembly(typeof(App));
+        var infoService = new InfoService();
+        infoService.LoadAssembly(mainAssembly);
+
         return new HostBuilder()
             .ConfigureHostConfiguration(builder =>
             {
-                Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
                 builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
             })
             .ConfigureLogging((logging, configuration) =>
             {
                 logging.SetMinimumLevel(LogLevel.Trace);
-                logging.AddApplicationInsightsLogging(configuration);
+                logging.AddOpenTelemetryLogging(configuration);
             })
             .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
             {
                 services.TryAddSingleton<ICameraService, CameraService>();
 
                 services.AddUpdatesIntegration();
-            }, f => f.Name.StartsWith(typeof(App).Namespace));
+            }, f => f.Name.StartsWith(typeof(App).Namespace))
+            .ConfigureOpenTelemetryLogging(infoService);
     }
 
     protected override async void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e)

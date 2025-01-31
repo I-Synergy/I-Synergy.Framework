@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Initializers;
 using ISynergy.Framework.Logging.Services;
@@ -29,6 +31,7 @@ public static class ServiceCollectionExtensions
         builder.Services.TryAddScoped<ITelemetryInitializer, DefaultTelemetryInitializer>();
 
         builder.Services.RemoveAll<ILogger>();
+        builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         builder.Services.TryAddSingleton<ILogger, Logger>();
 
         return builder;
