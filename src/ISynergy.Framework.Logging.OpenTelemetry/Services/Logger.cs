@@ -1,23 +1,19 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Logging.Base;
-using ISynergy.Framework.Logging.Options;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using OpenTelemetry.Logs;
 
 namespace ISynergy.Framework.Logging.Services;
 
 public class Logger : BaseLogger
 {
-    private readonly OpenTelemetryOptions _openTelemetryOptions;
     private readonly IInfoService _infoService;
     private readonly ILoggerFactory _loggerFactory;
 
-    public Logger(IScopedContextService scopedContextService, IInfoService infoService, IOptions<OpenTelemetryOptions> options)
+    public Logger(IScopedContextService scopedContextService, IInfoService infoService)
         : base("OpenTelemetry Logger")
     {
         _infoService = infoService;
-        _openTelemetryOptions = options.Value;
 
         _loggerFactory = LoggerFactory.Create(builder =>
         {
