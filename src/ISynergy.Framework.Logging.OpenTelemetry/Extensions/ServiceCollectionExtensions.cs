@@ -88,9 +88,6 @@ public static class ServiceCollectionExtensions
                 })
                 .WithTracing(tracing =>
                 {
-                    // Export to console
-                    tracing.AddConsoleExporter();
-
                     tracing.AddHttpClientInstrumentation();
 
                     // Custom tracing
@@ -98,9 +95,6 @@ public static class ServiceCollectionExtensions
                 })
                 .WithMetrics(metrics =>
                 {
-                    // Export to console
-                    metrics.AddConsoleExporter();
-
                     // System metrics
                     metrics.AddRuntimeInstrumentation();    // .NET Runtime metrics (GC, CPU, etc)
                     metrics.AddProcessInstrumentation();    // Process metrics (memory, CPU, etc)
@@ -113,9 +107,6 @@ public static class ServiceCollectionExtensions
                 })
                 .WithLogging(logging =>
                 {
-                    // Export to console
-                    logging.AddConsoleExporter();
-
                     // Custom logging
                     loggerAction?.Invoke(logging);
                 });
