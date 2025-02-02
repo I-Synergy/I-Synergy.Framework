@@ -24,12 +24,13 @@ public class ViewModelBladeTests
         _mockLoggerFactory
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestBladeViewModel : ViewModelBlade<TestEntity>
     {
-        public TestBladeViewModel(ICommonServices commonServices, ILoggerFactory loggerFactory, bool automaticValidation = false)
-            : base(commonServices, loggerFactory, automaticValidation) { }
+        public TestBladeViewModel(ICommonServices commonServices, bool automaticValidation = false)
+            : base(commonServices, automaticValidation) { }
     }
 
     private class TestEntity
@@ -42,7 +43,7 @@ public class ViewModelBladeTests
     public void Constructor_InitializesProperties()
     {
         // Arrange & Act
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.SubmitCommand);
@@ -55,7 +56,7 @@ public class ViewModelBladeTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedEvent()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var eventInvoked = false;
         viewModel.Submitted += (s, e) => eventInvoked = true;
@@ -71,7 +72,7 @@ public class ViewModelBladeTests
     public void SetSelectedItem_UpdatesPropertyAndFlag()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
 
         // Act
@@ -85,7 +86,7 @@ public class ViewModelBladeTests
     public void SetOwner_UpdatesOwnerProperty()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
         var mockOwner = new Mock<IViewModelBladeView>();
 
         // Act
@@ -99,7 +100,7 @@ public class ViewModelBladeTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedAndCloses()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var submittedInvoked = false;
         var closedInvoked = false;
@@ -118,7 +119,7 @@ public class ViewModelBladeTests
     public void Cleanup_ClearsSelectedItemAndCommands()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
         viewModel.SelectedItem = new TestEntity();
 
         viewModel.Cleanup();

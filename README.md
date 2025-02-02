@@ -31,6 +31,7 @@ ___
 | [I-Synergy.Framework.Logging](https://www.nuget.org/packages/I-Synergy.Framework.Logging/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging) |
 | [I-Synergy.Framework.Logging.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Logging.AppCenter/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.AppCenter) |
 | [I-Synergy.Framework.Logging.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Logging.ApplicationInsights/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.ApplicationInsights) |
+| [I-Synergy.Framework.Logging.OpenTelemetry](https://www.nuget.org/packages/I-Synergy.Framework.Logging.OpenTelemetry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.OpenTelemetry) |
 | [I-Synergy.Framework.Mail](https://www.nuget.org/packages/I-Synergy.Framework.Mail/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail) |
 | [I-Synergy.Framework.Mail.Microsoft365](https://www.nuget.org/packages/I-Synergy.Framework.Mail.Microsoft365/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.Microsoft365) |
 | [I-Synergy.Framework.Mail.SendGrid](https://www.nuget.org/packages/I-Synergy.Framework.Mail.SendGrid/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.SendGrid) |

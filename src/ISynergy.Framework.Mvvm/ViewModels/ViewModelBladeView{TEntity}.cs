@@ -7,7 +7,6 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
-using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
@@ -125,15 +124,13 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelBladeView(
         ICommonServices commonServices,
-        ILoggerFactory loggerFactory,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(commonServices, loggerFactory, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         RefreshOnInitialization = refreshOnInitialization;
 

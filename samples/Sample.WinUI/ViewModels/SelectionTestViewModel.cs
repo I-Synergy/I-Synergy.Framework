@@ -5,7 +5,6 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 using Sample.Models;
 using Sample.Views;
 using System.Collections.ObjectModel;
@@ -68,11 +67,8 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="loggerFactory">The logger factory.</param>
-    public SelectionTestViewModel(
-        ICommonServices commonServices,
-        ILoggerFactory loggerFactory)
-        : base(commonServices, loggerFactory)
+    public SelectionTestViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
@@ -96,7 +92,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 
     private async Task ShowUnitsAsync()
     {
-        TestViewModel vm = new TestViewModel(_commonServices, _loggerFactory);
+        TestViewModel vm = new TestViewModel(_commonServices);
         vm.Submitted += Vm_Submitted;
         await _commonServices.DialogService.ShowDialogAsync(typeof(TestWindow), vm);
     }
@@ -135,7 +131,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectMultipleAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVm = new ViewModelSelectionBlade<TestItem>(_commonServices, _loggerFactory, Items, SelectedTestItems, SelectionModes.Multiple);
+        ViewModelSelectionBlade<TestItem> selectionVm = new ViewModelSelectionBlade<TestItem>(_commonServices, Items, SelectedTestItems, SelectionModes.Multiple);
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
         return _commonServices.NavigationService.OpenBladeAsync(this, selectionVm);
     }
@@ -146,7 +142,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectSingleAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVm = new ViewModelSelectionBlade<TestItem>(_commonServices, _loggerFactory, Items, SelectedTestItems, SelectionModes.Single);
+        ViewModelSelectionBlade<TestItem> selectionVm = new ViewModelSelectionBlade<TestItem>(_commonServices, Items, SelectedTestItems, SelectionModes.Single);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
         return _commonServices.NavigationService.OpenBladeAsync(this, selectionVm);
     }

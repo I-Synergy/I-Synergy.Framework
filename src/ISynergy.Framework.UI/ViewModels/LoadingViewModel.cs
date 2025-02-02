@@ -22,12 +22,11 @@ public class LoadingViewModel : ObservableClass, IViewModel
 
     public LoadingViewModel(
         ICommonServices commonServices,
-        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
         : base(automaticValidation)
     {
         _commonServices = commonServices;
-        _logger = loggerFactory.CreateLogger<LoadingViewModel>();
+        _logger = _commonServices.LoggerFactory.CreateLogger<LoadingViewModel>();
 
         //PropertyChanged += OnPropertyChanged;
         IsInitialized = false;

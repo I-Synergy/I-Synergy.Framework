@@ -3,7 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
-using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -78,13 +77,11 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// Initializes a new instance of the <see cref="ViewModelBlade{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelBlade(
         ICommonServices commonServices,
-        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, loggerFactory, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         SubmitCommand = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
     }

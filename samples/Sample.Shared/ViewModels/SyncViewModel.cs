@@ -6,7 +6,6 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.Synchronization.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Messages;
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace Sample.ViewModels;
@@ -52,9 +51,8 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     public SyncViewModel(
         ICommonServices commonServices,
-        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, loggerFactory, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         SyncProgressionText = "Ready...";
         SyncCommandButtonEnabled = true;

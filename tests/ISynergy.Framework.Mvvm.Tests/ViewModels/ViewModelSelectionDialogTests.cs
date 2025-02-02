@@ -26,6 +26,7 @@ public class ViewModelSelectionDialogTests
         _mockLoggerFactory
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
 
         _mockLanguageService = new Mock<ILanguageService>();
     }
@@ -51,7 +52,6 @@ public class ViewModelSelectionDialogTests
         // Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             selectedItems,
             SelectionModes.Single);
@@ -76,7 +76,6 @@ public class ViewModelSelectionDialogTests
             };
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -99,7 +98,6 @@ public class ViewModelSelectionDialogTests
             };
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -118,7 +116,6 @@ public class ViewModelSelectionDialogTests
         // Arrange & Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             null,
             null,
             SelectionModes.Single);
@@ -136,7 +133,6 @@ public class ViewModelSelectionDialogTests
         // Arrange
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             new List<TestEntity>(),
             new List<TestEntity>(),
             SelectionModes.Single);

@@ -18,6 +18,7 @@ public class ViewModelSelectionBladeTests
     public void Setup()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
+
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
 
@@ -25,6 +26,8 @@ public class ViewModelSelectionBladeTests
         _mockLoggerFactory
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
+
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestEntity
@@ -45,7 +48,6 @@ public class ViewModelSelectionBladeTests
         var selectedItems = new List<TestEntity> { items[0] };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             selectedItems,
             SelectionModes.Single);
@@ -86,7 +88,6 @@ public class ViewModelSelectionBladeTests
         // Act
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             selectedItems,
             SelectionModes.Single);
@@ -111,7 +112,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             items,
             SelectionModes.Single);
@@ -142,7 +142,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -161,7 +160,6 @@ public class ViewModelSelectionBladeTests
         // Arrange & Act
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             null,
             null,
             SelectionModes.Single);
@@ -183,7 +181,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             items,
             SelectionModes.Single);
@@ -211,7 +208,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -235,7 +231,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Multiple);
@@ -259,7 +254,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -282,7 +276,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -305,7 +298,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Multiple);

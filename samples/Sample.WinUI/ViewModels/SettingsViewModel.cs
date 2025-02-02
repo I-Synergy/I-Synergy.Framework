@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Collections.ObjectModel;
 
@@ -42,9 +41,8 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
     public SettingsViewModel(
         ICommonServices commonServices,
-        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, loggerFactory, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
