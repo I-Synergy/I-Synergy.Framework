@@ -13,7 +13,6 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
 
@@ -40,11 +39,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="loggerFactory">The logger factory.</param>
-    public ShellViewModel(
-        ICommonServices commonServices,
-        ILoggerFactory loggerFactory)
-        : base(commonServices, loggerFactory)
+    public ShellViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
 
@@ -139,7 +135,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 LanguageService.Default.GetString("Language"),
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                var languageVM = new LanguageViewModel(_commonServices, _loggerFactory);
+                var languageVM = new LanguageViewModel(_commonServices);
                 languageVM.Submitted += (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language = e.Result;
@@ -150,7 +146,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
-            var wizardVM = new SettingsViewModel(_commonServices, _loggerFactory);
+            var wizardVM = new SettingsViewModel(_commonServices);
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();

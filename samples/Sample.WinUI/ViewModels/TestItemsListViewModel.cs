@@ -7,7 +7,6 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
-using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;
 using System.Collections.ObjectModel;
@@ -95,9 +94,8 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}" /> class.
     /// </summary>
     /// <param name="commonServices">The common service.</param>
-    /// <param name="loggerFactory">The logger factory.</param>
-    public TestItemsListViewModel(ICommonServices commonServices, ILoggerFactory loggerFactory)
-        : base(commonServices, loggerFactory)
+    public TestItemsListViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         ClearCommand = new RelayCommand(ClearItems);
     }
@@ -189,7 +187,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(_commonServices, _loggerFactory, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(_commonServices, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;
         return CommonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }

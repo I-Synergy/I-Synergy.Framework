@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 
 namespace Sample.ViewModels;
 
@@ -27,11 +26,8 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
     /// Initializes a new instance of the <see cref="ForgotPasswordViewModel" /> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="loggerFactory">The logger factory.</param>
-    public ForgotPasswordViewModel(
-        ICommonServices commonServices,
-        ILoggerFactory loggerFactory)
-        : base(commonServices, loggerFactory)
+    public ForgotPasswordViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         Validator = new Action<IObservableClass>(arg =>
         {

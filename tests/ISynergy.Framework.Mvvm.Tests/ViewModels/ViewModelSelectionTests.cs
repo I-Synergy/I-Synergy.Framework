@@ -25,6 +25,7 @@ public class ViewModelSelectionTests
         _mockLoggerFactory
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestEntity
@@ -52,7 +53,6 @@ public class ViewModelSelectionTests
         // Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             selectedItems,
             SelectionModes.Single);
@@ -77,7 +77,6 @@ public class ViewModelSelectionTests
             };
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLoggerFactory.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);

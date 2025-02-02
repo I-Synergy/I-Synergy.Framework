@@ -28,6 +28,8 @@ public class ViewModelSummaryTests
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
 
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
+
         _mockLanguageService = new Mock<ILanguageService>();
         _mockDialogService = new Mock<IDialogService>();
         _mockCommonServices.Setup(x => x.DialogService).Returns(_mockDialogService.Object);
@@ -42,8 +44,8 @@ public class ViewModelSummaryTests
 
     private class TestSummaryViewModel : ViewModelSummary<TestEntity>
     {
-        public TestSummaryViewModel(ICommonServices commonServices, ILoggerFactory loggerFactory, bool refreshOnInitialization = true)
-            : base(commonServices, loggerFactory, refreshOnInitialization) { }
+        public TestSummaryViewModel(ICommonServices commonServices, bool refreshOnInitialization = true)
+            : base(commonServices, refreshOnInitialization) { }
 
         public override Task AddAsync()
         {
@@ -70,7 +72,7 @@ public class ViewModelSummaryTests
     public void Constructor_InitializesCollectionsAndCommands()
     {
         // Arrange & Act
-        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -86,7 +88,7 @@ public class ViewModelSummaryTests
     public async Task InitializeAsync_WithRefreshOnInitialization_RefreshesItems()
     {
         // Arrange
-        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object, true);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, true);
 
         // Act
         await viewModel.InitializeAsync();
@@ -99,7 +101,7 @@ public class ViewModelSummaryTests
     public async Task DeleteAsync_WithConfirmation_RemovesItem()
     {
         // Arrange
-        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Description = "Test" };
         _mockLanguageService.Setup(x => x.GetString(It.IsAny<string>())).Returns("Test");
         _mockDialogService.Setup(x => x.ShowMessageAsync(

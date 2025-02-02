@@ -23,6 +23,7 @@ public class ViewModelDialogWizardTests
         _mockLoggerFactory
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestEntity
@@ -33,15 +34,15 @@ public class ViewModelDialogWizardTests
 
     private class TestDialogWizardViewModel : ViewModelDialogWizard<TestEntity>
     {
-        public TestDialogWizardViewModel(ICommonServices commonServices, ILoggerFactory loggerFactory, bool automaticValidation = false)
-            : base(commonServices, loggerFactory, automaticValidation) { }
+        public TestDialogWizardViewModel(ICommonServices commonServices, bool automaticValidation = false)
+            : base(commonServices, automaticValidation) { }
     }
 
     [TestMethod]
     public void Constructor_InitializesWizardProperties()
     {
         // Arrange & Act
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.BackCommand);
@@ -57,7 +58,7 @@ public class ViewModelDialogWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_FirstPage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
 
         // Act
         viewModel.Pages = 3;
@@ -74,7 +75,7 @@ public class ViewModelDialogWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_MiddlePage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
 
         // Act
         viewModel.Pages = 3;
@@ -91,7 +92,7 @@ public class ViewModelDialogWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_LastPage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
 
         // Act
         viewModel.Pages = 3;
@@ -108,7 +109,7 @@ public class ViewModelDialogWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_SinglePage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
 
         // Act
         viewModel.Pages = 1;
@@ -125,7 +126,7 @@ public class ViewModelDialogWizardTests
     public void BackCommand_DecreasesPage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
         viewModel.Pages = 3;
         viewModel.Page = 2;
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
@@ -141,7 +142,7 @@ public class ViewModelDialogWizardTests
     public void NextCommand_IncreasesPage()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
         viewModel.Pages = 3;
         viewModel.Page = 1;
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
@@ -157,7 +158,7 @@ public class ViewModelDialogWizardTests
     public void NextCommand_ValidatesBeforePageChange()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
         var validationCalled = false;
         viewModel.Pages = 3;
         viewModel.Page = 1;
@@ -181,7 +182,7 @@ public class ViewModelDialogWizardTests
     public void BackCommand_ValidatesBeforePageChange()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
         var validationCalled = false;
         viewModel.Pages = 3;
         viewModel.Page = 2;
@@ -205,7 +206,7 @@ public class ViewModelDialogWizardTests
     public void Cleanup_ClearsNavigationCommands()
     {
         // Arrange
-        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogWizardViewModel(_mockCommonServices.Object);
 
         // Act
         viewModel.Dispose();

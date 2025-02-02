@@ -23,6 +23,7 @@ public class ViewModelBladeWizardTests
         _mockLoggerFactory
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestEntity
@@ -33,15 +34,15 @@ public class ViewModelBladeWizardTests
 
     private class TestBladeWizardViewModel : ViewModelBladeWizard<TestEntity>
     {
-        public TestBladeWizardViewModel(ICommonServices commonServices, ILoggerFactory loggerFactory, bool automaticValidation = false)
-            : base(commonServices, loggerFactory, automaticValidation) { }
+        public TestBladeWizardViewModel(ICommonServices commonServices, bool automaticValidation = false)
+            : base(commonServices, automaticValidation) { }
     }
 
     [TestMethod]
     public void Constructor_InitializesWizardProperties()
     {
         // Arrange & Act
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.BackCommand);
@@ -59,7 +60,7 @@ public class ViewModelBladeWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_SinglePage()
     {
         // Arrange
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
 
         // Act
         viewModel.Pages = 1;
@@ -77,7 +78,7 @@ public class ViewModelBladeWizardTests
     public void OnPropertyChanged_Page_UpdatesNavigationState_MultiplePages()
     {
         // Arrange
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
 
         // Act - First Page
         viewModel.Pages = 3;
@@ -112,7 +113,7 @@ public class ViewModelBladeWizardTests
     public void BackCommand_DecreasesPage()
     {
         // Arrange
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
         viewModel.Pages = 3;
         viewModel.Page = 2;
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
@@ -128,7 +129,7 @@ public class ViewModelBladeWizardTests
     public void NextCommand_IncreasesPage()
     {
         // Arrange
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
         viewModel.Pages = 3;
         viewModel.Page = 1;
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
@@ -144,7 +145,7 @@ public class ViewModelBladeWizardTests
     public void BackCommand_AtFirstPage_CannotExecute()
     {
         // Arrange
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
         viewModel.Pages = 3;
         viewModel.Page = 1;
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
@@ -157,7 +158,7 @@ public class ViewModelBladeWizardTests
     public void NextCommand_AtLastPage_CannotExecute()
     {
         // Arrange
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
         viewModel.Pages = 3;
         viewModel.Page = 3;
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
@@ -170,7 +171,7 @@ public class ViewModelBladeWizardTests
     public void Cleanup_ClearsNavigationCommands()
     {
         // Arrange
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
 
         // Act
         viewModel.Dispose();
@@ -186,7 +187,7 @@ public class ViewModelBladeWizardTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedAndCloses()
     {
         // Arrange
-        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestBladeWizardViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var submittedInvoked = false;
         var closedInvoked = false;

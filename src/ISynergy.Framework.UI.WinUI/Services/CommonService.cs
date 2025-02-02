@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.UI.Services;
@@ -49,7 +50,10 @@ public class CommonService : ICommonServices
     /// </summary>
     /// <value>The file service.</value>
     public IFileService<FileResult> FileService { get; }
-
+    /// <summary>
+    /// Gets the logger factory.
+    /// </summary>
+    public ILoggerFactory LoggerFactory { get; }
     /// <summary>
     /// Initializes a new instance of the <see cref="CommonService"/> class.
     /// </summary>
@@ -60,6 +64,7 @@ public class CommonService : ICommonServices
     /// <param name="authenticationService"></param>
     /// <param name="scopedContextService"></param>
     /// <param name="fileService"></param>
+    /// <param name="loggerFactory"></param>
     protected CommonService(
         IInfoService infoService,
         IBusyService busyService,
@@ -67,7 +72,8 @@ public class CommonService : ICommonServices
         INavigationService navigationService,
         IAuthenticationService authenticationService,
         IScopedContextService scopedContextService,
-        IFileService<FileResult> fileService)
+        IFileService<FileResult> fileService,
+        ILoggerFactory loggerFactory)
     {
         InfoService = infoService;
         BusyService = busyService;
@@ -76,6 +82,7 @@ public class CommonService : ICommonServices
         AuthenticationService = authenticationService;
         ScopedContextService = scopedContextService;
         FileService = fileService;
+        LoggerFactory = loggerFactory;
     }
 
     /// <summary>

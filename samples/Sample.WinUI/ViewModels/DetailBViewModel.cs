@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -12,10 +11,9 @@ public class DetailBViewModel : ViewModelBlade<TestItem>
 
     public DetailBViewModel(
         ICommonServices commonServices,
-        ILoggerFactory loggerFactory,
         TestItem item,
         bool automaticValidation = false)
-        : base(commonServices, loggerFactory, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         SelectedItem = item;
 
@@ -24,7 +22,7 @@ public class DetailBViewModel : ViewModelBlade<TestItem>
 
     private async Task OpenNewBladeAsync()
     {
-        var detailsVm = new DetailCViewModel(_commonServices, _loggerFactory, SelectedItem);
+        var detailsVm = new DetailCViewModel(_commonServices, SelectedItem);
         await _commonServices.NavigationService.OpenBladeAsync(Owner, detailsVm);
     }
 

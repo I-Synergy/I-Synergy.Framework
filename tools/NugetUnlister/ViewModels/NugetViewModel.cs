@@ -1,10 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 using NugetUnlister.Abstractions;
 using NugetUnlister.Models;
 using System.Collections.ObjectModel;
@@ -51,11 +49,9 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
     public RelayCommand SettingsCommand { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public NugetViewModel(
-        IScopedContextService scopedContextService,
         ICommonServices commonServices,
-        INugetService nugetService,
-        ILoggerFactory loggerFactory)
-        : base(commonServices, loggerFactory)
+        INugetService nugetService)
+        : base(commonServices)
     {
         Items = [];
         Logs = [];

@@ -24,12 +24,13 @@ public class ViewModelDialogTests
         _mockLoggerFactory
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestDialogViewModel : ViewModelDialog<TestEntity>
     {
-        public TestDialogViewModel(ICommonServices commonServices, ILoggerFactory loggerFactory, bool automaticValidation = false)
-            : base(commonServices, loggerFactory, automaticValidation) { }
+        public TestDialogViewModel(ICommonServices commonServices, bool automaticValidation = false)
+            : base(commonServices, automaticValidation) { }
     }
 
     private class TestEntity
@@ -42,7 +43,7 @@ public class ViewModelDialogTests
     public void Constructor_InitializesProperties()
     {
         // Arrange & Act
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.SubmitCommand);
@@ -54,7 +55,7 @@ public class ViewModelDialogTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedAndClosedEvents()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var submittedInvoked = false;
         var closedInvoked = false;
@@ -73,7 +74,7 @@ public class ViewModelDialogTests
     public void ApplyQueryAttributes_SetsSelectedItem()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var query = new Dictionary<string, object>
             {
@@ -92,7 +93,7 @@ public class ViewModelDialogTests
     public void ApplyQueryAttributes_WithInvalidParameter_DoesNotSetSelectedItem()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
         var query = new Dictionary<string, object>
             {
                 { "wrongKey", new TestEntity() }
@@ -110,7 +111,7 @@ public class ViewModelDialogTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedAndCloses()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var submittedInvoked = false;
         var closedInvoked = false;
@@ -129,7 +130,7 @@ public class ViewModelDialogTests
     public void Cleanup_ClearsSelectedItemAndCommands()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
         viewModel.SelectedItem = new TestEntity();
 
         // Act

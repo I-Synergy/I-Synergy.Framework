@@ -15,7 +15,6 @@ public class ViewModelExtensionTests
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
-    private Mock<ILanguageService> _mockLanguageService;
 
     [TestInitialize]
     public void Setup()
@@ -29,7 +28,7 @@ public class ViewModelExtensionTests
             .Setup(x => x.CreateLogger(It.IsAny<string>()))
             .Returns(new Mock<ILogger>().Object);
 
-        _mockLanguageService = new Mock<ILanguageService>();
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     // Test classes
@@ -44,16 +43,16 @@ public class ViewModelExtensionTests
     }
     private class TestViewModel : ViewModel
     {
-        public TestViewModel(ICommonServices commonServices, ILoggerFactory loggerFactory, bool automaticValidation = false)
-            : base(commonServices, loggerFactory, automaticValidation)
+        public TestViewModel(ICommonServices commonServices, bool automaticValidation = false)
+            : base(commonServices, automaticValidation)
         {
         }
     }
 
     private class GenericViewModel<T> : TestViewModel
     {
-        public GenericViewModel(ICommonServices commonServices, ILoggerFactory loggerFactory, bool automaticValidation = false)
-            : base(commonServices, loggerFactory, automaticValidation)
+        public GenericViewModel(ICommonServices commonServices, bool automaticValidation = false)
+            : base(commonServices, automaticValidation)
         {
         }
     }
@@ -109,7 +108,7 @@ public class ViewModelExtensionTests
     public void GetViewModelName_FromInstance_ReturnsCorrectName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object);
 
         // Act
         var result = viewModel.GetViewModelName();
@@ -122,7 +121,7 @@ public class ViewModelExtensionTests
     public void GetViewModelFullName_FromInstance_ReturnsCorrectFullName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object);
 
         // Act
         var result = viewModel.GetViewModelFullName();
@@ -148,7 +147,7 @@ public class ViewModelExtensionTests
     public void GetRelatedView_FromViewModelInstance_ReturnsViewName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, _mockLoggerFactory.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object);
 
         // Act
         var result = viewModel.GetRelatedView();

@@ -11,7 +11,6 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
-using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
@@ -105,11 +104,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="loggerFactory">The logger factory.</param>
-    protected BaseShellViewModel(
-        ICommonServices commonServices,
-        ILoggerFactory loggerFactory)
-        : base(commonServices, loggerFactory)
+    protected BaseShellViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         _commonServices.NavigationService.BackStackChanged += (s, e) => RaisePropertyChanged(nameof(IsBackEnabled));
 
@@ -210,7 +206,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = new LanguageViewModel(_commonServices, _loggerFactory);
+        var languageVM = new LanguageViewModel(_commonServices);
         languageVM.Submitted += LanguageVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
@@ -247,7 +243,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = new ThemeViewModel(_commonServices, _loggerFactory);
+        var themeVM = new ThemeViewModel(_commonServices);
         themeVM.Submitted += ThemeVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
