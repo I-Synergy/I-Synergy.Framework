@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Logging.Options;
 using ISynergy.Framework.Logging.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ServiceDiscovery;
 using OpenTelemetry;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -20,8 +17,6 @@ namespace ISynergy.Framework.Logging.Extensions;
 public static class ServiceCollectionExtensions
 {
     private const string DockerEnvironment = "Docker";
-    private const string OpenTelemetryOptionsEndpoint = "OpenTelemetryOptions:OTLPExporterEndpoint";
-    private const string OpenTelemetryOptionsIsAzureMonitorExporterEnabled = "OpenTelemetryOptions:IsAzureMonitorExporterEnabled";
 
     public static ILoggingBuilder AddOpenTelemetryLogging(
         this ILoggingBuilder builder,
@@ -36,8 +31,6 @@ public static class ServiceCollectionExtensions
 
             optionsAction?.Invoke(options);
         });
-
-        builder.Services.Configure<OpenTelemetryOptions>(configuration.GetSection($"{prefix}{nameof(OpenTelemetryOptions)}").BindWithReload);
 
         builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
@@ -121,18 +114,7 @@ public static class ServiceCollectionExtensions
     {
         builder.ConfigureServices((context, services) =>
         {
-            var useOtlpExporter = !string.IsNullOrWhiteSpace(context.Configuration[OpenTelemetryOptionsEndpoint]);
-
-            if (useOtlpExporter)
-            {
-                // Microsoft Aspire
-                //otlpOptions.Endpoint = new Uri("http://host.docker.internal:18889");
-
-                // Grafana
-                //otlpOptions.Endpoint = new Uri("http://host.docker.internal:4317");
-
-                services.AddOpenTelemetry().UseOtlpExporter(OtlpExportProtocol.Grpc, new Uri(context.Configuration[OpenTelemetryOptionsEndpoint]));
-            }
+            services.AddOpenTelemetry().UseOtlpExporter();
         });
 
 
