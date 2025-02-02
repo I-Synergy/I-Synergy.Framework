@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.Options;
-using ISynergy.Framework.Logging.Processors;
 using ISynergy.Framework.Logging.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,7 +58,6 @@ public static class ServiceCollectionExtensions
             services.AddServiceDiscovery();
 
             services.TryAddSingleton<IInfoService>(s => infoService);
-            services.TryAddScoped<TenantProcessor>();
 
             services.ConfigureHttpClientDefaults(http =>
             {
@@ -118,14 +116,7 @@ public static class ServiceCollectionExtensions
                     // Export to console
                     logging.AddConsoleExporter();
 
-                    // Add TenantProcessor
-
-                    logging.AddProcessor(s =>
-                    {
-                        var scopedContextService = s.GetRequiredService<IScopedContextService>();
-                        return scopedContextService.GetService<TenantProcessor>();
-                    });
-
+                    // Custom logging
                     loggerAction?.Invoke(logging);
                 });
         });

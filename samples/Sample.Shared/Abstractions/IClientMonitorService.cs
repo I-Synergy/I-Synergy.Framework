@@ -1,4 +1,4 @@
-﻿namespace Sample.Abstractions.Services;
+﻿namespace Sample.Abstractions;
 
 /// <summary>
 /// Interface IClientMonitorService

@@ -14,10 +14,13 @@ using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
 using Sample.Models;
+using Sample.Processors;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Globalization;
@@ -58,11 +61,24 @@ public sealed partial class App : BaseApplication
             })
             .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
             {
+                services.TryAddScoped<TenantProcessor>();
+
                 services.TryAddSingleton<ICameraService, CameraService>();
 
                 services.AddUpdatesIntegration();
             }, f => f.Name.StartsWith(typeof(App).Namespace))
-            .ConfigureOpenTelemetryLogging(infoService);
+            .ConfigureOpenTelemetryLogging(
+                infoService,
+                tracing => { },
+                metrics => { },
+                logging =>
+                {
+                    logging.AddProcessor(s =>
+                    {
+                        var scopedContextService = s.GetRequiredService<IScopedContextService>();
+                        return scopedContextService.GetService<TenantProcessor>();
+                    });
+                });
     }
 
     protected override async void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e)

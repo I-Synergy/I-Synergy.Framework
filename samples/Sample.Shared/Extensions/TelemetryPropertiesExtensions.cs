@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Validation;
 
-namespace ISynergy.Framework.Logging.Extensions;
+namespace Sample.Extensions;
 public static class TelemetryPropertiesExtensions
 {
     public static void AddDefaultProperties(this IDictionary<string, object> properties, IInfoService infoService, IContext context)
