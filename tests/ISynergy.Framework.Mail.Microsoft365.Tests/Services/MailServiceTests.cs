@@ -11,8 +11,12 @@ public class MailServiceTests
 {
     private readonly MailOptions _mailOptions;
 
+    private Mock<ILoggerFactory> _mockLogger;
+
     public MailServiceTests()
     {
+        _mockLogger = new Mock<ILoggerFactory>();
+
         Mock<MailOptions> configMock = new();
         _mailOptions = configMock.Object;
         _mailOptions.ClientId = "";
@@ -26,7 +30,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailAsyncTest()
     {
-        MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailService>());
+        MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
             ["ismail.hassani@i-synergy.nl"],
             "Test subject",
@@ -40,7 +44,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithCopyAsyncTest()
     {
-        MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailService>());
+        MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
             ["ismail.hassani@i-synergy.nl"],
             "Test subject",
@@ -54,7 +58,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithFromAsyncTest()
     {
-        MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailService>());
+        MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
             "info@i-synergy.nl",
             ["support@i-synergy.nl"],
@@ -69,7 +73,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithFromAndCopyAsyncTest()
     {
-        MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailService>());
+        MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
             "info@i-synergy.nl",
             ["support@i-synergy.nl"],

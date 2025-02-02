@@ -40,11 +40,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     public ShellViewModel(
         ICommonServices commonServices,
-        ILogger<ShellViewModel> logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
 
@@ -139,7 +139,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 LanguageService.Default.GetString("Language"),
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                var languageVM = new LanguageViewModel(_commonServices, _logger);
+                var languageVM = new LanguageViewModel(_commonServices, _loggerFactory);
                 languageVM.Submitted += (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language = e.Result;
@@ -150,7 +150,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
-            var wizardVM = new SettingsViewModel(_commonServices, _logger);
+            var wizardVM = new SettingsViewModel(_commonServices, _loggerFactory);
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();

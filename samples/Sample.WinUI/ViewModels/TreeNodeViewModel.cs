@@ -30,11 +30,11 @@ public class TreeNodeViewModel : ViewModelNavigation<TreeNode<Guid, PublicationI
     /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     public TreeNodeViewModel(
         ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         Publication = [];
 

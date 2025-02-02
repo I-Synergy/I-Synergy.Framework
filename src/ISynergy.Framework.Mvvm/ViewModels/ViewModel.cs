@@ -21,6 +21,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 public abstract class ViewModel : ObservableClass, IViewModel
 {
     protected readonly ICommonServices _commonServices;
+    protected readonly ILoggerFactory _loggerFactory;
     protected readonly ILogger _logger;
 
     public ICommonServices CommonServices => _commonServices;
@@ -98,18 +99,19 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Initializes a new instance of the <see cref="ViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="automaticValidation">The validation.</param>
     protected ViewModel(
         ICommonServices commonServices,
-        ILogger<ViewModel> logger,
+        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
         : base(automaticValidation)
     {
         _commonServices = commonServices;
         _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;
 
-        _logger = logger;
+        _loggerFactory = loggerFactory;
+        _logger = _loggerFactory.CreateLogger(GetType());
 
         PropertyChanged += OnPropertyChanged;
         IsInitialized = false;

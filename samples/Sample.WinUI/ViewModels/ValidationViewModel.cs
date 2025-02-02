@@ -73,11 +73,11 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// Default constructor.
     /// </summary>
     /// <param name="commonServices"></param>
-    /// <param name="logger"></param>
+    /// <param name="loggerFactory"></param>
     public ValidationViewModel(
         ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";

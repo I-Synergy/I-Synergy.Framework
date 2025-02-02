@@ -83,11 +83,13 @@ public class NavigationService : INavigationService
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="scopedContextService"></param>
-    /// <param name="logger"></param>
-    public NavigationService(IScopedContextService scopedContextService, ILogger<NavigationService> logger)
+    /// <param name="loggerFactory"></param>
+    public NavigationService(
+        IScopedContextService scopedContextService,
+        ILoggerFactory loggerFactory)
     {
-        _logger = logger;
-        _logger.LogDebug($"NavigationService instance created with ID: {Guid.NewGuid()}");
+        _logger = loggerFactory.CreateLogger<NavigationService>();
+        _logger.LogTrace($"NavigationService instance created with ID: {Guid.NewGuid()}");
 
         _scopedContextService = scopedContextService;
     }

@@ -25,7 +25,7 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
     public SettingsService(ILogger<SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings>> logger)
     {
         _logger = logger;
-        _logger.LogDebug($"SettingsService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace($"SettingsService instance created with ID: {Guid.NewGuid()}");
 
         _localSettings = new TLocalSettings();
         _roamingSettings = new TRoamingSettings();

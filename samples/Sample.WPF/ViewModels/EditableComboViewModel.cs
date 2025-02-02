@@ -57,12 +57,12 @@ public class EditableComboViewModel : ViewModelNavigation<object>
     /// </summary>
     /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     public EditableComboViewModel(
         IScopedContextService scopedContextService,
         ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         MaskExpression = "9999aa";
         RegexExpression = "0000>LL"; //1111Ab 0000Xx

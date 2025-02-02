@@ -54,11 +54,11 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     public ConvertersViewModel(
         ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
         NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
@@ -115,13 +115,13 @@ public class ConvertersViewModel : ViewModelNavigation<object>
 
     private async Task NavigateToDetailAsync(TestItem item)
     {
-        var detailsVm = new DetailsViewModel(_commonServices, _logger);
+        var detailsVm = new DetailsViewModel(_commonServices, _loggerFactory);
         await _commonServices.NavigationService.NavigateAsync(detailsVm);
     }
 
     private async Task NavigateToPivotAsync(TestItem item)
     {
-        var detailsVm = new PivotViewModel(_commonServices, _logger);
+        var detailsVm = new PivotViewModel(_commonServices, _loggerFactory);
         await _commonServices.NavigationService.NavigateAsync(detailsVm);
     }
 }

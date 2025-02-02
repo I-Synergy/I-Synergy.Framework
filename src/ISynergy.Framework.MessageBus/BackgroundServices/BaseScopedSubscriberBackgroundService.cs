@@ -28,11 +28,13 @@ public abstract class BaseScopedSubscriberBackgroundService<TEntity, TService> :
     /// Initializes a new instance of the <see cref="BaseScopedSubscriberBackgroundService{TEntity, TService}" /> class.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    /// <param name="logger">The logger.</param>
-    protected BaseScopedSubscriberBackgroundService(IServiceProvider serviceProvider, ILogger<BaseScopedSubscriberBackgroundService<TEntity, TService>> logger)
+    /// <param name="loggerFactory">The logger.</param>
+    protected BaseScopedSubscriberBackgroundService(
+        IServiceProvider serviceProvider,
+        ILoggerFactory loggerFactory)
     {
         _serviceProvider = serviceProvider;
-        _logger = logger;
+        _logger = loggerFactory.CreateLogger<BaseScopedSubscriberBackgroundService<TEntity, TService>>();
     }
 
     /// <summary>

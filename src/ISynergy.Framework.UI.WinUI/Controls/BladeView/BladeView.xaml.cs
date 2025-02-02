@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -111,9 +112,8 @@ public partial class BladeView : UserControl, IDisposable
     #endregion
 
     private readonly Dictionary<IView, BladeState> _bladeStates = new();
-    private readonly ILogger<BladeView>? _logger;
+    private readonly ILogger _logger = ServiceLocator.Default.GetService<ILogger<BladeView>>();
     private bool _isInternalUpdate;
-    private int _viewModelHashCode;
     private bool _isDisposed;
 
     private class BladeState

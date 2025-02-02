@@ -75,12 +75,12 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// </summary>
     /// <param name="scopedContextService"></param>
     /// <param name="commonServices"></param>
-    /// <param name="logger"></param>
+    /// <param name="loggerFactory"></param>
     public ValidationViewModel(
         IScopedContextService scopedContextService,
         ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";

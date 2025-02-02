@@ -105,11 +105,11 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     protected BaseShellViewModel(
         ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         _commonServices.NavigationService.BackStackChanged += (s, e) => RaisePropertyChanged(nameof(IsBackEnabled));
 
@@ -210,7 +210,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = new LanguageViewModel(_commonServices, _logger);
+        var languageVM = new LanguageViewModel(_commonServices, _loggerFactory);
         languageVM.Submitted += LanguageVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
@@ -247,7 +247,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = new ThemeViewModel(_commonServices, _logger);
+        var themeVM = new ThemeViewModel(_commonServices, _loggerFactory);
         themeVM.Submitted += ThemeVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }

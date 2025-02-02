@@ -36,16 +36,16 @@ public class AutomationService : IAutomationService
     /// </summary>
     /// <param name="manager"></param>
     /// <param name="options"></param>
-    /// <param name="logger"></param>
+    /// <param name="loggerFactory"></param>
     public AutomationService(
         IAutomationManager manager,
         IOptions<AutomationOptions> options,
-        ILogger<AutomationService> logger)
+        ILoggerFactory loggerFactory)
     {
         _automations = new List<Automation>();
         _manager = manager;
         _options = options.Value;
-        _logger = logger;
+        _logger = loggerFactory.CreateLogger<AutomationService>();
     }
 
     /// <summary>

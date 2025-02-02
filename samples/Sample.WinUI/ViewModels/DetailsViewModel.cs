@@ -10,10 +10,10 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
 {
     public DetailsViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(commonServices, logger, refreshOnInitialization, automaticValidation)
+        : base(commonServices, loggerFactory, refreshOnInitialization, automaticValidation)
     {
     }
 
@@ -54,7 +54,7 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = new DetailViewModel(_commonServices, _logger, e);
+        var detailsVm = new DetailViewModel(_commonServices, _loggerFactory, e);
         await _commonServices.NavigationService.OpenBladeAsync(this, detailsVm);
     }
 }

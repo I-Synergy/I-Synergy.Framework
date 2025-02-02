@@ -8,9 +8,9 @@ public class TestExceptionViewModel : ViewModelDialog<object>
 {
     public TestExceptionViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
     }
 
