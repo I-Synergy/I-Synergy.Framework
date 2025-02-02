@@ -67,19 +67,19 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="items">The items.</param>
     /// <param name="selectedItems">The selected items.</param>
     /// <param name="selectionMode">The selection mode.</param>
     /// <param name="automaticValidation"></param>
     public ViewModelSelectionBlade(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         IEnumerable<TEntity> items,
         IEnumerable<TEntity> selectedItems,
         SelectionModes selectionMode = SelectionModes.Single,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         if (items is null)
             items = items.EnsureNotNull();

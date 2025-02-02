@@ -125,15 +125,15 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelBladeView(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         RefreshOnInitialization = refreshOnInitialization;
 

@@ -64,13 +64,12 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 #if DEBUG
                 config.AddDebug();
 #endif
-                config.SetMinimumLevel(LogLevel.Trace);
             })
             .Build();
 
         _initialView = initialView;
 
-        _logger = host.Services.GetService<ILogger>();
+        _logger = host.Services.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
         _logger.LogTrace("Setting up global exception handler.");
 
         this.ApplicationLoaded += OnApplicationLoaded;
@@ -108,11 +107,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         else
             RequestedTheme = ApplicationTheme.Dark;
 
-        _logger.LogInformation("Starting initialization of application");
+        _logger.LogTrace("Starting initialization of application");
 
         InitializeApplication();
 
-        _logger.LogInformation("Finishing initialization of application");
+        _logger.LogTrace("Finishing initialization of application");
     }
 
     /// <summary>

@@ -42,9 +42,9 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
     public SettingsViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();

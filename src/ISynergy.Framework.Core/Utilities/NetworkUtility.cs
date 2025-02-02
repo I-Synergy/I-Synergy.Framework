@@ -1,4 +1,5 @@
-﻿using System.Net.NetworkInformation;
+﻿using System.Net;
+using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Utilities;
@@ -12,15 +13,53 @@ public static class NetworkUtility
     /// Determines whether [is internet connection available].
     /// </summary>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public static Task<bool> IsInternetConnectionAvailable()
+    public static async Task<bool> IsInternetConnectionAvailable()
     {
-        var ping = new Ping();
-        var reply = ping.Send("8.8.8.8", 1000, new byte[32], new PingOptions());
+        try
+        {
+            using var ping = new Ping();
 
-        if (reply.Status == IPStatus.Success)
-            return Task.FromResult(true);
+            // Try multiple reliable DNS servers in case one fails
+            string[] hosts = { "8.8.8.8", "1.1.1.1", "8.8.4.4" };
 
-        return Task.FromResult(false);
+            foreach (var host in hosts)
+            {
+                var reply = await ping.SendPingAsync(host, 1000, new byte[32], new PingOptions());
+                if (reply.Status == IPStatus.Success)
+                    return true;
+            }
+            return false;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static string GetInternetIPAddress()
+    {
+        using var client = new WebClient();
+
+        // Try multiple IP services in case one fails
+        string[] ipServices = {
+            "https://api.ipify.org",
+            "https://icanhazip.com",
+            "https://api.my-ip.io/ip"
+        };
+
+        foreach (var service in ipServices)
+        {
+            try
+            {
+                return client.DownloadString(service).Trim();
+            }
+            catch
+            {
+                continue;
+            }
+        }
+
+        return "127.0.0.1";
     }
 
     /// <summary>
@@ -86,14 +125,16 @@ public static class NetworkUtility
     /// <returns><c>true</c> if [is URL reachable] [the specified URL]; otherwise, <c>false</c>.</returns>
     public static async Task<bool> IsUrlReachableAsync(Uri url, string method = "GET")
     {
+        using var client = new HttpClient();
+        client.Timeout = TimeSpan.FromSeconds(5);
+
         try
         {
-            using var client = new HttpClient();
-            client.Timeout = TimeSpan.FromSeconds(1);
-            using var response = await client.GetAsync(url);
+            var request = new HttpRequestMessage(new HttpMethod(method), url);
+            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             return response.IsSuccessStatusCode;
         }
-        catch (HttpRequestException)
+        catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
         {
             return false;
         }

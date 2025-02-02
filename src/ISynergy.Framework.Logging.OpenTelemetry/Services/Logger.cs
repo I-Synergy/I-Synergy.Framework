@@ -4,7 +4,6 @@ using ISynergy.Framework.Logging.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Logs;
-using OpenTelemetry.Resources;
 
 namespace ISynergy.Framework.Logging.Services;
 
@@ -19,15 +18,6 @@ public class Logger : BaseLogger
     {
         _infoService = infoService;
         _openTelemetryOptions = options.Value;
-
-        var resource = ResourceBuilder.CreateDefault()
-            .AddService(_infoService.ProductName)
-            .AddAttributes(new Dictionary<string, object>
-            {
-                ["version"] = _infoService.ProductVersion.ToString(),
-                ["os.version"] = Environment.OSVersion.ToString(),
-                ["session.id"] = Guid.NewGuid().ToString()
-            });
 
         _loggerFactory = LoggerFactory.Create(builder =>
         {

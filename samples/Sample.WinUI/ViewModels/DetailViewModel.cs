@@ -12,10 +12,10 @@ public class DetailViewModel : ViewModelBlade<TestItem>
 
     public DetailViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         TestItem item,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         SelectedItem = item;
 
@@ -24,7 +24,7 @@ public class DetailViewModel : ViewModelBlade<TestItem>
 
     private async Task OpenNewBladeAsync()
     {
-        var detailsVm = new DetailAViewModel(_commonServices, _logger, SelectedItem);
+        var detailsVm = new DetailAViewModel(_commonServices, _loggerFactory, SelectedItem);
         await _commonServices.NavigationService.OpenBladeAsync(Owner, detailsVm);
     }
 

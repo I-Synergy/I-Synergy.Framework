@@ -10,10 +10,10 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
 {
     public PivotViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(commonServices, logger, refreshOnInitialization, automaticValidation)
+        : base(commonServices, loggerFactory, refreshOnInitialization, automaticValidation)
     {
     }
 
@@ -54,7 +54,7 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = new DetailViewModel(_commonServices, _logger, e);
+        var detailsVm = new DetailViewModel(_commonServices, _loggerFactory, e);
         await _commonServices.NavigationService.OpenBladeAsync(this, detailsVm);
     }
 }

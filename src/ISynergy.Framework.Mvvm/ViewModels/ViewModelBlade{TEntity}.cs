@@ -78,13 +78,13 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// Initializes a new instance of the <see cref="ViewModelBlade{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelBlade(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         SubmitCommand = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
     }

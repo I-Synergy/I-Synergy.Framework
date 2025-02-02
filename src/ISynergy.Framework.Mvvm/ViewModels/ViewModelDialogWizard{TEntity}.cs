@@ -82,13 +82,13 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
     /// Initializes a new instance of the <see cref="ViewModelDialogWizard{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelDialogWizard(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         BackCommand = new RelayCommand(PerformBackAction);
         NextCommand = new RelayCommand(PerformNextAction);

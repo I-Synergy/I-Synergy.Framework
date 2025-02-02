@@ -25,11 +25,13 @@ public class FileService : IFileService<FileResult>
     /// Initializes a new instance of the <see cref="FileService" /> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="logger"></param>
-    public FileService(IDialogService dialogService, ILogger<FileService> logger)
+    /// <param name="loggerFactory"></param>
+    public FileService(
+        IDialogService dialogService,
+        ILoggerFactory loggerFactory)
     {
-        _logger = logger;
-        _logger.LogDebug($"FileService instance created with ID: {Guid.NewGuid()}");
+        _logger = loggerFactory.CreateLogger<FileService>();
+        _logger.LogTrace($"FileService instance created with ID: {Guid.NewGuid()}");
 
         _dialogService = dialogService;
     }

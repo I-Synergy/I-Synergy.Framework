@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using ISynergy.Framework.Core.Enumerations;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
 
 namespace ISynergy.Framework.UI.Extensions.Tests;
 
@@ -8,58 +10,71 @@ namespace ISynergy.Framework.UI.Extensions.Tests;
 public class BitmapExtensionsTests
 {
     [TestMethod]
-    public void ZeroByteBitmapToImageBytesTest()
+    public async Task ZeroByteBitmapToImageBytesTest()
     {
         // Arrange
         var bitmap = Array.Empty<byte>();
-        var quality = 90L;
-        var format = ImageFormat.Jpeg;
+        var quality = 90u;
+        var format = ImageFormats.jpg;
 
         // Assert
-        Assert.ThrowsException<ArgumentException>(() => bitmap.ToImageBytes(quality, format));
+        await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => bitmap.ToImageBytesAsync(quality, format));
     }
 
     [TestMethod]
-    public void ToJpegImageBytesTest()
+    public async Task ToJpegImageBytesTest()
     {
         // Arrange
-        using var bitmap = new Bitmap(10, 10);// small 10x10 bitmap
-        using var ms = new MemoryStream();
-        bitmap.Save(ms, ImageFormat.Bmp);
-        var bitmapBytes = ms.ToArray();
-
-        var quality = 90L;
-        var format = ImageFormat.Jpeg;
+        var bitmap = await CreateTestBitmapAsync(10, 10);
+        var quality = 90u;
+        var format = ImageFormats.jpg;
 
         // Act
-        var result = bitmapBytes.ToImageBytes(quality, format);
+        var result = await bitmap.ToImageBytesAsync(quality, format);
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.AreEqual(454, bitmapBytes.Length);
-        Assert.AreEqual(632, result.Length);
+        Assert.IsTrue(result.Length > 0);
         Assert.IsInstanceOfType(result, typeof(byte[]));
     }
 
     [TestMethod]
-    public void ToPngImageBytesTest()
+    public async Task ToPngImageBytesTest()
     {
         // Arrange
-        using var bitmap = new Bitmap(10, 10); // small 10x10 bitmap
-        using var ms = new MemoryStream();
-        bitmap.Save(ms, ImageFormat.Bmp);
-        var bitmapBytes = ms.ToArray();
-
-        var quality = 100L;
-        var format = ImageFormat.Png;
+        var bitmap = await CreateTestBitmapAsync(10, 10);
+        var quality = 100u;
+        var format = ImageFormats.png;
 
         // Act
-        var result = bitmapBytes.ToImageBytes(quality, format);
+        var result = await bitmap.ToImageBytesAsync(quality, format);
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.AreEqual(454, bitmapBytes.Length);
-        //Assert.AreEqual(148, result.Length);
+        Assert.IsTrue(result.Length > 0);
         Assert.IsInstanceOfType(result, typeof(byte[]));
+    }
+
+    private static async Task<byte[]> CreateTestBitmapAsync(uint width, uint height)
+    {
+        using var stream = new InMemoryRandomAccessStream();
+        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+
+        byte[] pixels = new byte[width * height * 4];
+        encoder.SetPixelData(
+            BitmapPixelFormat.Bgra8,
+            BitmapAlphaMode.Premultiplied,
+            width,
+            height,
+            96,
+            96,
+            pixels);
+
+        await encoder.FlushAsync();
+
+        var bytes = new byte[stream.Size];
+        await stream.ReadAsync(bytes.AsBuffer(), (uint)stream.Size, InputStreamOptions.None);
+
+        return bytes;
     }
 }

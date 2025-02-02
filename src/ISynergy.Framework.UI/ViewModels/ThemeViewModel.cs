@@ -33,11 +33,11 @@ public class ThemeViewModel : ViewModelDialog<Style>
     /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     public ThemeViewModel(
         ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         ThemeColors = new ThemeColors();
 

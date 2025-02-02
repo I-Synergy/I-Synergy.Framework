@@ -57,13 +57,13 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     /// Initializes a new instance of the <see cref="ViewModelDialog{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelDialog(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e));
     }

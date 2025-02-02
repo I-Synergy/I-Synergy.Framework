@@ -34,6 +34,14 @@ public interface IInfoService
     /// <value>The product version.</value>
     Version ProductVersion { get; }
     /// <summary>
+    /// Hostname of the machine.
+    /// </summary>
+    string HostName { get; }
+    /// <summary>
+    /// IP Address of the machine.
+    /// </summary>
+    string IPAddress { get; }
+    /// <summary>
     /// Gets the application title.
     /// </summary>
     string Title { get; }

@@ -52,9 +52,9 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     public SyncViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         SyncProgressionText = "Ready...";
         SyncCommandButtonEnabled = true;

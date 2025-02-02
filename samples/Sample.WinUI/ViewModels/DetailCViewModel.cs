@@ -9,10 +9,10 @@ public class DetailCViewModel : ViewModelBlade<TestItem>
 {
     public DetailCViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         TestItem item,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, loggerFactory, automaticValidation)
     {
         SelectedItem = item;
     }

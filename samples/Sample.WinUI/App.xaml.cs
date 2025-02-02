@@ -54,7 +54,6 @@ public sealed partial class App : BaseApplication
             })
             .ConfigureLogging((logging, configuration) =>
             {
-                logging.SetMinimumLevel(LogLevel.Trace);
                 logging.AddOpenTelemetryLogging(configuration);
             })
             .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
@@ -87,7 +86,7 @@ public sealed partial class App : BaseApplication
 
             bool navigateToAuthentication = true;
 
-            _logger.LogInformation("Retrieve default user and check for auto login");
+            _logger.LogTrace("Retrieve default user and check for auto login");
 
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin)
             {
@@ -103,7 +102,7 @@ public sealed partial class App : BaseApplication
 
             if (navigateToAuthentication)
             {
-                _logger.LogInformation("Navigate to SignIn page");
+                _logger.LogTrace("Navigate to SignIn page");
                 await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
             }
         }
@@ -178,12 +177,12 @@ public sealed partial class App : BaseApplication
 
         if (e.Value)
         {
-            _logger.LogInformation("Saving refresh token");
+            _logger.LogTrace("Saving refresh token");
 
             _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetService<IContext>().ToEnvironmentalRefreshToken();
             _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
 
-            _logger.LogInformation("Setting culture");
+            _logger.LogTrace("Setting culture");
             if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings is not null)
             {
                 var culture = CultureInfo.DefaultThreadCurrentCulture.Clone() as CultureInfo;
@@ -201,12 +200,12 @@ public sealed partial class App : BaseApplication
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
             }
 
-            _logger.LogInformation("Navigate to Shell");
+            _logger.LogTrace("Navigate to Shell");
             await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
         }
         else
         {
-            _logger.LogInformation("Navigate to SignIn page");
+            _logger.LogTrace("Navigate to SignIn page");
             await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
     }

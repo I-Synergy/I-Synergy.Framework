@@ -85,15 +85,15 @@ public class MapsViewModel : ViewModelDialog<object>
     /// Initializes a new instance of the <see cref="MapsViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="name">The name.</param>
     /// <param name="address">The address.</param>
     public MapsViewModel(
         ICommonServices commonServices,
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         string name,
         string address)
-        : base(commonServices, logger)
+        : base(commonServices, loggerFactory)
     {
         Locations = new ObservableCollection<object>();
         Title = address;

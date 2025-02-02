@@ -54,8 +54,8 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
         IScopedContextService scopedContextService,
         ICommonServices commonServices,
         INugetService nugetService,
-        ILogger logger)
-        : base(commonServices, logger)
+        ILoggerFactory loggerFactory)
+        : base(commonServices, loggerFactory)
     {
         Items = [];
         Logs = [];
