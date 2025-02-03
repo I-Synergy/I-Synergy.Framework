@@ -30,7 +30,7 @@ public class AuthenticationService : IAuthenticationService
         _scopedContextService = scopedContextService;
 
         _logger = logger;
-        _logger.LogDebug($"AuthenticationService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace($"AuthenticationService instance created with ID: {Guid.NewGuid()}");
     }
 
     public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)

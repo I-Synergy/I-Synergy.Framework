@@ -12,7 +12,7 @@ public class ViewModelSelectionDialogTests
 {
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILogger> _mockLogger;
+    private Mock<ILoggerFactory> _mockLoggerFactory;
     private Mock<ILanguageService> _mockLanguageService;
 
     [TestInitialize]
@@ -21,7 +21,13 @@ public class ViewModelSelectionDialogTests
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-        _mockLogger = new Mock<ILogger>();
+
+        _mockLoggerFactory = new Mock<ILoggerFactory>();
+        _mockLoggerFactory
+            .Setup(x => x.CreateLogger(It.IsAny<string>()))
+            .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
+
         _mockLanguageService = new Mock<ILanguageService>();
     }
 
@@ -46,7 +52,6 @@ public class ViewModelSelectionDialogTests
         // Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             selectedItems,
             SelectionModes.Single);
@@ -71,7 +76,6 @@ public class ViewModelSelectionDialogTests
             };
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -94,7 +98,6 @@ public class ViewModelSelectionDialogTests
             };
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -113,7 +116,6 @@ public class ViewModelSelectionDialogTests
         // Arrange & Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             null,
             null,
             SelectionModes.Single);
@@ -131,7 +133,6 @@ public class ViewModelSelectionDialogTests
         // Arrange
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             new List<TestEntity>(),
             new List<TestEntity>(),
             SelectionModes.Single);

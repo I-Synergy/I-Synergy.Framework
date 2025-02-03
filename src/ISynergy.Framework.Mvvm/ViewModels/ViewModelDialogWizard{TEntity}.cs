@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
@@ -82,13 +81,11 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
     /// Initializes a new instance of the <see cref="ViewModelDialogWizard{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelDialogWizard(
         ICommonServices commonServices,
-        ILogger logger,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         BackCommand = new RelayCommand(PerformBackAction);
         NextCommand = new RelayCommand(PerformNextAction);

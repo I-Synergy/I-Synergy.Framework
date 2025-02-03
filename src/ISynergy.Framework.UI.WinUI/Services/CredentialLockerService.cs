@@ -19,7 +19,7 @@ public class CredentialLockerService : ICredentialLockerService
     {
         _infoService = infoService;
         _logger = logger;
-        _logger.LogDebug($"CredentialLockerService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace($"CredentialLockerService instance created with ID: {Guid.NewGuid()}");
     }
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)

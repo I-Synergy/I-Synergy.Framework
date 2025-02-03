@@ -12,7 +12,7 @@ public class ViewModelSelectionTests
 {
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILogger> _mockLogger;
+    private Mock<ILoggerFactory> _mockLoggerFactory;
 
     [TestInitialize]
     public void Setup()
@@ -20,7 +20,12 @@ public class ViewModelSelectionTests
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-        _mockLogger = new Mock<ILogger>();
+
+        _mockLoggerFactory = new Mock<ILoggerFactory>();
+        _mockLoggerFactory
+            .Setup(x => x.CreateLogger(It.IsAny<string>()))
+            .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestEntity
@@ -48,7 +53,6 @@ public class ViewModelSelectionTests
         // Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             selectedItems,
             SelectionModes.Single);
@@ -73,7 +77,6 @@ public class ViewModelSelectionTests
             };
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);

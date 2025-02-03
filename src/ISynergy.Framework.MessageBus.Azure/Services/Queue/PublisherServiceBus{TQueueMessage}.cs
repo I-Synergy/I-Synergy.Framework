@@ -32,15 +32,17 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// Constructor of service bus.
     /// </summary>
     /// <param name="options">The options.</param>
-    /// <param name="logger">The logger.</param>
-    protected PublisherServiceBus(IOptions<TOption> options, ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger)
+    /// <param name="loggerFactory">The logger.</param>
+    protected PublisherServiceBus(
+        IOptions<TOption> options,
+        ILoggerFactory loggerFactory)
     {
         _option = options.Value;
 
         Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
 
-        _logger = logger;
+        _logger = loggerFactory.CreateLogger<PublisherServiceBus<TQueueMessage, TOption>>();
     }
 
     /// <summary>

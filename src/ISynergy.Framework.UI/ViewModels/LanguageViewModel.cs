@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.UI.ViewModels;
 
@@ -25,11 +24,8 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
     /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
-    public LanguageViewModel(
-        ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+    public LanguageViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         SelectedItem = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language;
     }

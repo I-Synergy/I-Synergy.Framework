@@ -1,5 +1,4 @@
-﻿#if WINDOWS
-using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Update.Abstractions.Services;
 using Microsoft.Extensions.Logging;
@@ -19,12 +18,14 @@ internal class UpdateService : IUpdateService
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="logger"></param>
-    public UpdateService(IDialogService dialogService, ILogger<UpdateService> logger)
+    /// <param name="loggerFactory"></param>
+    public UpdateService(
+        IDialogService dialogService,
+        ILoggerFactory loggerFactory)
     {
         _dialogService = dialogService;
-        _logger = logger;
-        _logger.LogDebug($"UpdateService instance created with ID: {Guid.NewGuid()}");
+        _logger = loggerFactory.CreateLogger<UpdateService>();
+        _logger.LogTrace($"UpdateService instance created with ID: {Guid.NewGuid()}");
     }
 
     /// <summary>
@@ -165,4 +166,3 @@ internal class UpdateService : IUpdateService
             LanguageService.Default.GetString("WarningMandatoryUpdateFailed"));
     }
 }
-#endif

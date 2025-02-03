@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Sample.Abstractions.Services;
+namespace Sample.Abstractions;
 
 /// <summary>
 /// Interface IReportingService

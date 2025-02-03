@@ -3,18 +3,11 @@
 namespace ISynergy.Framework.Core.Tests.Fixtures;
 internal class TestObservableClass : ObservableClass
 {
-    public bool IsDisposed { get; private set; }
     public bool IsAsyncDisposed { get; private set; }
 
     public void EnsureNotDisposed()
     {
         ThrowIfDisposed();
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        IsDisposed = true;
-        base.Dispose(disposing);
     }
 
     protected override async ValueTask DisposeAsyncCore()

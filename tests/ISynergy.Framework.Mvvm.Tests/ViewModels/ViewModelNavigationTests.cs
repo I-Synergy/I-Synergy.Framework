@@ -12,7 +12,7 @@ public class ViewModelNavigationTests
 {
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILogger> _mockLogger;
+    private Mock<ILoggerFactory> _mockLoggerFactory;
 
     [TestInitialize]
     public void Setup()
@@ -20,7 +20,12 @@ public class ViewModelNavigationTests
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-        _mockLogger = new Mock<ILogger>();
+
+        _mockLoggerFactory = new Mock<ILoggerFactory>();
+        _mockLoggerFactory
+            .Setup(x => x.CreateLogger(It.IsAny<string>()))
+            .Returns(new Mock<ILogger>().Object);
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestEntity
@@ -31,15 +36,15 @@ public class ViewModelNavigationTests
 
     private class TestNavigationViewModel : ViewModelNavigation<TestEntity>
     {
-        public TestNavigationViewModel(ICommonServices commonServices, ILogger logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation) { }
+        public TestNavigationViewModel(ICommonServices commonServices, bool automaticValidation = false)
+            : base(commonServices, automaticValidation) { }
     }
 
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
         // Arrange & Act
-        var viewModel = new TestNavigationViewModel(_mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestNavigationViewModel(_mockCommonServices.Object);
 
         // Assert
         Assert.IsNotNull(viewModel.SubmitCommand);
@@ -51,7 +56,7 @@ public class ViewModelNavigationTests
     public void ApplyQueryAttributes_SetsSelectedItem()
     {
         // Arrange
-        var viewModel = new TestNavigationViewModel(_mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestNavigationViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var query = new Dictionary<string, object>
             {
@@ -70,7 +75,7 @@ public class ViewModelNavigationTests
     public async Task SubmitAsync_WithValidation_InvokesSubmitted()
     {
         // Arrange
-        var viewModel = new TestNavigationViewModel(_mockCommonServices.Object, _mockLogger.Object);
+        var viewModel = new TestNavigationViewModel(_mockCommonServices.Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var submittedInvoked = false;
         viewModel.Submitted += (s, e) => submittedInvoked = true;

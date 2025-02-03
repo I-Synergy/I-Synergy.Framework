@@ -30,11 +30,10 @@ public static class WPFAppBuilderExtensions
     {
         wpfAppBuilder.ConfigureLogging((context, logger) =>
         {
+            logger.AddConfiguration(context.Configuration.GetSection("Logging"));
 #if DEBUG
             logger.AddDebug();
 #endif
-            logger.SetMinimumLevel(LogLevel.Trace);
-
             loggingBuilder.Invoke(logger, context.Configuration);
         });
 
@@ -64,13 +63,6 @@ public static class WPFAppBuilderExtensions
         wpfAppBuilder.ConfigureServices((context, services) =>
         {
             services.AddOptions();
-
-            // Register singleton services
-            services.TryAddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
-            {
-                builder.AddDebug();
-                builder.SetMinimumLevel(LogLevel.Trace);
-            }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
 
             var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
 

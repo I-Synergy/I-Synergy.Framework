@@ -25,6 +25,8 @@ public class AutomationTests
     private IAutomationService _automationService;
     private Stopwatch _stopwatch;
 
+    private readonly Mock<ILoggerFactory> _mockLoggerFactory = new Mock<ILoggerFactory>();
+
     /// <summary>
     /// Default constructor for the test.
     /// </summary>
@@ -33,10 +35,14 @@ public class AutomationTests
     {
         _stopwatch = new Stopwatch();
 
+        _mockLoggerFactory
+            .Setup(x => x.CreateLogger(It.IsAny<string>()))
+            .Returns(new Mock<ILogger>().Object);
+
         _automationService = new AutomationService(
             new Mock<IAutomationManager>().Object,
             new Mock<IOptions<AutomationOptions>>().Object,
-            new Mock<ILogger<AutomationService>>().Object);
+            _mockLoggerFactory.Object);
 
         _defaultCustomer = new Customer()
         {

@@ -3,7 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
-using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -57,13 +56,11 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
     /// Initializes a new instance of the <see cref="ViewModelNavigation{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
     /// <param name="automaticValidation">Validation trigger.</param>
     protected ViewModelNavigation(
         ICommonServices commonServices,
-        ILogger logger,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e));
     }

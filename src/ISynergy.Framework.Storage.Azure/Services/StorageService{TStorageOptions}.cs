@@ -25,12 +25,14 @@ internal class StorageService<TStorageOptions> : IStorageService
     /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}"/> class.
     /// </summary>
     /// <param name="storageOptions">The azure BLOB options.</param>
-    /// <param name="logger"></param>
-    public StorageService(IOptions<TStorageOptions> storageOptions, ILogger<StorageService<TStorageOptions>> logger)
+    /// <param name="loggerFactory"></param>
+    public StorageService(
+        IOptions<TStorageOptions> storageOptions,
+        ILoggerFactory loggerFactory)
     {
         Argument.IsNotNull(storageOptions.Value);
         _storageOptions = storageOptions.Value;
-        _logger = logger;
+        _logger = loggerFactory.CreateLogger<StorageService<TStorageOptions>>();
     }
 
     /// <summary>

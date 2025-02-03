@@ -14,7 +14,6 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
-using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
@@ -135,9 +134,8 @@ public class SignUpViewModel : ViewModel
 
     public SignUpViewModel(
         ICommonServices commonServices,
-        ILogger logger,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         this.Validator = new Action<IObservableClass>(_ =>
         {
@@ -196,7 +194,7 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_commonServices, _logger, Modules, SelectedModules, SelectionModes.Multiple);
+        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_commonServices, Modules, SelectedModules, SelectionModes.Multiple);
         selectionVM.Submitted += SelectionVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
     }
