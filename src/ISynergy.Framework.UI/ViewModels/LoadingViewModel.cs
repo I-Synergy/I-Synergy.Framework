@@ -6,6 +6,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -18,17 +19,25 @@ public class LoadingViewModel : ObservableClass, IViewModel
     private readonly ICommonServices _commonServices;
     private readonly ILogger _logger;
 
+    private LoadingViewOptions _loadingViewOptions;
+    private TaskCompletionSource<bool> _taskCompletion;
+    private Func<Task> _initializationTask;
+    private Action _onLoadingComplete;
+
     public ICommonServices CommonServices => _commonServices;
+    public LoadingViewOptions Configuration => _loadingViewOptions;
 
     public LoadingViewModel(
         ICommonServices commonServices,
+
         bool automaticValidation = false)
         : base(automaticValidation)
     {
         _commonServices = commonServices;
         _logger = _commonServices.LoggerFactory.CreateLogger<LoadingViewModel>();
 
-        //PropertyChanged += OnPropertyChanged;
+        _taskCompletion = new TaskCompletionSource<bool>();
+
         IsInitialized = false;
 
         CloseCommand = new AsyncRelayCommand(CloseAsync);
@@ -36,6 +45,46 @@ public class LoadingViewModel : ObservableClass, IViewModel
 
         _logger.LogTrace(GetType().Name);
     }
+
+    public void Initialize(Func<Task> task, Action onLoadingComplete, LoadingViewOptions loadingViewOptions)
+    {
+        _initializationTask = task;
+        _onLoadingComplete = onLoadingComplete;
+        _loadingViewOptions = loadingViewOptions;
+
+        InitializeTask();
+    }
+
+    private async void InitializeTask()
+    {
+        try
+        {
+            if (_initializationTask is not null)
+            {
+                await _initializationTask();
+                IsInitialized = true;
+                _taskCompletion.SetResult(true);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Initialization failed");
+            _taskCompletion.SetException(ex);
+        }
+    }
+
+    public Task CompleteLoadingAsync()
+    {
+        if (IsInitialized)
+        {
+            _onLoadingComplete?.Invoke();
+            return CloseAsync();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task WaitForCompletionAsync() => _taskCompletion.Task;
 
     /// <summary>
     /// Occurs when [cancelled].
@@ -175,6 +224,7 @@ public class LoadingViewModel : ObservableClass, IViewModel
     {
         IsCancelled = true;
         OnCancelled(EventArgs.Empty);
+        _taskCompletion.TrySetCanceled();
         return CloseAsync();
     }
 
@@ -200,6 +250,9 @@ public class LoadingViewModel : ObservableClass, IViewModel
         if (disposing)
         {
             PropertyChanged -= OnPropertyChanged;
+            _taskCompletion = null;
+            _initializationTask = null;
+            _onLoadingComplete = null;
 
             (CloseCommand as IDisposable)?.Dispose();
             (CancelCommand as IDisposable)?.Dispose();

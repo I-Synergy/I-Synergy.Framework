@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -10,10 +8,13 @@ namespace ISynergy.Framework.UI.Controls;
 public partial class BusyIndicatorControl : Grid
 {
     private readonly ICommonServices _commonServices;
+    private TaskCompletionSource<bool> _taskCompletion;
+    private Func<Task> _initializationTask;
 
     public BusyIndicatorControl(ICommonServices commonServices)
     {
         _commonServices = commonServices;
+        _taskCompletion = new TaskCompletionSource<bool>();
 
         var isBusyBinding = new Binding();
         isBusyBinding.Source = _commonServices.BusyService;
@@ -54,21 +55,32 @@ public partial class BusyIndicatorControl : Grid
         Unloaded += BusyIndicatorControl_Unloaded;
     }
 
-    private void BusyIndicatorControl_Loaded(object sender, RoutedEventArgs e)
+    public void Initialize(Func<Task> task)
     {
-        if (Application.Current is IBaseApplication baseApplication)
-            baseApplication.ApplicationInitialized += ApplicationInitialized;
+        _initializationTask = task;
+    }
+
+    public Task WaitForCompletionAsync() => _taskCompletion.Task;
+
+    private async void BusyIndicatorControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (_initializationTask is not null)
+        {
+            try
+            {
+                await _initializationTask();
+                _taskCompletion.SetResult(true);
+            }
+            catch (Exception ex)
+            {
+                _taskCompletion.SetException(ex);
+            }
+        }
     }
 
     private void BusyIndicatorControl_Unloaded(object sender, RoutedEventArgs e)
     {
-        if (Application.Current is IBaseApplication baseApplication)
-            baseApplication.ApplicationInitialized -= ApplicationInitialized;
-    }
-
-    private void ApplicationInitialized(object sender, ReturnEventArgs<bool> e)
-    {
-        if (Application.Current is IBaseApplication baseApplication)
-            baseApplication.RaiseApplicationLoaded();
+        Loaded -= BusyIndicatorControl_Loaded;
+        Unloaded -= BusyIndicatorControl_Unloaded;
     }
 }

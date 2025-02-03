@@ -33,10 +33,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Views\LoadingView.xaml" Link="Views\LoadingView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\ShellView.xaml" Link="Views\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -54,9 +50,6 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\Identity\ForgotPasswordWindow.xaml.cs">
       <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\LoadingView.xaml.cs">
-      <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>

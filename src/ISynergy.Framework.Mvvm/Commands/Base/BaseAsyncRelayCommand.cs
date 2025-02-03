@@ -76,28 +76,31 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
 
     protected void MonitorTask(Task task)
     {
-        // Schedule state update after task completion
         _ = task.ContinueWith(t =>
         {
-            // Only update if this is still the current task
             if (ReferenceEquals(_executionTask, t))
             {
-                // First notify about completion
-                PropertyChanged?.Invoke(this, ExecutionTaskChangedEventArgs);
-                PropertyChanged?.Invoke(this, IsRunningChangedEventArgs);
+                // Use UI thread dispatcher for property notifications
+                SynchronizationContext.Current?.Post(_ =>
+                {
+                    PropertyChanged?.Invoke(this, ExecutionTaskChangedEventArgs);
+                    PropertyChanged?.Invoke(this, IsRunningChangedEventArgs);
 
-                if (_cancellationTokenSource is not null)
-                    PropertyChanged?.Invoke(this, CanBeCanceledChangedEventArgs);
+                    if (_cancellationTokenSource is not null)
+                        PropertyChanged?.Invoke(this, CanBeCanceledChangedEventArgs);
 
-                if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
-                    OnCanExecuteChanged();
+                    if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
+                        OnCanExecuteChanged();
+                }, null);
 
-                // Then clear the task reference after a small delay to allow completion checks
                 Task.Delay(100).ContinueWith(_ =>
                 {
                     if (ReferenceEquals(_executionTask, t))
                     {
-                        _executionTask = null;
+                        SynchronizationContext.Current?.Post(__ =>
+                        {
+                            _executionTask = null;
+                        }, null);
                     }
                 }, TaskScheduler.Current);
             }
