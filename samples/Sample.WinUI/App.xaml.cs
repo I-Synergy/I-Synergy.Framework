@@ -39,7 +39,14 @@ public sealed partial class App : BaseApplication
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        : base() //(() => ServiceLocator.Default.GetService<ILoadingView>())
+        : base()
+    //: base(() => ServiceLocator.Default.GetService<ILoadingView>(), new LoadingViewOptions
+    //{
+    //    AssetStreamProvider = () => Task.FromResult(
+    //        Assembly.GetAssembly(typeof(App))?.GetManifestResourceStream("Sample.Assets.gta.mp4")),
+    //    ContentType = "video/mp4",
+    //    ViewType = LoadingViewTypes.Video
+    //})
     {
         InitializeComponent();
     }
@@ -81,23 +88,10 @@ public sealed partial class App : BaseApplication
                 });
     }
 
-    protected override async void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnApplicationInitialized(object sender, ReturnEventArgs<bool> e)
     {
         try
         {
-#if WINDOWS
-            //commonServices.BusyService.StartBusy(LanguageService.Default.GetString("UpdateCheckForUpdates"));
-
-            //if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await commonServices.DialogService.ShowMessageAsync(
-            //    LanguageService.Default.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-            //    "Update",
-            //    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //{
-            //    commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-            //    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
-            //    Environment.Exit(Environment.ExitCode);
-            //}
-#endif
             _commonServices.BusyService.StartBusy();
 
             bool navigateToAuthentication = true;
@@ -138,13 +132,16 @@ public sealed partial class App : BaseApplication
             {
                 _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
 
-                if (await ServiceLocator.Default.GetService<IUpdateService>().CheckForUpdateAsync() && await _commonServices.DialogService.ShowMessageAsync(
+                var updateService = ServiceLocator.Default.GetService<IUpdateService>();
+
+                if (await updateService?.CheckForUpdateAsync() &&
+                    await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
                     "Update",
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-                    await ServiceLocator.Default.GetService<IUpdateService>().DownloadAndInstallUpdateAsync();
+                    await updateService?.DownloadAndInstallUpdateAsync();
                     Environment.Exit(Environment.ExitCode);
                 }
             }
@@ -177,8 +174,6 @@ public sealed partial class App : BaseApplication
             {
                 await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
             }
-
-            RaiseApplicationInitialized();
         }
         finally
         {

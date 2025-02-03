@@ -19,7 +19,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
@@ -172,10 +172,10 @@
 			</_PackageFiles>
 		</ItemGroup>
 	</Target>
-	
+
 	<ItemGroup>
 		<Page Include="Controls\BladeView\BladeView.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Buttons\BaseDialogButtons.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -190,6 +190,9 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\ImageView\ImageView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Controls\LoadingView\LoadingView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Menu\BaseMenu.xaml">

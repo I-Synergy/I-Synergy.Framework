@@ -1,5 +1,4 @@
-﻿#if WINDOWS
-using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Update.Abstractions.Services;
 using Microsoft.Extensions.Logging;
@@ -167,4 +166,3 @@ internal class UpdateService : IUpdateService
             LanguageService.Default.GetString("WarningMandatoryUpdateFailed"));
     }
 }
-#endif
