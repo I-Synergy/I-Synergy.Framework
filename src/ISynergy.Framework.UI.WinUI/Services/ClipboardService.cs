@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
-using System.Drawing.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 
 namespace ISynergy.Framework.UI.Services;
@@ -18,7 +18,7 @@ public class ClipboardService : IClipboardService
     public ClipboardService(ILogger<ClipboardService> logger)
     {
         _logger = logger;
-        _logger.LogDebug($"ClipboardService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace($"ClipboardService instance created with ID: {Guid.NewGuid()}");
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class ClipboardService : IClipboardService
             var image = await imageStream.AsStreamForRead().ToByteArrayAsync();
 
             if (imageStream.ContentType == "image/bmp")
-                return new ImageResult(image.ToImageBytes(100, ImageFormat.Png), "image/png");
+                return new ImageResult(await image.ToImageBytesAsync(100, ImageFormats.png), "image/png");
             return new ImageResult(image, imageStream.ContentType);
         }
 

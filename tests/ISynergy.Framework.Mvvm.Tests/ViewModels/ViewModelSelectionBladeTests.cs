@@ -12,15 +12,22 @@ public class ViewModelSelectionBladeTests
 {
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILogger> _mockLogger;
+    private Mock<ILoggerFactory> _mockLoggerFactory;
 
     [TestInitialize]
     public void Setup()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
+
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-        _mockLogger = new Mock<ILogger>();
+
+        _mockLoggerFactory = new Mock<ILoggerFactory>();
+        _mockLoggerFactory
+            .Setup(x => x.CreateLogger(It.IsAny<string>()))
+            .Returns(new Mock<ILogger>().Object);
+
+        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
     private class TestEntity
@@ -41,7 +48,6 @@ public class ViewModelSelectionBladeTests
         var selectedItems = new List<TestEntity> { items[0] };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             selectedItems,
             SelectionModes.Single);
@@ -82,7 +88,6 @@ public class ViewModelSelectionBladeTests
         // Act
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             selectedItems,
             SelectionModes.Single);
@@ -107,7 +112,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             items,
             SelectionModes.Single);
@@ -138,7 +142,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -157,7 +160,6 @@ public class ViewModelSelectionBladeTests
         // Arrange & Act
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             null,
             null,
             SelectionModes.Single);
@@ -179,7 +181,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             items,
             SelectionModes.Single);
@@ -207,7 +208,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -231,7 +231,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Multiple);
@@ -255,7 +254,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -278,7 +276,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Single);
@@ -301,7 +298,6 @@ public class ViewModelSelectionBladeTests
             };
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            _mockLogger.Object,
             items,
             new List<TestEntity>(),
             SelectionModes.Multiple);

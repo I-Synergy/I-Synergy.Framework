@@ -30,13 +30,13 @@ internal class UpdateService : IUpdateService
     /// <param name="infoService"></param>
     /// <param name="dialogService">The dialog service.</param>
     /// <param name="options"></param>
-    /// <param name="logger"></param>
+    /// <param name="loggerFactory"></param>
     public UpdateService(
         IHttpClientFactory httpClientFactory,
         IInfoService infoService,
         IDialogService dialogService,
         IOptions<UpdateOptions> options,
-        ILogger<UpdateService> logger)
+        ILoggerFactory loggerFactory)
     {
         Argument.IsNotNull(options);
 
@@ -44,7 +44,7 @@ internal class UpdateService : IUpdateService
         _infoService = infoService;
         _dialogService = dialogService;
         _updateOptions = options.Value;
-        _logger = logger;
+        _logger = loggerFactory.CreateLogger<UpdateService>();
     }
 
     /// <summary>

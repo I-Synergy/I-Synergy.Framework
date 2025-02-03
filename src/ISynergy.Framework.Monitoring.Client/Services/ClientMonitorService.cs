@@ -38,15 +38,15 @@ internal class ClientMonitorService : IClientMonitorService
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
     /// <param name="configurationOptions">The configuration options.</param>
-    /// <param name="logger">The logger factory.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     public ClientMonitorService(
         IDialogService dialogService,
         IOptions<ClientMonitorOptions> configurationOptions,
-        ILogger<ClientMonitorService> logger)
+        ILoggerFactory loggerFactory)
     {
         _dialogService = dialogService;
         _configurationOptions = configurationOptions.Value;
-        _logger = logger;
+        _logger = loggerFactory.CreateLogger<ClientMonitorService>();
     }
 
     /// <summary>

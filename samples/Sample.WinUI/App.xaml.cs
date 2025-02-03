@@ -2,18 +2,25 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
+using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
 using Sample.Models;
+using Sample.Processors;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Globalization;
@@ -32,54 +39,64 @@ public sealed partial class App : BaseApplication
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        : base() //(() => ServiceLocator.Default.GetService<ILoadingView>())
+        : base()
+    //: base(() => ServiceLocator.Default.GetService<ILoadingView>(), new LoadingViewOptions
+    //{
+    //    AssetStreamProvider = () => Task.FromResult(
+    //        Assembly.GetAssembly(typeof(App))?.GetManifestResourceStream("Sample.Assets.gta.mp4")),
+    //    ContentType = "video/mp4",
+    //    ViewType = LoadingViewTypes.Video
+    //})
     {
         InitializeComponent();
     }
 
     protected override IHostBuilder CreateHostBuilder()
     {
+        var mainAssembly = Assembly.GetAssembly(typeof(App));
+        var infoService = new InfoService();
+        infoService.LoadAssembly(mainAssembly);
+
         return new HostBuilder()
             .ConfigureHostConfiguration(builder =>
             {
-                Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
                 builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
             })
             .ConfigureLogging((logging, configuration) =>
             {
-                logging.SetMinimumLevel(LogLevel.Trace);
-                logging.AddApplicationInsightsLogging(configuration);
+                logging.AddOpenTelemetryLogging(configuration);
             })
             .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
             {
+                services.TryAddScoped<TenantProcessor>();
+
                 services.TryAddSingleton<ICameraService, CameraService>();
 
                 services.AddUpdatesIntegration();
-            }, f => f.Name.StartsWith(typeof(App).Namespace));
+            }, f => f.Name.StartsWith(typeof(App).Namespace))
+            .ConfigureOpenTelemetryLogging(
+                infoService,
+                tracing => { },
+                metrics => { },
+                logging =>
+                {
+                    logging.AddProcessor(s =>
+                    {
+                        var scopedContextService = s.GetRequiredService<IScopedContextService>();
+                        return scopedContextService.GetService<TenantProcessor>();
+                    });
+                });
     }
 
-    protected override async void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnApplicationInitialized(object sender, ReturnEventArgs<bool> e)
     {
         try
         {
-#if WINDOWS
-            //commonServices.BusyService.StartBusy(LanguageService.Default.GetString("UpdateCheckForUpdates"));
-
-            //if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await commonServices.DialogService.ShowMessageAsync(
-            //    LanguageService.Default.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-            //    "Update",
-            //    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //{
-            //    commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-            //    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
-            //    Environment.Exit(Environment.ExitCode);
-            //}
-#endif
             _commonServices.BusyService.StartBusy();
 
             bool navigateToAuthentication = true;
 
-            _logger.LogInformation("Retrieve default user and check for auto login");
+            _logger.LogTrace("Retrieve default user and check for auto login");
 
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin)
             {
@@ -95,7 +112,7 @@ public sealed partial class App : BaseApplication
 
             if (navigateToAuthentication)
             {
-                _logger.LogInformation("Navigate to SignIn page");
+                _logger.LogTrace("Navigate to SignIn page");
                 await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
             }
         }
@@ -111,24 +128,27 @@ public sealed partial class App : BaseApplication
         {
             _commonServices.BusyService.StartBusy();
 
-            //try
-            //{
-            //    _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
+            try
+            {
+                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
 
-            //    if (await ServiceLocator.Default.GetService<IUpdateService>().CheckForUpdateAsync() && await _commonServices.DialogService.ShowMessageAsync(
-            //        LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-            //        "Update",
-            //        MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //    {
-            //        _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-            //        await ServiceLocator.Default.GetService<IUpdateService>().DownloadAndInstallUpdateAsync();
-            //        Environment.Exit(Environment.ExitCode);
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
-            //}
+                var updateService = ServiceLocator.Default.GetService<IUpdateService>();
+
+                if (await updateService?.CheckForUpdateAsync() &&
+                    await _commonServices.DialogService.ShowMessageAsync(
+                    LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
+                    "Update",
+                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
+                    await updateService?.DownloadAndInstallUpdateAsync();
+                    Environment.Exit(Environment.ExitCode);
+                }
+            }
+            catch (Exception)
+            {
+                await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
+            }
 
             try
             {
@@ -154,8 +174,6 @@ public sealed partial class App : BaseApplication
             {
                 await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
             }
-
-            RaiseApplicationInitialized();
         }
         finally
         {
@@ -170,12 +188,12 @@ public sealed partial class App : BaseApplication
 
         if (e.Value)
         {
-            _logger.LogInformation("Saving refresh token");
+            _logger.LogTrace("Saving refresh token");
 
             _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetService<IContext>().ToEnvironmentalRefreshToken();
             _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
 
-            _logger.LogInformation("Setting culture");
+            _logger.LogTrace("Setting culture");
             if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings is not null)
             {
                 var culture = CultureInfo.DefaultThreadCurrentCulture.Clone() as CultureInfo;
@@ -193,12 +211,12 @@ public sealed partial class App : BaseApplication
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
             }
 
-            _logger.LogInformation("Navigate to Shell");
+            _logger.LogTrace("Navigate to Shell");
             await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
         }
         else
         {
-            _logger.LogInformation("Navigate to SignIn page");
+            _logger.LogTrace("Navigate to SignIn page");
             await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
     }

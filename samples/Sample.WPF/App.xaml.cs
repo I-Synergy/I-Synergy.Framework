@@ -34,7 +34,7 @@ public partial class App : BaseApplication
 
             bool navigateToAuthentication = true;
 
-            _logger.LogInformation("Retrieve default user and check for auto login");
+            _logger.LogTrace("Retrieve default user and check for auto login");
 
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin)
             {
@@ -50,7 +50,7 @@ public partial class App : BaseApplication
 
             if (navigateToAuthentication)
             {
-                _logger.LogInformation("Navigate to SignIn page");
+                _logger.LogTrace("Navigate to SignIn page");
                 await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
             }
         }
@@ -67,12 +67,12 @@ public partial class App : BaseApplication
 
         if (e.Value)
         {
-            _logger.LogInformation("Navigate to Shell");
+            _logger.LogTrace("Navigate to Shell");
             await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
         }
         else
         {
-            _logger.LogInformation("Navigate to SignIn page");
+            _logger.LogTrace("Navigate to SignIn page");
             await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
     }

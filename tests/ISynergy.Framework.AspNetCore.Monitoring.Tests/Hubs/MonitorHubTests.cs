@@ -21,6 +21,7 @@ public class MonitorHubTests
     private readonly Mock<HubCallerContext> _mockHubCallerContext;
     private readonly Mock<IHubCallerClients> _mockClients;
     private readonly Mock<IClientProxy> _mockClientProxy;
+    private readonly Mock<ILoggerFactory> _mockLoggerFactory;
     private readonly MonitorHub _monitorHub;
 
     public MonitorHubTests()
@@ -28,6 +29,11 @@ public class MonitorHubTests
         _mockClientProxy = new Mock<IClientProxy>();
         _mockClients = new Mock<IHubCallerClients>();
         _mockGroupManager = new Mock<IGroupManager>();
+
+        _mockLoggerFactory = new Mock<ILoggerFactory>();
+        _mockLoggerFactory
+            .Setup(x => x.CreateLogger(It.IsAny<string>()))
+            .Returns(new Mock<ILogger>().Object);
 
         _mockHubCallerContext = new Mock<HubCallerContext>();
         _mockHubCallerContext.Setup(x => x.ConnectionId).Returns(connectionId);
@@ -53,8 +59,7 @@ public class MonitorHubTests
         _mockClients.Setup(x => x.OthersInGroup(groupName.ToString()))
             .Returns(_mockClientProxy.Object);
 
-        _monitorHub = new MonitorHub(
-            new Mock<ILogger<MonitorHub>>().Object)
+        _monitorHub = new MonitorHub(_mockLoggerFactory.Object)
         {
             Clients = _mockClients.Object,
             Context = _mockHubCallerContext.Object,

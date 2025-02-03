@@ -6,7 +6,6 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
-using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
@@ -95,15 +94,13 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Initializes a new instance of the <see cref="ViewModelSummary{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
     /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelSummary(
         ICommonServices commonServices,
-        ILogger logger,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        : base(commonServices, automaticValidation)
     {
         RefreshOnInitialization = refreshOnInitialization;
 

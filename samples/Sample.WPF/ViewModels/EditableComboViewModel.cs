@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
@@ -55,14 +53,9 @@ public class EditableComboViewModel : ViewModelNavigation<object>
     /// <summary>
     /// Initializes a new instance of the <see cref="EditableComboViewModel"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The context.</param>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
-    public EditableComboViewModel(
-        IScopedContextService scopedContextService,
-        ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+    public EditableComboViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         MaskExpression = "9999aa";
         RegexExpression = "0000>LL"; //1111Ab 0000Xx

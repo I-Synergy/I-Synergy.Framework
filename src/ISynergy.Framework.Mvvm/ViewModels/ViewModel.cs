@@ -98,18 +98,16 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Initializes a new instance of the <see cref="ViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
     /// <param name="automaticValidation">The validation.</param>
     protected ViewModel(
         ICommonServices commonServices,
-        ILogger logger,
         bool automaticValidation = false)
         : base(automaticValidation)
     {
         _commonServices = commonServices;
         _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;
 
-        _logger = logger;
+        _logger = _commonServices.LoggerFactory.CreateLogger(GetType());
 
         PropertyChanged += OnPropertyChanged;
         IsInitialized = false;

@@ -43,8 +43,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     {
         _commonServices = commonServices;
 
-        _logger = _commonServices.ScopedContextService.GetService<ILogger>();
-        _logger.LogInformation("Starting application");
+        _logger = _commonServices.ScopedContextService.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
+        _logger.LogTrace("Starting application");
 
         this.ApplicationLoaded += OnApplicationLoaded;
 
@@ -52,7 +52,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
         AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-        _logger.LogInformation("Setting up global exception handler.");
+        _logger.LogTrace("Setting up global exception handler.");
         SetGlobalExceptionHandler();
 
         _logger.LogTrace("Starting initialization of application");
@@ -66,7 +66,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices.AuthenticationService.AuthenticationChanged += OnAuthenticationChanged;
         _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
 
-        _logger.LogInformation("Setting up localization service.");
+        _logger.LogTrace("Setting up localization service.");
 
         if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is not null)
             _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language.SetLocalizationLanguage();
@@ -83,11 +83,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         //        Application.Current.Resources.ApplyDarkTheme();
         //}
 
-        _logger.LogInformation("Starting initialization of application");
+        _logger.LogTrace("Starting initialization of application");
 
         InitializeApplication();
 
-        _logger.LogInformation("Finishing initialization of application");
+        _logger.LogTrace("Finishing initialization of application");
     }
 
     protected abstract void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e);

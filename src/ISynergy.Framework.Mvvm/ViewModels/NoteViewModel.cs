@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
-using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -34,14 +33,12 @@ public class NoteViewModel : ViewModelDialog<string>
     /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
     /// <param name="note">The note.</param>
     [PreferredConstructor]
     public NoteViewModel(
         ICommonServices commonServices,
-        ILogger logger,
         string note)
-        : base(commonServices, logger)
+        : base(commonServices)
     {
         SelectedItem = note;
     }
@@ -50,15 +47,13 @@ public class NoteViewModel : ViewModelDialog<string>
     /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
     /// <param name="note">The note.</param>
     /// <param name="targetProperty">The target property.</param>
     public NoteViewModel(
         ICommonServices commonServices,
-        ILogger logger,
         string note,
         string targetProperty)
-        : this(commonServices, logger, note)
+        : this(commonServices, note)
     {
         _targetProperty = targetProperty;
     }

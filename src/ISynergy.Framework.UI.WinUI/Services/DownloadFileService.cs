@@ -18,11 +18,13 @@ public class DownloadFileService : IDownloadFileService
     /// Initializes a new instance of the <see cref="DownloadFileService"/> class.
     /// </summary>
     /// <param name="fileservice">The fileservice.</param>
-    /// <param name="logger"></param>
-    public DownloadFileService(IFileService<FileResult> fileservice, ILogger<DownloadFileService> logger)
+    /// <param name="loggerFactory"></param>
+    public DownloadFileService(
+        IFileService<FileResult> fileservice,
+        ILoggerFactory loggerFactory)
     {
-        _logger = logger;
-        _logger.LogDebug($"DownloadFileService instance created with ID: {Guid.NewGuid()}");
+        _logger = loggerFactory.CreateLogger<DownloadFileService>();
+        _logger.LogTrace($"DownloadFileService instance created with ID: {Guid.NewGuid()}");
 
         _fileService = fileservice;
     }

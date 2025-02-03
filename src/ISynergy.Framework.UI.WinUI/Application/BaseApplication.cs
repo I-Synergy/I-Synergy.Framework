@@ -8,6 +8,7 @@ using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
+using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,24 +28,16 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 {
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
+
     protected readonly Func<ILoadingView> _initialView;
+    protected readonly LoadingViewOptions _loadingViewOptions;
 
     public event EventHandler<ReturnEventArgs<bool>> ApplicationInitialized;
-    public event EventHandler<ReturnEventArgs<bool>> ApplicationLoaded;
 
-    public virtual void RaiseApplicationInitialized()
-    {
+    public virtual void RaiseApplicationInitialized() =>
         ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
-    }
-
-    public virtual void RaiseApplicationLoaded()
-    {
-        ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
-    }
 
     private int lastErrorMessage = 0;
-
-    private Task Initialize { get; set; }
 
     /// <summary>
     /// Main Application Window.
@@ -55,7 +48,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected BaseApplication(Func<ILoadingView> initialView = null)
+    protected BaseApplication(Func<ILoadingView> initialView = null, LoadingViewOptions loadingViewOptions = null)
         : base()
     {
         var host = CreateHostBuilder()
@@ -64,16 +57,14 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 #if DEBUG
                 config.AddDebug();
 #endif
-                config.SetMinimumLevel(LogLevel.Trace);
             })
             .Build();
 
         _initialView = initialView;
+        _loadingViewOptions = loadingViewOptions ?? new LoadingViewOptions();
 
-        _logger = host.Services.GetService<ILogger>();
+        _logger = host.Services.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
         _logger.LogTrace("Setting up global exception handler.");
-
-        this.ApplicationLoaded += OnApplicationLoaded;
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -107,12 +98,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             RequestedTheme = ApplicationTheme.Light;
         else
             RequestedTheme = ApplicationTheme.Dark;
-
-        _logger.LogInformation("Starting initialization of application");
-
-        InitializeApplication();
-
-        _logger.LogInformation("Finishing initialization of application");
     }
 
     /// <summary>
@@ -122,12 +107,9 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     protected abstract IHostBuilder CreateHostBuilder();
 
     protected abstract void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e);
-    protected abstract void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e);
 
-    protected virtual void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e)
-    {
+    protected virtual void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e) =>
         _commonServices.InfoService.SetTitle(e.Value);
-    }
 
     /// <summary>
     /// Handles the first chance exception event.
@@ -188,11 +170,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     }
 
     /// <summary>
-    /// Initializes the application.
-    /// </summary>
-    private void InitializeApplication() => Initialize = InitializeApplicationAsync();
-
-    /// <summary>
     /// Initializing the application.
     /// </summary>
     /// <example>
@@ -217,8 +194,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
     /// </summary>
     /// <param name="args">Event data for the event.</param>
-    protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
+        ApplicationInitialized += OnApplicationInitialized;
+
         MainWindow = WindowHelper.CreateWindow(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color);
 
         _logger.LogTrace("Loading custom resource dictionaries");
@@ -232,13 +211,52 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             }
         }
 
-        if (_initialView is not null && _initialView.Invoke() is View loadingView)
+        _logger.LogTrace("Settings initial view");
+
+        if (_initialView is not null && _loadingViewOptions is not null && _initialView.Invoke() is View loadingView)
         {
-            loadingView.ViewModel = _commonServices.ScopedContextService.GetService<LoadingViewModel>();
+            var viewModel = _commonServices.ScopedContextService.GetService<LoadingViewModel>();
+            viewModel.Initialize(
+                task: async () =>
+                {
+                    await HandleLaunchArgumentsAsync(args);
+
+                    _logger.LogTrace("Starting initialization of application");
+                    await InitializeApplicationAsync();
+                    _logger.LogTrace("Finishing initialization of application");
+                },
+                onLoadingComplete: () => RaiseApplicationInitialized(),
+                loadingViewOptions: _loadingViewOptions);
+
+            loadingView.ViewModel = viewModel;
             MainWindow.Content = loadingView;
         }
         else
-            MainWindow.Content = new BusyIndicatorControl(_commonServices);
+        {
+            var busyIndicator = new BusyIndicatorControl(_commonServices);
+
+            busyIndicator.Initialize(async () =>
+            {
+                await HandleLaunchArgumentsAsync(args);
+
+                _logger.LogTrace("Starting initialization of application");
+                await InitializeApplicationAsync();
+                _logger.LogTrace("Finishing initialization of application");
+
+                RaiseApplicationInitialized();
+            });
+
+            MainWindow.Content = busyIndicator;
+        }
+
+        _logger.LogTrace("Activate main window");
+
+        MainWindow.Activate();
+    }
+
+    private async Task HandleLaunchArgumentsAsync(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    {
+        _logger.LogTrace("Handling launch event arguments");
 
         if (args.UWPLaunchActivatedEventArgs is not null)
         {
@@ -253,11 +271,13 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             }
         }
 
+        _logger.LogTrace("Handle command line arguments");
+
         if (Environment.GetCommandLineArgs().Length > 1)
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
-
-        MainWindow.Activate();
     }
+
+    protected abstract void OnApplicationInitialized(object sender, ReturnEventArgs<bool> e);
 
     /// <summary>
     /// Invoked when Navigation to a certain page fails
@@ -338,7 +358,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
 
-            this.ApplicationLoaded -= OnApplicationLoaded;
+            ApplicationInitialized -= OnApplicationInitialized;
         }
 
         // free native resources if there are any.

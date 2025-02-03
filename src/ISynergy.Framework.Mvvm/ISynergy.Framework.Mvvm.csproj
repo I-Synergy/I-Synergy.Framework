@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net8.0;net9.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0;netstandard2.0;netstandard2.1</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
         <Description>I-Synergy Framework Mvvm</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Drawing.Common" />
         <PackageReference Include="Microsoft.Extensions.Logging" />
     </ItemGroup>
     

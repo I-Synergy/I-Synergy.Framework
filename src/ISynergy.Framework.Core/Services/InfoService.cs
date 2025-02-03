@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Utilities;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -42,6 +43,16 @@ public sealed class InfoService : IInfoService
     public string Copyrights { get; private set; }
 
     /// <summary>
+    /// Hostname of the machine.
+    /// </summary>
+    public string HostName { get; private set; }
+
+    /// <summary>
+    /// IP Address of the machine.
+    /// </summary>
+    public string IPAddress { get; private set; }
+
+    /// <summary>
     /// Gets the application title.
     /// </summary>
     public string Title { get; private set; }
@@ -76,6 +87,9 @@ public sealed class InfoService : IInfoService
         {
             ProductVersion = new Version("0.0.0");
         }
+
+        IPAddress = NetworkUtility.GetInternetIPAddress();
+        HostName = System.Net.Dns.GetHostName() ?? "localhost";
 
         Title = $"{ProductName} v{ProductVersion}";
     }

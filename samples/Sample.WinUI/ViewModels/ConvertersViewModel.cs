@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -54,11 +53,8 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
-    public ConvertersViewModel(
-        ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+    public ConvertersViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
         NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
@@ -115,13 +111,13 @@ public class ConvertersViewModel : ViewModelNavigation<object>
 
     private async Task NavigateToDetailAsync(TestItem item)
     {
-        var detailsVm = new DetailsViewModel(_commonServices, _logger);
+        var detailsVm = new DetailsViewModel(_commonServices);
         await _commonServices.NavigationService.NavigateAsync(detailsVm);
     }
 
     private async Task NavigateToPivotAsync(TestItem item)
     {
-        var detailsVm = new PivotViewModel(_commonServices, _logger);
+        var detailsVm = new PivotViewModel(_commonServices);
         await _commonServices.NavigationService.NavigateAsync(detailsVm);
     }
 }

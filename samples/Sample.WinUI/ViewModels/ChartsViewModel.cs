@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -36,11 +35,8 @@ public class ChartsViewModel : ViewModelNavigation<TestItem>
     /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger">The logger factory.</param>
-    public ChartsViewModel(
-        ICommonServices commonServices,
-        ILogger logger)
-        : base(commonServices, logger)
+    public ChartsViewModel(ICommonServices commonServices)
+        : base(commonServices)
     {
         CategoriesWithLeastDemand =
         [
