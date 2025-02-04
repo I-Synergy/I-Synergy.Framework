@@ -43,6 +43,13 @@ public class Country : BaseModel
     public string CountryPrefix { get; set; }
 
     /// <summary>
+    /// Regex string for zipcode validation
+    /// </summary>
+    [Required]
+    [StringLength(128)]
+    public string ZipCodeRegex { get; set; }
+
+    /// <summary>
     /// Gets or sets the IsEU property value.
     /// </summary>
     /// <value><c>true</c> if this instance is eu; otherwise, <c>false</c>.</value>
