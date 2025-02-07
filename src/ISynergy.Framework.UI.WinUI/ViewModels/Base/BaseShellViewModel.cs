@@ -84,6 +84,11 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
     }
 
+    public abstract Task ShellLoadedAsync();
+
+    public abstract Task InitializeFirstRunAsync();
+
+
     private void NavigationService_BackStackChanged(object sender, EventArgs e) => RaisePropertyChanged(nameof(IsBackEnabled));
 
     /// <summary>
