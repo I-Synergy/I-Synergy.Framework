@@ -121,6 +121,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
     }
 
+    public abstract Task ShellLoadedAsync();
+
+    public abstract Task InitializeFirstRunAsync();
+
     /// <summary>
     /// Opens the settings asynchronous.
     /// </summary>
