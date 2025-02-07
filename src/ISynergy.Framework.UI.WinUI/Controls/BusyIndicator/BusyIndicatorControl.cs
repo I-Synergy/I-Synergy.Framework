@@ -1,7 +1,10 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 
 namespace ISynergy.Framework.UI.Controls;
 
@@ -50,6 +53,12 @@ public partial class BusyIndicatorControl : Grid
         BindingOperations.SetBinding(progressRing, ProgressRing.IsActiveProperty, isBusyBinding);
         BindingOperations.SetBinding(textBlock, TextBlock.TextProperty, busyMessageBinding);
         BindingOperations.SetBinding(textBlock, TextBlock.VisibilityProperty, isBusyBinding);
+
+        Background = new SolidColorBrush(
+            Application.Current.Resources.TryGetValue("AccentFillColorDisabled", out object color)
+            ? (Color)color
+            : Colors.Black)
+        { Opacity = 0.5 };
 
         Loaded += BusyIndicatorControl_Loaded;
         Unloaded += BusyIndicatorControl_Unloaded;
