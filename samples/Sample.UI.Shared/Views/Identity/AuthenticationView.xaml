@@ -10,56 +10,74 @@
     xmlns:local="using:Sample.Views.Identity.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    
+
     <Page.Resources>
         <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed"/>
         <Converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
     </Page.Resources>
 
-    <RelativePanel>
-        <Grid x:Name="RootLayout"
+    <Grid>
+        <RelativePanel>
+            <Grid x:Name="RootLayout"
               RelativePanel.AlignTopWithPanel="True"
               RelativePanel.AlignLeftWithPanel="True"
               RelativePanel.AlignRightWithPanel="True"
               RelativePanel.AlignBottomWithPanel="True"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="300" />
-                <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="300" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="1" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="{m:LanguageResource Key= SignupTitle}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <TextBlock Text="{m:LanguageResource Key= SignupText}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <Button IsEnabled="{Binding CommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" Style="{StaticResource DefaultDialogButtonStyle}"/>
-                </StackPanel>
+                <Grid Grid.Column="1" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{m:LanguageResource Key= SignupTitle}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                        <TextBlock Text="{m:LanguageResource Key= SignupText}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                        <Button IsEnabled="{Binding CommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" Style="{StaticResource DefaultDialogButtonStyle}"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="3" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{m:LanguageResource Key= LoginTitle}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                        <TextBlock Text="{m:LanguageResource Key= LoginText}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                        <Button IsEnabled="{Binding CommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=SignIn}" Margin ="5,20,5,5" HorizontalAlignment="Right" Style="{StaticResource DefaultDialogButtonStyle}"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1" Grid.ColumnSpan="3">
+                    <local:SignUpControl HorizontalAlignment="Left" Width="300" Margin="0,1" IsEnabled="{Binding CommonServices.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}" VerticalAlignment="Stretch"  />
+                    <local:SignInControl HorizontalAlignment="Right" Width="300" Margin="0,1" IsEnabled="{Binding CommonServices.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Stretch" />
+                </Grid>
             </Grid>
 
-            <Grid Grid.Column="3" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="{m:LanguageResource Key= LoginTitle}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <TextBlock Text="{m:LanguageResource Key= LoginText}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                    <Button IsEnabled="{Binding CommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignInCommand}" Content="{m:LanguageResource Key=SignIn}" Margin ="5,20,5,5" HorizontalAlignment="Right" Style="{StaticResource DefaultDialogButtonStyle}"/>
-                </StackPanel>
-            </Grid>
+            <c:ErrorPresenter 
+                x:Name="ErrorPresenter"
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.AlignTopWithPanel="True"
+                Margin="10,42"/>
+        </RelativePanel>
 
-            <Grid Grid.Column="1" Grid.ColumnSpan="3">
-                <local:SignUpControl HorizontalAlignment="Left" Width="300" Margin="0,1" IsEnabled="{Binding CommonServices.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}" VerticalAlignment="Stretch"  />
-                <local:SignInControl HorizontalAlignment="Right" Width="300" Margin="0,1" IsEnabled="{Binding CommonServices.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Stretch" />
-            </Grid>
+        <Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Background="{StaticResource AccentFillColorDisabled}" Opacity="0.5"/>
+        <Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressRing
+                    x:Name="IsBusyProgressRing"
+                    Width="48"
+                    Height="48"
+                    IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" />
+                <TextBlock
+                    FontSize="16"
+                    Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}"
+                    Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}"
+                    Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" />
+            </StackPanel>
         </Grid>
-
-        <c:ErrorPresenter 
-            x:Name="ErrorPresenter"
-            RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.AlignTopWithPanel="True"
-            Margin="10,42"/>
-    </RelativePanel>
+    </Grid>
 </c:View>
