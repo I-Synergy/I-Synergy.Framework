@@ -186,38 +186,51 @@ public sealed partial class App : BaseApplication
         // Suppress backstack change event during sign out
         await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);
 
-        if (e.Value)
+        try
         {
-            _logger.LogTrace("Saving refresh token");
+            _commonServices.BusyService.StartBusy();
 
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetService<IContext>().ToEnvironmentalRefreshToken();
-            _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
-
-            _logger.LogTrace("Setting culture");
-            if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings is not null)
+            if (e.Value)
             {
-                var culture = CultureInfo.DefaultThreadCurrentCulture.Clone() as CultureInfo;
+                _logger.LogTrace("Saving refresh token");
 
-                culture.NumberFormat.CurrencySymbol = "€";
+                _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetService<IContext>().ToEnvironmentalRefreshToken();
+                _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
 
-                culture.NumberFormat.CurrencyDecimalDigits = _commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.Decimals;
-                culture.NumberFormat.NumberDecimalDigits = _commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.Decimals;
+                _logger.LogTrace("Setting culture");
+                if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings is not null)
+                {
+                    var culture = CultureInfo.DefaultThreadCurrentCulture.Clone() as CultureInfo;
 
-                culture.NumberFormat.CurrencyNegativePattern = 1;
-                culture.NumberFormat.NumberNegativePattern = 1;
-                culture.NumberFormat.PercentNegativePattern = 1;
+                    culture.NumberFormat.CurrencySymbol = "€";
 
-                CultureInfo.DefaultThreadCurrentCulture = culture;
-                CultureInfo.DefaultThreadCurrentUICulture = culture;
+                    culture.NumberFormat.CurrencyDecimalDigits = _commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.Decimals;
+                    culture.NumberFormat.NumberDecimalDigits = _commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.Decimals;
+
+                    culture.NumberFormat.CurrencyNegativePattern = 1;
+                    culture.NumberFormat.NumberNegativePattern = 1;
+                    culture.NumberFormat.PercentNegativePattern = 1;
+
+                    CultureInfo.DefaultThreadCurrentCulture = culture;
+                    CultureInfo.DefaultThreadCurrentUICulture = culture;
+                }
+
+                _logger.LogTrace("Navigate to Shell");
+                await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
             }
-
-            _logger.LogTrace("Navigate to Shell");
-            await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
+            else
+            {
+                _logger.LogTrace("Navigate to SignIn page");
+                await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+            }
         }
-        else
+        catch (Exception)
         {
-            _logger.LogTrace("Navigate to SignIn page");
-            await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+            // Do nothing!
+        }
+        finally
+        {
+            _commonServices.BusyService.StopBusy();
         }
     }
 
