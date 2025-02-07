@@ -63,7 +63,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         PopulateNavigationMenuItems();
     }
 
-    public async Task ShellLoadedAsync()
+    public override async Task ShellLoadedAsync()
     {
         await Task.Delay(100);
 
@@ -126,7 +126,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 
-    public async Task InitializeFirstRunAsync()
+    public override async Task InitializeFirstRunAsync()
     {
         if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.IsFirstRun)
         {

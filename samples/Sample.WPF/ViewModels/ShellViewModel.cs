@@ -228,4 +228,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() => throw new NotImplementedException();
+
+    public override Task ShellLoadedAsync() => Task.CompletedTask;
+
+    public override Task InitializeFirstRunAsync() => Task.CompletedTask;
 }
