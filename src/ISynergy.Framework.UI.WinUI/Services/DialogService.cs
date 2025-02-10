@@ -113,8 +113,7 @@ public class DialogService : IDialogService
             Content = message
         };
 
-        if (Application.Current is BaseApplication baseApplication)
-            dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+        dialog.XamlRoot = BaseApplication.GetMainWindow().Content.XamlRoot;
 
         switch (buttons)
         {
@@ -251,8 +250,7 @@ public class DialogService : IDialogService
     {
         if (dialog is Window window)
         {
-            if (Application.Current is BaseApplication baseApplication)
-                window.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+            window.XamlRoot = BaseApplication.GetMainWindow().Content.XamlRoot;
 
             window.ViewModel = viewmodel;
 

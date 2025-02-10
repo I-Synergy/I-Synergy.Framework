@@ -8,7 +8,6 @@ using Windows.Storage.AccessCache;
 using Windows.System;
 
 #if WINDOWS
-using Application = Microsoft.UI.Xaml.Application;
 #endif
 
 namespace ISynergy.Framework.UI.Services;
@@ -157,7 +156,7 @@ public class FileService : IFileService<FileResult>
         };
 
 #if WINDOWS
-        var _mainWindow = ((BaseApplication)Application.Current)?.MainWindow;
+        var _mainWindow = BaseApplication.GetMainWindow();
         var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow);
         WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 #endif

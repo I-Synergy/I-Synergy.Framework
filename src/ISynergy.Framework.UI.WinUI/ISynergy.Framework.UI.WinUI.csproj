@@ -192,7 +192,7 @@
 		<Page Include="Controls\ImageView\ImageView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Controls\LoadingView\LoadingView.xaml">
+		<Page Include="Controls\SplashScreen\SplashScreen.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Menu\BaseMenu.xaml">
