@@ -16,6 +16,13 @@
 		<EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
 		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Controls\**" />
+	  <Content Remove="Controls\**" />
+	  <EmbeddedResource Remove="Controls\**" />
+	  <None Remove="Controls\**" />
+	  <PRIResource Remove="Controls\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.WindowsAppSDK" />
