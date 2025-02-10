@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -122,5 +123,18 @@ public static class WPFAppBuilderExtensions
         services.RegisterViewModels(viewModelTypes);
         services.RegisterViews(viewTypes);
         services.RegisterWindows(windowTypes);
+    }
+
+    /// <summary>
+    /// Adds update integration.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).BindWithReload);
+        services.TryAddSingleton<IUpdateService, UpdateService>();
+        return services;
     }
 }

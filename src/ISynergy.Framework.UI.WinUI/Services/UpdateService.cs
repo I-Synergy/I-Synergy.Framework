@@ -1,10 +1,10 @@
 ﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Update.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Windows.Services.Store;
 
-namespace ISynergy.Framework.Update.Services;
+namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
 /// Class UpdateService.
@@ -27,22 +27,11 @@ internal class UpdateService : IUpdateService
         ILoggerFactory loggerFactory)
     {
         _dialogService = dialogService;
+
         _logger = loggerFactory.CreateLogger<UpdateService>();
         _logger.LogTrace($"UpdateService instance created with ID: {Guid.NewGuid()}");
-    }
 
-    public void Initialize(object mainWindow)
-    {
-        if (mainWindow is Microsoft.UI.Xaml.Window window)
-        {
-            // Initialize the store context with the window handle (HWND). 
-            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
 
-            _storeContext = StoreContext.GetDefault();
-
-            // Initialize the store context with the window handle (HWND). 
-            WinRT.Interop.InitializeWithWindow.Initialize(_storeContext, hWnd);
-        }
     }
 
     /// <summary>
@@ -55,18 +44,22 @@ internal class UpdateService : IUpdateService
 
         try
         {
-            updates = null;
-
             if (_storeContext is null)
             {
+#if WINDOWS
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(BaseApplication.GetMainWindow());
+
                 _storeContext = StoreContext.GetDefault();
-            }
 
-            updates = await _storeContext.GetAppAndOptionalStorePackageUpdatesAsync();
+                WinRT.Interop.InitializeWithWindow.Initialize(_storeContext, hwnd);
 
-            if (updates.Count > 0)
-            {
-                result = true;
+                updates = await _storeContext.GetAppAndOptionalStorePackageUpdatesAsync();
+
+                if (updates.Count > 0)
+                {
+                    result = true;
+                }
+#endif
             }
         }
         catch (Exception)
