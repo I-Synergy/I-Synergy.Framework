@@ -23,6 +23,12 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Controls\**" />
+	  <EmbeddedResource Remove="Controls\**" />
+	  <None Remove="Controls\**" />
+	  <Page Remove="Controls\**" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<AppxManifest Include="Package.appxmanifest">
@@ -71,4 +77,8 @@
 	</ItemGroup>
 	
 	<Import Project="..\Sample.UI.Shared\Sample.UI.Shared.projitems" Label="Shared" />
+	
+	<ItemGroup>
+	  <PRIResource Remove="Controls\**" />
+	</ItemGroup>
 </Project>
