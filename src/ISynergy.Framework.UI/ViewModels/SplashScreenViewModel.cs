@@ -14,77 +14,18 @@ using System.ComponentModel.DataAnnotations;
 namespace ISynergy.Framework.UI.ViewModels;
 
 [Lifetime(Lifetimes.Singleton)]
-public class LoadingViewModel : ObservableClass, IViewModel
+public class SplashScreenViewModel : ObservableClass, IViewModel
 {
     private readonly ICommonServices _commonServices;
     private readonly ILogger _logger;
 
-    private LoadingViewOptions _loadingViewOptions;
+    private SplashScreenOptions _splashScreenOptions;
     private TaskCompletionSource<bool> _taskCompletion;
     private Func<Task> _initializationTask;
     private Action _onLoadingComplete;
 
     public ICommonServices CommonServices => _commonServices;
-    public LoadingViewOptions Configuration => _loadingViewOptions;
-
-    public LoadingViewModel(
-        ICommonServices commonServices,
-
-        bool automaticValidation = false)
-        : base(automaticValidation)
-    {
-        _commonServices = commonServices;
-        _logger = _commonServices.LoggerFactory.CreateLogger<LoadingViewModel>();
-
-        _taskCompletion = new TaskCompletionSource<bool>();
-
-        IsInitialized = false;
-
-        CloseCommand = new AsyncRelayCommand(CloseAsync);
-        CancelCommand = new AsyncRelayCommand(CancelAsync);
-
-        _logger.LogTrace(GetType().Name);
-    }
-
-    public void Initialize(Func<Task> task, Action onLoadingComplete, LoadingViewOptions loadingViewOptions)
-    {
-        _initializationTask = task;
-        _onLoadingComplete = onLoadingComplete;
-        _loadingViewOptions = loadingViewOptions;
-
-        InitializeTask();
-    }
-
-    private async void InitializeTask()
-    {
-        try
-        {
-            if (_initializationTask is not null)
-            {
-                await _initializationTask();
-                IsInitialized = true;
-                _taskCompletion.SetResult(true);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Initialization failed");
-            _taskCompletion.SetException(ex);
-        }
-    }
-
-    public Task CompleteLoadingAsync()
-    {
-        if (IsInitialized)
-        {
-            _onLoadingComplete?.Invoke();
-            return CloseAsync();
-        }
-
-        return Task.CompletedTask;
-    }
-
-    public Task WaitForCompletionAsync() => _taskCompletion.Task;
+    public SplashScreenOptions Configuration => _splashScreenOptions;
 
     /// <summary>
     /// Occurs when [cancelled].
@@ -94,17 +35,6 @@ public class LoadingViewModel : ObservableClass, IViewModel
     /// Occurs when [closed].
     /// </summary>
     public event EventHandler Closed;
-
-    /// <summary>
-    /// Handles the <see cref="E:Cancelled" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    public virtual void OnCancelled(EventArgs e) => Cancelled?.Invoke(this, e);
-    /// <summary>
-    /// Handles the <see cref="E:Closed" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    public virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
 
     /// <summary>
     /// Gets or sets the close command.
@@ -154,6 +84,108 @@ public class LoadingViewModel : ObservableClass, IViewModel
         get => GetValue<object>();
         set => SetValue(value);
     }
+
+    /// <summary>
+    /// Gets or sets the CanSkip property value.
+    /// </summary>
+    public bool CanSkip
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    public SplashScreenViewModel(
+        ICommonServices commonServices,
+        bool automaticValidation = false)
+        : base(automaticValidation)
+    {
+        _commonServices = commonServices;
+        _logger = _commonServices.LoggerFactory.CreateLogger<SplashScreenViewModel>();
+
+        _taskCompletion = new TaskCompletionSource<bool>();
+
+        IsInitialized = false;
+
+        CloseCommand = new AsyncRelayCommand(CloseAsync);
+        CancelCommand = new AsyncRelayCommand(CancelAsync);
+
+        _logger.LogTrace(GetType().Name);
+    }
+
+    public void Initialize(Func<Task> task, Action onLoadingComplete, SplashScreenOptions splashScreenOptions)
+    {
+        _initializationTask = task;
+        _onLoadingComplete = onLoadingComplete;
+        _splashScreenOptions = splashScreenOptions;
+
+        if (_splashScreenOptions is null)
+        {
+            CanSkip = false;
+        }
+        else
+        {
+            switch (_splashScreenOptions.SplashScreenType)
+            {
+                case Enumerations.SplashScreenTypes.Video:
+                    CanSkip = true;
+                    break;
+                case Enumerations.SplashScreenTypes.Image:
+                default:
+                    CanSkip = false;
+                    break;
+            }
+        }
+
+        InitializeTask();
+    }
+
+    private async void InitializeTask()
+    {
+        try
+        {
+            if (_initializationTask is not null)
+            {
+                await _initializationTask();
+                IsInitialized = true;
+                _taskCompletion.SetResult(true);
+
+                // Automatically complete loading if there are no loading options
+                if (_splashScreenOptions is null && CanSkip == false)
+                {
+                    await CompleteLoadingAsync();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Initialization failed");
+            _taskCompletion.SetException(ex);
+        }
+    }
+
+    public Task CompleteLoadingAsync()
+    {
+        if (IsInitialized)
+        {
+            _onLoadingComplete?.Invoke();
+            return CloseAsync();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task WaitForCompletionAsync() => _taskCompletion.Task;
+
+    /// <summary>
+    /// Handles the <see cref="E:Cancelled" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    public virtual void OnCancelled(EventArgs e) => Cancelled?.Invoke(this, e);
+    /// <summary>
+    /// Handles the <see cref="E:Closed" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    public virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
 
     /// <summary>
     /// Initializes the asynchronous.
