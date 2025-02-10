@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Update.Abstractions.Services;
+﻿namespace ISynergy.Framework.UI.Abstractions.Services;
 
 /// <summary>
 /// Interface IUpdateService
