@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
-using Application = Microsoft.UI.Xaml.Application;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -23,15 +22,15 @@ public class StateToBrushConverter : IValueConverter
     {
         if (!(value is bool))
         {
-            return Microsoft.UI.Xaml.Application.Current.Resources["TertiaryDarkBrush"] as SolidColorBrush;
+            return Application.Current.Resources["TertiaryDarkBrush"] as SolidColorBrush;
         }
 
         if ((bool)value)
         {
-            return Microsoft.UI.Xaml.Application.Current.Resources["PrimaryMediumBrush"] as SolidColorBrush;
+            return Application.Current.Resources["PrimaryMediumBrush"] as SolidColorBrush;
         }
 
-        return Microsoft.UI.Xaml.Application.Current.Resources["TertiaryDarkBrush"] as SolidColorBrush;
+        return Application.Current.Resources["TertiaryDarkBrush"] as SolidColorBrush;
     }
 
     /// <summary>

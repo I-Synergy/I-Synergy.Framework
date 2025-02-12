@@ -358,4 +358,13 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.UI.Application">
+			<Alias>Application</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Controls.Window">
+			<Alias>Window</Alias>
+		</Using>
+	</ItemGroup>
 </Project>

@@ -16,26 +16,26 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="appsettings.json" />
+		<None Remove="appsettings.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="logo.ico" />
+		<Content Include="logo.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="appsettings.json" />
+		<EmbeddedResource Include="appsettings.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-	  <ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry\ISynergy.Framework.Logging.OpenTelemetry.csproj" />
-	  <ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-	  <ProjectReference Include="..\..\src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj" />
-	  <ProjectReference Include="..\..\src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj" />
-	  <ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
-	  <ProjectReference Include="..\..\tools\NugetUnlister\NugetUnlister.csproj" />
-	  <ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry\ISynergy.Framework.Logging.OpenTelemetry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+		<ProjectReference Include="..\..\tools\NugetUnlister\NugetUnlister.csproj" />
+		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -46,12 +46,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="Assets\Fonts\fontawesome.otf" />
+		<Resource Include="Assets\Fonts\fontawesome.otf" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Using Include="System.Windows.Application">
-	    <Alias>Application</Alias>
-	  </Using>
+		<Using Include="ISynergy.Framework.UI.Application">
+			<Alias>Application</Alias>
+		</Using>
 	</ItemGroup>
 </Project>

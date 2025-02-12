@@ -44,7 +44,7 @@ public sealed partial class App : Application
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        // : base()
+        //: base()
         : base(new SplashScreenOptions
         {
             AssetStreamProvider = () => Task.FromResult(
@@ -208,7 +208,7 @@ public sealed partial class App : Application
         }
     }
 
-    protected override async void OnLaunched(LaunchActivatedEventArgs args)
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
 
@@ -275,18 +275,29 @@ public sealed partial class App : Application
             });
 
         splashScreen.ViewModel = viewModel;
+
+        splashScreen.Loaded += SplashScreen_Loaded;
+        splashScreen.Unloaded += SplashScreen_Unloaded;
+
         _mainWindow.Content = splashScreen;
 
         _logger.LogTrace("Activate main window");
         _mainWindow.Activate();
+    }
 
-        await Task.Delay(1000);
-
-        // Start initialization tasks after window activation
-        _mainWindow.DispatcherQueue.TryEnqueue(async () =>
-        {
+    protected override async void SplashScreen_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is SplashScreen splashScreen && splashScreen.ViewModel is SplashScreenViewModel viewModel)
             await viewModel.StartInitializationAsync();
-        });
+    }
+
+    protected override void SplashScreen_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is SplashScreen splashScreen)
+        {
+            splashScreen.Loaded -= SplashScreen_Loaded;
+            splashScreen.Unloaded -= SplashScreen_Unloaded;
+        }
     }
 
     protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)

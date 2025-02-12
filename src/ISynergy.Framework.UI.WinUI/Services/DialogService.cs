@@ -8,8 +8,6 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
-using Application = Microsoft.UI.Xaml.Application;
-using Window = ISynergy.Framework.UI.Controls.Window;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -113,12 +111,7 @@ public class DialogService : IDialogService
             Content = message
         };
 
-#if WINDOWS
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.GetMainWindow());
-        WinRT.Interop.InitializeWithWindow.Initialize(dialog, hwnd);
-#endif
-
-        //dialog.XamlRoot = _mainWindow.Content.XamlRoot;
+        dialog.XamlRoot = Application.MainWindow.Content.XamlRoot;
 
         switch (buttons)
         {
@@ -255,12 +248,7 @@ public class DialogService : IDialogService
     {
         if (dialog is Window window)
         {
-#if WINDOWS
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.GetMainWindow());
-            WinRT.Interop.InitializeWithWindow.Initialize(window, hwnd);
-#endif
-
-            //window.XamlRoot = _mainWindow.Content.XamlRoot;
+            window.XamlRoot = Application.MainWindow.Content.XamlRoot;
 
             window.ViewModel = viewmodel;
 
@@ -279,7 +267,8 @@ public class DialogService : IDialogService
 
                 window.ViewModel?.Dispose();
                 window.Close();
-            };
+            }
+            ;
 
             viewmodel.Closed += ViewModelClosedHandler;
 
