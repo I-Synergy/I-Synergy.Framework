@@ -113,33 +113,38 @@ public class DialogService : IDialogService
             Content = message
         };
 
-        dialog.XamlRoot = BaseApplication.GetMainWindow().Content.XamlRoot;
+#if WINDOWS
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.GetMainWindow());
+        WinRT.Interop.InitializeWithWindow.Initialize(dialog, hwnd);
+#endif
+
+        //dialog.XamlRoot = _mainWindow.Content.XamlRoot;
 
         switch (buttons)
         {
             case MessageBoxButton.OKCancel:
                 dialog.PrimaryButtonText = LanguageService.Default.GetString("Ok");
                 dialog.CloseButtonText = LanguageService.Default.GetString("Cancel");
-                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
                 break;
             case MessageBoxButton.YesNoCancel:
                 dialog.PrimaryButtonText = LanguageService.Default.GetString("Yes");
                 dialog.SecondaryButtonText = LanguageService.Default.GetString("No");
                 dialog.CloseButtonText = LanguageService.Default.GetString("Cancel");
-                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-                dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
                 break;
             case MessageBoxButton.YesNo:
                 dialog.PrimaryButtonText = LanguageService.Default.GetString("Yes");
                 dialog.CloseButtonText = LanguageService.Default.GetString("No");
-                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
                 break;
             default:
                 dialog.CloseButtonText = LanguageService.Default.GetString("Ok");
-                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
                 break;
         }
 
@@ -250,7 +255,12 @@ public class DialogService : IDialogService
     {
         if (dialog is Window window)
         {
-            window.XamlRoot = BaseApplication.GetMainWindow().Content.XamlRoot;
+#if WINDOWS
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.GetMainWindow());
+            WinRT.Interop.InitializeWithWindow.Initialize(window, hwnd);
+#endif
+
+            //window.XamlRoot = _mainWindow.Content.XamlRoot;
 
             window.ViewModel = viewmodel;
 
@@ -258,9 +268,9 @@ public class DialogService : IDialogService
             window.SecondaryButtonCommand = viewmodel.CancelCommand;
             window.CloseButtonCommand = viewmodel.CancelCommand;
 
-            window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-            window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
-            window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+            window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+            window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+            window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
 
             void ViewModelClosedHandler(object sender, EventArgs e)
             {

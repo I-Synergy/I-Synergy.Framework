@@ -156,8 +156,7 @@ public class FileService : IFileService<FileResult>
         };
 
 #if WINDOWS
-        var _mainWindow = BaseApplication.GetMainWindow();
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow);
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.GetMainWindow());
         WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 #endif
 

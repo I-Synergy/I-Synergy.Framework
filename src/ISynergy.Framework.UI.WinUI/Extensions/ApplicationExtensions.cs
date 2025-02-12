@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml;
 namespace ISynergy.Framework.UI.Extensions;
 public static class ApplicationExtensions
 {
-    public static Application SetApplicationColor(this Application application, string color)
+    public static Microsoft.UI.Xaml.Application SetApplicationColor(this Microsoft.UI.Xaml.Application application, string color)
     {
         foreach (var item in application.Resources.MergedDictionaries.EnsureNotNull())
         {

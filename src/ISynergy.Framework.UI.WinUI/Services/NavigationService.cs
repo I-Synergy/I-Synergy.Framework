@@ -296,7 +296,7 @@ public class NavigationService : INavigationService
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
     {
-        if (BaseApplication.GetMainWindow().Content is DependencyObject dependencyObject &&
+        if (Application.GetMainWindow().Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
             NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter) is { } page)
         {
@@ -332,7 +332,7 @@ public class NavigationService : INavigationService
         where TViewModel : class, IViewModel
         where TView : IView
     {
-        if (BaseApplication.GetMainWindow().Content is DependencyObject dependencyObject &&
+        if (Application.GetMainWindow().Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
             _scopedContextService.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
         {
@@ -370,9 +370,9 @@ public class NavigationService : INavigationService
         _backStackChanged = null;
 
         if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page &&
-            Application.Current is BaseApplication baseApplication)
+            Microsoft.UI.Xaml.Application.Current is Application baseApplication)
         {
-            BaseApplication.GetMainWindow().Content = page;
+            Application.GetMainWindow().Content = page;
 
             if (!page.ViewModel.IsInitialized)
                 await page.ViewModel.InitializeAsync();

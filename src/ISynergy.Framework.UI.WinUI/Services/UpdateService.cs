@@ -47,7 +47,7 @@ internal class UpdateService : IUpdateService
             if (_storeContext is null)
             {
 #if WINDOWS
-                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(BaseApplication.GetMainWindow());
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.GetMainWindow());
 
                 _storeContext = StoreContext.GetDefault();
 

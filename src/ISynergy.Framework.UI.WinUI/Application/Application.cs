@@ -2,7 +2,10 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
@@ -11,22 +14,24 @@ using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using System.Runtime.InteropServices;
-using Application = Microsoft.UI.Xaml.Application;
 
 namespace ISynergy.Framework.UI;
 
 /// <summary>
 /// Class BaseApplication.
 /// </summary>
-public abstract class BaseApplication : Application, IDisposable
+public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 {
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
     protected readonly ISettingsService _settingsService;
     protected readonly IExceptionHandlerService _exceptionHandlerService;
+
+    protected readonly Features _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
 
     protected Microsoft.UI.Xaml.Window _mainWindow;
@@ -36,12 +41,12 @@ public abstract class BaseApplication : Application, IDisposable
     /// <summary>
     /// Gets the current main window from the running application instance
     /// </summary>
-    public static Microsoft.UI.Xaml.Window GetMainWindow() => (Application.Current as BaseApplication)?._mainWindow;
+    public static Microsoft.UI.Xaml.Window GetMainWindow() => (Application.Current as Application)?._mainWindow;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected BaseApplication(SplashScreenOptions splashScreenOptions = null)
+    protected Application(SplashScreenOptions splashScreenOptions = null)
         : base()
     {
         var host = CreateHostBuilder()
@@ -55,11 +60,12 @@ public abstract class BaseApplication : Application, IDisposable
 
         _splashScreenOptions = splashScreenOptions;
 
-        _logger = host.Services.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
+        _logger = host.Services.GetService<ILoggerFactory>().CreateLogger<Application>();
         _logger.LogTrace("Setting up global exception handler.");
 
         _logger.LogTrace("Getting common services.");
         _commonServices = host.Services.GetService<ICommonServices>();
+        _features = host.Services.GetService<IOptions<Features>>().Value;
         _exceptionHandlerService = host.Services.GetService<IExceptionHandlerService>();
 
         _settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
@@ -182,7 +188,7 @@ public abstract class BaseApplication : Application, IDisposable
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
     /// </summary>
     /// <param name="args">Event data for the event.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
 
@@ -206,22 +212,61 @@ public abstract class BaseApplication : Application, IDisposable
         var splashScreen = new SplashScreen();
         var viewModel = _commonServices.ScopedContextService.GetService<SplashScreenViewModel>();
         viewModel.Initialize(
-            task: async () =>
+            dispatcherQueue: _mainWindow.DispatcherQueue,
+            onLoadingComplete: async () => await HandleApplicationInitializedAsync(),
+            splashScreenOptions: _splashScreenOptions,
+            async (dispatcher) =>
             {
                 await HandleLaunchArgumentsAsync(args);
+            },
+            async (dispatcher) =>
+            {
+                if (_features.CheckForUpdatesInMicrosoftStore)
+                    await dispatcher.EnqueueAsync(async () =>
+                    {
+                        try
+                        {
+                            _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
 
+                            var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
+
+                            if (await updateService?.CheckForUpdateAsync() &&
+                                await _commonServices.DialogService.ShowMessageAsync(
+                                LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
+                                "Update",
+                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            {
+                                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
+                                await updateService?.DownloadAndInstallUpdateAsync();
+                                Environment.Exit(Environment.ExitCode);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
+                        }
+                    });
+            },
+            async (dispatcher) =>
+            {
                 _logger.LogTrace("Starting initialization of application");
                 await InitializeApplicationAsync();
                 _logger.LogTrace("Finishing initialization of application");
-            },
-            onLoadingComplete: async () => await HandleApplicationInitializedAsync(),
-            splashScreenOptions: _splashScreenOptions);
+            });
 
         splashScreen.ViewModel = viewModel;
         _mainWindow.Content = splashScreen;
 
         _logger.LogTrace("Activate main window");
         _mainWindow.Activate();
+
+        await Task.Delay(1000);
+
+        // Start initialization tasks after window activation
+        _mainWindow.DispatcherQueue.TryEnqueue(async () =>
+        {
+            await viewModel.StartInitializationAsync();
+        });
     }
 
     /// <summary>
@@ -334,7 +379,7 @@ public abstract class BaseApplication : Application, IDisposable
     }
 #endif
 
-    ~BaseApplication()
+    ~Application()
     {
         Dispose(false);
     }

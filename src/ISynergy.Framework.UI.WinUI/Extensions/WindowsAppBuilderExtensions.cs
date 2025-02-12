@@ -71,6 +71,7 @@ public static class WindowsAppBuilderExtensions
 
             var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
 
+            services.Configure<Features>(context.Configuration.GetSection(nameof(Features)).BindWithReload);
             services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
             var infoService = new InfoService();
@@ -101,6 +102,7 @@ public static class WindowsAppBuilderExtensions
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
             services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
             services.TryAddSingleton<ICommonServices, TCommonServices>();
+            services.TryAddSingleton<IUpdateService, UpdateService>();
 
             services.RegisterAssemblies(mainAssembly, assemblyFilter);
 
@@ -165,16 +167,5 @@ public static class WindowsAppBuilderExtensions
             resources.Add(key, scopedContextService.GetService<T>());
 
         return resources;
-    }
-
-    /// <summary>
-    /// Adds update integration.
-    /// </summary>
-    /// <param name="services"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services)
-    {
-        services.TryAddSingleton<IUpdateService, UpdateService>();
-        return services;
     }
 }
