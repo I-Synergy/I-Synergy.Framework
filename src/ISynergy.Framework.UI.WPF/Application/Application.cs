@@ -14,7 +14,7 @@ namespace ISynergy.Framework.UI;
 /// <summary>
 /// Class BaseApplication.
 /// </summary>
-public abstract class BaseApplication : Application, IDisposable
+public abstract class Application : System.Windows.Application, IDisposable
 {
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
@@ -30,12 +30,12 @@ public abstract class BaseApplication : Application, IDisposable
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected BaseApplication(ICommonServices commonServices)
+    protected Application(ICommonServices commonServices)
         : base()
     {
         _commonServices = commonServices;
 
-        _logger = _commonServices.ScopedContextService.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
+        _logger = _commonServices.ScopedContextService.GetService<ILoggerFactory>().CreateLogger<Application>();
         _logger.LogTrace("Starting application");
 
         this.ApplicationLoaded += OnApplicationLoaded;

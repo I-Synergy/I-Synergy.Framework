@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-using Application = Microsoft.UI.Xaml.Application;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -24,7 +23,7 @@ public class ResourceNameToGeometryConverter : IValueConverter
     {
         if (parameter is not null && parameter is string)
         {
-            return (Geometry)XamlReader.Load($"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>{Microsoft.UI.Xaml.Application.Current.Resources[parameter]}</Geometry>");
+            return (Geometry)XamlReader.Load($"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>{Application.Current.Resources[parameter]}</Geometry>");
         }
 
         return (Geometry)XamlReader.Load("<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'></Geometry>");
@@ -64,7 +63,7 @@ public class ResourceNameToStringConverter : IValueConverter
     {
         if (parameter is not null && parameter is string)
         {
-            return Microsoft.UI.Xaml.Application.Current.Resources[parameter] as string;
+            return Application.Current.Resources[parameter] as string;
         }
 
         return string.Empty;

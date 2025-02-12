@@ -5,7 +5,7 @@ namespace ISynergy.Framework.UI.Abstractions.Controls.ToastMessages;
 
 public interface IPositionProvider : IDisposable
 {
-    Window ParentWindow { get; }
+    System.Windows.Window ParentWindow { get; }
     Point GetPosition(double actualPopupWidth, double actualPopupHeight);
     double GetHeight();
     EjectDirection EjectDirection { get; }

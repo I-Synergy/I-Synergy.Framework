@@ -41,7 +41,16 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <summary>
     /// Gets the current main window from the running application instance
     /// </summary>
-    public static Microsoft.UI.Xaml.Window GetMainWindow() => (Application.Current as Application)?._mainWindow;
+    public static Microsoft.UI.Xaml.Window MainWindow
+    {
+        get
+        {
+            if (Application.Current is Application app)
+                return app._mainWindow;
+
+            return null;
+        }
+    }
 
     /// <summary>
     /// Default constructor.
@@ -188,7 +197,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
     /// </summary>
     /// <param name="args">Event data for the event.</param>
-    protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
 
@@ -255,18 +264,30 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             });
 
         splashScreen.ViewModel = viewModel;
+
+        splashScreen.Loaded += SplashScreen_Loaded;
+        splashScreen.Unloaded += SplashScreen_Unloaded;
+
         _mainWindow.Content = splashScreen;
 
         _logger.LogTrace("Activate main window");
         _mainWindow.Activate();
+    }
 
-        await Task.Delay(1000);
 
-        // Start initialization tasks after window activation
-        _mainWindow.DispatcherQueue.TryEnqueue(async () =>
-        {
+    protected virtual async void SplashScreen_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is SplashScreen splashScreen && splashScreen.ViewModel is SplashScreenViewModel viewModel)
             await viewModel.StartInitializationAsync();
-        });
+    }
+
+    protected virtual void SplashScreen_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is SplashScreen splashScreen)
+        {
+            splashScreen.Loaded -= SplashScreen_Loaded;
+            splashScreen.Unloaded -= SplashScreen_Unloaded;
+        }
     }
 
     /// <summary>
