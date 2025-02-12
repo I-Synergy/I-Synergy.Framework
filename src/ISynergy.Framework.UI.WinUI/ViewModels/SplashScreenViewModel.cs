@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Dispatching;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,8 +22,9 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
 
     private SplashScreenOptions _splashScreenOptions;
     private TaskCompletionSource<bool> _taskCompletion;
-    private Func<Task> _initializationTask;
     private Action _onLoadingComplete;
+    private DispatcherQueue _dispatcherQueue;
+    private Func<DispatcherQueue, Task>[] _tasks;
 
     public ICommonServices CommonServices => _commonServices;
     public SplashScreenOptions Configuration => _splashScreenOptions;
@@ -94,6 +96,15 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// Gets or sets the CurrentTaskDescription property value.
+    /// </summary>
+    public string CurrentTaskDescription
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
     public SplashScreenViewModel(
         ICommonServices commonServices,
         bool automaticValidation = false)
@@ -112,11 +123,12 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
         _logger.LogTrace(GetType().Name);
     }
 
-    public void Initialize(Func<Task> task, Action onLoadingComplete, SplashScreenOptions splashScreenOptions)
+    public void Initialize(DispatcherQueue dispatcherQueue, Action onLoadingComplete, SplashScreenOptions splashScreenOptions, params Func<DispatcherQueue, Task>[] tasks)
     {
-        _initializationTask = task;
+        _dispatcherQueue = dispatcherQueue;
         _onLoadingComplete = onLoadingComplete;
         _splashScreenOptions = splashScreenOptions;
+        _tasks = tasks;
 
         if (_splashScreenOptions is null)
         {
@@ -124,33 +136,37 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
         }
         else
         {
-            switch (_splashScreenOptions.SplashScreenType)
+            CanSkip = _splashScreenOptions.SplashScreenType switch
             {
-                case Enumerations.SplashScreenTypes.Video:
-                    CanSkip = true;
-                    break;
-                case Enumerations.SplashScreenTypes.Image:
-                default:
-                    CanSkip = false;
-                    break;
-            }
+                Enumerations.SplashScreenTypes.Video => true,
+                _ => false
+            };
         }
-
-        InitializeTask();
     }
 
-    private async void InitializeTask()
+    public async Task StartInitializationAsync()
     {
         try
         {
-            if (_initializationTask is not null)
+            _commonServices.BusyService.StartBusy();
+
+            if (_tasks?.Length > 0)
             {
-                await _initializationTask();
+                for (int i = 0; i < _tasks.Length; i++)
+                {
+                    if (IsCancelled)
+                        break;
+
+                    CurrentTaskDescription = $"Executing task {i + 1} of {_tasks.Length}";
+                    await _tasks[i](_dispatcherQueue);
+                }
+
                 IsInitialized = true;
+
                 _taskCompletion.SetResult(true);
 
                 // Automatically complete loading if there are no loading options
-                if (_splashScreenOptions is null && CanSkip == false)
+                if (_splashScreenOptions is null && !CanSkip)
                 {
                     await CompleteLoadingAsync();
                 }
@@ -160,6 +176,10 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
         {
             _logger.LogError(ex, "Initialization failed");
             _taskCompletion.SetException(ex);
+        }
+        finally
+        {
+            _commonServices.BusyService.StopBusy();
         }
     }
 
@@ -283,8 +303,8 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
         {
             PropertyChanged -= OnPropertyChanged;
             _taskCompletion = null;
-            _initializationTask = null;
             _onLoadingComplete = null;
+            _dispatcherQueue = null;
 
             (CloseCommand as IDisposable)?.Dispose();
             (CancelCommand as IDisposable)?.Dispose();

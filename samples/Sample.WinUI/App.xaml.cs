@@ -7,7 +7,6 @@ using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
@@ -36,7 +35,7 @@ namespace Sample;
 /// <summary>
 /// Provides application-specific behavior to supplement the default Application class.
 /// </summary>
-public sealed partial class App : BaseApplication
+public sealed partial class App : Application
 {
     private readonly ICredentialLockerService _credentialLockerService;
 
@@ -79,8 +78,6 @@ public sealed partial class App : BaseApplication
                 services.TryAddScoped<TenantProcessor>();
 
                 services.TryAddSingleton<ICameraService, CameraService>();
-
-                services.AddUpdatesIntegration();
             }, f => f.Name.StartsWith(typeof(App).Namespace))
             .ConfigureOpenTelemetryLogging(
                 infoService,
@@ -134,58 +131,27 @@ public sealed partial class App : BaseApplication
     {
         try
         {
-            _commonServices.BusyService.StartBusy();
-
-            try
-            {
-                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
-
-                var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
-
-                if (await updateService?.CheckForUpdateAsync() &&
-                    await _commonServices.DialogService.ShowMessageAsync(
-                    LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-                    "Update",
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-                    await updateService?.DownloadAndInstallUpdateAsync();
-                    Environment.Exit(Environment.ExitCode);
-                }
-            }
-            catch (Exception)
-            {
-                await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
-            }
-
-            try
-            {
-                _commonServices.BusyService.BusyMessage = "Start doing important stuff";
-                await Task.Delay(2000);
-                _commonServices.BusyService.BusyMessage = "Done doing important stuff";
-                await Task.Delay(2000);
-            }
-            catch (Exception)
-            {
-                await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
-            }
-
-            try
-            {
-                _commonServices.BusyService.BusyMessage = "Applying migrations";
-                //await _migrationService.ApplyMigrationAsync<_001>();
-                await Task.Delay(2000);
-                _commonServices.BusyService.BusyMessage = "Done applying migrations";
-                await Task.Delay(2000);
-            }
-            catch (Exception)
-            {
-                await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
-            }
+            _commonServices.BusyService.BusyMessage = "Start doing important stuff";
+            await Task.Delay(2000);
+            _commonServices.BusyService.BusyMessage = "Done doing important stuff";
+            await Task.Delay(2000);
         }
-        finally
+        catch (Exception)
         {
-            _commonServices.BusyService.StopBusy();
+            await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
+        }
+
+        try
+        {
+            _commonServices.BusyService.BusyMessage = "Applying migrations";
+            //await _migrationService.ApplyMigrationAsync<_001>();
+            await Task.Delay(2000);
+            _commonServices.BusyService.BusyMessage = "Done applying migrations";
+            await Task.Delay(2000);
+        }
+        catch (Exception)
+        {
+            await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
         }
     }
 
@@ -242,7 +208,7 @@ public sealed partial class App : BaseApplication
         }
     }
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
         _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
 
@@ -266,22 +232,61 @@ public sealed partial class App : BaseApplication
         var splashScreen = new SplashScreen();
         var viewModel = _commonServices.ScopedContextService.GetService<SplashScreenViewModel>();
         viewModel.Initialize(
-            task: async () =>
+            dispatcherQueue: _mainWindow.DispatcherQueue,
+            onLoadingComplete: async () => await HandleApplicationInitializedAsync(),
+            splashScreenOptions: _splashScreenOptions,
+            async (dispatcher) =>
             {
                 await HandleLaunchArgumentsAsync(args);
+            },
+            async (dispatcher) =>
+            {
+                if (_features.CheckForUpdatesInMicrosoftStore)
+                    await dispatcher.EnqueueAsync(async () =>
+                    {
+                        try
+                        {
+                            _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
 
+                            var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
+
+                            if (await updateService?.CheckForUpdateAsync() &&
+                                await _commonServices.DialogService.ShowMessageAsync(
+                                LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
+                                "Update",
+                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            {
+                                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
+                                await updateService?.DownloadAndInstallUpdateAsync();
+                                Environment.Exit(Environment.ExitCode);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
+                        }
+                    });
+            },
+            async (dispatcher) =>
+            {
                 _logger.LogTrace("Starting initialization of application");
                 await InitializeApplicationAsync();
                 _logger.LogTrace("Finishing initialization of application");
-            },
-            onLoadingComplete: async () => await HandleApplicationInitializedAsync(),
-            splashScreenOptions: _splashScreenOptions);
+            });
 
         splashScreen.ViewModel = viewModel;
         _mainWindow.Content = splashScreen;
 
         _logger.LogTrace("Activate main window");
         _mainWindow.Activate();
+
+        await Task.Delay(1000);
+
+        // Start initialization tasks after window activation
+        _mainWindow.DispatcherQueue.TryEnqueue(async () =>
+        {
+            await viewModel.StartInitializationAsync();
+        });
     }
 
     protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)

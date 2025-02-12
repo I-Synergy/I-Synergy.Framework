@@ -23,24 +23,18 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
-	<ItemGroup>
-	  <Compile Remove="Controls\**" />
-	  <EmbeddedResource Remove="Controls\**" />
-	  <None Remove="Controls\**" />
-	  <Page Remove="Controls\**" />
-	</ItemGroup>
-	
+
 	<ItemGroup>
 		<AppxManifest Include="Package.appxmanifest">
-		  <SubType>Designer</SubType>
+			<SubType>Designer</SubType>
 		</AppxManifest>
 		<Content Include="icon.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
-	
+
 	<ItemGroup>
-	  <EmbeddedResource Include="appsettings.json" />
+		<EmbeddedResource Include="appsettings.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -62,22 +56,22 @@
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Using Include="Microsoft.UI.Xaml.Application">
-			<Alias>Application</Alias>
-		</Using>
-	</ItemGroup>
-
 	<!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
 	   Tools extension to be activated for this project even if the Windows App SDK Nuget
 	   package has not yet been restored -->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
-	
+
 	<Import Project="..\Sample.UI.Shared\Sample.UI.Shared.projitems" Label="Shared" />
-	
+
 	<ItemGroup>
-	  <PRIResource Remove="Controls\**" />
+		<PRIResource Remove="Controls\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.UI.Application">
+			<Alias>Application</Alias>
+		</Using>
 	</ItemGroup>
 </Project>
