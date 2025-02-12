@@ -6,21 +6,15 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Services;
-using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml;
 using OpenTelemetry.Logs;
 using Sample.Models;
 using Sample.Processors;
@@ -205,98 +199,6 @@ public sealed partial class App : Application
         finally
         {
             _commonServices.BusyService.StopBusy();
-        }
-    }
-
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
-    {
-        _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
-
-        _logger.LogTrace("Loading custom resource dictionaries");
-
-        if (Application.Current.Resources?.MergedDictionaries is not null)
-        {
-            foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
-            {
-                if (!Application.Current.Resources.MergedDictionaries.Contains(item))
-                    Application.Current.Resources.MergedDictionaries.Add(item);
-            }
-        }
-
-        _logger.LogTrace("Setting up theming.");
-        if (_settingsService.LocalSettings is not null)
-            this.SetApplicationColor(_settingsService.LocalSettings.Color);
-
-        _logger.LogTrace("Settings initial view");
-
-        var splashScreen = new SplashScreen();
-        var viewModel = _commonServices.ScopedContextService.GetService<SplashScreenViewModel>();
-        viewModel.Initialize(
-            dispatcherQueue: _mainWindow.DispatcherQueue,
-            onLoadingComplete: async () => await HandleApplicationInitializedAsync(),
-            splashScreenOptions: _splashScreenOptions,
-            async (dispatcher) =>
-            {
-                await HandleLaunchArgumentsAsync(args);
-            },
-            async (dispatcher) =>
-            {
-                if (_features.CheckForUpdatesInMicrosoftStore)
-                    await dispatcher.EnqueueAsync(async () =>
-                    {
-                        try
-                        {
-                            _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
-
-                            var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
-
-                            if (await updateService?.CheckForUpdateAsync() &&
-                                await _commonServices.DialogService.ShowMessageAsync(
-                                LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-                                "Update",
-                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                            {
-                                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-                                await updateService?.DownloadAndInstallUpdateAsync();
-                                Environment.Exit(Environment.ExitCode);
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
-                        }
-                    });
-            },
-            async (dispatcher) =>
-            {
-                _logger.LogTrace("Starting initialization of application");
-                await InitializeApplicationAsync();
-                _logger.LogTrace("Finishing initialization of application");
-            });
-
-        splashScreen.ViewModel = viewModel;
-
-        splashScreen.Loaded += SplashScreen_Loaded;
-        splashScreen.Unloaded += SplashScreen_Unloaded;
-
-        _mainWindow.Content = splashScreen;
-
-        _logger.LogTrace("Activate main window");
-        _mainWindow.Activate();
-    }
-
-    protected override async void SplashScreen_Loaded(object sender, RoutedEventArgs e)
-    {
-        if (sender is SplashScreen splashScreen && splashScreen.ViewModel is SplashScreenViewModel viewModel)
-            await viewModel.StartInitializationAsync();
-    }
-
-    protected override void SplashScreen_Unloaded(object sender, RoutedEventArgs e)
-    {
-        if (sender is SplashScreen splashScreen)
-        {
-            splashScreen.Loaded -= SplashScreen_Loaded;
-            splashScreen.Unloaded -= SplashScreen_Unloaded;
         }
     }
 
