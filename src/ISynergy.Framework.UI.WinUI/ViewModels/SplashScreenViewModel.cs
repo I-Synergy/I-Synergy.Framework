@@ -8,83 +8,26 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Dispatching;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.UI.ViewModels;
 
 [Lifetime(Lifetimes.Singleton)]
-public class LoadingViewModel : ObservableClass, IViewModel
+public class SplashScreenViewModel : ObservableClass, IViewModel
 {
     private readonly ICommonServices _commonServices;
     private readonly ILogger _logger;
 
-    private LoadingViewOptions _loadingViewOptions;
+    private SplashScreenOptions _splashScreenOptions;
     private TaskCompletionSource<bool> _taskCompletion;
-    private Func<Task> _initializationTask;
     private Action _onLoadingComplete;
+    private DispatcherQueue _dispatcherQueue;
+    private Func<DispatcherQueue, Task>[] _tasks;
 
     public ICommonServices CommonServices => _commonServices;
-    public LoadingViewOptions Configuration => _loadingViewOptions;
-
-    public LoadingViewModel(
-        ICommonServices commonServices,
-
-        bool automaticValidation = false)
-        : base(automaticValidation)
-    {
-        _commonServices = commonServices;
-        _logger = _commonServices.LoggerFactory.CreateLogger<LoadingViewModel>();
-
-        _taskCompletion = new TaskCompletionSource<bool>();
-
-        IsInitialized = false;
-
-        CloseCommand = new AsyncRelayCommand(CloseAsync);
-        CancelCommand = new AsyncRelayCommand(CancelAsync);
-
-        _logger.LogTrace(GetType().Name);
-    }
-
-    public void Initialize(Func<Task> task, Action onLoadingComplete, LoadingViewOptions loadingViewOptions)
-    {
-        _initializationTask = task;
-        _onLoadingComplete = onLoadingComplete;
-        _loadingViewOptions = loadingViewOptions;
-
-        InitializeTask();
-    }
-
-    private async void InitializeTask()
-    {
-        try
-        {
-            if (_initializationTask is not null)
-            {
-                await _initializationTask();
-                IsInitialized = true;
-                _taskCompletion.SetResult(true);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Initialization failed");
-            _taskCompletion.SetException(ex);
-        }
-    }
-
-    public Task CompleteLoadingAsync()
-    {
-        if (IsInitialized)
-        {
-            _onLoadingComplete?.Invoke();
-            return CloseAsync();
-        }
-
-        return Task.CompletedTask;
-    }
-
-    public Task WaitForCompletionAsync() => _taskCompletion.Task;
+    public SplashScreenOptions Configuration => _splashScreenOptions;
 
     /// <summary>
     /// Occurs when [cancelled].
@@ -94,17 +37,6 @@ public class LoadingViewModel : ObservableClass, IViewModel
     /// Occurs when [closed].
     /// </summary>
     public event EventHandler Closed;
-
-    /// <summary>
-    /// Handles the <see cref="E:Cancelled" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    public virtual void OnCancelled(EventArgs e) => Cancelled?.Invoke(this, e);
-    /// <summary>
-    /// Handles the <see cref="E:Closed" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    public virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
 
     /// <summary>
     /// Gets or sets the close command.
@@ -154,6 +86,126 @@ public class LoadingViewModel : ObservableClass, IViewModel
         get => GetValue<object>();
         set => SetValue(value);
     }
+
+    /// <summary>
+    /// Gets or sets the CanSkip property value.
+    /// </summary>
+    public bool CanSkip
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the CurrentTaskDescription property value.
+    /// </summary>
+    public string CurrentTaskDescription
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public SplashScreenViewModel(
+        ICommonServices commonServices,
+        bool automaticValidation = false)
+        : base(automaticValidation)
+    {
+        _commonServices = commonServices;
+        _logger = _commonServices.LoggerFactory.CreateLogger<SplashScreenViewModel>();
+
+        _taskCompletion = new TaskCompletionSource<bool>();
+
+        IsInitialized = false;
+
+        CloseCommand = new AsyncRelayCommand(CloseAsync);
+        CancelCommand = new AsyncRelayCommand(CancelAsync);
+
+        _logger.LogTrace(GetType().Name);
+    }
+
+    public void Initialize(DispatcherQueue dispatcherQueue, Action onLoadingComplete, SplashScreenOptions splashScreenOptions, params Func<DispatcherQueue, Task>[] tasks)
+    {
+        _dispatcherQueue = dispatcherQueue;
+        _onLoadingComplete = onLoadingComplete;
+        _splashScreenOptions = splashScreenOptions;
+        _tasks = tasks;
+
+        if (_splashScreenOptions is null)
+        {
+            CanSkip = false;
+        }
+        else
+        {
+            CanSkip = _splashScreenOptions.SplashScreenType switch
+            {
+                Enumerations.SplashScreenTypes.Video => true,
+                _ => false
+            };
+        }
+    }
+
+    public async Task StartInitializationAsync()
+    {
+        try
+        {
+            _commonServices.BusyService.StartBusy();
+
+            if (_tasks?.Length > 0)
+            {
+                for (int i = 0; i < _tasks.Length; i++)
+                {
+                    if (IsCancelled)
+                        break;
+
+                    CurrentTaskDescription = $"Executing task {i + 1} of {_tasks.Length}";
+                    await _tasks[i](_dispatcherQueue);
+                }
+
+                IsInitialized = true;
+
+                _taskCompletion.SetResult(true);
+
+                // Automatically complete loading if there are no loading options
+                if (_splashScreenOptions is null && !CanSkip)
+                {
+                    await CompleteLoadingAsync();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Initialization failed");
+            _taskCompletion.SetException(ex);
+        }
+        finally
+        {
+            _commonServices.BusyService.StopBusy();
+        }
+    }
+
+    public Task CompleteLoadingAsync()
+    {
+        if (IsInitialized)
+        {
+            _onLoadingComplete?.Invoke();
+            return CloseAsync();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task WaitForCompletionAsync() => _taskCompletion.Task;
+
+    /// <summary>
+    /// Handles the <see cref="E:Cancelled" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    public virtual void OnCancelled(EventArgs e) => Cancelled?.Invoke(this, e);
+    /// <summary>
+    /// Handles the <see cref="E:Closed" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    public virtual void OnClosed(EventArgs e) => Closed?.Invoke(this, e);
 
     /// <summary>
     /// Initializes the asynchronous.
@@ -251,8 +303,8 @@ public class LoadingViewModel : ObservableClass, IViewModel
         {
             PropertyChanged -= OnPropertyChanged;
             _taskCompletion = null;
-            _initializationTask = null;
             _onLoadingComplete = null;
+            _dispatcherQueue = null;
 
             (CloseCommand as IDisposable)?.Dispose();
             (CancelCommand as IDisposable)?.Dispose();

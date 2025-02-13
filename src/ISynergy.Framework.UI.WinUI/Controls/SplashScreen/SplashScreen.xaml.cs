@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
@@ -11,36 +10,32 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Media.Playback;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace ISynergy.Framework.UI.Controls;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
 [Lifetime(Lifetimes.Singleton)]
-public sealed partial class LoadingView : ILoadingView
+public sealed partial class SplashScreen
 {
     private bool _initializationComplete;
-    private bool _videoComplete;
     private bool _userInteracted;
 
-    public LoadingView()
+    public SplashScreen()
     {
         this.InitializeComponent();
-        this.Loaded += LoadingView_Loaded;
-        this.Unloaded += LoadingView_Unloaded;
+        this.Loaded += SplashScreen_Loaded;
+        this.Unloaded += SplashScreen_Unloaded;
     }
 
-    private async void LoadingView_Loaded(object sender, RoutedEventArgs e)
+    private async void SplashScreen_Loaded(object sender, RoutedEventArgs e)
     {
-        if (ViewModel is LoadingViewModel viewModel && viewModel.Configuration?.AssetStreamProvider != null)
+        if (ViewModel is SplashScreenViewModel viewModel && viewModel.Configuration?.AssetStreamProvider != null)
         {
             await StartMediaPlayback(viewModel.Configuration);
         }
 
         // Monitor the initialization task completion
-        if (ViewModel is LoadingViewModel loadingViewModel)
+        if (ViewModel is SplashScreenViewModel loadingViewModel)
         {
             try
             {
@@ -58,23 +53,23 @@ public sealed partial class LoadingView : ILoadingView
         }
     }
 
-    private async Task StartMediaPlayback(LoadingViewOptions configuration)
+    private async Task StartMediaPlayback(SplashScreenOptions configuration)
     {
         using var stream = await configuration.AssetStreamProvider();
 
-        switch (configuration.ViewType)
+        switch (configuration.SplashScreenType)
         {
-            case LoadingViewTypes.Video:
+            case SplashScreenTypes.Video:
                 ConfigureVideoPlayback(stream, configuration);
                 break;
 
-            case LoadingViewTypes.Image:
+            case SplashScreenTypes.Image:
                 ConfigureImageDisplay(stream);
                 break;
         }
     }
 
-    private void ConfigureVideoPlayback(Stream stream, LoadingViewOptions configuration)
+    private void ConfigureVideoPlayback(Stream stream, SplashScreenOptions configuration)
     {
         BackgroundMediaElement.Visibility = Visibility.Visible;
         BackgroundImage.Visibility = Visibility.Collapsed;
@@ -93,12 +88,9 @@ public sealed partial class LoadingView : ILoadingView
         stream.Position = 0;
         bitmap.SetSource(stream.AsRandomAccessStream());
         BackgroundImage.Source = bitmap;
-
-        // For images, we don't wait for completion
-        _videoComplete = true;
     }
 
-    private void LoadingView_Unloaded(object sender, RoutedEventArgs e)
+    private void SplashScreen_Unloaded(object sender, RoutedEventArgs e)
     {
         if (BackgroundMediaElement?.MediaPlayer != null)
         {
@@ -109,7 +101,6 @@ public sealed partial class LoadingView : ILoadingView
 
     private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
     {
-        _videoComplete = true;
         DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
         {
             if (_initializationComplete && !_userInteracted)
@@ -145,7 +136,7 @@ public sealed partial class LoadingView : ILoadingView
             BackgroundMediaElement.MediaPlayer.Pause();
         }
 
-        if (ViewModel is LoadingViewModel viewModel)
+        if (ViewModel is SplashScreenViewModel viewModel)
         {
             await viewModel.CompleteLoadingAsync();
         }
@@ -157,8 +148,8 @@ public sealed partial class LoadingView : ILoadingView
 
         if (disposing)
         {
-            this.Loaded -= LoadingView_Loaded;
-            this.Unloaded -= LoadingView_Unloaded;
+            this.Loaded -= SplashScreen_Loaded;
+            this.Unloaded -= SplashScreen_Unloaded;
         }
     }
 }

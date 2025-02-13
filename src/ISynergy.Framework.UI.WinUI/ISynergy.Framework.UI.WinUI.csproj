@@ -192,7 +192,7 @@
 		<Page Include="Controls\ImageView\ImageView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Controls\LoadingView\LoadingView.xaml">
+		<Page Include="Controls\SplashScreen\SplashScreen.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Menu\BaseMenu.xaml">
@@ -357,5 +357,14 @@
 		<Page Include="Windows\ThemeWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.UI.Application">
+			<Alias>Application</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Controls.Window">
+			<Alias>Window</Alias>
+		</Using>
 	</ItemGroup>
 </Project>

@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -15,7 +14,7 @@ namespace ISynergy.Framework.UI;
 /// <summary>
 /// Class BaseApplication.
 /// </summary>
-public abstract class BaseApplication : Application, IBaseApplication, IDisposable
+public abstract class Application : System.Windows.Application, IDisposable
 {
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
@@ -23,27 +22,20 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     public event EventHandler<ReturnEventArgs<bool>> ApplicationInitialized;
     public event EventHandler<ReturnEventArgs<bool>> ApplicationLoaded;
 
-    public virtual void RaiseApplicationInitialized()
-    {
-        ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
-    }
-
-    public virtual void RaiseApplicationLoaded()
-    {
-        ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
-    }
+    public virtual void RaiseApplicationInitialized() => ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
+    public virtual void RaiseApplicationLoaded() => ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
 
     private Task Initialize { get; set; }
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected BaseApplication(ICommonServices commonServices)
+    protected Application(ICommonServices commonServices)
         : base()
     {
         _commonServices = commonServices;
 
-        _logger = _commonServices.ScopedContextService.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
+        _logger = _commonServices.ScopedContextService.GetService<ILoggerFactory>().CreateLogger<Application>();
         _logger.LogTrace("Starting application");
 
         this.ApplicationLoaded += OnApplicationLoaded;

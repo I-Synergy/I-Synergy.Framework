@@ -2,9 +2,10 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions;
-using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
@@ -13,42 +14,48 @@ using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using System.Runtime.InteropServices;
-using Windows.ApplicationModel.Activation;
-using Application = Microsoft.UI.Xaml.Application;
 
 namespace ISynergy.Framework.UI;
 
 /// <summary>
 /// Class BaseApplication.
 /// </summary>
-public abstract class BaseApplication : Application, IBaseApplication, IDisposable
+public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 {
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
+    protected readonly ISettingsService _settingsService;
+    protected readonly IExceptionHandlerService _exceptionHandlerService;
 
-    protected readonly Func<ILoadingView> _initialView;
-    protected readonly LoadingViewOptions _loadingViewOptions;
+    protected readonly Features _features;
+    protected readonly SplashScreenOptions _splashScreenOptions;
 
-    public event EventHandler<ReturnEventArgs<bool>> ApplicationInitialized;
-
-    public virtual void RaiseApplicationInitialized() =>
-        ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
+    protected Microsoft.UI.Xaml.Window _mainWindow;
 
     private int lastErrorMessage = 0;
 
     /// <summary>
-    /// Main Application Window.
+    /// Gets the current main window from the running application instance
     /// </summary>
-    /// <value>The main window.</value>
-    public Microsoft.UI.Xaml.Window MainWindow { get; private set; }
+    public static Microsoft.UI.Xaml.Window MainWindow
+    {
+        get
+        {
+            if (Application.Current is Application app)
+                return app._mainWindow;
+
+            return null;
+        }
+    }
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected BaseApplication(Func<ILoadingView> initialView = null, LoadingViewOptions loadingViewOptions = null)
+    protected Application(SplashScreenOptions splashScreenOptions = null)
         : base()
     {
         var host = CreateHostBuilder()
@@ -60,11 +67,17 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             })
             .Build();
 
-        _initialView = initialView;
-        _loadingViewOptions = loadingViewOptions ?? new LoadingViewOptions();
+        _splashScreenOptions = splashScreenOptions;
 
-        _logger = host.Services.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
+        _logger = host.Services.GetService<ILoggerFactory>().CreateLogger<Application>();
         _logger.LogTrace("Setting up global exception handler.");
+
+        _logger.LogTrace("Getting common services.");
+        _commonServices = host.Services.GetService<ICommonServices>();
+        _features = host.Services.GetService<IOptions<Features>>().Value;
+        _exceptionHandlerService = host.Services.GetService<IExceptionHandlerService>();
+
+        _settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -78,9 +91,6 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
 
         _logger.LogTrace("Starting initialization of application");
 
-        _logger.LogTrace("Getting common services.");
-        _commonServices = host.Services.GetService<ICommonServices>();
-
         _logger.LogTrace("Setting up main page.");
         _commonServices.BusyService.StartBusy();
 
@@ -89,15 +99,8 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
 
         _logger.LogTrace("Setting up localization service.");
-        if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is not null)
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language.SetLocalizationLanguage();
-
-        _logger.LogTrace("Setting up theming.");
-        if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is not null &&
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsLightThemeEnabled)
-            RequestedTheme = ApplicationTheme.Light;
-        else
-            RequestedTheme = ApplicationTheme.Dark;
+        if (_settingsService.LocalSettings is not null)
+            _settingsService.LocalSettings.Language.SetLocalizationLanguage();
     }
 
     /// <summary>
@@ -116,7 +119,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         if (e?.Exception == null)
             return;
@@ -145,10 +148,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
-        if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
-            await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
+        if (_exceptionHandlerService is not null)
+            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -160,11 +163,11 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+    protected virtual async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
-            if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
-                await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(exception);
+            if (_exceptionHandlerService is not null)
+                await _exceptionHandlerService.HandleExceptionAsync(exception);
             else
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
@@ -181,13 +184,13 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// </code>
     /// </example>
     /// <returns></returns>
-    public abstract Task InitializeApplicationAsync();
+    protected abstract Task InitializeApplicationAsync();
 
     /// <summary>
     /// Get a new list of additional resource dictionaries which can be merged.
     /// </summary>
     /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
-    public virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+    protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
         new List<ResourceDictionary>();
 
     /// <summary>
@@ -196,9 +199,7 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
     /// <param name="args">Event data for the event.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        ApplicationInitialized += OnApplicationInitialized;
-
-        MainWindow = WindowHelper.CreateWindow(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color);
+        _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
 
         _logger.LogTrace("Loading custom resource dictionaries");
 
@@ -211,50 +212,94 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             }
         }
 
+        _logger.LogTrace("Setting up theming.");
+        if (_settingsService.LocalSettings is not null)
+            this.SetApplicationColor(_settingsService.LocalSettings.Color);
+
         _logger.LogTrace("Settings initial view");
 
-        if (_initialView is not null && _loadingViewOptions is not null && _initialView.Invoke() is View loadingView)
-        {
-            var viewModel = _commonServices.ScopedContextService.GetService<LoadingViewModel>();
-            viewModel.Initialize(
-                task: async () =>
-                {
-                    await HandleLaunchArgumentsAsync(args);
-
-                    _logger.LogTrace("Starting initialization of application");
-                    await InitializeApplicationAsync();
-                    _logger.LogTrace("Finishing initialization of application");
-                },
-                onLoadingComplete: () => RaiseApplicationInitialized(),
-                loadingViewOptions: _loadingViewOptions);
-
-            loadingView.ViewModel = viewModel;
-            MainWindow.Content = loadingView;
-        }
-        else
-        {
-            var busyIndicator = new BusyIndicatorControl(_commonServices);
-
-            busyIndicator.Initialize(async () =>
+        var splashScreen = new SplashScreen();
+        var viewModel = _commonServices.ScopedContextService.GetService<SplashScreenViewModel>();
+        viewModel.Initialize(
+            dispatcherQueue: _mainWindow.DispatcherQueue,
+            onLoadingComplete: async () => await HandleApplicationInitializedAsync(),
+            splashScreenOptions: _splashScreenOptions,
+            async (dispatcher) =>
             {
                 await HandleLaunchArgumentsAsync(args);
+            },
+            async (dispatcher) =>
+            {
+                if (_features.CheckForUpdatesInMicrosoftStore)
+                    await dispatcher.EnqueueAsync(async () =>
+                    {
+                        try
+                        {
+                            _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
 
+                            var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
+
+                            if (await updateService?.CheckForUpdateAsync() &&
+                                await _commonServices.DialogService.ShowMessageAsync(
+                                LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
+                                "Update",
+                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            {
+                                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
+                                await updateService?.DownloadAndInstallUpdateAsync();
+                                Environment.Exit(Environment.ExitCode);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
+                        }
+                    });
+            },
+            async (dispatcher) =>
+            {
                 _logger.LogTrace("Starting initialization of application");
                 await InitializeApplicationAsync();
                 _logger.LogTrace("Finishing initialization of application");
-
-                RaiseApplicationInitialized();
             });
 
-            MainWindow.Content = busyIndicator;
-        }
+        splashScreen.ViewModel = viewModel;
+
+        splashScreen.Loaded += SplashScreen_Loaded;
+        splashScreen.Unloaded += SplashScreen_Unloaded;
+
+        _mainWindow.Content = splashScreen;
 
         _logger.LogTrace("Activate main window");
-
-        MainWindow.Activate();
+        _mainWindow.Activate();
     }
 
-    private async Task HandleLaunchArgumentsAsync(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+
+    protected virtual async void SplashScreen_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is SplashScreen splashScreen && splashScreen.ViewModel is SplashScreenViewModel viewModel)
+            await viewModel.StartInitializationAsync();
+    }
+
+    protected virtual void SplashScreen_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is SplashScreen splashScreen)
+        {
+            splashScreen.Loaded -= SplashScreen_Loaded;
+            splashScreen.Unloaded -= SplashScreen_Unloaded;
+        }
+    }
+
+    /// <summary>
+    /// Invoked when Navigation to a certain page fails
+    /// </summary>
+    /// <param name="sender">The Frame which failed navigation</param>
+    /// <param name="e">Details about the navigation failure</param>
+    /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
+    protected virtual void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
+        throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
+
+    protected virtual async Task HandleLaunchArgumentsAsync(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         _logger.LogTrace("Handling launch event arguments");
 
@@ -262,10 +307,10 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
         {
             switch (args.UWPLaunchActivatedEventArgs.Kind)
             {
-                case ActivationKind.Launch:
+                case Windows.ApplicationModel.Activation.ActivationKind.Launch:
                     await HandleLaunchActivationAsync(args.UWPLaunchActivatedEventArgs.Arguments);
                     break;
-                case ActivationKind.Protocol:
+                case Windows.ApplicationModel.Activation.ActivationKind.Protocol:
                     await HandleProtocolActivationAsync(args.UWPLaunchActivatedEventArgs.Arguments);
                     break;
             }
@@ -277,24 +322,16 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
     }
 
-    protected abstract void OnApplicationInitialized(object sender, ReturnEventArgs<bool> e);
-
-    /// <summary>
-    /// Invoked when Navigation to a certain page fails
-    /// </summary>
-    /// <param name="sender">The Frame which failed navigation</param>
-    /// <param name="e">Details about the navigation failure</param>
-    /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
-    public virtual void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
-        throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
-
-    public virtual Task HandleProtocolActivationAsync(string e) =>
+    protected virtual Task HandleProtocolActivationAsync(string e) =>
         Task.CompletedTask;
 
-    public virtual Task HandleLaunchActivationAsync(string e) =>
+    protected virtual Task HandleLaunchActivationAsync(string e) =>
         Task.CompletedTask;
 
-    public virtual Task HandleCommandLineArgumentsAsync(string[] e) =>
+    protected virtual Task HandleCommandLineArgumentsAsync(string[] e) =>
+        Task.CompletedTask;
+
+    protected virtual Task HandleApplicationInitializedAsync() =>
         Task.CompletedTask;
 
 
@@ -357,15 +394,13 @@ public abstract class BaseApplication : Application, IBaseApplication, IDisposab
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
-
-            ApplicationInitialized -= OnApplicationInitialized;
         }
 
         // free native resources if there are any.
     }
 #endif
 
-    ~BaseApplication()
+    ~Application()
     {
         Dispose(false);
     }

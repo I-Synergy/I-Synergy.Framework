@@ -1,10 +1,10 @@
-<app:BaseApplication
+<app:Application
     x:Class="Sample.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:ISynergy.Framework.UI">
 
-    <app:BaseApplication.Resources>
+    <app:Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
@@ -12,5 +12,5 @@
                 <ResourceDictionary Source="/Styles/Style.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </app:BaseApplication.Resources>
-</app:BaseApplication>
+    </app:Application.Resources>
+</app:Application>
