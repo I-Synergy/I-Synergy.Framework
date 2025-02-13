@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <c:View
-    x:Class="ISynergy.Framework.UI.Controls.LoadingView"
+    x:Class="ISynergy.Framework.UI.Controls.SplashScreen"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="using:ISynergy.Framework.UI.Controls"
@@ -30,16 +30,16 @@
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+            Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ProgressRing
                 x:Name="IsBusyProgressRing"
                 Width="48"
                 Height="48"
-                IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" />
             <TextBlock
                 FontSize="16"
                 Foreground="{Binding Foreground, ElementName=IsBusyProgressRing, UpdateSourceTrigger=PropertyChanged}"
-                Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" />
         </StackPanel>
 
         <Button
@@ -49,6 +49,7 @@
             VerticalAlignment="Bottom"
             Click="SignInClicked"
             Content="{m:LanguageResource Key=Skip}"
+            Visibility="{Binding CanSkip, Mode=OneWay}"
             IsEnabled="False">
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator

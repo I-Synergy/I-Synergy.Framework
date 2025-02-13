@@ -353,7 +353,7 @@ public class NavigationService : INavigationService
         // Unsubscribe old handlers before modal navigation
         _backStackChanged = null;
 
-        if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page && Application.Current is BaseApplication baseApplication)
+        if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page && Application.Current is Application baseApplication)
         {
             baseApplication.MainWindow.Content = page;
 

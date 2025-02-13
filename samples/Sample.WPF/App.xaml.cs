@@ -13,7 +13,7 @@ namespace Sample;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : BaseApplication
+public partial class App : ISynergy.Framework.UI.Application
 {
     public App()
         : base(ServiceLocator.Default.GetService<ICommonServices>())

@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -70,6 +71,7 @@ public static class WindowsAppBuilderExtensions
 
             var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
 
+            services.Configure<Features>(context.Configuration.GetSection(nameof(Features)).BindWithReload);
             services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
             var infoService = new InfoService();
@@ -100,6 +102,7 @@ public static class WindowsAppBuilderExtensions
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
             services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
             services.TryAddSingleton<ICommonServices, TCommonServices>();
+            services.TryAddSingleton<IUpdateService, UpdateService>();
 
             services.RegisterAssemblies(mainAssembly, assemblyFilter);
 

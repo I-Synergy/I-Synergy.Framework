@@ -8,8 +8,6 @@ using Microsoft.Extensions.Logging;
 using System.Windows;
 using MessageBoxButton = ISynergy.Framework.Mvvm.Enumerations.MessageBoxButton;
 using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
-using Window = ISynergy.Framework.UI.Controls.Window;
-
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -220,7 +218,8 @@ public class DialogService : IDialogService
 
                 window.ViewModel?.Dispose();
                 window.Close();
-            };
+            }
+            ;
 
             viewmodel.Closed += ViewModelClosedHandler;
 

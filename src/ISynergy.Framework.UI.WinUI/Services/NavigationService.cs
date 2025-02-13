@@ -296,8 +296,7 @@ public class NavigationService : INavigationService
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
     {
-        if (Application.Current is BaseApplication baseApplication &&
-            baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
+        if (Application.MainWindow.Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
             NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter) is { } page)
         {
@@ -333,8 +332,7 @@ public class NavigationService : INavigationService
         where TViewModel : class, IViewModel
         where TView : IView
     {
-        if (Application.Current is BaseApplication baseApplication &&
-            baseApplication.MainWindow.Content is DependencyObject dependencyObject &&
+        if (Application.MainWindow.Content is DependencyObject dependencyObject &&
             dependencyObject.FindDescendant<Frame>() is { } frame &&
             _scopedContextService.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
         {
@@ -371,10 +369,9 @@ public class NavigationService : INavigationService
         // Unsubscribe old handlers before modal navigation
         _backStackChanged = null;
 
-        if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page &&
-            Application.Current is BaseApplication baseApplication)
+        if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page)
         {
-            baseApplication.MainWindow.Content = page;
+            Application.MainWindow.Content = page;
 
             if (!page.ViewModel.IsInitialized)
                 await page.ViewModel.InitializeAsync();

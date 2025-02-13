@@ -1,10 +1,10 @@
 ﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Update.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Windows.Services.Store;
 
-namespace ISynergy.Framework.Update.Services;
+namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
 /// Class UpdateService.
@@ -13,6 +13,9 @@ internal class UpdateService : IUpdateService
 {
     private readonly ILogger _logger;
     private readonly IDialogService _dialogService;
+
+    private StoreContext _storeContext = null;
+    private IReadOnlyList<StorePackageUpdate> updates = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
@@ -24,19 +27,12 @@ internal class UpdateService : IUpdateService
         ILoggerFactory loggerFactory)
     {
         _dialogService = dialogService;
+
         _logger = loggerFactory.CreateLogger<UpdateService>();
         _logger.LogTrace($"UpdateService instance created with ID: {Guid.NewGuid()}");
+
+
     }
-
-    /// <summary>
-    /// The context
-    /// </summary>
-    private StoreContext context = null;
-
-    /// <summary>
-    /// The updates
-    /// </summary>
-    private IReadOnlyList<StorePackageUpdate> updates = null;
 
     /// <summary>
     /// check for update as an asynchronous operation.
@@ -48,18 +44,22 @@ internal class UpdateService : IUpdateService
 
         try
         {
-            updates = null;
-
-            if (context is null)
+            if (_storeContext is null)
             {
-                context = StoreContext.GetDefault();
-            }
+#if WINDOWS
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.MainWindow);
 
-            updates = await context.GetAppAndOptionalStorePackageUpdatesAsync();
+                _storeContext = StoreContext.GetDefault();
 
-            if (updates.Count > 0)
-            {
-                result = true;
+                WinRT.Interop.InitializeWithWindow.Initialize(_storeContext, hwnd);
+
+                updates = await _storeContext.GetAppAndOptionalStorePackageUpdatesAsync();
+
+                if (updates.Count > 0)
+                {
+                    result = true;
+                }
+#endif
             }
         }
         catch (Exception)
@@ -75,10 +75,10 @@ internal class UpdateService : IUpdateService
     /// </summary>
     public async Task DownloadAndInstallUpdateAsync()
     {
-        if (updates is not null && updates.Count > 0)
+        if (updates is not null && updates is not null && updates.Count > 0)
         {
             // Download the packages.
-            if (context.CanSilentlyDownloadStorePackageUpdates)
+            if (_storeContext.CanSilentlyDownloadStorePackageUpdates)
             {
                 await DownloadAndInstallPackageUpdatesSilentlyAsync(updates);
             }
@@ -95,7 +95,7 @@ internal class UpdateService : IUpdateService
     /// <param name="updates">The updates.</param>
     private async Task DownloadAndInstallPackageUpdatesAsync(IEnumerable<StorePackageUpdate> updates)
     {
-        var installOperation = context.RequestDownloadAndInstallStorePackageUpdatesAsync(updates);
+        var installOperation = _storeContext.RequestDownloadAndInstallStorePackageUpdatesAsync(updates);
 
         // The package updates were already downloaded separately, so this method skips the download
         // operatation and only installs the updates; no download progress notifications are provided.
@@ -129,7 +129,7 @@ internal class UpdateService : IUpdateService
         // Start the silent installation of the packages. Because the packages have already
         // been downloaded in the previous method, the following line of code just installs
         // the downloaded packages.
-        var downloadResult = await context.TrySilentDownloadAndInstallStorePackageUpdatesAsync(updates);
+        var downloadResult = await _storeContext.TrySilentDownloadAndInstallStorePackageUpdatesAsync(updates);
 
         switch (downloadResult.OverallState)
         {

@@ -1,8 +1,9 @@
-﻿<app:BaseApplication xmlns:app="clr-namespace:ISynergy.Framework.UI;assembly=ISynergy.Framework.UI.WPF"  
-                     x:Class="Sample.App"
-                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <app:BaseApplication.Resources>
+﻿<app:Application
+    xmlns:app="clr-namespace:ISynergy.Framework.UI;assembly=ISynergy.Framework.UI.WPF"  
+    x:Class="Sample.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <app:Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!--<ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />-->
@@ -11,5 +12,5 @@
                 <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </app:BaseApplication.Resources>
-</app:BaseApplication>
+    </app:Application.Resources>
+</app:Application>

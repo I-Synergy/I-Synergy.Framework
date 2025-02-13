@@ -3,14 +3,14 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Update.Abstractions.Services;
-using ISynergy.Framework.Update.Options;
+using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.IO;
 using System.Net.Http;
 
-namespace ISynergy.Framework.Update.Services;
+namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
 /// Class UpdateService.
