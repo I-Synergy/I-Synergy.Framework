@@ -22,10 +22,10 @@
     <PackageVersion Include="Microsoft.AppCenter" Version="5.0.6" />
     <PackageVersion Include="Microsoft.AppCenter.Analytics" Version="5.0.6" />
     <PackageVersion Include="Microsoft.AppCenter.Crashes" Version="5.0.6" />
-    <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.22.0" />
-    <PackageVersion Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.22.0" />
-    <PackageVersion Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.22.0" />
-    <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.22.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.23.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.23.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.23.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.23.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.2.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Graph" Version="5.70.0" />
