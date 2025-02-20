@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Extensions;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -15,7 +14,7 @@ namespace ISynergy.Framework.Core.Collections;
 /// invoices.CollectionChanged   += OnInvoicesChanged;
 /// invoices.ItemPropertyChanged += OnInvoiceChanged;
 /// </example>
-public sealed class ItemObservableCollection<T> : ObservableCollection<T>
+public sealed class ItemObservableCollection<T> : ObservableCollection<T>, IDisposable
     where T : INotifyPropertyChanged
 {
     public event EventHandler<ItemPropertyChangedEventArgs<T>> ItemPropertyChanged;
@@ -28,16 +27,28 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>
 
     private void item_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        foreach (T item in e.NewItems.EnsureNotNull())
+        if (e.NewItems != null)
         {
-            item.PropertyChanged += item_PropertyChanged;
+            foreach (T item in e.NewItems)
+            {
+                item.PropertyChanged += item_PropertyChanged;
+            }
+        }
+
+        if (e.OldItems != null)
+        {
+            foreach (T item in e.OldItems)
+            {
+                item.PropertyChanged -= item_PropertyChanged;
+            }
         }
     }
 
     protected override void SetItem(int index, T item)
     {
+        T oldItem = this[index];
+        oldItem.PropertyChanged -= item_PropertyChanged;
         base.SetItem(index, item);
-        item.PropertyChanged += item_PropertyChanged;
     }
 
     private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -49,5 +60,33 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>
     private void OnItemPropertyChanged(T item, string propertyName)
     {
         ItemPropertyChanged?.Invoke(this, new ItemPropertyChangedEventArgs<T>(item, propertyName));
+    }
+
+    protected override void RemoveItem(int index)
+    {
+        var item = this[index];
+        item.PropertyChanged -= item_PropertyChanged;
+
+        base.RemoveItem(index);
+    }
+
+    protected override void ClearItems()
+    {
+        foreach (var item in this)
+        {
+            item.PropertyChanged -= item_PropertyChanged;
+        }
+
+        base.ClearItems();
+    }
+
+    public void Dispose()
+    {
+        CollectionChanged -= item_CollectionChanged;
+
+        foreach (var item in this)
+        {
+            item.PropertyChanged -= item_PropertyChanged;
+        }
     }
 }
