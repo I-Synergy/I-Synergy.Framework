@@ -1,19 +1,18 @@
-name: $(Date:yyyy).1$(DayOfYear)$(Rev:.r)
+name: $(Date:yyyy).1$(DayOfYear).$(Date:Hmm)
 
 trigger:
 - main
 
 variables:
-  - name: VersionMajor
+  - name: VersionNumber
     value: ''
-  - name: VersionMinor
+  - name: VersionInformational  
     value: ''
-  - name: VersionRevision
+  - name: VersionPackage
     value: ''
 
   - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     - group: ACC
- 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - group: PROD
 
@@ -29,17 +28,24 @@ stages:
       timeoutInMinutes: 120
       steps:
         - task: PowerShell@2
-          displayName: Set the Version variables
+          displayName: Set Version Variables
           inputs:
             targetType: 'inline'
             script: |
-              [string] $buildNumber = $Env:BUILD_BUILDNUMBER
-              [string] $major = $buildNumber.Substring(0,4)
-              [string] $minor = $buildNumber.Substring(5,4)
-              [string] $revision = $buildNumber.Substring($buildNumber.LastIndexOf('.') + 1)
-              Write-Host "##vso[task.setvariable variable=VersionMajor]$major"
-              Write-Host "##vso[task.setvariable variable=VersionMinor]$minor"
-              Write-Host "##vso[task.setvariable variable=VersionRevision]$revision"
+              $date = Get-Date
+              $versionMajor = $date.ToString("yyyy")
+              $versionMinor = "1" + $date.DayOfYear.ToString("000")
+              $versionRevision = $date.ToString("Hmm")
+              $versionBuild = if ($env:BUILD_REASON -eq 'PullRequest') { $date.Second } else { 0 }
+              
+              $versionNumber = "$versionMajor.$versionMinor.$versionRevision.$versionBuild"
+              $versionInformational = "$versionMajor.$versionMinor.$versionRevision"
+              $versionPackage = if ($env:BUILD_REASON -eq 'PullRequest') { "$versionNumber-preview" } else { $versionNumber }
+              
+              Write-Host "##vso[task.setvariable variable=VersionNumber]$versionNumber"
+              Write-Host "##vso[task.setvariable variable=VersionFile]$versionNumber"
+              Write-Host "##vso[task.setvariable variable=VersionInformational]$versionInformational"
+              Write-Host "##vso[task.setvariable variable=VersionPackage]$versionPackage"
 
         - task: Assembly-Info-NetCore@3
           displayName: 'Set Release versions'
@@ -50,7 +56,7 @@ stages:
             InsertAttributes: true
             WriteBOM: true
             VersionNumber: '$(VersionNumber)'
-            FileVersionNumber: '$(VersionFile)'
+            FileVersionNumber: '$(VersionNumber)'
             InformationalVersion: '$(VersionInformational)'
             PackageVersion: '$(VersionPackage)'
             UpdateBuildNumber: '$(VersionPackage)'
