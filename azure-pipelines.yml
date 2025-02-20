@@ -1,4 +1,4 @@
-name: $(Date:yyyy).1$(DayOfYear).$(Date:Hmm)
+name: $(Date:yyyy).1$(Date:MMdd).$(Date:Hmm)
 
 trigger:
 - main
