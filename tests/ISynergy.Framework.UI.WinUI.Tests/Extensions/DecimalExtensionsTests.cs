@@ -35,10 +35,10 @@ public class DecimalExtensionsTests
 
         // Act
         string result = value.ToCurrency();
+        var expected = value.ToString("C", CultureInfo.CurrentCulture);
 
         // Assert
-        Assert.IsTrue(result.StartsWith("€"));
-        Assert.IsTrue(result.Contains("1.234,56"));
+        Assert.AreEqual(expected, result);
     }
 
     [TestMethod]
@@ -52,14 +52,13 @@ public class DecimalExtensionsTests
         CultureInfo.CurrentCulture = currentCulture;
 
         decimal value = -1234.56m;
+        var expected = value.ToString("C", CultureInfo.CurrentCulture);
 
         // Act
         string result = value.ToCurrency();
 
         // Assert
-        Assert.IsTrue(result.StartsWith("("));
-        Assert.IsTrue(result.Contains("1,234.56"));
-        Assert.IsTrue(result.EndsWith(")"));
+        Assert.AreEqual(expected, result);
     }
 
     [TestMethod]
@@ -74,11 +73,12 @@ public class DecimalExtensionsTests
         CultureInfo.CurrentCulture = currentCulture;
 
         decimal value = 0m;
+        var expected = value.ToString("C", CultureInfo.CurrentCulture);
 
         // Act
         string result = value.ToCurrency();
 
         // Assert
-        Assert.IsTrue(result.Contains("$ 0.00"));
+        Assert.AreEqual(expected, result);
     }
 }
