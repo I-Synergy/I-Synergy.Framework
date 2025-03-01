@@ -84,7 +84,10 @@ public class CurrencyConverterTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsTrue(result.Contains("$ 0.00"));
+
+        var expected = 0m.ToString("C", CultureInfo.CurrentCulture);
+
+        Assert.AreEqual(expected, result);
     }
 
     [TestMethod]

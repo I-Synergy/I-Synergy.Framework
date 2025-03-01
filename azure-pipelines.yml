@@ -1,4 +1,4 @@
-name: $(Date:yyyy).1$(DayOfYear).$(Date:Hmm)
+name: $(Date:yyyy).1$(Date:MMdd).1$(Date:HHmm)
 
 trigger:
 - main
@@ -32,11 +32,13 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-              $date = Get-Date
-              $versionMajor = $date.ToString("yyyy")
-              $versionMinor = "1" + $date.DayOfYear.ToString("000")
-              $versionRevision = $date.ToString("Hmm")
-              $versionBuild = if ($env:BUILD_REASON -eq 'PullRequest') { $date.Second } else { 0 }
+              $buildNumber = $Env:BUILD_BUILDNUMBER
+              $parts = $buildNumber.Split('.')
+              
+              $versionMajor = $parts[0]    # yyyy
+              $versionMinor = $parts[1]    # 1DDD
+              $versionRevision = $parts[2]  # HHmm
+              $versionBuild = if ($env:BUILD_REASON -eq 'PullRequest') { (Get-Date).Second } else { 0 }
               
               $versionNumber = "$versionMajor.$versionMinor.$versionRevision.$versionBuild"
               $versionInformational = "$versionMajor.$versionMinor.$versionRevision"
@@ -96,7 +98,7 @@ stages:
             projectVersion: '$(VersionPackage)'
 
         - task: MSBuild@1
-          displayName: 'Build I-Synergy Framework solution'
+          displayName: 'Build I-Synergy Framework'
           inputs:
             solution: 'I-Synergy.Framework.sln'
             msbuildArchitecture: 'x64'
@@ -104,69 +106,12 @@ stages:
             msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true /nr:false' #this flag is important to avoid DLL lock for the 2nd build/analysis
 
         - task: DotNetCoreCLI@2
-          displayName: 'Run Core Tests'
+          displayName: 'Test I-Synergy Framework'
           inputs:
             command: test
-            projects: 'tests\ISynergy.Framework.Core.Tests\ISynergy.Framework.Core.Tests.csproj'
+            projects: 'I-Synergy.Framework.sln'
             arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run EF Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.EntityFramework.Tests\ISynergy.Framework.EntityFramework.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run IO Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.IO.Tests\ISynergy.Framework.IO.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Mvvm Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Mvvm.Tests\ISynergy.Framework.Mvvm.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run AspNetCore Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.AspNetCore.Tests\ISynergy.Framework.AspNetCore.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Financial Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Financial.Tests\ISynergy.Framework.Financial.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Geography Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Geography.Tests\ISynergy.Framework.Geography.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Physics Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Physics.Tests\ISynergy.Framework.Physics.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Mathematics Tests'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Mathematics.Tests\ISynergy.Framework.Mathematics.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-
+       
         - task: CopyFiles@2
           inputs:
             SourceFolder: '$(Build.SourcesDirectory)\packages'
