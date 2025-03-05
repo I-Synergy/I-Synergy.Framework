@@ -45,7 +45,6 @@ stages:
               $versionPackage = if ($env:BUILD_REASON -eq 'PullRequest') { "$versionNumber-preview" } else { $versionNumber }
               
               Write-Host "##vso[task.setvariable variable=VersionNumber]$versionNumber"
-              Write-Host "##vso[task.setvariable variable=VersionFile]$versionNumber"
               Write-Host "##vso[task.setvariable variable=VersionInformational]$versionInformational"
               Write-Host "##vso[task.setvariable variable=VersionPackage]$versionPackage"
 
