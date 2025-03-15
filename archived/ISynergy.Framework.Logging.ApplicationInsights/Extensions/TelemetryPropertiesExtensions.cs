@@ -7,11 +7,10 @@ namespace ISynergy.Framework.Logging.Extensions;
 
 public static class TelemetryPropertiesExtensions
 {
-    public static void AddDefaultProperties(this IDictionary<string, string> properties, TelemetryContext telemetryContext,  IContext context, IInfoService infoService)
+    public static void AddDefaultProperties(this IDictionary<string, string> properties, TelemetryContext telemetryContext, IInfoService infoService, IContext context)
     {
         Argument.IsNotNull(properties);
         Argument.IsNotNull(context);
-        Argument.IsNotNull(infoService);
 
         SetUserProfile(telemetryContext, context.IsAuthenticated, context.Profile);
 

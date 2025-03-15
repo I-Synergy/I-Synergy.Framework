@@ -1,8 +1,5 @@
-using ISynergy.Framework.AspNetCore.Extensions;
-using ISynergy.Framework.AspNetCore.Options;
 using ISynergy.Framework.AspNetCore.Routing;
 using ISynergy.Framework.Core.Abstractions.Async;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -137,7 +134,6 @@ public abstract class BaseStartup : IAsyncInitialization
     protected virtual void AddOptions(IServiceCollection services, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<WebsiteOptions>(Configuration.GetSection($"{prefix}{nameof(WebsiteOptions)}").BindWithReload);
     }
 
     /// <summary>

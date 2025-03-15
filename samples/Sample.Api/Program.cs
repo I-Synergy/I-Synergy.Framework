@@ -14,8 +14,6 @@ namespace Sample.Api;
 
 public class Program
 {
-    private const string ApplicationInsightsConnectionString = "ApplicationInsights:ConnectionString";
-
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);

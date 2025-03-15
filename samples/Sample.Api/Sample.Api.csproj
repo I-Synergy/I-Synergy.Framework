@@ -5,6 +5,7 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
 		<PackageReference Include="NSwag.AspNetCore" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
