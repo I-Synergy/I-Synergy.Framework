@@ -29,7 +29,6 @@ ___
 | [I-Synergy.Framework.Geography](https://www.nuget.org/packages/I-Synergy.Framework.Geography/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Geography) |
 | [I-Synergy.Framework.IO](https://www.nuget.org/packages/I-Synergy.Framework.IO/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.IO) |
 | [I-Synergy.Framework.Logging](https://www.nuget.org/packages/I-Synergy.Framework.Logging/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging) |
-| [I-Synergy.Framework.Logging.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Logging.ApplicationInsights/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.ApplicationInsights) |
 | [I-Synergy.Framework.Logging.OpenTelemetry](https://www.nuget.org/packages/I-Synergy.Framework.Logging.OpenTelemetry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.OpenTelemetry) |
 | [I-Synergy.Framework.Mail](https://www.nuget.org/packages/I-Synergy.Framework.Mail/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail) |
 | [I-Synergy.Framework.Mail.Microsoft365](https://www.nuget.org/packages/I-Synergy.Framework.Mail.Microsoft365/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.Microsoft365) |
@@ -56,6 +55,7 @@ ___
 ## Nuget Deprecated Deployment Status
 | Release | Status |
 |:---|---|
+| [I-Synergy.Framework.Logging.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Logging.ApplicationInsights/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.ApplicationInsights) |
 | [I-Synergy.Framework.Logging.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Logging.AppCenter/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.AppCenter) |
 | [I-Synergy.Framework.Update](https://www.nuget.org/packages/I-Synergy.Framework.Update/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update) |
 | [I-Synergy.Framework.Update.Maui](https://www.nuget.org/packages/I-Synergy.Framework.Update.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Maui) |

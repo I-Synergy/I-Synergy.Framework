@@ -4,6 +4,7 @@ using ISynergy.Framework.EntityFramework.Attributes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace ISynergy.Framework.EntityFramework.Extensions;
 
@@ -177,5 +178,30 @@ public static class ModelBuilderExtensions
         }
 
         return Expression.Lambda(combinedExpr, parameter);
+    }
+
+    public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, Assembly[] assemblies)
+    {
+        // Get the open generic type for IEntityTypeConfiguration
+        var configurationInterface = typeof(IEntityTypeConfiguration<>);
+
+        // Filter assemblies that contain classes implementing IEntityTypeConfiguration<>
+        var entityAssemblies = assemblies
+            .Where(a => !a.IsDynamic &&
+                        a.GetTypes().Any(t =>
+                            t.IsClass &&
+                            !t.IsAbstract &&
+                            t.GetInterfaces().Any(i =>
+                                i.IsGenericType &&
+                                i.GetGenericTypeDefinition() == configurationInterface)))
+            .ToList();
+
+        // Apply configurations from each relevant assembly
+        foreach (var assembly in entityAssemblies.EnsureNotNull())
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+        }
+
+        return modelBuilder;
     }
 }
