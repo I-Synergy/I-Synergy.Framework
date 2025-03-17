@@ -1,21 +1,35 @@
 ﻿using ISynergy.Framework.AspNetCore.Monitoring.Extensions;
-using ISynergy.Framework.AspNetCore.Startup;
 
 namespace Sample.Monitor.SignalR;
 
-public class Startup(IWebHostEnvironment environment, IConfiguration configuration) : BaseStartup(environment, configuration)
+public class Startup(IConfiguration configuration)
 {
-    public override void ConfigureServices(IServiceCollection services)
+    // This method gets called by the runtime. Use this method to add services to the container.
+    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+    public void ConfigureServices(IServiceCollection services)
     {
-        services.AddMonitorSignalR<object>(Configuration);
+        // Override if you want to use custom implementation.
+        services.AddMonitorSignalR<object>(configuration);
     }
 
-    public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseRouting();
+
         app.UseMonitorSignalR();
-    }
 
-    protected override void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
-    {
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapGet("/", async context =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
+        });
     }
 }

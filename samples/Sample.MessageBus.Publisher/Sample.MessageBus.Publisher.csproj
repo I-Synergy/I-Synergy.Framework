@@ -1,28 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
-        <UserSecretsId>57f1ce89-fdf7-46f2-99d7-cf0363b7fbc8</UserSecretsId>
-        <IsPackable>false</IsPackable>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<UserSecretsId>57f1ce89-fdf7-46f2-99d7-cf0363b7fbc8</UserSecretsId>
+		<IsPackable>false</IsPackable>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    </PropertyGroup>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <Content Include="appsettings.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
+	<ItemGroup>
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
-        <PackageReference Include="System.Text.Encodings.Web" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+		<PackageReference Include="System.Text.Encodings.Web" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj" />
-        <ProjectReference Include="..\Sample.MessageBus.Shared\Sample.MessageBus.Shared.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj" />
+		<ProjectReference Include="..\Sample.MessageBus.Shared\Sample.MessageBus.Shared.csproj" />
+	</ItemGroup>
 
 </Project>

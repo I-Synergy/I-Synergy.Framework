@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.AspNetCore.Globalization</PackageId>
 		<Description>I-Synergy Framework Globalization</Description>
 		<PackageTags>I-Synergy, Framework, Globalization</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-    </PropertyGroup>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
-      <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Using Include="ISynergy.Framework.Core.Abstractions.Services" />

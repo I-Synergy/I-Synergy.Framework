@@ -1,8 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.EntityFramework.Tests.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace ISynergy.Framework.EntityFramework.Extensions.Tests;
 
@@ -17,9 +19,11 @@ public class ModelBuilderExtensionsTests
     [TestInitialize]
     public void Setup()
     {
+        var conventionSet = new ConventionSet();
+
         _options = new DbContextOptionsBuilder<DbContext>().UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options;
         _context = new DbContext(_options);
-        _modelBuilder = new ModelBuilder();
+        _modelBuilder = new ModelBuilder(conventionSet);
     }
 
     [TestCleanup]
@@ -280,5 +284,68 @@ public class ModelBuilderExtensionsTests
         Assert.IsNotNull(filter);
         var lambda = (LambdaExpression)filter;
         Assert.IsTrue(lambda.Body.NodeType == ExpressionType.Equal); // Only tenant filter
+    }
+
+    [TestMethod]
+    public void ApplyModelBuilderConfigurations_WithEmptyAssemblies_ReturnsModelBuilder()
+    {
+        // Arrange
+        Assembly[] emptyAssemblies = Array.Empty<Assembly>();
+
+        // Act
+        var result = _modelBuilder.ApplyModelBuilderConfigurations(emptyAssemblies);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(_modelBuilder, result);
+    }
+
+    [TestMethod]
+    public void ApplyModelBuilderConfigurations_WithNullAssemblies_ReturnsModelBuilder()
+    {
+        // Arrange
+        Assembly[] nullAssemblies = null;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            _modelBuilder.ApplyModelBuilderConfigurations(nullAssemblies));
+    }
+
+    [TestMethod]
+    public void ApplyModelBuilderConfigurations_WithValidAssemblies_AppliesConfigurations()
+    {
+        // Arrange
+        var assemblies = new[] { typeof(TestEntityConfiguration).Assembly };
+
+        // Act
+        var result = _modelBuilder.ApplyModelBuilderConfigurations(assemblies);
+
+        // Assert
+        Assert.IsNotNull(result);
+
+        // Verify that the entity was configured
+        var entityType = result.Model.FindEntityType(typeof(TestEntity));
+        Assert.IsNotNull(entityType, "Entity type should be configured");
+    }
+
+    [TestMethod]
+    public void ApplyModelBuilderConfigurations_WithMixedAssemblies_OnlyAppliesRelevantConfigurations()
+    {
+        // Arrange
+        // Include current assembly (which has our test configuration) and System assembly (which doesn't)
+        var assemblies = new[] {
+                typeof(TestEntityConfiguration).Assembly,
+                typeof(string).Assembly // System assembly with no configurations
+            };
+
+        // Act
+        var result = _modelBuilder.ApplyModelBuilderConfigurations(assemblies);
+
+        // Assert
+        Assert.IsNotNull(result);
+
+        // Verify that the entity was configured
+        var entityType = result.Model.FindEntityType(typeof(TestEntity));
+        Assert.IsNotNull(entityType, "Entity type should be configured");
     }
 }
