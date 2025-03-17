@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Initializers;
 using ISynergy.Framework.Logging.Services;
@@ -20,13 +22,17 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
+    /// <param name="prefix"></param>
     /// <returns></returns>
-    public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, IConfiguration configuration)
+    public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, IConfiguration configuration, string prefix = "")
     {
-        builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
+        builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection($"{prefix}{nameof(ApplicationInsightsOptions)}").BindWithReload);
+
+        builder.Services.TryAddScoped<ITelemetryInitializer, DefaultTelemetryInitializer>();
+
         builder.Services.RemoveAll<ILogger>();
+        builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         builder.Services.TryAddSingleton<ILogger, Logger>();
-        builder.Services.TryAddSingleton<ITelemetryInitializer, DefaultTelemetryInitializer>();
 
         return builder;
     }
