@@ -1,7 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Models;
-
 /// <summary>
 /// Class Grant.
 /// </summary>
@@ -47,42 +46,4 @@ public class Grant
     /// </summary>
     /// <value>The code.</value>
     [JsonPropertyName("code")] public string code { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// Class GrantTypes.
-/// </summary>
-public static class GrantTypes
-{
-    /// <summary>
-    /// The password
-    /// </summary>
-    public const string Password = "password";
-    /// <summary>
-    /// The refresh token
-    /// </summary>
-    public const string RefreshToken = "refresh_token";
-    /// <summary>
-    /// The client credentials
-    /// </summary>
-    public const string ClientCredentials = "client_credentials";
-    /// <summary>
-    /// The api key.
-    /// </summary>
-    public const string ApiKey = "api_key";
-}
-
-/// <summary>
-/// Class GrantScopes.
-/// </summary>
-public static class GrantScopes
-{
-    /// <summary>
-    /// The password
-    /// </summary>
-    public const string Password = "openid offline_access profile";
-    /// <summary>
-    /// The client credentials
-    /// </summary>
-    public const string ClientCredentials = "openid profile";
 }

@@ -14,6 +14,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
+using Sample.Models;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
@@ -297,7 +298,7 @@ public class SignUpViewModel : ViewModel
                 PasswordCheck.Equals(Password) &&
                 Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             {
-                RegistrationData registrationData = new()
+                var registrationData = new RegistrationData()
                 {
                     ApplicationId = 1,
                     LicenseName = Name,
