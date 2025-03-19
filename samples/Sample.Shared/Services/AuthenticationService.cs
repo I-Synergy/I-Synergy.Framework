@@ -6,6 +6,7 @@ using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
+using Sample.Models;
 
 namespace Sample.Services;
 
@@ -96,7 +97,7 @@ public class AuthenticationService : IAuthenticationService
         return Task.FromResult(new List<Module>());
     }
 
-    public Task<bool> RegisterNewAccountAsync(RegistrationData registration, CancellationToken cancellationToken = default)
+    public Task<bool> RegisterNewAccountAsync(IRegistrationData registration, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
