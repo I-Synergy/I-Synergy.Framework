@@ -46,16 +46,6 @@ public static class GenericConstants
     /// </summary>
     public const string UnauthorizedClientError = "unauthorized_client";
 
-    // Claims
-    /// <summary>
-    /// The claim connection string
-    /// </summary>
-    public const string Claim_ConnectionString = "Claim_ConnectionString";
-    /// <summary>
-    /// The claim modules
-    /// </summary>
-    public const string Claim_Modules = "Claim_Modules";
-
     /// <summary>
     /// The tenant identifier
     /// </summary>
@@ -156,6 +146,7 @@ public static class GenericConstants
     /// The username prefix test
     /// </summary>
     public const string UsernamePrefixTest = "test?";
+
     /// <summary>
     /// The username prefix local
     /// </summary>
@@ -175,11 +166,6 @@ public static class GenericConstants
     /// The API version
     /// </summary>
     public const string ApiVersion = "x-ms-version";
-
-    /// <summary>
-    /// The API client
-    /// </summary>
-    public const string ApiClient = "ISynergy";
 
     /// <summary>
     /// The signal path

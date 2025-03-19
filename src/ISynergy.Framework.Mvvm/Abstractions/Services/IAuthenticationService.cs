@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -83,7 +84,7 @@ public interface IAuthenticationService
     /// <param name="registration">The e.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    Task<bool> RegisterNewAccountAsync(RegistrationData registration, CancellationToken cancellationToken = default);
+    Task<bool> RegisterNewAccountAsync(IRegistrationData registration, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Requests a password reset.

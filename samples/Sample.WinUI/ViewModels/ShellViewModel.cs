@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -15,6 +14,7 @@ using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
+using Sample.Models;
 
 namespace Sample.ViewModels;
 

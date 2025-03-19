@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.AspNetCore.MultiTenancy</PackageId>
@@ -8,7 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
-	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj" />
 	</ItemGroup>
 </Project>
