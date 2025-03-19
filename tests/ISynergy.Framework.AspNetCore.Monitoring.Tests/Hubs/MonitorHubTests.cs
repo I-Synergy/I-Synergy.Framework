@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Security.Claims;
-using ClaimTypes = ISynergy.Framework.Core.Constants.ClaimTypes;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 
 namespace ISynergy.Framework.AspNetCore.Monitoring.Tests.Hubs;
@@ -42,13 +42,13 @@ public class MonitorHubTests
             {
                 ClaimsIdentity identity = new(
                     "OAuth",
-                    ClaimTypes.UserNameType,
-                    ClaimTypes.RoleType);
+                    Claims.Username,
+                    Claims.Role);
 
-                identity.AddClaim(new Claim(ClaimTypes.AccountIdType, groupName.ToString()));
-                identity.AddClaim(new Claim(ClaimTypes.AccountDescriptionType, "Test"));
-                identity.AddClaim(new Claim(ClaimTypes.UserNameType, userName));
-                identity.AddClaim(new Claim(ClaimTypes.UserIdType, userId.ToString()));
+                identity.AddClaim(new Claim(Claims.KeyId, groupName.ToString()));
+                identity.AddClaim(new Claim(Claims.Name, "Test"));
+                identity.AddClaim(new Claim(Claims.Username, userName));
+                identity.AddClaim(new Claim(Claims.Subject, userId.ToString()));
 
                 return new ClaimsPrincipal(identity);
             });

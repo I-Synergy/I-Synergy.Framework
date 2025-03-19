@@ -1,13 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
+	<PropertyGroup>
 		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-        <PackageId>I-Synergy.Framework.AspNetCore.Authentication</PackageId>
-        <Description>I-Synergy Framework Authentication</Description>
-        <PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
+		<PackageId>I-Synergy.Framework.AspNetCore.Authentication</PackageId>
+		<Description>I-Synergy Framework Authentication</Description>
+		<PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-    </PropertyGroup>
+	</PropertyGroup>
 
 	<ItemGroup>
-        <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
-    </ItemGroup>
+		<PackageReference Include="OpenIddict.Abstractions" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
+	</ItemGroup>
 </Project>

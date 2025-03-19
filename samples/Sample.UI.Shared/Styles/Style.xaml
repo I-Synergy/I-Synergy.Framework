@@ -83,7 +83,7 @@
         <Setter Property="Height" Value="110" />
         <Setter Property="VerticalContentAlignment" Value="Top" />
         <Setter Property="AcceptsReturn" Value="True" />
-        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     </Style>
 

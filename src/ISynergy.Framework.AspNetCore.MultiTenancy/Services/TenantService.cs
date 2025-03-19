@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using System.Security.Principal;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace ISynergy.Framework.AspNetCore.MultiTenancy.Services;
 
@@ -46,7 +47,7 @@ internal class TenantService : ITenantService
     public void SetTenant(Guid tenantId)
     {
         var claimIdentity = new ClaimsIdentity();
-        claimIdentity.AddClaim(new Claim(Core.Constants.ClaimTypes.AccountIdType, tenantId.ToString()));
+        claimIdentity.AddClaim(new Claim(Claims.KeyId, tenantId.ToString()));
         var principal = new GenericPrincipal(claimIdentity, Array.Empty<string>());
         _httpContextAccessor.HttpContext.User = principal;
     }
@@ -60,8 +61,8 @@ internal class TenantService : ITenantService
     {
         var identity = new GenericIdentity(username);
         var claimIdentity = new ClaimsIdentity(identity);
-        claimIdentity.AddClaim(new Claim(Core.Constants.ClaimTypes.AccountIdType, tenantId.ToString()));
-        claimIdentity.AddClaim(new Claim(Core.Constants.ClaimTypes.UserNameType, username));
+        claimIdentity.AddClaim(new Claim(Claims.KeyId, tenantId.ToString()));
+        claimIdentity.AddClaim(new Claim(Claims.Username, username));
         var principal = new GenericPrincipal(claimIdentity, _clientRoles);
         _httpContextAccessor.HttpContext.User = principal;
     }
@@ -72,7 +73,7 @@ internal class TenantService : ITenantService
     /// <returns>Guid.</returns>
     private Guid RetrieveTenantId()
     {
-        if (Guid.TryParse(_httpContextAccessor.HttpContext.User?.FindFirst(Core.Constants.ClaimTypes.AccountIdType)?.Value, out var parsedtenant))
+        if (Guid.TryParse(_httpContextAccessor.HttpContext.User?.FindFirst(Claims.KeyId)?.Value, out var parsedtenant))
             return parsedtenant;
 
         throw new UnauthorizedAccessException("Tenant could not be retrieved.");
