@@ -1,10 +1,10 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Constraints;
+﻿using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
 using ISynergy.Framework.AspNetCore.Globalization.Options;
 using ISynergy.Framework.AspNetCore.Globalization.Providers;
-using ISynergy.Framework.AspNetCore.Globalization.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace ISynergy.Framework.AspNetCore.Globalization.Extensions;
 
@@ -14,21 +14,64 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions;
 public static class ApplicationBuilderExtensions
 {
     /// <summary>
-    /// Adds globalization integration.
-    /// Don't use AddLocalization() in your Startup.cs, use this extension method instead.
+    /// Adds globalization and localization integration.
+    /// Don't use app.UseRequestLocalization() in your Startup.cs, use this extension method instead.
     /// </summary>
-    /// <param name="builder"></param>
+    /// <param name="app"></param>
     /// <returns></returns>
-    public static IHostApplicationBuilder AddGlobalization(this IHostApplicationBuilder builder)
+    public static IApplicationBuilder UseGlobalization(this IApplicationBuilder app)
     {
-        builder.Services.Configure<GlobalizationOptions>(builder.Configuration.GetSection(nameof(GlobalizationOptions)));
-        builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        builder.Services.TryAddSingleton<ILanguageService, LanguageService>();
-        builder.Services.TryAddSingleton<RouteDataRequestCultureProvider>();
-        builder.Services.TryAddSingleton<CultureRouteConstraint>();
-        builder.Services.AddLocalization();
-        return builder;
+        var globalization = app.ApplicationServices.GetRequiredService<IOptions<GlobalizationOptions>>().Value;
+
+        app.UseRequestLocalization(options =>
+        {
+            // Set supported cultures
+            var supportedCultures = globalization.SupportedCultures
+                .Select(c => new CultureInfo(c))
+                .ToArray();
+
+            options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+
+
+            // Clear existing providers and add our custom provider first
+            options.RequestCultureProviders.Clear();
+
+            // Add providers based on configuration
+            switch (globalization.ProviderType)
+            {
+                case RequestCultureProviderTypes.AcceptLanguageHeader:
+                    options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                    options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                    options.RequestCultureProviders.Add(app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                    options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                    break;
+
+                case RequestCultureProviderTypes.Cookie:
+                    options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                    options.RequestCultureProviders.Add(app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                    options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                    options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                    break;
+
+                case RequestCultureProviderTypes.QueryString:
+                    options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                    options.RequestCultureProviders.Add(app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                    options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                    options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                    break;
+
+                case RequestCultureProviderTypes.Route:
+                default:
+                    options.RequestCultureProviders.Add(app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                    options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                    options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                    options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                    break;
+            }
+        });
+
+        return app;
     }
-
-
 }
