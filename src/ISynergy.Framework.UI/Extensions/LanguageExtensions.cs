@@ -58,4 +58,17 @@ public static class LanguageExtensions
 
         return new List<string>();
     }
+
+    public static List<string> ToCountryIds(this string timezoneId)
+    {
+        if (TzdbDateTimeZoneSource.Default is { } source)
+        {
+            var locations = source.ZoneLocations?
+                .Where(key => key.ZoneId.Equals(timezoneId));
+
+            return locations.Select(s => s.CountryCode).ToList();
+        }
+
+        return new List<string>();
+    }
 }
