@@ -34,7 +34,7 @@ public static class ServiceCollectionExtensions
 
         builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
-        builder.Services.TryAddSingleton<ILogger, Logger>();
+        builder.Services.TryAddSingleton<ILogger, OpenTelemetryLoggerService>();
 
         return builder;
     }

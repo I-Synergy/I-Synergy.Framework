@@ -65,7 +65,7 @@ public sealed partial class App : Application
             })
             .ConfigureLogging((logging, configuration) =>
             {
-                logging.AddOpenTelemetryLogging(configuration);
+                logging.AddOpenTelemetryLogging(sp => sp.GetRequiredService<IContext>(), infoService, configuration);
             })
             .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
             {
