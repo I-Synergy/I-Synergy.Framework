@@ -1,7 +1,7 @@
 using Dotmim.Sync;
 using Dotmim.Sync.SqlServer;
 using Dotmim.Sync.Web.Server;
-using ISynergy.Framework.Core.Serializers;
+using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.Synchronization.Factories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,8 +57,7 @@ var sqlProvider = new SqlSyncProvider(connectionString);
 //builder.Services.AddSyncServer(sqlChangeTrackingProvider(sqlChangeTrackingProvider, setup, options, webServerOptions);
 builder.Services.AddSyncServer(sqlProvider, setup, options, webServerOptions);
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options => DefaultJsonSerializers.Web());
+builder.Services.AddControllerWithDefaultJsonSerialization();
 
 var app = builder.Build();
 

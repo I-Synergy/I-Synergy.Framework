@@ -1,4 +1,5 @@
-using ISynergy.Framework.Core.Serializers;
+using ISynergy.Framework.AspNetCore.Extensions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -21,8 +22,12 @@ public class Program
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly);
 
+        builder.Services.AddSingleton<IContext, Context>();
 
-        builder.Logging.AddOpenTelemetryLogging(builder.Configuration,
+        builder.Logging.AddOpenTelemetryLogging(sp =>
+        sp.GetRequiredService<IContext>(),
+        infoService,
+        builder.Configuration,
             logger =>
             {
                 //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
@@ -89,14 +94,11 @@ public class Program
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
         // Add services to the container.
-        builder.Services
-            .AddMvc()
-            .AddJsonOptions(options => DefaultJsonSerializers.Default());
+        builder.Services.AddControllerWithDefaultJsonSerialization();
 
         builder.Services.AddDbContext<TestDbContext>(options =>
             options.UseInMemoryDatabase("TestDb"));
 
-        builder.Services.AddControllersWithViews();
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddOpenApiDocument();

@@ -30,6 +30,7 @@ ___
 | [I-Synergy.Framework.IO](https://www.nuget.org/packages/I-Synergy.Framework.IO/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.IO) |
 | [I-Synergy.Framework.Logging](https://www.nuget.org/packages/I-Synergy.Framework.Logging/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging) |
 | [I-Synergy.Framework.Logging.OpenTelemetry](https://www.nuget.org/packages/I-Synergy.Framework.Logging.OpenTelemetry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.OpenTelemetry) |
+| [I-Synergy.Framework.Logging.OpenTelemetry.Sentry](https://www.nuget.org/packages/I-Synergy.Framework.Logging.OpenTelemetry.Sentry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.OpenTelemetry.Sentry) |
 | [I-Synergy.Framework.Mail](https://www.nuget.org/packages/I-Synergy.Framework.Mail/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail) |
 | [I-Synergy.Framework.Mail.Microsoft365](https://www.nuget.org/packages/I-Synergy.Framework.Mail.Microsoft365/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.Microsoft365) |
 | [I-Synergy.Framework.Mail.SendGrid](https://www.nuget.org/packages/I-Synergy.Framework.Mail.SendGrid/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.SendGrid) |
@@ -47,16 +48,15 @@ ___
 | [I-Synergy.Framework.Synchronization](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Synchronization) |
 | [I-Synergy.Framework.UI](https://www.nuget.org/packages/I-Synergy.Framework.UI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI) |
 | [I-Synergy.Framework.UI.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.UI.WinUI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WinUI) |
-| [I-Synergy.Framework.UI.Uno](https://www.nuget.org/packages/I-Synergy.Framework.UI.Uno/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Uno) |
-| [I-Synergy.Framework.UI.Maui](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui) |
 | [I-Synergy.Framework.UI.WPF](https://www.nuget.org/packages/I-Synergy.Framework.UI.WPF/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WPF) |
-
 
 ## Nuget Deprecated Deployment Status
 | Release | Status |
 |:---|---|
 | [I-Synergy.Framework.Logging.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Logging.ApplicationInsights/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.ApplicationInsights) |
 | [I-Synergy.Framework.Logging.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Logging.AppCenter/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.AppCenter) |
+| [I-Synergy.Framework.UI.Uno](https://www.nuget.org/packages/I-Synergy.Framework.UI.Uno/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Uno) |
+| [I-Synergy.Framework.UI.Maui](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui) |
 | [I-Synergy.Framework.Update](https://www.nuget.org/packages/I-Synergy.Framework.Update/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update) |
 | [I-Synergy.Framework.Update.Maui](https://www.nuget.org/packages/I-Synergy.Framework.Update.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Maui) |
 | [I-Synergy.Framework.Update.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.Update.WinUI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WinUI) |

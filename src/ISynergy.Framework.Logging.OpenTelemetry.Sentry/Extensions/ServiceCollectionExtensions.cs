@@ -1,5 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Logging.Processors;
 using ISynergy.Framework.Logging.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,11 +9,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ServiceDiscovery;
-using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Sentry.OpenTelemetry;
 
 namespace ISynergy.Framework.Logging.Extensions;
 public static class ServiceCollectionExtensions
@@ -20,21 +22,36 @@ public static class ServiceCollectionExtensions
 
     public static ILoggingBuilder AddOpenTelemetryLogging(
         this ILoggingBuilder builder,
+        Func<IServiceProvider, IContext> contextFactory,
+        IInfoService infoService,
         IConfiguration configuration,
         Action<OpenTelemetryLoggerOptions> optionsAction = null,
-        string prefix = "")
+        bool profiling = false)
     {
+        var sentryOptions = new SentryOptions();
+        configuration.GetSection(nameof(SentryOptions)).Bind(sentryOptions);
+
         builder.AddOpenTelemetry(options =>
         {
             options.IncludeFormattedMessage = true;
             options.IncludeScopes = true;
 
             optionsAction?.Invoke(options);
+
+            var context = contextFactory(builder.Services.BuildServiceProvider());
+            options.AddProcessor(new SentryLogProcessor(context, infoService, sentryOptions));
         });
 
         builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
-        builder.Services.TryAddSingleton<ILogger, OpenTelemetryLoggerService>();
+        builder.Services.TryAddSingleton<ILogger, SentryLoggerService>();
+
+        sentryOptions.UseOpenTelemetry();
+
+        if (profiling)
+            sentryOptions.AddProfilingIntegration();
+
+        SentrySdk.Init(sentryOptions);
 
         return builder;
     }
@@ -85,6 +102,8 @@ public static class ServiceCollectionExtensions
 
                     // Custom tracing
                     tracingAction?.Invoke(tracing);
+
+                    tracing.AddSentry();
                 })
                 .WithMetrics(metrics =>
                 {
@@ -104,19 +123,6 @@ public static class ServiceCollectionExtensions
                     loggerAction?.Invoke(logging);
                 });
         });
-
-        builder.AddOpenTelemetryExporters();
-
-        return builder;
-    }
-
-    private static IHostBuilder AddOpenTelemetryExporters(this IHostBuilder builder)
-    {
-        builder.ConfigureServices((context, services) =>
-        {
-            services.AddOpenTelemetry().UseOtlpExporter();
-        });
-
 
         return builder;
     }
