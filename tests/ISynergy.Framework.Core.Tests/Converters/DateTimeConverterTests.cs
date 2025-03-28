@@ -21,7 +21,7 @@ public class DateTimeConverterTests
 
     public DateTimeConverterTests()
     {
-        _serializerOptions = DefaultJsonSerializers.Default();
+        _serializerOptions = DefaultJsonSerializers.Default;
 
         _dateUnspecified = new DateTime(1975, 10, 29, 15, 0, 0, DateTimeKind.Unspecified);
         _dateUtc = new DateTime(1975, 10, 29, 15, 0, 0, DateTimeKind.Utc);

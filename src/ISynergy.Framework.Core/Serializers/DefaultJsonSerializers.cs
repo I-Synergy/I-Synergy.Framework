@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Core.Serializers;
 
 public static class DefaultJsonSerializers
 {
-    public static JsonSerializerOptions Default() => new JsonSerializerOptions(JsonSerializerDefaults.General)
+    public static JsonSerializerOptions Default => new JsonSerializerOptions(JsonSerializerDefaults.General)
     {
         Converters =
         {
@@ -22,7 +22,7 @@ public static class DefaultJsonSerializers
         ReferenceHandler = ReferenceHandler.Preserve
     };
 
-    public static JsonSerializerOptions Web() => new JsonSerializerOptions(JsonSerializerDefaults.Web)
+    public static JsonSerializerOptions Web => new JsonSerializerOptions(JsonSerializerDefaults.Web)
     {
         AllowTrailingCommas = true,
         Converters =

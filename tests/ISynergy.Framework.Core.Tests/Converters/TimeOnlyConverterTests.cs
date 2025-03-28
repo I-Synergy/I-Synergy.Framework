@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Converters.Tests;
 [TestClass]
 public class TimeOnlyConverterTests
 {
-    private readonly JsonSerializerOptions options = DefaultJsonSerializers.Default();
+    private readonly JsonSerializerOptions options = DefaultJsonSerializers.Default;
 
     [TestMethod]
     public void ReadValidStringReturnsValidResult()

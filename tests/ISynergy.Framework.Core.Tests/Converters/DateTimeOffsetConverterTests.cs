@@ -18,7 +18,7 @@ public class DateTimeOffsetConverterTests
 
     public DateTimeOffsetConverterTests()
     {
-        _serializerOptions = DefaultJsonSerializers.Default();
+        _serializerOptions = DefaultJsonSerializers.Default;
 
         _dateUtc = new DateTimeOffset(1975, 10, 29, 15, 0, 0, TimeSpan.Zero);
         _dateLocal = new DateTimeOffset(1975, 10, 29, 15, 0, 0, TimeSpan.FromHours(2));
