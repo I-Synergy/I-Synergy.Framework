@@ -8,6 +8,7 @@ namespace ISynergy.Framework.Automations.Triggers.Base;
 /// Base trigger.
 /// </summary>
 public abstract class BaseTrigger<T> : BaseTrigger, ITrigger<T>
+    where T : IEquatable<T>, IComparable
 {
     /// <summary>
     /// Gets or sets the From property value.
@@ -44,6 +45,7 @@ public abstract class BaseTrigger<T> : BaseTrigger, ITrigger<T>
         Func<T, Task> callbackAsync,
         TimeSpan @for)
         : base(automationId)
+
     {
         Argument.IsNotNull(from);
         Argument.IsNotNull(to);

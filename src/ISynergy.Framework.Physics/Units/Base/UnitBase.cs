@@ -42,7 +42,7 @@ public abstract class UnitBase : IUnit
         Argument.IsNotNullOrEmpty(Symbol);
 
         Argument.IsNotNull(unitTypes);
-        Argument.Condition(unitTypes, value => unitTypes.Count() >= 1);
+        Argument.Condition(unitTypes.Length, count => count >= 1, "At least one unit type must be specified");
 
         UnitTypes = unitTypes;
     }

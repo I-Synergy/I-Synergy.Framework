@@ -14,5 +14,5 @@ public interface IBindable : INotifyPropertyChanged
     /// Called when [property changed].
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
-    void RaisePropertyChanged([CallerMemberName] string propertyName = null);
+    void RaisePropertyChanged([CallerMemberName] string? propertyName = "");
 }
