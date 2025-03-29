@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Services;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Core.Validation;
@@ -7,6 +8,7 @@ namespace ISynergy.Framework.Core.Validation;
 /// <summary>
 /// Class Argument.
 /// </summary>
+[DebuggerNonUserCode, DebuggerStepThrough]
 public static class Argument
 {
     /// <summary>
@@ -15,8 +17,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <param name="name"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotNull(object value, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotNull([NotNull] object value, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if (value is null)
         {
@@ -31,8 +32,7 @@ public static class Argument
     /// <param name="name">Name of the parameter.</param>
     /// <param name="value">Value of the parameter.</param>
     /// <exception cref="ArgumentNullException"></exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotNullOrEmpty(string value, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotNullOrEmpty([NotNull] string value, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if (string.IsNullOrEmpty(value))
         {
@@ -47,8 +47,7 @@ public static class Argument
     /// <param name="name">Name of the parameter.</param>
     /// <param name="value">Value of the parameter.</param>
     /// <exception cref="ArgumentException"></exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotEmpty(Guid value, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotEmpty([NotNull] Guid value, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if (value == Guid.Empty)
         {
@@ -64,8 +63,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotNullOrEmpty(Guid? value, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotNullOrEmpty([NotNull] Guid? value, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if (!value.HasValue || value.Value == Guid.Empty)
         {
@@ -81,8 +79,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotNullOrWhitespace(string value, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotNullOrWhitespace([NotNull] string value, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if (string.IsNullOrEmpty(value) || (string.CompareOrdinal(value.Trim(), string.Empty) == 0))
         {
@@ -98,8 +95,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotNullOrEmptyArray(Array value, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotNullOrEmptyArray([NotNull] Array value, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if ((value is null) || (value.Length == 0))
         {
@@ -116,8 +112,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotNullOrEmptyList<T>(IList<T> value, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotNullOrEmptyList<T>([NotNull] IList<T> value, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if ((value is null) || (value.Count == 0))
         {
@@ -133,8 +128,7 @@ public static class Argument
     /// <param name="name">Name of the parameter.</param>
     /// <param name="value">The parameter value.</param>
     /// <exception cref="System.ArgumentException"></exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotEnum<T>(T value, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotEnum<T>([NotNull] T value, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if (value is null || !typeof(T).IsEnum)
         {
@@ -151,17 +145,13 @@ public static class Argument
     /// <param name="value">The value.</param>
     /// <returns>IList&lt;T&gt;.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IList<T> HasNoNulls<T>(IList<T> value, [CallerArgumentExpression("value")] string name = null)
+    public static IList<T> HasNoNulls<T>([NotNull] IList<T> value, [CallerArgumentExpression(nameof(value))] string name = "")
         where T : class
     {
         IsNotNull(value);
 
         if (value.Any(e => e is null))
-        {
-            IsNotNullOrEmpty(name);
-
             throw new ArgumentNullException(name);
-        }
 
         return value;
     }
@@ -178,8 +168,7 @@ public static class Argument
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentOutOfRangeException">The <paramref name="validation" /> is <c>null</c>.</exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotOutOfRange<T>(T value, T minimumValue, T maximumValue, Func<T, T, T, bool> validation, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotOutOfRange<T>(T value, T minimumValue, T maximumValue, Func<T, T, T, bool> validation, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         IsNotNull(validation);
 
@@ -199,8 +188,7 @@ public static class Argument
     /// <param name="minimumValue">The minimum value.</param>
     /// <param name="maximumValue">The maximum value.</param>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value" /> is out of range.</exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsNotOutOfRange<T>(T value, T minimumValue, T maximumValue, [CallerArgumentExpression("value")] string name = null)
+    public static void IsNotOutOfRange<T>(T value, T minimumValue, T maximumValue, [CallerArgumentExpression(nameof(value))] string name = "")
         where T : IComparable
     {
         IsNotOutOfRange(value, minimumValue, maximumValue,
@@ -219,8 +207,7 @@ public static class Argument
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentOutOfRangeException">The <paramref name="validation" /> is <c>null</c>.</exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsMinimal<T>(T value, T minimumValue, Func<T, T, bool> validation, [CallerArgumentExpression("value")] string name = null)
+    public static void IsMinimal<T>(T value, T minimumValue, Func<T, T, bool> validation, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         IsNotNull(validation);
 
@@ -239,8 +226,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <param name="minimumValue">The minimum value.</param>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value" /> is out of range.</exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsMinimal<T>(T value, T minimumValue, [CallerArgumentExpression("value")] string name = null)
+    public static void IsMinimal<T>(T value, T minimumValue, [CallerArgumentExpression(nameof(value))] string name = "")
         where T : IComparable
     {
         IsMinimal(value, minimumValue,
@@ -259,8 +245,7 @@ public static class Argument
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentOutOfRangeException">The <paramref name="validation" /> is <c>null</c>.</exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsMaximum<T>(T value, T maximumValue, Func<T, T, bool> validation, [CallerArgumentExpression("value")] string name = null)
+    public static void IsMaximum<T>(T value, T maximumValue, Func<T, T, bool> validation, [CallerArgumentExpression(nameof(value))] string name = "")
     {
         if (!validation(value, maximumValue))
         {
@@ -277,8 +262,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <param name="maximumValue">The maximum value.</param>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value" /> is out of range.</exception>
-    [DebuggerNonUserCode, DebuggerStepThrough]
-    public static void IsMaximum<T>(T value, T maximumValue, [CallerArgumentExpression("value")] string name = null)
+    public static void IsMaximum<T>(T value, T maximumValue, [CallerArgumentExpression(nameof(value))] string name = "")
         where T : IComparable
     {
         IsMaximum(value, maximumValue,
@@ -295,17 +279,14 @@ public static class Argument
     /// <param name="condition">The condition.</param>
     /// <returns>T.</returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public static T Condition<T>(T value, Predicate<T> condition, [CallerArgumentExpression("value")] string name = null)
+    public static T Condition<T>(T value, Predicate<T> condition, [CallerArgumentExpression(nameof(value))] string name = "")
+        where T : IComparable
     {
-        IsNotNull(condition);
         IsNotNull(value);
+        IsNotNull(condition);
 
         if (!condition(value))
-        {
-            IsNotNullOrEmpty(name);
-
             throw new ArgumentOutOfRangeException(name);
-        }
 
         return value;
     }
@@ -319,16 +300,14 @@ public static class Argument
     /// <param name="compareValue"></param>
     /// <returns>T.</returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public static T Equals<T>(T value, T compareValue, [CallerArgumentExpression("value")] string name = null)
+    public static T Equals<T>(T value, T compareValue, [CallerArgumentExpression(nameof(value))] string name = "")
+        where T : IComparable
     {
-        IsNotNull(compareValue);
         IsNotNull(value);
+        IsNotNull(compareValue);
 
         if (value.Equals(compareValue))
-        {
-            IsNotNullOrEmpty(name);
             throw new ArgumentException($"Property '{name}' cannot have the same value as the comparer value.");
-        }
 
         return value;
     }

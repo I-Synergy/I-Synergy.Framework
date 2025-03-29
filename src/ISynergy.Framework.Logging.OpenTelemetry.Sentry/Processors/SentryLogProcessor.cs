@@ -58,9 +58,9 @@ internal class SentryLogProcessor : BaseProcessor<LogRecord>
     /// Gets the metrics.
     /// </summary>
     /// <returns>Dictionary&lt;System.String, System.String&gt;.</returns>
-    private Dictionary<string, object> GetMetrics()
+    private Dictionary<string, object?> GetMetrics()
     {
-        var metrics = new Dictionary<string, object>();
+        var metrics = new Dictionary<string, object?>();
 
         if (_context.IsAuthenticated && _context.Profile is { } profile)
         {
@@ -95,13 +95,6 @@ internal class SentryLogProcessor : BaseProcessor<LogRecord>
                         { "AccountDescription", profile.AccountDescription }
                     }
                 };
-            });
-        }
-        else
-        {
-            SentrySdk.ConfigureScope(scope =>
-            {
-                scope.User = null;
             });
         }
     }
