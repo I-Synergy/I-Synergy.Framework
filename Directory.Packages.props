@@ -33,7 +33,7 @@
     <PackageVersion Include="NodaTime" Version="3.2.2" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.2.0" />
     <PackageVersion Include="NuGet.Commands" Version="6.13.2" />
-    <PackageVersion Include="OpenIddict.Abstractions" Version="6.1.1" />
+    <PackageVersion Include="OpenIddict.Abstractions" Version="6.2.0" />
     <PackageVersion Include="OpenTelemetry" Version="1.11.2" />
     <PackageVersion Include="OpenTelemetry.Api" Version="1.11.2" />
     <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.11.2" />
