@@ -52,7 +52,7 @@ public class TreeNode<TKey, TModel> : ObservableClass
     /// Gets or sets the Data property value.
     /// </summary>
     /// <value>The data.</value>
-    public TModel Data
+    public TModel? Data
     {
         get => GetValue<TModel>();
         set => SetValue(value);
@@ -62,7 +62,7 @@ public class TreeNode<TKey, TModel> : ObservableClass
     /// Gets or sets the Parent property value.
     /// </summary>
     /// <value>The parent.</value>
-    public TreeNode<TKey, TModel> Parent
+    public TreeNode<TKey, TModel>? Parent
     {
         get => GetValue<TreeNode<TKey, TModel>>();
         set => SetValue(value);
@@ -146,7 +146,7 @@ public class TreeNode<TKey, TModel> : ObservableClass
     /// </summary>
     /// <param name="node">The node.</param>
     /// <param name="updateChildNodes">if set to <c>true</c> [update child nodes].</param>
-    public void SetParent(TreeNode<TKey, TModel> node, bool updateChildNodes = true)
+    public void SetParent(TreeNode<TKey, TModel>? node, bool updateChildNodes = true)
     {
         if (node == Parent)
             return;
@@ -176,9 +176,9 @@ public class TreeNode<TKey, TModel> : ObservableClass
         set => SetValue(value);
     }
 
-    private void TreeNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void TreeNode_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName.Equals(nameof(Parent)))
+        if (e.PropertyName?.Equals(nameof(Parent)) == true)
         {
             if (Parent is not null)
             {
@@ -192,7 +192,8 @@ public class TreeNode<TKey, TModel> : ObservableClass
             if (Data is not null && Data.HasParentIdentityProperty())
                 Data.GetParentIdentityProperty().SetValue(Data, ParentKey);
         }
-        else if (e.PropertyName.Equals(nameof(Data)) && Data is not null && Data.HasIdentityProperty())
+        else if (e.PropertyName?.Equals(nameof(Data)) == true &&
+            Data is not null && Data.HasIdentityProperty())
         {
             Key = Data.GetIdentityValue<TModel, TKey>();
         }
@@ -217,7 +218,7 @@ public class TreeNode<TKey, TModel> : ObservableClass
     /// Returns a <see cref="System.String" /> that represents this instance.
     /// </summary>
     /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-    public override string ToString() => Data.ToString();
+    public override string ToString() => Data?.ToString() ?? string.Empty;
 
     /// <summary>
     /// Gets or sets the DisposeTraversal property value.
@@ -239,13 +240,13 @@ public class TreeNode<TKey, TModel> : ObservableClass
     {
         if (disposing)
         {
-            if (Data is IDisposable)
+            if (Data is IDisposable disposable)
             {
                 if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
                     foreach (var node in Children.EnsureNotNull())
                         node.Dispose();
 
-                (Data as IDisposable).Dispose();
+                disposable.Dispose();
 
                 if (DisposeTraversal == UpDownTraversalTypes.TopDown)
                     foreach (var node in Children.EnsureNotNull())

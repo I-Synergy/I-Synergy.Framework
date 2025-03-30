@@ -20,7 +20,7 @@ public class TenantProcessor : BaseProcessor<LogRecord>
 
     public override void OnEnd(LogRecord data)
     {
-        var attributes = new Dictionary<string, object>();
+        var attributes = new Dictionary<string, object?>();
         attributes.AddDefaultProperties(_infoService, _context);
         attributes.AddRange(data.Attributes);
         data.Attributes = attributes.ToList().AsReadOnly();

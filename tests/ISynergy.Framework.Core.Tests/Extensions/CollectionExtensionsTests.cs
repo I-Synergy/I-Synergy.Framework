@@ -17,7 +17,7 @@ public class CollectionExtensionsTests
     [TestMethod]
     public void NullObservableCollectionNonFailableTest()
     {
-        ObservableCollection<object> list = null;
+        ObservableCollection<object>? list = null;
         Assert.IsNotNull(list.EnsureNotNull());
     }
 
@@ -29,8 +29,8 @@ public class CollectionExtensionsTests
     {
         Assert.ThrowsException<NullReferenceException>(() =>
         {
-            ObservableCollection<object> list = null;
-            foreach (object item in list)
+            ObservableCollection<object>? list = null;
+            foreach (object item in list!)
             {
                 Assert.IsNotNull(item);
             }

@@ -38,7 +38,7 @@ public class SignUpViewModel : ViewModel
     /// <value>The registration mail.</value>
     public string Mail
     {
-        get { return GetValue<string>()?.ToLowerInvariant(); }
+        get { return GetValue<string>()!.ToLowerInvariant(); }
         set { SetValue(value?.ToLowerInvariant()); }
     }
 
@@ -205,7 +205,7 @@ public class SignUpViewModel : ViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<Module>> e)
+    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<List<Module>> e)
     {
         if (sender is ViewModelSelectionDialog<Module> vm)
             vm.Submitted -= SelectionVM_Submitted;
@@ -246,7 +246,7 @@ public class SignUpViewModel : ViewModel
     private Task SignInAsync() =>
         _commonServices.NavigationService.NavigateModalAsync<SignInViewModel>();
 
-    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SelectedCountry))
         {
@@ -261,8 +261,8 @@ public class SignUpViewModel : ViewModel
             }
             else
             {
-                TimeZones = null;
-                SelectedTimeZone = null;
+                TimeZones = new List<string>();
+                SelectedTimeZone = string.Empty;
             }
         }
     }

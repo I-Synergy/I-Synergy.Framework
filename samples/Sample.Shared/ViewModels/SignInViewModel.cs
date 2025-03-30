@@ -83,14 +83,14 @@ public class SignInViewModel : ViewModel
 
         if (!IsInitialized)
         {
-            AutoLogin = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin;
+            AutoLogin = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.IsAutoLogin;
             var users = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();
             Usernames.AddRange(users);
 
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser))
-                Username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
-            if (string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && Usernames.Count > 0)
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser))
+                Username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser;
+            if (string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser) && Usernames.Count > 0)
                 Username = Usernames[0];
 
             IsInitialized = true;
@@ -116,7 +116,7 @@ public class SignInViewModel : ViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void ForgotPasswordVM_Submitted(object sender, SubmitEventArgs<bool> e)
+    private async void ForgotPasswordVM_Submitted(object? sender, SubmitEventArgs<bool> e)
     {
         if (sender is ForgotPasswordViewModel vm)
             vm.Submitted -= ForgotPasswordVM_Submitted;

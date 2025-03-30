@@ -36,7 +36,7 @@ public static class TypeActivator
     /// <exception cref="ArgumentException">Unable to instantiate type: " + targetType.AssemblyQualifiedName + " - Unknown Error</exception>
     public static object CreateInstance(Type targetType)
     {
-        object result;
+        object? result;
 
         // Check if type is not a string. It has no parameterless constructor.
         if (Type.GetTypeCode(targetType) == TypeCode.String)

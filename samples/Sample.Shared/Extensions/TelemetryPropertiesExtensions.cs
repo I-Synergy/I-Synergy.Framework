@@ -5,7 +5,7 @@ using ISynergy.Framework.Core.Validation;
 namespace Sample.Extensions;
 public static class TelemetryPropertiesExtensions
 {
-    public static void AddDefaultProperties(this IDictionary<string, object> properties, IInfoService infoService, IContext context)
+    public static void AddDefaultProperties(this IDictionary<string, object?> properties, IInfoService infoService, IContext context)
     {
         Argument.IsNotNull(properties);
         Argument.IsNotNull(context);

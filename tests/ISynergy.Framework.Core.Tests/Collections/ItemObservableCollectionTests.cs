@@ -8,7 +8,7 @@ public class ItemObservableCollectionTests
 {
     private class TestItem : INotifyPropertyChanged
     {
-        private string _name;
+        private string _name = string.Empty;
         public string Name
         {
             get => _name;
@@ -19,7 +19,7 @@ public class ItemObservableCollectionTests
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 
     [TestMethod]

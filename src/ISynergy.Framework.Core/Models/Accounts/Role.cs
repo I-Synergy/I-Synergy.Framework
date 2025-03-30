@@ -23,12 +23,12 @@ public class Role : BaseModel
     /// </summary>
     /// <value>The name.</value>
     [Required]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the description.
     /// </summary>
     /// <value>The description.</value>
     [JsonIgnore]
-    public string Description { get; set; } = string.Empty;
+    public required string Description { get; set; }
 }

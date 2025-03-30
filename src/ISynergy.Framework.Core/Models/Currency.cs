@@ -24,7 +24,7 @@ public class Currency : BaseModel
     /// <value>The code.</value>
     [Required]
     [StringLength(3)]
-    public string Code { get; set; }
+    public required string Code { get; set; }
 
     /// <summary>
     /// Gets or sets the Description property value.
@@ -32,7 +32,7 @@ public class Currency : BaseModel
     /// <value>The description.</value>
     [Required]
     [StringLength(255)]
-    public string Description { get; set; }
+    public required string Description { get; set; }
 
     /// <summary>
     /// Gets or sets the Currency_Symbol property value.
@@ -40,7 +40,7 @@ public class Currency : BaseModel
     /// <value>The currency symbol.</value>
     [Required]
     [StringLength(3)]
-    public string CurrencySymbol { get; set; }
+    public required string CurrencySymbol { get; set; }
 
     /// <summary>
     /// Gets or sets the Rate property value.

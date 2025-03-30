@@ -217,10 +217,14 @@ public partial class MatrixTest
     {
         double[] actual;
 
+#pragma warning disable CS0618 // Type or member is obsolete
         actual = Vector.Interval(0.0, 0.0, 1.0);
+#pragma warning restore CS0618 // Type or member is obsolete
         Assert.AreEqual(0, actual[0]);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         actual = Vector.Interval(0.0, 0.0, 5.0);
+#pragma warning restore CS0618 // Type or member is obsolete
         Assert.AreEqual(0, actual[0]);
         Assert.AreEqual(actual.Length, 1);
     }
@@ -255,7 +259,9 @@ public partial class MatrixTest
         double to = 1;
         double stepSize = 0.2;
         double[] expected = [-1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
+#pragma warning disable CS0618 // Type or member is obsolete
         double[] actual = Vector.Interval(from, to, stepSize);
+#pragma warning restore CS0618 // Type or member is obsolete
         double[] round = Matrix.Round(actual, 15);
         Assert.IsTrue(Matrix.IsEqual(expected, round));
     }
@@ -267,7 +273,9 @@ public partial class MatrixTest
         double to = -1;
         double stepSize = 0.2;
         double[] expected = [-1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
+#pragma warning disable CS0618 // Type or member is obsolete
         double[] actual = Vector.Interval(from, to, stepSize);
+#pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(Matrix.IsEqual(expected.Reverse().ToArray(), Matrix.Round(actual, 15)));
     }
 
@@ -953,7 +961,9 @@ public partial class MatrixTest
             { 2, 1, 5 }
         };
 
+#pragma warning disable CS0618 // Type or member is obsolete
         double[] vcut = v.Submatrix(0, 1); // { 9, 4 }
+#pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(new double[] { 9, 4 }.IsEqual(vcut));
 
         double[] mv = m.Dot(v); // { 24, 32 }
@@ -3065,7 +3075,9 @@ public partial class MatrixTest
             [1.0,  1.0]
         ];
 
+#pragma warning disable CS0618 // Type or member is obsolete
         double[][] actual = Matrix.Mesh(rowRange, colRange, rowSteps, colSteps);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         for (int i = 0; i < actual.GetLength()[0]; i++)
             for (int j = 0; j < actual.GetLength()[1]; j++)
@@ -3524,7 +3536,9 @@ public partial class MatrixTest
 
         {
             int[] idx = values.Top(5);
+#pragma warning disable CS0618 // Type or member is obsolete
             double[] selected = values.Submatrix(idx);
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.AreEqual(5, idx.Length);
             Assert.AreEqual(9, selected[0]);
             Assert.AreEqual(8, selected[1]);
@@ -3535,7 +3549,9 @@ public partial class MatrixTest
 
         {
             int[] idx = values.Bottom(5);
+#pragma warning disable CS0618 // Type or member is obsolete
             double[] selected = values.Submatrix(idx);
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.AreEqual(5, idx.Length);
             Assert.AreEqual(-2, selected[0]);
             Assert.AreEqual(0, selected[1]);
@@ -3555,8 +3571,12 @@ public partial class MatrixTest
 
             for (int k = 1; k < 11; k++)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 double[] actualTop = values.Submatrix(values.Top(k));
+#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
                 double[] actualBottom = values.Submatrix(values.Bottom(k));
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 Array.Sort(values);
 

@@ -93,6 +93,9 @@ public class CommonServices : ICommonServices
     /// </summary>
     public void RestartApplication()
     {
+        if (Environment.ProcessPath == null)
+            return;
+
         // Start a new instance of the application
         Process.Start(Environment.ProcessPath);
         // Close the current process

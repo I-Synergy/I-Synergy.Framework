@@ -11,7 +11,7 @@ public class Space
     [ParentIdentity(typeof(Guid))]
     public Guid ParentId { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public double SquareFeet { get; set; }
     public SpaceTypes Type { get; set; }
 

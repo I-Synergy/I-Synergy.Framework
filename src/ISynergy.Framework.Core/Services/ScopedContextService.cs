@@ -2,16 +2,17 @@
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Services;
 
 public class ScopedContextService : IScopedContextService
 {
     private readonly IServiceProvider _serviceProvider;
-    private IServiceScope _serviceScope;
+    private IServiceScope? _serviceScope;
     private bool _disposed;
 
-    public event EventHandler<ReturnEventArgs<bool>> ScopedChanged;
+    public event EventHandler<ReturnEventArgs<bool>>? ScopedChanged;
 
     private void RaiseScopedChanged() => ScopedChanged?.Invoke(this, new ReturnEventArgs<bool>(true));
 
@@ -46,11 +47,7 @@ public class ScopedContextService : IScopedContextService
             var services = oldScope.ServiceProvider.GetRegisteredServices().EnsureNotNull();
             foreach (var descriptor in services)
             {
-#if NET6_0_OR_GREATER
                 if (descriptor.ServiceType.IsAssignableTo(typeof(IDisposable)))
-#else
-                if (typeof(IDisposable).IsAssignableFrom(descriptor.ServiceType))
-#endif
                 {
                     var service = oldScope.ServiceProvider.GetService(descriptor.ServiceType);
                     (service as IDisposable)?.Dispose();
@@ -70,7 +67,28 @@ public class ScopedContextService : IScopedContextService
         if (_disposed)
             throw new ObjectDisposedException(nameof(ScopedContextService));
 
-        return _serviceScope.ServiceProvider.GetService(serviceType) ?? throw new InvalidOperationException();
+        if (_serviceScope is null)
+            throw new InvalidOperationException("Service scope is not initialized");
+
+        return _serviceScope.ServiceProvider.GetService(serviceType) ??
+               throw new InvalidOperationException($"Service of type {serviceType.Name} is not registered");
+    }
+
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
+    /// <param name="serviceType">Type of the service.</param>
+    /// <returns>System.Object.</returns>
+    public object GetRequiredService([NotNull] Type serviceType)
+    {
+        if (_disposed)
+            throw new ObjectDisposedException(nameof(ScopedContextService));
+
+        if (_serviceScope is null)
+            throw new InvalidOperationException("Service scope is not initialized");
+
+        return _serviceScope.ServiceProvider.GetRequiredService(serviceType) ??
+               throw new InvalidOperationException($"Service of type {serviceType.Name} is not registered");
     }
 
     /// <summary>
@@ -83,7 +101,29 @@ public class ScopedContextService : IScopedContextService
         if (_disposed)
             throw new ObjectDisposedException(nameof(ScopedContextService));
 
-        return _serviceScope.ServiceProvider.GetService<TService>() ?? throw new InvalidOperationException();
+        if (_serviceScope is null)
+            throw new InvalidOperationException("Service scope is not initialized");
+
+        return _serviceScope.ServiceProvider.GetService<TService>() ??
+               throw new InvalidOperationException($"Service of type {typeof(TService).Name} is not registered");
+    }
+
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
+    /// <typeparam name="TService">The type of the t service.</typeparam>
+    /// <returns>TService.</returns>
+    [return: NotNull]
+    public TService GetRequiredService<TService>() where TService : notnull
+    {
+        if (_disposed)
+            throw new ObjectDisposedException(nameof(ScopedContextService));
+
+        if (_serviceScope is null)
+            throw new InvalidOperationException("Service scope is not initialized");
+
+        return _serviceScope.ServiceProvider.GetRequiredService<TService>() ??
+               throw new InvalidOperationException($"Service of type {typeof(TService).Name} is not registered");
     }
 
     /// <summary>
@@ -97,6 +137,9 @@ public class ScopedContextService : IScopedContextService
             if (_disposed)
                 throw new ObjectDisposedException(nameof(ScopedContextService));
 
+            if (_serviceScope is null)
+                throw new InvalidOperationException("Service scope is not initialized");
+
             return _serviceScope.ServiceProvider;
         }
     }
@@ -109,11 +152,7 @@ public class ScopedContextService : IScopedContextService
         var services = _serviceScope.ServiceProvider.GetRegisteredServices().EnsureNotNull();
         foreach (var descriptor in services)
         {
-#if NET6_0_OR_GREATER
             if (descriptor.ServiceType.IsAssignableTo(typeof(IDisposable)))
-#else
-            if (typeof(IDisposable).IsAssignableFrom(descriptor.ServiceType))
-#endif
             {
                 var service = _serviceScope.ServiceProvider.GetService(descriptor.ServiceType);
                 (service as IDisposable)?.Dispose();

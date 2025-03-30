@@ -74,7 +74,7 @@ public sealed partial class ImageView : UserControl
     /// <param name="source">The source.</param>
     private void LoadImage(ImageSource source)
     {
-        void handler(object sender, object e)
+        void handler(object? sender, object e)
         {
             ImageFadeOut.Completed -= handler;
             ActualImage.Source = source;

@@ -5,18 +5,18 @@ namespace ISynergy.Framework.Core.Events;
 /// <summary>
 /// Class WeakFunc.
 /// Implements the <see cref="WeakFunc{TResult}" />
-/// Implements the <see cref="IExecuteWithObjectAndResult" />
+/// Implements the <see cref="IExecuteWithObjectAndResult{T}" />
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <typeparam name="TResult">The type of the t result.</typeparam>
 /// <seealso cref="WeakFunc{TResult}" />
-/// <seealso cref="IExecuteWithObjectAndResult" />
-public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResult
+/// <seealso cref="IExecuteWithObjectAndResult{T}" />
+public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResult<T>
 {
     /// <summary>
     /// The static function
     /// </summary>
-    private Func<T, TResult> _staticFunc;
+    private Func<T, TResult>? _staticFunc;
 
     /// <summary>
     /// Gets the name of the method.
@@ -31,7 +31,7 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
                 return _staticFunc.Method.Name;
             }
 
-            return Method.Name;
+            return Method?.Name ?? string.Empty;
         }
     }
 
@@ -59,7 +59,7 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
                 return true;
             }
 
-            return Reference.IsAlive;
+            return Reference?.IsAlive ?? false;
         }
     }
 
@@ -79,8 +79,13 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
     /// <param name="target">The target.</param>
     /// <param name="func">The function.</param>
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-    public WeakFunc(object target, Func<T, TResult> func, bool keepTargetAlive = false)
+    public WeakFunc(object? target, Func<T, TResult>? func, bool keepTargetAlive = false)
     {
+        if (func is null)
+        {
+            throw new ArgumentNullException(nameof(func));
+        }
+
         if (func.Method.IsStatic)
         {
             _staticFunc = func;
@@ -105,9 +110,9 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
     /// Executes this instance.
     /// </summary>
     /// <returns>TResult.</returns>
-    public new TResult Execute()
+    public new TResult? Execute()
     {
-        return Execute(default(T));
+        return Execute(default!);
     }
 
     /// <summary>
@@ -115,7 +120,7 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
     /// </summary>
     /// <param name="parameter">The parameter.</param>
     /// <returns>TResult.</returns>
-    public TResult Execute(T parameter)
+    public TResult? Execute(T parameter)
     {
         if (_staticFunc is not null)
         {
@@ -131,7 +136,7 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
                     || FuncReference is not null)
                 && funcTarget is not null)
             {
-                return (TResult)Method.Invoke(
+                return (TResult?)Method.Invoke(
                     funcTarget,
                     [
                         parameter
@@ -139,7 +144,7 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
             }
         }
 
-        return default(TResult);
+        return default;
     }
 
     /// <summary>
@@ -148,10 +153,10 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
     /// <param name="parameter">A parameter passed as an object,
     /// to be casted to the appropriate type.</param>
     /// <returns>The result of the operation.</returns>
-    public object ExecuteWithObject(object parameter)
+    public object? ExecuteWithObject(T parameter)
     {
-        var parameterCasted = (T)parameter;
-        return Execute(parameterCasted);
+        //var parameterCasted = parameter is T typedParameter ? typedParameter : default!;
+        return Execute(parameter);
     }
 
     /// <summary>

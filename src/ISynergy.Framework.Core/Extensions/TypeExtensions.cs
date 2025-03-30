@@ -29,7 +29,7 @@ public static class TypeExtensions
     public static Type GetInnerMostType(this Type type)
     {
         while (type.IsArray)
-            type = type.GetElementType();
+            type = type.GetElementType()!;
 
         return type;
     }
@@ -54,7 +54,7 @@ public static class TypeExtensions
     /// 
     /// <param name="type">The type whose default value should be retrieved.</param>
     /// 
-    public static object GetDefaultValue(this Type type)
+    public static object? GetDefaultValue(this Type type)
     {
         if (type.GetTypeInfo().IsValueType)
             return Activator.CreateInstance(type);

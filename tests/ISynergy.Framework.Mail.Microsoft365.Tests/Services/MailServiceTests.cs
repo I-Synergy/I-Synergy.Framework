@@ -1,5 +1,5 @@
+using ISynergy.Framework.Mail.Configuration;
 using ISynergy.Framework.Mail.Models;
-using ISynergy.Framework.Mail.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -32,6 +32,7 @@ public class MailServiceTests
     {
         MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
+            _mailOptions.EmailAddress,
             ["ismail.hassani@i-synergy.nl"],
             "Test subject",
             "Test body",
@@ -46,6 +47,7 @@ public class MailServiceTests
     {
         MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
+            _mailOptions.EmailAddress,
             ["ismail.hassani@i-synergy.nl"],
             "Test subject",
             "Test body",

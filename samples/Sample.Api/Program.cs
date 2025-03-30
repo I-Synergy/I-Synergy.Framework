@@ -20,7 +20,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var mainAssembly = Assembly.GetAssembly(typeof(Program));
         var infoService = new InfoService();
-        infoService.LoadAssembly(mainAssembly);
+        infoService.LoadAssembly(mainAssembly!);
 
         builder.Services.AddSingleton<IContext, Context>();
 

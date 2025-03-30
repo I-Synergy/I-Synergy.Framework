@@ -13,7 +13,7 @@ public class Sleepy : IDisposable
         _alarm.Beeped += Alarm_Beeped;
     }
 
-    private void Alarm_Beeped(object sender, PropertyChangedEventArgs e)
+    private void Alarm_Beeped(object? sender, PropertyChangedEventArgs e)
     {
         _snoozeCount++;
     }

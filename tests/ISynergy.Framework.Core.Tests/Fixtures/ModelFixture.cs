@@ -45,6 +45,6 @@ public class ModelFixture<T> : BaseModel, IDisposable
     /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
     public override string ToString()
     {
-        return Value is null ? string.Empty : Value.ToString();
+        return Value is null ? string.Empty : Value.ToString()!;
     }
 }

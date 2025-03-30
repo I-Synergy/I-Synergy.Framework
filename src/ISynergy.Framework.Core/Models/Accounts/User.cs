@@ -15,14 +15,14 @@ public class User : BaseModel
     /// </summary>
     /// <value>The identifier.</value>
     [Required]
-    public string Id { get; set; }
+    public required string Id { get; set; }
 
     /// <summary>
     /// Gets or sets the UserName property value.
     /// </summary>
     /// <value>The name of the user.</value>
     [Required]
-    public string UserName { get; set; }
+    public required string UserName { get; set; }
 
     /// <summary>
     /// Gets or sets the IsUnlocked property value.
@@ -59,6 +59,7 @@ public class UserAdd : User
     public UserAdd()
     {
         Id = Guid.NewGuid().ToString();
+        Roles = new List<Role>();
     }
 
     /// <summary>
@@ -71,7 +72,7 @@ public class UserAdd : User
     /// Gets or sets the Password property value.
     /// </summary>
     /// <value>The password.</value>
-    public string Password { get; set; }
+    public required string Password { get; set; }
 
     /// <summary>
     /// Gets or sets the Roles property value.
@@ -87,6 +88,12 @@ public class UserAdd : User
 /// <seealso cref="User" />
 public class UserEdit : User
 {
+    public UserEdit()
+        : base()
+    {
+        Roles = new List<Role>();
+    }
+
     /// <summary>
     /// Gets or sets the IsConfirmed property value.
     /// </summary>
@@ -107,6 +114,12 @@ public class UserEdit : User
 /// <seealso cref="User" />
 public class UserFull : User
 {
+    public UserFull()
+        : base()
+    {
+        Roles = new List<Role>();
+    }
+
     /// <summary>
     /// Gets or sets the Roles property value.
     /// </summary>

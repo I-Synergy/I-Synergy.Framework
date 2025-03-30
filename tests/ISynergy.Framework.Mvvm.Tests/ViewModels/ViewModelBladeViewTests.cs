@@ -15,8 +15,7 @@ public class ViewModelBladeViewTests
     private Mock<ILoggerFactory> _mockLoggerFactory;
     private Mock<ILanguageService> _mockLanguageService;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelBladeViewTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
 
@@ -68,8 +67,8 @@ public class ViewModelBladeViewTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 
     [TestMethod]

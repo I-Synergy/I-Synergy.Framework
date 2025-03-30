@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Storage.Abstractions.Options;
 
-namespace ISynergy.Framework.Storage.Options;
+namespace ISynergy.Framework.Storage.Configuration;
 /// <summary>
 /// Azure Storage options.
 /// </summary>
@@ -9,5 +9,5 @@ public class AzureStorageOptions : IStorageOptions
     /// <summary>
     /// Connectionstring
     /// </summary>
-    public string ConnectionString { get; set; }
+    public string ConnectionString { get; set; } = string.Empty;
 }

@@ -20,8 +20,8 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     private readonly AutomationOptions _options;
     private readonly IActionService _service;
 
-    private Timer _backgroundTimer;
-    private Timer _executionTimer;
+    private Timer? _backgroundTimer;
+    private Timer? _executionTimer;
 
     /// <summary>
     /// Default constructor for the background service.
@@ -70,14 +70,14 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// Refreshes the queue and sets the execution timer to the first available tasks.
     /// </summary>
     /// <param name="state"></param>
-    private async void RefreshQueue(object state)
+    private async void RefreshQueue(object? state)
     {
         await _service.RefreshTasksAsync();
 
         var result = await _service.CalculateTimespanAsync();
 
-        if (result.Expiration != TimeSpan.Zero)
-            _executionTimer = new Timer(ExecuteTask, result.UpcomingTask, TimeSpan.Zero, result.Expiration);
+        if (result.HasValue && result.Value.Expiration != TimeSpan.Zero)
+            _executionTimer = new Timer(ExecuteTask, result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration);
         else
             _executionTimer?.Change(Timeout.Infinite, 0);
     }
@@ -86,7 +86,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// Executes task when task delay has elapsed.
     /// </summary>
     /// <param name="state"></param>
-    private async void ExecuteTask(object state)
+    private async void ExecuteTask(object? state)
     {
         if (state is IAction action)
             await _service.ExcecuteActionAsync(action);

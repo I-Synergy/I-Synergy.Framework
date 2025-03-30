@@ -14,7 +14,7 @@ public class ArrayExtensionsTests
     [TestMethod]
     public void NullArrayNonFailableTest()
     {
-        object[] list = null;
+        object[]? list = null;
         bool result = false;
 
         foreach (object item in list.EnsureNotNull())
@@ -34,9 +34,9 @@ public class ArrayExtensionsTests
     {
         Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
         {
-            object[] list = null;
+            object[]? list = null;
 
-            foreach (object item in list)
+            foreach (object item in list!)
             {
             }
 

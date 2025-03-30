@@ -7,18 +7,18 @@ namespace ISynergy.Framework.Synchronization.Serializers;
 
 public class DefaultMessagePackSerializer : ISerializer
 {
-    private MessagePackSerializerOptions options = MessagePackSerializerOptions.Standard.WithResolver(ContractlessStandardResolver.Instance);
+    private readonly MessagePackSerializerOptions options = MessagePackSerializerOptions.Standard.WithResolver(ContractlessStandardResolver.Instance);
 
-    public async Task<T> DeserializeAsync<T>(Stream ms) => 
+    public async Task<T> DeserializeAsync<T>(Stream ms) =>
         (T)await this.DeserializeAsync(ms, typeof(T)).ConfigureAwait(false);
 
-    public Task<byte[]> SerializeAsync<T>(T obj) => 
-        this.SerializeAsync((object)obj);
+    public Task<byte[]> SerializeAsync<T>(T obj) =>
+        this.SerializeAsync(obj);
 
     public async Task<object> DeserializeAsync(Stream ms, Type type)
     {
         var result = await MessagePackSerializer.DeserializeAsync(type, ms, this.options).ConfigureAwait(false);
-        return result;
+        return result!;
     }
 
     public T Deserialize<T>(string value)
@@ -26,7 +26,7 @@ public class DefaultMessagePackSerializer : ISerializer
         var bytes = Encoding.UTF8.GetBytes(value);
         using var ms = new MemoryStream(bytes);
         var result = MessagePackSerializer.Deserialize(typeof(T), ms, this.options);
-        return (T)result;
+        return (T)result!;
     }
 
     public async Task<byte[]> SerializeAsync(object obj)

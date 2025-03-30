@@ -14,8 +14,7 @@ public class ApiBenchmarks
     [Params(1, 10)]
     public int NumberOfRequests { get; set; }
 
-    [GlobalSetup]
-    public void Setup()
+    public ApiBenchmarks()
     {
         _factory = new WebApplicationFactory<Sample.Api.Program>();
         _client = _factory.CreateClient();

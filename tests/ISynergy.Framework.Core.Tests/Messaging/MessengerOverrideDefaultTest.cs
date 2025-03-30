@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests;
 [TestClass]
 public class MessengerOverrideDefaultTest
 {
-    private string ReceivedContent
+    private string? ReceivedContent
     {
         get;
         set;

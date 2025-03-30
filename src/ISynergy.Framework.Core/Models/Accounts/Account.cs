@@ -13,7 +13,12 @@ public class Account : BaseModel
     /// <summary>
     /// Initializes a new instance of the <see cref="Account"/> class.
     /// </summary>
-    public Account() { AccountId = Guid.NewGuid(); }
+    public Account()
+        : base()
+    {
+        AccountId = Guid.NewGuid();
+        Modules = new List<Module>();
+    }
 
     /// <summary>
     /// Gets or sets the Account_Id property value.
@@ -34,7 +39,7 @@ public class Account : BaseModel
     /// <value>The description.</value>
     [Required]
     [StringLength(128)]
-    public string Description { get; set; }
+    public required string Description { get; set; }
 
     /// <summary>
     /// Gets or sets the Modules property value.
@@ -76,13 +81,13 @@ public class Account : BaseModel
     /// </summary>
     /// <value>The time zone identifier.</value>
     [Required]
-    public string TimeZoneId { get; set; }
+    public required string TimeZoneId { get; set; }
 
     /// <summary>
     /// Gets or sets the CountryCode property value.
     /// </summary>
     [Required]
-    public string CountryCode { get; set; }
+    public required string CountryCode { get; set; }
 }
 
 /// <summary>
@@ -92,6 +97,12 @@ public class Account : BaseModel
 /// <seealso cref="Account" />
 public class AccountFull : Account
 {
+    public AccountFull()
+        : base()
+    {
+        Users = new List<UserFull>();
+    }
+
     /// <summary>
     /// Gets or sets the Users property value.
     /// </summary>

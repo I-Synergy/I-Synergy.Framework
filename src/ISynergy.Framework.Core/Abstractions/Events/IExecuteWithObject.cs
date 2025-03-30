@@ -13,7 +13,7 @@ public interface IExecuteWithObject
     /// The target of the WeakAction.
     /// </summary>
     /// <value>The target.</value>
-    object Target
+    object? Target
     {
         get;
     }

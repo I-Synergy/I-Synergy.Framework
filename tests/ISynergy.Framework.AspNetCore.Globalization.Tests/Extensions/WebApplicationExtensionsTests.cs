@@ -148,7 +148,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
         {
             // Arrange
             var optionsConfigured = false;
-            RequestLocalizationOptions capturedOptions = null;
+            RequestLocalizationOptions? capturedOptions = null;
 
             using var server = new TestServer(new WebHostBuilder()
                 .ConfigureServices(services =>
@@ -210,7 +210,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
             Assert.AreEqual("en-US", capturedOptions.DefaultRequestCulture.Culture.Name);
 
             // Check that supported cultures are set correctly
-            Assert.AreEqual(3, capturedOptions.SupportedCultures.Count);
+            Assert.AreEqual(3, capturedOptions.SupportedCultures!.Count);
             Assert.IsTrue(capturedOptions.SupportedCultures.Any(c => c.Name == "en-US"));
             Assert.IsTrue(capturedOptions.SupportedCultures.Any(c => c.Name == "nl-NL"));
             Assert.IsTrue(capturedOptions.SupportedCultures.Any(c => c.Name == "fr-FR"));
@@ -225,7 +225,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
         {
             // Arrange
             var optionsConfigured = false;
-            RequestLocalizationOptions capturedOptions = null;
+            RequestLocalizationOptions? capturedOptions = null;
 
             using var server = new TestServer(new WebHostBuilder()
                 .ConfigureServices(services =>

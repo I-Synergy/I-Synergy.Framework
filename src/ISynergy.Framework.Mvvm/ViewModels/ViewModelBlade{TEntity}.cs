@@ -19,7 +19,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TEntity>> Submitted;
+    public event EventHandler<SubmitEventArgs<TEntity>>? Submitted;
     /// <summary>
     /// Called when [submitted].
     /// </summary>
@@ -30,7 +30,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// Gets or sets the SelectedItem property value.
     /// </summary>
     /// <value>The selected item.</value>
-    public TEntity SelectedItem
+    public TEntity? SelectedItem
     {
         get { return GetValue<TEntity>(); }
         set { SetValue(value); }
@@ -71,7 +71,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// Gets the submit command.
     /// </summary>
     /// <value>The submit command.</value>
-    public AsyncRelayCommand SubmitCommand { get; private set; }
+    public AsyncRelayCommand<TEntity>? SubmitCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBlade{TEntity}"/> class.
@@ -83,7 +83,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
         bool automaticValidation = false)
         : base(commonServices, automaticValidation)
     {
-        SubmitCommand = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
+        SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e));
     }
 
     /// <summary>

@@ -63,8 +63,8 @@ public class DateTimeOffsetConverterTests
     {
         DateTimeOffset expected = DateTimeOffset.Parse("2023-12-23T12:23:20.0000010Z");
         const string json = "{\"dt\":\"2023-12-23T12:23:20.0000010Z\"}";
-        Dictionary<string, DateTimeOffset> actual = JsonSerializer.Deserialize<Dictionary<string, DateTimeOffset>>(json, _serializerOptions);
-        Assert.AreEqual(expected, actual["dt"]);
+        var actual = JsonSerializer.Deserialize<Dictionary<string, DateTimeOffset>>(json, _serializerOptions);
+        Assert.AreEqual(expected, actual!["dt"]);
     }
 
     [TestMethod]
@@ -72,7 +72,7 @@ public class DateTimeOffsetConverterTests
     {
         const string json = "{\"dt\":null}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTimeOffset>>(json, _serializerOptions);
-        Assert.ThrowsException<ArgumentNullException>(act);
+        Assert.ThrowsException<FormatException>(act);
     }
 
     [TestMethod]

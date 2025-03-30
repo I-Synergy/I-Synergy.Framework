@@ -26,7 +26,7 @@ public class AsynchronousController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<TestEntity> GetById(int id)
+    public async Task<TestEntity?> GetById(int id)
     {
         return await _context.TestEntities.FindAsync(id);
     }

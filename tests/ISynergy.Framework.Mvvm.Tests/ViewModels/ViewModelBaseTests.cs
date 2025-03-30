@@ -17,8 +17,7 @@ public class ViewModelBaseTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelBaseTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -45,7 +44,7 @@ public class ViewModelBaseTests
         public TestViewModel(ICommonServices commonServices, bool automaticValidation = false)
             : base(commonServices, automaticValidation) { }
 
-        public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(TestProperty))
             {

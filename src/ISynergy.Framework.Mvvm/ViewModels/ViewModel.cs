@@ -28,11 +28,11 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// <summary>
     /// Occurs when [cancelled].
     /// </summary>
-    public event EventHandler Cancelled;
+    public event EventHandler? Cancelled;
     /// <summary>
     /// Occurs when [closed].
     /// </summary>
-    public event EventHandler Closed;
+    public event EventHandler? Closed;
 
     /// <summary>
     /// Handles the <see cref="E:Cancelled" /> event.
@@ -49,12 +49,12 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Gets or sets the close command.
     /// </summary>
     /// <value>The close command.</value>
-    public AsyncRelayCommand CloseCommand { get; protected set; }
+    public AsyncRelayCommand? CloseCommand { get; protected set; }
 
     /// <summary>
     /// /// Gets or sets the cancel command.
     /// </summary>
-    public AsyncRelayCommand CancelCommand { get; protected set; }
+    public AsyncRelayCommand? CancelCommand { get; protected set; }
 
     /// <summary>
     /// Gets or sets the Title property value.
@@ -118,7 +118,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
         _logger.LogTrace(GetType().Name);
     }
 
-    private async void ScopedContextService_ScopedChanged(object sender, Core.Events.ReturnEventArgs<bool> e)
+    private async void ScopedContextService_ScopedChanged(object? sender, Core.Events.ReturnEventArgs<bool> e)
     {
         if (e.Value)
         {
@@ -158,11 +158,15 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
         var description = value.ToString();
         var fieldInfo = value.GetType().GetField(description);
+
+        if (fieldInfo is null)
+            return description;
+
         var attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
-        if (attributes is not null && attributes.Length > 0)
+        if (attributes is not null && attributes.Length > 0 && attributes[0].Description is not null)
         {
-            description = LanguageService.Default.GetString(attributes[0].Description);
+            description = LanguageService.Default.GetString(attributes[0].Description!);
         }
 
         return description;
@@ -173,7 +177,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="PropertyChangedEventArgs" /> instance containing the event data.</param>
-    public virtual void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public virtual void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
     }
 

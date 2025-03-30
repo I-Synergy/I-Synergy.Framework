@@ -14,8 +14,7 @@ public class ViewModelSelectionBladeTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelSelectionBladeTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
 
@@ -33,7 +32,7 @@ public class ViewModelSelectionBladeTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public override string ToString() => Name;
     }
 
@@ -147,7 +146,7 @@ public class ViewModelSelectionBladeTests
             SelectionModes.Single);
 
         // Act
-        await viewModel.RefreshCommand.ExecuteAsync("Test");
+        await viewModel.RefreshCommand!.ExecuteAsync("Test");
 
         // Assert
         Assert.AreEqual(1, viewModel.Items.Count);
@@ -160,8 +159,8 @@ public class ViewModelSelectionBladeTests
         // Arrange & Act
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            null,
-            null,
+            null!,
+            null!,
             SelectionModes.Single);
 
         // Assert
@@ -259,7 +258,7 @@ public class ViewModelSelectionBladeTests
             SelectionModes.Single);
 
         // Act
-        await viewModel.RefreshCommand.ExecuteAsync("");
+        await viewModel.RefreshCommand!.ExecuteAsync("");
 
         // Assert
         Assert.AreEqual(2, viewModel.Items.Count);
@@ -281,7 +280,7 @@ public class ViewModelSelectionBladeTests
             SelectionModes.Single);
 
         // Act
-        await viewModel.RefreshCommand.ExecuteAsync("*");
+        await viewModel.RefreshCommand!.ExecuteAsync("*");
 
         // Assert
         Assert.AreEqual(2, viewModel.Items.Count);

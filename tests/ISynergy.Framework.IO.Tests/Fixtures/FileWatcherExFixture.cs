@@ -14,13 +14,13 @@ public class FileWatcherExFixture
     /// <summary>
     /// The file watcher
     /// </summary>
-    public WatcherEx FileWatcher = null;
+    public WatcherEx? FileWatcher = null;
 
     /// <summary>
     /// Gets the observed files.
     /// </summary>
     /// <value>The observed files.</value>
-    public List<ObservedFile> ObservedFiles { get; private set; }
+    public List<ObservedFile> ObservedFiles { get; private set; } = new List<ObservedFile>();
 
     /// <summary>
     /// Initializes the watcher.
@@ -33,8 +33,6 @@ public class FileWatcherExFixture
     {
         if (Directory.Exists(fileOrFolderToWatch) || File.Exists(fileOrFolderToWatch))
         {
-            ObservedFiles = [];
-
             FileWatcher = new WatcherEx(new WatcherInfo
             {
                 ChangesFilters = NotifyFilters.Attributes |
@@ -115,7 +113,7 @@ public class FileWatcherExFixture
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
-    private void fileWatcher_EventRenamed(object sender, WatcherExEventArgs e)
+    private void fileWatcher_EventRenamed(object? sender, WatcherExEventArgs e)
     {
         lock (ObservedFiles)
         {
@@ -128,11 +126,11 @@ public class FileWatcherExFixture
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
-    private void fileWatcher_EventError(object sender, WatcherExEventArgs e)
+    private void fileWatcher_EventError(object? sender, WatcherExEventArgs e)
     {
         lock (ObservedFiles)
         {
-            ObservedFiles.Add(new ObservedFile("Error", "N/A", (e.Arguments is null) ? "Null argument object" : ((EventArgs)(e.Arguments)).ToString()));
+            ObservedFiles.Add(new ObservedFile("Error", "N/A", (e.Arguments is null) ? "Null argument object" : ((EventArgs)(e.Arguments)).ToString()!));
         }
     }
 
@@ -141,11 +139,11 @@ public class FileWatcherExFixture
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
-    private void fileWatcher_EventDisposed(object sender, WatcherExEventArgs e)
+    private void fileWatcher_EventDisposed(object? sender, WatcherExEventArgs e)
     {
         lock (ObservedFiles)
         {
-            ObservedFiles.Add(new ObservedFile("Disposed", "N/A", (e.Arguments is null) ? "Null argument object" : ((EventArgs)(e.Arguments)).ToString()));
+            ObservedFiles.Add(new ObservedFile("Disposed", "N/A", (e.Arguments is null) ? "Null argument object" : ((EventArgs)(e.Arguments)).ToString()!));
         }
     }
 
@@ -154,7 +152,7 @@ public class FileWatcherExFixture
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
-    private void fileWatcher_EventDeleted(object sender, WatcherExEventArgs e)
+    private void fileWatcher_EventDeleted(object? sender, WatcherExEventArgs e)
     {
         lock (ObservedFiles)
         {
@@ -167,7 +165,7 @@ public class FileWatcherExFixture
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
-    private void fileWatcher_EventCreated(object sender, WatcherExEventArgs e)
+    private void fileWatcher_EventCreated(object? sender, WatcherExEventArgs e)
     {
         lock (ObservedFiles)
         {
@@ -180,7 +178,7 @@ public class FileWatcherExFixture
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
-    private void fileWatcher_EventChanged(object sender, WatcherExEventArgs e)
+    private void fileWatcher_EventChanged(object? sender, WatcherExEventArgs e)
     {
         lock (ObservedFiles)
         {
@@ -193,7 +191,7 @@ public class FileWatcherExFixture
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
-    private void fileWatcher_EventPathAvailability(object sender, WatcherExEventArgs e)
+    private void fileWatcher_EventPathAvailability(object? sender, WatcherExEventArgs e)
     {
         string eventName = "Availability";
         string filterName = "N/A";

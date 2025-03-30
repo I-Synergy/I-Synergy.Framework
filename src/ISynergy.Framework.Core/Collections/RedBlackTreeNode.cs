@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-
-namespace ISynergy.Framework.Core.Collections;
+﻿namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>
 ///   Possible node colors for <see cref="RedBlackTree{T}"/>s.
@@ -30,9 +28,9 @@ public enum RedBlackTreeNodeType
 [Serializable]
 public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
 {
-    private RedBlackTreeNode<T> _parent;
+    private RedBlackTreeNode<T>? _parent;
     private RedBlackTreeNodeType _color;
-    private T _value;
+    private T? _value;
 
     /// <summary>
     ///   Constructs a new empty node.
@@ -55,7 +53,7 @@ public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
     ///   Gets or sets a reference to this node's parent node.
     /// </summary>
     /// 
-    public RedBlackTreeNode<T> Parent
+    public RedBlackTreeNode<T>? Parent
     {
         get { return _parent; }
         set { _parent = value; }
@@ -75,7 +73,7 @@ public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
     ///   Gets or sets the value associated with this node.
     /// </summary>
     /// 
-    public T Value
+    public T? Value
     {
         get { return this._value; }
         set { this._value = value; }
@@ -90,8 +88,8 @@ public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
     public override string ToString()
     {
         if (_color == RedBlackTreeNodeType.Black)
-            return "Black: {0)".Format(Value);
-        return "Red: {0)".Format(Value);
+            return $"Black: {Value}";
+        return $"Red: {Value}";
     }
 }
 

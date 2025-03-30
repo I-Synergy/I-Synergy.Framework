@@ -6,7 +6,9 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Configuration;
 using ISynergy.Framework.UI.Controls;
+using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Options;
@@ -29,19 +31,20 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
     protected readonly ISettingsService _settingsService;
-    protected readonly IExceptionHandlerService _exceptionHandlerService;
+
+    protected readonly IExceptionHandlerService? _exceptionHandlerService;
 
     protected readonly Features _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
 
-    protected Microsoft.UI.Xaml.Window _mainWindow;
+    protected Microsoft.UI.Xaml.Window? _mainWindow;
 
     private int lastErrorMessage = 0;
 
     /// <summary>
     /// Gets the current main window from the running application instance
     /// </summary>
-    public static Microsoft.UI.Xaml.Window MainWindow
+    public static Microsoft.UI.Xaml.Window? MainWindow
     {
         get
         {
@@ -55,7 +58,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected Application(SplashScreenOptions splashScreenOptions = null)
+    protected Application(SplashScreenOptions? splashScreenOptions = null)
         : base()
     {
         var host = CreateHostBuilder()
@@ -67,17 +70,16 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             })
             .Build();
 
-        _splashScreenOptions = splashScreenOptions;
+        _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
 
-        _logger = host.Services.GetService<ILoggerFactory>().CreateLogger<Application>();
+        _logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger<Application>();
         _logger.LogTrace("Setting up global exception handler.");
 
         _logger.LogTrace("Getting common services.");
-        _commonServices = host.Services.GetService<ICommonServices>();
-        _features = host.Services.GetService<IOptions<Features>>().Value;
-        _exceptionHandlerService = host.Services.GetService<IExceptionHandlerService>();
-
-        _settingsService = _commonServices.ScopedContextService.GetService<ISettingsService>();
+        _commonServices = host.Services.GetRequiredService<ICommonServices>();
+        _features = host.Services.GetRequiredService<IOptions<Features>>().Value;
+        _exceptionHandlerService = host.Services.GetRequiredService<IExceptionHandlerService>();
+        _settingsService = host.Services.GetRequiredService<ISettingsService>(); _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -109,9 +111,9 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <returns></returns>
     protected abstract IHostBuilder CreateHostBuilder();
 
-    protected abstract void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e);
+    protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
 
-    protected virtual void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e) =>
+    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e) =>
         _commonServices.InfoService.SetTitle(e.Value);
 
     /// <summary>
@@ -119,7 +121,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    protected virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         if (e?.Exception == null)
             return;
@@ -148,7 +150,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    protected virtual async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
             await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
@@ -163,7 +165,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+    protected virtual async void CurrentDomain_UnhandledException(object? sender, System.UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
             if (_exceptionHandlerService is not null)
@@ -199,7 +201,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <param name="args">Event data for the event.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
+        _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings!.Theme);
 
         _logger.LogTrace("Loading custom resource dictionaries");
 
@@ -213,6 +215,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         }
 
         _logger.LogTrace("Setting up theming.");
+
         if (_settingsService.LocalSettings is not null)
             this.SetApplicationColor(_settingsService.LocalSettings.Color);
 
@@ -239,14 +242,14 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
                             var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
 
-                            if (await updateService?.CheckForUpdateAsync() &&
+                            if (await updateService.CheckForUpdateAsync() &&
                                 await _commonServices.DialogService.ShowMessageAsync(
                                 LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
                                 "Update",
                                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                             {
                                 _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-                                await updateService?.DownloadAndInstallUpdateAsync();
+                                await updateService.DownloadAndInstallUpdateAsync();
                                 Environment.Exit(Environment.ExitCode);
                             }
                         }
@@ -275,13 +278,13 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     }
 
 
-    protected virtual async void SplashScreen_Loaded(object sender, RoutedEventArgs e)
+    protected virtual async void SplashScreen_Loaded(object? sender, RoutedEventArgs e)
     {
         if (sender is SplashScreen splashScreen && splashScreen.ViewModel is SplashScreenViewModel viewModel)
             await viewModel.StartInitializationAsync();
     }
 
-    protected virtual void SplashScreen_Unloaded(object sender, RoutedEventArgs e)
+    protected virtual void SplashScreen_Unloaded(object? sender, RoutedEventArgs e)
     {
         if (sender is SplashScreen splashScreen)
         {
@@ -296,7 +299,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>
     /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
-    protected virtual void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
+    protected virtual void OnNavigationFailed(object? sender, NavigationFailedEventArgs e) =>
         throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
 
     protected virtual async Task HandleLaunchArgumentsAsync(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)

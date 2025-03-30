@@ -20,8 +20,8 @@ public class AuthenticationService : IAuthenticationService
     private readonly IScopedContextService _scopedContextService;
     private readonly ILogger _logger;
 
-    public event EventHandler<ReturnEventArgs<SoftwareEnvironments>> SoftwareEnvironmentChanged;
-    public event EventHandler<ReturnEventArgs<bool>> AuthenticationChanged;
+    public event EventHandler<ReturnEventArgs<SoftwareEnvironments>>? SoftwareEnvironmentChanged;
+    public event EventHandler<ReturnEventArgs<bool>>? AuthenticationChanged;
 
     private void RaiseSoftwareEnvironmentChanged(SoftwareEnvironments softwareEnvironment) => SoftwareEnvironmentChanged?.Invoke(this, new ReturnEventArgs<SoftwareEnvironments>(softwareEnvironment));
     private void RaiseAuthenticationChanged(bool e) => AuthenticationChanged?.Invoke(this, new ReturnEventArgs<bool>(e));
@@ -69,10 +69,10 @@ public class AuthenticationService : IAuthenticationService
 
         if (remember)
         {
-            if (_scopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser != username)
+            if (_scopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser != username)
             {
-                _scopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin = true;
-                _scopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser = username;
+                _scopedContextService.GetService<ISettingsService>().LocalSettings!.IsAutoLogin = true;
+                _scopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser = username;
                 _scopedContextService.GetService<ISettingsService>().SaveLocalSettings();
             }
 
@@ -113,7 +113,7 @@ public class AuthenticationService : IAuthenticationService
         ValidateToken(null);
     }
 
-    private void ValidateToken(Token token)
+    private void ValidateToken(Token? token)
     {
         if (token is not null)
         {

@@ -58,7 +58,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the Name property value.
     /// </summary>
     /// <value>The name of the registration.</value>
-    public string Registration_Name
+    public required string Registration_Name
     {
         get { return GetValue<string>(); }
         set { SetValue(value); }
@@ -68,9 +68,9 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the Mail property value.
     /// </summary>
     /// <value>The registration mail.</value>
-    public string Registration_Mail
+    public required string Registration_Mail
     {
-        get { return GetValue<string>()?.ToLowerInvariant(); }
+        get { return GetValue<string>().ToLowerInvariant(); }
         set { SetValue(value?.ToLowerInvariant()); }
     }
 
@@ -88,7 +88,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the SelectedTimeZone property value.
     /// </summary>
     /// <value>The registration time zone.</value>
-    public string Registration_TimeZone
+    public string? Registration_TimeZone
     {
         get { return GetValue<string>(); }
         set { SetValue(value); }
@@ -98,7 +98,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the Password property value.
     /// </summary>
     /// <value>The registration password.</value>
-    public string Registration_Password
+    public required string Registration_Password
     {
         get { return GetValue<string>(); }
         set { SetValue(value); }
@@ -108,7 +108,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the PasswordCheck property value.
     /// </summary>
     /// <value>The registration password check.</value>
-    public string Registration_PasswordCheck
+    public required string Registration_PasswordCheck
     {
         get { return GetValue<string>(); }
         set { SetValue(value); }
@@ -265,16 +265,16 @@ public class AuthenticationViewModel : ViewModel
             if (Modules.FirstOrDefault() is { } module)
                 Registration_Modules.Add(module);
 
-            AutoLogin = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin;
+            AutoLogin = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.IsAutoLogin;
 
             var users = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();
             Usernames.AddRange(users);
 
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser))
-                Username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser))
+                Username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser;
 
-            if (string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && Usernames.Count > 0)
+            if (string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser) && Usernames.Count > 0)
                 Username = Usernames[0];
 
             IsInitialized = true;
@@ -305,7 +305,7 @@ public class AuthenticationViewModel : ViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void ForgotPasswordVM_Submitted(object sender, SubmitEventArgs<bool> e)
+    private async void ForgotPasswordVM_Submitted(object? sender, SubmitEventArgs<bool> e)
     {
         if (sender is ForgotPasswordViewModel vm)
             vm.Submitted -= ForgotPasswordVM_Submitted;
@@ -320,7 +320,7 @@ public class AuthenticationViewModel : ViewModel
         }
     }
 
-    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(Registration_Country))
         {
@@ -333,7 +333,7 @@ public class AuthenticationViewModel : ViewModel
             }
             else
             {
-                TimeZones = null;
+                TimeZones = new List<string>();
                 Registration_TimeZone = null;
             }
         }

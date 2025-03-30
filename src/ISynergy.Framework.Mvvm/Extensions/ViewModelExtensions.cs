@@ -13,14 +13,14 @@ public static class ViewModelExtensions
 {
     private static Func<Assembly, bool> assemblyFilter =>
         (x =>
-        !x.FullName.StartsWith("System") &&
-        !x.FullName.StartsWith("WinRT") &&
-        !x.FullName.StartsWith("Microsoft") &&
-        !x.FullName.StartsWith("Syncfusion") &&
-        !x.FullName.StartsWith("Snippets") &&
-        !x.FullName.StartsWith("Xamarin") &&
-        !x.FullName.StartsWith("netstandard") &&
-        !x.FullName.StartsWith("mscorlib"));
+        !x.FullName!.StartsWith("System") &&
+        !x.FullName!.StartsWith("WinRT") &&
+        !x.FullName!.StartsWith("Microsoft") &&
+        !x.FullName!.StartsWith("Syncfusion") &&
+        !x.FullName!.StartsWith("Snippets") &&
+        !x.FullName!.StartsWith("Xamarin") &&
+        !x.FullName!.StartsWith("netstandard") &&
+        !x.FullName!.StartsWith("mscorlib"));
 
     /// <summary>
     /// In case of an generic viewmodel, this function returns the base name from IViewModel. 
@@ -62,11 +62,14 @@ public static class ViewModelExtensions
     /// <returns></returns>
     public static string GetViewModelFullName(this Type type)
     {
+        if (type.FullName is null)
+            throw new NullReferenceException($"{type}: FullName is null");
+
         var result = type.FullName;
 
-        if (type.IsGenericType)
+        if (type.IsGenericType && !string.IsNullOrEmpty(type.GetGenericTypeDefinition().FullName))
         {
-            result = type.GetGenericTypeDefinition().FullName.Remove(type.GetGenericTypeDefinition().FullName.IndexOf('`'));
+            result = type.GetGenericTypeDefinition().FullName!.Remove(type.GetGenericTypeDefinition().FullName!.IndexOf('`'));
         }
 
         return result;
@@ -103,7 +106,7 @@ public static class ViewModelExtensions
         view.GetType().GetRelatedViewModel();
 
 
-    public static Type GetRelatedViewType(this string name)
+    public static Type? GetRelatedViewType(this string name)
     {
         return
             AppDomain.CurrentDomain.GetAssemblies()

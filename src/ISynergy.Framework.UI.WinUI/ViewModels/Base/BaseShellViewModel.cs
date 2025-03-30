@@ -32,15 +32,15 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         get => _commonServices.NavigationService.CanGoBack;
     }
 
-    public AsyncRelayCommand GoBackCommand { get; private set; }
-    public AsyncRelayCommand RestartUpdateCommand { get; private set; }
-    public RelayCommand SignInCommand { get; private set; }
-    public AsyncRelayCommand LanguageCommand { get; private set; }
-    public AsyncRelayCommand ColorCommand { get; private set; }
-    public AsyncRelayCommand HelpCommand { get; private set; }
-    public AsyncRelayCommand SettingsCommand { get; private set; }
-    public AsyncRelayCommand BackgroundCommand { get; private set; }
-    public AsyncRelayCommand FeedbackCommand { get; private set; }
+    public AsyncRelayCommand? GoBackCommand { get; private set; }
+    public AsyncRelayCommand? RestartUpdateCommand { get; private set; }
+    public RelayCommand? SignInCommand { get; private set; }
+    public AsyncRelayCommand? LanguageCommand { get; private set; }
+    public AsyncRelayCommand? ColorCommand { get; private set; }
+    public AsyncRelayCommand? HelpCommand { get; private set; }
+    public AsyncRelayCommand? SettingsCommand { get; private set; }
+    public AsyncRelayCommand? BackgroundCommand { get; private set; }
+    public AsyncRelayCommand? FeedbackCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the PrimaryItems property value.
@@ -89,7 +89,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     public abstract Task InitializeFirstRunAsync();
 
 
-    private void NavigationService_BackStackChanged(object sender, EventArgs e) => RaisePropertyChanged(nameof(IsBackEnabled));
+    private void NavigationService_BackStackChanged(object? sender, EventArgs e) => RaisePropertyChanged(nameof(IsBackEnabled));
 
     /// <summary>
     /// Opens the settings asynchronous.
@@ -176,12 +176,12 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void LanguageVM_Submitted(object sender, SubmitEventArgs<Languages> e)
+    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
     {
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language = e.Result;
+        _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.Language = e.Result;
         _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
 
         e.Result.SetLocalizationLanguage();
@@ -213,15 +213,15 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void ThemeVM_Submitted(object sender, SubmitEventArgs<Style> e)
+    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<Style> e)
     {
         if (sender is ThemeViewModel vm)
             vm.Submitted -= ThemeVM_Submitted;
 
         if (e.Result is { } style)
         {
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme = style.Theme;
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color = style.Color;
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.Theme = style.Theme;
+            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.Color = style.Color;
 
             if (_commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
@@ -266,14 +266,22 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             PrimaryItems?.Clear();
             SecondaryItems?.Clear();
 
-            (RestartUpdateCommand as IDisposable)?.Dispose();
-            (SignInCommand as IDisposable)?.Dispose();
-            (LanguageCommand as IDisposable)?.Dispose();
-            (ColorCommand as IDisposable)?.Dispose();
-            (HelpCommand as IDisposable)?.Dispose();
-            (SettingsCommand as IDisposable)?.Dispose();
-            (BackgroundCommand as IDisposable)?.Dispose();
-            (FeedbackCommand as IDisposable)?.Dispose();
+            RestartUpdateCommand?.Dispose();
+            RestartUpdateCommand = null;
+            SignInCommand?.Dispose();
+            SignInCommand = null;
+            LanguageCommand?.Dispose();
+            LanguageCommand = null;
+            ColorCommand?.Dispose();
+            ColorCommand = null;
+            HelpCommand?.Dispose();
+            HelpCommand = null;
+            SettingsCommand?.Dispose();
+            SettingsCommand = null;
+            BackgroundCommand?.Dispose();
+            BackgroundCommand = null;
+            FeedbackCommand?.Dispose();
+            FeedbackCommand = null;
 
             // Finally dispose context and other resources
             base.Dispose(disposing);

@@ -16,7 +16,7 @@ public class EnumerableExtensionsTest
     [TestMethod]
     public void NullEnumerableNonFailableTest()
     {
-        IEnumerable<object> list = null;
+        IEnumerable<object>? list = null;
         bool result = false;
 
         foreach (object item in list.EnsureNotNull())
@@ -36,9 +36,9 @@ public class EnumerableExtensionsTest
     {
         Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
         {
-            IEnumerable<object> list = null;
+            IEnumerable<object>? list = null;
 
-            foreach (object item in list)
+            foreach (object item in list!)
             {
             }
 

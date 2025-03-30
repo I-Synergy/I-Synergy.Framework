@@ -15,7 +15,7 @@ public class ArgumentTests
     [TestMethod]
     public void IsNotNullTest()
     {
-        Product test = null;
+        Product? test = null;
         Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNull(test));
     }
 

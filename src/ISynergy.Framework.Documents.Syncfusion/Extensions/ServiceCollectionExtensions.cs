@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Documents.Abstractions.Services;
-using ISynergy.Framework.Documents.Options;
+using ISynergy.Framework.Documents.Configuration;
 using ISynergy.Framework.Documents.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

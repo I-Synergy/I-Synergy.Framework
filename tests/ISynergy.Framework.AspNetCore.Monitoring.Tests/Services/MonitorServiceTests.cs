@@ -33,12 +33,12 @@ public class MonitorServiceTests
     [TestMethod]
     public async Task PublishTestAsync()
     {
-        await _monitorService.PublishAsync(_channel, "eventName", null);
+        await _monitorService.PublishAsync(_channel, "eventName", null!);
     }
 
     [TestMethod]
     public async Task PublishInvalidChannelTestAsync()
     {
-        await _monitorService.PublishAsync("invalidchannel", "eventName", null);
+        await _monitorService.PublishAsync("invalidchannel", "eventName", null!);
     }
 }

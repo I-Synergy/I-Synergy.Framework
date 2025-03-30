@@ -69,7 +69,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand<string> RefreshCommand { get; private set; }
+    public AsyncRelayCommand<string>? RefreshCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
@@ -88,10 +88,10 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
         : base(commonServices, automaticValidation)
     {
         if (items is null)
-            items = items.EnsureNotNull();
+            items = new List<TEntity>();
 
         if (selectedItems is null)
-            selectedItems = selectedItems.EnsureNotNull();
+            selectedItems = new List<TEntity>();
 
         SelectionMode = selectionMode;
 
@@ -114,7 +114,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
 
         foreach (var item in selectedItems.EnsureNotNull())
         {
-            SelectedItems.Add(item);
+            SelectedItems.Add(item!);
         }
 
         RaisePropertyChanged(nameof(SelectedItems));
@@ -138,7 +138,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
 
             foreach (var item in RawItems.EnsureNotNull())
             {
-                if (item.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
+                if (item!.ToString()?.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     filteredList.Add(item);
                 }

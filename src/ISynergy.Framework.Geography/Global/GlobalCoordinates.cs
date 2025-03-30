@@ -170,7 +170,7 @@ public struct GlobalCoordinates : IComparable<GlobalCoordinates>, IEquatable<Glo
     /// </summary>
     /// <param name="obj">The object to compare with the current instance.</param>
     /// <returns>True if they are the same</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is GlobalCoordinates coordinates)
         {

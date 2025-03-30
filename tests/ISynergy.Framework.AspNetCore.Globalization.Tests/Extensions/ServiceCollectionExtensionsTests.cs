@@ -32,7 +32,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
             };
 
             var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(configValues)
+                .AddInMemoryCollection(configValues!)
                 .Build();
 
             // Create a mock IConfigurationManager
@@ -69,7 +69,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
             Assert.IsNotNull(httpContextAccessor);
 
             // Verify options are configured correctly
-            var options = serviceProvider.GetService<Microsoft.Extensions.Options.IOptions<GlobalizationOptions>>().Value;
+            var options = serviceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<GlobalizationOptions>>().Value;
             Assert.IsNotNull(options);
             Assert.AreEqual("en-US", options.DefaultCulture);
             Assert.AreEqual(3, options.SupportedCultures.Length);

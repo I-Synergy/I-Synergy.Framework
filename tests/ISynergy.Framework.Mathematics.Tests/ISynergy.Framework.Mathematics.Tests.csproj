@@ -5,6 +5,7 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>

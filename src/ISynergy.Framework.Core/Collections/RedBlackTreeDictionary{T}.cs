@@ -12,11 +12,9 @@ namespace ISynergy.Framework.Core.Collections;
 [Serializable]
 public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 {
-    private RedBlackTree<TKey, TValue> _tree;
-
-    // proxies for tree iteration
-    private ValueCollection _values;
-    private KeyCollection _keys;
+    private RedBlackTree<TKey, TValue> _tree = new RedBlackTree<TKey, TValue>();
+    private ValueCollection? _values;
+    private KeyCollection? _keys;
 
 
     /// <summary>
@@ -92,7 +90,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public bool Remove(TKey key)
     {
-        return Remove(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+        return Remove(new KeyValuePair<TKey, TValue>(key, default(TValue)!));
     }
 
     /// <summary>
@@ -132,7 +130,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public bool ContainsKey(TKey key)
     {
-        return _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue))) is not null;
+        return _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)!)) is not null;
     }
 
     /// <summary>
@@ -149,7 +147,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         var result = _tree.Find(item);
 
-        return result is not null && item.Value.Equals(result.Value);
+        return result is not null && item.Value!.Equals(result.Value);
     }
 
     /// <summary>
@@ -159,7 +157,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public ICollection<TKey> Keys
     {
-        get { return _keys; }
+        get { return _keys!; }
     }
 
     /// <summary>
@@ -169,7 +167,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public ICollection<TValue> Values
     {
-        get { return _values; }
+        get { return _values!; }
     }
 
 
@@ -191,7 +189,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public bool TryGetValue(TKey key, out TValue value)
     {
-        value = default(TValue);
+        value = default(TValue)!;
 
         var result = _tree.Find(new KeyValuePair<TKey, TValue>(key, value));
 
@@ -216,7 +214,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         get
         {
-            var result = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+            var result = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)!));
 
             if (result is null)
                 throw new KeyNotFoundException("The requested key was not found in the present tree.");
@@ -331,7 +329,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         if (_tree.Count == 0)
             throw new InvalidOperationException("The dictionary is empty.");
 
-        return _tree.Min().Value;
+        return _tree.Min()!.Value;
     }
 
     /// <summary>
@@ -348,7 +346,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         if (_tree.Count == 0)
             throw new InvalidOperationException("The dictionary is empty.");
 
-        return _tree.Max().Value;
+        return _tree.Max()!.Value;
     }
 
 
@@ -365,7 +363,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public KeyValuePair<TKey, TValue> GetPrevious(TKey key)
     {
-        var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+        var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)!));
         var prevNode = _tree.GetPreviousNode(node);
 
         if (prevNode is not null)
@@ -393,7 +391,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         prev = default(KeyValuePair<TKey, TValue>);
 
-        var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+        var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)!));
         var prevNode = _tree.GetPreviousNode(node);
 
         if (prevNode is not null)
@@ -418,7 +416,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public KeyValuePair<TKey, TValue> GetNext(TKey key)
     {
-        var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+        var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)!));
         var nextNode = _tree.GetNextNode(node);
 
         if (nextNode is not null)
@@ -446,7 +444,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         next = default(KeyValuePair<TKey, TValue>);
 
-        var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+        var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)!));
         var nextNode = _tree.GetNextNode(node);
 
         if (nextNode is not null)
@@ -473,7 +471,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         public bool Contains(TValue item)
         {
             foreach (var node in owner)
-                if (item.Equals(node.Value.Value))
+                if (item!.Equals(node.Value.Value))
                     return true;
             return false;
         }
@@ -534,7 +532,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         public bool Contains(TKey item)
         {
             foreach (var node in owner)
-                if (item.Equals(node.Value.Key))
+                if (item!.Equals(node.Value.Key))
                     return true;
             return false;
         }

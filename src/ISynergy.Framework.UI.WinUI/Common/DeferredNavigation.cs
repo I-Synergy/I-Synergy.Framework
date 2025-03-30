@@ -33,14 +33,14 @@ public class DeferredNavigation
     /// Gets or sets the on navigating.
     /// </summary>
     /// <value>The on navigating.</value>
-    public Func<NavigatingCancelEventArgs, Task> OnNavigating { get; set; }
+    public Func<NavigatingCancelEventArgs, Task>? OnNavigating { get; set; }
 
     /// <summary>
     /// Handles the <see cref="E:FrameNavigating" /> event.
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="NavigatingCancelEventArgs"/> instance containing the event data.</param>
-    private async void OnFrameNavigating(object sender, NavigatingCancelEventArgs e)
+    private async void OnFrameNavigating(object? sender, NavigatingCancelEventArgs e)
     {
         e.Cancel = true;
         if (!_isBusy)

@@ -16,8 +16,7 @@ public class ViewModelExtensionTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelExtensionTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -34,7 +33,7 @@ public class ViewModelExtensionTests
     // Test classes
     private class TestView : IView
     {
-        public IViewModel ViewModel { get; set; }
+        public IViewModel? ViewModel { get; set; }
         public bool IsEnabled { get; set; }
 
         public void Dispose()
@@ -203,7 +202,7 @@ public class ViewModelExtensionTests
         var name = expectedType.FullName;
 
         // Act
-        var result = name.GetRelatedViewType();
+        var result = name!.GetRelatedViewType();
 
         // Assert
         Assert.IsNotNull(result);

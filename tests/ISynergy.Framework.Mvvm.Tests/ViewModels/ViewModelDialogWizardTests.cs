@@ -13,8 +13,7 @@ public class ViewModelDialogWizardTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelDialogWizardTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -29,7 +28,7 @@ public class ViewModelDialogWizardTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     private class TestDialogWizardViewModel : ViewModelDialogWizard<TestEntity>
@@ -132,7 +131,7 @@ public class ViewModelDialogWizardTests
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
 
         // Act
-        viewModel.BackCommand.Execute(null);
+        viewModel.BackCommand!.Execute(null);
 
         // Assert
         Assert.AreEqual(1, viewModel.Page);
@@ -148,7 +147,7 @@ public class ViewModelDialogWizardTests
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
 
         // Act
-        viewModel.NextCommand.Execute(null);
+        viewModel.NextCommand!.Execute(null);
 
         // Assert
         Assert.AreEqual(2, viewModel.Page);
@@ -172,7 +171,7 @@ public class ViewModelDialogWizardTests
         };
 
         // Act
-        viewModel.NextCommand.Execute(null);
+        viewModel.NextCommand!.Execute(null);
 
         // Assert
         Assert.IsTrue(validationCalled, "Validation should be called before page change");
@@ -196,7 +195,7 @@ public class ViewModelDialogWizardTests
         };
 
         // Act
-        viewModel.BackCommand.Execute(null);
+        viewModel.BackCommand!.Execute(null);
 
         // Assert
         Assert.IsTrue(validationCalled, "Validation should be called before page change");

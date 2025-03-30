@@ -24,5 +24,6 @@ public enum FileWatcherArgumentTypes
     /// <summary>
     /// The path availability
     /// </summary>
-    PathAvailability
+    PathAvailability,
+    Disposed
 }

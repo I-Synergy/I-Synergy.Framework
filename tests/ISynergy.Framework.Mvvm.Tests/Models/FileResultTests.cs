@@ -10,8 +10,7 @@ public class FileResultTests
     private byte[] _testData;
     private MemoryStream _testStream;
 
-    [TestInitialize]
-    public void Setup()
+    public FileResultTests()
     {
         _testData = new byte[] { 1, 2, 3, 4, 5 };
         _testStream = new MemoryStream(_testData);

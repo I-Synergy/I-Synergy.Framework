@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
     public static ILoggingBuilder AddOpenTelemetryLogging(
         this ILoggingBuilder builder,
         IConfiguration configuration,
-        Action<OpenTelemetryLoggerOptions> optionsAction = null,
+        Action<OpenTelemetryLoggerOptions>? optionsAction = null,
         string prefix = "")
     {
         builder.AddOpenTelemetry(options =>
@@ -42,9 +42,9 @@ public static class ServiceCollectionExtensions
     public static IHostBuilder ConfigureOpenTelemetryLogging(
         this IHostBuilder builder,
         IInfoService infoService,
-        Action<TracerProviderBuilder> tracingAction = null,
-        Action<MeterProviderBuilder> metricsAction = null,
-        Action<LoggerProviderBuilder> loggerAction = null)
+        Action<TracerProviderBuilder>? tracingAction = null,
+        Action<MeterProviderBuilder>? metricsAction = null,
+        Action<LoggerProviderBuilder>? loggerAction = null)
     {
         builder.ConfigureServices((context, services) =>
         {

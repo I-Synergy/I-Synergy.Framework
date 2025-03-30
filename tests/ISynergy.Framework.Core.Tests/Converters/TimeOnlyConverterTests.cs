@@ -14,8 +14,8 @@ public class TimeOnlyConverterTests
     {
         TimeOnly expected = TimeOnly.Parse("12:23:20.010");
         const string json = "{\"dt\":\"12:23:20.010\"}";
-        Dictionary<string, TimeOnly> actual = JsonSerializer.Deserialize<Dictionary<string, TimeOnly>>(json, options);
-        Assert.AreEqual(expected, actual["dt"]);
+        var actual = JsonSerializer.Deserialize<Dictionary<string, TimeOnly>>(json, options);
+        Assert.AreEqual(expected, actual!["dt"]);
     }
 
     [TestMethod]

@@ -18,7 +18,7 @@ internal static class TypeConverters
     /// <param name="destinationTypeFullName">The full name of the destination type.</param>
     /// <returns>Object representation of the string value.</returns>
     /// <exception cref="ArgumentNullException">destinationTypeFullName cannot be null.</exception>
-    public static Object Convert(string value, string destinationTypeFullName)
+    public static Object? Convert(string value, string destinationTypeFullName)
     {
         if (string.IsNullOrEmpty(destinationTypeFullName))
         {
@@ -52,7 +52,8 @@ internal static class TypeConverters
         string type = TypeConverters.GetType(destinationTypeFullName);
         string contentControlXaml = string.Format(CultureInfo.InvariantCulture, TypeConverters.ContentControlFormatString, scope, type, value);
 
-        ContentControl contentControl = XamlReader.Load(contentControlXaml) as ContentControl;
+        var contentControl = XamlReader.Load(contentControlXaml) as ContentControl;
+
         if (contentControl is not null)
         {
             return contentControl.Content;

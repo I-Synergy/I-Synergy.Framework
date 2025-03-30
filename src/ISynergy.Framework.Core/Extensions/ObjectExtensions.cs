@@ -15,11 +15,16 @@ public static class ObjectExtensions
     /// <typeparam name="T">The type of object being copied.</typeparam>
     /// <param name="source">The object instance to copy.</param>
     /// <returns>The copied object.</returns>
-    public static T Clone<T>(this T source) =>
-        JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(source), new JsonSerializerOptions
+    public static T Clone<T>(this T source)
+    {
+        if (source is not null && JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(source), new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
-        });
+        }) is T result)
+            return result;
+
+        throw new InvalidOperationException("Source cannot be null");
+    }
 
     /// <summary>
     /// Checks if object is of a nullable type.
@@ -42,9 +47,9 @@ public static class ObjectExtensions
     /// 
     /// <returns>The result of the conversion.</returns>
     /// 
-    public static T To<T>(this object value)
+    public static T? To<T>(this object? value)
     {
-        return (T)To(value, typeof(T));
+        return (T?)To(value, typeof(T));
     }
 
     /// <summary>
@@ -58,10 +63,10 @@ public static class ObjectExtensions
     /// 
     /// <returns>The result of the conversion.</returns>
     /// 
-    public static object To(this object value, Type type)
+    public static object? To(this object? value, Type type)
     {
         if (value is null)
-            return System.Convert.ChangeType(null, type);
+            return type.IsValueType ? Activator.CreateInstance(type) : null;
 
         if (type.IsInstanceOfType(value))
             return value;
@@ -73,8 +78,8 @@ public static class ObjectExtensions
 
         if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
-            MethodInfo setter = type.GetMethod("op_Implicit", [inputType]);
-            return setter.Invoke(null, [value]);
+            MethodInfo? setter = type.GetMethod("op_Implicit", [inputType]);
+            return setter?.Invoke(null, [value]);
         }
 
         var methods = new List<MethodInfo>();
@@ -104,8 +109,11 @@ public static class ObjectExtensions
     ///   Checks whether an object implements a method with the given name.
     /// </summary>
     /// 
-    public static bool HasMethod(this object obj, string methodName)
+    public static bool HasMethod(this object? obj, string methodName)
     {
+        if (obj is null)
+            return false;
+
         try
         {
             return obj.GetType().GetMethod(methodName) is not null;
@@ -124,8 +132,11 @@ public static class ObjectExtensions
     /// <param name="obj">The object.</param>
     /// <param name="propertyName">Name of the property.</param>
     /// <returns><c>true</c> if the specified property name has property; otherwise, <c>false</c>.</returns>
-    public static bool HasProperty(this object obj, string propertyName)
+    public static bool HasProperty(this object? obj, string propertyName)
     {
+        if (obj is null)
+            return false;
+
         try
         {
             return obj.GetType().GetRuntimeProperty(propertyName) is not null;
@@ -142,7 +153,7 @@ public static class ObjectExtensions
     ///   Determines whether <c>a > b</c>.
     /// </summary>
     /// 
-    public static bool IsGreaterThan<T>(this T a, object b)
+    public static bool IsGreaterThan<T>(this T a, object? b)
         where T : IComparable
     {
         return a.CompareTo(b) > 0;
@@ -152,7 +163,7 @@ public static class ObjectExtensions
     ///   Determines whether <c>a >= b</c>.
     /// </summary>
     /// 
-    public static bool IsGreaterThanOrEqual<T>(this T a, object b)
+    public static bool IsGreaterThanOrEqual<T>(this T a, object? b)
         where T : IComparable
     {
         return a.CompareTo(b) >= 0;
@@ -162,7 +173,7 @@ public static class ObjectExtensions
     ///   Determines whether <c>a &lt; b</c>.
     /// </summary>
     /// 
-    public static bool IsLessThan<T>(this T a, object b)
+    public static bool IsLessThan<T>(this T a, object? b)
         where T : IComparable
     {
         return a.CompareTo(b) < 0;
@@ -172,7 +183,7 @@ public static class ObjectExtensions
     ///   Determines whether <c>a &lt;= b</c>.
     /// </summary>
     /// 
-    public static bool IsLessThanOrEqual<T>(this T a, object b)
+    public static bool IsLessThanOrEqual<T>(this T a, object? b)
         where T : IComparable
     {
         return a.CompareTo(b) <= 0;

@@ -64,7 +64,7 @@ public class WindowHelper
     }
 #endif
 
-    static public Microsoft.UI.Xaml.Window GetWindowForElement(UIElement element)
+    static public Microsoft.UI.Xaml.Window? GetWindowForElement(UIElement element)
     {
         if (element.XamlRoot != null)
         {

@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mail.Abstractions.Services;
+using ISynergy.Framework.Mail.Configuration;
 using ISynergy.Framework.Mail.Models;
-using ISynergy.Framework.Mail.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid;

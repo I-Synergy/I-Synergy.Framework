@@ -16,7 +16,7 @@ public class EnumToBooleanConverter : IValueConverter
     /// Gets or sets the type of the enum.
     /// </summary>
     /// <value>The type of the enum.</value>
-    public string EnumType { get; set; }
+    public string EnumType { get; set; } = string.Empty;
 
     /// <summary>
     /// Converts the specified value.
@@ -34,14 +34,17 @@ public class EnumToBooleanConverter : IValueConverter
         {
             var type = Type.GetType(EnumType);
 
-            if (!Enum.IsDefined(type, value))
+            if (type is not null)
             {
-                throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized());
+                if (!Enum.IsDefined(type, value))
+                {
+                    throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized());
+                }
+
+                var enumValue = Enum.Parse(type, enumString);
+
+                return enumValue.Equals(value);
             }
-
-            var enumValue = Enum.Parse(type, enumString);
-
-            return enumValue.Equals(value);
         }
 
         throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
@@ -60,7 +63,7 @@ public class EnumToBooleanConverter : IValueConverter
     {
         if (parameter is string enumString)
         {
-            return Enum.Parse(Type.GetType(EnumType), enumString);
+            return Enum.Parse(Type.GetType(EnumType)!, enumString);
         }
 
         throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
@@ -142,10 +145,10 @@ public class EnumToStringConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is { } type && type.IsEnum)
-            return (Enum.Parse(type, value.ToString()) as Enum).GetLocalizedDescription();
+        if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()!) is { } type && type.IsEnum)
+            return (Enum.Parse(type, value.ToString()!) as Enum)!.GetLocalizedDescription();
 
-        return (Enum.Parse(value.GetType(), value.ToString()) as Enum).GetLocalizedDescription();
+        return (Enum.Parse(value.GetType(), value.ToString()!) as Enum)!.GetLocalizedDescription();
     }
 
     /// <summary>
@@ -228,7 +231,7 @@ public class EnumToIntegerConverter : IValueConverter
     /// <param name="language">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    public object? ConvertBack(object value, Type targetType, object parameter, string language)
     {
         if (value is int id && Enum.TryParse(targetType, id.ToString(), out var result))
             return result;

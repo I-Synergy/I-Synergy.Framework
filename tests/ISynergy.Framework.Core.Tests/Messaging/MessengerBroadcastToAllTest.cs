@@ -7,13 +7,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests;
 [TestClass]
 public class MessengerBroadcastToAllTest
 {
-    public string StringContent1
+    public string? StringContent1
     {
         get;
         private set;
     }
 
-    public string StringContent2
+    public string? StringContent2
     {
         get;
         private set;
@@ -58,7 +58,7 @@ public class MessengerBroadcastToAllTest
 
     public class TestMessage
     {
-        public string Content
+        public string? Content
         {
             get;
             set;
@@ -67,7 +67,7 @@ public class MessengerBroadcastToAllTest
 
     private class TestRecipient
     {
-        public string StringContent
+        public string? StringContent
         {
             get;
             private set;

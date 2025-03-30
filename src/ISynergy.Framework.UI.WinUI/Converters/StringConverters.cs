@@ -22,7 +22,7 @@ public class StringFormatConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is null)
             return null;
@@ -65,7 +65,7 @@ public class StringToBooleanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (parameter.ToString().Equals(value.ToString()))
+        if (parameter.ToString()!.Equals(value.ToString()))
         {
             return true;
         }
@@ -85,7 +85,7 @@ public class StringToBooleanConverter : IValueConverter
     {
         if ((bool)value)
         {
-            return parameter.ToString();
+            return parameter.ToString()!;
         }
 
         return string.Empty;
@@ -227,7 +227,7 @@ public class StringToGeometryConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is not null && !string.IsNullOrWhiteSpace(value.ToString()) && value is string)
         {
@@ -287,7 +287,7 @@ public class StringToDecimalConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    public object? ConvertBack(object value, Type targetType, object parameter, string language)
     {
         return value.ToString();
     }
@@ -326,7 +326,7 @@ public class StringToIntegerConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    public object? ConvertBack(object value, Type targetType, object parameter, string language)
     {
         return value.ToString();
     }
@@ -347,7 +347,7 @@ public class UriToImageSourceConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (string.IsNullOrEmpty(value?.ToString()))
             return null;
@@ -355,7 +355,7 @@ public class UriToImageSourceConverter : IValueConverter
         return new BitmapImage
         {
             CreateOptions = BitmapCreateOptions.IgnoreImageCache,
-            UriSource = new Uri(value as string)
+            UriSource = new Uri(value.ToString()!)
         };
     }
 
@@ -387,7 +387,7 @@ public class StringToColorConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="language"></param>
     /// <returns></returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is string color && !string.IsNullOrEmpty(color))
             return ColorHelper.HexStringToColor(color);
@@ -423,7 +423,7 @@ public class StringToColorBrushConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="language"></param>
     /// <returns></returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is string color && !string.IsNullOrEmpty(color))
         {

@@ -29,12 +29,12 @@ public interface IViewModel : IObservableClass, ICleanup
     /// Gets the close _command.
     /// </summary>
     /// <value>The close _command.</value>
-    AsyncRelayCommand CloseCommand { get; }
+    AsyncRelayCommand? CloseCommand { get; }
 
     /// <summary>
     /// /// Gets or sets the cancel command.
     /// </summary>
-    AsyncRelayCommand CancelCommand { get; }
+    AsyncRelayCommand? CancelCommand { get; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance can close.
@@ -70,7 +70,7 @@ public interface IViewModel : IObservableClass, ICleanup
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
-    void OnPropertyChanged(object sender, PropertyChangedEventArgs e);
+    void OnPropertyChanged(object? sender, PropertyChangedEventArgs e);
 
     /// <summary>
     /// Gets or sets an optional parameter.
