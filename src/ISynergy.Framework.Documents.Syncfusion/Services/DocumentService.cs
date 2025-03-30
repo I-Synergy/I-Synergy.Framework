@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Documents.Abstractions.Services;
+using ISynergy.Framework.Documents.Configuration;
 using ISynergy.Framework.Documents.Models;
-using ISynergy.Framework.Documents.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Syncfusion.DocIO.DLS;
@@ -44,7 +44,7 @@ internal class DocumentService : IDocumentService
         Argument.IsNotNull(spreadsheetRequest);
 
         Stream result = new MemoryStream();
-        IWorkbook workbook = null;
+        IWorkbook? workbook = null;
 
         var table = spreadsheetRequest.DataSet.ToDataTable(spreadsheetRequest.FileName);
 
@@ -91,7 +91,7 @@ internal class DocumentService : IDocumentService
         Argument.IsNotNull(documentRequest);
 
         Stream result = new MemoryStream();
-        WordDocument document = null;
+        WordDocument? document = null;
 
         try
         {
@@ -178,7 +178,8 @@ internal class DocumentService : IDocumentService
                             var pdfDocument = iORenderer.ConvertToPDF(document);
                             pdfDocument.Save(result);
                             pdfDocument.Close();
-                        };
+                        }
+                        ;
                     }
                     else
                     {

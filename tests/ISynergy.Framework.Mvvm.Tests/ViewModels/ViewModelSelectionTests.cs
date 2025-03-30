@@ -14,8 +14,7 @@ public class ViewModelSelectionTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelSelectionTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -31,7 +30,7 @@ public class ViewModelSelectionTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public override string ToString()
         {
@@ -82,7 +81,7 @@ public class ViewModelSelectionTests
             SelectionModes.Single);
 
         // Act
-        await viewModel.RefreshCommand.ExecuteAsync("Test");
+        await viewModel.RefreshCommand!.ExecuteAsync("Test");
 
         // Assert
         Assert.AreEqual(2, viewModel.Items.Count);

@@ -13,7 +13,7 @@ public static class TryCatchUtility
     {
         if (operation == null)
             return false;
-        
+
         try
         {
             operation.Invoke();
@@ -33,12 +33,12 @@ public static class TryCatchUtility
     /// </summary>
     /// <param name="operation">parameterless lamda that returns a value of T</param>
     /// <param name="defaultValue">Default value returned if operation fails</param>
-    public static T IgnoreAllErrors<T>(Func<T> operation, T defaultValue = default(T))
+    public static T? IgnoreAllErrors<T>(Func<T> operation, T? defaultValue = default(T))
     {
         if (operation == null)
             return defaultValue;
 
-        T result;
+        T? result;
 
         try
         {
@@ -84,13 +84,13 @@ public static class TryCatchUtility
     /// </summary>
     /// <param name="operation">parameterless lamda that returns a value of T</param>
     /// <param name="defaultValue">Default value returned if operation fails</param>
-    public static T IgnoreErrors<T, TException>(Func<T> operation, T defaultValue = default(T))
+    public static T? IgnoreErrors<T, TException>(Func<T> operation, T? defaultValue = default(T))
         where TException : Exception
     {
         if (operation == null)
             return defaultValue;
 
-        T result;
+        T? result;
 
         try
         {

@@ -26,20 +26,19 @@ public static class TreeTraversal
         if (tree.Root is null)
             yield break;
 
-        var queue = new Queue<TNode>(new[] { tree.Root });
+        var queue = new Queue<TNode>();
+        queue.Enqueue(tree.Root);
 
-        while (queue.Count != 0)
+        while (queue.Count > 0)
         {
-            if (queue.Dequeue() is { } current)
-            {
-                yield return current;
+            var current = queue.Dequeue();
+            yield return current;
 
-                if (current.Left is { } leftNode)
-                    queue.Enqueue(leftNode);
+            if (current.Left is not null)
+                queue.Enqueue(current.Left);
 
-                if (current.Right is { } rightNode)
-                    queue.Enqueue(rightNode);
-            }
+            if (current.Right is not null)
+                queue.Enqueue(current.Right);
         }
     }
 
@@ -56,22 +55,19 @@ public static class TreeTraversal
             yield break;
 
         var stack = new Stack<TNode>();
+        stack.Push(tree.Root);
 
-        TNode current = tree.Root;
-
-        while (stack.Count != 0 || current is not null)
+        while (stack.Count > 0)
         {
-            if (current is not null)
-            {
-                stack.Push(current);
-                yield return current;
-                current = current.Left;
-            }
-            else
-            {
-                current = stack.Pop();
-                current = current.Right;
-            }
+            var current = stack.Pop();
+            yield return current;
+
+            // Push right first so that left is processed first (LIFO stack)
+            if (current.Right is not null)
+                stack.Push(current.Right);
+
+            if (current.Left is not null)
+                stack.Push(current.Left);
         }
     }
 
@@ -88,22 +84,23 @@ public static class TreeTraversal
             yield break;
 
         var stack = new Stack<TNode>();
+        TNode? current = tree.Root;
 
-        TNode current = tree.Root;
-
-        while (stack.Count != 0 || current is not null)
+        while (stack.Count > 0 || current is not null)
         {
-            if (current is not null)
+            // Traverse to leftmost node
+            while (current is not null)
             {
                 stack.Push(current);
                 current = current.Left;
             }
-            else
-            {
-                current = stack.Pop();
-                yield return current;
-                current = current.Right;
-            }
+
+            // Visit node
+            current = stack.Pop();
+            yield return current;
+
+            // Move to right subtree
+            current = current.Right;
         }
     }
 
@@ -113,51 +110,34 @@ public static class TreeTraversal
     /// <typeparam name="TNode">The type of the t node.</typeparam>
     /// <param name="tree">The tree.</param>
     /// <returns>IEnumerator&lt;TNode&gt;.</returns>
-    /// <exception cref="System.InvalidOperationException"></exception>
     public static IEnumerator<TNode> PostOrder<TNode>(BinaryTree<TNode> tree)
         where TNode : BinaryNode<TNode>, new()
     {
         if (tree.Root is null)
             yield break;
 
-        var stack = new Stack<TNode>(new[] { tree.Root });
+        var stack1 = new Stack<TNode>();
+        var stack2 = new Stack<TNode>();
 
-        TNode previous = tree.Root;
+        stack1.Push(tree.Root);
 
-        while (stack.Count != 0)
+        // First, we'll collect nodes in reverse post-order (root, right, left)
+        while (stack1.Count > 0)
         {
-            TNode current = stack.Peek();
+            var current = stack1.Pop();
+            stack2.Push(current);
 
-            if (previous == current || previous.Left == current || previous.Right == current)
-            {
-                if (current.Left is not null)
-                    stack.Push(current.Left);
-                else if (current.Right is not null)
-                    stack.Push(current.Right);
-                else
-                {
-                    yield return stack.Pop();
-                }
-            }
-            else if (current.Left == previous)
-            {
-                if (current.Right is not null)
-                    stack.Push(current.Right);
-                else
-                {
-                    yield return stack.Pop();
-                }
-            }
-            else if (current.Right == previous)
-            {
-                yield return stack.Pop();
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+            if (current.Left is not null)
+                stack1.Push(current.Left);
 
-            previous = current;
+            if (current.Right is not null)
+                stack1.Push(current.Right);
+        }
+
+        // Then yield them in correct post-order (left, right, root)
+        while (stack2.Count > 0)
+        {
+            yield return stack2.Pop();
         }
     }
 
@@ -176,18 +156,17 @@ public static class TreeTraversal
         var stack = new Stack<TNode>();
         stack.Push(tree.Root);
 
-        while (stack.Count != 0)
+        while (stack.Count > 0)
         {
-            if (stack.Pop() is { } current)
-            {
-                yield return current;
+            var current = stack.Pop();
+            yield return current;
 
-                if (current.Left is { } leftNode)
-                    stack.Push(leftNode);
+            // Push left first so that right is processed first (LIFO stack)
+            if (current.Left is not null)
+                stack.Push(current.Left);
 
-                if (current.Right is { } rightNode)
-                    stack.Push(rightNode);
-            }
+            if (current.Right is not null)
+                stack.Push(current.Right);
         }
     }
 }

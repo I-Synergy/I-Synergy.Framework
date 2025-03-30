@@ -18,7 +18,7 @@ public class BenchMark
     /// Gets or sets the model.
     /// </summary>
     /// <value>The model.</value>
-    private TestModel _model { get; set; }
+    private TestModel? _model { get; set; }
 
     ///// <summary>
     ///// The file name

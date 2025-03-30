@@ -19,7 +19,7 @@ public class EnumKeyValueCollection : MarkupExtension
     /// Gets or sets the type of the enum.
     /// </summary>
     /// <value>The type of the enum.</value>
-    public Type EnumType { get; set; }
+    public Type? EnumType { get; set; }
 
     /// <summary>
     /// Provides the value.

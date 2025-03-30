@@ -13,8 +13,7 @@ public class ViewModelBladeWizardTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelBladeWizardTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -29,7 +28,7 @@ public class ViewModelBladeWizardTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     private class TestBladeWizardViewModel : ViewModelBladeWizard<TestEntity>
@@ -119,7 +118,7 @@ public class ViewModelBladeWizardTests
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
 
         // Act
-        viewModel.BackCommand.Execute(null);
+        viewModel.BackCommand!.Execute(null);
 
         // Assert
         Assert.AreEqual(1, viewModel.Page);
@@ -135,7 +134,7 @@ public class ViewModelBladeWizardTests
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
 
         // Act
-        viewModel.NextCommand.Execute(null);
+        viewModel.NextCommand!.Execute(null);
 
         // Assert
         Assert.AreEqual(2, viewModel.Page);

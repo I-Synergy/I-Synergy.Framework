@@ -22,8 +22,8 @@ public class AutomationTests
 {
     private Customer _defaultCustomer;
     private Automation _defaultAutomation;
-    private IAutomationService _automationService;
-    private Stopwatch _stopwatch;
+    private IAutomationService? _automationService;
+    private Stopwatch _stopwatch = new Stopwatch();
     private readonly Mock<ILoggerFactory> _mockLoggerFactory = new Mock<ILoggerFactory>();
 
     // Configuration for environment-aware testing
@@ -40,19 +40,8 @@ public class AutomationTests
     private TimeSpan GetDelay(int seconds) =>
         IsRunningInCI ? TimeSpan.FromSeconds(seconds / 2.0) : TimeSpan.FromSeconds(seconds);
 
-    [TestInitialize]
-    public void InitializeTest()
+    public AutomationTests()
     {
-        _stopwatch = new Stopwatch();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
-
-        _automationService = new AutomationService(
-            new Mock<IAutomationManager>().Object,
-            new Mock<IOptions<AutomationOptions>>().Object,
-            _mockLoggerFactory.Object);
-
         _defaultCustomer = new Customer()
         {
             Name = "Test1",
@@ -61,7 +50,22 @@ public class AutomationTests
             Active = false
         };
 
+        _mockLoggerFactory
+           .Setup(x => x.CreateLogger(It.IsAny<string>()))
+           .Returns(new Mock<ILogger>().Object);
+
+        _automationService = new AutomationService(
+            new Mock<IAutomationManager>().Object,
+            new Mock<IOptions<AutomationOptions>>().Object,
+            _mockLoggerFactory.Object);
+
         _defaultAutomation = new Automation { IsActive = true };
+    }
+
+    [TestInitialize]
+    public void InitializeTest()
+    {
+        _defaultAutomation.Conditions.Clear();
         _defaultAutomation.Conditions.Add(new Condition<Customer>(_defaultAutomation.AutomationId, (e) => !string.IsNullOrEmpty(e.Name)));
         _defaultAutomation.Conditions.Add(new Condition<Customer>(_defaultAutomation.AutomationId, (e) => !string.IsNullOrEmpty(e.Email)));
         _defaultAutomation.Conditions.Add(new Condition<Customer>(_defaultAutomation.AutomationId, (e) => e.Age >= 18));
@@ -98,7 +102,7 @@ public class AutomationTests
         _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, expectedDelay));
 
         _stopwatch.Start();
-        ActionResult result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
+        ActionResult result1 = await _automationService!.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
         _stopwatch.Stop();
 
         Assert.IsTrue(result1.Succeeded);
@@ -109,7 +113,7 @@ public class AutomationTests
         Customer customer2 = new() { Name = "Test2", Age = 16 };
 
         _stopwatch.Start();
-        ActionResult result2 = await _automationService.ExecuteAsync(_defaultAutomation, customer2, cancellationTokenSource);
+        ActionResult result2 = await _automationService!.ExecuteAsync(_defaultAutomation, customer2, cancellationTokenSource);
         _stopwatch.Stop();
 
         Assert.IsFalse(result2.Succeeded);
@@ -126,11 +130,11 @@ public class AutomationTests
 
         RelayCommand<Customer> command = new((e) =>
         {
-            e.Age = 16;
+            e!.Age = 16;
             _defaultAutomation.IsActive = false;
         });
 
-        RelayCommand<Customer> command2 = new((e) => e.Age += 1);
+        RelayCommand<Customer> command2 = new((e) => e!.Age += 1);
 
         _defaultAutomation.Actions.Add(new CommandAction(_defaultAutomation.AutomationId, command, _defaultCustomer));
         _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, expectedDelay));
@@ -139,11 +143,11 @@ public class AutomationTests
         _defaultAutomation.Actions.Add(new RepeatPreviousAction<Customer>(_defaultAutomation.AutomationId, RepeatTypes.Until, (e) => e.Age >= 35, 10));
 
         _stopwatch.Start();
-        ActionResult result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
+        ActionResult result1 = await _automationService!.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
         _stopwatch.Stop();
 
         Assert.IsTrue(result1.Succeeded);
-        Assert.AreEqual(27, ((Customer)result1.Result).Age);
+        Assert.AreEqual(27, ((Customer)result1.Result!).Age);
         Assert.IsTrue(IsWithinTolerance(expectedDelay * 2, _stopwatch.Elapsed));
 
         cancellationTokenSource.Dispose();
@@ -155,14 +159,14 @@ public class AutomationTests
         var cancellationTokenSource = new CancellationTokenSource();
         var expectedDelay = GetDelay(3);
 
-        RelayCommand<Customer> command = new((e) => e.Age = 16);
+        RelayCommand<Customer> command = new((e) => e!.Age = 16);
 
         _defaultAutomation.Actions.Add(new CommandAction(_defaultAutomation.AutomationId, command, _defaultCustomer));
         _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, expectedDelay));
 
-        ActionResult result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
+        ActionResult result1 = await _automationService!.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
         Assert.IsTrue(result1.Succeeded);
-        Assert.AreEqual(16, ((Customer)result1.Result).Age);
+        Assert.AreEqual(16, ((Customer)result1.Result!).Age);
 
         ActionResult result2 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
         Assert.IsFalse(result2.Succeeded);
@@ -176,7 +180,7 @@ public class AutomationTests
         var cancellationTokenSource = new CancellationTokenSource();
         var expectedDelay = GetDelay(4);
 
-        RelayCommand<Customer> command = new((e) => e.Age = 16);
+        RelayCommand<Customer> command = new((e) => e!.Age = 16);
 
         _defaultAutomation.ExecutionTimeout = GetDelay(10);
         _defaultAutomation.Actions.Add(new CommandAction(_defaultAutomation.AutomationId, command, _defaultCustomer));
@@ -189,7 +193,7 @@ public class AutomationTests
             18,
             async (age) =>
             {
-                ActionResult result = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
+                ActionResult result = await _automationService!.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
                 Assert.IsTrue(result.Succeeded);
                 Assert.AreEqual(21, age);
             });
@@ -219,7 +223,7 @@ public class AutomationTests
 
         _stopwatch.Start();
         await Assert.ThrowsExceptionAsync<TaskCanceledException>(() =>
-            _automationService.ExecuteAsync(automation, null, cancellationTokenSource));
+            _automationService!.ExecuteAsync(automation, default!, cancellationTokenSource));
         _stopwatch.Stop();
 
         Assert.IsTrue(IsWithinTolerance(executionTimeout, _stopwatch.Elapsed));
@@ -245,7 +249,7 @@ public class AutomationTests
         automation.Actions.Add(new DelayAction(automation.AutomationId, expectedDelay));
 
         _stopwatch.Start();
-        ActionResult result = await _automationService.ExecuteAsync(automation, null, cancellationTokenSource);
+        ActionResult result = await _automationService!.ExecuteAsync(automation, default!, cancellationTokenSource);
         _stopwatch.Stop();
 
         Assert.IsTrue(result.Succeeded);
@@ -268,12 +272,12 @@ public class AutomationTests
 
         BooleanStateTrigger stateTrigger = new(
             automation.AutomationId,
-            () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)),
+            () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)!),
             false,
             true,
             async (active) =>
             {
-                ActionResult result = await _automationService.ExecuteAsync(automation, _defaultCustomer, cancellationTokenSource);
+                ActionResult result = await _automationService!.ExecuteAsync(automation, _defaultCustomer, cancellationTokenSource);
                 Assert.IsTrue(result.Succeeded);
                 Assert.IsTrue(active);
             });
@@ -303,12 +307,12 @@ public class AutomationTests
 
         StringStateTrigger stateTrigger = new(
             automation.AutomationId,
-            () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Name)),
+            () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Name)!),
             _defaultCustomer.Name,
             name,
             async (newName) =>
             {
-                ActionResult result = await _automationService.ExecuteAsync(automation, _defaultCustomer, cancellationTokenSource);
+                ActionResult result = await _automationService!.ExecuteAsync(automation, _defaultCustomer, cancellationTokenSource);
                 Assert.IsTrue(result.Succeeded);
                 Assert.AreEqual(name, newName);
             });
@@ -329,10 +333,10 @@ public class AutomationTests
         {
             BooleanStateTrigger stateTrigger = new(
                 new Automation().AutomationId,
-                () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)),
+                () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)!),
                 false,
                 false,
-                null);
+                default!);
         });
     }
 
@@ -353,7 +357,7 @@ public class AutomationTests
             (s) => _defaultCustomer.Registered += s,
             async (e) =>
             {
-                ActionResult result = await _automationService.ExecuteAsync(automation, e, cancellationTokenSource);
+                ActionResult result = await _automationService!.ExecuteAsync(automation, e, cancellationTokenSource);
                 Assert.IsTrue(result.Succeeded);
             });
 

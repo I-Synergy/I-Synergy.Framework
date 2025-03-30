@@ -13,7 +13,7 @@ public class BusyService : IBusyService
 {
     private bool _isBusy = false;
     private bool _isEnabled;
-    private string _busyMessage;
+    private string _busyMessage = string.Empty;
 
     /// <summary>
     /// Gets or sets the IsBusy property value.
@@ -71,7 +71,7 @@ public class BusyService : IBusyService
     /// </summary>
     /// <param name="message">The message.</param>
     /// <returns>Task.</returns>
-    public void StartBusy(string message = null)
+    public void StartBusy(string? message = null)
     {
         if (!string.IsNullOrEmpty(message))
             BusyMessage = message;
@@ -87,9 +87,9 @@ public class BusyService : IBusyService
     /// <returns>Task.</returns>
     public void StopBusy() => IsBusy = false;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = "")
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

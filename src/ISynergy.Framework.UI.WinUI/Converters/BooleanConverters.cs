@@ -317,13 +317,13 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// Gets or sets the false.
     /// </summary>
     /// <value>The false.</value>
-    public T False { get; set; }
+    public T? False { get; set; }
 
     /// <summary>
     /// Gets or sets the true.
     /// </summary>
     /// <value>The true.</value>
-    public T True { get; set; }
+    public T? True { get; set; }
 
     /// <summary>
     /// Converts the specified value.
@@ -333,7 +333,7 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public virtual object Convert(object value, Type targetType, object parameter, string language)
+    public virtual object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is null)
         {

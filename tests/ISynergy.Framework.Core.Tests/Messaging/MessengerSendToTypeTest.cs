@@ -85,7 +85,7 @@ public class MessengerSendToTypeTest
     //// Helpers
     private class TestRecipient1
     {
-        public string ReceivedContentString
+        public string? ReceivedContentString
         {
             get;
             private set;
@@ -99,7 +99,7 @@ public class MessengerSendToTypeTest
 
     private class TestRecipient2 : ITestRecipient
     {
-        public string ReceivedContentString
+        public string? ReceivedContentString
         {
             get;
             private set;
@@ -118,7 +118,7 @@ public class MessengerSendToTypeTest
 
     public class TestRecipient3 : ITestRecipient
     {
-        public string ReceivedContentString
+        public string? ReceivedContentString
         {
             get;
             private set;

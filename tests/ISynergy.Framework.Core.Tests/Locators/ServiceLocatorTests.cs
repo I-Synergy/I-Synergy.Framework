@@ -42,8 +42,7 @@ public class ServiceLocatorTests
     private IServiceProvider _serviceProvider;
     private ServiceLocator _locator;
 
-    [TestInitialize]
-    public void Setup()
+    public ServiceLocatorTests()
     {
         var services = new ServiceCollection();
 

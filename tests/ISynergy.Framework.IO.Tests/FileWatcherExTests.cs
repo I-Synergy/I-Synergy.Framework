@@ -33,7 +33,7 @@ public class FileWatcherExTests
 
         if (_fixture.InitializeWatcher(folder, false))
         {
-            _fixture.FileWatcher.Start();
+            _fixture.FileWatcher!.Start();
 
             for (int i = 0; i < count; i++)
             {
@@ -62,7 +62,7 @@ public class FileWatcherExTests
 
         if (_fixture.InitializeWatcher(folder, false))
         {
-            _fixture.FileWatcher.Start();
+            _fixture.FileWatcher!.Start();
 
             for (int i = 0; i < count; i++)
             {

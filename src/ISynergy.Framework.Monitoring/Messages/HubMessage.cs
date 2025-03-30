@@ -10,6 +10,6 @@ public class HubMessage : HubMessage<object>
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="data">The data.</param>
-    public HubMessage(string message, object data = null)
+    public HubMessage(string message, object data)
         : base(message, data) { }
 }

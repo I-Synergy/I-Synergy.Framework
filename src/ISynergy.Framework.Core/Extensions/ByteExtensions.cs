@@ -12,9 +12,9 @@ public static class ByteExtensions
     /// </summary>
     /// <param name="_self">The self.</param>
     /// <returns>MemoryStream.</returns>
-    public static MemoryStream ToMemoryStream(this byte[] _self)
+    public static MemoryStream? ToMemoryStream(this byte[] _self)
     {
-        MemoryStream result = null;
+        MemoryStream? result = null;
 
         if (_self is not null && _self.Length > 0)
         {
@@ -38,7 +38,7 @@ public static class ByteExtensions
     /// <param name="position">The starting position in the rawData array where the object is located.</param>
     /// <returns>The object stored in the byte array.</returns>
     /// 
-    public static T ToStruct<T>(this byte[] rawData, int position = 0)
+    public static T? ToStruct<T>(this byte[] rawData, int position = 0)
         where T : struct
     {
         Type type = typeof(T);
@@ -49,7 +49,7 @@ public static class ByteExtensions
 
         IntPtr buffer = Marshal.AllocHGlobal(rawsize);
         Marshal.Copy(rawData, position, buffer, rawsize);
-        T obj = (T)Marshal.PtrToStructure(buffer, type);
+        T? obj = (T?)Marshal.PtrToStructure(buffer, type);
         Marshal.FreeHGlobal(buffer);
         return obj;
     }

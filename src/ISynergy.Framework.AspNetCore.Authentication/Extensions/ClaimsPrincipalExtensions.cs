@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Exceptions;
+using ISynergy.Framework.Core.Validation;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -70,6 +71,8 @@ public static class ClaimsPrincipalExtensions
     /// <exception cref="ClaimNotFoundException"></exception>
     public static string GetSingleClaim(this ClaimsPrincipal principal, string claimType)
     {
+        Argument.IsNotNull(principal);
+
         var claims = principal.GetClaims(claimType);
 
         if (claims is null || claims.Count == 0)
@@ -87,7 +90,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>List&lt;System.Int32&gt;.</returns>
-    public static List<int> GetClaimsAsInt(this ClaimsPrincipal principal, string claimType) =>
+    public static List<int> GetClaimsAsInt(this ClaimsPrincipal? principal, string claimType) =>
         principal.GetClaimsAs<int>(claimType, int.TryParse);
 
     /// <summary>
@@ -97,7 +100,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>List&lt;T&gt;.</returns>
-    public static List<T> GetClaimsAsEnum<T>(this ClaimsPrincipal principal, string claimType) where T : struct =>
+    public static List<T> GetClaimsAsEnum<T>(this ClaimsPrincipal? principal, string claimType) where T : struct =>
         principal.GetClaimsAs<T>(claimType, Enum.TryParse);
 
     /// <summary>
@@ -106,8 +109,14 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>System.Int32.</returns>
-    public static int GetSingleClaimAsInt(this ClaimsPrincipal principal, string claimType) =>
-        principal.GetSingleClaimAs<int>(claimType, int.TryParse);
+    public static int GetSingleClaimAsInt(this ClaimsPrincipal? principal, string claimType)
+    {
+        if (principal is not null)
+            return principal.GetSingleClaimAs<int>(claimType, int.TryParse);
+
+        return default;
+    }
+
 
     /// <summary>
     /// Gets the single claim as unique identifier.
@@ -115,8 +124,14 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>Guid.</returns>
-    public static Guid GetSingleClaimAsGuid(this ClaimsPrincipal principal, string claimType) =>
-        principal.GetSingleClaimAs<Guid>(claimType, Guid.TryParse);
+    public static Guid GetSingleClaimAsGuid(this ClaimsPrincipal? principal, string claimType)
+    {
+        if (principal is not null)
+            return principal.GetSingleClaimAs<Guid>(claimType, Guid.TryParse);
+
+        return default;
+    }
+
 
     /// <summary>
     /// Gets the single claim as enum.
@@ -125,8 +140,15 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal"></param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>T.</returns>
-    public static T GetSingleClaimAsEnum<T>(this ClaimsPrincipal principal, string claimType) where T : struct =>
-        principal.GetSingleClaimAs<T>(claimType, Enum.TryParse);
+    public static T GetSingleClaimAsEnum<T>(this ClaimsPrincipal? principal, string claimType)
+        where T : struct
+    {
+        if (principal is not null)
+            return principal.GetSingleClaimAs<T>(claimType, Enum.TryParse);
+
+        return default;
+    }
+
 
     /// <summary>
     /// Gets the claims as.
@@ -136,13 +158,18 @@ public static class ClaimsPrincipalExtensions
     /// <param name="claimType">Type of the claim.</param>
     /// <param name="transformFunc">The transform function.</param>
     /// <returns>List&lt;T&gt;.</returns>
-    private static List<T> GetClaimsAs<T>(this ClaimsPrincipal principal, string claimType, TryFunc<string, T> transformFunc)
+    private static List<T> GetClaimsAs<T>(this ClaimsPrincipal? principal, string claimType, TryFunc<string, T> transformFunc)
         where T : struct
     {
+        if (principal is null)
+            return new List<T>();
+
         var claimValues = principal.GetClaims(claimType);
         var transformedClaimValues = new List<T>();
+
         foreach (var claimValue in claimValues.EnsureNotNull())
             transformedClaimValues.Add(principal.GetClaimAs(claimType, claimValue, transformFunc));
+
         return transformedClaimValues;
     }
 
@@ -154,10 +181,17 @@ public static class ClaimsPrincipalExtensions
     /// <param name="claimType">Type of the claim.</param>
     /// <param name="transformFunc">The transform function.</param>
     /// <returns>T.</returns>
-    private static T GetSingleClaimAs<T>(this ClaimsPrincipal principal, string claimType, TryFunc<string, T> transformFunc)
+    private static T GetSingleClaimAs<T>(this ClaimsPrincipal? principal, string claimType, TryFunc<string, T> transformFunc)
         where T : struct
     {
+        if (principal is null)
+            return default;
+
         var claimValue = principal.GetSingleClaim(claimType);
+
+        if (claimValue is null)
+            return default;
+
         return principal.GetClaimAs(claimType, claimValue, transformFunc);
     }
 
@@ -171,7 +205,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="transformFunc">The transform function.</param>
     /// <returns>T.</returns>
     /// <exception cref="InvalidClaimValueException"></exception>
-    private static T GetClaimAs<T>(this ClaimsPrincipal principal, string claimType, string claimValue, TryFunc<string, T> transformFunc)
+    private static T GetClaimAs<T>(this ClaimsPrincipal? principal, string claimType, string claimValue, TryFunc<string, T> transformFunc)
         where T : struct
     {
         if (!transformFunc(claimValue, out var result)) throw new InvalidClaimValueException(claimType);
@@ -194,7 +228,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="claims">The claims.</param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>System.String.</returns>
-    public static string FindFirstValue(this IEnumerable<Claim> claims, string claimType)
+    public static string? FindFirstValue(this IEnumerable<Claim> claims, string claimType)
         => claims
             .Where(c => c.Type == claimType)
             .Select(c => c.Value)
@@ -206,7 +240,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="claims">The claims.</param>
     /// <param name="claimType">Type of the claim.</param>
     /// <returns>System.String.</returns>
-    public static string FindSingleValue(this IEnumerable<Claim> claims, string claimType)
+    public static string? FindSingleValue(this IEnumerable<Claim> claims, string claimType)
         => claims
             .Where(c => c.Type == claimType)
             .Select(c => c.Value)

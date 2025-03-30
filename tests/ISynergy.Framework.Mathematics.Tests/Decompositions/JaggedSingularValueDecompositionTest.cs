@@ -124,7 +124,9 @@ public class JaggedSingularValueDecompositionTest
         };
 
         // V can be different, but for the economy SVD it is often equal
+#pragma warning disable CS0618 // Type or member is obsolete
         Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors.Submatrix(0, 3, 0, 1), V, 0.0001));
+#pragma warning restore CS0618 // Type or member is obsolete
 
 
         double[][] S =

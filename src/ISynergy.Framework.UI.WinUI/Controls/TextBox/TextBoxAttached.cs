@@ -63,7 +63,7 @@ public static class TextBoxAttached
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-    private static void OnGotFocusHandler(object sender, RoutedEventArgs e)
+    private static void OnGotFocusHandler(object? sender, RoutedEventArgs e)
     {
         (sender as TextBox)?.SelectAll();
     }

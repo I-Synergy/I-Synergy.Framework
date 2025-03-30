@@ -25,7 +25,7 @@ public class SynchronousController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public TestEntity GetById(int id)
+    public TestEntity? GetById(int id)
     {
         return _context.TestEntities.Find(id);
     }

@@ -44,7 +44,7 @@ public static class SettingsStorageExtensions
     /// <param name="folder">The folder.</param>
     /// <param name="name">The name.</param>
     /// <returns>T.</returns>
-    public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name)
+    public static async Task<T?> ReadAsync<T>(this StorageFolder folder, string name)
     {
         if (!File.Exists(Path.Combine(folder.Path, GetJsonFileName(name))))
         {
@@ -91,7 +91,7 @@ public static class SettingsStorageExtensions
     /// <param name="settings">The settings.</param>
     /// <param name="key">The key.</param>
     /// <returns>T.</returns>
-    public static Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
+    public static Task<T?> ReadAsync<T>(this ApplicationDataContainer settings, string key)
     {
         if (settings.Values.TryGetValue(key, out var obj))
         {
@@ -101,7 +101,7 @@ public static class SettingsStorageExtensions
             }));
         }
 
-        return default;
+        return Task.FromResult<T?>(default);
     }
 
     /// <summary>
@@ -130,7 +130,7 @@ public static class SettingsStorageExtensions
     /// <param name="folder">The folder.</param>
     /// <param name="fileName">Name of the file.</param>
     /// <returns>System.Byte[].</returns>
-    public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
+    public static async Task<byte[]?> ReadFileAsync(this StorageFolder folder, string fileName)
     {
         var item = await folder.TryGetItemAsync(fileName).AsTask();
 
@@ -149,7 +149,7 @@ public static class SettingsStorageExtensions
     /// </summary>
     /// <param name="file">The file.</param>
     /// <returns>System.Byte[].</returns>
-    public static async Task<byte[]> ReadBytesAsync(this StorageFile file)
+    public static async Task<byte[]?> ReadBytesAsync(this StorageFile file)
     {
         if (file is not null)
         {

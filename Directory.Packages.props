@@ -31,7 +31,7 @@
     <PackageVersion Include="MSTest.TestAdapter" Version="3.8.3" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.8.3" />
     <PackageVersion Include="NodaTime" Version="3.2.2" />
-    <PackageVersion Include="NSwag.AspNetCore" Version="14.2.0" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.3.0" />
     <PackageVersion Include="NuGet.Commands" Version="6.13.2" />
     <PackageVersion Include="OpenIddict.Abstractions" Version="6.2.0" />
     <PackageVersion Include="OpenTelemetry" Version="1.11.2" />

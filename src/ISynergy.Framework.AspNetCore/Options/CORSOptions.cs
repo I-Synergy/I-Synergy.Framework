@@ -2,5 +2,5 @@
 
 public class CORSOptions
 {
-    public string[] AllowedOrigins { get; set; }
+    public required string[] AllowedOrigins { get; set; }
 }

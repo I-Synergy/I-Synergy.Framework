@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToMessage_ReturnsCorrectLogMessage()
         {
-            string logMessage = null;
+            string? logMessage = null;
 
             // Arrange
             try
@@ -46,10 +46,10 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         {
             // Arrange
             var exception = new Exception("Test Exception");
-            string environmentStackTrace = null;
+            string? environmentStackTrace = null;
 
             // Act
-            var logMessage = exception.ToMessage(environmentStackTrace);
+            var logMessage = exception.ToMessage(environmentStackTrace!);
 
             // Assert
             Assert.IsTrue(logMessage.Contains(exception.Message));

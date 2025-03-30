@@ -12,5 +12,5 @@ public interface ICameraService
     /// </summary>
     /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
     /// <returns>Task&lt;FileResult&gt;.</returns>
-    Task<FileResult> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024);
+    Task<FileResult?> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024);
 }

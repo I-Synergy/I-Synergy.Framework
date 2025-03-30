@@ -2,11 +2,11 @@
 
 public sealed class ImageResult : Result
 {
-    public byte[] FileBytes { get; }
-    public string ContentType { get; }
+    public byte[]? FileBytes { get; }
+    public string? ContentType { get; }
 
     public ImageResult()
-        :base()
+        : base()
     {
     }
 

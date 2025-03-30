@@ -17,7 +17,7 @@ public static class ImageHelperExtensions
     /// <param name="imagePath">The image path.</param>
     /// <param name="attributes">The attributes.</param>
     /// <returns>HtmlString.</returns>
-    public static HtmlString InlineImageAsync(this IHtmlHelper html, string notfoundPath, string imagePath, object attributes = null)
+    public static HtmlString InlineImageAsync(this IHtmlHelper html, string notfoundPath, string imagePath, object? attributes = null)
     {
         if (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
         {

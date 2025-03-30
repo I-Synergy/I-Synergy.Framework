@@ -25,7 +25,7 @@ public static class EnumExtensions
 
         //Tries to find a DescriptionAttribute for a potential friendly name
         //for the enum
-        MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+        MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString()!);
 
         if (memberInfo is not null && memberInfo.Length > 0)
         {
@@ -36,6 +36,6 @@ public static class EnumExtensions
         }
 
         //If we have no description attribute, just return the ToString of the enum
-        return enumerationValue.ToString();
+        return enumerationValue.ToString()!;
     }
 }

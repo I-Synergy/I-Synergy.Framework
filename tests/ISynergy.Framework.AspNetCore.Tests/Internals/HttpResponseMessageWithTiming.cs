@@ -9,7 +9,7 @@ internal class HttpResponseMessageWithTiming
     /// Gets or sets the response.
     /// </summary>
     /// <value>The response.</value>
-    internal HttpResponseMessage Response { get; set; }
+    internal HttpResponseMessage? Response { get; set; }
     /// <summary>
     /// Gets or sets the timing.
     /// </summary>

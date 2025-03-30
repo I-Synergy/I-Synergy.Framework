@@ -20,7 +20,7 @@ public class CommandAction : BaseAction
     /// <summary>
     /// Gets or sets the CommandParameter property value.
     /// </summary>
-    public object CommandParameter
+    public object? CommandParameter
     {
         get { return GetValue<object>(); }
         set { SetValue(value); }
@@ -41,7 +41,7 @@ public class CommandAction : BaseAction
     /// <param name="automationId"></param>
     /// <param name="command"></param>
     /// <param name="commandParameter"></param>
-    public CommandAction(Guid automationId, ICommand command, object commandParameter = null)
+    public CommandAction(Guid automationId, ICommand command, object? commandParameter = null)
         : base(automationId)
     {
         Command = command;

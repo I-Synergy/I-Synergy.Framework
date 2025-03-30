@@ -29,7 +29,7 @@ public interface IFileService<T>
     /// <param name="filter"></param>
     /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
     /// <returns>Task&lt;System.Byte[]&gt;.</returns>
-    Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024);
+    Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024);
 
     /// <summary>
     /// UWP implementation of OpenFile(), opening a file already stored in the app's local

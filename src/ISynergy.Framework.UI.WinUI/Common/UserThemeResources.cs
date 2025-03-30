@@ -32,26 +32,26 @@ public sealed class UserThemeResources
     /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the Dark theme.
     /// </summary>
     /// <value>The dark resources path.</value>
-    public static string DarkResourcesPath { get; set; }
+    public static string? DarkResourcesPath { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the Light theme.
     /// </summary>
     /// <value>The light resources path.</value>
-    public static string LightResourcesPath { get; set; }
+    public static string? LightResourcesPath { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the HighContrast theme.
     /// </summary>
     /// <value>The high contrast resources path.</value>
-    public static string HighContrastResourcesPath { get; set; }
+    public static string? HighContrastResourcesPath { get; set; }
 
     /// <summary>
     /// Gets the URI by path.
     /// </summary>
     /// <param name="resourceId">The resource identifier.</param>
     /// <returns>Uri.</returns>
-    internal static Uri GetUriByPath(string resourceId)
+    internal static Uri? GetUriByPath(string resourceId)
     {
         if (resourceId == LightResourcesPathKeyName && !string.IsNullOrEmpty(LightResourcesPath))
         {

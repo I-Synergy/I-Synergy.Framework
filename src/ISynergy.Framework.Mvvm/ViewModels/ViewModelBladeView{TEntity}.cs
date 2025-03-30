@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -24,7 +25,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TEntity>> Submitted;
+    public event EventHandler<SubmitEventArgs<TEntity>>? Submitted;
     /// <summary>
     /// Called when [submitted].
     /// </summary>
@@ -66,7 +67,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Gets or sets the SelectedItem property value.
     /// </summary>
     /// <value>The selected item.</value>
-    public TEntity SelectedItem
+    public TEntity? SelectedItem
     {
         get => GetValue<TEntity>();
         set => SetValue(value);
@@ -86,7 +87,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Gets or sets the submit command.
     /// </summary>
     /// <value>The submit command.</value>
-    public AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
+    public AsyncRelayCommand<TEntity>? SubmitCommand { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether [refresh on initialization].
@@ -98,27 +99,27 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Gets or sets the add command.
     /// </summary>
     /// <value>The add command.</value>
-    public AsyncRelayCommand AddCommand { get; private set; }
+    public AsyncRelayCommand? AddCommand { get; private set; }
     /// <summary>
     /// Gets or sets the edit command.
     /// </summary>
     /// <value>The edit command.</value>
-    public AsyncRelayCommand<TEntity> EditCommand { get; private set; }
+    public AsyncRelayCommand<TEntity>? EditCommand { get; private set; }
     /// <summary>
     /// Gets or sets the delete command.
     /// </summary>
     /// <value>The delete command.</value>
-    public AsyncRelayCommand<TEntity> DeleteCommand { get; private set; }
+    public AsyncRelayCommand<TEntity>? DeleteCommand { get; private set; }
     /// <summary>
     /// Gets or sets the refresh command.
     /// </summary>
     /// <value>The refresh command.</value>
-    public AsyncRelayCommand RefreshCommand { get; private set; }
+    public AsyncRelayCommand? RefreshCommand { get; private set; }
     /// <summary>
     /// Gets or sets the search command.
     /// </summary>
     /// <value>The search command.</value>
-    public AsyncRelayCommand<object> SearchCommand { get; private set; }
+    public AsyncRelayCommand<object>? SearchCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}"/> class.
@@ -188,6 +189,8 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// <param name="e">The e.</param>
     public async Task DeleteAsync(TEntity e)
     {
+        Argument.IsNotNull(e);
+
         string item;
         if (e.GetType().GetProperty("Description")?.GetValue(e) is string value)
         {
@@ -260,7 +263,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
             IsInCleanup = true;
 
             // Clear selected item first
-            SelectedItem = default;
+            SelectedItem = default(TEntity);
 
             Items?.Clear();
             Blades?.Clear();

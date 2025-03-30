@@ -13,7 +13,7 @@ public sealed class LanguageService : ILanguageService
     private readonly List<ResourceManager> _managers;
 
     private static readonly object _creationLock = new object();
-    private static ILanguageService _defaultInstance;
+    private static ILanguageService? _defaultInstance;
 
     /// <summary>
     /// Gets the LanguageService's default instance.
@@ -61,7 +61,8 @@ public sealed class LanguageService : ILanguageService
     {
         foreach (var manager in _managers.EnsureNotNull())
         {
-            string result = manager.GetString(key, CultureInfo.CurrentCulture);
+            string? result = manager.GetString(key, CultureInfo.CurrentCulture);
+
             if (!string.IsNullOrEmpty(result))
                 return result;
         }

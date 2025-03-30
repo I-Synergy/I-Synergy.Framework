@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
-using ISynergy.Framework.MessageBus.Azure.Options.Queue;
+using ISynergy.Framework.MessageBus.Azure.Configuration.Queue;
 using ISynergy.Framework.MessageBus.Azure.Services.Queue;
 using ISynergy.Framework.MessageBus.Extensions;
 using Microsoft.Extensions.Configuration;

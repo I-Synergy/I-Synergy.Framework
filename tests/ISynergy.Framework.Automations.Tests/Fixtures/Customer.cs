@@ -4,7 +4,7 @@ namespace ISynergy.Framework.Automations.Tests.Fixtures;
 
 public class Customer : BaseModel
 {
-    public event EventHandler Registered;
+    public event EventHandler? Registered;
 
     /// <summary>
     /// Gets or sets the Name property value.

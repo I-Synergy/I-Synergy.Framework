@@ -11,7 +11,7 @@ public interface IWindow : IDisposable
     /// Gets or sets the viewmodel.
     /// </summary>
     /// <value>The data context.</value>
-    IViewModel ViewModel { get; set; }
+    IViewModel? ViewModel { get; set; }
 
     /// <summary>
     /// Closes the current window.

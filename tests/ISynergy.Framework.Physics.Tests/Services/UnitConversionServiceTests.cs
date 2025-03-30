@@ -9,13 +9,12 @@ namespace ISynergy.Framework.Physics.Services.Tests;
 [TestClass()]
 public class UnitConversionServiceTests
 {
-    private IUnitConversionService _unitConversionService;
+    private IUnitConversionService? _unitConversionService;
 
     /// <summary>
     /// Initializes tests
     /// </summary>
-    [TestInitialize]
-    public void InitializeTest()
+    public UnitConversionServiceTests()
     {
         _unitConversionService = new UnitConversionService();
     }
@@ -37,7 +36,7 @@ public class UnitConversionServiceTests
     [TestMethod()]
     public void UnitConversionServiceGetSIUnitsTest()
     {
-        Assert.IsTrue(_unitConversionService.Units.Where(q => q is SIUnit).Count() == 15);
+        Assert.IsTrue(_unitConversionService!.Units.Where(q => q is SIUnit).Count() == 15);
     }
 
     /// <summary>
@@ -76,8 +75,8 @@ public class UnitConversionServiceTests
     [DataRow("L", 1000, "m3", 1)]
     public void UnitConvertTest(string sourceSymbol, double value, string targetSymbol, double result)
     {
-        IUnit source = _unitConversionService.Units.Single(q => q.Symbol.Equals(sourceSymbol));
-        IUnit target = _unitConversionService.Units.Single(q => q.Symbol.Equals(targetSymbol));
+        IUnit source = _unitConversionService!.Units.Single(q => q.Symbol.Equals(sourceSymbol));
+        IUnit target = _unitConversionService!.Units.Single(q => q.Symbol.Equals(targetSymbol));
 
         Assert.AreEqual(result, _unitConversionService.Convert(source, value, target));
     }
@@ -118,7 +117,7 @@ public class UnitConversionServiceTests
     [DataRow("L", 1000, "m3", 1)]
     public void SymbolConvertTest(string sourceSymbol, double value, string targetSymbol, double result)
     {
-        Assert.AreEqual(result, _unitConversionService.Convert(sourceSymbol, value, targetSymbol));
+        Assert.AreEqual(result, _unitConversionService!.Convert(sourceSymbol, value, targetSymbol));
     }
 
     /// <summary>

@@ -9,25 +9,25 @@ public class FileTypeInfo
     /// Gets the name of the file type.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the extension which is related to this type
     /// </summary>
     /// <value>The type of the file.</value>
-    public string Extension { get; set; }
+    public string Extension { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the MimeType of this type
     /// </summary>
     /// <value>The type of the MIME.</value>
-    public string MimeType { get; set; }
+    public string MimeType { get; set; } = string.Empty;
 
     /// <summary>
     /// Other names for this file type
     /// </summary>
     /// <value>The alias.</value>
-    public string Alias { get; set; }
+    public string Alias { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the offset location of the Header details
@@ -39,19 +39,19 @@ public class FileTypeInfo
     /// Gets or sets the additional.
     /// </summary>
     /// <value>The additional.</value>
-    public string Additional { get; set; }
+    public string? Additional { get; set; }
 
     /// <summary>
     /// Gets or sets the signature.
     /// </summary>
     /// <value>The signature.</value>
-    public string Signature { get; set; }
+    public string? Signature { get; set; }
 
     /// <summary>
     /// Gets the additional identifier to guarantee uniqueness of the file type
     /// </summary>
     /// <value>The additional identifier.</value>
-    public byte[] SubHeader
+    public byte[]? SubHeader
     {
         get => string.IsNullOrWhiteSpace(Additional) ? null : HexStringToByteArray(Additional);
     }
@@ -69,7 +69,7 @@ public class FileTypeInfo
     /// Gets the aliases.
     /// </summary>
     /// <value>The aliases.</value>
-    public string[] Aliases
+    public string[]? Aliases
     {
         get => string.IsNullOrWhiteSpace(Alias) ? null : Alias.Split('|');
     }
@@ -79,7 +79,7 @@ public class FileTypeInfo
     /// </summary>
     /// <param name="hexString">The hexadecimal string.</param>
     /// <returns>System.Byte[].</returns>
-    private static byte[] HexStringToByteArray(string hexString)
+    private static byte[] HexStringToByteArray(string? hexString)
     {
         if (string.IsNullOrEmpty(hexString))
             return Array.Empty<byte>();

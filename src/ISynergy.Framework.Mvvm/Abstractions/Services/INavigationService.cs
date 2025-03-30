@@ -4,7 +4,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
 public interface INavigationService
 {
-    event EventHandler BackStackChanged;
+    event EventHandler? BackStackChanged;
 
     bool CanGoBack { get; }
     Task GoBackAsync();
@@ -18,7 +18,7 @@ public interface INavigationService
     /// <param name="parameter"></param>
     /// <param name="backNavigation"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
+    Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel;
 
     /// <summary>
@@ -30,7 +30,7 @@ public interface INavigationService
     /// <param name="parameter"></param>
     /// <param name="backNavigation"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object parameter = null, bool backNavigation = false)
+    Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView;
 
@@ -41,7 +41,7 @@ public interface INavigationService
     /// <param name="parameter"></param>
     /// <param name="backNavigation"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel>(object parameter = null, bool backNavigation = false)
+    Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel;
 
     /// <summary>
@@ -52,7 +52,7 @@ public interface INavigationService
     /// <param name="parameter"></param>
     /// <param name="backNavigation"></param>
     /// <returns></returns>
-    Task NavigateAsync<TViewModel, TView>(object parameter = null, bool backNavigation = false)
+    Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView;
 
@@ -62,7 +62,7 @@ public interface INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    Task NavigateModalAsync<TViewModel>(object parameter = null)
+    Task NavigateModalAsync<TViewModel>(object? parameter = null)
         where TViewModel : class, IViewModel;
 
     /// <summary>

@@ -25,8 +25,15 @@ public static class BinaryReaderExtensions
         }
 
         GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-        structure = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
-        handle.Free();
+
+        try
+        {
+            structure = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T))!;
+        }
+        finally
+        {
+            handle.Free();
+        }
 
         return true;
     }

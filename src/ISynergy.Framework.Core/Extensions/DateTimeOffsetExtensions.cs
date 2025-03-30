@@ -284,7 +284,7 @@ public static class DateTimeOffsetExtensions
     /// <param name="offset">The offset.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.String.</returns>
-    public static string ToLocalDateString(this DateTimeOffset self, string format, TimeSpan offset, CultureInfo culture = null)
+    public static string ToLocalDateString(this DateTimeOffset self, string format, TimeSpan offset, CultureInfo? culture = null)
     {
         Argument.IsNotNullOrEmpty(format);
 

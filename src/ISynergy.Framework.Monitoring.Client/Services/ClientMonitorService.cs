@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Monitoring.Client.Abstractions.Services;
+using ISynergy.Framework.Monitoring.Configuration;
 using ISynergy.Framework.Monitoring.Enumerations;
 using ISynergy.Framework.Monitoring.Messages;
-using ISynergy.Framework.Monitoring.Options;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
@@ -31,7 +31,7 @@ internal class ClientMonitorService : IClientMonitorService
     /// <summary>
     /// The connection
     /// </summary>
-    protected HubConnection _connection;
+    protected HubConnection? _connection;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientMonitorService"/> class.
@@ -55,7 +55,7 @@ internal class ClientMonitorService : IClientMonitorService
     /// <param name="token">The token.</param>
     /// <param name="connectionAction"></param>
     /// <returns>Task.</returns>
-    public virtual Task ConnectAsync(string token, Action<HubConnection> connectionAction)
+    public virtual Task ConnectAsync(string? token, Action<HubConnection> connectionAction)
     {
         _logger.LogInformation($"Connecting to {_configurationOptions.EndpointUrl}");
 

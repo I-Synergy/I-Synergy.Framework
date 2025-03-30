@@ -33,7 +33,7 @@ public class CredentialLockerService : ICredentialLockerService
                 IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
 
                 if (credentials.Count > 0)
-                    return vault.Retrieve(_infoService.ProductName, username)?.Password;
+                    return vault.Retrieve(_infoService.ProductName, username).Password;
 
                 return string.Empty;
             }
@@ -42,7 +42,7 @@ public class CredentialLockerService : ICredentialLockerService
                 return string.Empty;
             }
         },
-        string.Empty));
+        string.Empty)!);
     }
 
     public Task<List<string>> GetUsernamesFromCredentialLockerAsync()
@@ -61,7 +61,7 @@ public class CredentialLockerService : ICredentialLockerService
                 return new List<string>();
             }
         },
-        new List<string>()));
+        new List<string>())!);
     }
 
     public Task AddCredentialToCredentialLockerAsync(string username, string password)
@@ -73,7 +73,7 @@ public class CredentialLockerService : ICredentialLockerService
             // Use nested try-catch for handling the specific "not found" case
             try
             {
-                string oldPassword = await GetPasswordFromCredentialLockerAsync(username);
+                var oldPassword = await GetPasswordFromCredentialLockerAsync(username);
                 if (oldPassword != password)
                 {
                     await RemoveCredentialFromCredentialLockerAsync(username);

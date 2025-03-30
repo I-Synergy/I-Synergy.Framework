@@ -16,7 +16,7 @@ public class CultureRouteConstraint : IRouteConstraint
         _options = options.Value;
     }
 
-    public bool Match(HttpContext httpContext, IRouter route, string routeKey,
+    public bool Match(HttpContext? httpContext, IRouter? route, string routeKey,
         RouteValueDictionary values, RouteDirection routeDirection)
     {
         if (!values.TryGetValue(routeKey, out var value) || value == null)

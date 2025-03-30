@@ -1,8 +1,8 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.UI.Configuration;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -27,7 +27,7 @@ public sealed partial class SplashScreen
         this.Unloaded += SplashScreen_Unloaded;
     }
 
-    private async void SplashScreen_Loaded(object sender, RoutedEventArgs e)
+    private async void SplashScreen_Loaded(object? sender, RoutedEventArgs e)
     {
         if (ViewModel is SplashScreenViewModel viewModel && viewModel.Configuration?.AssetStreamProvider != null)
         {
@@ -55,17 +55,20 @@ public sealed partial class SplashScreen
 
     private async Task StartMediaPlayback(SplashScreenOptions configuration)
     {
-        using var stream = await configuration.AssetStreamProvider();
-
-        switch (configuration.SplashScreenType)
+        if (configuration.AssetStreamProvider != null)
         {
-            case SplashScreenTypes.Video:
-                ConfigureVideoPlayback(stream, configuration);
-                break;
+            using var stream = await configuration.AssetStreamProvider();
 
-            case SplashScreenTypes.Image:
-                ConfigureImageDisplay(stream);
-                break;
+            switch (configuration.SplashScreenType)
+            {
+                case SplashScreenTypes.Video:
+                    ConfigureVideoPlayback(stream, configuration);
+                    break;
+
+                case SplashScreenTypes.Image:
+                    ConfigureImageDisplay(stream);
+                    break;
+            }
         }
     }
 
@@ -90,7 +93,7 @@ public sealed partial class SplashScreen
         BackgroundImage.Source = bitmap;
     }
 
-    private void SplashScreen_Unloaded(object sender, RoutedEventArgs e)
+    private void SplashScreen_Unloaded(object? sender, RoutedEventArgs e)
     {
         if (BackgroundMediaElement?.MediaPlayer != null)
         {
@@ -110,7 +113,7 @@ public sealed partial class SplashScreen
         });
     }
 
-    private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+    private void Grid_Tapped(object? sender, TappedRoutedEventArgs e)
     {
         if (_initializationComplete && SignInButton.IsEnabled)
         {
@@ -119,7 +122,7 @@ public sealed partial class SplashScreen
         }
     }
 
-    public void SignInClicked(object sender, RoutedEventArgs e)
+    public void SignInClicked(object? sender, RoutedEventArgs e)
     {
         if (_initializationComplete)
         {

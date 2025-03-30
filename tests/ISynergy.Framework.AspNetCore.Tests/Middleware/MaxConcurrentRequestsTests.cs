@@ -71,7 +71,7 @@ public class MaxConcurrentRequestsTests
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     /// <returns>TestServer.</returns>
-    private TestServer PrepareTestServer(IEnumerable<KeyValuePair<string, string>> configuration = null)
+    private TestServer PrepareTestServer(IEnumerable<KeyValuePair<string, string>>? configuration = null)
     {
         IWebHostBuilder webHostBuilder = new WebHostBuilder()
             .UseStartup<StartupFixture>();
@@ -79,7 +79,7 @@ public class MaxConcurrentRequestsTests
         if (configuration is not null)
         {
             ConfigurationBuilder configurationBuilder = new();
-            configurationBuilder.AddInMemoryCollection(configuration);
+            configurationBuilder.AddInMemoryCollection(configuration!);
             IConfiguration buildedConfiguration = configurationBuilder.Build();
 
             webHostBuilder.UseConfiguration(buildedConfiguration);
@@ -222,7 +222,7 @@ public class MaxConcurrentRequestsTests
 
             responseInformation = responsesWithTimingsTasks.Select(task => new HttpResponseInformation
             {
-                StatusCode = task.Result.Response.StatusCode,
+                StatusCode = task.Result.Response!.StatusCode,
                 Timing = task.Result.Timing
             }).ToArray();
         }

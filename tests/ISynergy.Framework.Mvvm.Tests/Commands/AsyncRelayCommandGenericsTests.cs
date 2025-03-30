@@ -15,8 +15,7 @@ public class AsyncRelayCommandGenericsTests
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public AsyncRelayCommandGenericsTests()
     {
         // Setup mocks
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();

@@ -130,7 +130,7 @@ public class AlphanumericStringComparer : IComparer
     /// <param name="x">The x.</param>
     /// <param name="y">The y.</param>
     /// <returns>System.Int32.</returns>
-    public int Compare(object x, object y)
+    public int Compare(object? x, object? y)
     {
         if (!(x is string s1))
         {

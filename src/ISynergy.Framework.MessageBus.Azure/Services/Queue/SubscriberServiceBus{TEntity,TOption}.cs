@@ -29,12 +29,12 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// <summary>
     /// ServiceBus client.
     /// </summary>
-    private ServiceBusClient _serviceBusClient;
+    private ServiceBusClient? _serviceBusClient;
 
     /// <summary>
     /// ServiceBus processor.
     /// </summary>
-    private ServiceBusProcessor _serviceBusProcessor;
+    private ServiceBusProcessor? _serviceBusProcessor;
 
     /// <summary>
     /// Constructor of service bus.
@@ -113,7 +113,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
             await _serviceBusClient.DisposeAsync();
     }
 
-    private Task ErrorHandlerAsync(ProcessErrorEventArgs arg)
+    private async Task ErrorHandlerAsync(ProcessErrorEventArgs arg)
     {
         _logger.LogError(arg.Exception, "Message handler encountered an exception");
         _logger.LogDebug($"- Error Source: {arg.ErrorSource}");
@@ -121,7 +121,8 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
         _logger.LogDebug($"- Entity Path: {arg.EntityPath}");
         _logger.LogDebug($"- Exception: {arg.Exception.ToString()}");
 
-        return _serviceBusProcessor.CloseAsync();
+        if (_serviceBusProcessor is not null)
+            await _serviceBusProcessor.CloseAsync();
     }
 
     private async Task MessageHandlerAsync(ProcessMessageEventArgs arg)
@@ -133,7 +134,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
             PropertyNameCaseInsensitive = true
         });
 
-        if (ValidateMessage(data))
+        if (data is not null && ValidateMessage(data))
         {
             if (await ProcessDataAsync(data).ConfigureAwait(false))
             {

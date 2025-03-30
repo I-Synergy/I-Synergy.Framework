@@ -19,8 +19,8 @@ namespace ISynergy.Framework.Core.Base;
 /// <seealso cref="IObservableClass" />
 public abstract class ObservableClass : IObservableClass
 {
-    private PropertyChangedEventHandler _propertyChanged;
-    private EventHandler<DataErrorsChangedEventArgs> _errorsChanged;
+    private PropertyChangedEventHandler? _propertyChanged;
+    private EventHandler<DataErrorsChangedEventArgs>? _errorsChanged;
     private bool _disposed;
 
 
@@ -67,7 +67,7 @@ public abstract class ObservableClass : IObservableClass
     [DataTableIgnore]
     [XmlIgnore]
     [Display(AutoGenerateField = false)]
-    public Action<IObservableClass> Validator { set; get; }
+    public Action<IObservableClass>? Validator { set; get; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is dirty.
@@ -97,7 +97,7 @@ public abstract class ObservableClass : IObservableClass
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
         {
@@ -105,7 +105,7 @@ public abstract class ObservableClass : IObservableClass
         }
 
         if (obj is IObservableClass observable && observable.HasIdentityProperty())
-            return observable.GetIdentityValue().Equals(this.GetIdentityValue());
+            return observable.GetIdentityValue()!.Equals(this.GetIdentityValue());
 
         var currentPropertiesToCheck = this.GetType()
             .GetProperties()
@@ -151,7 +151,7 @@ public abstract class ObservableClass : IObservableClass
                     return false;
                 }
 
-                if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this).Equals(propertyInfo.GetValue(obj)))
+                if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this)!.Equals(propertyInfo.GetValue(obj)))
                 {
                     return false;
                 }
@@ -167,8 +167,10 @@ public abstract class ObservableClass : IObservableClass
     /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
     public override int GetHashCode()
     {
-        if (this.GetIdentityValue() is not null)
-            return this.GetIdentityValue().GetHashCode();
+        var identityValue = this.GetIdentityValue();
+
+        if (identityValue is not null)
+            return identityValue.GetHashCode();
 
         return new HashCode().ToHashCode();
     }
@@ -183,7 +185,7 @@ public abstract class ObservableClass : IObservableClass
         ErrorsChanged += ObservableClass_ErrorsChanged;
     }
 
-    private void ObservableClass_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+    private void ObservableClass_ErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
     {
         RaisePropertyChanged(nameof(HasErrors));
         RaisePropertyChanged(nameof(Errors));
@@ -195,7 +197,7 @@ public abstract class ObservableClass : IObservableClass
     /// <typeparam name="T"></typeparam>
     /// <param name="propertyName">Name of the property.</param>
     /// <returns>T.</returns>
-    protected T GetValue<T>([CallerMemberName] string propertyName = null)
+    protected T GetValue<T>([CallerMemberName] string? propertyName = "")
     {
         if (propertyName != null && !Properties.ContainsKey(propertyName))
             Properties.Add(propertyName, new Property<T>(propertyName));
@@ -203,7 +205,7 @@ public abstract class ObservableClass : IObservableClass
         if (propertyName != null && Properties[propertyName] is IProperty<T> property)
             return property.Value;
 
-        return default;
+        return default!;
     }
 
     protected bool IsInCleanup { get; set; }
@@ -214,7 +216,7 @@ public abstract class ObservableClass : IObservableClass
     /// <typeparam name="T"></typeparam>
     /// <param name="value">The value.</param>
     /// <param name="propertyName">Name of the property.</param>
-    protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
+    protected void SetValue<T>(T value, [CallerMemberName] string? propertyName = "")
     {
         SetValueCore<T>(value, propertyName, !IsInCleanup);
     }
@@ -226,13 +228,13 @@ public abstract class ObservableClass : IObservableClass
     /// <param name="field">The field.</param>
     /// <param name="value">The value.</param>
     /// <param name="propertyName">Name of the property.</param>
-    protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    protected void SetValue<T>(ref T field, T value, [CallerMemberName] string? propertyName = "")
     {
         SetValueCore<T>(value, propertyName, !IsInCleanup);
         field = value;
     }
 
-    private void SetValueCore<T>(T value, string propertyName, bool shouldRaiseEvents)
+    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents)
     {
         if (propertyName is null)
             return;
@@ -380,7 +382,7 @@ public abstract class ObservableClass : IObservableClass
 
     #region INotifyDataErrorInfo Members
 
-    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
+    public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged
     {
         add
         {
@@ -393,13 +395,13 @@ public abstract class ObservableClass : IObservableClass
         }
     }
 
-    protected virtual void OnErrorsChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnErrorsChanged([CallerMemberName] string? propertyName = "")
     {
         ThrowIfDisposed();
         _errorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
     }
 
-    public IEnumerable GetErrors(string propertyName)
+    public IEnumerable GetErrors(string? propertyName)
     {
         if (!string.IsNullOrEmpty(propertyName))
         {
@@ -432,7 +434,7 @@ public abstract class ObservableClass : IObservableClass
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
-    public event PropertyChangedEventHandler PropertyChanged
+    public event PropertyChangedEventHandler? PropertyChanged
     {
         add
         {
@@ -449,7 +451,7 @@ public abstract class ObservableClass : IObservableClass
     /// Called when [property changed].
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
-    public virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+    public virtual void RaisePropertyChanged([CallerMemberName] string? propertyName = "")
     {
         ThrowIfDisposed();
         _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

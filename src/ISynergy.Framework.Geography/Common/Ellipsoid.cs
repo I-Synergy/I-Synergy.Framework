@@ -94,7 +94,7 @@ public struct Ellipsoid : IEquatable<Ellipsoid>
     /// </summary>
     /// <param name="obj">The other object</param>
     /// <returns>True, if the other object is an Ellipsoid with the same geometry</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is Ellipsoid ellipsoid)
         {

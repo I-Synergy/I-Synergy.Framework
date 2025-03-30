@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests;
 [TestClass]
 public class MessengerCreationDeletionTest
 {
-    public string StringContent
+    public string? StringContent
     {
         get;
         private set;
@@ -39,14 +39,14 @@ public class MessengerCreationDeletionTest
         Assert.AreEqual(TestContent1, recipient1.ReceivedContentString);
         Assert.AreEqual(TestContent1, recipient2.ReceivedContentString);
 
-        recipient1 = null;
+        recipient1 = null!;
         GC.Collect();
 
         MessageService.Default.Send(TestContent2);
 
         Assert.AreEqual(TestContent2, recipient2.ReceivedContentString);
 
-        recipient2 = null;
+        recipient2 = null!;
         GC.Collect();
 
         MessageService.Default.Send(TestContent2);
@@ -115,7 +115,7 @@ public class MessengerCreationDeletionTest
 
     public class TestMessage
     {
-        public string Content
+        public string? Content
         {
             get;
             set;
@@ -124,7 +124,7 @@ public class MessengerCreationDeletionTest
 
     private class TestRecipient1
     {
-        public string ReceivedContentString
+        public string? ReceivedContentString
         {
             get;
             set;

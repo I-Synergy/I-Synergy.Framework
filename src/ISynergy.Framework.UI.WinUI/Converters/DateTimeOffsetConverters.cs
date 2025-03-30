@@ -246,10 +246,10 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 
             var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
 
-            offset = scopedContextService.GetService<IContext>().TimeZone.BaseUtcOffset;
+            offset = scopedContextService.GetService<IContext>().TimeZone!.BaseUtcOffset;
 
             if (parameter is not null)
-                return datetime.ToLocalDateString(parameter.ToString(), offset, culture);
+                return datetime.ToLocalDateString(parameter.ToString()!, offset, culture);
 
             return datetime.ToLocalDateString("f", offset, culture);
         }
@@ -280,7 +280,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 public class IsoDateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
 {
     public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        DateTimeOffset.ParseExact(reader.GetString(), "o", null);
+        DateTimeOffset.ParseExact(reader.GetString()!, "o", null);
 
     public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
     {

@@ -36,7 +36,7 @@ public static class DbContextExtensions
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>ValueTask&lt;TEntity&gt;.</returns>
-    public static async ValueTask<TEntity> GetItemByIdAsync<TEntity, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
+    public static async ValueTask<TEntity?> GetItemByIdAsync<TEntity, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
         where TId : struct
     {
@@ -51,11 +51,14 @@ public static class DbContextExtensions
 
         var query = context
             .Set<TEntity>()
-            .AsQueryable();
+        .AsQueryable();
 
-        var navigations = context.Model
-            .FindEntityType(typeof(TEntity))
-            .GetDerivedTypesInclusive()
+        var entityType = context.Model.FindEntityType(typeof(TEntity));
+
+        if (entityType is null)
+            return null;
+
+        var navigations = entityType.GetDerivedTypesInclusive()
             .SelectMany(t => t.GetNavigations())
             .Distinct();
 
@@ -78,7 +81,7 @@ public static class DbContextExtensions
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;TModel&gt; representing the asynchronous operation.</returns>
-    public static async Task<TModel> GetItemByIdAsync<TEntity, TModel, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
+    public static async Task<TModel?> GetItemByIdAsync<TEntity, TModel, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
         where TModel : BaseModel, new()
         where TId : struct
@@ -133,12 +136,12 @@ public static class DbContextExtensions
         var result = 0;
 
         var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
-        
+
         if (entityPropertyName is null)
             throw new ArgumentException(ErrorEntity);
 
         var recordPropertyValue = e.GetIdentityValue();
-        
+
         if (recordPropertyValue is null)
             throw new ArgumentException(ErrorRecord);
 
@@ -150,8 +153,12 @@ public static class DbContextExtensions
             .Set<TEntity>()
             .AsQueryable();
 
-        var navigations = context.Model
-            .FindEntityType(typeof(TEntity))
+        var entityType = context.Model.FindEntityType(typeof(TEntity));
+
+        if (entityType is null)
+            return 0;
+
+        var navigations = entityType
             .GetDerivedTypesInclusive()
             .SelectMany(t => t.GetNavigations())
             .Distinct();
@@ -163,6 +170,9 @@ public static class DbContextExtensions
             .ConfigureAwait(false);
 
         target = e.Adapt(target);
+
+        if (target is null)
+            return 0;
 
         var updates = context.Update(target);
 
@@ -208,8 +218,12 @@ public static class DbContextExtensions
             .Set<TEntity>()
             .AsQueryable();
 
-        var navigations = context.Model
-            .FindEntityType(typeof(TEntity))
+        var entityType = context.Model.FindEntityType(typeof(TEntity));
+
+        if (entityType is null)
+            return 0;
+
+        var navigations = entityType
             .GetDerivedTypesInclusive()
             .SelectMany(t => t.GetNavigations())
             .Distinct();

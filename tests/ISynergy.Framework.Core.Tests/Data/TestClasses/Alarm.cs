@@ -4,7 +4,7 @@ namespace ISynergy.Framework.Core.Tests.Data.TestClasses;
 
 public class Alarm
 {
-    public event PropertyChangedEventHandler Beeped;
+    public event PropertyChangedEventHandler? Beeped;
 
     public void Beep()
     {

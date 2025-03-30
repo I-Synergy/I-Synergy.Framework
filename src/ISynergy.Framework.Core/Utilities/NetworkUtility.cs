@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Utilities;
@@ -38,7 +37,8 @@ public static class NetworkUtility
 
     public static string GetInternetIPAddress()
     {
-        using var client = new WebClient();
+        using var client = new HttpClient();
+        client.Timeout = TimeSpan.FromSeconds(5);
 
         // Try multiple IP services in case one fails
         string[] ipServices = {
@@ -51,7 +51,8 @@ public static class NetworkUtility
         {
             try
             {
-                return client.DownloadString(service).Trim();
+                var response = client.GetStringAsync(service).GetAwaiter().GetResult();
+                return response.Trim();
             }
             catch
             {

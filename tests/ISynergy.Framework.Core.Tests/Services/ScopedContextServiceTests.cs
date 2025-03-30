@@ -12,8 +12,7 @@ public class ScopedContextServiceTests
     private IServiceProvider _serviceProvider;
     private ScopedContextService _scopedContextService;
 
-    [TestInitialize]
-    public void Setup()
+    public ScopedContextServiceTests()
     {
         var services = new ServiceCollection();
         services.AddScoped<ITestService, TestService>();

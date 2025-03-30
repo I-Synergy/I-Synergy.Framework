@@ -14,8 +14,8 @@ internal class UpdateService : IUpdateService
     private readonly ILogger _logger;
     private readonly IDialogService _dialogService;
 
-    private StoreContext _storeContext = null;
-    private IReadOnlyList<StorePackageUpdate> updates = null;
+    private StoreContext? _storeContext = null;
+    private IReadOnlyList<StorePackageUpdate>? updates = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
@@ -78,7 +78,7 @@ internal class UpdateService : IUpdateService
         if (updates is not null && updates is not null && updates.Count > 0)
         {
             // Download the packages.
-            if (_storeContext.CanSilentlyDownloadStorePackageUpdates)
+            if (_storeContext is not null && _storeContext.CanSilentlyDownloadStorePackageUpdates)
             {
                 await DownloadAndInstallPackageUpdatesSilentlyAsync(updates);
             }
@@ -95,28 +95,31 @@ internal class UpdateService : IUpdateService
     /// <param name="updates">The updates.</param>
     private async Task DownloadAndInstallPackageUpdatesAsync(IEnumerable<StorePackageUpdate> updates)
     {
-        var installOperation = _storeContext.RequestDownloadAndInstallStorePackageUpdatesAsync(updates);
-
-        // The package updates were already downloaded separately, so this method skips the download
-        // operatation and only installs the updates; no download progress notifications are provided.
-        var result = await installOperation.AsTask();
-
-        switch (result.OverallState)
+        if (_storeContext is not null)
         {
-            case StorePackageUpdateState.Completed:
-                break;
-            default:
-                // Get the failed updates.
-                var failedUpdates = result.StorePackageUpdateStatuses.Where(
-                    status => status.PackageUpdateState != StorePackageUpdateState.Completed);
+            var installOperation = _storeContext.RequestDownloadAndInstallStorePackageUpdatesAsync(updates);
 
-                // See if any failed updates were mandatory
-                if (updates.Any(u => u.Mandatory && failedUpdates.Any(failed => failed.PackageFamilyName == u.Package.Id.FamilyName)))
-                {
-                    // At least one of the updates is mandatory, so tell the user.
-                    await HandleMandatoryPackageErrorAsync();
-                }
-                break;
+            // The package updates were already downloaded separately, so this method skips the download
+            // operatation and only installs the updates; no download progress notifications are provided.
+            var result = await installOperation.AsTask();
+
+            switch (result.OverallState)
+            {
+                case StorePackageUpdateState.Completed:
+                    break;
+                default:
+                    // Get the failed updates.
+                    var failedUpdates = result.StorePackageUpdateStatuses.Where(
+                        status => status.PackageUpdateState != StorePackageUpdateState.Completed);
+
+                    // See if any failed updates were mandatory
+                    if (updates.Any(u => u.Mandatory && failedUpdates.Any(failed => failed.PackageFamilyName == u.Package.Id.FamilyName)))
+                    {
+                        // At least one of the updates is mandatory, so tell the user.
+                        await HandleMandatoryPackageErrorAsync();
+                    }
+                    break;
+            }
         }
     }
 
@@ -126,33 +129,35 @@ internal class UpdateService : IUpdateService
     /// <param name="updates">The updates.</param>
     private async Task DownloadAndInstallPackageUpdatesSilentlyAsync(IEnumerable<StorePackageUpdate> updates)
     {
-        // Start the silent installation of the packages. Because the packages have already
-        // been downloaded in the previous method, the following line of code just installs
-        // the downloaded packages.
-        var downloadResult = await _storeContext.TrySilentDownloadAndInstallStorePackageUpdatesAsync(updates);
-
-        switch (downloadResult.OverallState)
+        if (_storeContext is not null)
         {
-            // If the user cancelled the installation or you can't perform the installation  
-            // for some other reason, try again later. The RetryInstallLater method is not  
-            // implemented in this example, you should implement it as needed for your own app.
-            case StorePackageUpdateState.Completed:
-                break;
-            default:
-                // Get the failed updates.
-                var failedUpdates = downloadResult.StorePackageUpdateStatuses.Where(
-                    status => status.PackageUpdateState != StorePackageUpdateState.Completed);
+            // Start the silent installation of the packages. Because the packages have already
+            // been downloaded in the previous method, the following line of code just installs
+            // the downloaded packages.
+            var downloadResult = await _storeContext.TrySilentDownloadAndInstallStorePackageUpdatesAsync(updates);
 
-                // See if any failed updates were mandatory
-                if (updates.Any(u => u.Mandatory && failedUpdates.Any(failed => failed.PackageFamilyName == u.Package.Id.FamilyName)))
-                {
-                    // At least one of the updates is mandatory, so tell the user.
-                    await HandleMandatoryPackageErrorAsync();
-                }
-                break;
+            switch (downloadResult.OverallState)
+            {
+                // If the user cancelled the installation or you can't perform the installation  
+                // for some other reason, try again later. The RetryInstallLater method is not  
+                // implemented in this example, you should implement it as needed for your own app.
+                case StorePackageUpdateState.Completed:
+                    break;
+                default:
+                    // Get the failed updates.
+                    var failedUpdates = downloadResult.StorePackageUpdateStatuses.Where(
+                        status => status.PackageUpdateState != StorePackageUpdateState.Completed);
+
+                    // See if any failed updates were mandatory
+                    if (updates.Any(u => u.Mandatory && failedUpdates.Any(failed => failed.PackageFamilyName == u.Package.Id.FamilyName)))
+                    {
+                        // At least one of the updates is mandatory, so tell the user.
+                        await HandleMandatoryPackageErrorAsync();
+                    }
+                    break;
+            }
         }
     }
-
 
     /// <summary>
     /// Helper method for handling the scenario where a mandatory package update fails to

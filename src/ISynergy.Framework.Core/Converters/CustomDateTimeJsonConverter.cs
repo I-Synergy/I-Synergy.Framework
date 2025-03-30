@@ -16,6 +16,17 @@ public class CustomDateTimeJsonConverter : JsonConverter<DateTime>
     public override void Write(Utf8JsonWriter writer, DateTime date, JsonSerializerOptions options) =>
         writer.WriteStringValue(date.ToString(Format));
 
-    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        DateTime.ParseExact(reader.GetString(), Format, CultureInfo.InvariantCulture);
+    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        string? dateString = reader.GetString();
+
+        if (string.IsNullOrEmpty(dateString))
+            throw new FormatException("Expected date string value.");
+
+        if (DateTime.TryParseExact(dateString, Format,
+            CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
+            return result;
+
+        throw new FormatException($"Unable to parse \"{dateString}\" as a DateTime using format \"{Format}\".");
+    }
 }

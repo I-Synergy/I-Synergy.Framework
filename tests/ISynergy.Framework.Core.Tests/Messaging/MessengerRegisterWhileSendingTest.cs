@@ -137,7 +137,7 @@ public class MessengerRegisterWhileSendingTest
 
     public abstract class TestRecipient
     {
-        public static string LastReceivedString
+        public static string? LastReceivedString
         {
             get;
             protected set;
@@ -190,7 +190,7 @@ public class MessengerRegisterWhileSendingTest
 
         public virtual void ReceiveString(BaseMessage m)
         {
-            MessageFixture message = m as MessageFixture;
+            var message = m as MessageFixture;
             if (message is not null)
             {
                 MessageService.Default.Register<BaseMessage>(this, true, ReceiveStringNested);
@@ -199,7 +199,7 @@ public class MessengerRegisterWhileSendingTest
 
         public void ReceiveStringNested(BaseMessage m)
         {
-            MessageFixture message = m as MessageFixture;
+            var message = m as MessageFixture;
             if (message is not null)
             {
                 ReceivedStringMessages++;

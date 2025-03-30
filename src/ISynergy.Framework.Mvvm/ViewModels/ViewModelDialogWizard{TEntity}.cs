@@ -70,12 +70,12 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
     /// Gets the back command.
     /// </summary>
     /// <value>The back command.</value>
-    public RelayCommand BackCommand { get; private set; }
+    public RelayCommand? BackCommand { get; private set; }
     /// <summary>
     /// Gets the next command.
     /// </summary>
     /// <value>The next command.</value>
-    public RelayCommand NextCommand { get; private set; }
+    public RelayCommand? NextCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelDialogWizard{TEntity}"/> class.
@@ -98,7 +98,7 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="PropertyChangedEventArgs" /> instance containing the event data.</param>
-    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(sender, e);
 

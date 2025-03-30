@@ -12,7 +12,7 @@ public class ActionResult
     /// <summary>
     /// Get placeholder for additional data as result.
     /// </summary>
-    public object Result { get; private set; }
+    public object? Result { get; private set; }
 
     /// <summary>
     /// Default constructor.
@@ -26,7 +26,7 @@ public class ActionResult
     /// </summary>
     /// <param name="succeeded"></param>
     /// <param name="result"></param>
-    public ActionResult(bool succeeded, object result = null)
+    public ActionResult(bool succeeded, object? result = null)
     {
         Succeeded = succeeded;
         Result = result;

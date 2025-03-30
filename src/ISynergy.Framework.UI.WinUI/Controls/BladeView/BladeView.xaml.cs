@@ -120,7 +120,7 @@ public partial class BladeView : UserControl, IDisposable
     {
         public bool IsRemoving { get; set; }
         public Guid MessageToken { get; set; }
-        public WeakReference<IViewModel> ViewModel { get; set; }
+        public WeakReference<IViewModel>? ViewModel { get; set; }
         public DateTime RegisteredAt { get; set; }
     }
 
@@ -139,11 +139,11 @@ public partial class BladeView : UserControl, IDisposable
         this.HorizontalAlignment = HorizontalAlignment.Stretch;
         this.Orientation = Orientation.Horizontal;
         this.BladeSpacing = 10;
-        this.DisabledBackground = Microsoft.UI.Xaml.Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Brush;
+        this.DisabledBackground = (Brush)Microsoft.UI.Xaml.Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"];
         this.DisabledOpacity = 0.75;
     }
 
-    private void BladeView_SizeChanged(object sender, SizeChangedEventArgs e)
+    private void BladeView_SizeChanged(object? sender, SizeChangedEventArgs e)
     {
         if (e.NewSize.Height > 0)
         {
@@ -157,7 +157,7 @@ public partial class BladeView : UserControl, IDisposable
         this.SizeChanged += BladeView_SizeChanged;
     }
 
-    private void Blades_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Blades_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         try
         {
@@ -241,7 +241,7 @@ public partial class BladeView : UserControl, IDisposable
                 disposableView.Dispose();
             }
 
-            if (state.ViewModel.TryGetTarget(out var viewModel) &&
+            if (state.ViewModel is not null && state.ViewModel.TryGetTarget(out var viewModel) &&
                 viewModel is IDisposable disposableViewModel)
             {
                 disposableViewModel.Dispose();
@@ -308,7 +308,7 @@ public partial class BladeView : UserControl, IDisposable
         _bladeStates.Clear();
     }
 
-    protected void OnUnloaded(object sender, RoutedEventArgs e)
+    protected void OnUnloaded(object? sender, RoutedEventArgs e)
     {
         CleanupBlades();
     }

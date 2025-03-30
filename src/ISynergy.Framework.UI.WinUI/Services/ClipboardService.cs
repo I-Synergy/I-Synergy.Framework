@@ -26,7 +26,7 @@ public class ClipboardService : IClipboardService
     /// </summary>
     /// <returns></returns>
 #if WINDOWS
-    public async Task<ImageResult> GetImageFromClipboardAsync()
+    public async Task<ImageResult?> GetImageFromClipboardAsync()
     {
         var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
 
@@ -44,7 +44,7 @@ public class ClipboardService : IClipboardService
         return null;
     }
 #else
-    public Task<ImageResult> GetImageFromClipboardAsync()
+    public Task<ImageResult?> GetImageFromClipboardAsync()
     {
         throw new NotImplementedException();
     }

@@ -14,7 +14,7 @@ public class ListExtensionsTests
     [TestMethod]
     public void NullListNonFailableTest()
     {
-        List<object> list = null;
+        List<object>? list = null;
         bool result = false;
 
         foreach (object item in list.EnsureNotNull())
@@ -34,9 +34,9 @@ public class ListExtensionsTests
     {
         Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
         {
-            List<object> list = null;
+            List<object>? list = null;
 
-            foreach (object item in list)
+            foreach (object item in list!)
             {
             }
 

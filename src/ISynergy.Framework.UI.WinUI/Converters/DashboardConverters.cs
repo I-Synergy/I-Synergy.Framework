@@ -20,7 +20,7 @@ public class TilenameToVisibilityConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (parameter.ToString().Equals(value.ToString()))
+        if (parameter.ToString()!.Equals(value.ToString()))
         {
             return Visibility.Visible;
         }

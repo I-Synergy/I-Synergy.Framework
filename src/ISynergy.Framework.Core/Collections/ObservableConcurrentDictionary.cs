@@ -13,6 +13,7 @@ namespace ISynergy.Framework.Core.Collections;
 /// <typeparam name="TValue">Specifies the type of the values in this collection.</typeparam>
 [DebuggerDisplay("Count={Count}")]
 public class ObservableConcurrentDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
+    where TKey : notnull
 {
     /// <summary>
     /// The context
@@ -36,12 +37,12 @@ public class ObservableConcurrentDictionary<TKey, TValue> : IDictionary<TKey, TV
     /// Event raised when the collection changes.
     /// </summary>
     /// <returns></returns>
-    public event NotifyCollectionChangedEventHandler CollectionChanged;
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
     /// <summary>
     /// Event raised when a property on the collection changes.
     /// </summary>
     /// <returns></returns>
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Notifies observers of CollectionChanged or PropertyChanged of an update to the dictionary.
@@ -96,7 +97,7 @@ public class ObservableConcurrentDictionary<TKey, TValue> : IDictionary<TKey, TV
     /// <returns>Whether the removal was successful.</returns>
     private bool TryRemoveWithNotification(TKey key, out TValue value)
     {
-        var result = _dictionary.TryRemove(key, out value);
+        var result = _dictionary.TryRemove(key, out value!);
         if (result) NotifyObserversOfChange();
         return result;
     }
@@ -220,7 +221,6 @@ public class ObservableConcurrentDictionary<TKey, TValue> : IDictionary<TKey, TV
     /// <returns>true if the <see cref="T:System.Collections.Generic.IDictionary`2"></see> contains an element with the key; otherwise, false.</returns>
     public bool ContainsKey(TKey key)
     {
-        if (key is null) return false;
         return _dictionary.ContainsKey(key);
     }
 
@@ -251,7 +251,7 @@ public class ObservableConcurrentDictionary<TKey, TValue> : IDictionary<TKey, TV
     /// <returns>true if the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"></see> contains an element with the specified key; otherwise, false.</returns>
     public bool TryGetValue(TKey key, out TValue value)
     {
-        return _dictionary.TryGetValue(key, out value);
+        return _dictionary.TryGetValue(key, out value!);
     }
 
     /// <summary>

@@ -17,7 +17,7 @@ internal class Program
     {
         try
         {
-            string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")!;
 
             IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false)
@@ -26,7 +26,7 @@ internal class Program
 
             AzureBlobOptions options = new()
             {
-                ConnectionString = config["AzureBlobOptions:ConnectionString"]
+                ConnectionString = config["AzureBlobOptions:ConnectionString"]!
             };
 
             IServiceCollection services = new ServiceCollection()
