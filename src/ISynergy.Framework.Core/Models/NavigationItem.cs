@@ -59,7 +59,7 @@ public partial class NavigationItem : IDisposable
     /// <param name="color">The color.</param>
     /// <param name="command">The command.</param>
     /// <param name="commandParameter">The command parameter.</param>
-    public NavigationItem(string name, object symbol, string color, ICommand command, object? commandParameter = null)
+    public NavigationItem(string name, object symbol, string color, ICommand? command, object? commandParameter = null)
     {
         Name = name;
         ToolTipMenu = name;
