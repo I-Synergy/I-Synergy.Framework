@@ -38,7 +38,7 @@ public class ServiceLocator
 
     // Delegate methods to _scopedContextService
     public TService GetService<TService>() => _scopedContextService.GetService<TService>();
-    public TService GetRequiredService<TService>() => _scopedContextService.GetRequiredService<TService>();
+    public TService GetRequiredService<TService>() where TService : notnull => _scopedContextService.GetRequiredService<TService>();
 
     public object GetService(Type serviceType) => _scopedContextService.GetService(serviceType);
     public object GetRequiredService(Type serviceType) => _scopedContextService.GetRequiredService(serviceType);
