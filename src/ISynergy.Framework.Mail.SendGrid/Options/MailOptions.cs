@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mail.Configuration;
+﻿using ISynergy.Framework.Mail.Options.Base;
+
+namespace ISynergy.Framework.Mail.Options;
 
 /// <summary>
 /// Sendgrid options.

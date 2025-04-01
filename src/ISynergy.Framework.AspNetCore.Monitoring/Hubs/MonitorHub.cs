@@ -37,6 +37,7 @@ public class MonitorHub : Hub
     {
         _logger.LogInformation($"Client connected: {Context.ConnectionId}");
 
+        Argument.IsNotNull(Context);
         Argument.IsNotNull(Context.User);
 
         var accountId = Context.User.GetAccountId();
@@ -62,6 +63,7 @@ public class MonitorHub : Hub
     {
         _logger.LogInformation($"Client disconnected: {Context.ConnectionId}");
 
+        Argument.IsNotNull(Context);
         Argument.IsNotNull(Context.User);
 
         var accountId = Context.User.GetAccountId();

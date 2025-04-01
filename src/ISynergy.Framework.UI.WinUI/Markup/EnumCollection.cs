@@ -29,8 +29,8 @@ public class EnumCollection : MarkupExtension
     /// <returns>System.Object.</returns>
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
-        Argument.IsNotNull(EnumType);
-        return EnumType.ToList();
+        Argument.IsNotNullEnum(EnumType);
+        return EnumType!.ToList();
     }
 
     /// <summary>

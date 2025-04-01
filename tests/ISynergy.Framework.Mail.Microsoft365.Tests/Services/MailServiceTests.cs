@@ -1,5 +1,5 @@
-using ISynergy.Framework.Mail.Configuration;
 using ISynergy.Framework.Mail.Models;
+using ISynergy.Framework.Mail.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

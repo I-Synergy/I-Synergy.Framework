@@ -32,7 +32,7 @@ public class EnumKeyValueCollection : MarkupExtension
 
         var list = new List<KeyValuePair<int, string>>();
 
-        if (EnumType.IsEnum)
+        if (EnumType!.IsEnum)
         {
             list.AddRange(from Enum item in Enum.GetValues(EnumType) select new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
         }

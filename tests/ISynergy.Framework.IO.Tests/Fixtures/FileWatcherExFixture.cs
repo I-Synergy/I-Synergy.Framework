@@ -68,7 +68,7 @@ public class FileWatcherExFixture
     {
         Argument.IsNotNull(FileWatcher);
 
-        FileWatcher.EventChangedAttribute += fileWatcher_EventChanged;
+        FileWatcher!.EventChangedAttribute += fileWatcher_EventChanged;
         FileWatcher.EventChangedCreationTime += fileWatcher_EventChanged;
         FileWatcher.EventChangedDirectoryName += fileWatcher_EventChanged;
         FileWatcher.EventChangedFileName += fileWatcher_EventChanged;

@@ -6,7 +6,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Configuration;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;

@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Storage.Abstractions.Options;
 
-namespace ISynergy.Framework.Storage.Configuration;
+namespace ISynergy.Framework.Storage.Options;
 /// <summary>
 /// Azure Storage options.
 /// </summary>

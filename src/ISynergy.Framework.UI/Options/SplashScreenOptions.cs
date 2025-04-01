@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.UI.Enumerations;
 
-namespace ISynergy.Framework.UI.Configuration;
+namespace ISynergy.Framework.UI.Options;
 public class SplashScreenOptions
 {
     public Func<Task<Stream>>? AssetStreamProvider { get; set; }

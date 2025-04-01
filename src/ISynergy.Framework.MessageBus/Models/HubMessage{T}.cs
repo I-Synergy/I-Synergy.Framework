@@ -8,6 +8,7 @@ namespace ISynergy.Framework.MessageBus.Models;
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 public class HubMessage<TEntity> : IHubMessage<TEntity>
+    where TEntity : class
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="HubMessage{TEntity}" /> class.

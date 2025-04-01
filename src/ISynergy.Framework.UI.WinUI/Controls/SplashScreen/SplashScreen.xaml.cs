@@ -1,8 +1,8 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.UI.Configuration;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;

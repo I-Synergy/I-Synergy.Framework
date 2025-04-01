@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Configuration;
+﻿namespace ISynergy.Framework.UI.Options;
 
 /// <summary>
 /// Class BingMapsOptions.

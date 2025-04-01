@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Configuration;
+﻿using ISynergy.Framework.UI.Options;
 using Windows.Media.Core;
 using Windows.Storage.Streams;
 
