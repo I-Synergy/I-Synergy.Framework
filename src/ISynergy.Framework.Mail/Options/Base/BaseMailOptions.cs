@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mail.Configuration;
+﻿namespace ISynergy.Framework.Mail.Options.Base;
 
 /// <summary>
 /// Mail service options.

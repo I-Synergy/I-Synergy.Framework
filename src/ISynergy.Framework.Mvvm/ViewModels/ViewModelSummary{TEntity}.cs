@@ -162,7 +162,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
 
         string item;
 
-        if (e.GetType().HasProperty("Description") && e.GetType().GetProperty("Description")!.GetValue(e) is string value)
+        if (e!.GetType().HasProperty("Description") && e.GetType().GetProperty("Description")!.GetValue(e) is string value)
         {
             item = value;
         }

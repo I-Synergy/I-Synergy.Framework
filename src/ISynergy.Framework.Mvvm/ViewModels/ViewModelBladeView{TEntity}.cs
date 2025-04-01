@@ -192,7 +192,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         Argument.IsNotNull(e);
 
         string item;
-        if (e.GetType().GetProperty("Description")?.GetValue(e) is string value)
+        if (e!.GetType().GetProperty("Description")?.GetValue(e) is string value)
         {
             item = value;
         }

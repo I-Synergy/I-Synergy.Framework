@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Monitoring.Client.Abstractions.Services;
-using ISynergy.Framework.Monitoring.Configuration;
 using ISynergy.Framework.Monitoring.Enumerations;
 using ISynergy.Framework.Monitoring.Messages;
+using ISynergy.Framework.Monitoring.Options;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;

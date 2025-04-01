@@ -86,7 +86,7 @@ public class ArgumentTests
     public void IsNotEnumTTest()
     {
         object test = new();
-        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEnum(test));
+        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotNullEnum(test));
     }
 
     /// <summary>

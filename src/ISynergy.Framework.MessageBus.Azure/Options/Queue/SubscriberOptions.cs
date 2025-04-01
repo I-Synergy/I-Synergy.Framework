@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.MessageBus.Configuration.Base;
+﻿using ISynergy.Framework.MessageBus.Options.Base;
 
-namespace ISynergy.Framework.MessageBus.Azure.Configuration.Queue;
+namespace ISynergy.Framework.MessageBus.Azure.Options.Queue;
 
 /// <summary>
 /// Queue Messagebus subscriber options. 

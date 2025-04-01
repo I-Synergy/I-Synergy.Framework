@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.MessageBus.Abstractions.Options;
 
-namespace ISynergy.Framework.MessageBus.Configuration.Base;
+namespace ISynergy.Framework.MessageBus.Options.Base;
 
 /// <summary>
 /// Class BaseTopicOption.

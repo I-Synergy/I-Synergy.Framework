@@ -10,6 +10,7 @@ namespace ISynergy.Framework.MessageBus.Models;
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 public abstract class QueueMessage<TEntity> : IQueueMessage<TEntity>
+    where TEntity : class
 {
     /// <summary>
     /// Gets the data.

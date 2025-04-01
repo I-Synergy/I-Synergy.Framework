@@ -41,25 +41,25 @@ public static class ClaimsPrincipalExtensions
     /// Get UserId from claims.
     /// </summary>
     /// <returns>Guid.</returns>
-    public static string GetUserId(this ClaimsPrincipal principal) => principal.GetSingleClaim(Claims.Subject);
+    public static string GetUserId(this ClaimsPrincipal? principal) => principal.GetSingleClaim(Claims.Subject);
 
     /// <summary>
     /// Get Username from claims.
     /// </summary>
     /// <returns>System.String.</returns>
-    public static string GetUserName(this ClaimsPrincipal principal) => principal.GetSingleClaim(Claims.Username);
+    public static string GetUserName(this ClaimsPrincipal? principal) => principal.GetSingleClaim(Claims.Username);
 
     /// <summary>
     /// Get AccountId from claims.
     /// </summary>
     /// <returns>Guid.</returns>
-    public static Guid GetAccountId(this ClaimsPrincipal principal) => principal.GetSingleClaimAsGuid(Claims.KeyId);
+    public static Guid GetAccountId(this ClaimsPrincipal? principal) => principal.GetSingleClaimAsGuid(Claims.KeyId);
 
     /// <summary>
     /// Get clientId from claims.
     /// </summary>
     /// <returns>Guid.</returns>
-    public static string GetClientId(this ClaimsPrincipal principal) => principal.GetSingleClaim(Claims.ClientId);
+    public static string GetClientId(this ClaimsPrincipal? principal) => principal.GetSingleClaim(Claims.ClientId);
 
     /// <summary>
     /// Gets the single claim.
@@ -69,11 +69,11 @@ public static class ClaimsPrincipalExtensions
     /// <returns>System.String.</returns>
     /// <exception cref="DuplicateClaimException"></exception>
     /// <exception cref="ClaimNotFoundException"></exception>
-    public static string GetSingleClaim(this ClaimsPrincipal principal, string claimType)
+    public static string GetSingleClaim(this ClaimsPrincipal? principal, string claimType)
     {
         Argument.IsNotNull(principal);
 
-        var claims = principal.GetClaims(claimType);
+        var claims = principal!.GetClaims(claimType);
 
         if (claims is null || claims.Count == 0)
             throw new ClaimNotFoundException(claimType);

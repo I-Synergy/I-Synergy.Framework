@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Documents.Abstractions.Services;
-using ISynergy.Framework.Documents.Configuration;
 using ISynergy.Framework.Documents.Models;
+using ISynergy.Framework.Documents.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Syncfusion.DocIO.DLS;
