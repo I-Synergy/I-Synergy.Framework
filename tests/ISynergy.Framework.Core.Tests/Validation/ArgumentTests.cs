@@ -129,4 +129,162 @@ public class ArgumentTests
         int test = 1975;
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMaximum(test, 1970));
     }
+
+    /// <summary>
+    /// Tests the Condition method with a failing condition.
+    /// </summary>
+    [TestMethod]
+    public void ConditionFailTest()
+    {
+        int test = 10;
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            Argument.Condition(test, x => x < 5));
+    }
+
+    /// <summary>
+    /// Tests the Condition method with a passing condition.
+    /// </summary>
+    [TestMethod]
+    public void ConditionPassTest()
+    {
+        int test = 3;
+        var result = Argument.Condition(test, x => x < 5);
+        Assert.AreEqual(test, result);
+    }
+
+    /// <summary>
+    /// Tests the Equals method with equal values.
+    /// </summary>
+    [TestMethod]
+    public void EqualsFailTest()
+    {
+        int test = 5;
+        int compareValue = 5;
+        Assert.ThrowsException<ArgumentException>(() =>
+            Argument.Equals(test, compareValue));
+    }
+
+    /// <summary>
+    /// Tests the Equals method with different values.
+    /// </summary>
+    [TestMethod]
+    public void EqualsPassTest()
+    {
+        int test = 5;
+        int compareValue = 10;
+        var result = Argument.Equals(test, compareValue);
+        Assert.AreEqual(test, result);
+    }
+
+    /// <summary>
+    /// Tests the IsNotOutOfRange method with custom validation function (failing case).
+    /// </summary>
+    [TestMethod]
+    public void IsNotOutOfRangeWithCustomValidationFailTest()
+    {
+        int test = 15;
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            Argument.IsNotOutOfRange(test, 0, 10,
+                (value, min, max) => value % 2 == 0 && value >= min && value <= max));
+    }
+
+    /// <summary>
+    /// Tests the IsNotOutOfRange method with custom validation function (passing case).
+    /// </summary>
+    [TestMethod]
+    public void IsNotOutOfRangeWithCustomValidationPassTest()
+    {
+        int test = 8;
+        Argument.IsNotOutOfRange(test, 0, 10,
+            (value, min, max) => value % 2 == 0 && value >= min && value <= max);
+        // No exception should be thrown
+    }
+
+    /// <summary>
+    /// Tests the IsMinimal method with custom validation function (failing case).
+    /// </summary>
+    [TestMethod]
+    public void IsMinimalWithCustomValidationFailTest()
+    {
+        int test = 5;
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            Argument.IsMinimal(test, 10, (value, min) => value > min));
+    }
+
+    /// <summary>
+    /// Tests the IsMinimal method with custom validation function (passing case).
+    /// </summary>
+    [TestMethod]
+    public void IsMinimalWithCustomValidationPassTest()
+    {
+        int test = 15;
+        Argument.IsMinimal(test, 10, (value, min) => value > min);
+        // No exception should be thrown
+    }
+
+    /// <summary>
+    /// Tests the IsMaximum method with custom validation function (failing case).
+    /// </summary>
+    [TestMethod]
+    public void IsMaximumWithCustomValidationFailTest()
+    {
+        int test = 15;
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            Argument.IsMaximum(test, 10, (value, max) => value < max));
+    }
+
+    /// <summary>
+    /// Tests the IsMaximum method with custom validation function (passing case).
+    /// </summary>
+    [TestMethod]
+    public void IsMaximumWithCustomValidationPassTest()
+    {
+        int test = 5;
+        Argument.IsMaximum(test, 10, (value, max) => value < max);
+        // No exception should be thrown
+    }
+
+    /// <summary>
+    /// Tests the positive case for IsNotNull.
+    /// </summary>
+    [TestMethod]
+    public void IsNotNullPassTest()
+    {
+        Product test = new Product();
+        bool result = Argument.IsNotNull(test);
+        Assert.IsTrue(result);
+    }
+
+    /// <summary>
+    /// Tests the positive case for IsNotNullOrEmpty with string.
+    /// </summary>
+    [TestMethod]
+    public void IsNotNullOrEmptyPassTest()
+    {
+        string test = "Test String";
+        bool result = Argument.IsNotNullOrEmpty(test);
+        Assert.IsTrue(result);
+    }
+
+    /// <summary>
+    /// Tests the positive case for IsNotEmpty with Guid.
+    /// </summary>
+    [TestMethod]
+    public void GuidIsNotEmptyPassTest()
+    {
+        Guid test = Guid.NewGuid();
+        bool result = Argument.IsNotEmpty(test);
+        Assert.IsTrue(result);
+    }
+
+    /// <summary>
+    /// Tests the positive case for IsNotOutOfRange.
+    /// </summary>
+    [TestMethod]
+    public void IsNotOutOfRangePassTest()
+    {
+        int test = 2010;
+        Argument.IsNotOutOfRange(test, 2000, 2021);
+        // No exception should be thrown
+    }
 }
