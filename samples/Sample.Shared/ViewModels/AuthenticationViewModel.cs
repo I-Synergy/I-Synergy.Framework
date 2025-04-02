@@ -68,9 +68,9 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the Mail property value.
     /// </summary>
     /// <value>The registration mail.</value>
-    public required string Registration_Mail
+    public required string? Registration_Mail
     {
-        get { return GetValue<string>().ToLowerInvariant(); }
+        get { return GetValue<string>()?.ToLowerInvariant(); }
         set { SetValue(value?.ToLowerInvariant()); }
     }
 
