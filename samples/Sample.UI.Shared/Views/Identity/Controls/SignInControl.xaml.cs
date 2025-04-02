@@ -22,7 +22,7 @@ public sealed partial class SignInControl : UserControl
     /// Gets the view model.
     /// </summary>
     /// <value>The view model.</value>
-    private AuthenticationViewModel ViewModel => DataContext as AuthenticationViewModel;
+    private AuthenticationViewModel? ViewModel => DataContext as AuthenticationViewModel;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SignInControl"/> class.
