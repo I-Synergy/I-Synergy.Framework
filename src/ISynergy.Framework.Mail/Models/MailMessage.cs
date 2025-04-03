@@ -9,7 +9,7 @@ public class MailMessage
     /// Gets the email address from.
     /// </summary>
     /// <value>The email address from.</value>
-    public string EmailAddressFrom { get; }
+    public string? EmailAddressFrom { get; }
     /// <summary>
     /// Gets the email addresses to.
     /// </summary>
@@ -58,14 +58,12 @@ public class MailMessage
     /// <summary>
     /// Constructor of MailMessage.
     /// </summary>
-    /// <param name="emailAddressFrom">The email address from.</param>
     /// <param name="emailAddressesTo">The email addresses to.</param>
     /// <param name="subject">The subject.</param>
     /// <param name="message">The message.</param>
     /// <param name="sendCopy">if set to <c>true</c> [send copy].</param>
-    public MailMessage(string emailAddressFrom, List<string> emailAddressesTo, string subject, string message, bool sendCopy)
+    public MailMessage(List<string> emailAddressesTo, string subject, string message, bool sendCopy)
     {
-        EmailAddressFrom = emailAddressFrom;
         EmailAddressesTo = emailAddressesTo;
         Subject = subject;
         Message = message;
