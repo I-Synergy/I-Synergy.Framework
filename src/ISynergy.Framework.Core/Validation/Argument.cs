@@ -18,7 +18,7 @@ public static class Argument
     /// <param name="name"></param>
     /// <exception cref="ArgumentNullException"></exception>
     [return: NotNull]
-    public static bool IsNotNull<T>([NotNullWhen(false)] T value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    public static T IsNotNull<T>(T value, [CallerArgumentExpression(nameof(value))] string? name = "")
     {
         if (value is null)
         {
@@ -26,7 +26,7 @@ public static class Argument
             throw new ArgumentNullException(name, error);
         }
 
-        return true;
+        return value;
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <exception cref="ArgumentNullException"></exception>
     [return: NotNull]
-    public static bool IsNotNullOrEmpty([NotNullWhen(false)] string value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    public static string IsNotNullOrEmpty(string? value, [CallerArgumentExpression(nameof(value))] string? name = "")
     {
         if (string.IsNullOrEmpty(value))
         {
@@ -44,7 +44,7 @@ public static class Argument
             throw new ArgumentNullException(name, error);
         }
 
-        return true;
+        return value;
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public static class Argument
     /// <param name="value">Value of the parameter.</param>
     /// <exception cref="ArgumentException"></exception>
     [return: NotNull]
-    public static bool IsNotEmpty([NotNullWhen(false)] Guid value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    public static Guid IsNotEmpty(Guid value, [CallerArgumentExpression(nameof(value))] string? name = "")
     {
         if (value == Guid.Empty)
         {
@@ -62,7 +62,7 @@ public static class Argument
             throw new ArgumentException(error, name);
         }
 
-        return true;
+        return value;
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public static class Argument
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentException"></exception>
     [return: NotNull]
-    public static bool IsNotNullOrEmpty([NotNullWhen(false)] Guid? value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    public static Guid IsNotNullOrEmpty(Guid? value, [CallerArgumentExpression(nameof(value))] string? name = "")
     {
         if (!value.HasValue || value.Value == Guid.Empty)
         {
@@ -81,7 +81,7 @@ public static class Argument
             throw new ArgumentNullException(name, error);
         }
 
-        return true;
+        return value.Value;
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public static class Argument
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentException"></exception>
     [return: NotNull]
-    public static bool IsNotNullOrWhitespace([NotNullWhen(false)] string value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    public static string IsNotNullOrWhitespace(string value, [CallerArgumentExpression(nameof(value))] string? name = "")
     {
         if (string.IsNullOrEmpty(value) || (string.CompareOrdinal(value.Trim(), string.Empty) == 0))
         {
@@ -100,7 +100,7 @@ public static class Argument
             throw new ArgumentNullException(name, error);
         }
 
-        return true;
+        return value;
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public static class Argument
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentException"></exception>
     [return: NotNull]
-    public static bool IsNotNullOrEmptyArray([NotNullWhen(false)] Array value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    public static Array IsNotNullOrEmptyArray(Array value, [CallerArgumentExpression(nameof(value))] string? name = "")
     {
         if ((value is null) || (value.Length == 0))
         {
@@ -119,7 +119,7 @@ public static class Argument
             throw new ArgumentNullException(name, error);
         }
 
-        return true;
+        return value;
     }
 
     /// <summary>
@@ -131,7 +131,7 @@ public static class Argument
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentException"></exception>
     [return: NotNull]
-    public static bool IsNotNullOrEmptyList<T>([NotNullWhen(false)] IList<T> value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    public static IList<T> IsNotNullOrEmptyList<T>(IList<T> value, [CallerArgumentExpression(nameof(value))] string? name = "")
     {
         if ((value is null) || (value.Count == 0))
         {
@@ -139,7 +139,7 @@ public static class Argument
             throw new ArgumentNullException(name, error);
         }
 
-        return true;
+        return value;
     }
 
     /// <summary>
@@ -150,9 +150,20 @@ public static class Argument
     /// <param name="value">The parameter value.</param>
     /// <exception cref="System.ArgumentException"></exception>
     [return: NotNull]
-    public static bool IsNotNullEnum<T>([NotNullWhen(false)] T value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    public static T IsNotNullEnum<T>(T value, [CallerArgumentExpression(nameof(value))] string? name = "")
     {
-        if (value is null || !typeof(T).IsEnum)
+        if (value is null || !value.GetType().IsEnum)
+        {
+            var error = LanguageService.Default.GetString("WarningEnum");
+            throw new ArgumentException(error, name);
+        }
+
+        return value;
+    }
+
+    public static bool IsEnumType([NotNullWhen(true)] Type? value, [CallerArgumentExpression(nameof(value))] string? name = "")
+    {
+        if (value is null || !value.IsEnum)
         {
             var error = LanguageService.Default.GetString("WarningEnum");
             throw new ArgumentException(error, name);

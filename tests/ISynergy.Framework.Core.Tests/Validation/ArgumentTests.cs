@@ -251,8 +251,8 @@ public class ArgumentTests
     public void IsNotNullPassTest()
     {
         Product test = new Product();
-        bool result = Argument.IsNotNull(test);
-        Assert.IsTrue(result);
+        var result = Argument.IsNotNull(test);
+        Assert.IsNotNull(result);
     }
 
     /// <summary>
@@ -261,9 +261,9 @@ public class ArgumentTests
     [TestMethod]
     public void IsNotNullOrEmptyPassTest()
     {
-        string test = "Test String";
-        bool result = Argument.IsNotNullOrEmpty(test);
-        Assert.IsTrue(result);
+        string? test = "Test String";
+        var result = Argument.IsNotNullOrEmpty(test);
+        Assert.IsNotNull(result);
     }
 
     /// <summary>
@@ -272,9 +272,11 @@ public class ArgumentTests
     [TestMethod]
     public void GuidIsNotEmptyPassTest()
     {
-        Guid test = Guid.NewGuid();
-        bool result = Argument.IsNotEmpty(test);
-        Assert.IsTrue(result);
+        Guid? test = Guid.NewGuid();
+        var result = Argument.IsNotNullOrEmpty(test);
+
+        Assert.IsFalse(result == Guid.Empty);
+        Assert.IsNotNull(result);
     }
 
     /// <summary>
@@ -286,5 +288,89 @@ public class ArgumentTests
         int test = 2010;
         Argument.IsNotOutOfRange(test, 2000, 2021);
         // No exception should be thrown
+    }
+
+    private enum TestEnum
+    {
+        Value1,
+        Value2,
+        Value3
+    }
+
+    [TestMethod]
+    public void IsNotNullEnum_WithEnumValue_ReturnsTrue()
+    {
+        // Arrange
+        TestEnum enumValue = TestEnum.Value1;
+
+        // Act
+        var result = Argument.IsNotNullEnum(enumValue);
+
+        // Assert
+        Assert.IsNotNull(result);
+    }
+
+    [TestMethod]
+    public void IsNotNullEnum_WithNullValue_ThrowsArgumentException()
+    {
+        // Arrange
+        TestEnum? nullEnum = null;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotNullEnum(nullEnum));
+    }
+
+    [TestMethod]
+    public void IsNotNullEnum_WithNonEnumType_ThrowsArgumentException()
+    {
+        // Arrange
+        Type nonEnumType = typeof(string);
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotNullEnum(nonEnumType));
+    }
+
+    [TestMethod]
+    public void IsNotNullEnum_WithEnumType_ThrowsArgumentException()
+    {
+        // Arrange
+        Type enumType = typeof(TestEnum);
+
+        // Act & Assert
+        // This will fail because IsNotNullEnum checks if T is an enum, not if the value represents an enum type
+        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotNullEnum(enumType));
+    }
+
+    [TestMethod]
+    public void IsEnumType_WithEnumType_ReturnsTrue()
+    {
+        // Arrange
+        Type enumType = typeof(TestEnum);
+
+        // Act
+        bool result = Argument.IsEnumType(enumType);
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsEnumType_WithNonEnumType_ThrowsArgumentException()
+    {
+        // Arrange
+        Type nonEnumType = typeof(string);
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentException>(() => Argument.IsEnumType(nonEnumType));
+    }
+
+    [TestMethod]
+    public void IsEnumType_WithNullType_ThrowsArgumentException()
+    {
+        // Arrange
+        Type? nullType = null;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentException>(() => Argument.IsEnumType(nullType));
     }
 }

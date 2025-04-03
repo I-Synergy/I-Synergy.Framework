@@ -60,8 +60,8 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         _logger.LogTrace("Setting up localization service.");
 
-        if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is not null)
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language.SetLocalizationLanguage();
+        if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is not null)
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language.SetLocalizationLanguage();
 
         //_logger.LogTrace("Setting up theming.");
 

@@ -67,7 +67,7 @@ public sealed partial class SignInControl : UserControl
     {
         SetCapsLockOnState();
 
-        TextBox_Username.ItemsSource = ViewModel.Usernames;
+        TextBox_Username.ItemsSource = ViewModel!.Usernames;
 
         if (TextBox_Username.Text.Length < 1)
         {
@@ -86,7 +86,7 @@ public sealed partial class SignInControl : UserControl
     /// <param name="e">The <see cref="KeyRoutedEventArgs"/> instance containing the event data.</param>
     private void TextBox_Password_KeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key == VirtualKey.Enter && ViewModel.SignInCommand.CanExecute(null))
+        if (e.Key == VirtualKey.Enter && ViewModel!.SignInCommand.CanExecute(null))
         {
             ViewModel.SignInCommand.Execute(null);
         }
@@ -160,11 +160,11 @@ public sealed partial class SignInControl : UserControl
         {
             if (string.IsNullOrWhiteSpace(sender.Text))
             {
-                sender.ItemsSource = ViewModel.Usernames;
+                sender.ItemsSource = ViewModel!.Usernames;
             }
             else
             {
-                sender.ItemsSource = ViewModel.Usernames?.Where(q => q.Contains(sender.Text, StringComparison.OrdinalIgnoreCase)).ToList();
+                sender.ItemsSource = ViewModel!.Usernames?.Where(q => q.Contains(sender.Text, StringComparison.OrdinalIgnoreCase)).ToList();
             }
         }
     }
@@ -186,8 +186,6 @@ public sealed partial class SignInControl : UserControl
     private void TextBox_Username_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
         if (NetworkUtility.IsValidEMail(args.SelectedItem.ToString()))
-        {
             sender.Text = args.SelectedItem.ToString();
-        }
     }
 }

@@ -51,9 +51,11 @@ public class ScopedContextService : IScopedContextService
                 {
                     var service = oldScope.ServiceProvider.GetService(descriptor.ServiceType);
                     (service as IDisposable)?.Dispose();
+                    service = null;
                 }
             }
             oldScope.Dispose();
+            oldScope = null;
         }
     }
 
@@ -156,6 +158,7 @@ public class ScopedContextService : IScopedContextService
             {
                 var service = _serviceScope.ServiceProvider.GetService(descriptor.ServiceType);
                 (service as IDisposable)?.Dispose();
+                service = null;
             }
         }
 

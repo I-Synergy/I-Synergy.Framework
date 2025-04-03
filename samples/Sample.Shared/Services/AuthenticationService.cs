@@ -69,11 +69,11 @@ public class AuthenticationService : IAuthenticationService
 
         if (remember)
         {
-            if (_scopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser != username)
+            if (_scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser != username)
             {
-                _scopedContextService.GetService<ISettingsService>().LocalSettings!.IsAutoLogin = true;
-                _scopedContextService.GetService<ISettingsService>().LocalSettings!.DefaultUser = username;
-                _scopedContextService.GetService<ISettingsService>().SaveLocalSettings();
+                _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = true;
+                _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser = username;
+                _scopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
             }
 
             await _scopedContextService.GetService<ICredentialLockerService>().AddCredentialToCredentialLockerAsync(username, password);

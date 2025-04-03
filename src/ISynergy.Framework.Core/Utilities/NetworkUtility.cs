@@ -1,4 +1,5 @@
-﻿using System.Net.NetworkInformation;
+﻿using ISynergy.Framework.Core.Validation;
+using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Utilities;
@@ -111,11 +112,11 @@ public static class NetworkUtility
     /// <summary>
     /// Determines whether [is valid e mail] [the specified string mail address].
     /// </summary>
-    /// <param name="strMailAddress">The string mail address.</param>
+    /// <param name="emailAddress">The string mail address.</param>
     /// <returns><c>true</c> if [is valid e mail] [the specified string mail address]; otherwise, <c>false</c>.</returns>
-    public static bool IsValidEMail(string strMailAddress)
+    public static bool IsValidEMail(string? emailAddress)
     {
-        return Regex.Match(strMailAddress, MailRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
+        return Regex.Match(Argument.IsNotNullOrEmpty(emailAddress), MailRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
     }
 
     /// <summary>

@@ -55,7 +55,7 @@
                 SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}">
                 <i:Interaction.Behaviors>
                     <i:EventTriggerBehavior EventName="DoubleTapped">
-                        <i:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
+                        <i:InvokeCommandAction Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItems}" />
                     </i:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListView>
@@ -72,8 +72,8 @@
                     MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}"
                     Margin="{ThemeResource ContentDialogButton1HostMargin}"
                     HorizontalAlignment="Right"
-                    Command="{Binding SubmitCommand}"
-                    CommandParameter="{Binding SelectedItem}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{Binding SelectedItems}"
                     Content="{m:LanguageResource Key=Select}" />
                 <Button
                     x:Name="Cancel_Button"

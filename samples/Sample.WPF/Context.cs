@@ -29,7 +29,7 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets the current profile.
     /// </summary>
     /// <value>The current profile.</value>
-    public IProfile Profile
+    public IProfile? Profile
     {
         get { return GetValue<IProfile>(); }
         set
@@ -44,7 +44,7 @@ public sealed class Context : ObservableClass, IContext
     /// Gets the current time zone.
     /// </summary>
     /// <value>The current time zone.</value>
-    public TimeZoneInfo TimeZone
+    public TimeZoneInfo? TimeZone
     {
         get
         {
@@ -158,7 +158,7 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets the NumberFormat property value.
     /// </summary>
     /// <value>The number format.</value>
-    public NumberFormatInfo NumberFormat
+    public NumberFormatInfo? NumberFormat
     {
         get { return GetValue<NumberFormatInfo>(); }
         set { SetValue(value); }
@@ -168,7 +168,7 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets the Culture property value.
     /// </summary>
     /// <value>The culture.</value>
-    public CultureInfo Culture
+    public CultureInfo? Culture
     {
         get { return GetValue<CultureInfo>(); }
         set { SetValue(value); }
@@ -178,7 +178,7 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets the gateway service endpoint.
     /// </summary>
     /// <value>The service endpoint.</value>
-    public string GatewayEndpoint
+    public string? GatewayEndpoint
     {
         get { return GetValue<string>(); }
         private set { SetValue(value); }

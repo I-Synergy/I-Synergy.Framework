@@ -200,7 +200,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <param name="args">Event data for the event.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings!.Theme);
+        _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
 
         _logger.LogTrace("Loading custom resource dictionaries");
 

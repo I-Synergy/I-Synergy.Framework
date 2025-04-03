@@ -225,8 +225,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language = e.Result;
-        _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
+        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
+        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
 
         e.Result.SetLocalizationLanguage();
 
@@ -264,10 +264,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         if (e.Result is { } style)
         {
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme = style.Theme;
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color = style.Color;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
 
-            if (_commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),

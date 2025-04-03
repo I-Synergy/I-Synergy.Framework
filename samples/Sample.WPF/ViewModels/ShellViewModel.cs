@@ -48,32 +48,14 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Gets or sets the selected test items.
     /// </summary>
     /// <value>The selected test items.</value>
-    public ObservableCollection<TestItem> SelectedTestItems { get; set; }
+    public ObservableCollection<TestItem> SelectedTestItems { get; set; } = [];
 
-    /// <summary>
-    /// Gets or sets the information command.
-    /// </summary>
-    /// <value>The information command.</value>
     public AsyncRelayCommand InfoCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the browse command.
-    /// </summary>
-    /// <value>The browse command.</value>
     public AsyncRelayCommand BrowseCommand { get; private set; }
 
     public AsyncRelayCommand EditableComboCommand { get; private set; }
-
-    /// <summary>
-    /// gets or sets the Unit Conversion command.
-    /// </summary>
     public AsyncRelayCommand UnitConversionCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the Validation test command.
-    /// </summary>
     public AsyncRelayCommand ValidationTestCommand { get; private set; }
-
     public AsyncRelayCommand NugetUnlisterCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
@@ -123,18 +105,18 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated)
         {
-            PrimaryItems.Add(new NavigationItem("Info", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("Browse", (Application.Current.Resources["search"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, BrowseCommand));
-            PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, EditableComboCommand));
-            PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
-            PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, UnitConversionCommand));
-            PrimaryItems.Add(new NavigationItem("Select single item", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, SelectSingleCommand));
-            PrimaryItems.Add(new NavigationItem("Select multiple items", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, SelectMultipleCommand));
-            PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, NugetUnlisterCommand));
-            PrimaryItems.Add(new NavigationItem("Show toast message", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, ShowToastMessageCommand));
+            PrimaryItems.Add(new NavigationItem("Info", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", (Application.Current.Resources["search"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, EditableComboCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, UnitConversionCommand));
+            PrimaryItems.Add(new NavigationItem("Select single item", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectSingleCommand));
+            PrimaryItems.Add(new NavigationItem("Select multiple items", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectMultipleCommand));
+            PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, NugetUnlisterCommand));
+            PrimaryItems.Add(new NavigationItem("Show toast message", (Application.Current.Resources["info"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ShowToastMessageCommand));
         }
 
-        PrimaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, SignInCommand));
+        PrimaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated ? "Logout" : "Login", (Application.Current.Resources["user2"] as string).ToPath(), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
     private Task ShowToastMessageAsync()
@@ -153,7 +135,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
-    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
@@ -168,7 +150,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
-    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_MultipleSubmitted;

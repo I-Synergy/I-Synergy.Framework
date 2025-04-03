@@ -27,6 +27,6 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
     public LanguageViewModel(ICommonServices commonServices)
         : base(commonServices)
     {
-        SelectedItem = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.Language;
+        SelectedItem = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language;
     }
 }

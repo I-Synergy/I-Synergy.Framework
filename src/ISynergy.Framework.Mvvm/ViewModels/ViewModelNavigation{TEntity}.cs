@@ -50,7 +50,7 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
     /// Gets or sets the submit command.
     /// </summary>
     /// <value>The submit command.</value>
-    public AsyncRelayCommand<TEntity>? SubmitCommand { get; private set; }
+    public AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelNavigation{TEntity}"/> class.
@@ -125,7 +125,6 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
 
             // Clear commands
             SubmitCommand?.Dispose();
-            SubmitCommand = null;
 
             base.Dispose(disposing);
         }
