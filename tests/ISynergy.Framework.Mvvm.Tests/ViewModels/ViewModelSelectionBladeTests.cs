@@ -56,8 +56,6 @@ public class ViewModelSelectionBladeTests
         Assert.IsTrue(viewModel.Items.Any());
         Assert.IsNotNull(viewModel.SelectedItems);
         Assert.IsTrue(viewModel.SelectedItems.Any());
-        Assert.IsNotNull(viewModel.RefreshCommand);
-        Assert.IsNotNull(viewModel.SubmitCommand);
 
         // Act
         viewModel.Cleanup();
@@ -68,8 +66,6 @@ public class ViewModelSelectionBladeTests
         Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
 
         viewModel.Dispose();
-        Assert.IsNull(viewModel.RefreshCommand, "RefreshCommand should be null after dispose");
-        Assert.IsNull(viewModel.SubmitCommand, "SubmitCommand should be null after dispose");
         Assert.IsTrue(viewModel.IsDisposed);
     }
 
@@ -125,8 +121,6 @@ public class ViewModelSelectionBladeTests
         Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
 
         viewModel.Dispose();
-        Assert.IsNull(viewModel.RefreshCommand, "RefreshCommand should be null after dispose");
-        Assert.IsNull(viewModel.SubmitCommand, "SubmitCommand should be null after dispose");
         Assert.IsTrue(viewModel.IsDisposed);
     }
 

@@ -14,7 +14,7 @@ namespace ISynergy.Framework.UI.Controls.Validators;
 /// </summary>
 public static class MaskValidator
 {
-    private static Control _control;
+    private static Control? _control;
 
     private const string DefaultPlaceHolder = "_";
     private const char EscapeChar = '\\';
@@ -119,7 +119,7 @@ public static class MaskValidator
 
     private static void InitializeControl(object sender)
     {
-        TextBox textBox = null;
+        TextBox? textBox = null;
 
         if (sender is TextBox parent)
         {
@@ -129,7 +129,7 @@ public static class MaskValidator
         else if (sender is Control control)
         {
             _control = control;
-            textBox = (sender as DependencyObject).FindChild<TextBox>();
+            textBox = (sender as DependencyObject)?.FindChild<TextBox>();
         }
 
         if (textBox is null)
@@ -141,7 +141,7 @@ public static class MaskValidator
         textBox.GotFocus -= Textbox_GotFocus;
         textBox.Loaded += Textbox_Loaded;
 
-        Textbox_Loaded(textBox, null);
+        Textbox_Loaded(textBox, new RoutedEventArgs());
     }
 
     private static void Textbox_Loaded(object sender, RoutedEventArgs e)
@@ -193,7 +193,7 @@ public static class MaskValidator
             _control.SetValue(EscapedMaskProperty, escapedMask);
         }
 
-        var placeHolder = placeHolderValue[0];
+        var placeHolder = placeHolderValue![0];
 
         var representationDictionary = new Dictionary<char, string>();
         representationDictionary.Add(AlphaCharacterRepresentation.Key, AlphaCharacterRepresentation.Value);
@@ -301,7 +301,7 @@ public static class MaskValidator
 
         var mask = string.Empty;
         var placeHolderValue = string.Empty;
-        Dictionary<char, string> representationDictionary = null;
+        Dictionary<char, string>? representationDictionary = null;
 
         if (_control is null)
         {
@@ -342,7 +342,7 @@ public static class MaskValidator
         string newValue,
         TextBox textBox,
         string mask,
-        List<int> escapedChars,
+        List<int>? escapedChars,
         Dictionary<char, string> representationDictionary,
         char placeholder,
         int oldSelectionStart)
@@ -356,7 +356,7 @@ public static class MaskValidator
             var selectedChar = newValue[i - oldSelectionStart];
 
             // If dynamic character a,9,* or custom
-            if (representationDictionary.ContainsKey(maskChar) && !escapedChars.Contains(i))
+            if (representationDictionary.ContainsKey(maskChar) && escapedChars is not null && !escapedChars.Contains(i))
             {
                 var pattern = representationDictionary[maskChar];
                 if (System.Text.RegularExpressions.Regex.IsMatch(selectedChar.ToString(), pattern, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
@@ -395,8 +395,8 @@ public static class MaskValidator
         var textBox = (TextBox)sender;
 
         var escapedMask = string.Empty;
-        List<int> escapedChars = null;
-        Dictionary<char, string> representationDictionary = null;
+        List<int>? escapedChars = null;
+        Dictionary<char, string>? representationDictionary = null;
         var placeHolderValue = string.Empty;
         var oldText = string.Empty;
         int oldSelectionStart;
@@ -503,7 +503,7 @@ public static class MaskValidator
             var maskChar = escapedMask[newSelectionIndex];
 
             // If dynamic character a,9,* or custom
-            if (representationDictionary.ContainsKey(maskChar) && !escapedChars.Contains(newSelectionIndex))
+            if (representationDictionary.ContainsKey(maskChar) && escapedChars is not null && !escapedChars.Contains(newSelectionIndex))
             {
                 var pattern = representationDictionary[maskChar];
                 if (System.Text.RegularExpressions.Regex.IsMatch(selectedChar.ToString(), pattern, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
@@ -550,7 +550,7 @@ public static class MaskValidator
                 var maskChar = escapedMask[i];
 
                 // If dynamic character a,9,* or custom
-                if (representationDictionary.ContainsKey(maskChar) && !escapedChars.Contains(i))
+                if (representationDictionary.ContainsKey(maskChar) && escapedChars is not null && !escapedChars.Contains(i))
                 {
                     textArray[i] = placeHolder;
                 }
@@ -573,14 +573,14 @@ public static class MaskValidator
         textBox.SelectionStart = isDeleteOrBackspace ? newSelectionIndex : GetSelectionStart(escapedMask, escapedChars, newSelectionIndex, representationDictionary);
     }
 
-    private static int GetSelectionStart(string mask, List<int> escapedChars, int selectionIndex, Dictionary<char, string> representationDictionary)
+    private static int GetSelectionStart(string mask, List<int>? escapedChars, int selectionIndex, Dictionary<char, string> representationDictionary)
     {
         for (int i = selectionIndex; i < mask.Length; i++)
         {
             var maskChar = mask[i];
 
             // If dynamic character a,9,* or custom
-            if (representationDictionary.ContainsKey(maskChar) && !escapedChars.Contains(i))
+            if (representationDictionary.ContainsKey(maskChar) && escapedChars is not null && !escapedChars.Contains(i))
             {
                 return i;
             }

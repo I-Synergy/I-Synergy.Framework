@@ -13,7 +13,6 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
-		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('windows7.0'))">

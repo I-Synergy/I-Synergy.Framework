@@ -19,13 +19,15 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
 
-    public event EventHandler<ReturnEventArgs<bool>> ApplicationInitialized;
-    public event EventHandler<ReturnEventArgs<bool>> ApplicationLoaded;
+    protected bool _isShuttingDown = false;
+
+    public event EventHandler<ReturnEventArgs<bool>>? ApplicationInitialized;
+    public event EventHandler<ReturnEventArgs<bool>>? ApplicationLoaded;
 
     public virtual void RaiseApplicationInitialized() => ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
     public virtual void RaiseApplicationLoaded() => ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
 
-    private Task Initialize { get; set; }
+    private Task? Initialize { get; set; }
 
     /// <summary>
     /// Default constructor.
@@ -82,10 +84,10 @@ public abstract class Application : System.Windows.Application, IDisposable
         _logger.LogTrace("Finishing initialization of application");
     }
 
-    protected abstract void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e);
-    protected abstract void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e);
+    protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
+    protected abstract void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e);
 
-    protected virtual void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e)
+    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e)
     {
         _commonServices.InfoService.SetTitle(e.Value);
     }
@@ -121,9 +123,19 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    public virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
-        Debug.WriteLine(e.Exception.ToMessage(Environment.StackTrace));
+        // Ignore task cancellation exceptions during shutdown
+        if (e.Exception is OperationCanceledException || e.Exception is TaskCanceledException)
+        {
+            // Check if we're in the process of shutting down
+            if (_isShuttingDown)
+                return; // Ignore the exception
+        }
+        else
+        {
+            Debug.WriteLine(e.Exception.ToMessage(Environment.StackTrace));
+        }
     }
 
     /// <summary>
@@ -131,7 +143,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    public virtual async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
             await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
@@ -146,7 +158,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    public virtual async void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
             if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
@@ -159,6 +171,12 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// Initializes the application asynchronously.
     /// </summary>
     private void InitializeApplication() => Initialize = InitializeApplicationAsync();
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        _isShuttingDown = true;
+        base.OnExit(e);
+    }
 
     /// <summary>
     /// LoadAssembly the application.

@@ -38,7 +38,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
     protected Microsoft.UI.Xaml.Window? _mainWindow;
 
-    private int lastErrorMessage = 0;
+    private int _lastErrorMessage = 0;
 
     /// <summary>
     /// Gets the current main window from the running application instance
@@ -129,6 +129,10 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         if (e.Exception is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested)
             return;
 
+        // Ignore the exception if it is an OperationCanceledException or a TaskCanceledException
+        if (e.Exception is OperationCanceledException)
+            return;
+
         // Ignore the exception if it is a TaskCanceledException inside an aggregated exception and the cancellation token is requested
         if (e.Exception is AggregateException ae && ae.InnerExceptions?.Any(ex => ex is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested) == true)
             return;
@@ -137,9 +141,9 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         if (e.Exception is COMException ce && ce.Message.Contains("Cannot find credential in Vault"))
             return;
 
-        if (e.Exception.HResult != lastErrorMessage)
+        if (e.Exception.HResult != _lastErrorMessage)
         {
-            lastErrorMessage = e.Exception.HResult;
+            _lastErrorMessage = e.Exception.HResult;
             _logger?.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
         }
     }

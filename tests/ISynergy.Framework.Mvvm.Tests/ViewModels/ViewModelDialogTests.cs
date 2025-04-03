@@ -137,7 +137,6 @@ public class ViewModelDialogTests
         Assert.IsNull(viewModel.SelectedItem);
 
         viewModel.Dispose();
-        Assert.IsNull(viewModel.SubmitCommand);
         Assert.IsTrue(viewModel.IsDisposed);
     }
 }

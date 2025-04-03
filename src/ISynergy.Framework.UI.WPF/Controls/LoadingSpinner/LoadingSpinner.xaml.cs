@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// </summary>
 public sealed partial class LoadingSpinner
 {
-    private Storyboard _storyboard;
+    private Storyboard? _storyboard;
 
     public string Message
     {

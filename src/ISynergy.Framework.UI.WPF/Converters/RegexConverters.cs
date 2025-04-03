@@ -21,10 +21,10 @@ public class MaskToRegexConverter : IValueConverter
     {
         if (value is not null && !string.IsNullOrEmpty(value.ToString()))
         {
-            return RegexUtility.MaskToRegexConverter(value.ToString());
+            return RegexUtility.MaskToRegexConverter(value.ToString()!);
         }
 
-        return null;
+        return null!;
     }
 
     /// <summary>

@@ -12,7 +12,7 @@ public interface IFileService<T>
     /// <param name="filename">The filename.</param>
     /// <param name="file">The file.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    Task<T> SaveFileAsync(string folder, string filename, byte[] file);
+    Task<T?> SaveFileAsync(string folder, string filename, byte[] file);
 
     /// <summary>
     /// Browses the file asynchronous.

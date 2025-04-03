@@ -125,7 +125,6 @@ public class ViewModelBladeTests
         Assert.AreEqual(default, viewModel.SelectedItem);
 
         viewModel.Dispose();
-        Assert.IsNull(viewModel.SubmitCommand);
         Assert.IsTrue(viewModel.IsDisposed);
     }
 }

@@ -16,7 +16,7 @@ public class PrimaryScreenPositionProvider : IPositionProvider
     private double WorkAreaHeight => SystemParameters.WorkArea.Height;
     private double WorkAreaWidth => SystemParameters.WorkArea.Width;
 
-    public System.Windows.Window ParentWindow { get; }
+    public System.Windows.Window? ParentWindow { get; }
     public EjectDirection EjectDirection { get; private set; }
 
     public PrimaryScreenPositionProvider(
@@ -194,10 +194,8 @@ public class PrimaryScreenPositionProvider : IPositionProvider
     }
 
 #pragma warning disable CS0067
-    public event EventHandler UpdatePositionRequested;
-
-    public event EventHandler UpdateEjectDirectionRequested;
-
-    public event EventHandler UpdateHeightRequested;
+    public event EventHandler? UpdatePositionRequested;
+    public event EventHandler? UpdateEjectDirectionRequested;
+    public event EventHandler? UpdateHeightRequested;
 #pragma warning restore CS0067
 }

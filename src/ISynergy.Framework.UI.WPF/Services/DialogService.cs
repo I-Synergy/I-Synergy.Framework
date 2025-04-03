@@ -211,7 +211,7 @@ public class DialogService : IDialogService
             window.ViewModel = viewmodel;
             window.Owner = Application.Current.MainWindow;
 
-            void ViewModelClosedHandler(object sender, EventArgs e)
+            void ViewModelClosedHandler(object? sender, EventArgs e)
             {
                 if (sender is IViewModelDialog<TEntity> vm)
                     vm.Closed -= ViewModelClosedHandler;

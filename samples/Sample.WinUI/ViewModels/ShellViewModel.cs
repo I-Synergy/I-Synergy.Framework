@@ -231,6 +231,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     protected override Task OpenSettingsAsync() =>
         base._commonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
 
+    protected override Task OpenBackgroundAsync() => throw new NotImplementedException();
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)

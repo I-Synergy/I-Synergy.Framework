@@ -15,7 +15,7 @@ public class NotificationsDisplaySupervisor : IDisposable
     private readonly IKeyboardEventHandler _keyboardEventHandler;
 
     private INotificationsLifetimeSupervisor _lifetimeSupervisor;
-    private NotificationsWindow _window;
+    private NotificationsWindow? _window;
 
     public NotificationsDisplaySupervisor(
         IPositionProvider positionProvider,
@@ -121,30 +121,30 @@ public class NotificationsDisplaySupervisor : IDisposable
 
     private void ShowWindow()
     {
-        _window.Show();
+        _window?.Show();
     }
 
-    private void LifetimeSupervisorOnShowNotificationRequested(object sender, ShowNotificationEventArgs eventArgs)
+    private void LifetimeSupervisorOnShowNotificationRequested(object? sender, ShowNotificationEventArgs eventArgs)
     {
         DisplayNotification(eventArgs.Notification);
     }
 
-    private void LifetimeSupervisorOnCloseNotificationRequested(object sender, CloseNotificationEventArgs eventArgs)
+    private void LifetimeSupervisorOnCloseNotificationRequested(object? sender, CloseNotificationEventArgs eventArgs)
     {
         CloseNotification(eventArgs.Notification);
     }
 
-    private void PositionProviderOnUpdatePositionRequested(object sender, EventArgs eventArgs)
+    private void PositionProviderOnUpdatePositionRequested(object? sender, EventArgs eventArgs)
     {
         UpdateWindowPosition();
     }
 
-    private void PositionProviderOnUpdateEjectDirectionRequested(object sender, EventArgs eventArgs)
+    private void PositionProviderOnUpdateEjectDirectionRequested(object? sender, EventArgs eventArgs)
     {
         UpdateEjectDirection();
     }
 
-    private void PositionProviderOnUpdateHeightRequested(object sender, EventArgs eventArgs)
+    private void PositionProviderOnUpdateHeightRequested(object? sender, EventArgs eventArgs)
     {
         UpdateHeight();
     }

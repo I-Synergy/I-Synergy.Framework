@@ -11,7 +11,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="path">Path Data string</param>
     /// <returns>System.String.</returns>
-    public static Geometry ToGeometry(this string path)
+    public static Geometry? ToGeometry(this string path)
     {
         if (!string.IsNullOrWhiteSpace(path))
             return Geometry.Parse(path);
@@ -24,7 +24,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="path">Path Data string</param>
     /// <returns>System.String.</returns>
-    public static Path ToPath(this string path)
+    public static Path? ToPath(this string path)
     {
         if (!string.IsNullOrWhiteSpace(path))
             return new Path

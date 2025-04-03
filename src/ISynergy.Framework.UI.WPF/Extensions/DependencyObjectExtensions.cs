@@ -14,32 +14,35 @@ public static class DependencyObjectExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="self">The parent.</param>
     /// <returns>T.</returns>
-    public static T FindChild<T>(this DependencyObject self) where T : DependencyObject
+    public static T? FindChild<T>(this DependencyObject self) where T : DependencyObject
     {
         // confirm parent is valid.
-        if (self is null) return default;
-        if (self is T) return (T)self;
+        if (self is null)
+            return default;
 
-        DependencyObject foundChild = null;
+        if (self is T)
+            return (T)self;
 
         var childrenCount = VisualTreeHelper.GetChildrenCount(self);
 
         for (var i = 0; i < childrenCount; i++)
         {
             var child = VisualTreeHelper.GetChild(self, i);
-            foundChild = child.FindChild<T>();
-            if (foundChild != null) break;
+            var foundChild = child.FindChild<T>();
+
+            if (foundChild != null)
+                return (T)foundChild;
         }
 
-        return (T)foundChild;
+        return null;
     }
 
-    public static T FindChild<T>(this DependencyObject parent, string childName) where T : DependencyObject
+    public static T? FindChild<T>(this DependencyObject parent, string childName) where T : DependencyObject
     {
         // Confirm parent and childName are valid. 
-        if (parent == null) return null;
+        if (parent == null)
+            return null;
 
-        T foundChild = null;
         int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
         for (int i = 0; i < childrenCount; i++)
         {
@@ -47,15 +50,15 @@ public static class DependencyObjectExtensions
             var tmpFoundChild = GetChild<T>(childName, child);
             if (tmpFoundChild != null)
             {
-                foundChild = tmpFoundChild;
-                break;
+                var foundChild = tmpFoundChild;
+                return foundChild;
             }
         }
 
-        return foundChild;
+        return null;
     }
 
-    private static T GetChild<T>(string childName, DependencyObject child) where T : DependencyObject
+    private static T? GetChild<T>(string childName, DependencyObject child) where T : DependencyObject
     {
         // If the child is not of the request child type child
         if ((child is T childType) == false)

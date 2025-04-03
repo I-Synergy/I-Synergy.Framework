@@ -10,11 +10,13 @@ public abstract class MessageBase<TDisplayPart> : NotificationBase where TDispla
 {
     private NotificationDisplayPart _displayPart;
 
-    protected MessageBase(string message, MessageOptions options) : base(message, options)
+    protected MessageBase(string message, MessageOptions options)
+        : base(message, options)
     {
+        _displayPart = Configure();
     }
 
-    public override NotificationDisplayPart DisplayPart => _displayPart ?? (_displayPart = Configure());
+    public override NotificationDisplayPart DisplayPart => _displayPart;
 
     private TDisplayPart Configure()
     {

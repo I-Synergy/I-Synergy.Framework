@@ -373,7 +373,7 @@ public class NavigationService : INavigationService
         {
             Application.MainWindow.Content = page;
 
-            if (!page.ViewModel!.IsInitialized)
+            if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
                 await page.ViewModel.InitializeAsync();
         }
     }

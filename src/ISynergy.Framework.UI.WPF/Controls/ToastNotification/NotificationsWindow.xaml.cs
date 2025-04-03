@@ -15,7 +15,7 @@ namespace ISynergy.Framework.UI.Controls.Toasts;
 /// </summary>
 public partial class NotificationsWindow : System.Windows.Window
 {
-    private IKeyboardEventHandler _keyboardEventHandler;
+    private IKeyboardEventHandler? _keyboardEventHandler;
 
     public NotificationsWindow()
     {
@@ -28,14 +28,15 @@ public partial class NotificationsWindow : System.Windows.Window
         Visibility = Visibility.Hidden;
     }
 
-    public NotificationsWindow(System.Windows.Window owner)
+    public NotificationsWindow(System.Windows.Window? owner)
     {
         InitializeComponent();
 
         Loaded += NotificationsWindow_Loaded;
         Closing += NotificationsWindow_Closing;
 
-        Owner = owner;
+        if (owner != null)
+            Owner = owner;
     }
 
     public void SetPosition(Point position)
@@ -108,14 +109,14 @@ public partial class NotificationsWindow : System.Windows.Window
         WinApi.SetWindowLong(wndHelper.Handle, (int)WinApi.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle);
     }
 
-    private void NotificationsWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private void NotificationsWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         e.Cancel = true;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        _keyboardEventHandler.Handle(e);
+        _keyboardEventHandler?.Handle(e);
     }
 
     public new void Close()

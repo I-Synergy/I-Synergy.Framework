@@ -8,13 +8,12 @@ public abstract class NotificationBase : INotification
     protected NotificationBase(string message, MessageOptions options)
     {
         Message = message;
-
         Options = options ?? new MessageOptions();
     }
 
     public string Message { get; }
 
-    private Action<INotification> _closeAction;
+    private Action<INotification>? _closeAction;
 
     public bool CanClose { get; set; } = true;
 
