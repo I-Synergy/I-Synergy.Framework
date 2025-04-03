@@ -175,7 +175,7 @@ public partial class BladeView : UserControl, IDisposable
 
     private void HandleCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        if (e.OldItems != null)
+        if (e.OldItems is not null)
         {
             foreach (UIElement item in e.OldItems)
             {
@@ -186,7 +186,7 @@ public partial class BladeView : UserControl, IDisposable
             }
         }
 
-        if (e.NewItems != null)
+        if (e.NewItems is not null)
         {
             foreach (UIElement item in e.NewItems)
             {

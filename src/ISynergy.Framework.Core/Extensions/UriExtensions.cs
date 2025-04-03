@@ -29,7 +29,7 @@ public static class UriExtensions
                 var key = httpValueCollection.GetKey(i);
                 key = HttpUtility.UrlEncode(key);
 
-                var val = (key != null) ? (key + "=") : string.Empty;
+                var val = (key is not null) ? (key + "=") : string.Empty;
                 var values = httpValueCollection.GetValues(i);
 
                 if (sb.Length > 0)

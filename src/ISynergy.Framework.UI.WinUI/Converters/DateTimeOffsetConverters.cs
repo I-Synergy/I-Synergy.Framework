@@ -246,7 +246,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 
             var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
 
-            offset = scopedContextService.GetService<IContext>().TimeZone!.BaseUtcOffset;
+            offset = scopedContextService.GetRequiredService<IContext>().TimeZone!.BaseUtcOffset;
 
             if (parameter is not null)
                 return datetime.ToLocalDateString(parameter.ToString()!, offset, culture);

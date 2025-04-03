@@ -113,7 +113,7 @@ public static class ViewModelExtensions
                 .Where(assemblyFilter)
                 .Reverse()
                     .Select(assembly => assembly.GetType(name))
-                    .FirstOrDefault(t => t != null)
+                    .FirstOrDefault(t => t is not null)
                 ??
                 AppDomain.CurrentDomain.GetAssemblies()
                     .Where(assemblyFilter)

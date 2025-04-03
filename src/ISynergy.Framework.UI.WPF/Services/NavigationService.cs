@@ -49,7 +49,7 @@ public class NavigationService : INavigationService
     {
         // Create a copy to avoid modification during iteration
         var handlers = _backStackChanged?.GetInvocationList();
-        if (handlers != null)
+        if (handlers is not null)
         {
             foreach (EventHandler handler in handlers)
             {

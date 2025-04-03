@@ -42,7 +42,7 @@ public partial class SelectionWindow : ISelectionWindow
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
-                if (DataSummary.SelectedItem != null)
+                if (DataSummary.SelectedItem is not null)
                     viewModel.SelectedItems.Add(DataSummary.SelectedItem);
             }
             else

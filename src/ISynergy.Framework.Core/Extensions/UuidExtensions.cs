@@ -92,7 +92,7 @@ public static class Uuidv7
         long z = Math.DivRem(rest2 << 12, 16_000_000_000L, out long _);
 
         int seq;
-        if (asOfCurrentTime != null)
+        if (asOfCurrentTime is not null)
         {
             if (x == _x && y == _y && z == _z)
             {

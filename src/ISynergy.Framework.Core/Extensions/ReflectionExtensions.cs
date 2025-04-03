@@ -329,7 +329,7 @@ public static class ReflectionExtensions
             {
                 var newAssembly = Assembly.Load(name);
 
-                if (newAssembly != null)
+                if (newAssembly is not null)
                 {
                     if (!result.Contains(newAssembly))
                         result.Add(newAssembly);
@@ -369,7 +369,7 @@ public static class ReflectionExtensions
             {
                 var newAssembly = Assembly.Load(name);
 
-                if (newAssembly != null && newAssembly.GetName() is AssemblyName assemblyName)
+                if (newAssembly is not null && newAssembly.GetName() is AssemblyName assemblyName)
                 {
                     if (!result.Contains(assemblyName))
                         result.Add(assemblyName);

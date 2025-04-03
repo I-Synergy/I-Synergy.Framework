@@ -27,7 +27,7 @@ public class AutomationTests
     private readonly Mock<ILoggerFactory> _mockLoggerFactory = new Mock<ILoggerFactory>();
 
     // Configuration for environment-aware testing
-    private static readonly bool IsRunningInCI = Environment.GetEnvironmentVariable("CI") != null;
+    private static readonly bool IsRunningInCI = Environment.GetEnvironmentVariable("CI") is not null;
     private static readonly double TimingTolerance = 0.2; // 20% tolerance
 
     private bool IsWithinTolerance(TimeSpan expected, TimeSpan actual)

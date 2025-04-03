@@ -67,7 +67,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         await Task.Delay(100);
 
-        if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
+        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
         {
             if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
                 PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
@@ -82,7 +82,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
-        if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated)
+        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
         {
             PrimaryItems.Clear();
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
@@ -100,11 +100,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, LanguageCommand));
             SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ColorCommand));
 
-            if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated && _commonServices.ScopedContextService.GetService<IContext>().Profile is Profile)
+            if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile is Profile)
                 SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SettingsCommand));
         }
 
-        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
+        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
     protected override void SignOut()

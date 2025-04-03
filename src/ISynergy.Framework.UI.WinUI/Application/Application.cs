@@ -30,8 +30,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
     protected readonly ISettingsService _settingsService;
-
-    protected readonly IExceptionHandlerService? _exceptionHandlerService;
+    protected readonly IExceptionHandlerService _exceptionHandlerService;
 
     protected readonly Features _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
@@ -112,8 +111,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
     protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
 
-    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e) =>
-        _commonServices.InfoService.SetTitle(e.Value);
+    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e) => _commonServices.InfoService.SetTitle(e.Value);
 
     /// <summary>
     /// Handles the first chance exception event.

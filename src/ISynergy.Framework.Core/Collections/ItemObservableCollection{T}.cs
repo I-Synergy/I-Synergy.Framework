@@ -27,7 +27,7 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>, IDisp
 
     private void item_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.NewItems != null)
+        if (e.NewItems is not null)
         {
             foreach (T item in e.NewItems)
             {
@@ -35,7 +35,7 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>, IDisp
             }
         }
 
-        if (e.OldItems != null)
+        if (e.OldItems is not null)
         {
             foreach (T item in e.OldItems)
             {

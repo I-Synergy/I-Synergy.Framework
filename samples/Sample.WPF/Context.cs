@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using System.Globalization;
+using Sample.Constants;
 
 namespace Sample;
 
@@ -13,15 +13,15 @@ namespace Sample;
 /// </summary>
 /// <seealso cref="ObservableClass" />
 /// <seealso cref="IContext" />
-public sealed class Context : ObservableClass, IContext
+public sealed class Context : IContext
 {
+    private SoftwareEnvironments _environment;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Context" /> class.
     /// </summary>
     public Context()
     {
-        CurrencyCode = "EURO";
-        CurrencySymbol = "€";
         Environment = SoftwareEnvironments.Production;
     }
 
@@ -29,16 +29,7 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets the current profile.
     /// </summary>
     /// <value>The current profile.</value>
-    public IProfile? Profile
-    {
-        get { return GetValue<IProfile>(); }
-        set
-        {
-            SetValue(value);
-            RaisePropertyChanged(nameof(IsAuthenticated));
-            RaisePropertyChanged(nameof(IsUserAdministrator));
-        }
-    }
+    public IProfile? Profile { get; set; }
 
     /// <summary>
     /// Gets the current time zone.
@@ -48,10 +39,8 @@ public sealed class Context : ObservableClass, IContext
     {
         get
         {
-            if (Profile != null)
-            {
+            if (Profile is not null)
                 return TimeZoneInfo.FindSystemTimeZoneById(Profile.TimeZoneId);
-            }
 
             return TimeZoneInfo.Local;
         }
@@ -63,48 +52,20 @@ public sealed class Context : ObservableClass, IContext
     /// <value>The environment.</value>
     public SoftwareEnvironments Environment
     {
-        get { return GetValue<SoftwareEnvironments>(); }
+        get => _environment;
         set
         {
-            SetValue(value);
-            ApplyEnvironment(value);
+            _environment = value;
+
+            switch (_environment)
+            {
+                case SoftwareEnvironments.Local:
+                case SoftwareEnvironments.Test:
+                default:
+                    Properties.Add(Endpoints.ApiEndpoint, @"https://localhost:5000");
+                    break;
+            }
         }
-    }
-
-    /// <summary>
-    /// Applies the environment.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    private void ApplyEnvironment(SoftwareEnvironments value)
-    {
-        switch (value)
-        {
-            case SoftwareEnvironments.Local:
-            case SoftwareEnvironments.Test:
-            default:
-                GatewayEndpoint = @"https://localhost:5000";
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the currency symbol.
-    /// </summary>
-    /// <value>The currency symbol.</value>
-    public string CurrencySymbol
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the currency code.
-    /// </summary>
-    /// <value>The currency code.</value>
-    public string CurrencyCode
-    {
-        get { return GetValue<string>(); }
-        set { SetValue(value); }
     }
 
     /// <summary>
@@ -115,10 +76,8 @@ public sealed class Context : ObservableClass, IContext
     {
         get
         {
-            if (Profile != null)
-            {
+            if (Profile is not null)
                 return Profile.IsAuthenticated();
-            }
 
             return false;
         }
@@ -132,10 +91,8 @@ public sealed class Context : ObservableClass, IContext
     {
         get
         {
-            if (Profile != null)
-            {
+            if (Profile is not null)
                 return Profile.IsInRole(nameof(RoleNames.Administrator));
-            }
 
             return false;
         }
@@ -145,42 +102,10 @@ public sealed class Context : ObservableClass, IContext
     /// Gets or sets a value indicating whether this instance is offline.
     /// </summary>
     /// <value><c>true</c> if this instance is offline; otherwise, <c>false</c>.</value>
-    public bool IsOffline
-    {
-        get { return GetValue<bool>(); }
-        set
-        {
-            SetValue(value);
-        }
-    }
+    public bool IsOffline { get; set; }
 
     /// <summary>
-    /// Gets or sets the NumberFormat property value.
+    /// Gets or sets the custom properties.
     /// </summary>
-    /// <value>The number format.</value>
-    public NumberFormatInfo? NumberFormat
-    {
-        get { return GetValue<NumberFormatInfo>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the Culture property value.
-    /// </summary>
-    /// <value>The culture.</value>
-    public CultureInfo? Culture
-    {
-        get { return GetValue<CultureInfo>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the gateway service endpoint.
-    /// </summary>
-    /// <value>The service endpoint.</value>
-    public string? GatewayEndpoint
-    {
-        get { return GetValue<string>(); }
-        private set { SetValue(value); }
-    }
+    public Dictionary<string, object> Properties { get; } = new();
 }

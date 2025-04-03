@@ -51,7 +51,7 @@ public static class ReflectionExtensions
     {
         foreach (var assembly in assemblies)
             foreach (var type in assembly.GetTypes())
-                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
+                if (Array.Exists(type.GetInterfaces(), a => a is not null && a.FullName is not null && a.FullName.Equals(typeof(IView).FullName))
                 && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
                 && type.Name != GenericConstants.View
                 && type.Name != GenericConstants.Page
@@ -69,7 +69,7 @@ public static class ReflectionExtensions
             .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
             .SelectMany(assembly => assembly.GetTypes())
             .Where(type => type.GetInterfaces()
-                .Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
+                .Any(a => a is not null && a.FullName is not null && a.FullName.Equals(typeof(IView).FullName))
                 && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
                 && type.Name != GenericConstants.View
                 && type.Name != GenericConstants.Page
@@ -85,7 +85,7 @@ public static class ReflectionExtensions
     {
         foreach (var assembly in assemblies)
             foreach (var type in assembly.GetTypes())
-                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
+                if (Array.Exists(type.GetInterfaces(), a => a is not null && a.FullName is not null && a.FullName.Equals(typeof(IWindow).FullName))
                 && type.Name.EndsWith(GenericConstants.Window)
                 && type.Name != GenericConstants.Window
                 && !type.IsAbstract
@@ -101,7 +101,7 @@ public static class ReflectionExtensions
         AppDomain.CurrentDomain.GetAssemblies()
             .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
             .SelectMany(assembly => assembly.GetTypes())
-            .Where(type => Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
+            .Where(type => Array.Exists(type.GetInterfaces(), a => a is not null && a.FullName is not null && a.FullName.Equals(typeof(IWindow).FullName))
                 && type.Name.EndsWith(GenericConstants.Window)
                 && type.Name != GenericConstants.Window
                 && !type.IsAbstract

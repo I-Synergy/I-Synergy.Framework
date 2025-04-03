@@ -126,6 +126,6 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <returns>System.Object.</returns>
     public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
     {
-        return value != null && value.Equals(True);
+        return value is not null && value.Equals(True);
     }
 }

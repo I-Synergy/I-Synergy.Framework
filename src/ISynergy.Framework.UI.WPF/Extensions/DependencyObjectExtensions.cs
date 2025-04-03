@@ -30,7 +30,7 @@ public static class DependencyObjectExtensions
             var child = VisualTreeHelper.GetChild(self, i);
             var foundChild = child.FindChild<T>();
 
-            if (foundChild != null)
+            if (foundChild is not null)
                 return (T)foundChild;
         }
 
@@ -48,7 +48,7 @@ public static class DependencyObjectExtensions
         {
             var child = VisualTreeHelper.GetChild(parent, i);
             var tmpFoundChild = GetChild<T>(childName, child);
-            if (tmpFoundChild != null)
+            if (tmpFoundChild is not null)
             {
                 var foundChild = tmpFoundChild;
                 return foundChild;

@@ -66,7 +66,7 @@ public class NotificationsDisplaySupervisor : IDisposable
     {
         lock (_syncRoot)
         {
-            if (_window != null)
+            if (_window is not null)
                 return;
 
             _window = new NotificationsWindow(_positionProvider.ParentWindow);
@@ -110,7 +110,7 @@ public class NotificationsDisplaySupervisor : IDisposable
 
     private void CloseNotification(INotification notification)
     {
-        if (notification != null)
+        if (notification is not null)
         {
             notification.DisplayPart.OnClose();
             DelayAction.Execute(TimeSpan.FromMilliseconds(300),

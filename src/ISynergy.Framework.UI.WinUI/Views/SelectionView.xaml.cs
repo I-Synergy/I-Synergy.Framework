@@ -39,7 +39,7 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
-                if (DataSummary.SelectedItem != null)
+                if (DataSummary.SelectedItem is not null)
                     viewModel.SelectedItems.Add(DataSummary.SelectedItem);
             }
             else
