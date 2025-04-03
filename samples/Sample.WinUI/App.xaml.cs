@@ -163,7 +163,7 @@ public sealed partial class App : Application
             {
                 _logger.LogTrace("Saving refresh token");
 
-                _settingsService.LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetService<IContext>().ToEnvironmentalRefreshToken();
+                _settingsService.LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetRequiredService<IContext>().ToEnvironmentalRefreshToken();
                 _settingsService.SaveLocalSettings();
 
                 _logger.LogTrace("Setting culture");

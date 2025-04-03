@@ -42,7 +42,7 @@ public class ScopedContextService : IScopedContextService
         RaiseScopedChanged();
 
         // Dispose old scope if it exists
-        if (oldScope != null)
+        if (oldScope is not null)
         {
             var services = oldScope.ServiceProvider.GetRegisteredServices().EnsureNotNull();
             foreach (var descriptor in services)

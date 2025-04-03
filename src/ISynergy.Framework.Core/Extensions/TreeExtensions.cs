@@ -162,7 +162,7 @@ public static class TreeExtensions
 
             var foundChild = node.Children.GetNodeById(key);
 
-            if (foundChild != null)
+            if (foundChild is not null)
                 return foundChild;
         }
 
@@ -187,7 +187,7 @@ public static class TreeExtensions
 
             var selectedChild = node.Children.GetSelectedNode();
 
-            if (selectedChild != null)
+            if (selectedChild is not null)
                 return selectedChild;
         }
 

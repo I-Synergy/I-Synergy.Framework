@@ -199,10 +199,10 @@ public abstract class ObservableClass : IObservableClass
     /// <returns>T.</returns>
     protected T GetValue<T>([CallerMemberName] string? propertyName = "")
     {
-        if (propertyName != null && !Properties.ContainsKey(propertyName))
+        if (propertyName is not null && !Properties.ContainsKey(propertyName))
             Properties.Add(propertyName, new Property<T>(propertyName));
 
-        if (propertyName != null && Properties[propertyName] is IProperty<T> property)
+        if (propertyName is not null && Properties[propertyName] is IProperty<T> property)
             return property.Value!;
 
         return default!;

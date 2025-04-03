@@ -25,7 +25,7 @@ public class Sleepy : IDisposable
 
     public void Dispose()
     {
-        if (_alarm != null)
+        if (_alarm is not null)
             _alarm.Beeped -= Alarm_Beeped;
     }
 }

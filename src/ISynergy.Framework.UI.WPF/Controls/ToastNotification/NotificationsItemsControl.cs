@@ -103,7 +103,7 @@ public class NotificationsItemsControl : ItemsControl
             {
                 child = GetVisualChild<T>(v);
             }
-            if (child != null)
+            if (child is not null)
             {
                 break;
             }

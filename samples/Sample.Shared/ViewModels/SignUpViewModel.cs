@@ -223,7 +223,7 @@ public class SignUpViewModel : ViewModel
 
     private async Task ValidateMailAsync()
     {
-        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_commonServices.ScopedContextService.GetService<IContext>())))
+        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_commonServices.ScopedContextService.GetRequiredService<IContext>())))
         {
             ArePickersAvailable = true;
 
@@ -278,18 +278,18 @@ public class SignUpViewModel : ViewModel
             if (Mail.StartsWith(GenericConstants.UsernamePrefixTest, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixTest, "");
-                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Test;
+                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
             }
             // remove this prefix and set environment to local.
             else if (Mail.StartsWith(GenericConstants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixLocal, "");
-                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Local;
+                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Local;
             }
             else
             {
                 emailaddress = Mail;
-                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Production;
+                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Production;
             }
 
             if (!HasErrors &&

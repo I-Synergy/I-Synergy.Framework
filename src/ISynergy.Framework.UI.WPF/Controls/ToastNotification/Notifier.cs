@@ -20,7 +20,7 @@ public class Notifier : IDisposable
     public void Notify<T>(Func<T> createNotificationFunc)
         where T : INotification
     {
-        if (_configuration != null)
+        if (_configuration is not null)
             return;
 
         _configuration = CreateConfiguration();

@@ -145,7 +145,7 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
         catch (Exception ex)
         {
             var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-            if (ex.InnerException != null)
+            if (ex.InnerException is not null)
                 await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
             else
                 await exceptionHandlerService.HandleExceptionAsync(ex);

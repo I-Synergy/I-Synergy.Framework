@@ -51,8 +51,8 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
     {
-        _scopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Test;
-        _scopedContextService.GetService<IContext>().Profile = new Profile(
+        _scopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
+        _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
             new Token(),
             Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
             "Test",
@@ -117,7 +117,7 @@ public class AuthenticationService : IAuthenticationService
     {
         if (token is not null)
         {
-            _scopedContextService.GetService<IContext>().Profile = new Profile(
+            _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
                 token,
                 Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
                 "Test",
@@ -132,8 +132,8 @@ public class AuthenticationService : IAuthenticationService
                 1,
                 DateTime.Now.AddHours(24));
 
-            RaiseAuthenticationChanged(_scopedContextService.GetService<IContext>().IsAuthenticated);
-            RaiseSoftwareEnvironmentChanged(_scopedContextService.GetService<IContext>().Environment);
+            RaiseAuthenticationChanged(_scopedContextService.GetRequiredService<IContext>().IsAuthenticated);
+            RaiseSoftwareEnvironmentChanged(_scopedContextService.GetRequiredService<IContext>().Environment);
         }
         else
         {

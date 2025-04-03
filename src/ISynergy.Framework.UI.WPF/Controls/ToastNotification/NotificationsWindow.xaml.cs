@@ -35,7 +35,7 @@ public partial class NotificationsWindow : System.Windows.Window
         Loaded += NotificationsWindow_Loaded;
         Closing += NotificationsWindow_Closing;
 
-        if (owner != null)
+        if (owner is not null)
             Owner = owner;
     }
 

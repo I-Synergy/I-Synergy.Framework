@@ -40,7 +40,7 @@ public abstract class BaseRelayCommand : IRelayCommand, IDisposable
     {
         var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
 
-        if (ex.InnerException != null)
+        if (ex.InnerException is not null)
         {
             exceptionHandlerService.HandleExceptionAsync(ex.InnerException)
                 .ConfigureAwait(false)

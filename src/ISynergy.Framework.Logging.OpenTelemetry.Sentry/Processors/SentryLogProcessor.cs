@@ -32,7 +32,7 @@ internal class SentryLogProcessor : BaseProcessor<LogRecord>
 
         var sentryEvent = new SentryEvent();
 
-        if (data.Exception != null)
+        if (data.Exception is not null)
             sentryEvent = new SentryEvent(data.Exception);
 
         sentryEvent.Message = data.FormattedMessage;

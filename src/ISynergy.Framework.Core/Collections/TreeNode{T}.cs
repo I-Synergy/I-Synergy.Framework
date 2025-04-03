@@ -155,14 +155,14 @@ public class TreeNode<TKey, TModel> : ObservableClass
 
         // if oldParent isn't null
         // remove this node from its newly ex-parent's children
-        if (oldParent != null && oldParent.Children.Contains(this))
+        if (oldParent is not null && oldParent.Children.Contains(this))
             oldParent.RemoveChild(this);
 
         // update the backing field
         Parent = node;
 
         // add this node to its new parent's children
-        if (Parent != null && updateChildNodes)
+        if (Parent is not null && updateChildNodes)
             Parent.AddChild(this);
     }
 

@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using System.Globalization;
+using Sample.Constants;
 
 namespace Sample;
 
@@ -39,10 +39,8 @@ public sealed class Context : IContext
     {
         get
         {
-            if (Profile != null)
-            {
+            if (Profile is not null)
                 return TimeZoneInfo.FindSystemTimeZoneById(Profile.TimeZoneId);
-            }
 
             return TimeZoneInfo.Local;
         }
@@ -64,7 +62,7 @@ public sealed class Context : IContext
                 case SoftwareEnvironments.Local:
                 case SoftwareEnvironments.Test:
                 default:
-                    GatewayEndpoint = @"https://localhost:5000";
+                    Properties.Add(Endpoints.ApiEndpoint, @"https://localhost:5000");
                     break;
             }
         }
@@ -78,10 +76,8 @@ public sealed class Context : IContext
     {
         get
         {
-            if (Profile != null)
-            {
+            if (Profile is not null)
                 return Profile.IsAuthenticated();
-            }
 
             return false;
         }
@@ -95,10 +91,8 @@ public sealed class Context : IContext
     {
         get
         {
-            if (Profile != null)
-            {
+            if (Profile is not null)
                 return Profile.IsInRole(nameof(RoleNames.Administrator));
-            }
 
             return false;
         }
@@ -111,12 +105,7 @@ public sealed class Context : IContext
     public bool IsOffline { get; set; }
 
     /// <summary>
-    /// Gets or sets the gateway service endpoint.
+    /// Gets or sets the custom properties.
     /// </summary>
-    /// <value>The service endpoint.</value>
-    public string? GatewayEndpoint { get; private set; }
-
-    public NumberFormatInfo? NumberFormat { get; private set; }
-
-    public CultureInfo? Culture { get; private set; }
+    public Dictionary<string, object> Properties { get; } = new();
 }

@@ -29,7 +29,7 @@ public sealed partial class SplashScreen
 
     private async void SplashScreen_Loaded(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel is SplashScreenViewModel viewModel && viewModel.Configuration?.AssetStreamProvider != null)
+        if (ViewModel is SplashScreenViewModel viewModel && viewModel.Configuration?.AssetStreamProvider is not null)
         {
             await StartMediaPlayback(viewModel.Configuration);
         }
@@ -55,7 +55,7 @@ public sealed partial class SplashScreen
 
     private async Task StartMediaPlayback(SplashScreenOptions configuration)
     {
-        if (configuration.AssetStreamProvider != null)
+        if (configuration.AssetStreamProvider is not null)
         {
             using var stream = await configuration.AssetStreamProvider();
 
@@ -95,7 +95,7 @@ public sealed partial class SplashScreen
 
     private void SplashScreen_Unloaded(object? sender, RoutedEventArgs e)
     {
-        if (BackgroundMediaElement?.MediaPlayer != null)
+        if (BackgroundMediaElement?.MediaPlayer is not null)
         {
             BackgroundMediaElement.MediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
             BackgroundMediaElement.MediaPlayer.Dispose();

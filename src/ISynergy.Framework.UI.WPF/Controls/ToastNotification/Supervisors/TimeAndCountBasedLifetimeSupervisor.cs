@@ -64,7 +64,7 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
         _notifications.TryRemove(notification.Id, out var removedNotification);
         RequestCloseNotification(new CloseNotificationEventArgs(removedNotification.Notification));
 
-        if (_notificationsPending != null && _notificationsPending.Any())
+        if (_notificationsPending is not null && _notificationsPending.Any())
         {
             var not = _notificationsPending.Dequeue();
             PushNotification(not);
