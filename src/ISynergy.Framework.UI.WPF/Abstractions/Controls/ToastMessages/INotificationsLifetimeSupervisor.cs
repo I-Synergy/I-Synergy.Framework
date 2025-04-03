@@ -7,8 +7,8 @@ public interface INotificationsLifetimeSupervisor : IDisposable
     void PushNotification(INotification notification);
     void CloseNotification(INotification notification);
 
-    event EventHandler<ShowNotificationEventArgs> ShowNotificationRequested;
-    event EventHandler<CloseNotificationEventArgs> CloseNotificationRequested;
+    event EventHandler<ShowNotificationEventArgs>? ShowNotificationRequested;
+    event EventHandler<CloseNotificationEventArgs>? CloseNotificationRequested;
 
     void ClearMessages(IClearStrategy clearStrategy);
 }

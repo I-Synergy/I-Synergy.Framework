@@ -10,7 +10,7 @@ public interface IProperty
     /// <summary>
     /// Occurs when [value changed].
     /// </summary>
-    event EventHandler ValueChanged;
+    event EventHandler? ValueChanged;
 
     /// <summary>
     /// Resets the changes.

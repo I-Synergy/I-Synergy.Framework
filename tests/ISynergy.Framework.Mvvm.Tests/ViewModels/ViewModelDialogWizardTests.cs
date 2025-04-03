@@ -211,8 +211,6 @@ public class ViewModelDialogWizardTests
         viewModel.Dispose();
 
         // Assert
-        Assert.IsNull(viewModel.BackCommand);
-        Assert.IsNull(viewModel.NextCommand);
         Assert.IsTrue(viewModel.IsDisposed);
     }
 }

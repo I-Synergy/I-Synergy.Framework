@@ -42,7 +42,7 @@ public class FileService : IFileService<FileResult>
     /// <param name="filename">The filename.</param>
     /// <param name="file">The file.</param>
     /// <returns>FileResult.</returns>
-    public async Task<FileResult> SaveFileAsync(string folder, string filename, byte[] file)
+    public async Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] file)
     {
         var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
         var createdFile = await storageFolder.CreateFileAsync(

@@ -22,7 +22,10 @@ public class TenantProcessor : BaseProcessor<LogRecord>
     {
         var attributes = new Dictionary<string, object?>();
         attributes.AddDefaultProperties(_infoService, _context);
-        attributes.AddRange(data.Attributes);
+
+        if (data.Attributes is not null)
+            attributes.AddRange(data.Attributes);
+
         data.Attributes = attributes.ToList().AsReadOnly();
         base.OnEnd(data);
     }

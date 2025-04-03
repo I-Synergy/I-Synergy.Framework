@@ -25,7 +25,7 @@ public partial class App : ISynergy.Framework.UI.Application
         RaiseApplicationLoaded();
     }
 
-    protected override async void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e)
     {
         try
         {
@@ -38,7 +38,7 @@ public partial class App : ISynergy.Framework.UI.Application
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin)
             {
                 string username = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser;
-                string password = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+                string password = await _commonServices.ScopedContextService.GetRequiredService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
                 if (!string.IsNullOrEmpty(password))
                 {
@@ -59,7 +59,7 @@ public partial class App : ISynergy.Framework.UI.Application
         }
     }
 
-    protected override async void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
         await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);

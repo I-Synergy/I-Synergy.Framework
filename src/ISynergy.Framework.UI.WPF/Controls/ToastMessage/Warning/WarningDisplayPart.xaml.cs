@@ -17,6 +17,6 @@ public partial class WarningDisplayPart : NotificationDisplayPart
 
     private void OnClose(object sender, RoutedEventArgs e)
     {
-        Notification.Close();
+        Notification?.Close();
     }
 }

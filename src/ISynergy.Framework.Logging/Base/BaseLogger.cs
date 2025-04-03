@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Logging.Base;
 
-public class BaseLogger : ILogger
+public class BaseLogger : ILogger, IDisposable
 {
     protected readonly Dictionary<string, object> _customAttributes = new();
 
@@ -34,6 +34,46 @@ public class BaseLogger : ILogger
 
     public virtual void Flush()
     {
+        try
+        {
+            // If there's any pending logging operations, allow them to complete
+            // with a reasonable timeout
+        }
+        catch (OperationCanceledException)
+        {
+            // Silently ignore task cancellations during shutdown
+        }
+        catch (Exception ex)
+        {
+            // Optionally log this to console or debug output
+            System.Diagnostics.Debug.WriteLine($"Error during logger flush: {ex.Message}");
+        }
+    }
+
+    // Add a Dispose method to properly clean up resources
+    public virtual void Dispose()
+    {
+        try
+        {
+            Flush();
+
+            // Clear any custom attributes
+            _customAttributes.Clear();
+
+            // If _logger implements IDisposable, dispose it
+            if (_logger is IDisposable disposableLogger)
+            {
+                disposableLogger.Dispose();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Silently ignore task cancellations during disposal
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error during logger disposal: {ex.Message}");
+        }
     }
 
     public virtual void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)

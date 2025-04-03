@@ -21,12 +21,12 @@ public class CredentialLockerService : ICredentialLockerService
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
-        ISynergy.Framework.UI.Models.Credential result = CredentialManager.ReadCredential(_infoService.ProductName, username);
+        var result = CredentialManager.ReadCredential(_infoService.ProductName, username);
 
         if (result is not null)
             return Task.FromResult(result.Password);
 
-        return Task.FromResult<string>(null);
+        return Task.FromResult(string.Empty);
     }
 
     public Task<List<string>> GetUsernamesFromCredentialLockerAsync()

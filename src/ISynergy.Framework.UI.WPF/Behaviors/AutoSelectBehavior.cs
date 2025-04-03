@@ -46,7 +46,7 @@ public static class AutoSelectBehavior
     /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     private static void AutoSelectableChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        TextBox textBox = null;
+        TextBox? textBox = null;
 
         if (d is TextBox control)
             textBox = control;
@@ -73,12 +73,12 @@ public static class AutoSelectBehavior
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private static void OnGotFocusHandler(object sender, RoutedEventArgs e)
     {
-        TextBox textBox = null;
+        TextBox? textBox = null;
 
         if (sender is TextBox control)
             textBox = control;
         else
-            textBox = (sender as DependencyObject).FindChild<TextBox>();
+            textBox = (sender as DependencyObject)?.FindChild<TextBox>();
 
         textBox?.SelectAll();
     }

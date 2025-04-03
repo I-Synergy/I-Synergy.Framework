@@ -16,13 +16,13 @@ public interface IViewModel : IObservableClass, ICleanup
     /// <summary>
     /// Occurs when [cancelled].
     /// </summary>
-    event EventHandler Cancelled;
+    event EventHandler? Cancelled;
     void OnCancelled(EventArgs e);
 
     /// <summary>
     /// Occurs when [closed].
     /// </summary>
-    event EventHandler Closed;
+    event EventHandler? Closed;
     void OnClosed(EventArgs e);
 
     /// <summary>

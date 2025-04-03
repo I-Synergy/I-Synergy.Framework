@@ -18,13 +18,13 @@ public class FileService : IFileService<FileResult>
     /// </summary>
     private readonly IDialogService _dialogService;
 
-    public string Filter { get; set; }
+    public string Filter { get; set; } = string.Empty;
     public bool AddExtension { get; set; }
     public bool CheckFileExists { get; set; }
     public bool CheckPathExists { get; set; }
     public int FilterIndex { get; set; }
-    public string InitialDirectory { get; set; }
-    public string Title { get; set; }
+    public string InitialDirectory { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
     public bool ValidateNames { get; set; }
 
     /// <summary>
@@ -64,7 +64,7 @@ public class FileService : IFileService<FileResult>
         return Task.FromResult(result);
     }
 
-    public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
+    public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
             return result.First().File;
@@ -90,7 +90,7 @@ public class FileService : IFileService<FileResult>
     /// <param name="filename"></param>
     /// <param name="file"></param>
     /// <returns></returns>
-    public Task<FileResult> SaveFileAsync(string folder, string filename, byte[] file)
+    public Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] file)
     {
         var extension = Path.GetExtension(filename);
         var fileDialog = new SaveFileDialog();
@@ -106,14 +106,14 @@ public class FileService : IFileService<FileResult>
 
         if (fileDialog.ShowDialog() ?? false)
         {
-            return Task.FromResult(
+            return Task.FromResult<FileResult?>(
                 new FileResult(
                     fileDialog.FileName,
                     Path.GetFileName(fileDialog.FileName),
                     () => File.OpenRead(fileDialog.FileName)));
         }
 
-        return Task.FromResult<FileResult>(null);
+        return Task.FromResult<FileResult?>(null);
     }
 
     /// <summary>

@@ -119,6 +119,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
+        BackgroundCommand = new AsyncRelayCommand(() => Task.CompletedTask);
     }
 
     public abstract Task ShellLoadedAsync();
@@ -220,7 +221,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void LanguageVM_Submitted(object sender, SubmitEventArgs<Languages> e)
+    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
     {
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
@@ -257,7 +258,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void ThemeVM_Submitted(object sender, SubmitEventArgs<Style> e)
+    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<Style> e)
     {
         if (sender is ThemeViewModel vm)
             vm.Submitted -= ThemeVM_Submitted;

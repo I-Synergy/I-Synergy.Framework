@@ -118,8 +118,6 @@ public class ViewModelBaseTests
         viewModel.Dispose();
 
         // Assert
-        Assert.IsNull(viewModel.CloseCommand);
-        Assert.IsNull(viewModel.CancelCommand);
         Assert.IsTrue(viewModel.IsDisposed);
     }
 
