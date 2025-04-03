@@ -99,27 +99,27 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Gets or sets the add command.
     /// </summary>
     /// <value>The add command.</value>
-    public AsyncRelayCommand? AddCommand { get; private set; }
+    public AsyncRelayCommand AddCommand { get; private set; }
     /// <summary>
     /// Gets or sets the edit command.
     /// </summary>
     /// <value>The edit command.</value>
-    public AsyncRelayCommand<TEntity>? EditCommand { get; private set; }
+    public AsyncRelayCommand<TEntity> EditCommand { get; private set; }
     /// <summary>
     /// Gets or sets the delete command.
     /// </summary>
     /// <value>The delete command.</value>
-    public AsyncRelayCommand<TEntity>? DeleteCommand { get; private set; }
+    public AsyncRelayCommand<TEntity> DeleteCommand { get; private set; }
     /// <summary>
     /// Gets or sets the refresh command.
     /// </summary>
     /// <value>The refresh command.</value>
-    public AsyncRelayCommand? RefreshCommand { get; private set; }
+    public AsyncRelayCommand RefreshCommand { get; private set; }
     /// <summary>
     /// Gets or sets the search command.
     /// </summary>
     /// <value>The search command.</value>
-    public AsyncRelayCommand<object>? SearchCommand { get; private set; }
+    public AsyncRelayCommand<object> SearchCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}"/> class.
@@ -288,17 +288,11 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
 
             // Dispose and clear all commands
             AddCommand?.Dispose();
-            AddCommand = null;
             EditCommand?.Dispose();
-            EditCommand = null;
             DeleteCommand?.Dispose();
-            DeleteCommand = null;
             RefreshCommand?.Dispose();
-            RefreshCommand = null;
             SearchCommand?.Dispose();
-            SearchCommand = null;
             SubmitCommand?.Dispose();
-            SubmitCommand = null;
 
             base.Dispose(disposing);
         }

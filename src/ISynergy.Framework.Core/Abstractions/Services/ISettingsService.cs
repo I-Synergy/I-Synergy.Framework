@@ -16,18 +16,18 @@ public interface ISettingsService
     /// Gets the local settings.
     /// </summary>
     /// <value>The settings.</value>
-    ILocalSettings? LocalSettings { get; }
+    ILocalSettings LocalSettings { get; }
 
     /// <summary>
     /// Gets the roaming settings.
     /// </summary>
     /// <value>The settings.</value>
-    IRoamingSettings? RoamingSettings { get; }
+    IRoamingSettings RoamingSettings { get; }
 
     /// <summary>
     /// Gets the global settings.
     /// </summary>
-    IGlobalSettings? GlobalSettings { get; }
+    IGlobalSettings GlobalSettings { get; }
 
     #region "Local Settings"
     /// <summary>

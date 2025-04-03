@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
@@ -18,14 +19,14 @@ public static class Program
     [STAThread]
     public static void Main()
     {
-        var mainAssembly = Assembly.GetAssembly(typeof(App));
+        var mainAssembly = Argument.IsNotNull(Assembly.GetAssembly(typeof(App)));
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly);
 
         IHost host = new HostBuilder()
             .ConfigureHostConfiguration(builder =>
             {
-                builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
+                builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json")!);
             })
             .ConfigureLogging((logging, configuration) =>
             {

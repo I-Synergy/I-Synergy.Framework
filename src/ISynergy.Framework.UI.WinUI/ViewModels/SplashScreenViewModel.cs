@@ -43,12 +43,12 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
     /// Gets or sets the close command.
     /// </summary>
     /// <value>The close command.</value>
-    public AsyncRelayCommand? CloseCommand { get; private set; }
+    public AsyncRelayCommand CloseCommand { get; private set; }
 
     /// <summary>
     /// /// Gets or sets the cancel command.
     /// </summary>
-    public AsyncRelayCommand? CancelCommand { get; private set; }
+    public AsyncRelayCommand CancelCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the Title property value.
@@ -313,9 +313,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
             _dispatcherQueue = null;
 
             CloseCommand?.Dispose();
-            CloseCommand = null;
             CancelCommand?.Dispose();
-            CancelCommand = null;
         }
     }
 }

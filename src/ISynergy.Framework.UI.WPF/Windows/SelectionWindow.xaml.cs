@@ -41,7 +41,10 @@ public partial class SelectionWindow : ISelectionWindow
             viewModel.SelectedItems = new List<object>();
 
             if (viewModel.SelectionMode == SelectionModes.Single)
-                viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+            {
+                if (DataSummary.SelectedItem != null)
+                    viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+            }
             else
             {
                 foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
@@ -49,6 +52,8 @@ public partial class SelectionWindow : ISelectionWindow
                     viewModel.SelectedItems.Add(item);
                 }
             }
+
+            viewModel.SelectCommand.NotifyCanExecuteChanged();
         }
     }
 

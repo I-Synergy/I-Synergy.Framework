@@ -39,7 +39,8 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
-                viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+                if (DataSummary.SelectedItem != null)
+                    viewModel.SelectedItems.Add(DataSummary.SelectedItem);
             }
             else
             {
@@ -48,6 +49,8 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
                     viewModel.SelectedItems.Add(item);
                 }
             }
+
+            viewModel.SelectCommand.NotifyCanExecuteChanged();
         }
     }
 

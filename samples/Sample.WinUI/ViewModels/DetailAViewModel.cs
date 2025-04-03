@@ -11,7 +11,7 @@ public class DetailAViewModel : ViewModelBlade<TestItem>
 
     public DetailAViewModel(
         ICommonServices commonServices,
-        TestItem item,
+        TestItem? item,
         bool automaticValidation = false)
         : base(commonServices, automaticValidation)
     {

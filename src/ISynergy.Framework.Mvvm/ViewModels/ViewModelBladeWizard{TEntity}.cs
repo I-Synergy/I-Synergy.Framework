@@ -66,12 +66,12 @@ public abstract class ViewModelBladeWizard<TEntity> : ViewModelBlade<TEntity>
     /// Gets the back command.
     /// </summary>
     /// <value>The back command.</value>
-    public RelayCommand? BackCommand { get; private set; }
+    public RelayCommand BackCommand { get; private set; }
     /// <summary>
     /// Gets the next command.
     /// </summary>
     /// <value>The next command.</value>
-    public RelayCommand? NextCommand { get; private set; }
+    public RelayCommand NextCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBladeWizard{TEntity}"/> class.
@@ -159,9 +159,7 @@ public abstract class ViewModelBladeWizard<TEntity> : ViewModelBlade<TEntity>
 
             // Dispose and clear navigation commands
             BackCommand?.Dispose();
-            BackCommand = null;
             NextCommand?.Dispose();
-            NextCommand = null;
 
             base.Dispose(disposing);
         }

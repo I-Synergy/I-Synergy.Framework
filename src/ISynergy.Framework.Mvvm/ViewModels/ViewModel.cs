@@ -49,12 +49,12 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Gets or sets the close command.
     /// </summary>
     /// <value>The close command.</value>
-    public AsyncRelayCommand? CloseCommand { get; protected set; }
+    public AsyncRelayCommand CloseCommand { get; protected set; }
 
     /// <summary>
     /// /// Gets or sets the cancel command.
     /// </summary>
-    public AsyncRelayCommand? CancelCommand { get; protected set; }
+    public AsyncRelayCommand CancelCommand { get; protected set; }
 
     /// <summary>
     /// Gets or sets the Title property value.
@@ -233,9 +233,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
             // Clear commands
             CloseCommand?.Dispose();
-            CloseCommand = null;
             CancelCommand?.Dispose();
-            CancelCommand = null;
 
             base.Dispose(disposing);
         }

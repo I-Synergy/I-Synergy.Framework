@@ -25,7 +25,7 @@ public partial class NavigationItem : IDisposable
     /// Gets or sets the command.
     /// </summary>
     /// <value>The command.</value>
-    public ICommand? Command { get; private set; }
+    public ICommand Command { get; private set; }
 
     /// <summary>
     /// Gets or sets the command parameter.
@@ -59,7 +59,7 @@ public partial class NavigationItem : IDisposable
     /// <param name="color">The color.</param>
     /// <param name="command">The command.</param>
     /// <param name="commandParameter">The command parameter.</param>
-    public NavigationItem(string name, object symbol, string color, ICommand? command, object? commandParameter = null)
+    public NavigationItem(string name, object symbol, string color, ICommand command, object? commandParameter = null)
     {
         Name = name;
         ToolTipMenu = name;
@@ -93,7 +93,7 @@ public partial class NavigationItem : IDisposable
         if (disposing)
         {
             // free managed resources
-            Command = null;
+            (Command as IDisposable)?.Dispose();
         }
 
         // free native resources if there are any.

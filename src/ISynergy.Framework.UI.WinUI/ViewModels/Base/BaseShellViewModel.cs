@@ -32,15 +32,15 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         get => _commonServices.NavigationService.CanGoBack;
     }
 
-    public AsyncRelayCommand? GoBackCommand { get; private set; }
-    public AsyncRelayCommand? RestartUpdateCommand { get; private set; }
-    public RelayCommand? SignInCommand { get; private set; }
-    public AsyncRelayCommand? LanguageCommand { get; private set; }
-    public AsyncRelayCommand? ColorCommand { get; private set; }
-    public AsyncRelayCommand? HelpCommand { get; private set; }
-    public AsyncRelayCommand? SettingsCommand { get; private set; }
-    public AsyncRelayCommand? BackgroundCommand { get; private set; }
-    public AsyncRelayCommand? FeedbackCommand { get; private set; }
+    public AsyncRelayCommand GoBackCommand { get; private set; }
+    public AsyncRelayCommand RestartUpdateCommand { get; private set; }
+    public RelayCommand SignInCommand { get; private set; }
+    public AsyncRelayCommand LanguageCommand { get; private set; }
+    public AsyncRelayCommand ColorCommand { get; private set; }
+    public AsyncRelayCommand HelpCommand { get; private set; }
+    public AsyncRelayCommand SettingsCommand { get; private set; }
+    public AsyncRelayCommand BackgroundCommand { get; private set; }
+    public AsyncRelayCommand FeedbackCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the PrimaryItems property value.
@@ -82,7 +82,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
+        BackgroundCommand = new AsyncRelayCommand(OpenBackgroundAsync);
     }
+
 
     public abstract Task ShellLoadedAsync();
 
@@ -96,6 +98,12 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <returns>Task.</returns>
     protected abstract Task OpenSettingsAsync();
+
+    /// <summary>
+    /// Sets the background of the application asynchronous.
+    /// </summary>
+    /// <returns></returns>
+    protected abstract Task OpenBackgroundAsync();
 
     /// <summary>
     /// Sign out.
@@ -181,8 +189,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.Language = e.Result;
-        _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
+        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
+        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
 
         e.Result.SetLocalizationLanguage();
 
@@ -220,10 +228,10 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
         if (e.Result is { } style)
         {
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.Theme = style.Theme;
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings!.Color = style.Color;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
 
-            if (_commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
@@ -267,21 +275,13 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             SecondaryItems?.Clear();
 
             RestartUpdateCommand?.Dispose();
-            RestartUpdateCommand = null;
             SignInCommand?.Dispose();
-            SignInCommand = null;
             LanguageCommand?.Dispose();
-            LanguageCommand = null;
             ColorCommand?.Dispose();
-            ColorCommand = null;
             HelpCommand?.Dispose();
-            HelpCommand = null;
             SettingsCommand?.Dispose();
-            SettingsCommand = null;
             BackgroundCommand?.Dispose();
-            BackgroundCommand = null;
             FeedbackCommand?.Dispose();
-            FeedbackCommand = null;
 
             // Finally dispose context and other resources
             base.Dispose(disposing);

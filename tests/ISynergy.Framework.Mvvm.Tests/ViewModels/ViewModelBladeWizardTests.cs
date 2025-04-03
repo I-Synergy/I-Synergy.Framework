@@ -118,7 +118,7 @@ public class ViewModelBladeWizardTests
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
 
         // Act
-        viewModel.BackCommand!.Execute(null);
+        viewModel.BackCommand.Execute(null);
 
         // Assert
         Assert.AreEqual(1, viewModel.Page);
@@ -134,7 +134,7 @@ public class ViewModelBladeWizardTests
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
 
         // Act
-        viewModel.NextCommand!.Execute(null);
+        viewModel.NextCommand.Execute(null);
 
         // Assert
         Assert.AreEqual(2, viewModel.Page);

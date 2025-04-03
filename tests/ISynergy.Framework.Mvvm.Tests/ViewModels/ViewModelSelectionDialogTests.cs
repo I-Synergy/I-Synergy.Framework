@@ -80,7 +80,7 @@ public class ViewModelSelectionDialogTests
             SelectionModes.Single);
 
         // Act
-        await viewModel.RefreshCommand!.ExecuteAsync("");
+        await viewModel.RefreshCommand.ExecuteAsync("");
 
         // Assert
         Assert.AreEqual(2, viewModel.Items.Count);
@@ -102,7 +102,7 @@ public class ViewModelSelectionDialogTests
             SelectionModes.Single);
 
         // Act
-        await viewModel.RefreshCommand!.ExecuteAsync("Test");
+        await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
         Assert.AreEqual(1, viewModel.Items.Count);

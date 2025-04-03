@@ -81,7 +81,7 @@ public class ViewModelSelectionTests
             SelectionModes.Single);
 
         // Act
-        await viewModel.RefreshCommand!.ExecuteAsync("Test");
+        await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
         Assert.AreEqual(2, viewModel.Items.Count);

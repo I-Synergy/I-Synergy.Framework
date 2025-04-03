@@ -131,7 +131,7 @@ public class ViewModelDialogWizardTests
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
 
         // Act
-        viewModel.BackCommand!.Execute(null);
+        viewModel.BackCommand.Execute(null);
 
         // Assert
         Assert.AreEqual(1, viewModel.Page);
@@ -147,7 +147,7 @@ public class ViewModelDialogWizardTests
         viewModel.RaisePropertyChanged(nameof(viewModel.Page));
 
         // Act
-        viewModel.NextCommand!.Execute(null);
+        viewModel.NextCommand.Execute(null);
 
         // Assert
         Assert.AreEqual(2, viewModel.Page);
@@ -171,7 +171,7 @@ public class ViewModelDialogWizardTests
         };
 
         // Act
-        viewModel.NextCommand!.Execute(null);
+        viewModel.NextCommand.Execute(null);
 
         // Assert
         Assert.IsTrue(validationCalled, "Validation should be called before page change");
@@ -195,7 +195,7 @@ public class ViewModelDialogWizardTests
         };
 
         // Act
-        viewModel.BackCommand!.Execute(null);
+        viewModel.BackCommand.Execute(null);
 
         // Assert
         Assert.IsTrue(validationCalled, "Validation should be called before page change");

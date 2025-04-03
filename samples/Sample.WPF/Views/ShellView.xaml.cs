@@ -20,6 +20,7 @@ public partial class ShellView : View, IShellView
     private void NavigationView_ItemClicked(object sender, NavigationItemClickedEventArgs e)
     {
         if (e.Item.DataContext is ISynergy.Framework.Core.Models.NavigationItem navigationItem &&
+            navigationItem.Command is not null &&
             navigationItem.Command.CanExecute(navigationItem.CommandParameter))
             navigationItem.Command.Execute(navigationItem.CommandParameter);
     }

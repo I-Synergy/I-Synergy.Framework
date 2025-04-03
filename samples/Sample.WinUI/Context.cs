@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using System.Globalization;
 
 namespace Sample;
 
@@ -28,13 +29,13 @@ public sealed class Context : IContext
     /// Gets or sets the current profile.
     /// </summary>
     /// <value>The current profile.</value>
-    public IProfile Profile { get; set; }
+    public IProfile? Profile { get; set; }
 
     /// <summary>
     /// Gets the current time zone.
     /// </summary>
     /// <value>The current time zone.</value>
-    public TimeZoneInfo TimeZone
+    public TimeZoneInfo? TimeZone
     {
         get
         {
@@ -113,5 +114,9 @@ public sealed class Context : IContext
     /// Gets or sets the gateway service endpoint.
     /// </summary>
     /// <value>The service endpoint.</value>
-    public string GatewayEndpoint { get; private set; }
+    public string? GatewayEndpoint { get; private set; }
+
+    public NumberFormatInfo? NumberFormat { get; private set; }
+
+    public CultureInfo? Culture { get; private set; }
 }

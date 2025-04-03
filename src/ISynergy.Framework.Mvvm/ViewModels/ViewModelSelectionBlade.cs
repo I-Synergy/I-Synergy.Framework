@@ -60,7 +60,8 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand<string>? RefreshCommand { get; private set; }
+    public AsyncRelayCommand<string> RefreshCommand { get; private set; }
+    public AsyncRelayCommand<List<object>> SelectCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
@@ -96,6 +97,8 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         });
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
+        SelectCommand = new AsyncRelayCommand<List<object>>((e) => SelectAsync(e), (s) => s is not null && s.Count > 0);
+
         RawItems = items.ToList();
 
         Items = new ObservableCollection<TEntity>();
@@ -112,6 +115,8 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
         IsInitialized = true;
     }
+
+
 
     /// <summary>
     /// Queries the items.
@@ -148,7 +153,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// <param name="e"></param>
     /// <param name="validateUnderlayingProperties"></param>
     /// <returns></returns>
-    public override async Task SubmitAsync(List<TEntity> e, bool validateUnderlayingProperties = true)
+    private async Task SelectAsync(List<object> e, bool validateUnderlayingProperties = true)
     {
         if (Validate(validateUnderlayingProperties))
         {
@@ -198,7 +203,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
             // Dispose and clear commands
             RefreshCommand?.Dispose();
-            RefreshCommand = null;
+            SelectCommand?.Dispose();
 
             base.Dispose(disposing);
         }

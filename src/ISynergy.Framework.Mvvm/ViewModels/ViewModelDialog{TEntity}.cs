@@ -50,7 +50,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     /// Gets the submit command.
     /// </summary>
     /// <value>The submit command.</value>
-    public AsyncRelayCommand<TEntity>? SubmitCommand { get; private set; }
+    public AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelDialog{TEntity}"/> class.
@@ -129,7 +129,6 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
 
             // Dispose and clear submit command
             SubmitCommand?.Dispose();
-            SubmitCommand = null;
 
             base.Dispose(disposing);
         }
