@@ -9,12 +9,12 @@ public interface IAddress
     /// Gets or sets the street.
     /// </summary>
     /// <value>The street.</value>
-    string Street { get; set; }
+    string? Street { get; set; }
     /// <summary>
     /// Gets or sets the extra address line.
     /// </summary>
     /// <value>The extra address line.</value>
-    string ExtraAddressLine { get; set; }
+    string? ExtraAddressLine { get; set; }
     /// <summary>
     /// Gets or sets the house number.
     /// </summary>
@@ -24,22 +24,22 @@ public interface IAddress
     /// Gets or sets the addition.
     /// </summary>
     /// <value>The addition.</value>
-    string Addition { get; set; }
+    string? Addition { get; set; }
     /// <summary>
     /// Gets or sets the zipcode.
     /// </summary>
     /// <value>The zipcode.</value>
-    string Zipcode { get; set; }
+    string? Zipcode { get; set; }
     /// <summary>
     /// Gets or sets the city.
     /// </summary>
     /// <value>The city.</value>
-    string City { get; set; }
+    string? City { get; set; }
     /// <summary>
     /// Gets or sets the state.
     /// </summary>
     /// <value>The state.</value>
-    string State { get; set; }
+    string? State { get; set; }
     /// <summary>
     /// Gets or sets the country identifier.
     /// </summary>
