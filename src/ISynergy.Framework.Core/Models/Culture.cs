@@ -30,7 +30,7 @@ public class Culture : BaseModel
     /// </summary>
     /// <value>The language.</value>
     [Required]
-    public required string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Gets or sets the TwoLetterLanguageCode property value.
@@ -38,7 +38,7 @@ public class Culture : BaseModel
     /// <value>The two letter language code.</value>
     [StringLength(5)]
     [Required]
-    public required string TwoLetterLanguageCode { get; set; }
+    public string? TwoLetterLanguageCode { get; set; }
 
     /// <summary>
     /// Gets or sets the ThreeLetterLanguageCode property value.
@@ -46,12 +46,12 @@ public class Culture : BaseModel
     /// <value>The three letter language code.</value>
     [StringLength(5)]
     [Required]
-    public required string ThreeLetterLanguageCode { get; set; }
+    public string? ThreeLetterLanguageCode { get; set; }
 
     /// <summary>
     /// Gets or sets the CultureInfoCode property value.
     /// </summary>
     /// <value>The culture information code.</value>
     [Required]
-    public required string CultureInfoCode { get; set; }
+    public string? CultureInfoCode { get; set; }
 }

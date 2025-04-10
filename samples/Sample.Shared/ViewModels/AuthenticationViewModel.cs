@@ -58,7 +58,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the Name property value.
     /// </summary>
     /// <value>The name of the registration.</value>
-    public required string Registration_Name
+    public string Registration_Name
     {
         get { return GetValue<string>(); }
         set { SetValue(value); }
@@ -68,7 +68,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the Mail property value.
     /// </summary>
     /// <value>The registration mail.</value>
-    public required string? Registration_Mail
+    public string? Registration_Mail
     {
         get { return GetValue<string>()?.ToLowerInvariant(); }
         set { SetValue(value?.ToLowerInvariant()); }
@@ -98,7 +98,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the Password property value.
     /// </summary>
     /// <value>The registration password.</value>
-    public required string Registration_Password
+    public string Registration_Password
     {
         get { return GetValue<string>(); }
         set { SetValue(value); }
@@ -108,7 +108,7 @@ public class AuthenticationViewModel : ViewModel
     /// Gets or sets the PasswordCheck property value.
     /// </summary>
     /// <value>The registration password check.</value>
-    public required string Registration_PasswordCheck
+    public string Registration_PasswordCheck
     {
         get { return GetValue<string>(); }
         set { SetValue(value); }
@@ -174,10 +174,10 @@ public class AuthenticationViewModel : ViewModel
         set => SetValue(value);
     }
 
-    public RelayCommand ShowSignInCommand { get; private set; }
-    public AsyncRelayCommand SignInCommand { get; private set; }
-    public AsyncRelayCommand SignUpCommand { get; private set; }
-    public AsyncRelayCommand ForgotPasswordCommand { get; private set; }
+    public RelayCommand? ShowSignInCommand { get; private set; }
+    public AsyncRelayCommand? SignInCommand { get; private set; }
+    public AsyncRelayCommand? SignUpCommand { get; private set; }
+    public AsyncRelayCommand? ForgotPasswordCommand { get; private set; }
 
     public AuthenticationViewModel(
         ICommonServices commonServices,
@@ -359,5 +359,22 @@ public class AuthenticationViewModel : ViewModel
             await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
 
         _commonServices.BusyService.StopBusy();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            ShowSignInCommand?.Dispose();
+            ShowSignInCommand = null;
+            SignInCommand?.Dispose();
+            SignInCommand = null;
+            SignUpCommand?.Dispose();
+            SignUpCommand = null;
+            ForgotPasswordCommand?.Dispose();
+            ForgotPasswordCommand = null;
+
+            base.Dispose(disposing);
+        }
     }
 }

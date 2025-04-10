@@ -15,14 +15,14 @@ public class User : BaseModel
     /// </summary>
     /// <value>The identifier.</value>
     [Required]
-    public required string Id { get; set; }
+    public string? Id { get; set; }
 
     /// <summary>
     /// Gets or sets the UserName property value.
     /// </summary>
     /// <value>The name of the user.</value>
     [Required]
-    public required string UserName { get; set; }
+    public string? UserName { get; set; }
 
     /// <summary>
     /// Gets or sets the IsUnlocked property value.
@@ -72,7 +72,7 @@ public class UserAdd : User
     /// Gets or sets the Password property value.
     /// </summary>
     /// <value>The password.</value>
-    public required string Password { get; set; }
+    public string? Password { get; set; }
 
     /// <summary>
     /// Gets or sets the Roles property value.

@@ -128,10 +128,10 @@ public class SignUpViewModel : ViewModel
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand SignUpCommand { get; private set; }
-    public AsyncRelayCommand ValidateMailCommand { get; private set; }
-    public AsyncRelayCommand SignInCommand { get; private set; }
-    public AsyncRelayCommand SelectModulesCommand { get; private set; }
+    public AsyncRelayCommand? SignUpCommand { get; private set; }
+    public AsyncRelayCommand? ValidateMailCommand { get; private set; }
+    public AsyncRelayCommand? SignInCommand { get; private set; }
+    public AsyncRelayCommand? SelectModulesCommand { get; private set; }
 
     public SignUpViewModel(
         ICommonServices commonServices,
@@ -316,6 +316,23 @@ public class SignUpViewModel : ViewModel
                     await SignInAsync();
                 }
             }
+        }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            SignInCommand?.Dispose();
+            SignInCommand = null;
+            SignUpCommand?.Dispose();
+            SignUpCommand = null;
+            ValidateMailCommand?.Dispose();
+            ValidateMailCommand = null;
+            SelectModulesCommand?.Dispose();
+            SelectModulesCommand = null;
+
+            base.Dispose(disposing);
         }
     }
 }
