@@ -54,8 +54,8 @@ public class SignInViewModel : ViewModel
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand SignInCommand { get; private set; }
-    public AsyncRelayCommand SignUpCommand { get; private set; }
+    public AsyncRelayCommand? SignInCommand { get; private set; }
+    public AsyncRelayCommand? SignUpCommand { get; private set; }
 
     public SignInViewModel(
         ICommonServices commonServices,
@@ -147,8 +147,10 @@ public class SignInViewModel : ViewModel
     {
         if (disposing)
         {
-            (SignInCommand as IDisposable)?.Dispose();
-            (SignUpCommand as IDisposable)?.Dispose();
+            SignInCommand?.Dispose();
+            SignInCommand = null;
+            SignUpCommand?.Dispose();
+            SignUpCommand = null;
 
             base.Dispose(disposing);
         }

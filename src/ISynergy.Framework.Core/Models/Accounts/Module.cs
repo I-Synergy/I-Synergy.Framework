@@ -31,7 +31,7 @@ public class Module : BaseModel
     /// <value>The name.</value>
     [Required]
     [StringLength(32)]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the Description property value.
@@ -39,7 +39,7 @@ public class Module : BaseModel
     /// <value>The description.</value>
     [Required]
     [StringLength(128)]
-    public required string Description { get; set; }
+    public string Description { get; set; }
 
     public override string ToString() => Description;
 }

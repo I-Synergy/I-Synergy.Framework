@@ -39,7 +39,7 @@ public class Account : BaseModel
     /// <value>The description.</value>
     [Required]
     [StringLength(128)]
-    public required string Description { get; set; }
+    public string Description { get; set; }
 
     /// <summary>
     /// Gets or sets the Modules property value.
@@ -81,13 +81,13 @@ public class Account : BaseModel
     /// </summary>
     /// <value>The time zone identifier.</value>
     [Required]
-    public required string TimeZoneId { get; set; }
+    public string TimeZoneId { get; set; }
 
     /// <summary>
     /// Gets or sets the CountryCode property value.
     /// </summary>
     [Required]
-    public required string CountryCode { get; set; }
+    public string CountryCode { get; set; }
 }
 
 /// <summary>
