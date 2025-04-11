@@ -24,7 +24,7 @@ public interface IFileTypeAnalyzer
     /// </summary>
     /// <param name="extension">The extension.</param>
     /// <returns>string.</returns>
-    string GetMimeTypeByExtension(string extension);
+    string? GetMimeTypeByExtension(string extension);
 
     /// <summary>
     /// Retrieve available types that are supported based on the current definitions.
@@ -38,7 +38,7 @@ public interface IFileTypeAnalyzer
     /// <param name="fileContent">The file contents to check.</param>
     /// <param name="extension">The extension.</param>
     /// <returns>FileTypeInfo.</returns>
-    FileTypeInfo DetectType(byte[] fileContent, string extension);
+    FileTypeInfo? DetectType(byte[]? fileContent, string extension);
 
     /// <summary>
     /// Detect the file type.
@@ -46,7 +46,7 @@ public interface IFileTypeAnalyzer
     /// <param name="inputStream">Input stream to detect file type, if the stream is seekable the stream will be reset upon detecting.</param>
     /// <param name="extension">The extension.</param>
     /// <returns>FileTypeInfo.</returns>
-    FileTypeInfo DetectType(Stream inputStream, string extension);
+    FileTypeInfo? DetectType(Stream? inputStream, string extension);
 
     /// <summary>
     /// Determines if the file contents are of a specified type.

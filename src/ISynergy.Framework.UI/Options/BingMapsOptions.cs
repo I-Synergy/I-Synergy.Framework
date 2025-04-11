@@ -9,5 +9,5 @@ public class BingMapsOptions
     /// Gets or sets the API key.
     /// </summary>
     /// <value>The MapService Token.</value>
-    public string MapServiceToken { get; set; }
+    public string MapServiceToken { get; set; } = string.Empty;
 }

@@ -64,17 +64,20 @@ internal class UpdateService : IUpdateService
     /// </summary>
     public async Task DownloadAndInstallUpdateAsync()
     {
-        await GetUpdateAsync(_updateOptions.ApplicationId);
-
-        var updatePath = Path.Combine(Path.GetTempPath(), _updateOptions.Filename);
-
-        if (File.Exists(updatePath))
+        if (!string.IsNullOrEmpty(_updateOptions.Filename))
         {
-            System.Diagnostics.Process.Start(updatePath);
-        }
-        else
-        {
-            await _dialogService.ShowInformationAsync(LanguageService.Default.GetString("CannotFindUpdateFile"));
+            await GetUpdateAsync(_updateOptions.ApplicationId);
+
+            var updatePath = Path.Combine(Path.GetTempPath(), _updateOptions.Filename);
+
+            if (File.Exists(updatePath))
+            {
+                System.Diagnostics.Process.Start(updatePath);
+            }
+            else
+            {
+                await _dialogService.ShowInformationAsync(LanguageService.Default.GetString("CannotFindUpdateFile"));
+            }
         }
     }
 
@@ -122,7 +125,7 @@ internal class UpdateService : IUpdateService
     {
         try
         {
-            if (await NetworkUtility.IsInternetConnectionAvailable())
+            if (!string.IsNullOrEmpty(_updateOptions.Filename) && await NetworkUtility.IsInternetConnectionAvailable())
             {
                 var updatePath = Path.Combine(Path.GetTempPath(), _updateOptions.Filename);
 

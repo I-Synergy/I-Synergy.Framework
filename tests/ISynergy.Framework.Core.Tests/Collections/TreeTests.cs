@@ -39,7 +39,7 @@ public class TreeTests
         using TreeNode<Guid, Space> storage = building.AddChild(storageSpace);
         using TreeNode<Guid, Space> bin = storage.AddChild(binSpace);
 
-        TreeNode<Guid, Space> node = bin.FindNode(storage.Key);
+        var node = bin.FindNode(storage.Key);
 
         Assert.IsNotNull(node);
         Assert.AreEqual(storage, node);
@@ -85,10 +85,10 @@ public class TreeTests
         Assert.AreSame(bin.Parent, storage);
 
         Assert.AreEqual(building.Key, storage.ParentKey);
-        Assert.AreEqual(building.Data.Id, storage.Data.ParentId);
+        Assert.AreEqual(building.Data!.Id, storage.Data!.ParentId);
 
         Assert.AreEqual(storage.Key, bin.ParentKey);
-        Assert.AreEqual(storage.Data.Id, bin.Data.ParentId);
+        Assert.AreEqual(storage.Data.Id, bin.Data!.ParentId);
     }
 
     [TestMethod]
@@ -110,10 +110,10 @@ public class TreeTests
         Assert.IsNull(bin.Parent);
 
         Assert.AreEqual(building.Key, storage.ParentKey);
-        Assert.AreEqual(building.Data.Id, storage.Data.ParentId);
+        Assert.AreEqual(building.Data!.Id, storage.Data!.ParentId);
 
         Assert.AreEqual(Guid.Empty, bin.ParentKey);
-        Assert.AreEqual(Guid.Empty, bin.Data.ParentId);
+        Assert.AreEqual(Guid.Empty, bin.Data!.ParentId);
     }
 
     [TestMethod]
@@ -139,13 +139,13 @@ public class TreeTests
         Assert.AreSame(bin.Parent, kitchen);
 
         Assert.AreEqual(building.Key, storage.ParentKey);
-        Assert.AreEqual(building.Data.Id, storage.Data.ParentId);
+        Assert.AreEqual(building.Data!.Id, storage.Data!.ParentId);
 
         Assert.AreNotEqual(storage.Key, bin.ParentKey);
-        Assert.AreNotEqual(storage.Data.Id, bin.Data.ParentId);
+        Assert.AreNotEqual(storage.Data.Id, bin.Data!.ParentId);
 
         Assert.AreEqual(kitchen.Key, bin.ParentKey);
-        Assert.AreEqual(kitchen.Data.Id, bin.Data.ParentId);
+        Assert.AreEqual(kitchen.Data!.Id, bin.Data.ParentId);
     }
 
     [TestMethod]
@@ -167,10 +167,10 @@ public class TreeTests
         Assert.IsNull(bin.Parent);
 
         Assert.AreEqual(building.Key, storage.ParentKey);
-        Assert.AreEqual(building.Data.Id, storage.Data.ParentId);
+        Assert.AreEqual(building.Data!.Id, storage.Data!.ParentId);
 
         Assert.AreEqual(Guid.Empty, bin.ParentKey);
-        Assert.AreEqual(Guid.Empty, bin.Data.ParentId);
+        Assert.AreEqual(Guid.Empty, bin.Data!.ParentId);
     }
 
     [TestMethod]
@@ -227,9 +227,9 @@ public class TreeTests
         Assert.AreEqual(1, property.Children.Count);
         Assert.AreEqual(0, buildingA.Children.Count);
 
-        TreeNode<Guid, Space> parentOfBuildingA = buildingA.Parent;
+        var parentOfBuildingA = buildingA.Parent;
         Assert.IsNotNull(parentOfBuildingA);
-        Assert.AreEqual("Industrial Property", parentOfBuildingA.Data.Name);
+        Assert.AreEqual("Industrial Property", parentOfBuildingA.Data!.Name);
 
         property.Children.Remove(buildingA);
 

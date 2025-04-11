@@ -31,12 +31,12 @@ public class RouteDataRequestCultureProvider : RequestCultureProvider
     /// <param name="httpContext">The HTTP context.</param>
     /// <returns>Task&lt;ProviderCultureResult&gt;.</returns>
     /// <exception cref="ArgumentNullException">httpContext</exception>
-    public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+    public override Task<ProviderCultureResult?> DetermineProviderCultureResult(HttpContext httpContext)
     {
         Argument.IsNotNull(httpContext);
 
         // Create the default result task based on configuration
-        var defaultResultTask = Task.FromResult(
+        var defaultResultTask = Task.FromResult<ProviderCultureResult?>(
             new ProviderCultureResult(_options.DefaultCulture, _options.DefaultCulture));
 
         // Get the path value
@@ -63,7 +63,7 @@ public class RouteDataRequestCultureProvider : RequestCultureProvider
         try
         {
             var providerResultCulture = new ProviderCultureResult(culture, culture);
-            return Task.FromResult(providerResultCulture);
+            return Task.FromResult<ProviderCultureResult?>(providerResultCulture);
         }
         catch (Exception)
         {

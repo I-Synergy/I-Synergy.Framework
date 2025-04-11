@@ -13,8 +13,7 @@ public class CultureRouteConstraintTests
     private Mock<IOptions<GlobalizationOptions>> _mockOptions;
     private CultureRouteConstraint _constraint;
 
-    [TestInitialize]
-    public void Initialize()
+    public CultureRouteConstraintTests()
     {
         _mockOptions = new Mock<IOptions<GlobalizationOptions>>();
         _mockOptions.Setup(o => o.Value).Returns(new GlobalizationOptions
@@ -33,7 +32,7 @@ public class CultureRouteConstraintTests
         var httpContext = new DefaultHttpContext();
         var route = Mock.Of<IRouter>();
         var routeKey = "culture";
-        var values = new RouteValueDictionary(new Dictionary<string, object>
+        var values = new RouteValueDictionary(new Dictionary<string, object?>
             {
                 { routeKey, "nl-NL" }
             });
@@ -53,7 +52,7 @@ public class CultureRouteConstraintTests
         var httpContext = new DefaultHttpContext();
         var route = Mock.Of<IRouter>();
         var routeKey = "culture";
-        var values = new RouteValueDictionary(new Dictionary<string, object>
+        var values = new RouteValueDictionary(new Dictionary<string, object?>
             {
                 { routeKey, "de-DE" }
             });
@@ -90,7 +89,7 @@ public class CultureRouteConstraintTests
         var httpContext = new DefaultHttpContext();
         var route = Mock.Of<IRouter>();
         var routeKey = "culture";
-        var values = new RouteValueDictionary(new Dictionary<string, object>
+        var values = new RouteValueDictionary(new Dictionary<string, object?>
             {
                 { routeKey, null }
             });
@@ -110,7 +109,7 @@ public class CultureRouteConstraintTests
         var httpContext = new DefaultHttpContext();
         var route = Mock.Of<IRouter>();
         var routeKey = "culture";
-        var values = new RouteValueDictionary(new Dictionary<string, object>
+        var values = new RouteValueDictionary(new Dictionary<string, object?>
             {
                 { routeKey, "en-us" } // lowercase
             });

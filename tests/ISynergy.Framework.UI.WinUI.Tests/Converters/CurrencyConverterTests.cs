@@ -8,8 +8,7 @@ public class CurrencyConverterTests
 {
     private CultureInfo _originalCulture;
 
-    [TestInitialize]
-    public void Setup()
+    public CurrencyConverterTests()
     {
         _originalCulture = CultureInfo.CurrentCulture;
     }
@@ -35,7 +34,7 @@ public class CurrencyConverterTests
         decimal value = 1234.56m;
 
         // Act
-        var result = converter.Convert(value, typeof(string), null, null) as string;
+        var result = converter.Convert(value, typeof(string), null!, null!) as string;
 
         // Assert
         Assert.IsNotNull(result);
@@ -58,7 +57,7 @@ public class CurrencyConverterTests
         decimal value = -1234.56m;
 
         // Act
-        var result = converter.Convert(value, typeof(string), null, null) as string;
+        var result = converter.Convert(value, typeof(string), null!, null!) as string;
 
         // Assert
         Assert.IsNotNull(result);
@@ -80,7 +79,7 @@ public class CurrencyConverterTests
         decimal value = 0m;
 
         // Act
-        var result = converter.Convert(value, typeof(string), null, null) as string;
+        var result = converter.Convert(value, typeof(string), null!, null!) as string;
 
         // Assert
         Assert.IsNotNull(result);
@@ -98,7 +97,7 @@ public class CurrencyConverterTests
         var converter = new CurrencyConverter();
 
         // Act
-        converter.ConvertBack("$ 1,234.56", typeof(decimal), null, null);
+        converter.ConvertBack("$ 1,234.56", typeof(decimal), null!, null!);
 
         // Assert is handled by ExpectedException
     }

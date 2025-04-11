@@ -16,7 +16,7 @@ public class DialogService : IDialogService
     private readonly IScopedContextService _scopedContextService;
     private readonly ILogger _logger;
 
-    private Window _activeDialog = null;
+    private Window? _activeDialog = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
@@ -111,7 +111,8 @@ public class DialogService : IDialogService
             Content = message
         };
 
-        dialog.XamlRoot = Application.MainWindow.Content.XamlRoot;
+        if (Application.MainWindow is not null)
+            dialog.XamlRoot = Application.MainWindow.Content.XamlRoot;
 
         switch (buttons)
         {
@@ -248,7 +249,8 @@ public class DialogService : IDialogService
     {
         if (dialog is Window window)
         {
-            window.XamlRoot = Application.MainWindow.Content.XamlRoot;
+            if (Application.MainWindow is not null)
+                window.XamlRoot = Application.MainWindow.Content.XamlRoot;
 
             window.ViewModel = viewmodel;
 
@@ -260,7 +262,7 @@ public class DialogService : IDialogService
             window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
             window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
 
-            void ViewModelClosedHandler(object sender, EventArgs e)
+            void ViewModelClosedHandler(object? sender, EventArgs e)
             {
                 if (sender is IViewModelDialog<TEntity> vm)
                     vm.Closed -= ViewModelClosedHandler;

@@ -5,10 +5,10 @@ namespace ISynergy.Framework.UI.Controls.ToastNotification;
 
 public class NotifierConfiguration
 {
-    public IPositionProvider PositionProvider { get; set; }
-    public INotificationsLifetimeSupervisor LifetimeSupervisor { get; set; }
+    public IPositionProvider? PositionProvider { get; set; }
+    public INotificationsLifetimeSupervisor? LifetimeSupervisor { get; set; }
     public DisplayOptions DisplayOptions { get; }
-    public IKeyboardEventHandler KeyboardEventHandler { get; set; }
+    public IKeyboardEventHandler? KeyboardEventHandler { get; set; }
 
     public NotifierConfiguration()
     {

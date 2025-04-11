@@ -7,7 +7,7 @@ namespace ISynergy.Framework.IO.Watchers;
 /// </summary>
 /// <param name="sender">The sender.</param>
 /// <param name="e">The <see cref="PathAvailablitiyEventArgs"/> instance containing the event data.</param>
-public delegate void PathAvailabilityHandler(object sender, PathAvailablitiyEventArgs e);
+public delegate void PathAvailabilityHandler(object? sender, PathAvailablitiyEventArgs e);
 
 /// <summary>
 /// Class FileSystemWatcherEx.
@@ -35,7 +35,7 @@ public class FileSystemWatcherEx : FileSystemWatcher
     /// <summary>
     /// The thread
     /// </summary>
-    private Thread _thread = null;
+    private Thread? _thread = null;
     /// <summary>
     /// The run
     /// </summary>

@@ -9,10 +9,14 @@ public static class DictionaryExtensions
     ///   Checks whether two dictionaries have the same contents.
     /// </summary>
     /// 
-    public static bool IsEqual<TKey, TValue>(this IDictionary<TKey, TValue> a, IDictionary<TKey, TValue> b)
+    public static bool IsEqual<TKey, TValue>(this IDictionary<TKey, TValue>? a, IDictionary<TKey, TValue>? b)
+        where TKey : notnull
     {
-        if (a == b)
+        if (ReferenceEquals(a, b))
             return true;
+
+        if (a is null || b is null)
+            return false;
 
         if (a.Count != b.Count)
             return false;
@@ -25,17 +29,38 @@ public static class DictionaryExtensions
         if (StringExtensions.HasMethod<TValue>("SetEquals"))
         {
             var setEquals = typeof(TValue).GetMethod("SetEquals");
-            foreach (var k in aKeys.EnsureNotNull())
+            if (setEquals is not null)
             {
-                if (!(bool)setEquals.Invoke(a[k], [b[k]]))
-                    return false;
+                foreach (var k in aKeys.EnsureNotNull())
+                {
+                    var aValue = a[k];
+                    var bValue = b[k];
+
+                    if (aValue is null)
+                    {
+                        if (bValue is not null)
+                            return false;
+                        continue;
+                    }
+
+                    if (!(bool)(setEquals.Invoke(aValue, [bValue]) ?? false))
+                        return false;
+                }
             }
         }
         else
         {
             foreach (var k in aKeys.EnsureNotNull())
-                if (!a[k].Equals(b[k]))
+            {
+                var aValue = a[k];
+                var bValue = b[k];
+
+                if (aValue is null)
+                    return bValue is null;
+
+                if (!aValue.Equals(bValue))
                     return false;
+            }
         }
         return true;
     }

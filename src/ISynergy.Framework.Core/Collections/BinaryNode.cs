@@ -16,13 +16,13 @@ public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // TO
     ///   Gets or sets the left subtree of this node.
     /// </summary>
     /// 
-    public TNode Left { get; set; }
+    public TNode? Left { get; set; }
 
     /// <summary>
     ///   Gets or sets the right subtree of this node.
     /// </summary>
     /// 
-    public TNode Right { get; set; }
+    public TNode? Right { get; set; }
 
     /// <summary>
     ///   Gets whether this node is a leaf (has no children).
@@ -30,7 +30,7 @@ public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // TO
     /// 
     public bool IsLeaf
     {
-        get { return Left == default(TNode) && Right == default(TNode); }
+        get { return Left == null && Right == null; }
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // TO
     /// true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
     /// </returns>
     /// 
-    public bool Equals(TNode other)
+    public bool Equals(TNode? other)
     {
         return this == other;
     }
@@ -51,7 +51,7 @@ public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // TO
     ///   under this node.
     /// </summary>
     /// 
-    public TNode[] Children
+    public TNode?[] Children
     {
         get { return [Left, Right]; }
         set

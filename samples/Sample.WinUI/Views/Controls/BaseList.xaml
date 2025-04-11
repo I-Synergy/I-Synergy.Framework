@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Sample.Models"
@@ -34,9 +33,9 @@
                 PlaceholderText="{m:LanguageResource Key=Search}"
                 QueryIcon="Find">
                 <i:Interaction.Behaviors>
-                    <ic:EventTriggerBehavior EventName="QuerySubmitted">
-                        <ic:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
-                    </ic:EventTriggerBehavior>
+                    <i:EventTriggerBehavior EventName="QuerySubmitted">
+                        <i:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
+                    </i:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </AutoSuggestBox>
         </StackPanel>
@@ -52,9 +51,9 @@
             SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectionMode="Single">
             <i:Interaction.Behaviors>
-                <ic:EventTriggerBehavior EventName="DoubleTapped">
-                    <ic:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
-                </ic:EventTriggerBehavior>
+                <i:EventTriggerBehavior EventName="DoubleTapped">
+                    <i:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
+                </i:EventTriggerBehavior>
             </i:Interaction.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:TestItem">

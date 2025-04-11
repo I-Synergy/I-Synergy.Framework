@@ -17,7 +17,7 @@
 		<EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<WindowsSdkPackageVersion>10.0.26100.48</WindowsSdkPackageVersion>
+		<WindowsSdkPackageVersion>10.0.26100.57</WindowsSdkPackageVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

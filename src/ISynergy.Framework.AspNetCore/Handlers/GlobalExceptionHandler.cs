@@ -18,7 +18,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, Prob
             detail: exception.Message);
 
         httpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
-        httpContext.Response.StatusCode = (int)problemDetails.Status;
+        httpContext.Response.StatusCode = (int)problemDetails.Status!;
 
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 

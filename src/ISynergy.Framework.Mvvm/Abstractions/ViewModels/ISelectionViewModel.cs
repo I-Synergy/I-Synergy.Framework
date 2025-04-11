@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Enumerations;
+﻿using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Enumerations;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
@@ -14,4 +15,6 @@ public interface ISelectionViewModel
     /// Gets or sets the selected items.    
     /// </summary>
     List<object> SelectedItems { get; set; }
+
+    AsyncRelayCommand<List<object>> SelectCommand { get; }
 }

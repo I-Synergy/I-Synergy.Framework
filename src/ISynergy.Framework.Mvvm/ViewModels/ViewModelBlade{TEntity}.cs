@@ -19,7 +19,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TEntity>> Submitted;
+    public event EventHandler<SubmitEventArgs<TEntity>>? Submitted;
     /// <summary>
     /// Called when [submitted].
     /// </summary>
@@ -30,7 +30,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// Gets or sets the SelectedItem property value.
     /// </summary>
     /// <value>The selected item.</value>
-    public TEntity SelectedItem
+    public TEntity? SelectedItem
     {
         get { return GetValue<TEntity>(); }
         set { SetValue(value); }
@@ -71,7 +71,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// Gets the submit command.
     /// </summary>
     /// <value>The submit command.</value>
-    public AsyncRelayCommand SubmitCommand { get; private set; }
+    public virtual AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBlade{TEntity}"/> class.
@@ -83,7 +83,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
         bool automaticValidation = false)
         : base(commonServices, automaticValidation)
     {
-        SubmitCommand = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
+        SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e), (e) => e is not null);
     }
 
     /// <summary>
@@ -131,7 +131,6 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
 
             // Dispose and clear the submit command
             SubmitCommand?.Dispose();
-            SubmitCommand = null;
 
             base.Dispose(disposing);
         }

@@ -11,6 +11,8 @@ public abstract class BaseMessage
     /// </summary>
     protected BaseMessage()
     {
+        Sender = null!;
+        Target = null!;
     }
 
     /// <summary>
@@ -20,6 +22,7 @@ public abstract class BaseMessage
     protected BaseMessage(object sender)
     {
         Sender = sender;
+        Target = null!;
     }
 
     /// <summary>

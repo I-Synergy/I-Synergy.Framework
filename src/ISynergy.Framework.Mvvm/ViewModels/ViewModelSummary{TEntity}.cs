@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -15,7 +16,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TEntity>> Submitted;
+    public event EventHandler<SubmitEventArgs<TEntity>>? Submitted;
     /// <summary>
     /// Called when [submitted].
     /// </summary>
@@ -36,7 +37,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Gets or sets the SelectedItem property value.
     /// </summary>
     /// <value>The selected item.</value>
-    public TEntity SelectedItem
+    public TEntity? SelectedItem
     {
         get => GetValue<TEntity>();
         set => SetValue(value);
@@ -56,7 +57,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Gets or sets the submit command.
     /// </summary>
     /// <value>The submit command.</value>
-    public AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
+    public AsyncRelayCommand<TEntity>? SubmitCommand { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether [refresh on initialization].
@@ -157,8 +158,11 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// <param name="e">The e.</param>
     public async Task DeleteAsync(TEntity e)
     {
+        Argument.IsNotNull(e);
+
         string item;
-        if (e.GetType().GetProperty("Description").GetValue(e) is string value)
+
+        if (e!.GetType().HasProperty("Description") && e.GetType().GetProperty("Description")!.GetValue(e) is string value)
         {
             item = value;
         }
@@ -209,7 +213,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
 
     public virtual void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.TryGetValue(GenericConstants.Parameter, out object result) && result is TEntity entity)
+        if (query.TryGetValue(GenericConstants.Parameter, out object? result) && result is TEntity entity)
             SetSelectedItem(entity);
     }
 
@@ -258,17 +262,11 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
 
             // Dispose and clear commands
             AddCommand?.Dispose();
-            AddCommand = null;
             EditCommand?.Dispose();
-            EditCommand = null;
             DeleteCommand?.Dispose();
-            DeleteCommand = null;
             RefreshCommand?.Dispose();
-            RefreshCommand = null;
             SearchCommand?.Dispose();
-            SearchCommand = null;
             SubmitCommand?.Dispose();
-            SubmitCommand = null;
 
             base.Dispose(disposing);
         }

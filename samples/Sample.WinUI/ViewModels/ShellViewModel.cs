@@ -67,7 +67,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         await Task.Delay(100);
 
-        if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
+        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
         {
             if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
                 PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
@@ -78,33 +78,33 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         await InitializeFirstRunAsync();
     }
 
-    private void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e) => SetClock();
+    private void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e) => SetClock();
 
     private void PopulateNavigationMenuItems()
     {
-        if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated)
+        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
         {
             PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, DisplayCommand));
-            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, BrowseCommand));
-            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, ConverterCommand));
-            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, SelectionTestCommand));
-            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, ListViewTestCommand));
-            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
-            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, TreeNodeTestCommand));
-            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, ChartCommand));
+            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, DisplayCommand));
+            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, BrowseCommand));
+            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ConverterCommand));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectionTestCommand));
+            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ListViewTestCommand));
+            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
+            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, TreeNodeTestCommand));
+            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ChartCommand));
 
             SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, HelpCommand));
-            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, LanguageCommand));
-            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, ColorCommand));
+            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ColorCommand));
 
-            if (_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated && _commonServices.ScopedContextService.GetService<IContext>().Profile is Profile)
-                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, SettingsCommand));
+            if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile is Profile)
+                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SettingsCommand));
         }
 
-        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color, SignInCommand));
+        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
     protected override void SignOut()
@@ -114,10 +114,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             // Clear profile before base sign out
             base.SignOut();
 
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser))
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
             {
-                _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin = false;
-                _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = false;
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
             }
         }
         catch (ObjectDisposedException)
@@ -128,7 +128,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     public override async Task InitializeFirstRunAsync()
     {
-        if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings.IsFirstRun)
+        if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings!.IsFirstRun)
         {
             if (await _commonServices.DialogService.ShowMessageAsync(
                 LanguageService.Default.GetString("ChangeLanguage"),
@@ -138,8 +138,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 var languageVM = new LanguageViewModel(_commonServices);
                 languageVM.Submitted += (s, e) =>
                 {
-                    _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language = e.Result;
-                    _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
+                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
+                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };
@@ -160,7 +160,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 
-    private void ClockTimerCallBack(object sender, object e) => SetClock();
+    private void ClockTimerCallBack(object? sender, object e) => SetClock();
 
     private void SetClock() => base.Title = $"{_commonServices.InfoService.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
 
@@ -231,6 +231,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     protected override Task OpenSettingsAsync() =>
         base._commonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
 
+    protected override Task OpenBackgroundAsync() => throw new NotImplementedException();
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -244,15 +246,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             if (_commonServices.AuthenticationService is not null)
                 _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
 
-            (DisplayCommand as IDisposable)?.Dispose();
-            (InfoCommand as IDisposable)?.Dispose();
-            (BrowseCommand as IDisposable)?.Dispose();
-            (ConverterCommand as IDisposable)?.Dispose();
-            (SelectionTestCommand as IDisposable)?.Dispose();
-            (ListViewTestCommand as IDisposable)?.Dispose();
-            (ValidationTestCommand as IDisposable)?.Dispose();
-            (TreeNodeTestCommand as IDisposable)?.Dispose();
-            (ChartCommand as IDisposable)?.Dispose();
+            DisplayCommand?.Dispose();
+            InfoCommand?.Dispose();
+            BrowseCommand?.Dispose();
+            ConverterCommand?.Dispose();
+            SelectionTestCommand?.Dispose();
+            ListViewTestCommand?.Dispose();
+            ValidationTestCommand?.Dispose();
+            TreeNodeTestCommand?.Dispose();
+            ChartCommand?.Dispose();
 
             base.Dispose(disposing);
         }

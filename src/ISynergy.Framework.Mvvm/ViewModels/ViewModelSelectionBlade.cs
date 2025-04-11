@@ -61,6 +61,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     }
 
     public AsyncRelayCommand<string> RefreshCommand { get; private set; }
+    public AsyncRelayCommand<List<object>> SelectCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
@@ -79,10 +80,10 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         : base(commonServices, automaticValidation)
     {
         if (items is null)
-            items = items.EnsureNotNull();
+            items = new List<TEntity>();
 
         if (selectedItems is null)
-            selectedItems = selectedItems.EnsureNotNull();
+            selectedItems = new List<TEntity>();
 
         SelectionMode = selectionMode;
 
@@ -96,6 +97,8 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         });
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
+        SelectCommand = new AsyncRelayCommand<List<object>>((e) => SelectAsync(e), (s) => s is not null && s.Count > 0);
+
         RawItems = items.ToList();
 
         Items = new ObservableCollection<TEntity>();
@@ -105,13 +108,15 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
         foreach (var item in selectedItems.EnsureNotNull())
         {
-            SelectedItems.Add(item);
+            SelectedItems.Add(item!);
         }
 
         RaisePropertyChanged(nameof(SelectedItems));
 
         IsInitialized = true;
     }
+
+
 
     /// <summary>
     /// Queries the items.
@@ -129,7 +134,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
             foreach (var item in RawItems.EnsureNotNull())
             {
-                if (item.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
+                if (item!.ToString()?.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     filteredList.Add(item);
                 }
@@ -148,7 +153,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// <param name="e"></param>
     /// <param name="validateUnderlayingProperties"></param>
     /// <returns></returns>
-    public override async Task SubmitAsync(List<TEntity> e, bool validateUnderlayingProperties = true)
+    private async Task SelectAsync(List<object> e, bool validateUnderlayingProperties = true)
     {
         if (Validate(validateUnderlayingProperties))
         {
@@ -198,7 +203,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
             // Dispose and clear commands
             RefreshCommand?.Dispose();
-            RefreshCommand = null;
+            SelectCommand?.Dispose();
 
             base.Dispose(disposing);
         }

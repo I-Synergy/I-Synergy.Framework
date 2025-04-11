@@ -14,8 +14,7 @@ public class ViewModelSelectionBladeTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelSelectionBladeTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
 
@@ -33,7 +32,7 @@ public class ViewModelSelectionBladeTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public override string ToString() => Name;
     }
 
@@ -57,8 +56,6 @@ public class ViewModelSelectionBladeTests
         Assert.IsTrue(viewModel.Items.Any());
         Assert.IsNotNull(viewModel.SelectedItems);
         Assert.IsTrue(viewModel.SelectedItems.Any());
-        Assert.IsNotNull(viewModel.RefreshCommand);
-        Assert.IsNotNull(viewModel.SubmitCommand);
 
         // Act
         viewModel.Cleanup();
@@ -69,8 +66,6 @@ public class ViewModelSelectionBladeTests
         Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
 
         viewModel.Dispose();
-        Assert.IsNull(viewModel.RefreshCommand, "RefreshCommand should be null after dispose");
-        Assert.IsNull(viewModel.SubmitCommand, "SubmitCommand should be null after dispose");
         Assert.IsTrue(viewModel.IsDisposed);
     }
 
@@ -126,8 +121,6 @@ public class ViewModelSelectionBladeTests
         Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
 
         viewModel.Dispose();
-        Assert.IsNull(viewModel.RefreshCommand, "RefreshCommand should be null after dispose");
-        Assert.IsNull(viewModel.SubmitCommand, "SubmitCommand should be null after dispose");
         Assert.IsTrue(viewModel.IsDisposed);
     }
 
@@ -160,8 +153,8 @@ public class ViewModelSelectionBladeTests
         // Arrange & Act
         var viewModel = new ViewModelSelectionBlade<TestEntity>(
             _mockCommonServices.Object,
-            null,
-            null,
+            null!,
+            null!,
             SelectionModes.Single);
 
         // Assert

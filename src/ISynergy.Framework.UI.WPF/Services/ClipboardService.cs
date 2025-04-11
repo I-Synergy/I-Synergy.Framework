@@ -47,7 +47,7 @@ public class ClipboardService : IClipboardService
     /// Gets the bitmap source from clipboard asynchronous.
     /// </summary>
     /// <returns>Task&lt;System.Object&gt;.</returns>
-    public Task<object> GetBitmapSourceFromClipboardAsync()
+    public Task<object?> GetBitmapSourceFromClipboardAsync()
     {
         if ((Clipboard.GetData("DeviceIndependentBitmap") is MemoryStream memoryStream))
         {
@@ -76,13 +76,13 @@ public class ClipboardService : IClipboardService
             stream.Write(buffer, 0, buffer.Length);
             stream.Seek(0, SeekOrigin.Begin);
 
-            return Task.FromResult<object>(BitmapFrame.Create(stream));
+            return Task.FromResult<object?>(BitmapFrame.Create(stream));
         }
 
-        return Task.FromResult<object>(null);
+        return Task.FromResult<object?>(null);
     }
 
-    public async Task<ImageResult> GetImageFromClipboardAsync()
+    public async Task<ImageResult?> GetImageFromClipboardAsync()
     {
         if (await GetBitmapSourceFromClipboardAsync() is ImageSource imageSource)
         {

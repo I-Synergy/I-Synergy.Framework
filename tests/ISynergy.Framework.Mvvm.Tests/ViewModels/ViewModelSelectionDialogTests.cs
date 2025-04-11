@@ -15,8 +15,7 @@ public class ViewModelSelectionDialogTests
     private Mock<ILoggerFactory> _mockLoggerFactory;
     private Mock<ILanguageService> _mockLanguageService;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelSelectionDialogTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -34,7 +33,7 @@ public class ViewModelSelectionDialogTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public override string ToString() => Name;
     }
 
@@ -116,8 +115,8 @@ public class ViewModelSelectionDialogTests
         // Arrange & Act
         var viewModel = new ViewModelSelectionDialog<TestEntity>(
             _mockCommonServices.Object,
-            null,
-            null,
+            null!,
+            null!,
             SelectionModes.Single);
 
         // Assert

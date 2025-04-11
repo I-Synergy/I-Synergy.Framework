@@ -80,8 +80,13 @@ public static class ModelBuilderExtensions
             var tenantIdCall = Expression.Call(Expression.Constant(tenantId.Target), tenantId.Method);
             var equalExpression = Expression.Equal(tenantIdProperty, tenantIdCall);
             var tenantFilter = Expression.Lambda(equalExpression, parameter);
+            var entityType = modelBuilder.Model.FindEntityType(type);
 
-            var existingFilter = modelBuilder.Model.FindEntityType(type).GetQueryFilter();
+            if (entityType is null)
+                continue;
+
+            var existingFilter = entityType.GetQueryFilter();
+
             if (existingFilter is null)
             {
                 // Directly apply the tenant filter if no existing filter
@@ -120,8 +125,12 @@ public static class ModelBuilderExtensions
             var isDeletedProperty = Expression.Property(parameter, nameof(IEntity.IsDeleted));
             var notExpression = Expression.Not(isDeletedProperty);
             var softDeleteFilter = Expression.Lambda(notExpression, parameter);
+            var entityType = modelBuilder.Model.FindEntityType(type);
 
-            var existingFilter = modelBuilder.Model.FindEntityType(type).GetQueryFilter();
+            if (entityType is null)
+                continue;
+
+            var existingFilter = entityType.GetQueryFilter();
 
             if (existingFilter is null)
             {

@@ -12,7 +12,7 @@ namespace ISynergy.Framework.UI.Controls.Validators;
 /// </summary>
 public static class RegexValidator
 {
-    private static Control _control;
+    private static Control? _control;
 
     /// <summary>
     /// Regex validation mode.
@@ -174,7 +174,7 @@ public static class RegexValidator
 
     private static void InitializeControl(object sender)
     {
-        TextBox textBox = null;
+        TextBox? textBox = null;
 
         if (sender is TextBox parent)
         {
@@ -184,7 +184,7 @@ public static class RegexValidator
         else if (sender is Control control)
         {
             _control = control;
-            textBox = (sender as DependencyObject).FindChild<TextBox>();
+            textBox = (sender as DependencyObject)?.FindChild<TextBox>();
         }
 
         if (textBox is null)

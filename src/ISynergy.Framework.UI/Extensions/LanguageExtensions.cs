@@ -14,7 +14,7 @@ public static class LanguageExtensions
     {
         var systemCulture = CultureInfo.CurrentCulture.Clone() as CultureInfo;
 
-        if (systemCulture.TwoLetterISOLanguageName.Equals(language))
+        if (systemCulture is not null && systemCulture.TwoLetterISOLanguageName.Equals(language))
         {
             CultureInfo.DefaultThreadCurrentCulture = systemCulture;
             CultureInfo.DefaultThreadCurrentUICulture = systemCulture;
@@ -48,13 +48,20 @@ public static class LanguageExtensions
     /// <returns></returns>
     public static List<string> ToTimeZoneIds(this string isoCountryCode)
     {
-        if (TzdbDateTimeZoneSource.Default is { } source)
-        {
-            var locations = source.ZoneLocations?
-                .Where(key => key.CountryCode.Equals(isoCountryCode.ToUpper()));
-
+        if (TzdbDateTimeZoneSource.Default is { } source &&
+            source.ZoneLocations?
+                .Where(key => key.CountryCode.Equals(isoCountryCode.ToUpper())) is IEnumerable<TzdbZoneLocation> locations)
             return locations.Select(s => s.ZoneId).ToList();
-        }
+
+        return new List<string>();
+    }
+
+    public static List<string> ToCountryIds(this string timezoneId)
+    {
+        if (TzdbDateTimeZoneSource.Default is { } source &&
+            source.ZoneLocations?
+                .Where(key => key.ZoneId.Equals(timezoneId)) is IEnumerable<TzdbZoneLocation> locations)
+            return locations.Select(s => s.CountryCode).ToList();
 
         return new List<string>();
     }

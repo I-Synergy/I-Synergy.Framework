@@ -13,7 +13,7 @@ public interface IViewModelDialog<TEntity> : IViewModelSelectedItem<TEntity>
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    event EventHandler<SubmitEventArgs<TEntity>> Submitted;
+    event EventHandler<SubmitEventArgs<TEntity>>? Submitted;
 
     Task SubmitAsync(TEntity e, bool validateUnderlayingProperties = true);
 }

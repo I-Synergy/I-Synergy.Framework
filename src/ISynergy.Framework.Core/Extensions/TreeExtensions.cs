@@ -35,7 +35,7 @@ public static class TreeExtensions
     /// <param name="node">The node.</param>
     /// <param name="key">The key.</param>
     /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
-    public static TreeNode<TKey, TModel> FindNode<TKey, TModel>(this TreeNode<TKey, TModel> node, TKey key)
+    public static TreeNode<TKey, TModel>? FindNode<TKey, TModel>(this TreeNode<TKey, TModel> node, TKey key)
         where TKey : struct
         where TModel : class
     {
@@ -103,9 +103,9 @@ public static class TreeExtensions
     /// <param name="node">The tree.</param>
     /// <returns>IEnumerable&lt;System.Object&gt;.</returns>
     public static IEnumerable<TModel> FlattenDataList<TKey, TModel>(this TreeNode<TKey, TModel> node)
-        where TKey : struct
-        where TModel : class =>
-        node.Flatten().Select(s => s.Data).ToList();
+    where TKey : struct
+    where TModel : class =>
+    node.Flatten().Select(s => s.Data!).ToList();
 
 
     /// <summary>
@@ -115,7 +115,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="nodes">The data.</param>
     /// <returns>TreeNode&lt;T&gt;.</returns>
-    public static TreeNode<TKey, TModel> ToTree<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
+    public static TreeNode<TKey, TModel>? ToTree<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
         where TKey : struct
         where TModel : class
     {
@@ -125,7 +125,7 @@ public static class TreeExtensions
         {
             var tree = array[0] as Tree<TKey, TModel>;
             var parents = new Stack<TreeNode<TKey, TModel>>();
-            parents.Push(tree);
+            parents.Push(tree!);
 
             for (int i = 1; i < nodes.Count() - 1; i++)
             {
@@ -142,6 +142,7 @@ public static class TreeExtensions
         }
         return null;
     }
+
     /// <summary>
     /// Gets the node by identifier.
     /// </summary>
@@ -150,7 +151,7 @@ public static class TreeExtensions
     /// <param name="nodes">The nodes.</param>
     /// <param name="key">The identifier.</param>
     /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
-    public static TreeNode<TKey, TModel> GetNodeById<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes, TKey key)
+    public static TreeNode<TKey, TModel>? GetNodeById<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes, TKey key)
         where TKey : struct
         where TModel : class
     {
@@ -161,7 +162,7 @@ public static class TreeExtensions
 
             var foundChild = node.Children.GetNodeById(key);
 
-            if (foundChild != null)
+            if (foundChild is not null)
                 return foundChild;
         }
 
@@ -175,7 +176,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="nodes">The nodes.</param>
     /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
-    public static TreeNode<TKey, TModel> GetSelectedNode<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
+    public static TreeNode<TKey, TModel>? GetSelectedNode<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
         where TKey : struct
         where TModel : class
     {
@@ -186,7 +187,7 @@ public static class TreeExtensions
 
             var selectedChild = node.Children.GetSelectedNode();
 
-            if (selectedChild != null)
+            if (selectedChild is not null)
                 return selectedChild;
         }
 

@@ -37,7 +37,7 @@ public static class EnumUtility
 
         foreach (var name in Enum.GetNames(enumType).EnsureNotNull())
         {
-            var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetRuntimeField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
+            var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetRuntimeField(name)!.GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
 
             if (enumMemberAttribute.Value == str)
             {

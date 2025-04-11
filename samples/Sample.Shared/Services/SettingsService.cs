@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
@@ -15,9 +16,9 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
     private readonly string _settingsFolder;
     private readonly ILogger _logger;
 
-    private TLocalSettings _localSettings;
-    private TRoamingSettings _roamingSettings;
-    private TGlobalSettings _globalSettings;
+    private TLocalSettings? _localSettings;
+    private TRoamingSettings? _roamingSettings;
+    private TGlobalSettings? _globalSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsService{TLocalSettings, TRoamingSettings, TGlobalSettings}"/> class.
@@ -112,7 +113,7 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
     }
 
     public T GetGlobalSetting<T>(string name, T defaultvalue) where T : IComparable<T> =>
-        _globalSettings.GetPropertyValue(name, defaultvalue);
+        _globalSettings!.GetPropertyValue(name, defaultvalue);
 
 
     public void ClearSettings()
@@ -121,11 +122,11 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
         _roamingSettings = null;
     }
 
-    public TLocalSettings LocalSettings => _localSettings;
-    public TRoamingSettings RoamingSettings => _roamingSettings;
-    public TGlobalSettings GlobalSettings => _globalSettings;
+    public TLocalSettings LocalSettings => Argument.IsNotNull(_localSettings);
+    public TRoamingSettings RoamingSettings => Argument.IsNotNull(_roamingSettings);
+    public TGlobalSettings GlobalSettings => Argument.IsNotNull(_globalSettings);
 
-    ILocalSettings ISettingsService.LocalSettings => _localSettings;
-    IRoamingSettings ISettingsService.RoamingSettings => _roamingSettings;
-    IGlobalSettings ISettingsService.GlobalSettings => _globalSettings;
+    ILocalSettings ISettingsService.LocalSettings => Argument.IsNotNull(_localSettings);
+    IRoamingSettings ISettingsService.RoamingSettings => Argument.IsNotNull(_roamingSettings);
+    IGlobalSettings ISettingsService.GlobalSettings => Argument.IsNotNull(_globalSettings);
 }

@@ -87,7 +87,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// <summary>
     /// The origin
     /// </summary>
-    private UtmCoordinate _origin;
+    private UtmCoordinate? _origin;
     /// <summary>
     /// The zone
     /// </summary>
@@ -209,7 +209,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// which is the latitude closer to the aequator.
     /// </summary>
     /// <value>The origin.</value>
-    public UtmCoordinate Origin
+    public UtmCoordinate? Origin
     {
         get
         {
@@ -472,7 +472,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// </summary>
     /// <param name="obj">The object to compare with the current instance.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is null || !(obj is UtmGrid))
             return false;

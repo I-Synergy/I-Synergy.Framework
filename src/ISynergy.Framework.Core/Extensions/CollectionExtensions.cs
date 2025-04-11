@@ -6,7 +6,6 @@ using System.Data;
 
 namespace ISynergy.Framework.Core.Extensions;
 
-#nullable disable
 /// <summary>
 /// Extensions for the <see cref="ICollection" /> and <see cref="Collection{T}" /> classes.
 /// </summary>
@@ -400,7 +399,7 @@ public static class CollectionExtensions
     /// <typeparam name="T">The type of elements.</typeparam>
     /// <param name="existingSet">The existing set.</param>
     /// <param name="comparer">The comparer.</param>
-    public static void Sort<T>(this IList<T> existingSet, Func<T, T, int> comparer = null)
+    public static void Sort<T>(this IList<T> existingSet, Func<T, T, int>? comparer = null)
     {
         Argument.IsNotNull(existingSet);
 
@@ -415,7 +414,7 @@ public static class CollectionExtensions
 
                 if (comparer is null)
                 {
-                    reshuffle = ((IComparable)o1).CompareTo(o2) > 0;
+                    reshuffle = ((o1 as IComparable)?.CompareTo(o2) ?? 0) > 0;
                 }
                 else
                 {

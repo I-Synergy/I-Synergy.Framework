@@ -19,7 +19,7 @@ public class MessengerRegisterUnregisterTest
         private set;
     }
 
-    public Exception ReceivedContentException
+    public Exception? ReceivedContentException
     {
         get;
         private set;
@@ -31,19 +31,19 @@ public class MessengerRegisterUnregisterTest
         private set;
     }
 
-    public string ReceivedContentStringA1
+    public string? ReceivedContentStringA1
     {
         get;
         private set;
     }
 
-    public string ReceivedContentStringA2
+    public string? ReceivedContentStringA2
     {
         get;
         private set;
     }
 
-    public string ReceivedContentStringB
+    public string? ReceivedContentStringB
     {
         get;
         private set;
@@ -64,8 +64,7 @@ public class MessengerRegisterUnregisterTest
             true,
             m =>
             {
-                TestMessageGeneric<Exception> exceptionMessage =
-                    m as TestMessageGeneric<Exception>;
+                var exceptionMessage = m as TestMessageGeneric<Exception>;
                 if (exceptionMessage is not null)
                 {
                     ReceivedContentException =
@@ -73,8 +72,7 @@ public class MessengerRegisterUnregisterTest
                     return;
                 }
 
-                TestMessageGeneric<DateTime> dateTimeMessage =
-                    m as TestMessageGeneric<DateTime>;
+                var dateTimeMessage = m as TestMessageGeneric<DateTime>;
                 if (dateTimeMessage is not null)
                 {
                     ReceivedContentDateTime1 =
@@ -82,7 +80,7 @@ public class MessengerRegisterUnregisterTest
                     return;
                 }
 
-                TestMessageGeneric<string> stringMessage = m as TestMessageGeneric<string>;
+                var stringMessage = m as TestMessageGeneric<string>;
                 if (stringMessage is not null)
                 {
                     ReceivedContentStringA1 = stringMessage.Content;
@@ -186,8 +184,7 @@ public class MessengerRegisterUnregisterTest
             {
                 receivedMessages++;
 
-                TestMessageGeneric<DateTime> dateTimeMessage =
-                    m as TestMessageGeneric<DateTime>;
+                var dateTimeMessage = m as TestMessageGeneric<DateTime>;
                 if (dateTimeMessage is not null)
                 {
                     ReceivedContentDateTime1 =
@@ -195,7 +192,7 @@ public class MessengerRegisterUnregisterTest
                     return;
                 }
 
-                TestMessageGeneric<string> stringMessage = m as TestMessageGeneric<string>;
+                var stringMessage = m as TestMessageGeneric<string>;
                 if (stringMessage is not null)
                 {
                     ReceivedContentStringA1 = stringMessage.Content;
@@ -237,7 +234,7 @@ public class MessengerRegisterUnregisterTest
 
     public class TestMessageGeneric<T> : TestMessageGenericBase
     {
-        public T Content
+        public T? Content
         {
             get;
             set;
@@ -258,14 +255,14 @@ public class MessengerRegisterUnregisterTest
             true,
             m =>
             {
-                TestMessageA messageA = m as TestMessageA;
+                var messageA = m as TestMessageA;
                 if (messageA is not null)
                 {
                     ReceivedContentStringA1 = messageA.Content;
                     return;
                 }
 
-                TestMessageB messageB = m as TestMessageB;
+                var messageB = m as TestMessageB;
                 if (messageB is not null)
                 {
                     ReceivedContentStringB = messageB.Content;
@@ -314,7 +311,7 @@ public class MessengerRegisterUnregisterTest
                     ReceivedContentStringA1 = messageA.Content;
                 }
 
-                TestMessageAa messageAa = m as TestMessageAa;
+                var messageAa = m as TestMessageAa;
                 if (messageAa is not null)
                 {
                     ReceivedContentStringA2 = messageAa.Content;
@@ -693,7 +690,7 @@ public class MessengerRegisterUnregisterTest
     }
 
     private static bool _result;
-    private static object _context;
+    private static object? _context;
 
     public static void DoSomethingStatic(bool result)
     {
@@ -713,13 +710,13 @@ public class MessengerRegisterUnregisterTest
         ReceivedContentDateTime2 = DateTime.MinValue;
         ReceivedContentException = null;
 
-        _context = null;
+        _context = null!;
         _result = false;
     }
 
     public class TestMessageA
     {
-        public string Content
+        public string? Content
         {
             get;
             set;
@@ -732,7 +729,7 @@ public class MessengerRegisterUnregisterTest
 
     public class TestMessageB
     {
-        public string Content
+        public string? Content
         {
             get;
             set;
@@ -745,13 +742,13 @@ public class MessengerRegisterUnregisterTest
 
     private class TestRecipient
     {
-        public string ReceivedContentA
+        public string? ReceivedContentA
         {
             get;
             private set;
         }
 
-        public string ReceivedContentB
+        public string? ReceivedContentB
         {
             get;
             private set;

@@ -39,7 +39,7 @@ public sealed partial class SignUpControl : UserControl
     {
         if (DataContext is AuthenticationViewModel viewModel && viewModel.Modules.FirstOrDefault() is { } module)
         {
-            ComboBox_Modules.SelectedItems.Add(module);
+            ComboBox_Modules.SelectedItems.EnsureNotNull().Add(module);
         }
 
     }

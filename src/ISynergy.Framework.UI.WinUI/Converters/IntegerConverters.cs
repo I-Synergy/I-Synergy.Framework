@@ -102,7 +102,7 @@ public class IntegerToStringConverter : IValueConverter
     {
         if (value is not null)
         {
-            return value.ToString();
+            return value.ToString()!;
         }
 
         return "0";

@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions.Messages;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.MessageBus.Abstractions.Messages;
 
 namespace ISynergy.Framework.MessageBus.Models;
 
@@ -7,6 +8,7 @@ namespace ISynergy.Framework.MessageBus.Models;
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 public class HubMessage<TEntity> : IHubMessage<TEntity>
+    where TEntity : class
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="HubMessage{TEntity}" /> class.
@@ -14,12 +16,14 @@ public class HubMessage<TEntity> : IHubMessage<TEntity>
     /// <param name="channel">The channel.</param>
     /// <param name="event">The event.</param>
     /// <param name="data">The data.</param>
-    public HubMessage(string channel, string @event, TEntity data = default)
+    public HubMessage(string channel, string @event, TEntity data)
     {
+        Argument.IsNotNull(data);
+
         Channel = channel;
         Event = @event;
         Data = data;
-        ContentType = data?.GetType().Name;
+        ContentType = data.GetType().Name;
     }
 
     /// <summary>
@@ -44,7 +48,7 @@ public class HubMessage<TEntity> : IHubMessage<TEntity>
     /// Gets or sets the tag.
     /// </summary>
     /// <value>The tag.</value>
-    public string Tag { get; set; }
+    public string Tag { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the type of the content.

@@ -11,7 +11,7 @@ internal class NugetService(IHttpClientFactory httpClientFactory, IOptions<Nuget
 {
     private readonly NugetOptions _nugetOptions = options.Value;
 
-    public async Task<NugetResponse> GetIndexAsync(string packageId, CancellationToken cancellationToken = default)
+    public async Task<NugetResponse?> GetIndexAsync(string packageId, CancellationToken cancellationToken = default)
     {
         using HttpClient client = httpClientFactory.CreateClient();
         Uri url = new Uri($"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/index.json");
@@ -31,7 +31,10 @@ internal class NugetService(IHttpClientFactory httpClientFactory, IOptions<Nuget
 
     public async Task<List<PackageVersion>> ListVersionAsync(string packageId, CancellationToken cancellationToken = default)
     {
-        NugetResponse response = await GetIndexAsync(packageId, cancellationToken);
+        var response = await GetIndexAsync(packageId, cancellationToken);
+
+        if (response is null)
+            return new List<PackageVersion>();
 
         return response.Versions.Select(version => new PackageVersion(packageId, version, true)).ToList();
     }
@@ -56,13 +59,13 @@ internal class NugetService(IHttpClientFactory httpClientFactory, IOptions<Nuget
                 StreamReader errorReader = process.StandardError;
                 while (!outputReader.EndOfStream)
                 {
-                    string text = outputReader.ReadLine();
+                    var text = outputReader.ReadLine();
                     streamWriter.WriteLine(text);
                 }
 
                 while (!errorReader.EndOfStream)
                 {
-                    string text = errorReader.ReadLine();
+                    var text = errorReader.ReadLine();
                     streamWriter.WriteLine(text);
                 }
 

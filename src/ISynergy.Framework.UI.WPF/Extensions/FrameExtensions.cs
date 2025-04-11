@@ -16,11 +16,12 @@ public static class FrameExtensions
     /// <param name="sourcePageType">Type of the source page.</param>
     /// <param name="parameter">The parameter.</param>
     /// <returns>IView.</returns>
-    public static IView NavigateToView(this Frame frame, Type sourcePageType, object parameter)
+    public static IView? NavigateToView(this Frame frame, Type sourcePageType, object parameter)
     {
-        IView navigationalView = default;
+        var navigationalView = Activator.CreateInstance(sourcePageType) as IView;
 
-        navigationalView = Activator.CreateInstance(sourcePageType) as IView;
+        if (navigationalView is null)
+            return null;
 
         if (parameter is IViewModel viewModel)
             navigationalView.ViewModel = viewModel;

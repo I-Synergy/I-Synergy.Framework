@@ -13,6 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization\ISynergy.Framework.Synchronization.csproj" />
 	</ItemGroup>
 </Project>

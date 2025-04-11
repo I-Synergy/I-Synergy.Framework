@@ -39,7 +39,7 @@ public class ReflectionExtensionsTests
     public void GetIdentityPropertyTest()
     {
         Assert.IsNotNull(_product.GetIdentityProperty());
-        Assert.AreEqual(nameof(Product.ProductId), _product.GetIdentityProperty().Name);
+        Assert.AreEqual(nameof(Product.ProductId), _product.GetIdentityProperty()!.Name);
     }
 
     /// <summary>

@@ -6,7 +6,6 @@
     xmlns:c="using:ISynergy.Framework.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -25,9 +24,9 @@
             ItemsSource="{Binding Items}"
             SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Behaviors>
-                <ic:EventTriggerBehavior EventName="DoubleTapped">
-                    <ic:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
-                </ic:EventTriggerBehavior>
+                <i:EventTriggerBehavior EventName="DoubleTapped">
+                    <i:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
+                </i:EventTriggerBehavior>
             </i:Interaction.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>

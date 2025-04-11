@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -57,8 +58,16 @@ public class StringToGeometryConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-        value.ToString().ToGeometry();
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is null)
+            return null!;
+
+        if (value is string geometry && geometry.ToGeometry() is Geometry result)
+            return result;
+        else
+            return null!;
+    }
 
     /// <summary>
     /// Converts the back.

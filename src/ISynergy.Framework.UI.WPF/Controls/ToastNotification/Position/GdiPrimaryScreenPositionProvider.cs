@@ -18,7 +18,7 @@ public class GdiPrimaryScreenPositionProvider : IPositionProvider
     private double WorkAreaHeight => SystemParameters.WorkArea.Height / _dpiRatioY;
     private double WorkAreaWidth => SystemParameters.WorkArea.Width / _dpiRatioX;
 
-    public System.Windows.Window ParentWindow { get; }
+    public System.Windows.Window? ParentWindow { get; }
     public EjectDirection EjectDirection { get; private set; }
 
     public GdiPrimaryScreenPositionProvider(
@@ -27,6 +27,7 @@ public class GdiPrimaryScreenPositionProvider : IPositionProvider
         double offsetY)
     {
         _corner = corner;
+
         using (var gfx = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
         {
             _dpiRatioX = gfx.DpiX / 96F;
@@ -201,10 +202,8 @@ public class GdiPrimaryScreenPositionProvider : IPositionProvider
     }
 
 #pragma warning disable CS0067
-    public event EventHandler UpdatePositionRequested;
-
-    public event EventHandler UpdateEjectDirectionRequested;
-
-    public event EventHandler UpdateHeightRequested;
+    public event EventHandler? UpdatePositionRequested;
+    public event EventHandler? UpdateEjectDirectionRequested;
+    public event EventHandler? UpdateHeightRequested;
 #pragma warning restore CS0067
 }

@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -42,7 +43,7 @@ public sealed partial class App : Application
         : base(new SplashScreenOptions
         {
             AssetStreamProvider = () => Task.FromResult(
-                Assembly.GetAssembly(typeof(App))?.GetManifestResourceStream("Sample.Assets.gta.mp4")),
+                Assembly.GetAssembly(typeof(App))?.GetManifestResourceStream("Sample.Assets.gta.mp4")!),
             ContentType = "video/mp4",
             SplashScreenType = SplashScreenTypes.Video
         })
@@ -54,14 +55,14 @@ public sealed partial class App : Application
 
     protected override IHostBuilder CreateHostBuilder()
     {
-        var mainAssembly = Assembly.GetAssembly(typeof(App));
+        var mainAssembly = Argument.IsNotNull(Assembly.GetAssembly(typeof(App)));
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly);
 
         return new HostBuilder()
             .ConfigureHostConfiguration(builder =>
             {
-                builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
+                builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json")!);
             })
             .ConfigureLogging((logging, configuration) =>
             {
@@ -72,7 +73,7 @@ public sealed partial class App : Application
                 services.TryAddScoped<TenantProcessor>();
 
                 services.TryAddSingleton<ICameraService, CameraService>();
-            }, f => f.Name.StartsWith(typeof(App).Namespace))
+            }, f => f.Name!.StartsWith(typeof(App).Namespace!))
             .ConfigureOpenTelemetryLogging(
                 infoService,
                 tracing => { },
@@ -149,7 +150,7 @@ public sealed partial class App : Application
         }
     }
 
-    protected override async void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
         await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);
@@ -162,14 +163,13 @@ public sealed partial class App : Application
             {
                 _logger.LogTrace("Saving refresh token");
 
-                _settingsService.LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetService<IContext>().ToEnvironmentalRefreshToken();
+                _settingsService.LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetRequiredService<IContext>().ToEnvironmentalRefreshToken();
                 _settingsService.SaveLocalSettings();
 
                 _logger.LogTrace("Setting culture");
-                if (_settingsService.GlobalSettings is not null)
+                if (_settingsService.GlobalSettings is not null &&
+                    CultureInfo.DefaultThreadCurrentCulture!.Clone() is CultureInfo culture)
                 {
-                    var culture = CultureInfo.DefaultThreadCurrentCulture.Clone() as CultureInfo;
-
                     culture.NumberFormat.CurrencySymbol = "€";
 
                     culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
@@ -202,7 +202,7 @@ public sealed partial class App : Application
         }
     }
 
-    protected override void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
+    protected override void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
     {
         base.CurrentDomain_FirstChanceException(sender, e);
     }

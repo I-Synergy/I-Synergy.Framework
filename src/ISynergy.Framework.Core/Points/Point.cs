@@ -364,7 +364,7 @@ public class Point : IComparable<Point>
     /// 
     /// <returns>Return <see langword="true"/> if objects are equal.</returns>
     /// 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return (obj is Point) ? (this == (Point)obj) : false;
     }
@@ -413,11 +413,13 @@ public class Point : IComparable<Point>
     /// </summary>
     /// <param name="other">An object to compare with this instance.</param>
     /// <returns>A value that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance precedes <paramref name="other" /> in the sort order.  Zero This instance occurs in the same position in the sort order as <paramref name="other" />. Greater than zero This instance follows <paramref name="other" /> in the sort order.</returns>
-    public int CompareTo(Point other)
+    public int CompareTo(Point? other)
     {
-        var line = this.Y.CompareTo(other.Y);
+        var line = this.Y.CompareTo(other!.Y);
+
         if (line == 0)
             return this.X.CompareTo(other.X);
+
         return line;
     }
 }

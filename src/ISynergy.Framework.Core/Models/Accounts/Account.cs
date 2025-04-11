@@ -13,7 +13,12 @@ public class Account : BaseModel
     /// <summary>
     /// Initializes a new instance of the <see cref="Account"/> class.
     /// </summary>
-    public Account() { AccountId = Guid.NewGuid(); }
+    public Account()
+        : base()
+    {
+        AccountId = Guid.NewGuid();
+        Modules = new List<Module>();
+    }
 
     /// <summary>
     /// Gets or sets the Account_Id property value.
@@ -92,6 +97,12 @@ public class Account : BaseModel
 /// <seealso cref="Account" />
 public class AccountFull : Account
 {
+    public AccountFull()
+        : base()
+    {
+        Users = new List<UserFull>();
+    }
+
     /// <summary>
     /// Gets or sets the Users property value.
     /// </summary>

@@ -7,7 +7,6 @@
     xmlns:c="using:ISynergy.Framework.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:ISynergy.Framework.Core.Models"
     xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -33,9 +32,9 @@
                             <PathIcon Data="{x:Bind Symbol, Converter={StaticResource StringToGeometryConverter}}" />
                         </NavigationViewItem.Icon>
                         <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{x:Bind Command}" CommandParameter="{x:Bind CommandParameter}" />
-                            </ic:EventTriggerBehavior>
+                            <i:EventTriggerBehavior EventName="Tapped">
+                                <i:InvokeCommandAction Command="{x:Bind Command}" CommandParameter="{x:Bind CommandParameter}" />
+                            </i:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </NavigationViewItem>
                 </DataTemplate>

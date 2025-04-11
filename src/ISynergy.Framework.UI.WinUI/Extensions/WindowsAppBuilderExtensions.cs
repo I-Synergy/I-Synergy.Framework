@@ -71,6 +71,9 @@ public static class WindowsAppBuilderExtensions
 
             var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
 
+            if (mainAssembly is null)
+                throw new ArgumentNullException(nameof(mainAssembly));
+
             services.Configure<Features>(context.Configuration.GetSection(nameof(Features)).BindWithReload);
             services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
@@ -130,8 +133,8 @@ public static class WindowsAppBuilderExtensions
                 assemblies.Add(Assembly.Load(item));
 
         foreach (var item in referencedAssemblies.Where(x =>
-            x.Name.StartsWith("ISynergy.Framework.UI") ||
-            x.Name.StartsWith("ISynergy.Framework.Mvvm")))
+            x.Name!.StartsWith("ISynergy.Framework.UI") ||
+            x.Name!.StartsWith("ISynergy.Framework.Mvvm")).EnsureNotNull())
             assemblies.Add(Assembly.Load(item));
 
         services.RegisterAssemblies(assemblies);
@@ -153,7 +156,7 @@ public static class WindowsAppBuilderExtensions
         services.RegisterWindows(windowTypes);
     }
 
-    public static ResourceDictionary AddToResourceDictionary<T>(this ResourceDictionary resources, IScopedContextService scopedContextService, string key = null, Func<T> implementation = null)
+    public static ResourceDictionary AddToResourceDictionary<T>(this ResourceDictionary resources, IScopedContextService scopedContextService, string? key = null, Func<T>? implementation = null)
     {
         if (string.IsNullOrEmpty(key))
             key = typeof(T).Name;

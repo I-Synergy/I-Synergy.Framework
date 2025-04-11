@@ -82,20 +82,28 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
+        BackgroundCommand = new AsyncRelayCommand(OpenBackgroundAsync);
     }
+
 
     public abstract Task ShellLoadedAsync();
 
     public abstract Task InitializeFirstRunAsync();
 
 
-    private void NavigationService_BackStackChanged(object sender, EventArgs e) => RaisePropertyChanged(nameof(IsBackEnabled));
+    private void NavigationService_BackStackChanged(object? sender, EventArgs e) => RaisePropertyChanged(nameof(IsBackEnabled));
 
     /// <summary>
     /// Opens the settings asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     protected abstract Task OpenSettingsAsync();
+
+    /// <summary>
+    /// Sets the background of the application asynchronous.
+    /// </summary>
+    /// <returns></returns>
+    protected abstract Task OpenBackgroundAsync();
 
     /// <summary>
     /// Sign out.
@@ -176,13 +184,13 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void LanguageVM_Submitted(object sender, SubmitEventArgs<Languages> e)
+    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
     {
         if (sender is LanguageViewModel vm)
             vm.Submitted -= LanguageVM_Submitted;
 
-        _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Language = e.Result;
-        _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
+        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
+        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
 
         e.Result.SetLocalizationLanguage();
 
@@ -213,17 +221,17 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void ThemeVM_Submitted(object sender, SubmitEventArgs<Style> e)
+    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<Style> e)
     {
         if (sender is ThemeViewModel vm)
             vm.Submitted -= ThemeVM_Submitted;
 
         if (e.Result is { } style)
         {
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Theme = style.Theme;
-            _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.Color = style.Color;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
 
-            if (_commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
@@ -266,14 +274,14 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             PrimaryItems?.Clear();
             SecondaryItems?.Clear();
 
-            (RestartUpdateCommand as IDisposable)?.Dispose();
-            (SignInCommand as IDisposable)?.Dispose();
-            (LanguageCommand as IDisposable)?.Dispose();
-            (ColorCommand as IDisposable)?.Dispose();
-            (HelpCommand as IDisposable)?.Dispose();
-            (SettingsCommand as IDisposable)?.Dispose();
-            (BackgroundCommand as IDisposable)?.Dispose();
-            (FeedbackCommand as IDisposable)?.Dispose();
+            RestartUpdateCommand?.Dispose();
+            SignInCommand?.Dispose();
+            LanguageCommand?.Dispose();
+            ColorCommand?.Dispose();
+            HelpCommand?.Dispose();
+            SettingsCommand?.Dispose();
+            BackgroundCommand?.Dispose();
+            FeedbackCommand?.Dispose();
 
             // Finally dispose context and other resources
             base.Dispose(disposing);

@@ -11,13 +11,13 @@ public class WeakFunc<TResult>
     /// <summary>
     /// The static function
     /// </summary>
-    private Func<TResult> _staticFunc;
+    private Func<TResult>? _staticFunc;
 
     /// <summary>
     /// Gets or sets the method.
     /// </summary>
     /// <value>The method.</value>
-    protected MethodInfo Method { get; set; }
+    protected MethodInfo? Method { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is static.
@@ -44,7 +44,7 @@ public class WeakFunc<TResult>
                 return _staticFunc.Method.Name;
             }
 
-            return Method.Name;
+            return Method?.Name ?? string.Empty;
         }
     }
 
@@ -52,19 +52,19 @@ public class WeakFunc<TResult>
     /// Gets or sets the function reference.
     /// </summary>
     /// <value>The function reference.</value>
-    protected WeakReference FuncReference { get; set; }
+    protected WeakReference? FuncReference { get; set; }
 
     /// <summary>
     /// Gets or sets the live reference.
     /// </summary>
     /// <value>The live reference.</value>
-    protected object LiveReference { get; set; }
+    protected object? LiveReference { get; set; }
 
     /// <summary>
     /// Gets or sets the reference.
     /// </summary>
     /// <value>The reference.</value>
-    protected WeakReference Reference { get; set; }
+    protected WeakReference? Reference { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WeakFunc{TResult}"/> class.
@@ -89,8 +89,13 @@ public class WeakFunc<TResult>
     /// <param name="target">The target.</param>
     /// <param name="func">The function.</param>
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-    public WeakFunc(object target, Func<TResult> func, bool keepTargetAlive = false)
+    public WeakFunc(object? target, Func<TResult>? func, bool keepTargetAlive = false)
     {
+        if (func is null)
+        {
+            throw new ArgumentNullException(nameof(func));
+        }
+
         if (func.Method.IsStatic)
         {
             _staticFunc = func;
@@ -156,7 +161,7 @@ public class WeakFunc<TResult>
     /// Gets the target.
     /// </summary>
     /// <value>The target.</value>
-    public object Target
+    public object? Target
     {
         get
         {
@@ -173,7 +178,7 @@ public class WeakFunc<TResult>
     /// Gets the function target.
     /// </summary>
     /// <value>The function target.</value>
-    protected object FuncTarget
+    protected object? FuncTarget
     {
         get
         {
@@ -195,7 +200,7 @@ public class WeakFunc<TResult>
     /// Executes this instance.
     /// </summary>
     /// <returns>TResult.</returns>
-    public TResult Execute()
+    public TResult? Execute()
     {
         if (_staticFunc is not null)
         {
@@ -211,11 +216,11 @@ public class WeakFunc<TResult>
                     || FuncReference is not null)
                 && funcTarget is not null)
             {
-                return (TResult)Method.Invoke(funcTarget, null);
+                return (TResult?)Method.Invoke(funcTarget, null);
             }
         }
 
-        return default(TResult);
+        return default;
     }
 
     /// <summary>

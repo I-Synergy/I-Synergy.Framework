@@ -122,7 +122,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
           new Year { Value = 0, Description = LanguageService.Default.GetString("SearchAll") }
         ];
 
-        SelectedYear = Years.FirstOrDefault(e => e.Value == DateTime.Now.Date.Year);
+        SelectedYear = Years.First(e => e.Value == DateTime.Now.Date.Year);
     }
 
     /// <summary>
@@ -197,7 +197,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVM_Submitted;

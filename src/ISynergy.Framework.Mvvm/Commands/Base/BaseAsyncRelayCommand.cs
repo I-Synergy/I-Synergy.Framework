@@ -67,7 +67,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                 PropertyChanged?.Invoke(this, IsCancellationRequestedChangedEventArgs);
             }
 
-            if (!isAlreadyCompletedOrNull && value != null)
+            if (!isAlreadyCompletedOrNull && value is not null)
             {
                 MonitorTask(value);
             }
@@ -130,7 +130,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         {
             var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
 
-            if (ex.InnerException != null)
+            if (ex.InnerException is not null)
                 await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
             else
                 await exceptionHandlerService.HandleExceptionAsync(ex);

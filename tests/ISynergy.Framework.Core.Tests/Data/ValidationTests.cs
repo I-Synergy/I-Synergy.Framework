@@ -21,12 +21,12 @@ public class ValidationTests
     {
         using ModelFixture<string> model = new()
         {
-            Value = null,
+            Value = null!,
             Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<string> i = arg as ModelFixture<string>;
+                var i = arg as ModelFixture<string>;
 
-                if (string.IsNullOrEmpty(i.Value))
+                if (string.IsNullOrEmpty(i!.Value))
                 {
                     i.AddValidationError(nameof(i.Value), _valueIsNull);
                 }
@@ -46,9 +46,9 @@ public class ValidationTests
             Value = "192.168.1.0",
             Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<string> i = arg as ModelFixture<string>;
+                var i = arg as ModelFixture<string>;
 
-                if (string.IsNullOrEmpty(i.Value))
+                if (string.IsNullOrEmpty(i!.Value))
                 {
                     i.AddValidationError(nameof(i.Value), _valueIsNull);
                 }
@@ -71,9 +71,9 @@ public class ValidationTests
             Value = 9999,
             Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<int> i = arg as ModelFixture<int>;
+                var i = arg as ModelFixture<int>;
 
-                if (!Enumerable.Range(1, 100).Contains(i.Value))
+                if (!Enumerable.Range(1, 100).Contains(i!.Value))
                 {
                     i.AddValidationError(nameof(i.Value), _portNumberNotInRange);
                 }
@@ -93,9 +93,9 @@ public class ValidationTests
             Value = 80,
             Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<int> i = arg as ModelFixture<int>;
+                var i = arg as ModelFixture<int>;
 
-                if (!Enumerable.Range(1, 500).Contains(i.Value))
+                if (!Enumerable.Range(1, 500).Contains(i!.Value))
                 {
                     i.AddValidationError(nameof(i.Value), _portNumberNotInRange);
                 }
@@ -117,9 +117,9 @@ public class ValidationTests
             Value = "",
             Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<string> i = arg as ModelFixture<string>;
+                var i = arg as ModelFixture<string>;
 
-                if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
+                if (!Enumerable.Range(1, 35).Contains(i!.Value.Length))
                 {
                     i.AddValidationError(nameof(i.Value), _stringLengthNotInRange);
                 }
@@ -139,9 +139,9 @@ public class ValidationTests
             Value = "192.168.1.0",
             Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<string> i = arg as ModelFixture<string>;
+                var i = arg as ModelFixture<string>;
 
-                if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
+                if (!Enumerable.Range(1, 35).Contains(i!.Value.Length))
                 {
                     i.AddValidationError(nameof(i.Value), _stringLengthNotInRange);
                 }

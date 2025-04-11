@@ -19,7 +19,7 @@ public class BytesToImageSourceConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is byte[] bytes)
         {
@@ -58,9 +58,9 @@ public class ByteArrayToStreamConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
-        Stream result = null;
+        Stream? result = null;
 
         if (value is byte[] bytes)
         {

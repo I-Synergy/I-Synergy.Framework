@@ -38,7 +38,7 @@ public class SignUpViewModel : ViewModel
     /// <value>The registration mail.</value>
     public string Mail
     {
-        get { return GetValue<string>()?.ToLowerInvariant(); }
+        get { return GetValue<string>()!.ToLowerInvariant(); }
         set { SetValue(value?.ToLowerInvariant()); }
     }
 
@@ -128,10 +128,10 @@ public class SignUpViewModel : ViewModel
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand SignUpCommand { get; private set; }
-    public AsyncRelayCommand ValidateMailCommand { get; private set; }
-    public AsyncRelayCommand SignInCommand { get; private set; }
-    public AsyncRelayCommand SelectModulesCommand { get; private set; }
+    public AsyncRelayCommand? SignUpCommand { get; private set; }
+    public AsyncRelayCommand? ValidateMailCommand { get; private set; }
+    public AsyncRelayCommand? SignInCommand { get; private set; }
+    public AsyncRelayCommand? SelectModulesCommand { get; private set; }
 
     public SignUpViewModel(
         ICommonServices commonServices,
@@ -205,7 +205,7 @@ public class SignUpViewModel : ViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<Module>> e)
+    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<List<Module>> e)
     {
         if (sender is ViewModelSelectionDialog<Module> vm)
             vm.Submitted -= SelectionVM_Submitted;
@@ -223,7 +223,7 @@ public class SignUpViewModel : ViewModel
 
     private async Task ValidateMailAsync()
     {
-        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_commonServices.ScopedContextService.GetService<IContext>())))
+        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_commonServices.ScopedContextService.GetRequiredService<IContext>())))
         {
             ArePickersAvailable = true;
 
@@ -246,7 +246,7 @@ public class SignUpViewModel : ViewModel
     private Task SignInAsync() =>
         _commonServices.NavigationService.NavigateModalAsync<SignInViewModel>();
 
-    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SelectedCountry))
         {
@@ -261,8 +261,8 @@ public class SignUpViewModel : ViewModel
             }
             else
             {
-                TimeZones = null;
-                SelectedTimeZone = null;
+                TimeZones = new List<string>();
+                SelectedTimeZone = string.Empty;
             }
         }
     }
@@ -278,18 +278,18 @@ public class SignUpViewModel : ViewModel
             if (Mail.StartsWith(GenericConstants.UsernamePrefixTest, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixTest, "");
-                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Test;
+                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
             }
             // remove this prefix and set environment to local.
             else if (Mail.StartsWith(GenericConstants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
             {
                 emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixLocal, "");
-                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Local;
+                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Local;
             }
             else
             {
                 emailaddress = Mail;
-                _commonServices.ScopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Production;
+                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Production;
             }
 
             if (!HasErrors &&
@@ -316,6 +316,23 @@ public class SignUpViewModel : ViewModel
                     await SignInAsync();
                 }
             }
+        }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            SignInCommand?.Dispose();
+            SignInCommand = null;
+            SignUpCommand?.Dispose();
+            SignUpCommand = null;
+            ValidateMailCommand?.Dispose();
+            ValidateMailCommand = null;
+            SelectModulesCommand?.Dispose();
+            SelectModulesCommand = null;
+
+            base.Dispose(disposing);
         }
     }
 }

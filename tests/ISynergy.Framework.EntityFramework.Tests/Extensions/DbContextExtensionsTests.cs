@@ -13,8 +13,7 @@ public class DbContextExtensionsTests
 {
     private TestDataContext _dbContext;
 
-    [TestInitialize]
-    public void Initialize()
+    public DbContextExtensionsTests()
     {
         var contextOptions = new DbContextOptionsBuilder<TestDataContext>()
            .UseInMemoryDatabase("DbContextExtensionsTests")
@@ -66,7 +65,12 @@ public class DbContextExtensionsTests
     {
         // Arrange
         var cancellationToken = new CancellationToken();
-        var testRecord = new TestModel { Id = 4 };
+        var testRecord = new TestModel
+        {
+            Id = 4,
+            Memo = "Test",
+            CreatedBy = "Test"
+        };
 
         // Act
         var result = await _dbContext.AddItemAsync<TestEntity, TestModel>(testRecord, cancellationToken);

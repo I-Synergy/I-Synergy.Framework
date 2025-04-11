@@ -4,8 +4,6 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net9.0-windows</TargetFramework>
 		<RootNamespace>Sample</RootNamespace>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
 		<AssemblyName>Sample</AssemblyName>
 		<StartupObject>Sample.Program</StartupObject>

@@ -17,12 +17,12 @@ public class SubmitEventArgs<TEntity> : EventArgs
     /// Gets the owner.
     /// </summary>
     /// <value>The owner.</value>
-    public object Owner { get; }
+    public object? Owner { get; }
     /// <summary>
     /// Gets the target property.
     /// </summary>
     /// <value>The target property.</value>
-    public string TargetProperty { get; }
+    public string? TargetProperty { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SubmitEventArgs{TEntity}"/> class.

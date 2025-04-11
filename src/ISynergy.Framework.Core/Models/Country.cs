@@ -24,7 +24,7 @@ public class Country : BaseModel
     /// <value>The ISO2 code.</value>
     [Required]
     [StringLength(2)]
-    public string ISO2Code { get; set; }
+    public string? ISO2Code { get; set; }
 
     /// <summary>
     /// Gets or sets the CountryISO property value.
@@ -32,7 +32,7 @@ public class Country : BaseModel
     /// <value>The country iso.</value>
     [Required]
     [StringLength(255)]
-    public string CountryISO { get; set; }
+    public string? CountryISO { get; set; }
 
     /// <summary>
     /// Gets or sets the CountryPrefix property value.
@@ -40,14 +40,14 @@ public class Country : BaseModel
     /// <value>The country prefix.</value>
     [Required]
     [StringLength(128)]
-    public string CountryPrefix { get; set; }
+    public string? CountryPrefix { get; set; }
 
     /// <summary>
     /// Regex string for zipcode validation
     /// </summary>
     [Required]
     [StringLength(128)]
-    public string ZipCodeRegex { get; set; }
+    public string? ZipCodeRegex { get; set; }
 
     /// <summary>
     /// Gets or sets the IsEU property value.
@@ -66,5 +66,10 @@ public class Country : BaseModel
     /// Gets or sets the Currency property value.
     /// </summary>
     /// <value>The currency.</value>
-    public Currency Currency { get; set; }
+    public Currency? Currency { get; set; }
+
+    public Country()
+    {
+        Cultures = new List<Culture>();
+    }
 }

@@ -21,7 +21,7 @@ public class WarningMessage : MessageBase<WarningDisplayPart>
 
     protected override void UpdateDisplayOptions(WarningDisplayPart displayPart, MessageOptions options)
     {
-        if (options.FontSize != null)
+        if (options.FontSize is not null)
             displayPart.Text.FontSize = options.FontSize.Value;
 
         displayPart.CloseButton.Visibility = options.ShowCloseButton ? Visibility.Visible : Visibility.Collapsed;

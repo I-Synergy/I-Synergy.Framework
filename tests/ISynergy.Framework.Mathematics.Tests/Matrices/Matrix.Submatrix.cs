@@ -52,7 +52,9 @@ public partial class MatrixTest
         actual = Matrix.Get(value, [0, 2], null);
         Assert.IsTrue(Matrix.IsEqual(actual, expected));
 
+#pragma warning disable CS0618 // Type or member is obsolete
         actual = Matrix.Submatrix(value, null, null);
+#pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(Matrix.IsEqual(actual, value));
     }
 
@@ -133,7 +135,9 @@ public partial class MatrixTest
         actual = Matrix.Get(value, null, j0, j1 + 1);
         Assert.IsTrue(Matrix.IsEqual(actual, expected2));
 
+#pragma warning disable CS0618 // Type or member is obsolete
         actual = Matrix.Submatrix(value, null, null);
+#pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(Matrix.IsEqual(actual, value));
     }
 
@@ -144,7 +148,9 @@ public partial class MatrixTest
         int[] idx = [0, 0, 0, 5, 5, 5, 5];
 
 
+#pragma warning disable CS0618 // Type or member is obsolete
         double[][] groups = value.Subgroups(idx);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         Assert.AreEqual(2, groups.Length);
         Assert.AreEqual(3, groups[0].Length);
@@ -167,7 +173,9 @@ public partial class MatrixTest
         int[] idx = [0, 0, 0, 4, 4, 4, 4];
 
 
+#pragma warning disable CS0618 // Type or member is obsolete
         double[][] groups = value.Subgroups(idx, 5);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         Assert.AreEqual(5, groups.Length);
 

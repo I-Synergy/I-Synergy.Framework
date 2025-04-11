@@ -18,7 +18,7 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Scoped)]
 public partial class Window : ContentDialog, IWindow
 {
-    private IViewModel _viewModel;
+    private IViewModel? _viewModel;
 
     /// <summary>
     /// Default constructor.
@@ -37,7 +37,7 @@ public partial class Window : ContentDialog, IWindow
     /// Gets or sets the viewmodel and data context for a window.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel ViewModel
+    public IViewModel? ViewModel
     {
         get => _viewModel;
         set
@@ -47,7 +47,7 @@ public partial class Window : ContentDialog, IWindow
         }
     }
 
-    private void Window_Unloaded(object sender, RoutedEventArgs e)
+    private void Window_Unloaded(object? sender, RoutedEventArgs e)
     {
         throw new NotImplementedException();
     }
@@ -58,30 +58,22 @@ public partial class Window : ContentDialog, IWindow
     /// <param name="parent">The parent.</param>
     /// <param name="name">The name.</param>
     /// <returns>FrameworkElement.</returns>
-    private static FrameworkElement GetDescendantFromName(DependencyObject parent, string name)
+    private static FrameworkElement? GetDescendantFromName(DependencyObject parent, string name)
     {
         var count = VisualTreeHelper.GetChildrenCount(parent);
 
         if (count < 1)
-        {
             return null;
-        }
 
         for (var i = 0; i < count; i++)
         {
             if (VisualTreeHelper.GetChild(parent, i) is FrameworkElement frameworkElement)
             {
                 if (frameworkElement.Name == name)
-                {
                     return frameworkElement;
-                }
 
-                frameworkElement = GetDescendantFromName(frameworkElement, name);
-
-                if (frameworkElement is not null)
-                {
-                    return frameworkElement;
-                }
+                if (GetDescendantFromName(frameworkElement, name) is FrameworkElement descendant)
+                    return descendant;
             }
         }
 

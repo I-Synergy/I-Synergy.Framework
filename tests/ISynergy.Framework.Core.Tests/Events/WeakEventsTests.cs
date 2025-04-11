@@ -36,7 +36,7 @@ public class WeakEventsTests
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        Assert.IsNull(sleepyReference.Target);
+        Assert.IsNull(sleepyReference!.Target);
     }
 
     [TestMethod]

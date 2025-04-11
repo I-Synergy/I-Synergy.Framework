@@ -37,35 +37,37 @@ public class CameraService : ICameraService
     /// </summary>
     /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
     /// <returns>FileResult.</returns>
-    public async Task<FileResult> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024)
+    public async Task<FileResult?> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024)
     {
         var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
-        DeviceInformation device = devices.FirstOrDefault(); // Finds one device, my webcam
-
-        var settings = new MediaCaptureInitializationSettings();
-        settings.VideoDeviceId = device.Id;
-        settings.StreamingCaptureMode = StreamingCaptureMode.Video;
-        settings.PhotoCaptureSource = PhotoCaptureSource.Photo;
-
-        var mediaCapture = new MediaCapture();
-        await mediaCapture.InitializeAsync(settings);
-
-        var capture = await mediaCapture.PrepareLowLagPhotoCaptureAsync(ImageEncodingProperties.CreatePng()).AsTask();
-        var photo = await capture.CaptureAsync().AsTask();
-        var bitmap = photo.Frame.SoftwareBitmap;
-
-        if (photo.Frame is not null)
+        var device = devices.FirstOrDefault(); // Finds one device, my webcam
+        if (device is not null)
         {
-            if (photo.Frame.Size.ToLong() <= maxFileSize)
-            {
-                var fileName = $"Capture {DateTime.Now}";
-                return new FileResult(
-                    $"{fileName}.png",
-                    fileName,
-                    () => photo.Frame.AsStreamForRead());
-            }
+            var settings = new MediaCaptureInitializationSettings();
+            settings.VideoDeviceId = device.Id;
+            settings.StreamingCaptureMode = StreamingCaptureMode.Video;
+            settings.PhotoCaptureSource = PhotoCaptureSource.Photo;
 
-            await _dialogService.ShowErrorAsync(string.Format(LanguageService.Default.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
+            var mediaCapture = new MediaCapture();
+            await mediaCapture.InitializeAsync(settings);
+
+            var capture = await mediaCapture.PrepareLowLagPhotoCaptureAsync(ImageEncodingProperties.CreatePng()).AsTask();
+            var photo = await capture.CaptureAsync().AsTask();
+            var bitmap = photo.Frame.SoftwareBitmap;
+
+            if (photo.Frame is not null)
+            {
+                if (photo.Frame.Size.ToLong() <= maxFileSize)
+                {
+                    var fileName = $"Capture {DateTime.Now}";
+                    return new FileResult(
+                        $"{fileName}.png",
+                        fileName,
+                        () => photo.Frame.AsStreamForRead());
+                }
+
+                await _dialogService.ShowErrorAsync(string.Format(LanguageService.Default.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
+            }
         }
 
         return null;

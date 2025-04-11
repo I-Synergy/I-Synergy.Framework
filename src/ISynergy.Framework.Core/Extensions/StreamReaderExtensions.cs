@@ -20,9 +20,11 @@ public static class StreamReaderExtensions
     {
         // http://stackoverflow.com/a/17457085/262032
         var type = typeof(StreamReader).GetTypeInfo();
-        char[] charBuffer = (char[])type.GetDeclaredField("_charBuffer").GetValue(reader);
-        int charPos = (int)type.GetDeclaredField("_charPos").GetValue(reader);
-        int byteLen = (int)type.GetDeclaredField("_byteLen").GetValue(reader);
+
+        // Use null-forgiving operator since we know these fields exist in StreamReader
+        char[] charBuffer = (char[])type.GetDeclaredField("_charBuffer")!.GetValue(reader)!;
+        int charPos = (int)type.GetDeclaredField("_charPos")!.GetValue(reader)!;
+        int byteLen = (int)type.GetDeclaredField("_byteLen")!.GetValue(reader)!;
 
         // The number of bytes that the already-read characters need when encoded.
         int numReadBytes = reader.CurrentEncoding.GetByteCount(charBuffer, 0, charPos);

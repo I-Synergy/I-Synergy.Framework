@@ -17,8 +17,7 @@ public class ContextExtensionsTests
 
     private const string TestRefreshToken = "test-refresh-token";
 
-    [TestInitialize]
-    public void Setup()
+    public ContextExtensionsTests()
     {
         _contextMock = new Mock<IContext>();
         _profileMock = new Mock<IProfile>();
@@ -75,7 +74,7 @@ public class ContextExtensionsTests
     public void ToEnvironmentalRefreshToken_NullProfile_ReturnsEmptyString()
     {
         // Arrange
-        _contextMock.Setup(c => c.Profile).Returns((IProfile)null);
+        _contextMock.Setup(c => c.Profile).Returns((IProfile)null!);
         _contextMock.Setup(c => c.Environment).Returns(SoftwareEnvironments.Production);
 
         // Act
@@ -89,7 +88,7 @@ public class ContextExtensionsTests
     public void ToEnvironmentalRefreshToken_NullToken_ReturnsEmptyString()
     {
         // Arrange
-        _profileMock.Setup(p => p.Token).Returns((Token)null);
+        _profileMock.Setup(p => p.Token).Returns((Token)null!);
         _contextMock.Setup(c => c.Environment).Returns(SoftwareEnvironments.Production);
 
         // Act

@@ -4,7 +4,7 @@ namespace ISynergy.Framework.Core.Models.Results;
 
 public class Result<T> : Result, IResult<T>
 {
-    public T Data { get; }
+    public T? Data { get; }
 
     public Result()
         : base()

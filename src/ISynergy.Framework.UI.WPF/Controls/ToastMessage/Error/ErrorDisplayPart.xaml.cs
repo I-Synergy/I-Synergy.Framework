@@ -16,6 +16,6 @@ public partial class ErrorDisplayPart : NotificationDisplayPart
 
     private void OnClose(object sender, RoutedEventArgs e)
     {
-        Notification.Close();
+        Notification?.Close();
     }
 }

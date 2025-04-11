@@ -34,7 +34,7 @@ public static class ReflectionExtensions
     /// <returns></returns>
     public static IEnumerable<Type> GetViewModelTypes() =>
     AppDomain.CurrentDomain.GetAssemblies()
-        .Where(e => !e.FullName.Contains("Microsoft") && !e.IsDynamic)
+        .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
         .SelectMany(assembly => assembly.GetTypes())
         .Where(type => type.GetInterface(nameof(IViewModel), false) is not null
             && (type.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(type.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
@@ -51,7 +51,7 @@ public static class ReflectionExtensions
     {
         foreach (var assembly in assemblies)
             foreach (var type in assembly.GetTypes())
-                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
+                if (Array.Exists(type.GetInterfaces(), a => a is not null && a.FullName is not null && a.FullName.Equals(typeof(IView).FullName))
                 && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
                 && type.Name != GenericConstants.View
                 && type.Name != GenericConstants.Page
@@ -66,10 +66,10 @@ public static class ReflectionExtensions
     /// <returns></returns>
     public static IEnumerable<Type> GetViewTypes() =>
         AppDomain.CurrentDomain.GetAssemblies()
-            .Where(e => !e.FullName.Contains("Microsoft") && !e.IsDynamic)
+            .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
             .SelectMany(assembly => assembly.GetTypes())
             .Where(type => type.GetInterfaces()
-                .Any(a => a != null && a.FullName != null && a.FullName.Equals(typeof(IView).FullName))
+                .Any(a => a is not null && a.FullName is not null && a.FullName.Equals(typeof(IView).FullName))
                 && (type.Name.EndsWith(GenericConstants.View) || type.Name.EndsWith(GenericConstants.Page))
                 && type.Name != GenericConstants.View
                 && type.Name != GenericConstants.Page
@@ -85,7 +85,7 @@ public static class ReflectionExtensions
     {
         foreach (var assembly in assemblies)
             foreach (var type in assembly.GetTypes())
-                if (Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
+                if (Array.Exists(type.GetInterfaces(), a => a is not null && a.FullName is not null && a.FullName.Equals(typeof(IWindow).FullName))
                 && type.Name.EndsWith(GenericConstants.Window)
                 && type.Name != GenericConstants.Window
                 && !type.IsAbstract
@@ -99,9 +99,9 @@ public static class ReflectionExtensions
     /// <returns></returns>
     public static IEnumerable<Type> GetWindowTypes() =>
         AppDomain.CurrentDomain.GetAssemblies()
-            .Where(e => !e.FullName.Contains("Microsoft") && !e.IsDynamic)
+            .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
             .SelectMany(assembly => assembly.GetTypes())
-            .Where(type => Array.Exists(type.GetInterfaces(), a => a != null && a.FullName != null && a.FullName.Equals(typeof(IWindow).FullName))
+            .Where(type => Array.Exists(type.GetInterfaces(), a => a is not null && a.FullName is not null && a.FullName.Equals(typeof(IWindow).FullName))
                 && type.Name.EndsWith(GenericConstants.Window)
                 && type.Name != GenericConstants.Window
                 && !type.IsAbstract
@@ -182,7 +182,7 @@ public static class ReflectionExtensions
         services.Register(viewmodel, abstraction);
     }
 
-    private static void Register(this IServiceCollection services, Type type, Type abstraction)
+    private static void Register(this IServiceCollection services, Type type, Type? abstraction)
     {
         if (type.IsSingleton())
         {

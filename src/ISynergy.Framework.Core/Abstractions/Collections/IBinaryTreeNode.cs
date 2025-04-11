@@ -19,7 +19,7 @@ public interface IBinaryTreeNode<TNode>
     ///   under this node.
     /// </summary>
     /// 
-    TNode[] Children { get; set; }
+    TNode?[] Children { get; set; }
 
     /// <summary>
     ///   Gets whether this node is a leaf (has no children).

@@ -119,20 +119,20 @@ public class ControlPositionProvider : IPositionProvider
         UpdatePositionRequested?.Invoke(this, EventArgs.Empty);
     }
 
-    private void ParentWindowOnLocationChanged(object sender, EventArgs eventArgs)
+    private void ParentWindowOnLocationChanged(object? sender, EventArgs eventArgs)
     {
         RequestUpdatePosition();
     }
 
-    private void ParentWindowOnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+    private void ParentWindowOnSizeChanged(object? sender, SizeChangedEventArgs sizeChangedEventArgs)
     {
         RequestUpdatePosition();
     }
+
+    public event EventHandler? UpdatePositionRequested;
+
 #pragma warning disable CS0067
-    public event EventHandler UpdatePositionRequested;
-
-    public event EventHandler UpdateEjectDirectionRequested;
-
-    public event EventHandler UpdateHeightRequested;
+    public event EventHandler? UpdateEjectDirectionRequested;
+    public event EventHandler? UpdateHeightRequested;
 #pragma warning restore CS0067
 }

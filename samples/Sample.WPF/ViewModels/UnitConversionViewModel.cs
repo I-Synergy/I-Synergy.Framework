@@ -92,9 +92,9 @@ public class UnitConversionViewModel : ViewModelNavigation<object>
         SelectedOutputUnit = (int)Units.metre;
     }
 
-    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName.Equals(nameof(SelectedInputUnit)))
+        if (e.PropertyName!.Equals(nameof(SelectedInputUnit)))
         {
             InputUnit = ((Units)SelectedInputUnit).GetSymbol();
         }

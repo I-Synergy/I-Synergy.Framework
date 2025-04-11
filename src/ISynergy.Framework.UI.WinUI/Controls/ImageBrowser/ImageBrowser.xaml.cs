@@ -15,7 +15,7 @@ public sealed partial class ImageBrowser : UserControl
     /// Gets or sets the Image property value.
     /// </summary>
     /// <value>The file.</value>
-    public byte[] FileBytes
+    public byte[]? FileBytes
     {
         get { return (byte[])GetValue(FileProperty); }
         set { SetValue(FileProperty, value); }
@@ -67,7 +67,7 @@ public sealed partial class ImageBrowser : UserControl
     /// browse image as an asynchronous operation.
     /// </summary>
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-    private async void Button_Browse_Tapped(object sender, TappedRoutedEventArgs e)
+    private async void Button_Browse_Tapped(object? sender, TappedRoutedEventArgs e)
     {
         if (ServiceLocator.Default.GetService<IFileService<FileResult>>() is { } fileService)
         {
@@ -80,14 +80,15 @@ public sealed partial class ImageBrowser : UserControl
                 FileName = result.First().FileName;
                 DateTime = System.DateTime.Now;
             }
-        };
+        }
+        ;
     }
 
     /// <summary>
     /// take picture as an asynchronous operation.
     /// </summary>
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-    private async void Button_Camera_Tapped(object sender, TappedRoutedEventArgs e)
+    private async void Button_Camera_Tapped(object? sender, TappedRoutedEventArgs e)
     {
         if (ServiceLocator.Default.GetService<ICameraService>() is { } cameraService)
         {
@@ -100,13 +101,14 @@ public sealed partial class ImageBrowser : UserControl
                 FileName = result.FileName;
                 DateTime = System.DateTime.Now;
             }
-        };
+        }
+        ;
     }
 
     /// <summary>
     /// Clears the image.
     /// </summary>
-    private void Button_Clear_Tapped(object sender, TappedRoutedEventArgs e)
+    private void Button_Clear_Tapped(object? sender, TappedRoutedEventArgs e)
     {
         FileBytes = null;
         ContentType = string.Empty;
@@ -116,13 +118,13 @@ public sealed partial class ImageBrowser : UserControl
     /// paste from clipboard as an asynchronous operation.
     /// </summary>
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-    private async void Button_Paste_Tapped(object sender, TappedRoutedEventArgs e)
+    private async void Button_Paste_Tapped(object? sender, TappedRoutedEventArgs e)
     {
         if (ServiceLocator.Default.GetService<IClipboardService>() is { } clipboardService &&
             await clipboardService.GetImageFromClipboardAsync() is { } imageResult)
         {
             FileBytes = imageResult.FileBytes;
-            ContentType = imageResult.ContentType;
+            ContentType = imageResult.ContentType!;
             FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
             DateTime = System.DateTime.Now;
         }

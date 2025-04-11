@@ -12,7 +12,7 @@ public class PropertyChangedMessageTest
     [TestMethod]
     public void TestPropertyChangedMessage()
     {
-        ExecuteTest(null, null);
+        ExecuteTest(null, null!);
     }
 
     [TestMethod]
@@ -20,20 +20,20 @@ public class PropertyChangedMessageTest
     {
         DateTime previousDateTime = DateTime.Now - TimeSpan.FromDays(1);
         DateTime currentDateTime = DateTime.Now + TimeSpan.FromDays(1);
-        const Exception PreviousException = null;
+        const Exception? PreviousException = null;
         InvalidOperationException currentException = new();
 
         DateTime receivedPreviousDateTime = DateTime.MinValue;
         DateTime receivedCurrentDateTime = DateTime.MinValue;
-        Exception receivedPreviousException = null;
-        Exception receivedCurrentException = null;
+        Exception? receivedPreviousException = null;
+        Exception? receivedCurrentException = null;
 
-        object receivedSender = null;
-        object receivedTarget = null;
+        object? receivedSender = null;
+        object? receivedTarget = null;
 
         bool messageWasReceived = false;
 
-        TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException);
+        TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
 
         MessageService.Reset();
 
@@ -46,7 +46,7 @@ public class PropertyChangedMessageTest
                 receivedTarget = m.Target;
                 messageWasReceived = true;
 
-                PropertyChangedMessage<InvalidOperationException> exceptionMessage =
+                var exceptionMessage =
                     m as PropertyChangedMessage<InvalidOperationException>;
 
                 if (exceptionMessage is not null && exceptionMessage.PropertyName == nameof(TestViewModel.MyException))
@@ -58,7 +58,7 @@ public class PropertyChangedMessageTest
                     return;
                 }
 
-                PropertyChangedMessage<DateTime> dateMessage = m as PropertyChangedMessage<DateTime>;
+                var dateMessage = m as PropertyChangedMessage<DateTime>;
 
                 if (dateMessage is not null && dateMessage.PropertyName == nameof(TestViewModel.MyDate))
                 {
@@ -119,20 +119,20 @@ public class PropertyChangedMessageTest
     {
         DateTime previousDateTime = DateTime.Now - TimeSpan.FromDays(1);
         DateTime currentDateTime = DateTime.Now + TimeSpan.FromDays(1);
-        const Exception PreviousException = null;
+        const Exception? PreviousException = null;
         InvalidOperationException currentException = new();
 
         DateTime receivedPreviousDateTime = DateTime.MinValue;
         DateTime receivedCurrentDateTime = DateTime.MinValue;
-        Exception receivedPreviousException = null;
-        Exception receivedCurrentException = null;
+        Exception? receivedPreviousException = null;
+        Exception? receivedCurrentException = null;
 
-        object receivedSender = null;
-        object receivedTarget = null;
+        object? receivedSender = null;
+        object? receivedTarget = null;
 
         bool messageWasReceived = false;
 
-        TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException);
+        TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
 
         MessageService.Reset();
 
@@ -213,7 +213,7 @@ public class PropertyChangedMessageTest
     [TestMethod]
     public void TestPropertyChangedMessageWithSender()
     {
-        ExecuteTest(this, null);
+        ExecuteTest(this, null!);
     }
 
     [TestMethod]
@@ -224,7 +224,7 @@ public class PropertyChangedMessageTest
 
     // Helpers
 
-    private void ExecuteTest(object sender, object target)
+    private void ExecuteTest(object? sender, object target)
     {
         const string PropertyName1 = "MyProperty1";
         const string PropertyName2 = "MyProperty2";
@@ -233,13 +233,13 @@ public class PropertyChangedMessageTest
         const string TestOldContent1 = "ijkl";
         const string TestOldContent2 = "mnop";
 
-        string receivedNewContent1 = null;
-        string receivedNewContent2 = null;
-        string receivedOldContent1 = null;
-        string receivedOldContent2 = null;
+        string? receivedNewContent1 = null;
+        string? receivedNewContent2 = null;
+        string? receivedOldContent1 = null;
+        string? receivedOldContent2 = null;
 
-        object receivedSender = null;
-        object receivedTarget = null;
+        object? receivedSender = null;
+        object? receivedTarget = null;
 
         MessageService.Reset();
 

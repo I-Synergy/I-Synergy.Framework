@@ -18,13 +18,14 @@ public static class ReflectionExtensions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>System.String.</returns>
-    public static string GetIdentityPropertyName<T>() where T : class
+    public static string? GetIdentityPropertyName<T>() where T : class
     {
         var result = typeof(T).GetProperties().Where(
                 e => e.IsDefined(typeof(IdentityAttribute)));
 
         if (result.Any())
             return result.First().Name;
+
         return null;
     }
 
@@ -34,7 +35,7 @@ public static class ReflectionExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="_self">The self.</param>
     /// <returns>System.Object.</returns>
-    public static object GetIdentityValue<T>(this T _self) where T : class
+    public static object? GetIdentityValue<T>(this T _self) where T : class
     {
         var result = _self.GetType().GetProperties().Where(
                 e => e.IsDefined(typeof(IdentityAttribute))
@@ -42,6 +43,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First().GetValue(_self);
+
         return null;
     }
 
@@ -61,8 +63,22 @@ public static class ReflectionExtensions
             );
 
         if (result.Any())
-            return (TResult)result.First().GetValue(_self);
-        return default(TResult);
+        {
+            var value = result.First().GetValue(_self);
+
+            // If value is null, return default value for TResult
+            if (value is null)
+                return default;
+
+            // If value is already of type TResult, return it directly
+            if (value is TResult typedValue)
+                return typedValue;
+
+            // Otherwise, try to convert it to TResult
+            return (TResult)Convert.ChangeType(value, typeof(TResult));
+        }
+
+        return default;
     }
 
     /// <summary>
@@ -70,7 +86,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>PropertyInfo.</returns>
-    public static PropertyInfo GetIdentityProperty<T>() where T : class
+    public static PropertyInfo? GetIdentityProperty<T>() where T : class
     {
         return typeof(T).GetProperties().FirstOrDefault(e => e.IsDefined(typeof(IdentityAttribute)));
     }
@@ -81,7 +97,7 @@ public static class ReflectionExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="_self">The self.</param>
     /// <returns>PropertyInfo.</returns>
-    public static PropertyInfo GetIdentityProperty<T>(this T _self) where T : class
+    public static PropertyInfo? GetIdentityProperty<T>(this T _self) where T : class
     {
         var result = _self.GetType().GetProperties().Where(
                 e => e.IsDefined(typeof(IdentityAttribute))
@@ -89,6 +105,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First();
+
         return null;
     }
 
@@ -118,7 +135,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>System.String.</returns>
-    public static string GetParentIdentityPropertyName<T>() where T : class
+    public static string? GetParentIdentityPropertyName<T>() where T : class
     {
         var result = typeof(T).GetProperties().Where(
                 e => e.IsDefined(typeof(ParentIdentityAttribute))
@@ -126,6 +143,7 @@ public static class ReflectionExtensions
 
         if (result.Any())
             return result.First().Name;
+
         return null;
     }
 
@@ -159,7 +177,7 @@ public static class ReflectionExtensions
         where TResult : IComparable<TResult>
     {
         var propInfo = _self.GetType().GetProperty(propertyName);
-        var prop = propInfo.GetValue(_self, null);
+        var prop = propInfo?.GetValue(_self, null);
 
         if (prop is TResult result)
             return result;
@@ -199,7 +217,7 @@ public static class ReflectionExtensions
     /// <param name="_self"></param>
     /// <param name="selector"></param>
     /// <returns></returns>
-    public static Property<TValue> GetProperty<T, TValue>(this T _self, Expression<Func<T, TValue>> selector)
+    public static Property<TValue>? GetProperty<T, TValue>(this T _self, Expression<Func<T, TValue>> selector)
         where T : class, IObservableClass
     {
         Expression body = selector;
@@ -228,8 +246,9 @@ public static class ReflectionExtensions
                 e => e.IsDefined(typeof(TitleAttribute))
             );
 
-        if (result.Any())
-            return result.First().GetValue(_self).ToString();
+        if (result is not null && result.Count() > 0)
+            return result.First().GetValue(_self)?.ToString() ?? string.Empty;
+
         return string.Empty;
     }
 
@@ -242,8 +261,16 @@ public static class ReflectionExtensions
     public static PropertyInfo GetParentIdentityProperty<T>() where T : class =>
         typeof(T).GetParentIdentityProperty();
 
-    public static PropertyInfo GetParentIdentityProperty<T>(this T _self) where T : class =>
-        _self.GetType().GetProperties().FirstOrDefault(e => e.IsDefined(typeof(ParentIdentityAttribute)));
+    public static PropertyInfo GetParentIdentityProperty<T>(this T _self)
+        where T : class
+    {
+        var property = _self.GetType().GetProperties().FirstOrDefault(e => e.IsDefined(typeof(ParentIdentityAttribute)));
+
+        if (property is null)
+            throw new InvalidOperationException("Parent identity property not found. Check with HasParentIdentityProperty first.");
+
+        return property;
+    }
 
     /// <summary>
     /// Gets the identity value.
@@ -285,7 +312,7 @@ public static class ReflectionExtensions
     public static List<Assembly> GetAllReferencedAssemblies(this Assembly _self)
     {
         var queue = new Queue<AssemblyName>(_self.GetReferencedAssemblies());
-        var alreadyProcessed = new HashSet<string>() { _self.FullName };
+        var alreadyProcessed = new HashSet<string>() { _self.FullName! };
         var result = new List<Assembly>() { _self };
 
         while (queue.Count > 0)
@@ -302,7 +329,7 @@ public static class ReflectionExtensions
             {
                 var newAssembly = Assembly.Load(name);
 
-                if (newAssembly != null)
+                if (newAssembly is not null)
                 {
                     if (!result.Contains(newAssembly))
                         result.Add(newAssembly);
@@ -325,7 +352,7 @@ public static class ReflectionExtensions
     public static AssemblyName[] GetAllReferencedAssemblyNames(this Assembly _self)
     {
         var queue = new Queue<AssemblyName>(_self.GetReferencedAssemblies());
-        var alreadyProcessed = new HashSet<string>() { _self.FullName };
+        var alreadyProcessed = new HashSet<string>() { _self.FullName! };
         var result = new List<AssemblyName>() { _self.GetName() };
 
         while (queue.Count > 0)
@@ -342,7 +369,7 @@ public static class ReflectionExtensions
             {
                 var newAssembly = Assembly.Load(name);
 
-                if (newAssembly != null && newAssembly.GetName() is AssemblyName assemblyName)
+                if (newAssembly is not null && newAssembly.GetName() is AssemblyName assemblyName)
                 {
                     if (!result.Contains(assemblyName))
                         result.Add(assemblyName);

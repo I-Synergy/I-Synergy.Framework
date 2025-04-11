@@ -4,7 +4,6 @@ using ISynergy.Framework.UI.Controls.ToastNotification.Events;
 using ISynergy.Framework.UI.Controls.ToastNotification.Lifetime;
 using ISynergy.Framework.UI.Controls.ToastNotification.Utilities;
 using System.Diagnostics;
-using System.Windows;
 
 namespace ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
 
@@ -13,19 +12,15 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
     private readonly TimeSpan _notificationLifetime;
     private readonly int _maximumNotificationCount;
 
-    private NotificationsList _notifications;
-    private Queue<INotification> _notificationsPending;
+    private Queue<INotification>? _notificationsPending;
 
-    private IInterval _interval;
+    private NotificationsList _notifications = new NotificationsList();
+    private IInterval _interval = new Interval();
 
     public TimeAndCountBasedLifetimeSupervisor(TimeSpan notificationLifetime, MaximumNotificationCount maximumNotificationCount)
     {
-        _notifications = new NotificationsList();
-
         _notificationLifetime = notificationLifetime;
         _maximumNotificationCount = maximumNotificationCount.Count;
-
-        _interval = new Interval();
     }
 
     public void PushNotification(INotification notification)
@@ -69,7 +64,7 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
         _notifications.TryRemove(notification.Id, out var removedNotification);
         RequestCloseNotification(new CloseNotificationEventArgs(removedNotification.Notification));
 
-        if (_notificationsPending != null && _notificationsPending.Any())
+        if (_notificationsPending is not null && _notificationsPending.Any())
         {
             var not = _notificationsPending.Dequeue();
             PushNotification(not);
@@ -85,9 +80,7 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
 
         _disposed = true;
         _interval?.Stop();
-        _interval = null;
         _notifications?.Clear();
-        _notifications = null;
         _notificationsPending?.Clear();
     }
 
@@ -139,6 +132,6 @@ public class TimeAndCountBasedLifetimeSupervisor : INotificationsLifetimeSupervi
         }
     }
 
-    public event EventHandler<ShowNotificationEventArgs> ShowNotificationRequested;
-    public event EventHandler<CloseNotificationEventArgs> CloseNotificationRequested;
+    public event EventHandler<ShowNotificationEventArgs>? ShowNotificationRequested;
+    public event EventHandler<CloseNotificationEventArgs>? CloseNotificationRequested;
 }

@@ -6,6 +6,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
@@ -20,23 +21,23 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
     private readonly ICommonServices _commonServices;
     private readonly ILogger _logger;
 
-    private SplashScreenOptions _splashScreenOptions;
-    private TaskCompletionSource<bool> _taskCompletion;
-    private Action _onLoadingComplete;
-    private DispatcherQueue _dispatcherQueue;
-    private Func<DispatcherQueue, Task>[] _tasks;
+    private SplashScreenOptions? _splashScreenOptions;
+    private TaskCompletionSource<bool>? _taskCompletion;
+    private Action? _onLoadingComplete;
+    private DispatcherQueue? _dispatcherQueue;
+    private Func<DispatcherQueue, Task>[]? _tasks;
 
     public ICommonServices CommonServices => _commonServices;
-    public SplashScreenOptions Configuration => _splashScreenOptions;
+    public SplashScreenOptions Configuration => _splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
 
     /// <summary>
     /// Occurs when [cancelled].
     /// </summary>
-    public event EventHandler Cancelled;
+    public event EventHandler? Cancelled;
     /// <summary>
     /// Occurs when [closed].
     /// </summary>
-    public event EventHandler Closed;
+    public event EventHandler? Closed;
 
     /// <summary>
     /// Gets or sets the close command.
@@ -158,12 +159,12 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
                         break;
 
                     CurrentTaskDescription = $"Executing task {i + 1} of {_tasks.Length}";
-                    await _tasks[i](_dispatcherQueue);
+                    await _tasks[i](_dispatcherQueue!);
                 }
 
                 IsInitialized = true;
 
-                _taskCompletion.SetResult(true);
+                _taskCompletion!.SetResult(true);
 
                 // Automatically complete loading if there are no loading options
                 if (_splashScreenOptions is null && !CanSkip)
@@ -175,7 +176,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
         catch (Exception ex)
         {
             _logger.LogError(ex, "Initialization failed");
-            _taskCompletion.SetException(ex);
+            _taskCompletion!.SetException(ex);
         }
         finally
         {
@@ -194,7 +195,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
         return Task.CompletedTask;
     }
 
-    public Task WaitForCompletionAsync() => _taskCompletion.Task;
+    public Task WaitForCompletionAsync() => _taskCompletion!.Task;
 
     /// <summary>
     /// Handles the <see cref="E:Cancelled" /> event.
@@ -230,11 +231,15 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
 
         var description = value.ToString();
         var fieldInfo = value.GetType().GetField(description);
+
+        if (fieldInfo is null)
+            return description;
+
         var attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
         if (attributes is not null && attributes.Length > 0)
         {
-            description = LanguageService.Default.GetString(attributes[0].Description);
+            description = LanguageService.Default.GetString(attributes[0].Description!);
         }
 
         return description;
@@ -245,7 +250,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="PropertyChangedEventArgs" /> instance containing the event data.</param>
-    public virtual void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public virtual void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
     }
 
@@ -276,7 +281,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
     {
         IsCancelled = true;
         OnCancelled(EventArgs.Empty);
-        _taskCompletion.TrySetCanceled();
+        _taskCompletion!.TrySetCanceled();
         return CloseAsync();
     }
 
@@ -302,12 +307,13 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
         if (disposing)
         {
             PropertyChanged -= OnPropertyChanged;
+
             _taskCompletion = null;
             _onLoadingComplete = null;
             _dispatcherQueue = null;
 
-            (CloseCommand as IDisposable)?.Dispose();
-            (CancelCommand as IDisposable)?.Dispose();
+            CloseCommand?.Dispose();
+            CancelCommand?.Dispose();
         }
     }
 }

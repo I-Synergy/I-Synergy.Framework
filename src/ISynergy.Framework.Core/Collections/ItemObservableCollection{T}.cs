@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Core.Collections;
 public sealed class ItemObservableCollection<T> : ObservableCollection<T>, IDisposable
     where T : INotifyPropertyChanged
 {
-    public event EventHandler<ItemPropertyChangedEventArgs<T>> ItemPropertyChanged;
+    public event EventHandler<ItemPropertyChangedEventArgs<T>>? ItemPropertyChanged;
 
     public ItemObservableCollection()
         : base()
@@ -25,9 +25,9 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>, IDisp
         CollectionChanged += item_CollectionChanged;
     }
 
-    private void item_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void item_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.NewItems != null)
+        if (e.NewItems is not null)
         {
             foreach (T item in e.NewItems)
             {
@@ -35,7 +35,7 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>, IDisp
             }
         }
 
-        if (e.OldItems != null)
+        if (e.OldItems is not null)
         {
             foreach (T item in e.OldItems)
             {
@@ -51,13 +51,13 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>, IDisp
         base.SetItem(index, item);
     }
 
-    private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        T item = (T)sender;
-        OnItemPropertyChanged(item, e.PropertyName);
+        if (sender is not null && sender is T item)
+            OnItemPropertyChanged(item, e.PropertyName);
     }
 
-    private void OnItemPropertyChanged(T item, string propertyName)
+    private void OnItemPropertyChanged(T item, string? propertyName)
     {
         ItemPropertyChanged?.Invoke(this, new ItemPropertyChangedEventArgs<T>(item, propertyName));
     }

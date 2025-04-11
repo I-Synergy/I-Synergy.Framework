@@ -76,7 +76,7 @@ namespace Sample.Synchronization.Controllers
             });
 
             var result = await remoteOrchestrator.ProvisionAsync(setup);
-            var options = DefaultJsonSerializers.Default();
+            var options = DefaultJsonSerializers.Default;
             return result is not null ? new JsonResult(result, options) : BadRequest();
         }
 
@@ -115,7 +115,7 @@ namespace Sample.Synchronization.Controllers
             });
 
             var result = await remoteOrchestrator.ProvisionAsync(setup);
-            var options = DefaultJsonSerializers.Default();
+            var options = DefaultJsonSerializers.Default;
             return result is not null ? new JsonResult(result, options) : BadRequest();
         }
     }

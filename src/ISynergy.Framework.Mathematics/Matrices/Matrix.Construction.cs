@@ -1104,8 +1104,12 @@ public static partial class Matrix
         double rowMin, double rowMax, double rowStepSize,
         double colMin, double colMax, double colStepSize)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         double[] x = Vector.Interval(rowMin, rowMax, rowStepSize);
+#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
         double[] y = Vector.Interval(colMin, colMax, colStepSize);
+#pragma warning restore CS0618 // Type or member is obsolete
         double[][] mesh = Matrix.Cartesian(x, y);
         return mesh;
     }

@@ -18,7 +18,7 @@ public class LanguageResource : MarkupExtension
     /// Gets or sets the key.
     /// </summary>
     /// <value>The key.</value>
-    public string Key { get; set; }
+    public string Key { get; set; } = string.Empty;
 
     /// <summary>
     /// Provides the value.

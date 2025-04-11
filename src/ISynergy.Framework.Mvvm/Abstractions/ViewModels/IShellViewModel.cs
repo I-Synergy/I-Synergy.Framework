@@ -11,10 +11,12 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 /// <seealso cref="IViewModel" />
 public interface IShellViewModel : IViewModel
 {
-    AsyncRelayCommand SettingsCommand { get; }
-    RelayCommand SignInCommand { get; }
+    AsyncRelayCommand? SettingsCommand { get; }
+    RelayCommand? SignInCommand { get; }
+
     ObservableCollection<NavigationItem> PrimaryItems { get; }
     ObservableCollection<NavigationItem> SecondaryItems { get; }
+
     Task ShellLoadedAsync();
     Task InitializeFirstRunAsync();
 }

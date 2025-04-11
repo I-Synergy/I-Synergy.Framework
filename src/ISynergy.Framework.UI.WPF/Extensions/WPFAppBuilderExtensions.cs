@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
@@ -15,7 +16,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
-using System.Windows;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -65,7 +65,7 @@ public static class WPFAppBuilderExtensions
         {
             services.AddOptions();
 
-            var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
+            var mainAssembly = Argument.IsNotNull(Assembly.GetAssembly(typeof(TApplication)));
 
             services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 

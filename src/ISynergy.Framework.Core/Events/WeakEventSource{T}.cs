@@ -28,7 +28,7 @@ public class WeakEventSource<TEventArgs>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The instance containing the event data.</param>
-    public void Raise(object sender, TEventArgs e)
+    public void Raise(object? sender, TEventArgs e)
     {
         lock (_handlers)
         {
@@ -42,6 +42,9 @@ public class WeakEventSource<TEventArgs>
     /// <param name="handler">The handler.</param>
     public void Subscribe(EventHandler<TEventArgs> handler)
     {
+        if (handler is null)
+            throw new ArgumentNullException(nameof(handler));
+
         var weakHandlers = handler
             .GetInvocationList()
             .Select(d => new WeakDelegate(d))
@@ -59,6 +62,9 @@ public class WeakEventSource<TEventArgs>
     /// <param name="handler">The handler.</param>
     public void Unsubscribe(EventHandler<TEventArgs> handler)
     {
+        if (handler is null)
+            return;
+
         lock (_handlers)
         {
             var index = _handlers.FindIndex(h => h.IsMatch(handler));
@@ -78,7 +84,7 @@ public class WeakEventSource<TEventArgs>
         /// <param name="target">The target.</param>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The instance containing the event data.</param>
-        private delegate void OpenEventHandler(object target, object sender, TEventArgs e);
+        private delegate void OpenEventHandler(object? target, object? sender, TEventArgs e);
 
         /// <summary>
         /// The open handler cache
@@ -110,7 +116,7 @@ public class WeakEventSource<TEventArgs>
             {
                 var expr = Expression.Lambda<OpenEventHandler>(
                     Expression.Call(
-                        Expression.Convert(target, method.DeclaringType),
+                        Expression.Convert(target, method.DeclaringType!),
                         method,
                         sender, e),
                     target, sender, e);
@@ -121,7 +127,7 @@ public class WeakEventSource<TEventArgs>
         /// <summary>
         /// The weak target
         /// </summary>
-        private readonly WeakReference _weakTarget;
+        private readonly WeakReference? _weakTarget;
 
         /// <summary>
         /// The method
@@ -139,6 +145,9 @@ public class WeakEventSource<TEventArgs>
         /// <param name="handler">The handler.</param>
         public WeakDelegate(Delegate handler)
         {
+            if (handler is null)
+                throw new ArgumentNullException(nameof(handler));
+
             _weakTarget = handler.Target is not null ? new WeakReference(handler.Target) : null;
             _method = handler.GetMethodInfo();
             _openHandler = _openHandlerCache.GetOrAdd(_method, CreateOpenHandler);
@@ -150,9 +159,9 @@ public class WeakEventSource<TEventArgs>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The instance containing the event data.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Invoke(object sender, TEventArgs e)
+        public bool Invoke(object? sender, TEventArgs e)
         {
-            object target = null;
+            object? target = null;
             if (_weakTarget is not null)
             {
                 target = _weakTarget.Target;

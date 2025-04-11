@@ -14,8 +14,7 @@ public class RelayCommandGenericTests
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public RelayCommandGenericTests()
     {
         // Setup mocks
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();

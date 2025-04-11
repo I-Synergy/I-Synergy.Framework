@@ -42,7 +42,7 @@ public class FileService : IFileService<FileResult>
     /// <param name="filename">The filename.</param>
     /// <param name="file">The file.</param>
     /// <returns>FileResult.</returns>
-    public async Task<FileResult> SaveFileAsync(string folder, string filename, byte[] file)
+    public async Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] file)
     {
         var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
         var createdFile = await storageFolder.CreateFileAsync(
@@ -125,7 +125,7 @@ public class FileService : IFileService<FileResult>
     /// <param name="filter"></param>
     /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
     /// <returns>System.Byte[].</returns>
-    public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
+    public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
             return result.First().File;
@@ -145,7 +145,7 @@ public class FileService : IFileService<FileResult>
     /// <returns>
     /// File data object, or null when user cancelled picking file
     /// </returns>
-    private async Task<List<FileResult>> PickFileAsync(string[] allowedTypes = null, bool multiple = false)
+    private async Task<List<FileResult>> PickFileAsync(string[]? allowedTypes = null, bool multiple = false)
     {
         var result = new List<FileResult>();
 

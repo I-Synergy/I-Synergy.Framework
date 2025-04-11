@@ -5,9 +5,9 @@ namespace ISynergy.Framework.UI.Controls.ToastNotification.Utilities;
 
 public class Interval : IInterval
 {
-    private DispatcherTimer _timer;
+    private DispatcherTimer? _timer;
 
-    public bool IsRunning => _timer != null && _timer.IsEnabled;
+    public bool IsRunning => _timer is not null && _timer.IsEnabled;
 
     public void Invoke(TimeSpan frequency, Action action, Dispatcher dispatcher)
     {

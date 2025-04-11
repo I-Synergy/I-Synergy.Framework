@@ -15,7 +15,7 @@ public partial class DependencyObjectCollection<T> : DependencyObjectCollection,
     /// Occurs when items in the collection are added, removed, or replaced.
     /// </summary>
     /// <returns></returns>
-    public event NotifyCollectionChangedEventHandler CollectionChanged;
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
     /// <summary>
     /// The old items

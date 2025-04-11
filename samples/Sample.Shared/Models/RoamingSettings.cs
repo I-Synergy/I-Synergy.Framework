@@ -8,7 +8,7 @@ public class RoamingSettings : ObservableClass, IRoamingSettings
     /// <summary>
     /// Gets or sets the SynchronizationSetting property value.
     /// </summary>
-    public SynchronizationSettings SynchronizationSetting
+    public SynchronizationSettings? SynchronizationSetting
     {
         get => GetValue<SynchronizationSettings>();
         set => SetValue(value);

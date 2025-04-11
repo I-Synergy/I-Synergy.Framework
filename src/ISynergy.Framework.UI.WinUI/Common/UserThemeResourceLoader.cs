@@ -22,7 +22,7 @@ public sealed class UserThemeResourceLoader : CustomXamlResourceLoader
     /// <param name="propertyName">Name of the property.</param>
     /// <param name="propertyType">Type of the property.</param>
     /// <returns>System.Object.</returns>
-    protected override object GetResource(string resourceId, string objectType, string propertyName, string propertyType)
+    protected override object? GetResource(string resourceId, string objectType, string propertyName, string propertyType)
     {
         return UserThemeResources.GetUriByPath(resourceId);
     }

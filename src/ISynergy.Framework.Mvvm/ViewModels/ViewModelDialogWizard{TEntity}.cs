@@ -98,7 +98,7 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="PropertyChangedEventArgs" /> instance containing the event data.</param>
-    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(sender, e);
 
@@ -171,9 +171,7 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
 
             // Dispose and clear navigation commands
             BackCommand?.Dispose();
-            BackCommand = null;
             NextCommand?.Dispose();
-            NextCommand = null;
 
             base.Dispose(disposing);
         }

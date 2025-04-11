@@ -13,8 +13,8 @@ public class GlobalizationOptionsTests
         var options = new GlobalizationOptions();
 
         // Assert
-        Assert.IsNull(options.DefaultCulture);
-        Assert.IsNull(options.SupportedCultures);
+        Assert.IsNotNull(options.DefaultCulture);
+        Assert.IsNotNull(options.SupportedCultures);
         Assert.AreEqual(RequestCultureProviderTypes.Route, options.ProviderType);
     }
 

@@ -13,7 +13,7 @@ public class ResultExtensionsTest : ControllerBase
     public void NoContentActionResultTest()
     {
         // Returns 204 (No content)
-        var result = Result<Product>.Success(default(Product));
+        var result = Result<Product>.Success(default(Product)!);
         var output = result.Match<Product, IActionResult>(
             value => value is not null ? Ok(value) : NoContent(),
             () => NotFound()

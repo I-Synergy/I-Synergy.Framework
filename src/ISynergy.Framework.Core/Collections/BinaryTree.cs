@@ -35,7 +35,7 @@ public class BinaryTree<TNode> : IEnumerable<TNode>
     ///   Gets the root node of this tree.
     /// </summary>
     /// 
-    public TNode Root { get; set; }
+    public TNode? Root { get; set; }
 
     /// <summary>
     ///   Returns an enumerator that iterates through the tree.

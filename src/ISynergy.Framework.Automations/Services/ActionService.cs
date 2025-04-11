@@ -46,7 +46,7 @@ public class ActionService : IActionService
     /// Calculates Schedule/Delay expiration when action is saved.
     /// </summary>
     /// <returns></returns>
-    public async Task<(TimeSpan Expiration, IAction UpcomingTask)> CalculateTimespanAsync()
+    public async Task<(TimeSpan Expiration, IAction? UpcomingTask)?> CalculateTimespanAsync()
     {
         var upcomingTask = _tasks.FirstOrDefault();
 
@@ -60,7 +60,7 @@ public class ActionService : IActionService
                 return (previousCompletedDateTime.Add(delayAction.Delay) - DateTimeOffset.Now, delayAction);
         }
 
-        return (TimeSpan.Zero, null);
+        return (TimeSpan.Zero, upcomingTask);
     }
 
     /// <summary>

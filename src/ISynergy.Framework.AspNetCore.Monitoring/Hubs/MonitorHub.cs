@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Models;
 using ISynergy.Framework.Monitoring.Enumerations;
 using Microsoft.AspNetCore.Authorization;
@@ -36,8 +37,11 @@ public class MonitorHub : Hub
     {
         _logger.LogInformation($"Client connected: {Context.ConnectionId}");
 
+        Argument.IsNotNull(Context);
+        Argument.IsNotNull(Context.User);
+
         var accountId = Context.User.GetAccountId();
-        var userId = Context.User.GetAccountId();
+        var userId = Context.User.GetUserId();
         var userName = Context.User.GetUserName();
 
         // add user to own Group
@@ -55,9 +59,12 @@ public class MonitorHub : Hub
     /// </summary>
     /// <param name="exception">The exception.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _logger.LogInformation($"Client disconnected: {Context.ConnectionId}");
+
+        Argument.IsNotNull(Context);
+        Argument.IsNotNull(Context.User);
 
         var accountId = Context.User.GetAccountId();
         var userId = Context.User.GetAccountId();

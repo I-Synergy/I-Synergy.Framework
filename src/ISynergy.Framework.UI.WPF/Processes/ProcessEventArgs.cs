@@ -48,7 +48,7 @@ public class ProcessEventArgs : EventArgs
     /// Gets the content.
     /// </summary>
     /// <value>The content.</value>
-    public string Content { get; }
+    public string? Content { get; }
 
     /// <summary>
     /// Gets or sets the code.

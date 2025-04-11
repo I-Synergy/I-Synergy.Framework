@@ -18,7 +18,7 @@ public static class NavigationExtensions
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     /// <exception cref="FileNotFoundException"></exception>
-    public static View CreatePage<TViewModel>(IScopedContextService scopedContextService, object parameter = null) where TViewModel : class, IViewModel
+    public static View CreatePage<TViewModel>(IScopedContextService scopedContextService, object? parameter = null) where TViewModel : class, IViewModel
         => CreatePage<TViewModel>(scopedContextService, default(TViewModel), parameter);
 
     /// <summary>
@@ -31,12 +31,15 @@ public static class NavigationExtensions
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     /// <exception cref="FileNotFoundException"></exception>
-    public static View CreatePage<TViewModel>(IScopedContextService scopedContextService, TViewModel viewModel, object parameter = null) where TViewModel : class, IViewModel
+    public static View CreatePage<TViewModel>(IScopedContextService scopedContextService, TViewModel? viewModel, object? parameter = null) where TViewModel : class, IViewModel
     {
+        if (viewModel is null)
+            viewModel = scopedContextService.ServiceProvider.GetRequiredService<TViewModel>();
+
         var view = typeof(TViewModel).GetRelatedView();
         var viewType = view.GetRelatedViewType();
 
-        if (scopedContextService.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
+        if (viewType is not null && scopedContextService.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
         {
             if (viewModel is not null)
                 resolvedPage.ViewModel = viewModel;

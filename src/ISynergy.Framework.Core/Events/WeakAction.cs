@@ -10,13 +10,13 @@ public class WeakAction
     /// <summary>
     /// The static action
     /// </summary>
-    private Action _staticAction;
+    private Action? _staticAction;
 
     /// <summary>
     /// Gets or sets the method.
     /// </summary>
     /// <value>The method.</value>
-    protected MethodInfo Method { get; set; }
+    protected MethodInfo? Method { get; set; }
 
     /// <summary>
     /// Gets the name of the method.
@@ -31,7 +31,7 @@ public class WeakAction
                 return _staticAction.Method.Name;
             }
 
-            return Method.Name;
+            return Method?.Name ?? string.Empty;
         }
     }
 
@@ -39,19 +39,19 @@ public class WeakAction
     /// Gets or sets the action reference.
     /// </summary>
     /// <value>The action reference.</value>
-    protected WeakReference ActionReference { get; set; }
+    protected WeakReference? ActionReference { get; set; }
 
     /// <summary>
     /// Gets or sets the live reference.
     /// </summary>
     /// <value>The live reference.</value>
-    protected object LiveReference { get; set; }
+    protected object? LiveReference { get; set; }
 
     /// <summary>
     /// Gets or sets the reference.
     /// </summary>
     /// <value>The reference.</value>
-    protected WeakReference Reference { get; set; }
+    protected WeakReference? Reference { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is static.
@@ -78,7 +78,7 @@ public class WeakAction
     /// <param name="action">The action.</param>
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
     public WeakAction(Action action, bool keepTargetAlive = false)
-        : this(action?.Target, action, keepTargetAlive)
+        : this(action.Target, action, keepTargetAlive)
     {
     }
 
@@ -88,7 +88,7 @@ public class WeakAction
     /// <param name="target">The target.</param>
     /// <param name="action">The action.</param>
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-    public WeakAction(object target, Action action, bool keepTargetAlive = false)
+    public WeakAction(object? target, Action action, bool keepTargetAlive = false)
     {
         if (action.Method.IsStatic)
         {
@@ -155,7 +155,7 @@ public class WeakAction
     /// Gets the target.
     /// </summary>
     /// <value>The target.</value>
-    public object Target
+    public object? Target
     {
         get
         {
@@ -172,7 +172,7 @@ public class WeakAction
     /// Gets the action target.
     /// </summary>
     /// <value>The action target.</value>
-    protected object ActionTarget
+    protected object? ActionTarget
     {
         get
         {

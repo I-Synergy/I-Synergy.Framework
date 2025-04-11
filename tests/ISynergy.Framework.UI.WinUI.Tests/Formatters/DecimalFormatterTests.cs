@@ -8,8 +8,7 @@ public class DecimalFormatterTests
 {
     private CultureInfo _originalCulture;
 
-    [TestInitialize]
-    public void Setup()
+    public DecimalFormatterTests()
     {
         _originalCulture = CultureInfo.CurrentCulture;
     }

@@ -14,8 +14,7 @@ public class ViewModelNavigationTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelNavigationTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -31,7 +30,7 @@ public class ViewModelNavigationTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     private class TestNavigationViewModel : ViewModelNavigation<TestEntity>

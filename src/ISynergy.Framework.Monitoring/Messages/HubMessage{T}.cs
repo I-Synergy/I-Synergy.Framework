@@ -10,7 +10,7 @@ public class HubMessage<T>
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="data">The data.</param>
-    public HubMessage(string message, T data = default)
+    public HubMessage(string message, T data)
     {
         Message = message;
         Data = data;
