@@ -49,7 +49,7 @@ internal class TenantService : ITenantService
         var claimIdentity = new ClaimsIdentity();
         claimIdentity.AddClaim(new Claim(Claims.KeyId, tenantId.ToString()));
         var principal = new GenericPrincipal(claimIdentity, Array.Empty<string>());
-        _httpContextAccessor.HttpContext.User = principal;
+        _httpContextAccessor.HttpContext!.User = principal;
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ internal class TenantService : ITenantService
         claimIdentity.AddClaim(new Claim(Claims.KeyId, tenantId.ToString()));
         claimIdentity.AddClaim(new Claim(Claims.Username, username));
         var principal = new GenericPrincipal(claimIdentity, _clientRoles);
-        _httpContextAccessor.HttpContext.User = principal;
+        _httpContextAccessor.HttpContext!.User = principal;
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ internal class TenantService : ITenantService
     /// <returns>Guid.</returns>
     private Guid RetrieveTenantId()
     {
-        if (Guid.TryParse(_httpContextAccessor.HttpContext.User?.FindFirst(Claims.KeyId)?.Value, out var parsedtenant))
+        if (Guid.TryParse(_httpContextAccessor.HttpContext!.User?.FindFirst(Claims.KeyId)?.Value, out var parsedtenant))
             return parsedtenant;
 
         throw new UnauthorizedAccessException("Tenant could not be retrieved.");
@@ -83,5 +83,5 @@ internal class TenantService : ITenantService
     /// </summary>
     /// <returns>System.String.</returns>
     private string RetrieveUserName() =>
-        _httpContextAccessor.HttpContext.User?.Identity?.Name ?? string.Empty;
+        _httpContextAccessor.HttpContext!.User?.Identity?.Name ?? string.Empty;
 }

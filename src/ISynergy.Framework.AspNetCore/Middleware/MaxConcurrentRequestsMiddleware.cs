@@ -29,7 +29,7 @@ public class MaxConcurrentRequestsMiddleware
     /// <summary>
     /// The enqueuer
     /// </summary>
-    private readonly MaxConcurrentRequestsEnqueuer _enqueuer;
+    private readonly MaxConcurrentRequestsEnqueuer? _enqueuer;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MaxConcurrentRequestsMiddleware"/> class.
@@ -59,9 +59,9 @@ public class MaxConcurrentRequestsMiddleware
     {
         if (CheckLimitExceeded() && !(await TryWaitInQueueAsync(context.RequestAborted).ConfigureAwait(false)))
         {
-            if (!context.RequestAborted.IsCancellationRequested)
+            if (!context.RequestAborted.IsCancellationRequested &&
+                context.Features.Get<IHttpResponseFeature>() is IHttpResponseFeature responseFeature)
             {
-                var responseFeature = context.Features.Get<IHttpResponseFeature>();
                 responseFeature.StatusCode = StatusCodes.Status503ServiceUnavailable;
                 responseFeature.ReasonPhrase = "Concurrent request limit exceeded.";
             }

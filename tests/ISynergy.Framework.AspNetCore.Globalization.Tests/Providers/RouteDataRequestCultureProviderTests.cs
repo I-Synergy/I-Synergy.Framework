@@ -12,8 +12,7 @@ public class RouteDataRequestCultureProviderTests
     private Mock<IOptions<GlobalizationOptions>> _mockOptions;
     private RouteDataRequestCultureProvider _provider;
 
-    [TestInitialize]
-    public void Initialize()
+    public RouteDataRequestCultureProviderTests()
     {
         _mockOptions = new Mock<IOptions<GlobalizationOptions>>();
         _mockOptions.Setup(o => o.Value).Returns(new GlobalizationOptions
@@ -129,7 +128,7 @@ public class RouteDataRequestCultureProviderTests
         mockOptions.Setup(o => o.Value).Returns(new GlobalizationOptions
         {
             DefaultCulture = "en-US",
-            SupportedCultures = null // This will cause an exception when Contains is called
+            SupportedCultures = null! // This will cause an exception when Contains is called
         });
 
         var provider = new RouteDataRequestCultureProvider(mockOptions.Object);
@@ -150,7 +149,7 @@ public class RouteDataRequestCultureProviderTests
     public async Task DetermineProviderCultureResult_WithNullHttpContext_ThrowsArgumentNullException()
     {
         // Act
-        await _provider.DetermineProviderCultureResult(null);
+        await _provider.DetermineProviderCultureResult(null!);
 
         // Assert is handled by ExpectedException attribute
     }

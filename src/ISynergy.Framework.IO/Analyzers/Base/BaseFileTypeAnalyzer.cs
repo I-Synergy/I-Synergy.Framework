@@ -52,7 +52,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <param name="extension">The extension.</param>
     /// <returns>FileTypeInfo.</returns>
     /// <exception cref="ArgumentNullException">inputStream</exception>
-    public FileTypeInfo DetectType(Stream inputStream, string extension)
+    public FileTypeInfo? DetectType(Stream? inputStream, string extension)
     {
         if (inputStream is null)
             throw new ArgumentNullException(nameof(inputStream));
@@ -77,7 +77,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <returns>FileTypeInfo.</returns>
     /// <exception cref="ArgumentNullException">fileContent</exception>
     /// <exception cref="ArgumentException">input must not be empty</exception>
-    public FileTypeInfo DetectType(byte[] fileContent, string extension)
+    public FileTypeInfo? DetectType(byte[]? fileContent, string extension)
     {
         if (fileContent is null)
             throw new ArgumentNullException(nameof(fileContent));
@@ -125,7 +125,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// </summary>
     /// <param name="extension">The extension.</param>
     /// <returns>System.String.</returns>
-    public string GetMimeTypeByExtension(string extension) =>
+    public string? GetMimeTypeByExtension(string extension) =>
         AvailableTypes
             .Where(q =>
                 q.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
@@ -232,11 +232,18 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// </summary>
     /// <param name="flatFileData">The flat file data.</param>
     /// <returns>IEnumerable&lt;FileTypeInfo&gt;.</returns>
-    private static IEnumerable<FileTypeInfo> LoadFileTypes(string flatFileData) =>
-        JsonSerializer.Deserialize<IEnumerable<FileTypeInfo>>(flatFileData, new JsonSerializerOptions
+    private static IEnumerable<FileTypeInfo> LoadFileTypes(string flatFileData)
+    {
+        if (JsonSerializer.Deserialize<IEnumerable<FileTypeInfo>>(flatFileData, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
-        });
+        }) is IEnumerable<FileTypeInfo> fileTypes)
+        {
+            return fileTypes;
+        }
+
+        return new List<FileTypeInfo>();
+    }
 
     /// <summary>
     /// Determines whether the specified input is text.

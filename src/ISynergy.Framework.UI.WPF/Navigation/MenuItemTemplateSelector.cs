@@ -17,7 +17,7 @@ public class MenuItemTemplateSelector : DataTemplateSelector
     /// Gets or sets the item template.
     /// </summary>
     /// <value>The item template.</value>
-    public DataTemplate ItemTemplate { get; set; }
+    public DataTemplate? ItemTemplate { get; set; }
 
     /// <summary>
     /// Selects the template.
@@ -25,7 +25,7 @@ public class MenuItemTemplateSelector : DataTemplateSelector
     /// <param name="item"></param>
     /// <param name="container"></param>
     /// <returns></returns>
-    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    public override DataTemplate? SelectTemplate(object item, DependencyObject container)
     {
         if (item is NavigationItem)
             return ItemTemplate;

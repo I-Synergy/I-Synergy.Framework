@@ -12,8 +12,7 @@ public class ModelBuilderExtensionsWithSoftDeleteTests
     private readonly Guid _testTenantId = Guid.Parse("12345678-1234-1234-1234-123456789012");
     private readonly Guid _otherTenantId = Guid.Parse("87654321-4321-4321-4321-987654321098");
 
-    [TestInitialize]
-    public void Setup()
+    public ModelBuilderExtensionsWithSoftDeleteTests()
     {
         var options = new DbContextOptionsBuilder<TestDataContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())

@@ -15,7 +15,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// <summary>
     /// The static action
     /// </summary>
-    private Action<T> _staticAction;
+    private Action<T>? _staticAction;
 
     /// <summary>
     /// Gets the name of the method.
@@ -30,7 +30,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
                 return _staticAction.Method.Name;
             }
 
-            return Method.Name;
+            return Method?.Name ?? string.Empty;
         }
     }
 
@@ -58,7 +58,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
                 return true;
             }
 
-            return Reference.IsAlive;
+            return Reference?.IsAlive ?? false;
         }
     }
 
@@ -78,8 +78,13 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// <param name="target">The target.</param>
     /// <param name="action">The action.</param>
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-    public WeakAction(object target, Action<T> action, bool keepTargetAlive = false)
+    public WeakAction(object? target, Action<T>? action, bool keepTargetAlive = false)
     {
+        if (action is null)
+        {
+            throw new ArgumentNullException(nameof(action));
+        }
+
         if (action.Method.IsStatic)
         {
             _staticAction = action;
@@ -105,7 +110,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// </summary>
     public new void Execute()
     {
-        Execute(default);
+        Execute(default!);
     }
 
     /// <summary>
@@ -145,7 +150,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// to be casted to the appropriate type.</param>
     public void ExecuteWithObject(object parameter)
     {
-        var parameterCasted = (T)parameter;
+        var parameterCasted = parameter is T typedParameter ? typedParameter : default!;
         Execute(parameterCasted);
     }
 

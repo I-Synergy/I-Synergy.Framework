@@ -119,29 +119,29 @@ public class WindowPositionProvider : IPositionProvider
         UpdatePositionRequested?.Invoke(this, EventArgs.Empty);
     }
 
-    private void ParentWindowOnLocationChanged(object sender, EventArgs eventArgs)
+    private void ParentWindowOnLocationChanged(object? sender, EventArgs eventArgs)
     {
         RequestUpdatePosition();
     }
 
-    private void ParentWindowOnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+    private void ParentWindowOnSizeChanged(object? sender, SizeChangedEventArgs sizeChangedEventArgs)
     {
         RequestUpdatePosition();
     }
 
-    private void ParentWindowOnStateChanged(object sender, EventArgs eventArgs)
+    private void ParentWindowOnStateChanged(object? sender, EventArgs eventArgs)
     {
         RequestUpdatePosition();
     }
 
-    private void ParentWindowOnActivated(object sender, EventArgs eventArgs)
+    private void ParentWindowOnActivated(object? sender, EventArgs eventArgs)
     {
         RequestUpdatePosition();
     }
 
-    public event EventHandler UpdatePositionRequested;
+    public event EventHandler? UpdatePositionRequested;
 
-    public event EventHandler UpdateEjectDirectionRequested;
+    public event EventHandler? UpdateEjectDirectionRequested;
 
-    public event EventHandler UpdateHeightRequested;
+    public event EventHandler? UpdateHeightRequested;
 }

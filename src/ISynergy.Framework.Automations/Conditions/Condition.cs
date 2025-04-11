@@ -55,5 +55,11 @@ public class Condition<TEntity> : AutomationModel, ICondition
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public bool ValidateCondition(object entity) => Validator?.Invoke(entity as TEntity) ?? false;
+    public bool ValidateCondition(object entity)
+    {
+        if (entity is TEntity obj)
+            return Validator?.Invoke(obj) ?? false;
+
+        return false;
+    }
 }

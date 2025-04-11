@@ -15,7 +15,7 @@ namespace ISynergy.Framework.UI.Behaviors;
 /// <seealso cref="Behavior{Control}" />
 public class Authorization : Behavior<Control>
 {
-    private readonly IAuthenticationProvider _authenticationProvider;
+    private readonly IAuthenticationProvider? _authenticationProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Authorization" /> class.
@@ -28,7 +28,7 @@ public class Authorization : Behavior<Control>
             var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
 
             if (_authenticationProvider is null)
-                _authenticationProvider = scopedContextService.GetService<IAuthenticationProvider>();
+                _authenticationProvider = scopedContextService.GetRequiredService<IAuthenticationProvider>();
 
             if (_authenticationProvider is null)
                 throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");
@@ -74,7 +74,7 @@ public class Authorization : Behavior<Control>
     {
         base.OnAttached();
 
-        if (!_authenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
+        if (_authenticationProvider is not null && !_authenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
         {
             switch (Action)
             {

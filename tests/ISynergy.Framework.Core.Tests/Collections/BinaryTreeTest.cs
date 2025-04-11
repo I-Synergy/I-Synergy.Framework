@@ -18,7 +18,7 @@ public class BinaryTreeTest
         ///   Gets or sets a custom value that you would like your nodes to have.
         /// </summary>
         /// 
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
     }
     #endregion
 

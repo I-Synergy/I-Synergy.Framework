@@ -12,7 +12,7 @@ public static class ExceptionExtensions
     public static string ToMessage(this Exception exception, string environmentStackTrace)
     {
         var environmentStackTraceLines = ExceptionExtensions.GetUserStackTraceLines(environmentStackTrace);
-        var stackTraceLines = ExceptionExtensions.GetStackTraceLines(exception.StackTrace);
+        var stackTraceLines = ExceptionExtensions.GetStackTraceLines(exception.StackTrace ?? string.Empty);
 
         stackTraceLines ??= new List<string>();
         stackTraceLines.AddRange(environmentStackTraceLines);

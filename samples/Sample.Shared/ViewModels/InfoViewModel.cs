@@ -79,6 +79,6 @@ public class InfoViewModel : ViewModelNavigation<object>
         Version = _commonServices.InfoService.ProductVersion;
         Copyrights = _commonServices.InfoService.Copyrights;
 
-        Startup = _commonServices.ScopedContextService.GetService<IContext>().Environment.ToString();
+        Startup = _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment.ToString();
     }
 }

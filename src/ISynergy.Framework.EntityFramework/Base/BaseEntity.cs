@@ -13,7 +13,7 @@ public abstract class BaseEntity : BaseClass, IEntity
     /// Gets or sets the memo.
     /// </summary>
     /// <value>The memo.</value>
-    public string Memo { get; set; }
+    public string? Memo { get; set; }
     /// <summary>
     /// Gets or sets the created date.
     /// </summary>
@@ -28,18 +28,17 @@ public abstract class BaseEntity : BaseClass, IEntity
     /// Gets or sets the created by.
     /// </summary>
     /// <value>The created by.</value>
-    public string CreatedBy { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
     /// <summary>
     /// Gets or sets the changed by.
     /// </summary>
     /// <value>The changed by.</value>
-    public string ChangedBy { get; set; }
+    public string? ChangedBy { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseEntity"/> class.
     /// </summary>
     protected BaseEntity()
     {
-        CreatedBy = string.Empty;
     }
 }

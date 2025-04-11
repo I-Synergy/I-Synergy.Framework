@@ -27,7 +27,7 @@ public sealed class FileResult : IDisposable
     /// <param name="fileName">Name of the file.</param>
     /// <param name="streamGetter">The stream getter.</param>
     /// <param name="dispose">The dispose.</param>
-    public FileResult(string filePath, string fileName, Func<Stream> streamGetter, Action<bool> dispose = null)
+    public FileResult(string filePath, string fileName, Func<Stream> streamGetter, Action<bool>? dispose = null)
     {
         _filePath = filePath;
         _fileName = fileName;
@@ -138,7 +138,7 @@ public sealed class FileResult : IDisposable
     /// <summary>
     /// Action to dispose of underlying resources of the picked file.
     /// </summary>
-    private readonly Action<bool> _dispose;
+    private readonly Action<bool>? _dispose;
 
     /// <summary>
     /// Disposes of all resources in the object

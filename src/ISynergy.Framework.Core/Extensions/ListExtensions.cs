@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Extensions;
 
@@ -14,9 +15,13 @@ public static class ListExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="list">The list.</param>
     /// <returns>IList&lt;T&gt;.</returns>
-    public static IList<T> EnsureNotNull<T>(this IList<T> list)
+    [return: NotNull]
+    public static IList<T> EnsureNotNull<T>([AllowNull] this IList<T>? list)
     {
-        return list ?? new List<T>();
+        if (list is null)
+            list = new List<T>();
+
+        return list;
     }
 
     /// <summary>
@@ -25,9 +30,13 @@ public static class ListExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="list">The list.</param>
     /// <returns>IEnumerable&lt;T&gt;.</returns>
-    public static IEnumerable<T> EnsureNotNull<T>(this IEnumerable<T> list)
+    [return: NotNull]
+    public static IEnumerable<T> EnsureNotNull<T>([AllowNull] this IEnumerable<T>? list)
     {
-        return list ?? Enumerable.Empty<T>();
+        if (list is null)
+            list = Enumerable.Empty<T>();
+
+        return list;
     }
 
     /// <summary>
@@ -35,9 +44,13 @@ public static class ListExtensions
     /// </summary>
     /// <param name="list">The list.</param>
     /// <returns>IEnumerable.</returns>
-    public static IEnumerable EnsureNotNull(this IEnumerable list)
+    [return: NotNull]
+    public static IEnumerable EnsureNotNull([AllowNull] this IEnumerable? list)
     {
-        return list ?? Enumerable.Empty<object>();
+        if (list is null)
+            list = Enumerable.Empty<object>();
+
+        return list;
     }
 
     /// <summary>
@@ -46,9 +59,13 @@ public static class ListExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="list">The list.</param>
     /// <returns>ObservableCollection&lt;T&gt;.</returns>
-    public static ObservableCollection<T> EnsureNotNull<T>(this ObservableCollection<T> list)
+    [return: NotNull]
+    public static ObservableCollection<T> EnsureNotNull<T>([AllowNull] this ObservableCollection<T>? list)
     {
-        return list ?? new ObservableCollection<T>();
+        if (list is null)
+            list = new ObservableCollection<T>();
+
+        return list;
     }
 
     /// <summary>

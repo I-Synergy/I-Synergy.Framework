@@ -2,7 +2,7 @@
 
 public sealed class ItemPropertyChangedEventArgs<T> : EventArgs
 {
-    public ItemPropertyChangedEventArgs(T item, string propertyName)
+    public ItemPropertyChangedEventArgs(T item, string? propertyName)
     {
         Item = item;
         PropertyName = propertyName;
@@ -10,5 +10,5 @@ public sealed class ItemPropertyChangedEventArgs<T> : EventArgs
 
     public T Item { get; private set; }
 
-    public string PropertyName { get; private set; }
+    public string? PropertyName { get; private set; }
 }

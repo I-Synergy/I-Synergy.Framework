@@ -9,5 +9,5 @@ public class AzureStorageOptions : IStorageOptions
     /// <summary>
     /// Connectionstring
     /// </summary>
-    public string ConnectionString { get; set; }
+    public string ConnectionString { get; set; } = string.Empty;
 }

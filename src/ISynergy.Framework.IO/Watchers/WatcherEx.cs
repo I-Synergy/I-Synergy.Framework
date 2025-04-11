@@ -31,14 +31,17 @@ public class WatcherEx : BaseWatcher<FileSystemWatcherEx, WatcherExEventArgs>
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="PathAvailablitiyEventArgs" /> instance containing the event data.</param>
-    private void watcher_EventPathAvailability(object sender, PathAvailablitiyEventArgs e)
+    private void watcher_EventPathAvailability(object? sender, PathAvailablitiyEventArgs e)
     {
-        EventPathAvailability(this, new WatcherExEventArgs(sender as FileSystemWatcherEx, e, FileWatcherArgumentTypes.PathAvailability));
-
-        if (e.PathIsAvailable)
+        if (sender is FileSystemWatcherEx fileSystemWatcher)
         {
-            DisposeWatchers();
-            Initialize();
+            EventPathAvailability(this, new WatcherExEventArgs(fileSystemWatcher, e, FileWatcherArgumentTypes.PathAvailability));
+
+            if (e.PathIsAvailable)
+            {
+                DisposeWatchers();
+                Initialize();
+            }
         }
     }
 }

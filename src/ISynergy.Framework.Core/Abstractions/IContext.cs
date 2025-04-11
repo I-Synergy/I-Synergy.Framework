@@ -7,9 +7,9 @@ namespace ISynergy.Framework.Core.Abstractions;
 /// </summary>
 public interface IContext
 {
-    IProfile Profile { get; set; }
-    TimeZoneInfo TimeZone { get; }
+    IProfile? Profile { get; set; }
+    TimeZoneInfo? TimeZone { get; }
     SoftwareEnvironments Environment { get; set; }
     bool IsAuthenticated { get; }
-    string GatewayEndpoint { get; }
+    Dictionary<string, object> Properties { get; }
 }

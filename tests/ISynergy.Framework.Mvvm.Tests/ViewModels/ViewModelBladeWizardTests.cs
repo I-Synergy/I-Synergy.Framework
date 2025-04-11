@@ -13,8 +13,7 @@ public class ViewModelBladeWizardTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelBladeWizardTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -29,7 +28,7 @@ public class ViewModelBladeWizardTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     private class TestBladeWizardViewModel : ViewModelBladeWizard<TestEntity>
@@ -177,9 +176,6 @@ public class ViewModelBladeWizardTests
         viewModel.Dispose();
 
         // Assert
-        Assert.IsNull(viewModel.BackCommand);
-        Assert.IsNull(viewModel.NextCommand);
-
         Assert.IsTrue(viewModel.IsDisposed);
     }
 

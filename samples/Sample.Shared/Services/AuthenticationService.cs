@@ -20,8 +20,8 @@ public class AuthenticationService : IAuthenticationService
     private readonly IScopedContextService _scopedContextService;
     private readonly ILogger _logger;
 
-    public event EventHandler<ReturnEventArgs<SoftwareEnvironments>> SoftwareEnvironmentChanged;
-    public event EventHandler<ReturnEventArgs<bool>> AuthenticationChanged;
+    public event EventHandler<ReturnEventArgs<SoftwareEnvironments>>? SoftwareEnvironmentChanged;
+    public event EventHandler<ReturnEventArgs<bool>>? AuthenticationChanged;
 
     private void RaiseSoftwareEnvironmentChanged(SoftwareEnvironments softwareEnvironment) => SoftwareEnvironmentChanged?.Invoke(this, new ReturnEventArgs<SoftwareEnvironments>(softwareEnvironment));
     private void RaiseAuthenticationChanged(bool e) => AuthenticationChanged?.Invoke(this, new ReturnEventArgs<bool>(e));
@@ -51,8 +51,8 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
     {
-        _scopedContextService.GetService<IContext>().Environment = SoftwareEnvironments.Test;
-        _scopedContextService.GetService<IContext>().Profile = new Profile(
+        _scopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
+        _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
             new Token(),
             Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
             "Test",
@@ -69,11 +69,11 @@ public class AuthenticationService : IAuthenticationService
 
         if (remember)
         {
-            if (_scopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser != username)
+            if (_scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser != username)
             {
-                _scopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin = true;
-                _scopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser = username;
-                _scopedContextService.GetService<ISettingsService>().SaveLocalSettings();
+                _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = true;
+                _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser = username;
+                _scopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
             }
 
             await _scopedContextService.GetService<ICredentialLockerService>().AddCredentialToCredentialLockerAsync(username, password);
@@ -113,11 +113,11 @@ public class AuthenticationService : IAuthenticationService
         ValidateToken(null);
     }
 
-    private void ValidateToken(Token token)
+    private void ValidateToken(Token? token)
     {
         if (token is not null)
         {
-            _scopedContextService.GetService<IContext>().Profile = new Profile(
+            _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
                 token,
                 Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
                 "Test",
@@ -132,8 +132,8 @@ public class AuthenticationService : IAuthenticationService
                 1,
                 DateTime.Now.AddHours(24));
 
-            RaiseAuthenticationChanged(_scopedContextService.GetService<IContext>().IsAuthenticated);
-            RaiseSoftwareEnvironmentChanged(_scopedContextService.GetService<IContext>().Environment);
+            RaiseAuthenticationChanged(_scopedContextService.GetRequiredService<IContext>().IsAuthenticated);
+            RaiseSoftwareEnvironmentChanged(_scopedContextService.GetRequiredService<IContext>().Environment);
         }
         else
         {

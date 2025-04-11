@@ -23,37 +23,12 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <value>The title.</value>
     public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
 
-    /// <summary>
-    /// Gets or sets the select single command.
-    /// </summary>
-    /// <value>The select single command.</value>
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
-    /// <summary>
-    /// Gets or sets the select multiple command.
-    /// </summary>
-    /// <value>The select multiple command.</value>
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
-
-    /// <summary>
-    /// Show Yes/No dialog.
-    /// </summary>
     public AsyncRelayCommand ShowDialogYesNo { get; set; }
-
-    /// <summary>
-    /// Show Yes/No/Cancel dialog.
-    /// </summary>
     public AsyncRelayCommand ShowDialogYesNoCancel { get; set; }
-
-    /// <summary>
-    /// Show Ok dialog.
-    /// </summary>
     public AsyncRelayCommand ShowDialogOk { get; set; }
-
-    /// <summary>
-    /// Show Ok/Cancel dialog.
-    /// </summary>
     public AsyncRelayCommand ShowDialogOkCancel { get; set; }
-
     public AsyncRelayCommand ShowUnitsCommand { get; private set; }
     public AsyncRelayCommand ShowTestCommand { get; private set; }
 
@@ -61,7 +36,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// Gets or sets the selected test items.
     /// </summary>
     /// <value>The selected test items.</value>
-    public ObservableCollection<TestItem> SelectedTestItems { get; set; }
+    public ObservableCollection<TestItem> SelectedTestItems { get; set; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
@@ -97,7 +72,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         await _commonServices.DialogService.ShowDialogAsync(typeof(TestWindow), vm);
     }
 
-    private async void Vm_Submitted(object sender, SubmitEventArgs<object> e)
+    private async void Vm_Submitted(object? sender, SubmitEventArgs<object> e)
     {
         if (sender is TestViewModel vm)
             vm.Submitted -= Vm_Submitted;
@@ -107,9 +82,9 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         await _commonServices.DialogService.ShowInformationAsync($"{e.Result} selected.");
     }
 
-    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName.Equals(nameof(CanExecuteTest)))
+        if (e.PropertyName!.Equals(nameof(CanExecuteTest)))
         {
             ShowTestCommand.NotifyCanExecuteChanged();
         }
@@ -152,7 +127,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVm_MultipleSubmitted;
@@ -168,7 +143,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
@@ -248,14 +223,14 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     {
         if (disposing)
         {
-            (SelectSingleCommand as IDisposable)?.Dispose();
-            (SelectMultipleCommand as IDisposable)?.Dispose();
-            (ShowDialogYesNo as IDisposable)?.Dispose();
-            (ShowDialogYesNoCancel as IDisposable)?.Dispose();
-            (ShowDialogOk as IDisposable)?.Dispose();
-            (ShowDialogOkCancel as IDisposable)?.Dispose();
-            (ShowUnitsCommand as IDisposable)?.Dispose();
-            (ShowTestCommand as IDisposable)?.Dispose();
+            SelectSingleCommand?.Dispose();
+            SelectMultipleCommand?.Dispose();
+            ShowDialogYesNo?.Dispose();
+            ShowDialogYesNoCancel?.Dispose();
+            ShowDialogOk?.Dispose();
+            ShowDialogOkCancel?.Dispose();
+            ShowUnitsCommand?.Dispose();
+            ShowTestCommand?.Dispose();
 
             base.Dispose(disposing);
         }

@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mail.Options;
+﻿using ISynergy.Framework.Mail.Options.Base;
+
+namespace ISynergy.Framework.Mail.Options;
 
 internal class MailOptions : BaseMailOptions
 {

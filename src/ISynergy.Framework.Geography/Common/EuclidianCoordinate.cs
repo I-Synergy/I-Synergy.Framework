@@ -115,7 +115,7 @@ public class EuclidianCoordinate : IEquatable<EuclidianCoordinate>
     /// </summary>
     /// <param name="other">The coordinates to test</param>
     /// <returns>True if this is the same coordinate</returns>
-    public bool Equals(EuclidianCoordinate other)
+    public bool Equals(EuclidianCoordinate? other)
     {
         return other is not null && IsApproximatelyEqual(other);
     }
@@ -125,7 +125,7 @@ public class EuclidianCoordinate : IEquatable<EuclidianCoordinate>
     /// </summary>
     /// <param name="obj">The object to test</param>
     /// <returns>True if the object is the same coordinate</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is EuclidianCoordinate coordinate)
         {

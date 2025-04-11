@@ -49,7 +49,7 @@ public class MessengerMultipleInstancesTest
 
     private class TestRecipient1
     {
-        public string ReceivedContentString
+        public string? ReceivedContentString
         {
             get;
             set;
@@ -63,7 +63,7 @@ public class MessengerMultipleInstancesTest
 
     private class TestRecipient2
     {
-        public string ReceivedContentString
+        public string? ReceivedContentString
         {
             get;
             set;

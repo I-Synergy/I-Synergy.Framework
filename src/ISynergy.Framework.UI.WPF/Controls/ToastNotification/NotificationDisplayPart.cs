@@ -10,7 +10,7 @@ namespace ISynergy.Framework.UI.Controls.ToastNotification;
 public abstract class NotificationDisplayPart : UserControl
 {
     protected INotificationAnimator Animator;
-    public INotification Notification { get; protected set; }
+    public INotification? Notification { get; protected set; }
 
     protected NotificationDisplayPart()
     {
@@ -26,19 +26,18 @@ public abstract class NotificationDisplayPart : UserControl
 
     protected override void OnMouseEnter(MouseEventArgs e)
     {
-        var options = Notification.Options;
-        if (options != null && options.FreezeOnMouseEnter)
+        if (Notification is not null && Notification.Options is not null && Notification.Options.FreezeOnMouseEnter)
         {
-            if (!options.UnfreezeOnMouseLeave) // message stay freezed, show close button
+            if (!Notification.Options.UnfreezeOnMouseLeave) // message stay freezed, show close button
             {
                 var bord2 = Content as Border;
-                if (bord2 != null)
+                if (bord2 is not null)
                 {
                     if (Notification.CanClose)
                     {
                         Notification.CanClose = false;
                         var btn = this.FindChild<Button>("CloseButton");
-                        if (btn != null)
+                        if (btn is not null)
                         {
                             btn.Visibility = Visibility.Visible;
                         }
@@ -55,11 +54,9 @@ public abstract class NotificationDisplayPart : UserControl
 
     protected override void OnMouseLeave(MouseEventArgs e)
     {
-        var opts = Notification.Options;
-        if (opts != null && opts.FreezeOnMouseEnter && opts.UnfreezeOnMouseLeave)
-        {
+        if (Notification is not null && Notification.Options is not null && Notification.Options.FreezeOnMouseEnter && Notification.Options.UnfreezeOnMouseLeave)
             Notification.CanClose = true;
-        }
+
         base.OnMouseLeave(e);
     }
 

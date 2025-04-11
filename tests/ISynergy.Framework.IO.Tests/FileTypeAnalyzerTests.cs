@@ -232,8 +232,8 @@ public partial class FileTypeAnalyzerTests
         foreach (string file in files)
         {
             byte[] fileContents = File.ReadAllBytes(file);
-            FileTypeInfo result = _fileTypeAnalyzer.DetectType(fileContents, extension);
-            assertionValidator(result);
+            var result = _fileTypeAnalyzer.DetectType(fileContents, extension);
+            assertionValidator(result!);
         }
     }
 

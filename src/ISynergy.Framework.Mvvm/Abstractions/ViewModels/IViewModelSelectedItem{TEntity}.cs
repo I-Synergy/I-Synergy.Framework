@@ -24,10 +24,10 @@ public interface IViewModelSelectedItem<TEntity> : IViewModel
     /// Gets the selected item.
     /// </summary>
     /// <value>The selected item.</value>
-    TEntity SelectedItem { get; }
+    TEntity? SelectedItem { get; }
     /// <summary>
     /// Gets the submit _command.
     /// </summary>
     /// <value>The submit _command.</value>
-    AsyncRelayCommand<TEntity> SubmitCommand { get; }
+    AsyncRelayCommand<TEntity>? SubmitCommand { get; }
 }

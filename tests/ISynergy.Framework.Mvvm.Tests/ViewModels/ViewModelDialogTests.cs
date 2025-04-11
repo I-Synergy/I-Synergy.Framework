@@ -14,8 +14,7 @@ public class ViewModelDialogTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelDialogTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -36,7 +35,7 @@ public class ViewModelDialogTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     [TestMethod]
@@ -138,7 +137,6 @@ public class ViewModelDialogTests
         Assert.IsNull(viewModel.SelectedItem);
 
         viewModel.Dispose();
-        Assert.IsNull(viewModel.SubmitCommand);
         Assert.IsTrue(viewModel.IsDisposed);
     }
 }

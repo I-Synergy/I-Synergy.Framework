@@ -11,8 +11,8 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 /// </summary>
 public interface IAuthenticationService
 {
-    event EventHandler<ReturnEventArgs<bool>> AuthenticationChanged;
-    event EventHandler<ReturnEventArgs<SoftwareEnvironments>> SoftwareEnvironmentChanged;
+    event EventHandler<ReturnEventArgs<bool>>? AuthenticationChanged;
+    event EventHandler<ReturnEventArgs<SoftwareEnvironments>>? SoftwareEnvironmentChanged;
 
     /// <summary>
     /// authenticate with username password as an asynchronous operation.

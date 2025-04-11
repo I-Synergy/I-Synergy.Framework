@@ -119,7 +119,7 @@ public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPos
     /// </summary>
     /// <param name="obj">Another object to compare to</param>
     /// <returns>true if the obj is a GlobalPosition and is the same.</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is GlobalPosition position)
         {

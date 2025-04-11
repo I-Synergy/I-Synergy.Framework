@@ -15,7 +15,7 @@ public static class ByteArrayExtensions
     /// <param name="_self">The image.</param>
     /// <returns>ImageSource.</returns>
 
-    public static ImageSource ToImageSource(this byte[] _self)
+    public static ImageSource? ToImageSource(this byte[] _self)
     {
         if (_self.ToMemoryStream() is not null)
         {

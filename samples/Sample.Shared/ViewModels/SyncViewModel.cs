@@ -41,12 +41,11 @@ public class SyncViewModel : ViewModelNavigation<object>
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand SyncCommand { get; set; }
-    public AsyncRelayCommand SyncReinitializeCommand { get; set; }
-    public AsyncRelayCommand CustomActionCommand { get; set; }
-
-    public AsyncRelayCommand DeprovisionClientCommand { get; private set; }
-    public AsyncRelayCommand ProvisionClientCommand { get; private set; }
+    public AsyncRelayCommand? SyncCommand { get; set; }
+    public AsyncRelayCommand? SyncReinitializeCommand { get; set; }
+    public AsyncRelayCommand? CustomActionCommand { get; set; }
+    public AsyncRelayCommand? DeprovisionClientCommand { get; private set; }
+    public AsyncRelayCommand? ProvisionClientCommand { get; private set; }
 
 
     public SyncViewModel(
@@ -203,13 +202,24 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     protected override void Dispose(bool disposing)
     {
-        base.Dispose(disposing);
-
         if (disposing)
         {
+            SyncCommand?.Dispose();
+            SyncCommand = null;
+            SyncReinitializeCommand?.Dispose();
+            SyncReinitializeCommand = null;
+            CustomActionCommand?.Dispose();
+            CustomActionCommand = null;
+            DeprovisionClientCommand?.Dispose();
+            DeprovisionClientCommand = null;
+            ProvisionClientCommand?.Dispose();
+            ProvisionClientCommand = null;
+
             MessageService.Default.Unregister<SyncMessage>(this);
             MessageService.Default.Unregister<SyncProgressMessage>(this);
             MessageService.Default.Unregister<SyncSessionStateChangedMessage>(this);
         }
+
+        base.Dispose(disposing);
     }
 }

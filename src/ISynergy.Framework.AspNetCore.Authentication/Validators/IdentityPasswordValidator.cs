@@ -34,14 +34,14 @@ public class IdentityPasswordValidator<TUser> : PasswordValidator<TUser>
     /// <param name="user">The user.</param>
     /// <param name="password">The password.</param>
     /// <returns>IdentityResult.</returns>
-    public override async Task<IdentityResult> ValidateAsync(UserManager<TUser> manager, TUser user, string password)
+    public override async Task<IdentityResult> ValidateAsync(UserManager<TUser> manager, TUser user, string? password)
     {
         var result = await base.ValidateAsync(manager, user, password).ConfigureAwait(false);
 
         if (!result.Succeeded)
             return result;
 
-        if (options.RequiredRegexMatch is null || options.RequiredRegexMatch.IsMatch(password))
+        if (options.RequiredRegexMatch is null || (password is not null && options.RequiredRegexMatch.IsMatch(password)))
             return IdentityResult.Success;
 
         // Todo: Move to IdentityErrorDescriber.
@@ -50,6 +50,7 @@ public class IdentityPasswordValidator<TUser> : PasswordValidator<TUser>
             Code = "PasswordRequirementsFailed",
             Description = "Password does not comply with requirements."
         };
+
         return IdentityResult.Failed(error);
     }
 }

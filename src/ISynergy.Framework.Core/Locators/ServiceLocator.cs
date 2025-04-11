@@ -11,11 +11,11 @@ namespace ISynergy.Framework.Core.Locators;
 /// </summary>
 public class ServiceLocator
 {
-    private static IServiceProvider _staticServiceProvider;
-    private static ServiceLocator _default;
+    private static IServiceProvider? _staticServiceProvider;
+    private static ServiceLocator? _default;
     private readonly IScopedContextService _scopedContextService;
 
-    public event EventHandler<ReturnEventArgs<bool>> ScopedChanged;
+    public event EventHandler<ReturnEventArgs<bool>>? ScopedChanged;
 
     public ServiceLocator(IServiceProvider currentServiceProvider)
     {
@@ -27,7 +27,8 @@ public class ServiceLocator
         _default = this;
     }
 
-    public static ServiceLocator Default => _default ?? new ServiceLocator(_staticServiceProvider);
+    public static ServiceLocator Default => _default ?? new ServiceLocator(_staticServiceProvider ??
+        throw new InvalidOperationException("ServiceProvider has not been initialized. Call SetLocatorProvider first."));
 
     public static void SetLocatorProvider(IServiceProvider serviceProvider)
     {
@@ -37,8 +38,10 @@ public class ServiceLocator
 
     // Delegate methods to _scopedContextService
     public TService GetService<TService>() => _scopedContextService.GetService<TService>();
+    public TService GetRequiredService<TService>() where TService : notnull => _scopedContextService.GetRequiredService<TService>();
 
     public object GetService(Type serviceType) => _scopedContextService.GetService(serviceType);
+    public object GetRequiredService(Type serviceType) => _scopedContextService.GetRequiredService(serviceType);
 
     public void CreateNewScope() => _scopedContextService.CreateNewScope();
 

@@ -27,9 +27,9 @@ public sealed partial class SplashScreen
         this.Unloaded += SplashScreen_Unloaded;
     }
 
-    private async void SplashScreen_Loaded(object sender, RoutedEventArgs e)
+    private async void SplashScreen_Loaded(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel is SplashScreenViewModel viewModel && viewModel.Configuration?.AssetStreamProvider != null)
+        if (ViewModel is SplashScreenViewModel viewModel && viewModel.Configuration?.AssetStreamProvider is not null)
         {
             await StartMediaPlayback(viewModel.Configuration);
         }
@@ -55,17 +55,20 @@ public sealed partial class SplashScreen
 
     private async Task StartMediaPlayback(SplashScreenOptions configuration)
     {
-        using var stream = await configuration.AssetStreamProvider();
-
-        switch (configuration.SplashScreenType)
+        if (configuration.AssetStreamProvider is not null)
         {
-            case SplashScreenTypes.Video:
-                ConfigureVideoPlayback(stream, configuration);
-                break;
+            using var stream = await configuration.AssetStreamProvider();
 
-            case SplashScreenTypes.Image:
-                ConfigureImageDisplay(stream);
-                break;
+            switch (configuration.SplashScreenType)
+            {
+                case SplashScreenTypes.Video:
+                    ConfigureVideoPlayback(stream, configuration);
+                    break;
+
+                case SplashScreenTypes.Image:
+                    ConfigureImageDisplay(stream);
+                    break;
+            }
         }
     }
 
@@ -90,9 +93,9 @@ public sealed partial class SplashScreen
         BackgroundImage.Source = bitmap;
     }
 
-    private void SplashScreen_Unloaded(object sender, RoutedEventArgs e)
+    private void SplashScreen_Unloaded(object? sender, RoutedEventArgs e)
     {
-        if (BackgroundMediaElement?.MediaPlayer != null)
+        if (BackgroundMediaElement?.MediaPlayer is not null)
         {
             BackgroundMediaElement.MediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
             BackgroundMediaElement.MediaPlayer.Dispose();
@@ -110,7 +113,7 @@ public sealed partial class SplashScreen
         });
     }
 
-    private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+    private void Grid_Tapped(object? sender, TappedRoutedEventArgs e)
     {
         if (_initializationComplete && SignInButton.IsEnabled)
         {
@@ -119,7 +122,7 @@ public sealed partial class SplashScreen
         }
     }
 
-    public void SignInClicked(object sender, RoutedEventArgs e)
+    public void SignInClicked(object? sender, RoutedEventArgs e)
     {
         if (_initializationComplete)
         {

@@ -16,13 +16,13 @@ namespace ISynergy.Framework.UI.Controls;
 [Bindable(true)]
 public partial class Window : System.Windows.Window, IWindow
 {
-    private IViewModel _viewModel;
+    private IViewModel? _viewModel;
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a window.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel ViewModel
+    public IViewModel? ViewModel
     {
         get => _viewModel;
         set
@@ -38,14 +38,12 @@ public partial class Window : System.Windows.Window, IWindow
     /// <param name="parent">The parent.</param>
     /// <param name="name">The name.</param>
     /// <returns>FrameworkElement.</returns>
-    private static FrameworkElement GetDescendantFromName(DependencyObject parent, string name)
+    private static FrameworkElement? GetDescendantFromName(DependencyObject parent, string name)
     {
         var count = VisualTreeHelper.GetChildrenCount(parent);
 
         if (count < 1)
-        {
             return null;
-        }
 
         for (var i = 0; i < count; i++)
         {
@@ -56,12 +54,8 @@ public partial class Window : System.Windows.Window, IWindow
                     return frameworkElement;
                 }
 
-                frameworkElement = GetDescendantFromName(frameworkElement, name);
-
-                if (frameworkElement != null)
-                {
-                    return frameworkElement;
-                }
+                if (GetDescendantFromName(frameworkElement, name) is FrameworkElement descendant)
+                    return descendant;
             }
         }
 

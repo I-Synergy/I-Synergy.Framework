@@ -48,7 +48,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
 {
 
     private IComparer<T> _compare;
-    private RedBlackTreeNode<T> _root;
+    private RedBlackTreeNode<T>? _root;
     private int _count;
     private bool _duplicates = false;
 
@@ -216,10 +216,10 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
 
     fixtree:
 
-        if (item.Parent.Color == RedBlackTreeNodeType.Red)
+        if (item.Parent!.Color == RedBlackTreeNodeType.Red)
         {
             // red cannot have red child
-            var u = p == p.Parent.Left ? p.Parent.Right : p.Parent.Left;
+            var u = p == p.Parent!.Left ? p.Parent.Right : p.Parent.Left;
 
             if (u is not null && u.Color == RedBlackTreeNodeType.Red)
             {
@@ -237,13 +237,13 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                 if (item == p.Right && p == p.Parent.Left)
                 {
                     rotate_left(p);
-                    p = item; item = item.Left;
+                    p = item; item = item.Left!;
                 }
                 else if (item == p.Left && p == p.Parent.Right)
                 {
                     rotate_right(p);
                     p = item;
-                    item = item.Right;
+                    item = item.Right!;
                 }
 
                 p.Color = RedBlackTreeNodeType.Black;
@@ -304,7 +304,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   A reference to the removed node, if the item was in the tree; otherwise, <c>null</c>.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> Remove(T item)
+    public RedBlackTreeNode<T>? Remove(T item)
     {
         var node = Find(item);
 
@@ -328,7 +328,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     {
         var k = node.Value;
 
-        RedBlackTreeNode<T> m, mp;
+        RedBlackTreeNode<T>? m, mp;
 
         if (node.Left is not null && node.Right is not null)
         {
@@ -355,6 +355,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
         }
 
         mp = node.Parent;
+
         if (m is not null)
             m.Parent = mp;
 
@@ -372,7 +373,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                 {
                     var s = m == mp.Left ? mp.Right : mp.Left;
 
-                    if (s.Color == RedBlackTreeNodeType.Red)
+                    if (s!.Color == RedBlackTreeNodeType.Red)
                     {
                         mp.Color = RedBlackTreeNodeType.Red;
                         s.Color = RedBlackTreeNodeType.Black;
@@ -385,7 +386,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     }
 
                     if (mp.Color == RedBlackTreeNodeType.Black
-                      && s.Color == RedBlackTreeNodeType.Black
+                      && s!.Color == RedBlackTreeNodeType.Black
                       && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
                       && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                     {
@@ -399,7 +400,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     }
 
                     if (mp.Color == RedBlackTreeNodeType.Red
-                        && s.Color == RedBlackTreeNodeType.Black
+                        && s!.Color == RedBlackTreeNodeType.Black
                         && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
                         && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                     {
@@ -410,7 +411,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     }
                     else
                     {
-                        if (m == mp.Left && s.Color == RedBlackTreeNodeType.Black
+                        if (m == mp.Left && s!.Color == RedBlackTreeNodeType.Black
                                          && (s.Left is not null && s.Left.Color == RedBlackTreeNodeType.Red)
                                          && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                         {
@@ -421,7 +422,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
 
                             s = m == mp.Left ? mp.Right : mp.Left;
                         }
-                        else if (m == mp.Right && s.Color == RedBlackTreeNodeType.Black
+                        else if (m == mp.Right && s!.Color == RedBlackTreeNodeType.Black
                                                && (s.Right is not null && s.Right.Color == RedBlackTreeNodeType.Red)
                                                && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black))
                         {
@@ -431,17 +432,17 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                             s = m == mp.Left ? mp.Right : mp.Left;
                         }
 
-                        s.Color = mp.Color;
+                        s!.Color = mp.Color;
                         mp.Color = RedBlackTreeNodeType.Black;
 
                         if (m == mp.Left)
                         {
-                            s.Right.Color = RedBlackTreeNodeType.Black;
+                            s.Right!.Color = RedBlackTreeNodeType.Black;
                             rotate_left(mp);
                         }
                         else
                         {
-                            s.Left.Color = RedBlackTreeNodeType.Black;
+                            s.Left!.Color = RedBlackTreeNodeType.Black;
                             rotate_right(mp);
                         }
                     }
@@ -488,7 +489,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   The zero-based index in <paramref name="array"/> at which copying begins.
     /// </param>
     /// 
-    public void CopyTo(T[] array, int arrayIndex)
+    public void CopyTo(T?[] array, int arrayIndex)
     {
         foreach (var node in this)
             array[arrayIndex++] = node.Value;
@@ -519,8 +520,8 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     /// 
     public override IEnumerator<RedBlackTreeNode<T>> GetEnumerator()
     {
-        RedBlackTreeNode<T> node = _root;
-        RedBlackTreeNode<T> lastNode = null;
+        RedBlackTreeNode<T>? node = _root;
+        RedBlackTreeNode<T>? lastNode = null;
 
         while (node is not null)
         {
@@ -575,7 +576,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
         foreach (RedBlackTreeNode<T> node in this)
-            yield return node.Value;
+            yield return node.Value!;
     }
 
     /// <summary>
@@ -605,7 +606,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     /// 
     public bool Contains(RedBlackTreeNode<T> item)
     {
-        return Find(item.Value) is not null;
+        return Find(item.Value!) is not null;
     }
 
     /// <summary>
@@ -619,7 +620,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   if it is present in the dictionary; otherwise, returns <c>null</c>.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> Find(T item)
+    public RedBlackTreeNode<T>? Find(T item)
     {
         var p = _root;
 
@@ -650,7 +651,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   its immediately smaller neighboring number present in the tree.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> FindLessThanOrEqualTo(RedBlackTreeNode<T> node, T value)
+    public RedBlackTreeNode<T>? FindLessThanOrEqualTo(RedBlackTreeNode<T>? node, T value)
     {
         while (node is not null)
         {
@@ -685,7 +686,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   its immediately smaller neighboring number present in the tree.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> FindLessThanOrEqualTo(T value)
+    public RedBlackTreeNode<T>? FindLessThanOrEqualTo(T value)
     {
         return FindLessThanOrEqualTo(this._root, value);
     }
@@ -703,7 +704,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   The node containing an element that is immediately below <paramref name="value"/>.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> FindLessThan(RedBlackTreeNode<T> node, T value)
+    public RedBlackTreeNode<T>? FindLessThan(RedBlackTreeNode<T>? node, T value)
     {
         while (node is not null)
         {
@@ -735,7 +736,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   The node containing an element that is immediately below <paramref name="value"/>.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> FindLessThan(T value)
+    public RedBlackTreeNode<T>? FindLessThan(T value)
     {
         return FindLessThan(this._root, value);
     }
@@ -753,7 +754,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   The node containing an element that is immediately below <paramref name="value"/>.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> FindGreaterThan(RedBlackTreeNode<T> node, T value)
+    public RedBlackTreeNode<T>? FindGreaterThan(RedBlackTreeNode<T>? node, T value)
     {
         while (node is not null)
         {
@@ -786,7 +787,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   The node containing an element that is immediately below <paramref name="value"/>.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> FindGreaterThan(T value)
+    public RedBlackTreeNode<T>? FindGreaterThan(T value)
     {
         return FindGreaterThan(this._root, value);
     }
@@ -800,7 +801,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   holds the minimum element in the tree.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> Min()
+    public RedBlackTreeNode<T>? Min()
     {
         var n = this._root;
 
@@ -821,7 +822,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   holds the maximum element in the tree.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> Max()
+    public RedBlackTreeNode<T>? Max()
     {
         var n = this._root;
 
@@ -845,7 +846,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   the current value contained in the given <paramref name="node"/>.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> GetNextNode(RedBlackTreeNode<T> node)
+    public RedBlackTreeNode<T>? GetNextNode(RedBlackTreeNode<T>? node)
     {
         if (node is null)
             return null;
@@ -881,7 +882,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   the current value contained in the given <paramref name="node"/>.
     /// </returns>
     /// 
-    public RedBlackTreeNode<T> GetPreviousNode(RedBlackTreeNode<T> node)
+    public RedBlackTreeNode<T>? GetPreviousNode(RedBlackTreeNode<T>? node)
     {
         if (node is null)
             return null;
@@ -925,7 +926,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
 
     private void rotate_left(RedBlackTreeNode<T> p)
     {
-        var n = p.Right;
+        var n = p.Right!;
         p.Right = n.Left;
         n.Left = p;
 
@@ -949,7 +950,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
 
     private void rotate_right(RedBlackTreeNode<T> p)
     {
-        var n = p.Left; /* must be non-null */
+        var n = p.Left!; /* must be non-null */
 
         p.Left = n.Right;
         n.Right = p;
@@ -974,7 +975,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
 
 
 
-    internal bool check_node(RedBlackTreeNode<T> n, ref int nblack)
+    internal bool check_node(RedBlackTreeNode<T>? n, ref int nblack)
     {
         int nbl = 0;
         int nbr = 0;

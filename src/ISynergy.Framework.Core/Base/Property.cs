@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Base;
 
-#nullable disable
 /// <summary>
 /// Class Property.
 /// Implements the <see cref="IProperty{T}" />
@@ -16,7 +15,7 @@ public class Property<T> : IProperty<T>
     /// <summary>
     /// Occurs when [value changed].
     /// </summary>
-    public event EventHandler ValueChanged;
+    public event EventHandler? ValueChanged;
     /// <summary>
     /// The is original set
     /// </summary>
@@ -28,11 +27,11 @@ public class Property<T> : IProperty<T>
     /// <summary>
     /// The value
     /// </summary>
-    private T _value = default;
+    private T? _value = default;
     /// <summary>
     /// The original value
     /// </summary>
-    private T _originalValue = default;
+    private T? _originalValue = default;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Property{T}"/> class.
@@ -76,7 +75,7 @@ public class Property<T> : IProperty<T>
     /// Gets or sets the value.
     /// </summary>
     /// <value>The value.</value>
-    public T Value
+    public T? Value
     {
         get { return _value; }
         set
@@ -106,7 +105,7 @@ public class Property<T> : IProperty<T>
     /// </summary>
     /// <value>The original value.</value>
     [JsonIgnore]
-    public T OriginalValue
+    public T? OriginalValue
     {
         get { return _originalValue; }
         set
@@ -150,5 +149,5 @@ public class Property<T> : IProperty<T>
     /// Returns a <see cref="string" /> that represents this instance.
     /// </summary>
     /// <returns>A <see cref="string" /> that represents this instance.</returns>
-    public override string ToString() => Value.ToString();
+    public override string ToString() => Value?.ToString() ?? string.Empty;
 }

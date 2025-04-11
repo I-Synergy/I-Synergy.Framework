@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.UI;
 using Microsoft.Extensions.Logging;
 using Sample.ViewModels;
 using System.Windows;
@@ -26,7 +25,7 @@ public partial class App : ISynergy.Framework.UI.Application
         RaiseApplicationLoaded();
     }
 
-    protected override async void OnApplicationLoaded(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e)
     {
         try
         {
@@ -36,14 +35,14 @@ public partial class App : ISynergy.Framework.UI.Application
 
             _logger.LogTrace("Retrieve default user and check for auto login");
 
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin)
+            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin)
             {
-                string username = _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.DefaultUser;
-                string password = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
+                string username = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser;
+                string password = await _commonServices.ScopedContextService.GetRequiredService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
                 if (!string.IsNullOrEmpty(password))
                 {
-                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings.IsAutoLogin);
+                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin);
                     navigateToAuthentication = false;
                 }
             }
@@ -60,7 +59,7 @@ public partial class App : ISynergy.Framework.UI.Application
         }
     }
 
-    protected override async void OnAuthenticationChanged(object sender, ReturnEventArgs<bool> e)
+    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
         await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);

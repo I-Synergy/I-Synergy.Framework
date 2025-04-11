@@ -70,14 +70,14 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
             if (!IsInitialized)
             {
-                _commonServices.ScopedContextService.GetService<ISettingsService>().LoadLocalSettings();
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LoadLocalSettings();
 
-                if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is LocalSettings localSetting)
+                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings localSetting)
                     LocalSettings = localSetting;
 
-                await _commonServices.ScopedContextService.GetService<ISettingsService>().LoadGlobalSettingsAsync();
+                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LoadGlobalSettingsAsync();
 
-                if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
+                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
                     GlobalSettings = globalSetting;
 
                 IsInitialized = true;
@@ -101,11 +101,11 @@ public class SettingsViewModel : ViewModelNavigation<object>
         {
             _commonServices.BusyService.StartBusy();
 
-            if (_commonServices.ScopedContextService.GetService<ISettingsService>().LocalSettings is LocalSettings)
-                _commonServices.ScopedContextService.GetService<ISettingsService>().SaveLocalSettings();
+            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings)
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
 
-            if (_commonServices.ScopedContextService.GetService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
-                await _commonServices.ScopedContextService.GetService<ISettingsService>().AddOrUpdateGlobalSettingsAsync(globalSetting);
+            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
+                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().AddOrUpdateGlobalSettingsAsync(globalSetting);
         }
         finally
         {

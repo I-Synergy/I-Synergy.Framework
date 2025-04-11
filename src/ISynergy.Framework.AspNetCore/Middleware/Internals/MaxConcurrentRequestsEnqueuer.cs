@@ -190,26 +190,26 @@ internal class MaxConcurrentRequestsEnqueuer
     /// Cancels the enqueue.
     /// </summary>
     /// <param name="state">The state.</param>
-    private void CancelEnqueue(object state)
+    private void CancelEnqueue(object? state)
     {
         var removed = false;
-        var enqueueTaskCompletionSource = ((TaskCompletionSource<bool>)state);
 
-        // This is blocking, but it looks like this callback can't be asynchronous.
-        _queueSemaphore.Wait();
+        if (state is TaskCompletionSource<bool> enqueueTaskCompletionSource)
+        {
+            _queueSemaphore.Wait();
 
-        try
-        {
-            removed = _queue.Remove(enqueueTaskCompletionSource);
-        }
-        finally
-        {
-            _queueSemaphore.Release();
-        }
-
-        if (removed)
-        {
-            enqueueTaskCompletionSource.SetResult(false);
+            try
+            {
+                removed = _queue.Remove(enqueueTaskCompletionSource);
+            }
+            finally
+            {
+                _queueSemaphore.Release();
+            }
+            if (removed)
+            {
+                enqueueTaskCompletionSource.SetResult(false);
+            }
         }
     }
 
@@ -219,10 +219,13 @@ internal class MaxConcurrentRequestsEnqueuer
     /// <param name="result">if set to <c>true</c> [result].</param>
     private void InternalDequeue(bool result)
     {
-        var enqueueTaskCompletionSource = _queue.First.Value;
+        if (_queue.Count > 0 && _queue.First is not null)
+        {
+            var enqueueTaskCompletionSource = _queue.First.Value;
 
-        _queue.RemoveFirst();
+            _queue.RemoveFirst();
 
-        enqueueTaskCompletionSource.SetResult(result);
+            enqueueTaskCompletionSource.SetResult(result);
+        }
     }
 }

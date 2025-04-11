@@ -19,7 +19,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TEntity>> Submitted;
+    public event EventHandler<SubmitEventArgs<TEntity>>? Submitted;
     /// <summary>
     /// Called when [submitted].
     /// </summary>
@@ -30,7 +30,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     /// Gets or sets the SelectedItem property value.
     /// </summary>
     /// <value>The selected item.</value>
-    public TEntity SelectedItem
+    public TEntity? SelectedItem
     {
         get { return GetValue<TEntity>(); }
         set { SetValue(value); }
@@ -92,7 +92,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
 
     public virtual void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.TryGetValue(GenericConstants.Parameter, out object result) && result is TEntity entity)
+        if (query.TryGetValue(GenericConstants.Parameter, out object? result) && result is TEntity entity)
             SetSelectedItem(entity);
     }
 
@@ -104,7 +104,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
             IsInCleanup = true;
 
             // Clear selected item first
-            SelectedItem = default;
+            SelectedItem = default(TEntity);
 
             // Reset dialog state
             IsUpdate = false;
@@ -129,7 +129,6 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
 
             // Dispose and clear submit command
             SubmitCommand?.Dispose();
-            SubmitCommand = null;
 
             base.Dispose(disposing);
         }

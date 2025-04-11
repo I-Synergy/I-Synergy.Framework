@@ -10,7 +10,7 @@ public class Measurement
     /// <summary>
     /// Gets or sets the Description property value.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Gets or sets the Value property value.

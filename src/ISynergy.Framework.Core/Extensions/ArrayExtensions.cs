@@ -88,8 +88,11 @@ public static class ArrayExtensions
     /// <summary>
     ///     Gets the total length over all dimensions of an array.
     /// </summary>
-    public static int GetTotalLength(this Array array, bool deep = true, bool rectangular = true)
+    public static int GetTotalLength(this Array? array, bool deep = true, bool rectangular = true)
     {
+        if (array is null)
+            return 0;
+
         if (deep && IsJagged(array))
         {
             if (rectangular)
@@ -116,10 +119,11 @@ public static class ArrayExtensions
     ///     Gets the maximum length possible for each dimension (in case
     ///     the jagged matrices has different lengths).
     /// </param>
-    public static int[] GetLength(this Array array, bool deep = true, bool max = false)
+    public static int[] GetLength(this Array? array, bool deep = true, bool max = false)
     {
         if (array is null)
             return [-1];
+
         if (array.Rank == 0)
             return new int[0];
 
@@ -160,11 +164,15 @@ public static class ArrayExtensions
     ///     Determines whether an array is a jagged array
     ///     (containing inner arrays as its elements).
     /// </summary>
-    public static bool IsJagged(this Array array)
+    public static bool IsJagged(this Array? array)
     {
+        if (array is null)
+            return false;
+
         if (array.Length == 0)
             return array.Rank == 1;
-        return array.GetType().GetElementType().IsArray;
+
+        return array.GetType().GetElementType()!.IsArray;
     }
 
     /// <summary>

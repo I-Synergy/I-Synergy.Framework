@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions.Messages;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.MessageBus.Abstractions.Messages;
 using ISynergy.Framework.MessageBus.Enumerations;
 
 namespace ISynergy.Framework.MessageBus.Models;
@@ -9,6 +10,7 @@ namespace ISynergy.Framework.MessageBus.Models;
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 public abstract class QueueMessage<TEntity> : IQueueMessage<TEntity>
+    where TEntity : class
 {
     /// <summary>
     /// Gets the data.
@@ -29,17 +31,17 @@ public abstract class QueueMessage<TEntity> : IQueueMessage<TEntity>
     /// Gets to.
     /// </summary>
     /// <value>To.</value>
-    public string To { get; }
+    public string To { get; } = string.Empty;
     /// <summary>
     /// Gets the reply to.
     /// </summary>
     /// <value>The reply to.</value>
-    public string ReplyTo { get; }
+    public string ReplyTo { get; } = string.Empty;
     /// <summary>
     /// Gets the tag.
     /// </summary>
     /// <value>The tag.</value>
-    public string Tag { get; set; }
+    public string Tag { get; set; } = string.Empty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QueueMessage{TEntity}" /> class.
@@ -48,6 +50,8 @@ public abstract class QueueMessage<TEntity> : IQueueMessage<TEntity>
     /// <param name="data">The data.</param>
     protected QueueMessage(QueueMessageActions action, TEntity data)
     {
+        Argument.IsNotNull(data);
+
         Action = action;
         Data = data;
         ContentType = data.GetType().Name;

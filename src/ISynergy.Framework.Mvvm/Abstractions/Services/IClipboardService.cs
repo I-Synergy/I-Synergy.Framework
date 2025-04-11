@@ -11,5 +11,5 @@ public interface IClipboardService
     /// Gets image (bytes and content type) from clipboard.
     /// </summary>
     /// <returns></returns>
-    Task<ImageResult> GetImageFromClipboardAsync();
+    Task<ImageResult?> GetImageFromClipboardAsync();
 }

@@ -15,13 +15,13 @@ namespace ISynergy.Framework.UI.Controls;
 [Bindable(true)]
 public abstract partial class View : Page, IView
 {
-    private IViewModel _viewModel;
+    private IViewModel? _viewModel;
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel ViewModel
+    public IViewModel? ViewModel
     {
         get => _viewModel;
         set
@@ -35,7 +35,6 @@ public abstract partial class View : Page, IView
     /// Initializes a new instance of the <see cref="View"/> class.
     /// </summary>
     protected View()
-        : this(null)
     {
     }
 

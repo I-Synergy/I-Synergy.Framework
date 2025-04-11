@@ -10,7 +10,7 @@ public class TestEntity : BaseEntity
     [Identity]
     public int Id { get; set; }
     public decimal TestDecimal { get; set; }
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }
 
 public class TestEntityConfiguration : IEntityTypeConfiguration<TestEntity>

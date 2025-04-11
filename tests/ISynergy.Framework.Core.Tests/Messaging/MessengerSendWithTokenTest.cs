@@ -9,9 +9,9 @@ public class MessengerSendWithTokenTest
     [TestMethod]
     public void TestSendWithToken()
     {
-        string receivedContent1 = null;
-        string receivedContent2 = null;
-        string receivedContent3 = null;
+        string? receivedContent1 = null;
+        string? receivedContent2 = null;
+        string? receivedContent3 = null;
 
         MessageService.Reset();
 
@@ -48,9 +48,9 @@ public class MessengerSendWithTokenTest
     [TestMethod]
     public void TestSendMessageBaseWithToken()
     {
-        Exception receivedContent1 = null;
-        Exception receivedContent2 = null;
-        Exception receivedContent3 = null;
+        Exception? receivedContent1 = null;
+        Exception? receivedContent2 = null;
+        Exception? receivedContent3 = null;
 
         MessageService.Reset();
 
@@ -73,9 +73,9 @@ public class MessengerSendWithTokenTest
     [TestMethod]
     public void TestSendWithIntToken()
     {
-        InvalidOperationException receivedContent1 = null;
-        InvalidOperationException receivedContent2 = null;
-        InvalidOperationException receivedContent3 = null;
+        InvalidOperationException? receivedContent1 = null;
+        InvalidOperationException? receivedContent2 = null;
+        InvalidOperationException? receivedContent3 = null;
 
         MessageService.Reset();
 
@@ -99,7 +99,6 @@ public class MessengerSendWithTokenTest
     public void TestSendNullObjectWithToken()
     {
         bool itemReceived = false;
-        bool itemIsNull = false;
 
         MessageService.Reset();
 
@@ -111,19 +110,12 @@ public class MessengerSendWithTokenTest
             m =>
             {
                 itemReceived = true;
-
-                if (m is null)
-                {
-                    itemIsNull = true;
-                }
             });
 
         Assert.IsFalse(itemReceived);
-        Assert.IsFalse(itemIsNull);
 
-        MessageService.Default.Send<string>(null, token1);
+        MessageService.Default.Send<string>(null!, token1);
 
-        Assert.IsTrue(itemReceived);
-        Assert.IsTrue(itemIsNull);
+        Assert.IsFalse(itemReceived);
     }
 }

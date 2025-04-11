@@ -74,9 +74,9 @@ public abstract class BaseModel : ObservableClass, IModel
     /// Gets or sets the ChangedBy property value.
     /// </summary>
     /// <value>The changed by.</value>
-    public string ChangedBy
+    public string? ChangedBy
     {
-        get { return GetValue<string>(); }
+        get { return GetValue<string?>(); }
         set { SetValue(value); }
     }
 }

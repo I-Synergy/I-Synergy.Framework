@@ -8,8 +8,7 @@ public class DecimalExtensionsTests
 {
     private CultureInfo _originalCulture;
 
-    [TestInitialize]
-    public void Setup()
+    public DecimalExtensionsTests()
     {
         _originalCulture = CultureInfo.CurrentCulture;
     }

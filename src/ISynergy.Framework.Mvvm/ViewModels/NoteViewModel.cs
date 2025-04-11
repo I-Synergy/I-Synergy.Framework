@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
 
@@ -27,7 +28,7 @@ public class NoteViewModel : ViewModelDialog<string>
     /// <summary>
     /// The target property
     /// </summary>
-    private readonly string _targetProperty;
+    private readonly string? _targetProperty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
@@ -64,9 +65,11 @@ public class NoteViewModel : ViewModelDialog<string>
     /// <param name="e">The e.</param>
     protected override void OnSubmitted(SubmitEventArgs<string> e)
     {
+        Argument.IsNotNull(e);
+
         if (!string.IsNullOrEmpty(_targetProperty))
         {
-            base.OnSubmitted(new SubmitEventArgs<string>(e.Owner, e.Result, _targetProperty));
+            base.OnSubmitted(new SubmitEventArgs<string>(e.Owner!, e.Result, _targetProperty));
         }
         else
         {

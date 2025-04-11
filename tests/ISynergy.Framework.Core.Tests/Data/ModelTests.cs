@@ -24,10 +24,10 @@ public class ModelTests
 
         bool gotEvent = false;
 
-        ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
+        ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object? sender, PropertyChangedEventArgs e)
         {
             gotEvent = true;
-            Assert.IsTrue(e.PropertyName.Equals("Value") | e.PropertyName.Equals("IsValid"), "PropertyName was wrong.");
+            Assert.IsTrue(e.PropertyName!.Equals("Value") | e.PropertyName.Equals("IsValid"), "PropertyName was wrong.");
         };
 
         string newValue = "new value";
@@ -51,7 +51,7 @@ public class ModelTests
 
         bool gotEvent = false;
 
-        ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
+        ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object? sender, PropertyChangedEventArgs e)
         {
             gotEvent = true;
             Assert.IsTrue(gotEvent, "Should not get any PropertyChanged events.");

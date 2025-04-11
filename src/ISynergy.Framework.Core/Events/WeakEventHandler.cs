@@ -19,11 +19,11 @@ public sealed class WeakEventHandler<TEventArgs> where TEventArgs : EventArgs
     public void Handler(object sender, TEventArgs e)
     {
         var target = _targetReference.Target;
-        if (target != null)
+        if (target is not null)
         {
-            var callback = (Action<object, TEventArgs>)Delegate.CreateDelegate(typeof(Action<object, TEventArgs>), target, _method, true);
+            var callback = Delegate.CreateDelegate(typeof(Action<object, TEventArgs>), target, _method, true) as Action<object, TEventArgs>;
 
-            if (callback != null)
+            if (callback is not null)
                 callback(sender, e);
         }
     }

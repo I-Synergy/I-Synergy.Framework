@@ -90,7 +90,7 @@ public class MultiSelectionBehavior : Behavior<ListView>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
-    void SourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    void SourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_isUpdatingSource)
             return;
@@ -131,7 +131,7 @@ public class MultiSelectionBehavior : Behavior<ListView>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
-    private void ListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void ListViewSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_isUpdatingTarget)
             return;

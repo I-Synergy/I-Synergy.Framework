@@ -170,7 +170,7 @@ public class MessengerTestConstrainingMessages
     {
         Assert.IsNotNull(testMessage);
 
-        ITestMessage castedMessage = testMessage as ITestMessage;
+        var castedMessage = testMessage as ITestMessage;
 
         if (castedMessage is not null)
         {

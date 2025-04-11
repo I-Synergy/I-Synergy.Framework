@@ -43,7 +43,7 @@ public interface IObservableClass : IBindable, IDisposable, IAsyncDisposable, ID
     /// Gets or sets the validator.
     /// </summary>
     /// <value>The validator.</value>
-    Action<IObservableClass> Validator { get; set; }
+    Action<IObservableClass>? Validator { get; set; }
     /// <summary>
     /// Gets a value indicating whether this instance is dirty.
     /// </summary>

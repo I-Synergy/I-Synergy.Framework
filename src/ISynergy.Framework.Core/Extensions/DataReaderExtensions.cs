@@ -22,9 +22,9 @@ public static class DataReaderExtensions
         while (datareader.Read())
         {
             var fieldNames = Enumerable.Range(0, datareader.FieldCount).Select(i => datareader.GetName(i)).ToArray();
-            T obj = TypeActivator.CreateInstance<T>();
+            T? obj = TypeActivator.CreateInstance<T>();
 
-            foreach (var prop in obj.GetType().GetProperties().EnsureNotNull())
+            foreach (var prop in obj!.GetType().GetProperties().EnsureNotNull())
             {
                 if (fieldNames.Contains(prop.Name) && !datareader.IsDBNull(prop.Name))
                 {

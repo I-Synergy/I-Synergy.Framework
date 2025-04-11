@@ -47,7 +47,7 @@ public class AutoFocusBehavior
     /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     private static void AutoFocusableChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        TextBox textBox = null;
+        TextBox? textBox = null;
 
         if (d is TextBox control)
             textBox = control;
@@ -74,12 +74,12 @@ public class AutoFocusBehavior
     /// <param name="e"></param>
     private static void TextBox_Loaded(object sender, RoutedEventArgs e)
     {
-        TextBox textBox = null;
+        TextBox? textBox = null;
 
         if (sender is TextBox control)
             textBox = control;
         else
-            textBox = (sender as DependencyObject).FindChild<TextBox>();
+            textBox = (sender as DependencyObject)?.FindChild<TextBox>();
 
         if (textBox is not null && textBox.IsLoaded && textBox.Visibility == Visibility.Visible)
         {

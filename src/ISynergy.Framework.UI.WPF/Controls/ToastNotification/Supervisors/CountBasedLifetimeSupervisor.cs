@@ -9,13 +9,11 @@ namespace ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
 public class CountBasedLifetimeSupervisor : INotificationsLifetimeSupervisor
 {
     private readonly int _maximumNotificationCount;
-    private NotificationsList _notifications;
+    private NotificationsList _notifications = new NotificationsList();
 
     public CountBasedLifetimeSupervisor(MaximumNotificationCount maximumNotificationCount)
     {
         _maximumNotificationCount = maximumNotificationCount.Count;
-
-        _notifications = new NotificationsList();
     }
 
     public void PushNotification(INotification notification)
@@ -66,7 +64,6 @@ public class CountBasedLifetimeSupervisor : INotificationsLifetimeSupervisor
 
         _disposed = true;
         _notifications?.Clear();
-        _notifications = null;
     }
 
     public void ClearMessages(IClearStrategy clearStrategy)
@@ -78,6 +75,6 @@ public class CountBasedLifetimeSupervisor : INotificationsLifetimeSupervisor
         }
     }
 
-    public event EventHandler<ShowNotificationEventArgs> ShowNotificationRequested;
-    public event EventHandler<CloseNotificationEventArgs> CloseNotificationRequested;
+    public event EventHandler<ShowNotificationEventArgs>? ShowNotificationRequested;
+    public event EventHandler<CloseNotificationEventArgs>? CloseNotificationRequested;
 }

@@ -90,13 +90,13 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// Gets or sets the false.
     /// </summary>
     /// <value>The false.</value>
-    public T False { get; set; }
+    public T False { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the true.
     /// </summary>
     /// <value>The true.</value>
-    public T True { get; set; }
+    public T True { get; set; } = default!;
 
     /// <summary>
     /// Converts the specified value.
@@ -110,10 +110,10 @@ public abstract class BooleanConverter<T> : IValueConverter
     {
         if (value is null)
         {
-            return False;
+            return False!;
         }
 
-        return System.Convert.ToBoolean(value) ? True : False;
+        return System.Convert.ToBoolean(value) ? True! : False!;
     }
 
     /// <summary>
@@ -126,6 +126,6 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <returns>System.Object.</returns>
     public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
     {
-        return value != null && value.Equals(True);
+        return value is not null && value.Equals(True);
     }
 }

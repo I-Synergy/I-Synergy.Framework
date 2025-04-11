@@ -39,7 +39,8 @@ public class NotificationsItemsControl : ItemsControl
 
     private static void PrepareItemsControl(ItemsControl itemsControl, bool reverse)
     {
-        Panel itemPanel = GetItemsPanel(itemsControl);
+        var itemPanel = GetItemsPanel(itemsControl);
+
         if (itemPanel == null)
             return;
 
@@ -47,6 +48,7 @@ public class NotificationsItemsControl : ItemsControl
 
         itemPanel.LayoutTransform = new ScaleTransform(1, scaleY);
         Style itemContainerStyle;
+
         if (itemsControl.ItemContainerStyle == null)
         {
             itemContainerStyle = new Style();
@@ -55,18 +57,21 @@ public class NotificationsItemsControl : ItemsControl
         {
             itemContainerStyle = CopyStyle(itemsControl.ItemContainerStyle);
         }
-        Setter setter = new Setter();
+
+        var setter = new Setter();
         setter.Property = LayoutTransformProperty;
         setter.Value = new ScaleTransform(1, scaleY);
         itemContainerStyle.Setters.Add(setter);
         itemsControl.ItemContainerStyle = itemContainerStyle;
     }
 
-    private static Panel GetItemsPanel(ItemsControl itemsControl)
+    private static Panel? GetItemsPanel(ItemsControl itemsControl)
     {
-        ItemsPresenter itemsPresenter = GetVisualChild<ItemsPresenter>(itemsControl);
+        var itemsPresenter = GetVisualChild<ItemsPresenter>(itemsControl);
+
         if (itemsPresenter == null)
             return null;
+
         return GetVisualChild<Panel>(itemsControl);
     }
 
@@ -84,20 +89,21 @@ public class NotificationsItemsControl : ItemsControl
         return styleCopy;
     }
 
-    private static T GetVisualChild<T>(DependencyObject parent) where T : Visual
+    private static T? GetVisualChild<T>(DependencyObject parent) where T : Visual
     {
-        T child = default;
+        T? child = default;
 
         int numVisuals = VisualTreeHelper.GetChildrenCount(parent);
         for (int i = 0; i < numVisuals; i++)
         {
             Visual v = (Visual)VisualTreeHelper.GetChild(parent, i);
             child = v as T;
+
             if (child == null)
             {
                 child = GetVisualChild<T>(v);
             }
-            if (child != null)
+            if (child is not null)
             {
                 break;
             }

@@ -61,8 +61,8 @@ public class ContextServiceExtensionTests
     {
         // Arrange
         var serviceProvider = CreateTestServiceProvider();
-        ITestService firstInstance = null;
-        ITestService secondInstance = null;
+        ITestService? firstInstance = null;
+        ITestService? secondInstance = null;
 
         // Act
         serviceProvider.ExecuteInContext(context =>

@@ -32,7 +32,7 @@ public class DateTimeModelBinderProvider : IModelBinderProvider
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>System.Nullable&lt;IModelBinder&gt;.</returns>
-    public IModelBinder GetBinder(ModelBinderProviderContext context)
+    public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
         Argument.IsNotNull(context);
 

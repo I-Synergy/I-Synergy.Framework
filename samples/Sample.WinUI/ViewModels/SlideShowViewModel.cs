@@ -86,7 +86,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// <summary>
     /// slideshow time out timer tick as an asynchronous operation.
     /// </summary>
-    private void SlideshowTimer_Tick(object sender, ElapsedEventArgs e)
+    private void SlideshowTimer_Tick(object? sender, ElapsedEventArgs e)
     {
         SlideshowTimer.Enabled = false;
 
@@ -112,7 +112,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// <summary>
     /// Updates the source time out timer tick synchronous.
     /// </summary>
-    private void UpdateSourceTimer_Tick(object sender, ElapsedEventArgs e)
+    private void UpdateSourceTimer_Tick(object? sender, ElapsedEventArgs e)
     {
         UpdateSourceTimer.Enabled = false;
 

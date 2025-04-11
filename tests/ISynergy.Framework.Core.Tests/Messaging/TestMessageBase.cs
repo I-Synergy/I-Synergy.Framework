@@ -4,9 +4,5 @@ namespace ISynergy.Framework.Core.Messaging.Tests;
 
 public class TestMessageBase(object sender) : BaseMessage(sender), ITestMessage
 {
-    public string Content
-    {
-        get;
-        set;
-    }
+    public string Content { get; set; } = string.Empty;
 }

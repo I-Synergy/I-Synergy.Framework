@@ -16,7 +16,7 @@ public static class X509CertUtilities
     /// <param name="findValue">The find value.</param>
     /// <param name="validOnly">if set to <c>true</c> [valid only].</param>
     /// <returns>System.Nullable&lt;X509Certificate2&gt;.</returns>
-    public static X509Certificate2 FindCertFromStore(StoreName name, StoreLocation location, X509FindType findType, object findValue, bool validOnly)
+    public static X509Certificate2? FindCertFromStore(StoreName name, StoreLocation location, X509FindType findType, object findValue, bool validOnly)
     {
         using var store = new X509Store(name, location);
         store.Open(OpenFlags.ReadOnly);

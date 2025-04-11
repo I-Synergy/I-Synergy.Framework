@@ -13,9 +13,9 @@ public static class UriExtensions
     /// </summary>
     /// <param name="_self">The image source.</param>
     /// <returns>System.Byte[].</returns>
-    public static async Task<byte[]> ToByteArrayAsync(this Uri _self)
+    public static async Task<byte[]?> ToByteArrayAsync(this Uri _self)
     {
-        byte[] result = null;
+        byte[]? result = null;
 
         var file = await StorageFile.GetFileFromApplicationUriAsync(_self);
 

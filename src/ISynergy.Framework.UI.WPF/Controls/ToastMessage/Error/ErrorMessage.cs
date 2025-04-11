@@ -21,7 +21,7 @@ public class ErrorMessage : MessageBase<ErrorDisplayPart>
 
     protected override void UpdateDisplayOptions(ErrorDisplayPart displayPart, MessageOptions options)
     {
-        if (options.FontSize != null)
+        if (options.FontSize is not null)
             displayPart.Text.FontSize = options.FontSize.Value;
 
         displayPart.CloseButton.Visibility = options.ShowCloseButton ? Visibility.Visible : Visibility.Collapsed;

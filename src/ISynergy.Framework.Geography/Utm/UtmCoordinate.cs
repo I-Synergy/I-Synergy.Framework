@@ -137,7 +137,7 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
     /// </summary>
     /// <param name="other">The other coordinates</param>
     /// <returns>True if they are equal</returns>
-    public bool Equals(UtmCoordinate other)
+    public bool Equals(UtmCoordinate? other)
     {
         return other is not null && other.Grid.Equals(Grid) &&
                 IsApproximatelyEqual(other, DefaultPrecision);
@@ -148,7 +148,7 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
     /// </summary>
     /// <param name="obj">The other object</param>
     /// <returns>True if the other object is an UtmCoordinate equal to this one</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is UtmCoordinate coordinate)
         {

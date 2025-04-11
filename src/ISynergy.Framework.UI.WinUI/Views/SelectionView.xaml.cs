@@ -31,7 +31,7 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
-    private void DataSummary_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void DataSummary_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {
@@ -39,7 +39,8 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
-                viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+                if (DataSummary.SelectedItem is not null)
+                    viewModel.SelectedItems.Add(DataSummary.SelectedItem);
             }
             else
             {
@@ -48,6 +49,8 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
                     viewModel.SelectedItems.Add(item);
                 }
             }
+
+            viewModel.SelectCommand.NotifyCanExecuteChanged();
         }
     }
 

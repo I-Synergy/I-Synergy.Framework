@@ -21,7 +21,7 @@ public class DateTimeConverterTests
 
     public DateTimeConverterTests()
     {
-        _serializerOptions = DefaultJsonSerializers.Default();
+        _serializerOptions = DefaultJsonSerializers.Default;
 
         _dateUnspecified = new DateTime(1975, 10, 29, 15, 0, 0, DateTimeKind.Unspecified);
         _dateUtc = new DateTime(1975, 10, 29, 15, 0, 0, DateTimeKind.Utc);
@@ -84,8 +84,8 @@ public class DateTimeConverterTests
     {
         DateTime expected = DateTime.Parse("2023-12-23T12:23:20.0000010Z");
         const string json = "{\"dt\":\"2023-12-23T12:23:20.0000010Z\"}";
-        Dictionary<string, DateTime> actual = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
-        Assert.AreEqual(expected, actual["dt"]);
+        var actual = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
+        Assert.AreEqual(expected, actual!["dt"]);
     }
 
     [TestMethod]
@@ -93,7 +93,7 @@ public class DateTimeConverterTests
     {
         const string json = "{\"dt\":null}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
-        Assert.ThrowsException<ArgumentNullException>(act);
+        Assert.ThrowsException<FormatException>(act);
     }
 
     [TestMethod]

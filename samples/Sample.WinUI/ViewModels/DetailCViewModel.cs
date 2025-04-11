@@ -8,7 +8,7 @@ public class DetailCViewModel : ViewModelBlade<TestItem>
 {
     public DetailCViewModel(
         ICommonServices commonServices,
-        TestItem item,
+        TestItem? item,
         bool automaticValidation = false)
         : base(commonServices, automaticValidation)
     {

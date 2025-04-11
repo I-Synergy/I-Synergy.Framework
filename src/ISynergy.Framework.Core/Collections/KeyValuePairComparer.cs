@@ -60,7 +60,7 @@ public class KeyValuePairComparer<TKey, TValue>
     /// <param name="x">The first object to compare.</param>
     /// <param name="y">The second object to compare.</param>
     /// 
-    public int Compare(TKey x, TKey y)
+    public int Compare(TKey? x, TKey? y)
     {
         return _keyComparer.Compare(x, y);
     }

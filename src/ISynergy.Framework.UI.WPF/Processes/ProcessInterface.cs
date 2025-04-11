@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -49,7 +48,7 @@ public class ProcessInterface : IDisposable
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="ProgressChangedEventArgs" /> instance containing the event data.</param>
-    void OutputWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+    void OutputWorker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
     {
         //  We must be passed a string in the user state.
         if (e.UserState is string userState)
@@ -64,7 +63,7 @@ public class ProcessInterface : IDisposable
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="DoWorkEventArgs" /> instance containing the event data.</param>
-    void OutputWorker_DoWork(object sender, DoWorkEventArgs e)
+    void OutputWorker_DoWork(object? sender, DoWorkEventArgs e)
     {
         while (!OutputWorker.CancellationPending && OutputReader is not null)
         {
@@ -88,7 +87,7 @@ public class ProcessInterface : IDisposable
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="ProgressChangedEventArgs" /> instance containing the event data.</param>
-    void ErrorWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+    void ErrorWorker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
     {
         //  The userstate must be a string.
         if (e.UserState is string userState)
@@ -103,7 +102,7 @@ public class ProcessInterface : IDisposable
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="DoWorkEventArgs" /> instance containing the event data.</param>
-    void ErrorWorker_DoWork(object sender, DoWorkEventArgs e)
+    void ErrorWorker_DoWork(object? sender, DoWorkEventArgs e)
     {
         while (!ErrorWorker.CancellationPending && ErrorReader is not null)
         {
@@ -158,7 +157,7 @@ public class ProcessInterface : IDisposable
             StartInfo = processStartInfo
         };
 
-        Process.Exited += new WeakEventHandler<EventArgs>(CurrentProcess_Exited).Handler;
+        Process.Exited += CurrentProcess_Exited;
 
         //  Start the process.
         try
@@ -205,7 +204,7 @@ public class ProcessInterface : IDisposable
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-    void CurrentProcess_Exited(object sender, EventArgs e)
+    void CurrentProcess_Exited(object? sender, EventArgs e)
     {
         //  Fire process exited.
         if (Process is not null) FireProcessExitEvent(Process.ExitCode);
@@ -278,25 +277,25 @@ public class ProcessInterface : IDisposable
     /// The current process.
     /// </summary>
     /// <value>The process.</value>
-    public Process Process { get; private set; }
+    public Process? Process { get; private set; }
 
     /// <summary>
     /// The input writer.
     /// </summary>
     /// <value>The input writer.</value>
-    public StreamWriter InputWriter { get; private set; }
+    public StreamWriter? InputWriter { get; private set; }
 
     /// <summary>
     /// The output reader.
     /// </summary>
     /// <value>The output reader.</value>
-    public TextReader OutputReader { get; private set; }
+    public TextReader? OutputReader { get; private set; }
 
     /// <summary>
     /// The error reader.
     /// </summary>
     /// <value>The error reader.</value>
-    public TextReader ErrorReader { get; private set; }
+    public TextReader? ErrorReader { get; private set; }
 
     /// <summary>
     /// The output worker.
@@ -312,35 +311,33 @@ public class ProcessInterface : IDisposable
     /// Current process file name.
     /// </summary>
     /// <value>The name of the process file.</value>
-    public string ProcessFileName { get; private set; }
+    public string? ProcessFileName { get; private set; }
 
     /// <summary>
     /// Arguments sent to the current process.
     /// </summary>
     /// <value>The process arguments.</value>
-    public string ProcessArguments { get; private set; }
+    public string? ProcessArguments { get; private set; }
 
-#nullable disable
     /// <summary>
     /// Occurs when process output is produced.
     /// </summary>
-    public event ProcessEventHanlder OnProcessOutput;
+    public event ProcessEventHanlder? OnProcessOutput;
 
     /// <summary>
     /// Occurs when process error output is produced.
     /// </summary>
-    public event ProcessEventHanlder OnProcessError;
+    public event ProcessEventHanlder? OnProcessError;
 
     /// <summary>
     /// Occurs when process input is produced.
     /// </summary>
-    public event ProcessEventHanlder OnProcessInput;
+    public event ProcessEventHanlder? OnProcessInput;
 
     /// <summary>
     /// Occurs when the process ends.
     /// </summary>
-    public event ProcessEventHanlder OnProcessExit;
-#nullable enable
+    public event ProcessEventHanlder? OnProcessExit;
 
     /// <summary>
     /// Gets a value indicating whether this instance is process running.

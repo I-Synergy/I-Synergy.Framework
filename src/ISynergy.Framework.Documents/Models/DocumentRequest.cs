@@ -25,10 +25,10 @@ public class DocumentRequest<TDocument, TDetails> : BaseRequest
     /// <summary>
     /// Details mail-merge fields.
     /// </summary>
-    public IEnumerable<TDetails> DocumentDetails { get; set; }
+    public IEnumerable<TDetails> DocumentDetails { get; set; } = Enumerable.Empty<TDetails>();
 
     /// <summary>
     /// Alternatives mail-merge fields.
     /// </summary>
-    public IEnumerable<TDetails> DocumentAlternatives { get; set; }
+    public IEnumerable<TDetails> DocumentAlternatives { get; set; } = Enumerable.Empty<TDetails>();
 }

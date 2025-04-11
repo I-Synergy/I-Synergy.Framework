@@ -8,5 +8,5 @@ public class ClientMonitorOptions
     /// <summary>
     /// Endpoint url.
     /// </summary>
-    public string EndpointUrl { get; set; }
+    public string EndpointUrl { get; set; } = string.Empty;
 }

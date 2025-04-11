@@ -90,10 +90,13 @@ public class CommonService : ICommonServices
     /// </summary>
     public void RestartApplication()
     {
-        // Start a new instance of the application
-        Process.Start(Environment.ProcessPath);
-        // Close the current process
-        QuitApplication();
+        if (!string.IsNullOrEmpty(Environment.ProcessPath))
+        {
+            // Start a new instance of the application
+            Process.Start(Environment.ProcessPath);
+            // Close the current process
+            QuitApplication();
+        }
     }
 
     /// <summary>

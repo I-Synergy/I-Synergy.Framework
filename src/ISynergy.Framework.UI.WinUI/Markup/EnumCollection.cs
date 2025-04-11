@@ -20,7 +20,7 @@ public class EnumCollection : MarkupExtension
     /// Gets or sets the type of the enum.
     /// </summary>
     /// <value>The type of the enum.</value>
-    public Type EnumType { get; set; }
+    public Type? EnumType { get; set; }
 
     /// <summary>
     /// Provides the value.
@@ -29,8 +29,8 @@ public class EnumCollection : MarkupExtension
     /// <returns>System.Object.</returns>
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
-        Argument.IsNotNull(EnumType);
-        return EnumType.ToList();
+        Argument.IsEnumType(EnumType);
+        return EnumType!.ToList();
     }
 
     /// <summary>

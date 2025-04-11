@@ -22,5 +22,5 @@ public interface IActionService
     /// Calculates Schedule/Delay expiration when action is saved.
     /// </summary>
     /// <returns></returns>
-    Task<(TimeSpan Expiration, IAction UpcomingTask)> CalculateTimespanAsync();
+    Task<(TimeSpan Expiration, IAction? UpcomingTask)?> CalculateTimespanAsync();
 }

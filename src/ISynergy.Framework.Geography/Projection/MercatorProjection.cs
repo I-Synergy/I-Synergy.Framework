@@ -72,7 +72,7 @@ public abstract class MercatorProjection : IEquatable<MercatorProjection>
     /// </summary>
     /// <param name="other">The projection to compare against</param>
     /// <returns>True if they are equal</returns>
-    public bool Equals(MercatorProjection other)
+    public bool Equals(MercatorProjection? other)
     {
         return null != other && other.ReferenceGlobe.Equals(ReferenceGlobe);
     }

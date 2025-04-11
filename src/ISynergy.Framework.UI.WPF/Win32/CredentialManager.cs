@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.UI.Enumerations;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Win32.SafeHandles;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ namespace ISynergy.Framework.UI.Win32;
 
 public static class CredentialManager
 {
-    public static Credential ReadCredential(string resource)
+    public static Credential? ReadCredential(string resource)
     {
         var read = CredRead(resource, CredentialTypes.Generic, 0, out IntPtr nCredPtr);
         if (read)
@@ -24,7 +25,7 @@ public static class CredentialManager
         return null;
     }
 
-    public static Credential ReadCredential(string resource, string username)
+    public static Credential? ReadCredential(string resource, string username)
     {
         var read = CredRead(resource, CredentialTypes.Generic, 0, out IntPtr nCredPtr);
         if (read)
@@ -43,12 +44,16 @@ public static class CredentialManager
 
     private static Credential ReadCredential(CREDENTIAL credential)
     {
-        string resource = Marshal.PtrToStringUni(credential.TargetName);
-        string username = Marshal.PtrToStringUni(credential.UserName);
-        string password = null;
+        var resource = Marshal.PtrToStringUni(credential.TargetName);
+        var username = Marshal.PtrToStringUni(credential.UserName);
+        string? password = null;
 
         if (credential.CredentialBlob != IntPtr.Zero)
             password = Marshal.PtrToStringUni(credential.CredentialBlob, (int)credential.CredentialBlobSize / 2);
+
+        resource = Argument.IsNotNullOrEmpty(resource);
+        username = Argument.IsNotNullOrEmpty(username);
+        password = Argument.IsNotNullOrEmpty(password);
 
         return new Credential(credential.Type, resource, username, password);
     }
@@ -100,7 +105,7 @@ public static class CredentialManager
             for (int n = 0; n < count; n++)
             {
                 IntPtr credential = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf(typeof(IntPtr)));
-                result.Add(ReadCredential((CREDENTIAL)Marshal.PtrToStructure(credential, typeof(CREDENTIAL))));
+                result.Add(ReadCredential((CREDENTIAL)Marshal.PtrToStructure(credential, typeof(CREDENTIAL))!));
             }
         }
         else
@@ -119,7 +124,7 @@ public static class CredentialManager
     static extern bool CredWrite([In] ref CREDENTIAL userCredential, [In] UInt32 flags);
 
     [DllImport("advapi32", SetLastError = true, CharSet = CharSet.Unicode)]
-    static extern bool CredEnumerate(string filter, int flag, out int count, out IntPtr pCredentials);
+    static extern bool CredEnumerate(string? filter, int flag, out int count, out IntPtr pCredentials);
 
     [DllImport("Advapi32.dll", EntryPoint = "CredFree", SetLastError = true)]
     static extern bool CredFree([In] IntPtr cred);
@@ -155,7 +160,7 @@ public static class CredentialManager
         {
             if (!IsInvalid)
             {
-                CREDENTIAL credential = (CREDENTIAL)Marshal.PtrToStructure(handle, typeof(CREDENTIAL));
+                var credential = (CREDENTIAL)Marshal.PtrToStructure(handle, typeof(CREDENTIAL))!;
                 return credential;
             }
 

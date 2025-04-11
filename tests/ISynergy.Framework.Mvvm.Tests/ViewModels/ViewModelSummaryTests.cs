@@ -16,8 +16,7 @@ public class ViewModelSummaryTests
     private Mock<ILanguageService> _mockLanguageService;
     private Mock<IDialogService> _mockDialogService;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelSummaryTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -38,8 +37,8 @@ public class ViewModelSummaryTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 
     private class TestSummaryViewModel : ViewModelSummary<TestEntity>

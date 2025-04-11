@@ -2,7 +2,7 @@
 
 public class PaginatedResult<T> : Result
 {
-    public IEnumerable<T> Data { get; }
+    public IEnumerable<T>? Data { get; }
 
     public int CurrentPage { get; }
 
@@ -18,7 +18,7 @@ public class PaginatedResult<T> : Result
         Data = data;
     }
 
-    internal PaginatedResult(bool succeeded, IEnumerable<T> data = default, List<string> messages = null, int count = 0, int page = 1, int pageSize = 10)
+    internal PaginatedResult(bool succeeded, IEnumerable<T>? data = default, List<string>? messages = null, int count = 0, int page = 1, int pageSize = 10)
     {
         Data = data;
         CurrentPage = page;

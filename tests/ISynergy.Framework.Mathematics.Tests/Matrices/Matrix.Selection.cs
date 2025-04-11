@@ -27,7 +27,9 @@ public partial class MatrixTest
         Assert.IsTrue(a.IsEqual([0, 1, 2, 3, 4, 5, 6, 7]));
 
         a = [2, 7, 3, 4, 5, 6, 1, 8];
+#pragma warning disable CS0618 // Type or member is obsolete
         double expected = (int)Measures.Median(a.Submatrix(4, 7));
+#pragma warning restore CS0618 // Type or member is obsolete
         int actual = Sort.Partition(a, 4, 7);
         Assert.AreEqual(actual, expected);
         //Assert.IsTrue(a.IsEqual(new[] { 2, 7, 3, 4, 5, 1, 6, 8 }));

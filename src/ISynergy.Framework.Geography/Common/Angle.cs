@@ -168,7 +168,7 @@ public struct Angle : IComparable<Angle>, IEquatable<Angle>
     /// </summary>
     /// <param name="obj">object to compare to</param>
     /// <returns>'true' if angles are equal</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is Angle angle)
         {

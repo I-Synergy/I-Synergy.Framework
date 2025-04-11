@@ -57,5 +57,11 @@ public class RepeatPreviousAction<TEntity> : BaseAction, IRepeatAction
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public bool ValidateAction(object entity) => RepeatValidator?.Invoke(entity as TEntity) ?? false;
+    public bool ValidateAction(object entity)
+    {
+        if (entity is TEntity obj)
+            return RepeatValidator?.Invoke(obj) ?? false;
+
+        return false;
+    }
 }

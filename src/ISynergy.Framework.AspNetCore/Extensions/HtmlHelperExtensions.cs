@@ -47,7 +47,7 @@ public static class HtmlHelperExtensions
     /// <param name="extension">The extension.</param>
     /// <param name="attributes">The attributes.</param>
     /// <returns>HtmlString.</returns>
-    public static HtmlString InlineImageAsync(this IHtmlHelper html, string path, byte[] image, string extension, object attributes = null)
+    public static HtmlString InlineImageAsync(this IHtmlHelper html, string path, byte[] image, string extension, object? attributes = null)
     {
         if (image is not null && !string.IsNullOrWhiteSpace(extension))
         {
@@ -61,12 +61,7 @@ public static class HtmlHelperExtensions
             using var stream = env.WebRootFileProvider.GetFileInfo(path).CreateReadStream();
             var buffer = new byte[stream.Length];
 
-#if NET8_0_OR_GREATER
             stream.ReadExactly(buffer);
-#else
-            stream.Read(buffer, 0, buffer.Length);
-#endif
-
             return ConvertArrayToHtmlString(buffer, contentType, attributes);
         }
 
@@ -80,7 +75,7 @@ public static class HtmlHelperExtensions
     /// <param name="contentType">Type of the content.</param>
     /// <param name="attributes">The attributes.</param>
     /// <returns>HtmlString.</returns>
-    private static HtmlString ConvertArrayToHtmlString(byte[] array, string contentType, object attributes = null)
+    private static HtmlString ConvertArrayToHtmlString(byte[] array, string contentType, object? attributes = null)
     {
         var base64 = Convert.ToBase64String(array);
 

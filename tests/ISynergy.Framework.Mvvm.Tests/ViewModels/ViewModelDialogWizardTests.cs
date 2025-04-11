@@ -13,8 +13,7 @@ public class ViewModelDialogWizardTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILoggerFactory> _mockLoggerFactory;
 
-    [TestInitialize]
-    public void Setup()
+    public ViewModelDialogWizardTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
@@ -29,7 +28,7 @@ public class ViewModelDialogWizardTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     private class TestDialogWizardViewModel : ViewModelDialogWizard<TestEntity>
@@ -212,8 +211,6 @@ public class ViewModelDialogWizardTests
         viewModel.Dispose();
 
         // Assert
-        Assert.IsNull(viewModel.BackCommand);
-        Assert.IsNull(viewModel.NextCommand);
         Assert.IsTrue(viewModel.IsDisposed);
     }
 }

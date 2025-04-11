@@ -16,46 +16,46 @@ public sealed class InfoService : IInfoService
     /// Gets the product version.
     /// </summary>
     /// <value>The product version.</value>
-    public Version ProductVersion { get; private set; }
+    public Version ProductVersion { get; private set; } = new Version("0.0.0");
 
     /// <summary>
     /// Gets the application path.
     /// </summary>
     /// <value>The application path.</value>
-    public string ApplicationPath { get; private set; }
+    public string ApplicationPath { get; private set; } = string.Empty;
 
     /// <summary>
     /// Gets the name of the company.
     /// </summary>
     /// <value>The name of the company.</value>
-    public string CompanyName { get; private set; }
+    public string CompanyName { get; private set; } = string.Empty;
 
     /// <summary>
     /// Gets the name of the product.
     /// </summary>
     /// <value>The name of the product.</value>
-    public string ProductName { get; private set; }
+    public string ProductName { get; private set; } = string.Empty;
 
     /// <summary>
     /// Gets the copy rights detail.
     /// </summary>
     /// <value>The copy rights detail.</value>
-    public string Copyrights { get; private set; }
+    public string Copyrights { get; private set; } = string.Empty;
 
     /// <summary>
     /// Hostname of the machine.
     /// </summary>
-    public string HostName { get; private set; }
+    public string HostName { get; private set; } = "localhost";
 
     /// <summary>
     /// IP Address of the machine.
     /// </summary>
-    public string IPAddress { get; private set; }
+    public string IPAddress { get; private set; } = string.Empty;
 
     /// <summary>
     /// Gets the application title.
     /// </summary>
-    public string Title { get; private set; }
+    public string Title { get; private set; } = string.Empty;
 
     /// <summary>
     /// Loads the assembly into the Version service.
@@ -64,22 +64,22 @@ public sealed class InfoService : IInfoService
     public void LoadAssembly(Assembly assembly)
     {
         ApplicationPath = System.AppContext.BaseDirectory;
-        CompanyName = assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
-        ProductName = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
-        Copyrights = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+        CompanyName = assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company ?? string.Empty;
+        ProductName = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? string.Empty;
+        Copyrights = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? string.Empty;
 
         if (assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false) &&
-            Version.TryParse(assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion, out var informationalVersion))
+            Version.TryParse(assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion, out var informationalVersion))
         {
             ProductVersion = informationalVersion;
         }
         else if (assembly.IsDefined(typeof(AssemblyVersionAttribute), false) &&
-            Version.TryParse(assembly.GetCustomAttribute<AssemblyVersionAttribute>().Version, out var assemblyVersion))
+            Version.TryParse(assembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version, out var assemblyVersion))
         {
             ProductVersion = assemblyVersion;
         }
         else if (assembly.IsDefined(typeof(AssemblyFileVersionAttribute), false) &&
-            Version.TryParse(assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version, out var fileVersion))
+            Version.TryParse(assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version, out var fileVersion))
         {
             ProductVersion = fileVersion;
         }
@@ -88,7 +88,7 @@ public sealed class InfoService : IInfoService
             ProductVersion = new Version("0.0.0");
         }
 
-        IPAddress = NetworkUtility.GetInternetIPAddress();
+        IPAddress = NetworkUtility.GetInternetIPAddress() ?? string.Empty;
         HostName = System.Net.Dns.GetHostName() ?? "localhost";
 
         Title = $"{ProductName} v{ProductVersion}";

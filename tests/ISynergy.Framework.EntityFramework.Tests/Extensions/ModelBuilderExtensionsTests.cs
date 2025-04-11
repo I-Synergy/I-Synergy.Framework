@@ -16,8 +16,7 @@ public class ModelBuilderExtensionsTests
     private ModelBuilder _modelBuilder;
     private readonly Guid _testTenantId = Guid.Parse("12345678-1234-1234-1234-123456789012");
 
-    [TestInitialize]
-    public void Setup()
+    public ModelBuilderExtensionsTests()
     {
         var conventionSet = new ConventionSet();
 
@@ -43,8 +42,8 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestEntity));
-        var property = entity.FindProperty(nameof(TestEntity.TestDecimal));
-        Assert.AreEqual("decimal(38, 10)", property.GetColumnType());
+        var property = entity!.FindProperty(nameof(TestEntity.TestDecimal));
+        Assert.AreEqual("decimal(38, 10)", property!.GetColumnType());
     }
 
     [TestMethod]
@@ -59,8 +58,8 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestEntity));
-        var property = entity.FindProperty(nameof(TestEntity.TestDecimal));
-        Assert.AreEqual(customPrecision, property.GetColumnType());
+        var property = entity!.FindProperty(nameof(TestEntity.TestDecimal));
+        Assert.AreEqual(customPrecision, property!.GetColumnType());
     }
 
     [TestMethod]
@@ -74,7 +73,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntity));
-        var filter = entity.GetQueryFilter();
+        var filter = entity!.GetQueryFilter();
 
         Assert.IsNotNull(filter);
         Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
@@ -96,7 +95,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestEntity));
-        var filter = entity.GetQueryFilter();
+        var filter = entity!.GetQueryFilter();
         Assert.IsNull(filter);
     }
 
@@ -111,7 +110,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestEntity));
-        var filter = entity.GetQueryFilter();
+        var filter = entity!.GetQueryFilter();
 
         Assert.IsNotNull(filter);
         Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
@@ -133,7 +132,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestEntity));
-        var property = entity.FindProperty(nameof(IClass.Version));
+        var property = entity!.FindProperty(nameof(IClass.Version));
 
         Assert.IsNotNull(property);
         Assert.AreEqual(1, property.GetDefaultValue());
@@ -151,7 +150,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntity));
-        var filter = entity.GetQueryFilter();
+        var filter = entity!.GetQueryFilter();
 
         Assert.IsNotNull(filter);
         Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
@@ -207,7 +206,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntity));
-        var filter = entity.GetQueryFilter();
+        var filter = entity!.GetQueryFilter();
 
         Assert.IsNotNull(filter);
         Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
@@ -235,7 +234,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntity));
-        var filter = entity.GetQueryFilter();
+        var filter = entity!.GetQueryFilter();
 
         Assert.IsNotNull(filter);
         Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
@@ -262,7 +261,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntityWithIgnoreSoftDelete));
-        var filter = entity.GetQueryFilter();
+        var filter = entity!.GetQueryFilter();
         Assert.IsNull(filter);
     }
 
@@ -279,7 +278,7 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntityWithIgnoreSoftDelete));
-        var filter = entity.GetQueryFilter();
+        var filter = entity!.GetQueryFilter();
 
         Assert.IsNotNull(filter);
         var lambda = (LambdaExpression)filter;
@@ -304,11 +303,11 @@ public class ModelBuilderExtensionsTests
     public void ApplyModelBuilderConfigurations_WithNullAssemblies_ReturnsModelBuilder()
     {
         // Arrange
-        Assembly[] nullAssemblies = null;
+        Assembly[]? nullAssemblies = null;
 
         // Act & Assert
         Assert.ThrowsException<ArgumentNullException>(() =>
-            _modelBuilder.ApplyModelBuilderConfigurations(nullAssemblies));
+            _modelBuilder.ApplyModelBuilderConfigurations(nullAssemblies!));
     }
 
     [TestMethod]
