@@ -13,7 +13,7 @@ public abstract class BaseEntity : BaseClass, IEntity
     /// Gets or sets the memo.
     /// </summary>
     /// <value>The memo.</value>
-    public string Memo { get; set; } = string.Empty;
+    public string? Memo { get; set; }
     /// <summary>
     /// Gets or sets the created date.
     /// </summary>

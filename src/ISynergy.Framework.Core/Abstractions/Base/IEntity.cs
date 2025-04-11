@@ -11,7 +11,7 @@ public interface IEntity : IClass
     /// Gets or sets the memo.
     /// </summary>
     /// <value>The memo.</value>
-    string Memo { get; set; }
+    string? Memo { get; set; }
     /// <summary>
     /// Gets or sets the created date.
     /// </summary>
