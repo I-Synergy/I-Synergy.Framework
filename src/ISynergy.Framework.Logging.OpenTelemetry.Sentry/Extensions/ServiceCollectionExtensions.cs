@@ -56,6 +56,37 @@ public static class ServiceCollectionExtensions
         return builder;
     }
 
+    public static ILoggingBuilder AddOpenTelemetryLogging(
+        this ILoggingBuilder builder,
+        IInfoService infoService,
+        IConfiguration configuration,
+        Action<OpenTelemetryLoggerOptions>? optionsAction = null,
+        bool profiling = false)
+    {
+        var sentryOptions = new SentryOptions();
+        configuration.GetSection(nameof(SentryOptions)).Bind(sentryOptions);
+
+        builder.AddOpenTelemetry(options =>
+        {
+            options.IncludeFormattedMessage = true;
+            options.IncludeScopes = true;
+
+            optionsAction?.Invoke(options);
+        });
+
+        builder.Services.RemoveAll<ILogger>();
+        builder.Services.TryAddSingleton<ILogger, SentryLoggerService>();
+
+        sentryOptions.UseOpenTelemetry();
+
+        if (profiling)
+            sentryOptions.AddProfilingIntegration();
+
+        SentrySdk.Init(sentryOptions);
+
+        return builder;
+    }
+
     public static IHostBuilder ConfigureOpenTelemetryLogging(
         this IHostBuilder builder,
         IInfoService infoService,
