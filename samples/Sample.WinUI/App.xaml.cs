@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
@@ -7,18 +6,14 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Logs;
 using Sample.Models;
-using Sample.Processors;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Globalization;
@@ -39,14 +34,14 @@ public sealed partial class App : Application
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
-        //: base()
-        : base(new SplashScreenOptions
-        {
-            AssetStreamProvider = () => Task.FromResult(
-                Assembly.GetAssembly(typeof(App))?.GetManifestResourceStream("Sample.Assets.gta.mp4")!),
-            ContentType = "video/mp4",
-            SplashScreenType = SplashScreenTypes.Video
-        })
+        : base()
+    //: base(new SplashScreenOptions
+    //{
+    //    AssetStreamProvider = () => Task.FromResult(
+    //        Assembly.GetAssembly(typeof(App))?.GetManifestResourceStream("Sample.Assets.gta.mp4")!),
+    //    ContentType = "video/mp4",
+    //    SplashScreenType = SplashScreenTypes.Video
+    //})
     {
         InitializeComponent();
 
@@ -66,25 +61,26 @@ public sealed partial class App : Application
             })
             .ConfigureLogging((logging, configuration) =>
             {
-                logging.AddOpenTelemetryLogging(configuration);
+                //logging.AddOpenTelemetryLogging(infoService, configuration);
+                logging.AddOpenTelemetryLogging(infoService, configuration, profiling: true, contextFactory: sp => sp.GetRequiredService<IContext>());
             })
             .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
             {
-                services.TryAddScoped<TenantProcessor>();
-
                 services.TryAddSingleton<ICameraService, CameraService>();
             }, f => f.Name!.StartsWith(typeof(App).Namespace!))
             .ConfigureOpenTelemetryLogging(
                 infoService,
-                tracing => { },
-                metrics => { },
+                tracing =>
+                {
+                    // Add any custom tracing instrumentation here
+                },
+                metrics =>
+                {
+                    // Add any custom metrics instrumentation here
+                },
                 logging =>
                 {
-                    logging.AddProcessor(s =>
-                    {
-                        var scopedContextService = s.GetRequiredService<IScopedContextService>();
-                        return scopedContextService.GetService<TenantProcessor>();
-                    });
+                    // Add any custom logging configuration here
                 });
     }
 

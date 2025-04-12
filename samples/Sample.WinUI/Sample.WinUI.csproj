@@ -41,6 +41,8 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
 		<PackageReference Include="Syncfusion.Chart.WinUI" />
 		<PackageReference Include="Syncfusion.Editors.WinUI" />
 		<PackageReference Include="Syncfusion.Gauge.WinUI" />
@@ -48,7 +50,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry\ISynergy.Framework.Logging.OpenTelemetry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry.Sentry\ISynergy.Framework.Logging.OpenTelemetry.Sentry.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />

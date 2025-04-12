@@ -20,14 +20,20 @@ public static class ServiceCollectionExtensions
 
     public static ILoggingBuilder AddOpenTelemetryLogging(
         this ILoggingBuilder builder,
+        IInfoService infoService,
         IConfiguration configuration,
-        Action<OpenTelemetryLoggerOptions>? optionsAction = null,
-        string prefix = "")
+        Action<OpenTelemetryLoggerOptions>? optionsAction = null)
     {
         builder.AddOpenTelemetry(options =>
         {
             options.IncludeFormattedMessage = true;
             options.IncludeScopes = true;
+
+            options.SetResourceBuilder(
+                ResourceBuilder.CreateDefault()
+                    .AddService(
+                        serviceName: infoService.ProductName,
+                        serviceVersion: infoService.ProductVersion.ToString()));
 
             optionsAction?.Invoke(options);
         });
@@ -79,44 +85,30 @@ public static class ServiceCollectionExtensions
                         .AddTelemetrySdk()
                         .AddEnvironmentVariableDetector();
                 })
-                .WithTracing(tracing =>
+                .WithTracing(tracingBuilder =>
                 {
-                    tracing.AddHttpClientInstrumentation();
+                    tracingAction?.Invoke(tracingBuilder);
 
-                    // Custom tracing
-                    tracingAction?.Invoke(tracing);
+                    tracingBuilder.AddHttpClientInstrumentation();
                 })
-                .WithMetrics(metrics =>
+                .WithMetrics(metricsBuilder =>
                 {
+                    metricsAction?.Invoke(metricsBuilder);
+
                     // System metrics
-                    metrics.AddRuntimeInstrumentation();    // .NET Runtime metrics (GC, CPU, etc)
-                    metrics.AddProcessInstrumentation();    // Process metrics (memory, CPU, etc)
+                    metricsBuilder.AddRuntimeInstrumentation();    // .NET Runtime metrics (GC, CPU, etc)
+                    metricsBuilder.AddProcessInstrumentation();    // Process metrics (memory, CPU, etc)
 
                     // HTTP Client metrics
-                    metrics.AddHttpClientInstrumentation(); // Outgoing HTTP requests
-
-                    // Custom metrics
-                    metricsAction?.Invoke(metrics);
+                    metricsBuilder.AddHttpClientInstrumentation(); // Outgoing HTTP requests
                 })
-                .WithLogging(logging =>
+                .WithLogging(loggingBuilder =>
                 {
                     // Custom logging
-                    loggerAction?.Invoke(logging);
-                });
+                    loggerAction?.Invoke(loggingBuilder);
+                })
+                .UseOtlpExporter();
         });
-
-        builder.AddOpenTelemetryExporters();
-
-        return builder;
-    }
-
-    private static IHostBuilder AddOpenTelemetryExporters(this IHostBuilder builder)
-    {
-        builder.ConfigureServices((context, services) =>
-        {
-            services.AddOpenTelemetry().UseOtlpExporter();
-        });
-
 
         return builder;
     }

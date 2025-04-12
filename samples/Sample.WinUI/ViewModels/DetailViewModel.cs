@@ -7,7 +7,7 @@ namespace Sample.ViewModels;
 
 public class DetailViewModel : ViewModelBlade<TestItem>
 {
-    public AsyncRelayCommand OpenNewBladeCommand { get; private set; }
+    public AsyncRelayCommand? OpenNewBladeCommand { get; private set; }
 
     public DetailViewModel(
         ICommonServices commonServices,
