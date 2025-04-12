@@ -135,13 +135,22 @@ public class RelayCommandGenericTests
     }
 
     [TestMethod]
-    public void CanExecute_WithNullForValueType_ReturnsFalse()
+    public void CanExecute_WithNullForValueType_ConsultsPredicate()
     {
         // Arrange
-        var command = new RelayCommand<int>(_ => { });
+        var commandWithoutPredicate = new RelayCommand<int>(_ => { });
+        var commandWithTruePredicate = new RelayCommand<int>(_ => { }, _ => true);
+        var commandWithFalsePredicate = new RelayCommand<int>(_ => { }, _ => false);
 
         // Act & Assert
-        Assert.IsFalse(command.CanExecute(null));
+        // Without an explicit predicate, should return true (default behavior)
+        Assert.IsTrue(commandWithoutPredicate.CanExecute(null));
+
+        // With a predicate that returns true, should return true
+        Assert.IsTrue(commandWithTruePredicate.CanExecute(null));
+
+        // With a predicate that returns false, should return false
+        Assert.IsFalse(commandWithFalsePredicate.CanExecute(null));
     }
 
     [TestMethod]
@@ -184,6 +193,71 @@ public class RelayCommandGenericTests
             RelayCommand<int>.ThrowArgumentExceptionForInvalidCommandArgument("invalid"));
         Assert.IsTrue(ex2.Message.Contains("cannot be of type"));
     }
+
+    [TestMethod]
+    public void Dispose_MultipleTimes_HandlesCorrectly()
+    {
+        // Arrange
+        var command = new RelayCommand<string>(_ => { });
+
+        // Act & Assert - should not throw
+        command.Dispose();
+        command.Dispose(); // Second dispose should be safe
+    }
+
+    [TestMethod]
+    public void Execute_AfterDispose_ThrowsObjectDisposedException()
+    {
+        // Arrange
+        var command = new RelayCommand<string>(_ => { });
+        command.Dispose();
+
+        // Act & Assert
+        Assert.ThrowsException<ObjectDisposedException>(() => command.Execute("test"));
+    }
+
+    [TestMethod]
+    public void CanExecute_AfterDispose_ThrowsObjectDisposedException()
+    {
+        // Arrange
+        var command = new RelayCommand<string>(_ => { });
+        command.Dispose();
+
+        // Act & Assert
+        Assert.ThrowsException<ObjectDisposedException>(() => command.CanExecute("test"));
+    }
+
+    [TestMethod]
+    public void Execute_WithComplexType_PassesReferenceCorrectly()
+    {
+        // Arrange
+        var testObject = new TestClass { Value = "test" };
+        TestClass? receivedObject = null;
+        var command = new RelayCommand<TestClass>(param => receivedObject = param);
+
+        // Act
+        command.Execute(testObject);
+
+        // Assert
+        Assert.AreSame(testObject, receivedObject);
+    }
+
+    [TestMethod]
+    public void Constructor_WithNullAction_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new RelayCommand<string>(null!));
+    }
+
+    [TestMethod]
+    public void Constructor_WithNullPredicate_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new RelayCommand<string>(_ => { }, null!));
+    }
+
 
     private class TestClass
     {

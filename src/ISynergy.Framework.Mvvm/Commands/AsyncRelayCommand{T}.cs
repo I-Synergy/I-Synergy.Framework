@@ -6,8 +6,6 @@ using ISynergy.Framework.Mvvm.Commands.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System.Runtime.CompilerServices;
 
-#nullable enable
-
 namespace ISynergy.Framework.Mvvm.Commands;
 
 /// <summary>
@@ -81,22 +79,17 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool CanExecute(T? parameter)
     {
-        if (parameter is not null)
-        {
-            bool canExecute = _canExecute?.Invoke(parameter) != false;
-            return canExecute && ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0 || ExecutionTask is not { IsCompleted: false });
-        }
-
-        return false;
+        var canExecute = _canExecute?.Invoke(parameter!) != false;
+        return canExecute && ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0 || ExecutionTask is not { IsCompleted: false });
     }
 
     public override bool CanExecute(object? parameter)
     {
-        if (parameter is null && default(T) is not null)
-            return false;
-
         if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result))
-            RelayCommand<T>.ThrowArgumentExceptionForInvalidCommandArgument(parameter);
+        {
+            if (parameter is not null)
+                RelayCommand<T>.ThrowArgumentExceptionForInvalidCommandArgument(parameter);
+        }
 
         return CanExecute(result);
     }
@@ -144,11 +137,20 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
         }
         catch (Exception ex)
         {
-            var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-            if (ex.InnerException is not null)
-                await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+            // Only handle exceptions if not configured to flow them to the task scheduler
+            if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
+            {
+                var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
+                if (ex.InnerException is not null)
+                    await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                else
+                    await exceptionHandlerService.HandleExceptionAsync(ex);
+            }
             else
-                await exceptionHandlerService.HandleExceptionAsync(ex);
+            {
+                // Re-throw the exception if configured to flow to task scheduler
+                throw;
+            }
         }
         finally
         {
