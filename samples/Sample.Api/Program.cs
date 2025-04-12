@@ -1,5 +1,4 @@
 using ISynergy.Framework.AspNetCore.Extensions;
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Logging.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -22,10 +21,7 @@ public class Program
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly!);
 
-        builder.Services.AddSingleton<IContext, Context>();
-
-        builder.Logging.AddOpenTelemetryLogging(sp =>
-        sp.GetRequiredService<IContext>(),
+        builder.Logging.AddOpenTelemetryLogging(
         infoService,
         builder.Configuration,
             logger =>
