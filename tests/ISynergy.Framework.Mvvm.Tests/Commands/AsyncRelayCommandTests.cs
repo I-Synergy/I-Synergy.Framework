@@ -239,4 +239,63 @@ public class AsyncRelayCommandTests
         // Act & Assert - should not throw
         await command.ExecuteAsync(null);
     }
+
+    [TestMethod]
+    public async Task ExecuteAsync_WithFlowExceptionsToTaskScheduler_DoesNotHandleException()
+    {
+        // Arrange
+        var expectedException = new InvalidOperationException("Test exception");
+        var command = new AsyncRelayCommand(
+            async () =>
+            {
+                await Task.Delay(10);
+                throw expectedException;
+            },
+            options: AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler
+        );
+
+        // Act & Assert
+        var task = command.ExecuteAsync(null);
+
+        // The exception should flow to the task rather than being handled internally
+        var actualException = await Assert.ThrowsExceptionAsync<InvalidOperationException>(
+            async () => await task);
+
+        Assert.AreEqual(expectedException, actualException);
+
+        // Verify exception was NOT handled by the service
+        _mockExceptionHandler.Verify(
+            x => x.HandleExceptionAsync(It.IsAny<Exception>()),
+            Times.Never);
+    }
+
+    [TestMethod]
+    public async Task PropertyChanged_NotifiesIsRunningCorrectly()
+    {
+        // Arrange
+        var propertyChanges = new List<string>();
+        var tcs = new TaskCompletionSource<bool>();
+        var command = new AsyncRelayCommand(async () =>
+        {
+            await tcs.Task;
+        });
+
+        command.PropertyChanged += (s, e) => propertyChanges.Add(e.PropertyName!);
+
+        // Act
+        var task = command.ExecuteAsync(null);
+
+        // Assert initial state
+        Assert.IsTrue(propertyChanges.Contains("IsRunning"));
+        Assert.IsTrue(command.IsRunning);
+
+        // Complete the task
+        tcs.SetResult(true);
+        await task;
+
+        // Assert final state
+        Assert.IsTrue(propertyChanges.Contains("IsRunning"));
+        Assert.IsFalse(command.IsRunning);
+    }
+
 }

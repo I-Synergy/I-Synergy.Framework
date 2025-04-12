@@ -128,4 +128,53 @@ public class RelayCommandTests
         // Assert
         Assert.IsTrue(wasNotified);
     }
+
+    [TestMethod]
+    public void Dispose_MultipleTimes_HandlesCorrectly()
+    {
+        // Arrange
+        var command = new RelayCommand(() => { });
+
+        // Act & Assert - should not throw
+        command.Dispose();
+        command.Dispose(); // Second dispose should be safe
+    }
+
+    [TestMethod]
+    public void Execute_AfterDispose_ThrowsObjectDisposedException()
+    {
+        // Arrange
+        var command = new RelayCommand(() => { });
+        command.Dispose();
+
+        // Act & Assert
+        Assert.ThrowsException<ObjectDisposedException>(() => command.Execute(null));
+    }
+
+    [TestMethod]
+    public void CanExecute_AfterDispose_ThrowsObjectDisposedException()
+    {
+        // Arrange
+        var command = new RelayCommand(() => { });
+        command.Dispose();
+
+        // Act & Assert
+        Assert.ThrowsException<ObjectDisposedException>(() => command.CanExecute(null));
+    }
+
+    [TestMethod]
+    public void Constructor_WithNullAction_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() => new RelayCommand(null!));
+    }
+
+    [TestMethod]
+    public void Constructor_WithNullPredicate_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new RelayCommand(() => { }, null!));
+    }
+
 }
