@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ServiceDiscovery;
+using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -22,11 +23,11 @@ public static class ServiceCollectionExtensions
 
     public static ILoggingBuilder AddOpenTelemetryLogging(
         this ILoggingBuilder builder,
-        Func<IServiceProvider, IContext> contextFactory,
         IInfoService infoService,
         IConfiguration configuration,
-        Action<OpenTelemetryLoggerOptions>? optionsAction = null,
-        bool profiling = false)
+        bool profiling = false,
+        Func<IServiceProvider, IContext>? contextFactory = null,
+        Action<OpenTelemetryLoggerOptions>? optionsAction = null)
     {
         var sentryOptions = new SentryOptions();
         configuration.GetSection(nameof(SentryOptions)).Bind(sentryOptions);
@@ -36,45 +37,23 @@ public static class ServiceCollectionExtensions
             options.IncludeFormattedMessage = true;
             options.IncludeScopes = true;
 
+            options.SetResourceBuilder(
+                ResourceBuilder.CreateDefault()
+                    .AddService(
+                        serviceName: infoService.ProductName,
+                        serviceVersion: infoService.ProductVersion.ToString()));
+
             optionsAction?.Invoke(options);
 
-            var context = contextFactory(builder.Services.BuildServiceProvider());
-            options.AddProcessor(new SentryLogProcessor(context, infoService, sentryOptions));
+            if (contextFactory is not null)
+            {
+                var context = contextFactory(builder.Services.BuildServiceProvider());
+                options.AddProcessor(new SentryLogProcessor(context, infoService, sentryOptions));
+            }
         });
 
         builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
-        builder.Services.TryAddSingleton<ILogger, SentryLoggerService>();
-
-        sentryOptions.UseOpenTelemetry();
-
-        if (profiling)
-            sentryOptions.AddProfilingIntegration();
-
-        SentrySdk.Init(sentryOptions);
-
-        return builder;
-    }
-
-    public static ILoggingBuilder AddOpenTelemetryLogging(
-        this ILoggingBuilder builder,
-        IInfoService infoService,
-        IConfiguration configuration,
-        Action<OpenTelemetryLoggerOptions>? optionsAction = null,
-        bool profiling = false)
-    {
-        var sentryOptions = new SentryOptions();
-        configuration.GetSection(nameof(SentryOptions)).Bind(sentryOptions);
-
-        builder.AddOpenTelemetry(options =>
-        {
-            options.IncludeFormattedMessage = true;
-            options.IncludeScopes = true;
-
-            optionsAction?.Invoke(options);
-        });
-
-        builder.Services.RemoveAll<ILogger>();
         builder.Services.TryAddSingleton<ILogger, SentryLoggerService>();
 
         sentryOptions.UseOpenTelemetry();
@@ -129,30 +108,29 @@ public static class ServiceCollectionExtensions
                 })
                 .WithTracing(tracing =>
                 {
-                    tracing.AddHttpClientInstrumentation();
-
-                    // Custom tracing
                     tracingAction?.Invoke(tracing);
+
+                    tracing.AddHttpClientInstrumentation();
 
                     tracing.AddSentry();
                 })
                 .WithMetrics(metrics =>
                 {
+                    metricsAction?.Invoke(metrics);
+
                     // System metrics
                     metrics.AddRuntimeInstrumentation();    // .NET Runtime metrics (GC, CPU, etc)
                     metrics.AddProcessInstrumentation();    // Process metrics (memory, CPU, etc)
 
                     // HTTP Client metrics
                     metrics.AddHttpClientInstrumentation(); // Outgoing HTTP requests
-
-                    // Custom metrics
-                    metricsAction?.Invoke(metrics);
                 })
                 .WithLogging(logging =>
                 {
                     // Custom logging
                     loggerAction?.Invoke(logging);
-                });
+                })
+                .UseOtlpExporter();
         });
 
         return builder;

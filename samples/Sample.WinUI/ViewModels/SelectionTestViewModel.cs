@@ -23,14 +23,14 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <value>The title.</value>
     public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
 
-    public AsyncRelayCommand SelectSingleCommand { get; private set; }
-    public AsyncRelayCommand SelectMultipleCommand { get; private set; }
-    public AsyncRelayCommand ShowDialogYesNo { get; set; }
-    public AsyncRelayCommand ShowDialogYesNoCancel { get; set; }
-    public AsyncRelayCommand ShowDialogOk { get; set; }
-    public AsyncRelayCommand ShowDialogOkCancel { get; set; }
-    public AsyncRelayCommand ShowUnitsCommand { get; private set; }
-    public AsyncRelayCommand ShowTestCommand { get; private set; }
+    public AsyncRelayCommand? SelectSingleCommand { get; private set; }
+    public AsyncRelayCommand? SelectMultipleCommand { get; private set; }
+    public AsyncRelayCommand? ShowDialogYesNo { get; set; }
+    public AsyncRelayCommand? ShowDialogYesNoCancel { get; set; }
+    public AsyncRelayCommand? ShowDialogOk { get; set; }
+    public AsyncRelayCommand? ShowDialogOkCancel { get; set; }
+    public AsyncRelayCommand? ShowUnitsCommand { get; private set; }
+    public AsyncRelayCommand? ShowTestCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the selected test items.

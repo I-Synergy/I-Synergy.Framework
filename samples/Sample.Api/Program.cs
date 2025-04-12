@@ -22,18 +22,18 @@ public class Program
         infoService.LoadAssembly(mainAssembly!);
 
         builder.Logging.AddOpenTelemetryLogging(
-        infoService,
-        builder.Configuration,
-            logger =>
-            {
-                //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
-                //{
-                //    logger.AddAzureMonitorLogExporter(options =>
-                //    {
-                //        options.ConnectionString = builder.Configuration[ApplicationInsightsConnectionString];
-                //    });
-                //}
-            });
+            infoService,
+            builder.Configuration,
+                logger =>
+                {
+                    //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
+                    //{
+                    //    logger.AddAzureMonitorLogExporter(options =>
+                    //    {
+                    //        options.ConnectionString = builder.Configuration[ApplicationInsightsConnectionString];
+                    //    });
+                    //}
+                });
 
         builder.Host.ConfigureOpenTelemetryLogging(infoService,
             tracing =>
