@@ -25,15 +25,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
 
-    public AsyncRelayCommand DisplayCommand { get; private set; }
-    public AsyncRelayCommand InfoCommand { get; private set; }
-    public AsyncRelayCommand BrowseCommand { get; private set; }
-    public AsyncRelayCommand ConverterCommand { get; private set; }
-    public AsyncRelayCommand SelectionTestCommand { get; private set; }
-    public AsyncRelayCommand ListViewTestCommand { get; private set; }
-    public AsyncRelayCommand ValidationTestCommand { get; private set; }
-    public AsyncRelayCommand TreeNodeTestCommand { get; private set; }
-    public AsyncRelayCommand ChartCommand { get; private set; }
+    public AsyncRelayCommand? DisplayCommand { get; private set; }
+    public AsyncRelayCommand? InfoCommand { get; private set; }
+    public AsyncRelayCommand? BrowseCommand { get; private set; }
+    public AsyncRelayCommand? ConverterCommand { get; private set; }
+    public AsyncRelayCommand? SelectionTestCommand { get; private set; }
+    public AsyncRelayCommand? ListViewTestCommand { get; private set; }
+    public AsyncRelayCommand? ValidationTestCommand { get; private set; }
+    public AsyncRelayCommand? TreeNodeTestCommand { get; private set; }
+    public AsyncRelayCommand? ChartCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -247,14 +247,23 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
 
             DisplayCommand?.Dispose();
+            DisplayCommand = null;
             InfoCommand?.Dispose();
+            InfoCommand = null;
             BrowseCommand?.Dispose();
+            BrowseCommand = null;
             ConverterCommand?.Dispose();
+            ConverterCommand = null;
             SelectionTestCommand?.Dispose();
+            SelectionTestCommand = null;
             ListViewTestCommand?.Dispose();
+            ListViewTestCommand = null;
             ValidationTestCommand?.Dispose();
+            ValidationTestCommand = null;
             TreeNodeTestCommand?.Dispose();
+            TreeNodeTestCommand = null;
             ChartCommand?.Dispose();
+            ChartCommand = null;
 
             base.Dispose(disposing);
         }

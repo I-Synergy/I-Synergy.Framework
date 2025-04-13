@@ -167,7 +167,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
                 _taskCompletion!.SetResult(true);
 
                 // Automatically complete loading if there are no loading options
-                if (_splashScreenOptions is null && !CanSkip)
+                if ((_splashScreenOptions is null || _splashScreenOptions.SplashScreenType == SplashScreenTypes.None) && !CanSkip)
                 {
                     await CompleteLoadingAsync();
                 }

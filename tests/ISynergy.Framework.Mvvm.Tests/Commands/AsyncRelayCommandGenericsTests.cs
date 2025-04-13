@@ -409,6 +409,73 @@ public class AsyncRelayCommandGenericsTests
         Assert.IsTrue(propertyChanges.IndexOf("ExecutionTask") < propertyChanges.IndexOf("IsRunning"));
     }
 
+    [TestMethod]
+    public async Task ExecuteAsync_WithFlowExceptionsToTaskScheduler_DoesNotHandleException()
+    {
+        // Arrange
+        var expectedException = new InvalidOperationException("Test exception");
+        var command = new AsyncRelayCommand<string>(
+            async (param) =>
+            {
+                await Task.Delay(10);
+                throw expectedException;
+            },
+            options: AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler
+        );
+
+        // Act & Assert
+        var task = command.ExecuteAsync("test");
+
+        // The exception should flow to the task rather than being handled internally
+        var actualException = await Assert.ThrowsExceptionAsync<InvalidOperationException>(
+            async () => await task);
+
+        Assert.AreEqual(expectedException, actualException);
+
+        // Verify exception was NOT handled by the service
+        _mockExceptionHandler.Verify(
+            x => x.HandleExceptionAsync(It.IsAny<Exception>()),
+            Times.Never);
+    }
+
+    [TestMethod]
+    public void CanExecute_WithNullParameter_ReturnsExpectedResult()
+    {
+        // Arrange
+        bool predicateCalled = false;
+        var command = new AsyncRelayCommand<string?>(
+            (param) => Task.CompletedTask,
+            (param) =>
+            {
+                predicateCalled = true;
+                return param == null;
+            }
+        );
+
+        // Act
+        bool canExecute = command.CanExecute(null);
+
+        // Assert
+        Assert.IsTrue(predicateCalled, "Predicate should be called even with null parameter");
+        Assert.IsTrue(canExecute, "Command should be executable with null parameter when predicate allows it");
+    }
+
+    [TestMethod]
+    public void CanExecute_WithNullParameterAndNoExplicitPredicate_ReturnsTrue()
+    {
+        // Arrange - command with no explicit predicate
+        var command = new AsyncRelayCommand<string?>(
+            (param) => Task.CompletedTask
+        );
+
+        // Act
+        bool canExecute = command.CanExecute(null);
+
+        // Assert
+        Assert.IsTrue(canExecute, "Command with no explicit predicate should be executable with null parameter");
+    }
+
+
     private class TestClass
     {
         public string? Value { get; set; }

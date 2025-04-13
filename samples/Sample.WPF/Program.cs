@@ -30,7 +30,7 @@ public static class Program
             })
             .ConfigureLogging((logging, configuration) =>
             {
-                logging.AddOpenTelemetryLogging(configuration);
+                logging.AddOpenTelemetryLogging(infoService, configuration);
             })
             .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
             {

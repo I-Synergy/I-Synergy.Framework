@@ -129,7 +129,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// Gets or sets the clear command.
     /// </summary>
     /// <value>The clear command.</value>
-    public RelayCommand ClearCommand { get; private set; }
+    public RelayCommand? ClearCommand { get; private set; }
 
     /// <summary>
     /// Edits the asynchronous.
