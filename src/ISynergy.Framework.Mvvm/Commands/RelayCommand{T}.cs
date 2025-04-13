@@ -49,11 +49,11 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     {
         ThrowIfDisposed();
 
-        if (parameter is null && default(T) is not null)
-            return false;
-
         if (!TryGetCommandArgument(parameter, out T? result))
-            ThrowArgumentExceptionForInvalidCommandArgument(parameter);
+        {
+            if (parameter is not null)
+                ThrowArgumentExceptionForInvalidCommandArgument(parameter);
+        }
 
         return CanExecute(result);
     }

@@ -82,7 +82,7 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool CanExecute(object? parameter)
     {
-        bool canExecute = _canExecute?.Invoke() != false;
+        var canExecute = _canExecute?.Invoke() != false;
         return canExecute && ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0 || ExecutionTask is not { IsCompleted: false });
     }
 
@@ -121,11 +121,20 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
         }
         catch (Exception ex)
         {
-            var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-            if (ex.InnerException is not null)
-                await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+            // Only handle exceptions if not configured to flow them to the task scheduler
+            if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
+            {
+                var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
+                if (ex.InnerException is not null)
+                    await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                else
+                    await exceptionHandlerService.HandleExceptionAsync(ex);
+            }
             else
-                await exceptionHandlerService.HandleExceptionAsync(ex);
+            {
+                // Re-throw the exception if configured to flow to task scheduler
+                throw;
+            }
         }
         finally
         {

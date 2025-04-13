@@ -46,8 +46,8 @@ public class ConvertersViewModel : ViewModelNavigation<object>
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand<TestItem> NavigateToDetailCommand { get; private set; }
-    public AsyncRelayCommand<TestItem> NavigateToPivotCommand { get; private set; }
+    public AsyncRelayCommand<TestItem>? NavigateToDetailCommand { get; private set; }
+    public AsyncRelayCommand<TestItem>? NavigateToPivotCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
