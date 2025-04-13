@@ -208,6 +208,10 @@ public abstract class ObservableClass : IObservableClass
         return default!;
     }
 
+    [JsonIgnore]
+    [DataTableIgnore]
+    [XmlIgnore]
+    [Display(AutoGenerateField = false)]
     protected bool IsInCleanup { get; set; }
 
     /// <summary>
