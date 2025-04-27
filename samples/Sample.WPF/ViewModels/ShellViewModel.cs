@@ -10,6 +10,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
+using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
 using Sample.Models;
 using System.Collections.ObjectModel;
@@ -65,11 +66,13 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="logger"></param>
     /// <param name="toastMessageService"></param>
     public ShellViewModel(
         ICommonServices commonServices,
+        ILogger<ShellViewModel> logger,
         IToastMessageService toastMessageService)
-        : base(commonServices)
+        : base(commonServices, logger)
     {
         _toastMessageService = toastMessageService;
 
@@ -129,7 +132,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private Task SelectSingleAsync()
     {
-        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(_commonServices, Items, SelectedTestItems, SelectionModes.Single);
+        var selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
+        selectionVm.SetSelectionMode(SelectionModes.Single);
+        selectionVm.SetItems(Items);
+        selectionVm.SetSelectedItems(SelectedTestItems);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
@@ -144,7 +150,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private Task SelectMultipleAsync()
     {
-        ViewModelSelectionDialog<TestItem> selectionVm = new ViewModelSelectionDialog<TestItem>(_commonServices, Items, SelectedTestItems, SelectionModes.Multiple);
+        var selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
+        selectionVm.SetSelectionMode(SelectionModes.Multiple);
+        selectionVm.SetItems(Items);
+        selectionVm.SetSelectedItems(SelectedTestItems);
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }

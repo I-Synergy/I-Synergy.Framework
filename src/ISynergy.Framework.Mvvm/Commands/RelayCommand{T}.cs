@@ -3,8 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Commands.Base;
 using System.Runtime.CompilerServices;
 
-#nullable enable
-
 namespace ISynergy.Framework.Mvvm.Commands;
 
 /// <summary>
@@ -61,15 +59,7 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     public void Execute(T? parameter)
     {
         ThrowIfDisposed();
-
-        try
-        {
-            _execute(parameter);
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex);
-        }
+        _execute(parameter);
     }
 
     public override void Execute(object? parameter)

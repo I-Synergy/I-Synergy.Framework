@@ -38,11 +38,14 @@
 
 	<ItemGroup>
 		<Manifest Include="$(ApplicationManifest)" />
+		<PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
+		<PackageReference Include="Sentry" />
+		<PackageReference Include="Sentry.OpenTelemetry" />
 		<PackageReference Include="Syncfusion.Chart.WinUI" />
 		<PackageReference Include="Syncfusion.Editors.WinUI" />
 		<PackageReference Include="Syncfusion.Gauge.WinUI" />
@@ -50,8 +53,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry.Sentry\ISynergy.Framework.Logging.OpenTelemetry.Sentry.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.ApplicationInsights\ISynergy.Framework.OpenTelemetry.ApplicationInsights.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.Sentry\ISynergy.Framework.OpenTelemetry.Sentry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
@@ -65,10 +70,6 @@
 	</ItemGroup>
 
 	<Import Project="..\Sample.UI.Shared\Sample.UI.Shared.projitems" Label="Shared" />
-
-	<ItemGroup>
-		<PRIResource Remove="Controls\**" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<Using Include="ISynergy.Framework.UI.Application">

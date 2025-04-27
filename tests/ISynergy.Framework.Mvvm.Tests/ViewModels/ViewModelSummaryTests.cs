@@ -12,39 +12,35 @@ public class ViewModelSummaryTests
 {
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILoggerFactory> _mockLoggerFactory;
+    private Mock<ILogger> _mockLogger;
     private Mock<ILanguageService> _mockLanguageService;
     private Mock<IDialogService> _mockDialogService;
 
     public ViewModelSummaryTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
+
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
 
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
-
-        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
+        _mockLogger = new Mock<ILogger>();
 
         _mockLanguageService = new Mock<ILanguageService>();
         _mockDialogService = new Mock<IDialogService>();
         _mockCommonServices.Setup(x => x.DialogService).Returns(_mockDialogService.Object);
     }
 
-    private class TestEntity
+    public class TestEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
     }
 
-    private class TestSummaryViewModel : ViewModelSummary<TestEntity>
+    public class TestSummaryViewModel : ViewModelSummary<TestEntity>
     {
-        public TestSummaryViewModel(ICommonServices commonServices, bool refreshOnInitialization = true)
-            : base(commonServices, refreshOnInitialization) { }
+        public TestSummaryViewModel(ICommonServices commonServices, ILogger<TestSummaryViewModel> logger, bool refreshOnInitialization = true)
+            : base(commonServices, logger, refreshOnInitialization) { }
 
         public override Task AddAsync()
         {
@@ -71,7 +67,7 @@ public class ViewModelSummaryTests
     public void Constructor_InitializesCollectionsAndCommands()
     {
         // Arrange & Act
-        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, new Mock<ILogger<TestSummaryViewModel>>().Object);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -87,7 +83,7 @@ public class ViewModelSummaryTests
     public async Task InitializeAsync_WithRefreshOnInitialization_RefreshesItems()
     {
         // Arrange
-        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, true);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, new Mock<ILogger<TestSummaryViewModel>>().Object, true);
 
         // Act
         await viewModel.InitializeAsync();
@@ -100,7 +96,7 @@ public class ViewModelSummaryTests
     public async Task DeleteAsync_WithConfirmation_RemovesItem()
     {
         // Arrange
-        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, new Mock<ILogger<TestSummaryViewModel>>().Object);
         var entity = new TestEntity { Id = 1, Description = "Test" };
         _mockLanguageService.Setup(x => x.GetString(It.IsAny<string>())).Returns("Test");
         _mockDialogService.Setup(x => x.ShowMessageAsync(

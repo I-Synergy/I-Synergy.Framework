@@ -1,4 +1,3 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,7 +7,6 @@ namespace ISynergy.Framework.Mvvm.Commands.Tests;
 [TestClass]
 public class RelayCommandTests
 {
-    private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
@@ -16,7 +14,6 @@ public class RelayCommandTests
     public RelayCommandTests()
     {
         // Setup mocks
-        _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockServiceScope = new Mock<IServiceScope>();
         _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
@@ -34,11 +31,6 @@ public class RelayCommandTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Setup exception handler service
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
 
         // Initialize ServiceLocator with mock service provider
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
@@ -89,12 +81,7 @@ public class RelayCommandTests
         var command = new RelayCommand(() => throw expectedException);
 
         // Act
-        command.Execute(null);
-
-        // Assert
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(expectedException),
-            Times.Once);
+        Assert.Throws<InvalidOperationException>(() => command.Execute(null));
     }
 
     [TestMethod]
@@ -106,12 +93,7 @@ public class RelayCommandTests
         var command = new RelayCommand(() => throw outerException);
 
         // Act
-        command.Execute(null);
-
-        // Assert
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(innerException),
-            Times.Once);
+        Assert.Throws<Exception>(() => command.Execute(null));
     }
 
     [TestMethod]

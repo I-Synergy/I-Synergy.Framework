@@ -28,9 +28,6 @@ ___
 | [I-Synergy.Framework.Financial](https://www.nuget.org/packages/I-Synergy.Framework.Financial/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Financial) |
 | [I-Synergy.Framework.Geography](https://www.nuget.org/packages/I-Synergy.Framework.Geography/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Geography) |
 | [I-Synergy.Framework.IO](https://www.nuget.org/packages/I-Synergy.Framework.IO/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.IO) |
-| [I-Synergy.Framework.Logging](https://www.nuget.org/packages/I-Synergy.Framework.Logging/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging) |
-| [I-Synergy.Framework.Logging.OpenTelemetry](https://www.nuget.org/packages/I-Synergy.Framework.Logging.OpenTelemetry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.OpenTelemetry) |
-| [I-Synergy.Framework.Logging.OpenTelemetry.Sentry](https://www.nuget.org/packages/I-Synergy.Framework.Logging.OpenTelemetry.Sentry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.OpenTelemetry.Sentry) |
 | [I-Synergy.Framework.Mail](https://www.nuget.org/packages/I-Synergy.Framework.Mail/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail) |
 | [I-Synergy.Framework.Mail.Microsoft365](https://www.nuget.org/packages/I-Synergy.Framework.Mail.Microsoft365/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.Microsoft365) |
 | [I-Synergy.Framework.Mail.SendGrid](https://www.nuget.org/packages/I-Synergy.Framework.Mail.SendGrid/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.SendGrid) |
@@ -40,6 +37,9 @@ ___
 | [I-Synergy.Framework.Monitoring](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Monitoring) |
 | [I-Synergy.Framework.Monitoring.Client](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Client/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Monitoring.Client) |
 | [I-Synergy.Framework.Mvvm](https://www.nuget.org/packages/I-Synergy.Framework.Mvvm/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mvvm) |
+| [I-Synergy.Framework.OpenTelemetry](https://www.nuget.org/packages/I-Synergy.Framework.OpenTelemetry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry) |
+| [I-Synergy.Framework.OpenTelemetry.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.OpenTelemetry.ApplicationInsights/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry.ApplicationInsights) |
+| [I-Synergy.Framework.OpenTelemetry.Sentry](https://www.nuget.org/packages/I-Synergy.Framework.OpenTelemetry.Sentry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry.Sentry) |
 | [I-Synergy.Framework.Physics](https://www.nuget.org/packages/I-Synergy.Framework.Physics/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Physics) |
 | [I-Synergy.Framework.Printer.Label](https://www.nuget.org/packages/I-Synergy.Framework.Printer.Label/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Printer.Label) |
 | [I-Synergy.Framework.Printer.Label.Dymo](https://www.nuget.org/packages/I-Synergy.Framework.Printer.Label.Dymo/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Printer.Label.Dymo) |

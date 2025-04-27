@@ -108,11 +108,11 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
 
     public SplashScreenViewModel(
         ICommonServices commonServices,
-        bool automaticValidation = false)
-        : base(automaticValidation)
+        ILogger<SplashScreenViewModel> logger)
+        : base(false)
     {
         _commonServices = commonServices;
-        _logger = _commonServices.LoggerFactory.CreateLogger<SplashScreenViewModel>();
+        _logger = logger;
 
         _taskCompletion = new TaskCompletionSource<bool>();
 

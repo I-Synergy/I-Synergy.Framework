@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
@@ -14,47 +14,33 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Reflection;
+using System.Windows;
 
 namespace ISynergy.Framework.UI.Extensions;
 
-public static class WPFAppBuilderExtensions
+public static class WpfAppBuilderExtensions
 {
-    /// <summary>
-    /// Returns an instance of the <see cref="IHostBuilder"/> and adds loggingBuilder.
-    /// </summary>
-    /// <param name="wpfAppBuilder"></param>
-    /// <param name="loggingBuilder"></param>
-    /// <returns></returns>
-    public static IHostBuilder ConfigureLogging(this IHostBuilder wpfAppBuilder, Action<ILoggingBuilder, IConfiguration> loggingBuilder)
-    {
-        wpfAppBuilder.ConfigureLogging((context, logger) =>
-        {
-            logger.AddConfiguration(context.Configuration.GetSection("Logging"));
-#if DEBUG
-            logger.AddDebug();
-#endif
-            loggingBuilder.Invoke(logger, context.Configuration);
-        });
-
-        return wpfAppBuilder;
-    }
-
     /// <summary>
     /// Returns an instance of the <see cref="IHostBuilder"/> and configures all services.
     /// </summary>
-    /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
     /// <typeparam name="TAuthenticationService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="wpfAppBuilder"></param>
+    /// <param name="infoService"></param>
     /// <param name="action"></param>
+    /// <param name="assembly"></param>
+    /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TApplication, TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(this IHostBuilder wpfAppBuilder, Action<IServiceCollection, IConfiguration> action)
-        where TApplication : Application
+    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
+        this IHostBuilder wpfAppBuilder,
+        IInfoService infoService,
+        Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
+        Assembly assembly,
+        Func<AssemblyName, bool> assemblyFilter)
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
         where TSettingsService : class, ISettingsService
@@ -65,12 +51,7 @@ public static class WPFAppBuilderExtensions
         {
             services.AddOptions();
 
-            var mainAssembly = Argument.IsNotNull(Assembly.GetAssembly(typeof(TApplication)));
-
-            services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
-
-            var infoService = new InfoService();
-            infoService.LoadAssembly(mainAssembly);
+            services.Configure<ApplicationOptions>(context.Configuration.GetSection(nameof(ApplicationOptions)).BindWithReload);
 
             var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
@@ -100,11 +81,9 @@ public static class WPFAppBuilderExtensions
             services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
             services.TryAddSingleton<ICommonServices, TCommonServices>();
 
-            services.RegisterAssemblies();
+            services.RegisterAssemblies(assembly, assemblyFilter);
 
-            action.Invoke(services, context.Configuration);
-
-            services.BuildServiceProviderWithLocator(true);
+            action.Invoke(context.Configuration, context.HostingEnvironment, services);
         });
 
         return wpfAppBuilder;
@@ -114,11 +93,35 @@ public static class WPFAppBuilderExtensions
     /// Registers the assemblies.
     /// </summary>
     /// <param name="services"></param>
-    private static void RegisterAssemblies(this IServiceCollection services)
+    /// <param name="assembly"></param>
+    /// <param name="assemblyFilter"></param>
+    private static void RegisterAssemblies(this IServiceCollection services, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
-        var viewTypes = ReflectionExtensions.GetViewTypes();
-        var windowTypes = ReflectionExtensions.GetWindowTypes();
-        var viewModelTypes = ReflectionExtensions.GetViewModelTypes();
+        var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
+        var assemblies = new List<Assembly>();
+
+        if (assemblyFilter is not null)
+            foreach (var item in referencedAssemblies.Where(assemblyFilter).EnsureNotNull())
+                assemblies.Add(Assembly.Load(item));
+
+        foreach (var item in referencedAssemblies.Where(x =>
+            x.Name!.StartsWith("ISynergy.Framework.UI") ||
+            x.Name!.StartsWith("ISynergy.Framework.Mvvm")).EnsureNotNull())
+            assemblies.Add(Assembly.Load(item));
+
+        services.RegisterAssemblies(assemblies);
+    }
+
+    /// <summary>
+    /// Registers the assemblies.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="assemblies"></param>
+    private static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
+    {
+        var viewTypes = assemblies.ToViewTypes();
+        var windowTypes = assemblies.ToWindowTypes();
+        var viewModelTypes = assemblies.ToViewModelTypes();
 
         services.RegisterViewModels(viewModelTypes);
         services.RegisterViews(viewTypes);
@@ -136,5 +139,21 @@ public static class WPFAppBuilderExtensions
         services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).BindWithReload);
         services.TryAddSingleton<IUpdateService, UpdateService>();
         return services;
+    }
+
+    public static ResourceDictionary AddToResourceDictionary<T>(this ResourceDictionary resources, IScopedContextService scopedContextService, string? key = null, Func<T>? implementation = null)
+    {
+        if (string.IsNullOrEmpty(key))
+            key = typeof(T).Name;
+
+        if (resources[key] is not null)
+            resources.Remove(key);
+
+        if (implementation is not null)
+            resources.Add(key, implementation.Invoke());
+        else
+            resources.Add(key, scopedContextService.GetService<T>());
+
+        return resources;
     }
 }

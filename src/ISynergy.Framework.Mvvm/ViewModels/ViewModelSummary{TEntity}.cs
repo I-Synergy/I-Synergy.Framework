@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
@@ -40,7 +41,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     public TEntity? SelectedItem
     {
         get => GetValue<TEntity>();
-        set => SetValue(value);
+        private set => SetValue(value);
     }
 
     /// <summary>
@@ -95,24 +96,26 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Initializes a new instance of the <see cref="ViewModelSummary{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="logger"></param>
     /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelSummary(
         ICommonServices commonServices,
+        ILogger<ViewModelSummary<TEntity>> logger,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(commonServices, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         RefreshOnInitialization = refreshOnInitialization;
 
         Items = new ObservableCollection<TEntity>();
 
         AddCommand = new AsyncRelayCommand(async () => await AddAsync());
-        EditCommand = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));
-        DeleteCommand = new AsyncRelayCommand<TEntity>(async (e) => await DeleteAsync(e));
+        EditCommand = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()), e => e is not null);
+        DeleteCommand = new AsyncRelayCommand<TEntity>(async (e) => await DeleteAsync(e), e => e is not null);
         RefreshCommand = new AsyncRelayCommand(async () => await RefreshAsync());
         SearchCommand = new AsyncRelayCommand<object>(async (e) => await SearchAsync(e));
-        SubmitCommand = new AsyncRelayCommand<TEntity>(async (e) => await SubmitAsync(e));
+        SubmitCommand = new AsyncRelayCommand<TEntity>(async (e) => await SubmitAsync(e), e => e is not null);
     }
 
     /// <summary>

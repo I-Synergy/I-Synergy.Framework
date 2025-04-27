@@ -21,13 +21,13 @@ internal class MailService : IMailService
     /// Constructor of Email Service.
     /// </summary>
     /// <param name="sendGridOptions">The configuration.</param>
-    /// <param name="loggerFactory">The logger.</param>
+    /// <param name="logger">The logger.</param>
     public MailService(
         IOptions<MailOptions> sendGridOptions,
-        ILoggerFactory loggerFactory)
+        ILogger<MailService> logger)
     {
         _sendGridOptions = sendGridOptions.Value;
-        _logger = loggerFactory.CreateLogger<MailService>();
+        _logger = logger;
 
         Argument.IsNotNullOrEmpty(_sendGridOptions.EmailAddress);
         Argument.IsNotNullOrEmpty(_sendGridOptions.Sender);

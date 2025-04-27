@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
@@ -13,7 +14,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using System.Reflection;
 
@@ -22,43 +22,25 @@ namespace ISynergy.Framework.UI.Extensions;
 public static class WindowsAppBuilderExtensions
 {
     /// <summary>
-    /// Returns an instance of the <see cref="IServiceCollection"/> and adds loggingBuilder.
-    /// </summary>
-    /// <param name="windowsAppBuilder"></param>
-    /// <param name="loggingBuilder"></param>
-    /// <returns></returns>
-    public static IHostBuilder ConfigureLogging(this IHostBuilder windowsAppBuilder, Action<ILoggingBuilder, IConfiguration> loggingBuilder)
-    {
-        windowsAppBuilder.ConfigureLogging((context, logger) =>
-        {
-            logger.AddConfiguration(context.Configuration.GetSection("Logging"));
-#if DEBUG
-            logger.AddDebug();
-#endif
-            loggingBuilder.Invoke(logger, context.Configuration);
-        });
-
-        return windowsAppBuilder;
-    }
-
-    /// <summary>
     /// Returns an instance of the <see cref="IServiceCollection"/> and configures all windowsAppBuilder.
     /// </summary>
-    /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
     /// <typeparam name="TAuthenticationService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="windowsAppBuilder"></param>
+    /// <param name="infoService"></param>
     /// <param name="action"></param>
+    /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TApplication, TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
+    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
         this IHostBuilder windowsAppBuilder,
-        Action<IServiceCollection, IConfiguration> action,
+        IInfoService infoService,
+        Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
+        Assembly assembly,
         Func<AssemblyName, bool> assemblyFilter)
-        where TApplication : Microsoft.UI.Xaml.Application
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
         where TSettingsService : class, ISettingsService
@@ -69,16 +51,8 @@ public static class WindowsAppBuilderExtensions
         {
             services.AddOptions();
 
-            var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
-
-            if (mainAssembly is null)
-                throw new ArgumentNullException(nameof(mainAssembly));
-
-            services.Configure<Features>(context.Configuration.GetSection(nameof(Features)).BindWithReload);
-            services.Configure<ConfigurationOptions>(context.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
-
-            var infoService = new InfoService();
-            infoService.LoadAssembly(mainAssembly);
+            services.Configure<ApplicationFeatures>(context.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
+            services.Configure<ApplicationOptions>(context.Configuration.GetSection(nameof(ApplicationOptions)).BindWithReload);
 
             var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
@@ -107,11 +81,9 @@ public static class WindowsAppBuilderExtensions
             services.TryAddSingleton<ICommonServices, TCommonServices>();
             services.TryAddSingleton<IUpdateService, UpdateService>();
 
-            services.RegisterAssemblies(mainAssembly, assemblyFilter);
+            services.RegisterAssemblies(assembly, assemblyFilter);
 
-            action.Invoke(services, context.Configuration);
-
-            services.BuildServiceProviderWithLocator(true);
+            action.Invoke(context.Configuration, context.HostingEnvironment, services);
         });
 
         return windowsAppBuilder;
@@ -121,11 +93,11 @@ public static class WindowsAppBuilderExtensions
     /// Registers the assemblies.
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="mainAssembly">The main assembly.</param>
+    /// <param name="assembly"></param>
     /// <param name="assemblyFilter">The assembly filter.</param>
-    private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
+    private static void RegisterAssemblies(this IServiceCollection services, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
-        var referencedAssemblies = mainAssembly.GetAllReferencedAssemblyNames();
+        var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
         var assemblies = new List<Assembly>();
 
         if (assemblyFilter is not null)

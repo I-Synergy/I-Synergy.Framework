@@ -12,27 +12,22 @@ public class ViewModelBladeTests
 {
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILoggerFactory> _mockLoggerFactory;
 
     public ViewModelBladeTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
+
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
-        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
     }
 
-    private class TestBladeViewModel : ViewModelBlade<TestEntity>
+    public class TestBladeViewModel : ViewModelBlade<TestEntity>
     {
-        public TestBladeViewModel(ICommonServices commonServices, bool automaticValidation = false)
-            : base(commonServices, automaticValidation) { }
+        public TestBladeViewModel(ICommonServices commonServices, ILogger<TestBladeViewModel> logger, bool automaticValidation = false)
+            : base(commonServices, logger, automaticValidation) { }
     }
 
-    private class TestEntity
+    public class TestEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -42,7 +37,7 @@ public class ViewModelBladeTests
     public void Constructor_InitializesProperties()
     {
         // Arrange & Act
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, new Mock<ILogger<TestBladeViewModel>>().Object);
 
         // Assert
         Assert.IsNotNull(viewModel.SubmitCommand);
@@ -55,7 +50,7 @@ public class ViewModelBladeTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedEvent()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, new Mock<ILogger<TestBladeViewModel>>().Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var eventInvoked = false;
         viewModel.Submitted += (s, e) => eventInvoked = true;
@@ -71,11 +66,11 @@ public class ViewModelBladeTests
     public void SetSelectedItem_UpdatesPropertyAndFlag()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, new Mock<ILogger<TestBladeViewModel>>().Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
 
         // Act
-        viewModel.SelectedItem = entity;
+        viewModel.SetSelectedItem(entity);
 
         // Assert
         Assert.AreEqual(entity, viewModel.SelectedItem);
@@ -85,7 +80,7 @@ public class ViewModelBladeTests
     public void SetOwner_UpdatesOwnerProperty()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, new Mock<ILogger<TestBladeViewModel>>().Object);
         var mockOwner = new Mock<IViewModelBladeView>();
 
         // Act
@@ -99,7 +94,7 @@ public class ViewModelBladeTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedAndCloses()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, new Mock<ILogger<TestBladeViewModel>>().Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var submittedInvoked = false;
         var closedInvoked = false;
@@ -118,8 +113,8 @@ public class ViewModelBladeTests
     public void Cleanup_ClearsSelectedItemAndCommands()
     {
         // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object);
-        viewModel.SelectedItem = new TestEntity();
+        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, new Mock<ILogger<TestBladeViewModel>>().Object);
+        viewModel.SetSelectedItem(new TestEntity());
 
         viewModel.Cleanup();
         Assert.AreEqual(default, viewModel.SelectedItem);

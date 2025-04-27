@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
@@ -59,8 +60,8 @@ public class SignInViewModel : ViewModel
 
     public SignInViewModel(
         ICommonServices commonServices,
-        bool automaticValidation = false)
-        : base(commonServices, automaticValidation)
+        ILogger<SignInViewModel> logger)
+        : base(commonServices, logger)
     {
         SignInCommand = new AsyncRelayCommand(SignInAsync);
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
@@ -106,7 +107,7 @@ public class SignInViewModel : ViewModel
     /// <returns>Task.</returns>
     public Task ForgotPasswordAsync()
     {
-        ForgotPasswordViewModel forgotPasswordVM = new ForgotPasswordViewModel(_commonServices);
+        var forgotPasswordVM = _commonServices.ScopedContextService.GetRequiredService<ForgotPasswordViewModel>();
         forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }

@@ -27,12 +27,12 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 {
-    protected readonly ILogger _logger;
     protected readonly ICommonServices _commonServices;
     protected readonly ISettingsService _settingsService;
     protected readonly IExceptionHandlerService _exceptionHandlerService;
+    protected readonly ILogger<Application> _logger;
 
-    protected readonly Features _features;
+    protected readonly ApplicationFeatures _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
 
     protected Microsoft.UI.Xaml.Window? _mainWindow;
@@ -60,24 +60,21 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         : base()
     {
         var host = CreateHostBuilder()
-            .ConfigureLogging(config =>
-            {
-#if DEBUG
-                config.AddDebug();
-#endif
-            })
-            .Build();
+            .Build()
+            .SetLocatorProvider();
 
         _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
 
-        _logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger<Application>();
+        _logger = host.Services.GetRequiredService<ILogger<Application>>();
         _logger.LogTrace("Setting up global exception handler.");
 
         _logger.LogTrace("Getting common services.");
         _commonServices = host.Services.GetRequiredService<ICommonServices>();
-        _features = host.Services.GetRequiredService<IOptions<Features>>().Value;
+        _features = host.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
         _exceptionHandlerService = host.Services.GetRequiredService<IExceptionHandlerService>();
-        _settingsService = host.Services.GetRequiredService<ISettingsService>(); _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+
+        _logger.LogTrace("Retrieving scoped SettingsService");
+        _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -135,6 +132,9 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         if (e.Exception is AggregateException ae && ae.InnerExceptions?.Any(ex => ex is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested) == true)
             return;
 
+        if (e.Exception is IOException io && io.Message.Contains("The I/O operation has been aborted"))
+            return;
+
         // Ignore the exception if it is a COMException and the message contains "Cannot find credential in Vault"
         if (e.Exception is COMException ce && ce.Message.Contains("Cannot find credential in Vault"))
             return;
@@ -142,7 +142,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         if (e.Exception.HResult != _lastErrorMessage)
         {
             _lastErrorMessage = e.Exception.HResult;
-            _logger?.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 

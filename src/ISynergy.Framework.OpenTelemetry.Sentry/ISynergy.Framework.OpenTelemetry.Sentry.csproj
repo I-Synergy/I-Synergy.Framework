@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.OpenTelemetry.Sentry</PackageId>
+		<Description>I-Synergy Framework OpenTelemetry for Sentry</Description>
+		<PackageTags>I-Synergy, Framework, OpenTelemetry, Sentry.io, Windows, Uno</PackageTags>
+		<RootNamespace>ISynergy.Framework.OpenTelemetry</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnableMsixTooling>true</EnableMsixTooling>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Sentry.OpenTelemetry" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
+	</ItemGroup>
+</Project>

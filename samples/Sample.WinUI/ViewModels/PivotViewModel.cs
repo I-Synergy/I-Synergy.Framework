@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -9,9 +10,8 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
 {
     public PivotViewModel(
         ICommonServices commonServices,
-        bool refreshOnInitialization = true,
-        bool automaticValidation = false)
-        : base(commonServices, refreshOnInitialization, automaticValidation)
+        ILogger<PivotViewModel> logger)
+        : base(commonServices, logger, refreshOnInitialization: true)
     {
     }
 
@@ -52,7 +52,8 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = new DetailViewModel(_commonServices, e);
+        var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailViewModel>();
+        detailsVm.SetSelectedItem(e);
         await _commonServices.NavigationService.OpenBladeAsync(this, detailsVm);
     }
 }

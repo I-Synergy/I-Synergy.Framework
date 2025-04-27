@@ -1,7 +1,5 @@
 ﻿using System.Windows.Input;
 
-#nullable enable
-
 namespace ISynergy.Framework.Mvvm.Commands;
 
 /// <summary>

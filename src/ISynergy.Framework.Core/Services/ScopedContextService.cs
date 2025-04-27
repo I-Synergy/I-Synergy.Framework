@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
@@ -9,6 +8,7 @@ namespace ISynergy.Framework.Core.Services;
 public class ScopedContextService : IScopedContextService
 {
     private readonly IServiceProvider _serviceProvider;
+
     private IServiceScope? _serviceScope;
     private bool _disposed;
 
@@ -44,17 +44,7 @@ public class ScopedContextService : IScopedContextService
         // Dispose old scope if it exists
         if (oldScope is not null)
         {
-            var services = oldScope.ServiceProvider.GetRegisteredServices().EnsureNotNull();
-            foreach (var descriptor in services)
-            {
-                if (descriptor.ServiceType.IsAssignableTo(typeof(IDisposable)))
-                {
-                    var service = oldScope.ServiceProvider.GetService(descriptor.ServiceType);
-                    (service as IDisposable)?.Dispose();
-                    service = null;
-                }
-            }
-            oldScope.Dispose();
+            oldScope?.Dispose();
             oldScope = null;
         }
     }
@@ -151,18 +141,7 @@ public class ScopedContextService : IScopedContextService
         if (_disposed || _serviceScope is null)
             return;
 
-        var services = _serviceScope.ServiceProvider.GetRegisteredServices().EnsureNotNull();
-        foreach (var descriptor in services)
-        {
-            if (descriptor.ServiceType.IsAssignableTo(typeof(IDisposable)))
-            {
-                var service = _serviceScope.ServiceProvider.GetService(descriptor.ServiceType);
-                (service as IDisposable)?.Dispose();
-                service = null;
-            }
-        }
-
-        _serviceScope.Dispose();
+        _serviceScope?.Dispose();
         _serviceScope = null;
 
         _disposed = true;

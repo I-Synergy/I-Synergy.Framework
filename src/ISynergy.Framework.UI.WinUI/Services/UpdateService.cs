@@ -21,14 +21,14 @@ internal class UpdateService : IUpdateService
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public UpdateService(
         IDialogService dialogService,
-        ILoggerFactory loggerFactory)
+        ILogger<UpdateService> logger)
     {
         _dialogService = dialogService;
 
-        _logger = loggerFactory.CreateLogger<UpdateService>();
+        _logger = logger;
         _logger.LogTrace($"UpdateService instance created with ID: {Guid.NewGuid()}");
 
 

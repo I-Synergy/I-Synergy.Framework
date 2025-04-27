@@ -1,10 +1,12 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Sample.ViewModels;
 
 public class Test2ViewModel(
     ICommonServices commonServices,
-    bool automaticValidation = false) : ViewModelDialog<object>(commonServices, automaticValidation)
+    ILogger<Test2ViewModel> logger,
+    bool automaticValidation = false) : ViewModelDialog<object>(commonServices, logger, automaticValidation)
 {
 }

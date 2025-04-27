@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.OpenTelemetry.ApplicationInsights</PackageId>
+		<Description>I-Synergy Framework OpenTelemetry library for ApplicationInsights</Description>
+		<PackageTags>I-Synergy, Framework, OpenTelemetry, Application Insights</PackageTags>
+		<RootNamespace>ISynergy.Framework.OpenTelemetry</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnableMsixTooling>true</EnableMsixTooling>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
+	  <PackageReference Include="Microsoft.ApplicationInsights" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
+	</ItemGroup>
+</Project>

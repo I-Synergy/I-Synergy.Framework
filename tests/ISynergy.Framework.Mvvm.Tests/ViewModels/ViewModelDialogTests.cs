@@ -12,27 +12,24 @@ public class ViewModelDialogTests
 {
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILoggerFactory> _mockLoggerFactory;
+    private Mock<ILogger> _mockLogger;
 
     public ViewModelDialogTests()
     {
         _mockScopedContextService = new Mock<IScopedContextService>();
+
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
-        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
-    }
 
-    private class TestDialogViewModel : ViewModelDialog<TestEntity>
+        _mockLogger = new Mock<ILogger>();
+    }
+    public class TestDialogViewModel : ViewModelDialog<TestEntity>
     {
-        public TestDialogViewModel(ICommonServices commonServices, bool automaticValidation = false)
-            : base(commonServices, automaticValidation) { }
+        public TestDialogViewModel(ICommonServices commonServices, ILogger<TestDialogViewModel> logger, bool automaticValidation = false)
+            : base(commonServices, logger, automaticValidation) { }
     }
 
-    private class TestEntity
+    public class TestEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -42,7 +39,7 @@ public class ViewModelDialogTests
     public void Constructor_InitializesProperties()
     {
         // Arrange & Act
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, new Mock<ILogger<TestDialogViewModel>>().Object);
 
         // Assert
         Assert.IsNotNull(viewModel.SubmitCommand);
@@ -54,7 +51,7 @@ public class ViewModelDialogTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedAndClosedEvents()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, new Mock<ILogger<TestDialogViewModel>>().Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var submittedInvoked = false;
         var closedInvoked = false;
@@ -73,7 +70,7 @@ public class ViewModelDialogTests
     public void ApplyQueryAttributes_SetsSelectedItem()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, new Mock<ILogger<TestDialogViewModel>>().Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var query = new Dictionary<string, object>
             {
@@ -92,7 +89,7 @@ public class ViewModelDialogTests
     public void ApplyQueryAttributes_WithInvalidParameter_DoesNotSetSelectedItem()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, new Mock<ILogger<TestDialogViewModel>>().Object);
         var query = new Dictionary<string, object>
             {
                 { "wrongKey", new TestEntity() }
@@ -110,7 +107,7 @@ public class ViewModelDialogTests
     public async Task SubmitAsync_WithValidation_InvokesSubmittedAndCloses()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, new Mock<ILogger<TestDialogViewModel>>().Object);
         var entity = new TestEntity { Id = 1, Name = "Test" };
         var submittedInvoked = false;
         var closedInvoked = false;
@@ -129,8 +126,8 @@ public class ViewModelDialogTests
     public void Cleanup_ClearsSelectedItemAndCommands()
     {
         // Arrange
-        var viewModel = new TestDialogViewModel(_mockCommonServices.Object);
-        viewModel.SelectedItem = new TestEntity();
+        var viewModel = new TestDialogViewModel(_mockCommonServices.Object, new Mock<ILogger<TestDialogViewModel>>().Object);
+        viewModel.SetSelectedItem(new TestEntity());
 
         // Act
         viewModel.Cleanup();

@@ -40,17 +40,17 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// Constructor of service bus.
     /// </summary>
     /// <param name="options">The options.</param>
-    /// <param name="loggerFactory">The logger.</param>
+    /// <param name="logger">The logger.</param>
     protected SubscriberServiceBus(
         IOptions<TOption> options,
-        ILoggerFactory loggerFactory)
+        ILogger<SubscriberServiceBus<TEntity, TOption>> logger)
     {
         _option = options.Value;
 
         Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
 
-        _logger = loggerFactory.CreateLogger<SubscriberServiceBus<TEntity, TOption>>();
+        _logger = logger;
     }
 
     /// <summary>

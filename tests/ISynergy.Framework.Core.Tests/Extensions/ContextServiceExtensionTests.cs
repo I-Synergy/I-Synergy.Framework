@@ -9,13 +9,11 @@ public class ContextServiceExtensionTests
     private IServiceProvider CreateTestServiceProvider()
     {
         var services = new ServiceCollection();
-
-        // Register test services
         services.AddScoped<ITestService, TestService>();
         services.AddScoped<IOrderProcessor, OrderProcessor>();
         services.AddScoped<IOrderValidator, OrderValidator>();
 
-        return services.BuildServiceProviderWithLocator();
+        return services.BuildServiceProvider();
     }
 
     [TestMethod]
@@ -26,12 +24,13 @@ public class ContextServiceExtensionTests
         var wasExecuted = false;
 
         // Act
-        serviceProvider.ExecuteInContext(context =>
-        {
-            var service = context.GetService<ITestService>();
-            service.DoSomething();
-            wasExecuted = true;
-        });
+        serviceProvider.ExecuteInContext(
+            context =>
+            {
+                var service = context.GetService<ITestService>();
+                service.DoSomething();
+                wasExecuted = true;
+            });
 
         // Assert
         Assert.IsTrue(wasExecuted);
@@ -45,12 +44,13 @@ public class ContextServiceExtensionTests
         var wasExecuted = false;
 
         // Act
-        await serviceProvider.ExecuteInContextAsync(async context =>
-        {
-            var service = context.GetService<ITestService>();
-            await service.DoSomethingAsync();
-            wasExecuted = true;
-        });
+        await serviceProvider.ExecuteInContextAsync(
+            async context =>
+            {
+                var service = context.GetService<ITestService>();
+                await service.DoSomethingAsync();
+                wasExecuted = true;
+            });
 
         // Assert
         Assert.IsTrue(wasExecuted);
@@ -65,15 +65,17 @@ public class ContextServiceExtensionTests
         ITestService? secondInstance = null;
 
         // Act
-        serviceProvider.ExecuteInContext(context =>
-        {
-            firstInstance = context.GetService<ITestService>();
-        });
+        serviceProvider.ExecuteInContext(
+            context =>
+            {
+                firstInstance = context.GetService<ITestService>();
+            });
 
-        serviceProvider.ExecuteInContext(context =>
-        {
-            secondInstance = context.GetService<ITestService>();
-        });
+        serviceProvider.ExecuteInContext(
+            context =>
+            {
+                secondInstance = context.GetService<ITestService>();
+            });
 
         // Assert
         Assert.IsNotNull(firstInstance);
@@ -88,14 +90,15 @@ public class ContextServiceExtensionTests
         var serviceProvider = CreateTestServiceProvider();
 
         // Act & Assert
-        serviceProvider.ExecuteInContext(context =>
-        {
-            var processor = context.GetService<IOrderProcessor>();
-            var validator = context.GetService<IOrderValidator>();
+        serviceProvider.ExecuteInContext(
+            context =>
+            {
+                var processor = context.GetService<IOrderProcessor>();
+                var validator = context.GetService<IOrderValidator>();
 
-            Assert.IsNotNull(processor);
-            Assert.IsNotNull(validator);
-        });
+                Assert.IsNotNull(processor);
+                Assert.IsNotNull(validator);
+            });
     }
 
     [TestMethod]
@@ -105,16 +108,16 @@ public class ContextServiceExtensionTests
         var services = new ServiceCollection();
         var disposableService = new DisposableTestService();
 
-
         services.AddScoped(_ => disposableService);
-        var serviceProvider = services.BuildServiceProviderWithLocator();
+        var serviceProvider = services.BuildServiceProvider();
 
         // Act
-        serviceProvider.ExecuteInContext(context =>
-        {
-            var service = context.GetService<DisposableTestService>();
-            Assert.IsNotNull(service);
-        });
+        serviceProvider.ExecuteInContext(
+            context =>
+            {
+                var service = context.GetService<DisposableTestService>();
+                Assert.IsNotNull(service);
+            });
 
         // Assert
         Assert.IsTrue(disposableService.WasDisposed);
@@ -128,11 +131,12 @@ public class ContextServiceExtensionTests
         var serviceProvider = CreateTestServiceProvider();
 
         // Act
-        serviceProvider.ExecuteInContext(context =>
-        {
-            // Try to resolve unregistered service
-            var unregistered = context.GetService<IUnregisteredService>();
-        });
+        serviceProvider.ExecuteInContext(
+            context =>
+            {
+                // Try to resolve unregistered service
+                var unregistered = context.GetService<IUnregisteredService>();
+            });
     }
 
     #region Test interfaces and implementations

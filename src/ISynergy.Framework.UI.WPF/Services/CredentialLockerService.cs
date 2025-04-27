@@ -31,7 +31,7 @@ public class CredentialLockerService : ICredentialLockerService
 
     public Task<List<string>> GetUsernamesFromCredentialLockerAsync()
     {
-        IReadOnlyList<ISynergy.Framework.UI.Models.Credential> credentials = CredentialManager.EnumerateCrendentials();
+        var credentials = CredentialManager.EnumerateCrendentials(_infoService.ProductName);
         return Task.FromResult(credentials.Select(q => q.Username).ToList());
     }
 

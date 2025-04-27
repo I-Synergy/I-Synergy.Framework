@@ -32,13 +32,13 @@ internal class MailService : IMailService
     /// Constructor of Email Service.
     /// </summary>
     /// <param name="mailOptions">The configuration.</param>
-    /// <param name="loggerFactory">The logger.</param>
+    /// <param name="logger">The logger.</param>
     public MailService(
         IOptions<MailOptions> mailOptions,
-        ILoggerFactory loggerFactory)
+        ILogger<MailService> logger)
     {
         _mailOptions = mailOptions.Value;
-        _logger = loggerFactory.CreateLogger<MailService>();
+        _logger = logger;
 
         Argument.IsNotNullOrEmpty(_mailOptions.EmailAddress);
         Argument.IsNotNullOrEmpty(_mailOptions.Sender);

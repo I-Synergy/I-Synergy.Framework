@@ -24,12 +24,12 @@ public class DialogService : IDialogService
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="scopedContextService"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public DialogService(
         IScopedContextService scopedContextService,
-        ILoggerFactory loggerFactory)
+        ILogger<DialogService> logger)
     {
-        _logger = loggerFactory.CreateLogger<DialogService>();
+        _logger = logger;
         _scopedContextService = scopedContextService;
     }
 

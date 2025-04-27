@@ -1,8 +1,6 @@
-﻿using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.UI.Enumerations;
+﻿using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Win32.SafeHandles;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -42,7 +40,7 @@ public static class CredentialManager
         return null;
     }
 
-    private static Credential ReadCredential(CREDENTIAL credential)
+    private static Credential? ReadCredential(CREDENTIAL credential)
     {
         var resource = Marshal.PtrToStringUni(credential.TargetName);
         var username = Marshal.PtrToStringUni(credential.UserName);
@@ -51,11 +49,10 @@ public static class CredentialManager
         if (credential.CredentialBlob != IntPtr.Zero)
             password = Marshal.PtrToStringUni(credential.CredentialBlob, (int)credential.CredentialBlobSize / 2);
 
-        resource = Argument.IsNotNullOrEmpty(resource);
-        username = Argument.IsNotNullOrEmpty(username);
-        password = Argument.IsNotNullOrEmpty(password);
+        if (!string.IsNullOrEmpty(resource) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            return new Credential(credential.Type, resource, username, password);
 
-        return new Credential(credential.Type, resource, username, password);
+        return null;
     }
 
     public static bool DeleteCredential(string resource) =>
@@ -64,11 +61,12 @@ public static class CredentialManager
 
     public static int WriteCredential(string resource, string username, string password, CredentialPersistence persistence = CredentialPersistence.LocalMachine)
     {
-        byte[] byteArray = Encoding.Unicode.GetBytes(password);
-        if (byteArray.Length > 512)
+        var byteArray = Encoding.Unicode.GetBytes(password);
+
+        if (byteArray is not null && byteArray.Length > 512)
             throw new ArgumentOutOfRangeException("password", "The password message has exceeded 512 bytes.");
 
-        CREDENTIAL credential = new CREDENTIAL();
+        var credential = new CREDENTIAL();
         credential.AttributeCount = 0;
         credential.Attributes = IntPtr.Zero;
         credential.Comment = IntPtr.Zero;
@@ -80,8 +78,8 @@ public static class CredentialManager
         credential.CredentialBlob = Marshal.StringToCoTaskMemUni(password);
         credential.UserName = Marshal.StringToCoTaskMemUni(username ?? Environment.UserName);
 
-        bool written = CredWrite(ref credential, 0);
-        int lastError = Marshal.GetLastWin32Error();
+        var written = CredWrite(ref credential, 0);
+        var lastError = Marshal.GetLastWin32Error();
 
         Marshal.FreeCoTaskMem(credential.TargetName);
         Marshal.FreeCoTaskMem(credential.CredentialBlob);
@@ -93,25 +91,21 @@ public static class CredentialManager
         throw new Exception(string.Format("CredWrite failed with the error code {0}.", lastError));
     }
 
-    public static IReadOnlyList<Credential> EnumerateCrendentials()
+    public static IReadOnlyList<Credential> EnumerateCrendentials(string resource)
     {
-        List<Credential> result = new List<Credential>();
+        var result = new List<Credential>();
+        var count = 0;
 
-        int count;
-        IntPtr pCredentials;
-        bool ret = CredEnumerate(null, 0, out count, out pCredentials);
-        if (ret)
+        if (CredEnumerate(resource, 0, out count, out IntPtr pCredentials))
         {
             for (int n = 0; n < count; n++)
             {
-                IntPtr credential = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf(typeof(IntPtr)));
-                result.Add(ReadCredential((CREDENTIAL)Marshal.PtrToStructure(credential, typeof(CREDENTIAL))!));
+                var credentialPtr = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf(typeof(IntPtr)));
+                var credential = ReadCredential((CREDENTIAL)Marshal.PtrToStructure(credentialPtr, typeof(CREDENTIAL))!);
+
+                if (credential is not null)
+                    result.Add(credential);
             }
-        }
-        else
-        {
-            int lastError = Marshal.GetLastWin32Error();
-            throw new Win32Exception(lastError);
         }
 
         return result;

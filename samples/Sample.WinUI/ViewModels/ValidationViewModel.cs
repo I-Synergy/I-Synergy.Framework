@@ -1,8 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
@@ -68,12 +69,15 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// </summary>
     public string Description { get; }
 
+    public AsyncRelayCommand? ValidateCommand { get; }
+
     /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="commonServices"></param>
-    public ValidationViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public ValidationViewModel(ICommonServices commonServices, ILogger<ValidationViewModel> logger)
+        : base(commonServices, logger)
     {
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";
@@ -104,15 +108,16 @@ public class ValidationViewModel : ViewModelNavigation<object>
                 }
             }
         });
+
+        ValidateCommand = new AsyncRelayCommand(ValidateAsync);
     }
 
-    public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
+    private async Task ValidateAsync()
     {
-        Argument.IsNotNullOrEmpty(Test);
-
         if (Validate())
         {
             await _commonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
         }
     }
+
 }
