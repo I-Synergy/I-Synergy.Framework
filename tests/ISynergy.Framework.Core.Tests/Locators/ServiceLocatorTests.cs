@@ -1,8 +1,12 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Concurrent;
+using System.Reflection;
 using static ISynergy.Framework.Core.Services.Tests.ScopedContextServiceTests;
 
 namespace ISynergy.Framework.Core.Locators.Tests;
@@ -53,8 +57,10 @@ public class ServiceLocatorTests
         services.AddScoped<ITestService, TestService>();
         services.AddScoped<INestedScopeTestService, NestedScopeTestService>();
 
-        _serviceProvider = services.BuildServiceProviderWithLocator(true);
+        _serviceProvider = services.BuildServiceProvider();
+
         _locator = new ServiceLocator(_serviceProvider);
+
         ServiceLocator.SetLocatorProvider(_serviceProvider);
     }
 
@@ -257,9 +263,10 @@ public class ServiceLocatorTests
     {
         // Arrange
         var oldInstance = ServiceLocator.Default;
-        var newServiceProvider = new ServiceCollection().BuildServiceProvider();
+        var services = new ServiceCollection();
 
         // Act
+        var newServiceProvider = services.BuildServiceProvider();
         ServiceLocator.SetLocatorProvider(newServiceProvider);
         var newInstance = ServiceLocator.Default;
 
@@ -291,9 +298,16 @@ public class ServiceLocatorTests
     [TestMethod]
     public void ServiceLocator_Dispose_CleansUpServices()
     {
+        var mainAssembly = Assembly.GetExecutingAssembly();
+        var infoService = new InfoService();
+        infoService.LoadAssembly(mainAssembly);
+
         // Arrange
         var disposableService = new Mock<IDisposableTestService>();
+
         var services = new ServiceCollection();
+        services.AddSingleton<IInfoService>(s => infoService);
+        services.AddScoped<ILoggerFactory, LoggerFactory>();
         services.AddScoped<IDisposableTestService>(s => disposableService.Object);
         var provider = services.BuildServiceProvider();
         var locator = new ServiceLocator(provider);

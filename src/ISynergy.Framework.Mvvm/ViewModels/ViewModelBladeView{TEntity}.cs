@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
@@ -73,6 +74,17 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         set => SetValue(value);
     }
 
+
+    /// <summary>
+    /// Sets the selected item.
+    /// </summary>
+    /// <param name="e">The entity.</param>
+    public virtual void SetSelectedItem(TEntity? e)
+    {
+        SelectedItem = e;
+        IsUpdate = true;
+    }
+
     /// <summary>
     /// Gets or sets the IsUpdate property value.
     /// </summary>
@@ -125,13 +137,15 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="logger"></param>
     /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
     /// <param name="automaticValidation"></param>
     protected ViewModelBladeView(
         ICommonServices commonServices,
+        ILogger<ViewModelBladeView<TEntity>> logger,
         bool refreshOnInitialization = true,
         bool automaticValidation = false)
-        : base(commonServices, automaticValidation)
+        : base(commonServices, logger, automaticValidation)
     {
         RefreshOnInitialization = refreshOnInitialization;
 
@@ -139,11 +153,11 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         Blades = new ObservableCollection<IView>();
 
         AddCommand = new AsyncRelayCommand(AddAsync);
-        EditCommand = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));
-        DeleteCommand = new AsyncRelayCommand<TEntity>(DeleteAsync);
+        EditCommand = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()), e => e is not null);
+        DeleteCommand = new AsyncRelayCommand<TEntity>(DeleteAsync, e => e is not null);
         RefreshCommand = new AsyncRelayCommand(RefreshAsync);
         SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
-        SubmitCommand = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e));
+        SubmitCommand = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e), e => e is not null);
     }
 
     /// <summary>
@@ -159,16 +173,6 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
             await RefreshAsync();
             IsInitialized = true;
         }
-    }
-
-    /// <summary>
-    /// Sets the selected item.
-    /// </summary>
-    /// <param name="entity">The entity.</param>
-    public virtual void SetSelectedItem(TEntity entity)
-    {
-        SelectedItem = entity;
-        IsUpdate = true;
     }
 
     /// <summary>

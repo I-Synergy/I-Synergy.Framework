@@ -21,12 +21,12 @@ public class CameraService : ICameraService
     /// Initializes a new instance of the <see cref="CameraService"/> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public CameraService(
         IDialogService dialogService,
-        ILoggerFactory loggerFactory)
+        ILogger<CameraService> logger)
     {
-        _logger = loggerFactory.CreateLogger<CameraService>();
+        _logger = logger;
         _logger.LogTrace($"CameraService instance created with ID: {Guid.NewGuid()}");
 
         _dialogService = dialogService;

@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
@@ -38,7 +39,12 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     public SelectionModes SelectionMode
     {
         get { return GetValue<SelectionModes>(); }
-        set { SetValue(value); }
+        private set { SetValue(value); }
+    }
+
+    public virtual void SetSelectionMode(SelectionModes selectionMode)
+    {
+        SelectionMode = selectionMode;
     }
 
     /// <summary>
@@ -48,7 +54,19 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     public ObservableCollection<TEntity> Items
     {
         get { return GetValue<ObservableCollection<TEntity>>(); }
-        set { SetValue(value); }
+        private set { SetValue(value); }
+    }
+
+    public virtual void SetItems(IEnumerable<object> e)
+    {
+        RawItems = new List<TEntity>();
+        Items = new ObservableCollection<TEntity>();
+
+        foreach (TEntity item in e.EnsureNotNull())
+        {
+            RawItems.Add(item);
+            Items.Add(item);
+        }
     }
 
     /// <summary>
@@ -57,7 +75,17 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     public List<object> SelectedItems
     {
         get => GetValue<List<object>>();
-        set => SetValue(value);
+        private set => SetValue(value);
+    }
+
+    public virtual void SetSelectedItems(IEnumerable<object> e)
+    {
+        SelectedItems = new List<object>();
+
+        foreach (var item in e.EnsureNotNull())
+        {
+            SelectedItems.Add(item!);
+        }
     }
 
     public AsyncRelayCommand<string> RefreshCommand { get; private set; }
@@ -67,25 +95,17 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="items">The items.</param>
-    /// <param name="selectedItems">The selected items.</param>
-    /// <param name="selectionMode">The selection mode.</param>
-    /// <param name="automaticValidation"></param>
+    /// <param name="logger"></param>
     public ViewModelSelectionBlade(
         ICommonServices commonServices,
-        IEnumerable<TEntity> items,
-        IEnumerable<TEntity> selectedItems,
-        SelectionModes selectionMode = SelectionModes.Single,
-        bool automaticValidation = false)
-        : base(commonServices, automaticValidation)
+        ILogger<ViewModelSelectionBlade<TEntity>> logger)
+        : base(commonServices, logger)
     {
-        if (items is null)
-            items = new List<TEntity>();
+        RawItems = new List<TEntity>();
+        Items = new ObservableCollection<TEntity>();
+        SelectedItems = new List<object>();
 
-        if (selectedItems is null)
-            selectedItems = new List<TEntity>();
-
-        SelectionMode = selectionMode;
+        SelectionMode = SelectionModes.Single;
 
         Validator = new Action<IObservableClass>(arg =>
         {
@@ -98,20 +118,6 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
         SelectCommand = new AsyncRelayCommand<List<object>>((e) => SelectAsync(e), (s) => s is not null && s.Count > 0);
-
-        RawItems = items.ToList();
-
-        Items = new ObservableCollection<TEntity>();
-        Items.AddRange(items);
-
-        SelectedItems = new List<object>();
-
-        foreach (var item in selectedItems.EnsureNotNull())
-        {
-            SelectedItems.Add(item!);
-        }
-
-        RaisePropertyChanged(nameof(SelectedItems));
 
         IsInitialized = true;
     }

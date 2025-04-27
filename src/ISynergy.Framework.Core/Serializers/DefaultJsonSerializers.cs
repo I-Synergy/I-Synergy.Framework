@@ -13,9 +13,7 @@ public static class DefaultJsonSerializers
             new JsonStringEnumConverter(),
             new DateTimeConverter(),
             new DateTimeOffsetConverter(),
-#if NET8_0_OR_GREATER
             new TimeOnlyConverter()
-#endif
         },
         NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
         WriteIndented = true,
@@ -30,9 +28,7 @@ public static class DefaultJsonSerializers
             new JsonStringEnumConverter(),
             new DateTimeConverter(),
             new DateTimeOffsetConverter(),
-#if NET8_0_OR_GREATER
             new TimeOnlyConverter()
-#endif
         },
         DefaultIgnoreCondition = JsonIgnoreCondition.Never,
         DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,

@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.UI.ViewModels;
 
@@ -32,11 +33,15 @@ public class ThemeViewModel : ViewModelDialog<Style>
     /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public ThemeViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public ThemeViewModel(ICommonServices commonServices, ILogger<ThemeViewModel> logger)
+        : base(commonServices, logger)
     {
         ThemeColors = new ThemeColors();
 
-        SelectedItem = new Style(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme);
+        SetSelectedItem(
+            new Style(
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color,
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme));
     }
 }

@@ -62,7 +62,15 @@ public sealed class Context : IContext
                 case SoftwareEnvironments.Local:
                 case SoftwareEnvironments.Test:
                 default:
-                    Properties.Add(Endpoints.ApiEndpoint, @"https://localhost:5000");
+                    if (Properties.ContainsKey(Endpoints.ApiEndpoint))
+                        Properties[Endpoints.ApiEndpoint] = @"https://localhost:5000";
+                    else
+                        Properties.Add(Endpoints.ApiEndpoint, @"https://localhost:5000");
+
+                    if (Properties.ContainsKey(Endpoints.IdentityEndpoint))
+                        Properties[Endpoints.IdentityEndpoint] = @"https://localhost:5000";
+                    else
+                        Properties.Add(Endpoints.IdentityEndpoint, @"https://localhost:5000");
                     break;
             }
         }

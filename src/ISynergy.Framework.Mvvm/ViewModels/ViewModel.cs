@@ -98,16 +98,18 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Initializes a new instance of the <see cref="ViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="logger"></param>
     /// <param name="automaticValidation">The validation.</param>
     protected ViewModel(
         ICommonServices commonServices,
+        ILogger<ViewModel> logger,
         bool automaticValidation = false)
         : base(automaticValidation)
     {
         _commonServices = commonServices;
         _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;
 
-        _logger = _commonServices.LoggerFactory.CreateLogger(GetType());
+        _logger = logger;
 
         PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
@@ -142,7 +144,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            _logger.LogTrace("{0} initialized.", GetType().Name);
+            _logger.LogTrace($"{GetType().Name} initialized.");
 
         return Task.CompletedTask;
     }

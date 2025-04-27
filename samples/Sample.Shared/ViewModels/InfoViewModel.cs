@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Sample.ViewModels;
 
@@ -71,8 +72,9 @@ public class InfoViewModel : ViewModelNavigation<object>
     /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public InfoViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public InfoViewModel(ICommonServices commonServices, ILogger<InfoViewModel> logger)
+        : base(commonServices, logger)
     {
         CompanyName = _commonServices.InfoService.CompanyName;
         ProductName = _commonServices.InfoService.ProductName;

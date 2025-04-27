@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.MessageBus.Azure.Extensions;
+﻿using ISynergy.Framework.MessageBus.Azure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -33,7 +32,7 @@ internal class Program
 
             services.TryAddSingleton<ApplicationAzure>();
 
-            var serviceProvider = services.BuildServiceProviderWithLocator();
+            var serviceProvider = services.BuildServiceProvider();
 
             ApplicationAzure application = serviceProvider.GetRequiredService<ApplicationAzure>();
             application.RunAsync().GetAwaiter().GetResult();

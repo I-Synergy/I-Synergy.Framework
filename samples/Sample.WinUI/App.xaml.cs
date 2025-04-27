@@ -2,17 +2,16 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
@@ -50,38 +49,38 @@ public sealed partial class App : Application
 
     protected override IHostBuilder CreateHostBuilder()
     {
-        var mainAssembly = Argument.IsNotNull(Assembly.GetAssembly(typeof(App)));
+        var mainAssembly = Assembly.GetExecutingAssembly();
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly);
 
-        return new HostBuilder()
+        var hostBuilder = new HostBuilder();
+
+        hostBuilder
             .ConfigureHostConfiguration(builder =>
             {
                 builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json")!);
             })
-            .ConfigureLogging((logging, configuration) =>
+            .ConfigureLogging((context, loggingBuilder) =>
             {
-                //logging.AddOpenTelemetryLogging(infoService, configuration);
-                logging.AddOpenTelemetryLogging(infoService, configuration, profiling: true, contextFactory: sp => sp.GetRequiredService<IContext>());
+                loggingBuilder
+                    .AddTelemetry(context, infoService)
+                    .AddOtlpExporter()
+                    .AddApplicationInsightsExporter()
+                    .AddSentryExporter(
+                        options =>
+                        {
+                            options.Environment = context.HostingEnvironment.EnvironmentName;
+                            options.Debug = context.HostingEnvironment.IsDevelopment();
+                        });
             })
-            .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
+            .ConfigureServices<Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
                 services.TryAddSingleton<ICameraService, CameraService>();
-            }, f => f.Name!.StartsWith(typeof(App).Namespace!))
-            .ConfigureOpenTelemetryLogging(
-                infoService,
-                tracing =>
-                {
-                    // Add any custom tracing instrumentation here
-                },
-                metrics =>
-                {
-                    // Add any custom metrics instrumentation here
-                },
-                logging =>
-                {
-                    // Add any custom logging configuration here
-                });
+            },
+            mainAssembly,
+            f => f.Name!.StartsWith(typeof(App).Namespace!));
+
+        return hostBuilder;
     }
 
     protected override async Task HandleApplicationInitializedAsync()
@@ -157,9 +156,10 @@ public sealed partial class App : Application
 
             if (e.Value)
             {
-                _logger.LogTrace("Saving refresh token");
+                var context = _commonServices.ScopedContextService.GetRequiredService<IContext>();
 
-                _settingsService.LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetRequiredService<IContext>().ToEnvironmentalRefreshToken();
+                _logger.LogTrace("Saving refresh token");
+                _settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
                 _settingsService.SaveLocalSettings();
 
                 _logger.LogTrace("Setting culture");
@@ -184,6 +184,8 @@ public sealed partial class App : Application
             }
             else
             {
+                Baggage.ClearBaggage();
+
                 _logger.LogTrace("Navigate to SignIn page");
                 await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
             }

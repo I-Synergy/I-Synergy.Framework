@@ -185,4 +185,7 @@ public static class GenericConstants
     /// The number of payments to list
     /// </summary>
     public const int NumberOfPaymentsToList = 50;
+
+
+    public const string DockerEnvironment = "Docker";
 }

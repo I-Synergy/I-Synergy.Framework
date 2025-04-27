@@ -32,6 +32,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

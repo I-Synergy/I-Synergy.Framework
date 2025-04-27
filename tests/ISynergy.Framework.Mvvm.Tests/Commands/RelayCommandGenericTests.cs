@@ -1,4 +1,3 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,7 +8,6 @@ namespace ISynergy.Framework.Mvvm.Commands.Tests;
 [TestClass]
 public class RelayCommandGenericTests
 {
-    private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
@@ -17,7 +15,6 @@ public class RelayCommandGenericTests
     public RelayCommandGenericTests()
     {
         // Setup mocks
-        _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockServiceScope = new Mock<IServiceScope>();
         _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
@@ -35,11 +32,6 @@ public class RelayCommandGenericTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Setup exception handler service
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
 
         // Initialize ServiceLocator with mock service provider
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
@@ -126,12 +118,7 @@ public class RelayCommandGenericTests
         var command = new RelayCommand<string>(_ => throw expectedException);
 
         // Act
-        command.Execute("test");
-
-        // Assert
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(expectedException),
-            Times.Once);
+        Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
     }
 
     [TestMethod]

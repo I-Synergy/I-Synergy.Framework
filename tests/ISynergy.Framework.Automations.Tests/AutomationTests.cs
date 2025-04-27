@@ -24,7 +24,7 @@ public class AutomationTests
     private Automation _defaultAutomation;
     private IAutomationService? _automationService;
     private Stopwatch _stopwatch = new Stopwatch();
-    private readonly Mock<ILoggerFactory> _mockLoggerFactory = new Mock<ILoggerFactory>();
+    private readonly Mock<ILogger<AutomationService>> _mockLogger = new Mock<ILogger<AutomationService>>();
 
     // Configuration for environment-aware testing
     private static readonly bool IsRunningInCI = Environment.GetEnvironmentVariable("CI") is not null;
@@ -50,14 +50,10 @@ public class AutomationTests
             Active = false
         };
 
-        _mockLoggerFactory
-           .Setup(x => x.CreateLogger(It.IsAny<string>()))
-           .Returns(new Mock<ILogger>().Object);
-
         _automationService = new AutomationService(
             new Mock<IAutomationManager>().Object,
             new Mock<IOptions<AutomationOptions>>().Object,
-            _mockLoggerFactory.Object);
+            _mockLogger.Object);
 
         _defaultAutomation = new Automation { IsActive = true };
     }

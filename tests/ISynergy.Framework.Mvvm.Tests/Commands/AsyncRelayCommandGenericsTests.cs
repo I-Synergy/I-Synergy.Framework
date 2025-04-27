@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,7 +9,6 @@ namespace ISynergy.Framework.Mvvm.Commands.Tests;
 [TestClass]
 public class AsyncRelayCommandGenericsTests
 {
-    private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
@@ -18,7 +16,6 @@ public class AsyncRelayCommandGenericsTests
     public AsyncRelayCommandGenericsTests()
     {
         // Setup mocks
-        _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockServiceScope = new Mock<IServiceScope>();
         _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
@@ -36,11 +33,6 @@ public class AsyncRelayCommandGenericsTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Setup exception handler service
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
 
         // Initialize ServiceLocator with mock service provider
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
@@ -87,11 +79,6 @@ public class AsyncRelayCommandGenericsTests
         // Assert
         CollectionAssert.AreEqual(new int[0], executedParameters);
         Assert.IsTrue(command.IsCancellationRequested);
-
-        // Verify exception was handled
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(It.IsAny<OperationCanceledException>()),
-            Times.Once);
     }
 
     [TestMethod]
@@ -371,9 +358,6 @@ public class AsyncRelayCommandGenericsTests
 
         // Assert
         Assert.AreEqual(0, completedCount);
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(It.IsAny<OperationCanceledException>()),
-            Times.Exactly(2));
     }
 
     [TestMethod]
@@ -431,11 +415,6 @@ public class AsyncRelayCommandGenericsTests
             async () => await task);
 
         Assert.AreEqual(expectedException, actualException);
-
-        // Verify exception was NOT handled by the service
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(It.IsAny<Exception>()),
-            Times.Never);
     }
 
     [TestMethod]

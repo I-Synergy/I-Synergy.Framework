@@ -1,7 +1,7 @@
-﻿namespace ISynergy.Framework.AspNetCore.Options;
-public class IntrospectionOptions
+﻿using ISynergy.Framework.Core.Options;
+
+namespace ISynergy.Framework.AspNetCore.Options;
+public class IntrospectionOptions : ApplicationOptions
 {
     public string? Issuer { get; set; }
-    public string? ClientId { get; set; }
-    public string? ClientSecret { get; set; }
 }

@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace Sample.Services;
@@ -13,6 +12,10 @@ namespace Sample.Services;
 /// <seealso cref="ICommonServices" />
 public class CommonServices : ICommonServices
 {
+    /// <summary>
+    /// Gets the language service.
+    /// </summary>
+    public ILanguageService LanguageService { get; }
     /// <summary>
     /// Gets the info service.
     /// </summary>
@@ -53,13 +56,9 @@ public class CommonServices : ICommonServices
     public IFileService<FileResult> FileService { get; }
 
     /// <summary>
-    /// Gets the logger factory.
-    /// </summary>
-    public ILoggerFactory LoggerFactory { get; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="CommonServices"/> class.
     /// </summary>
+    /// <param name="languageService"></param>
     /// <param name="infoService"></param>
     /// <param name="busyService">The busy.</param>
     /// <param name="dialogService">The dialog.</param>
@@ -67,17 +66,17 @@ public class CommonServices : ICommonServices
     /// <param name="authenticationService"></param>
     /// <param name="scopedContextService"></param>
     /// <param name="fileService"></param>
-    /// <param name="loggerFactory"></param>
     public CommonServices(
+        ILanguageService languageService,
         IInfoService infoService,
         IBusyService busyService,
         IDialogService dialogService,
         INavigationService navigationService,
         IAuthenticationService authenticationService,
         IScopedContextService scopedContextService,
-        IFileService<FileResult> fileService,
-        ILoggerFactory loggerFactory)
+        IFileService<FileResult> fileService)
     {
+        LanguageService = languageService;
         InfoService = infoService;
         BusyService = busyService;
         DialogService = dialogService;
@@ -85,7 +84,6 @@ public class CommonServices : ICommonServices
         AuthenticationService = authenticationService;
         ScopedContextService = scopedContextService;
         FileService = fileService;
-        LoggerFactory = loggerFactory;
     }
 
     /// <summary>

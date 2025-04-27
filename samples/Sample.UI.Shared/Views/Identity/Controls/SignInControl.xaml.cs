@@ -86,9 +86,9 @@ public sealed partial class SignInControl : UserControl
     /// <param name="e">The <see cref="KeyRoutedEventArgs"/> instance containing the event data.</param>
     private void TextBox_Password_KeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key == VirtualKey.Enter && ViewModel!.SignInCommand.CanExecute(null))
+        if (e.Key == VirtualKey.Enter && ViewModel.SignInCommand.CanExecute(null))
         {
-            ViewModel.SignInCommand.Execute(null);
+            ViewModel.SignInCommand?.Execute(null);
         }
     }
 

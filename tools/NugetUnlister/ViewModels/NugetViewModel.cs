@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using NugetUnlister.Abstractions;
 using NugetUnlister.Models;
 using System.Collections.ObjectModel;
@@ -50,8 +51,9 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
 
     public NugetViewModel(
         ICommonServices commonServices,
+        ILogger<NugetViewModel> logger,
         INugetService nugetService)
-        : base(commonServices)
+        : base(commonServices, logger)
     {
         Items = [];
         Logs = [];

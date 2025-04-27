@@ -4,9 +4,11 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
+using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;
 using System.Collections.ObjectModel;
@@ -94,8 +96,9 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}" /> class.
     /// </summary>
     /// <param name="commonServices">The common service.</param>
-    public TestItemsListViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public TestItemsListViewModel(ICommonServices commonServices, ILogger<TestItemsListViewModel> logger)
+        : base(commonServices, logger)
     {
         ClearCommand = new RelayCommand(ClearItems);
     }
@@ -187,9 +190,12 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(_commonServices, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+        var selectionVM = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
+        selectionVM.SetItems(Items);
+        selectionVM.SetSelectedItems(SelectedItems);
+        selectionVM.SetSelectionMode(SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;
-        return CommonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
+        return _commonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }
 
     /// <summary>

@@ -139,6 +139,5 @@ public class AuthenticationService : IAuthenticationService
         {
             RaiseAuthenticationChanged(false);
         }
-
     }
 }

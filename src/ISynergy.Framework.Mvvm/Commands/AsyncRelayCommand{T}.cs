@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Validation;
+﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Commands.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -134,23 +132,6 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
 
             ExecutionTask = executionTask;
             await executionTask;
-        }
-        catch (Exception ex)
-        {
-            // Only handle exceptions if not configured to flow them to the task scheduler
-            if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
-            {
-                var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-                if (ex.InnerException is not null)
-                    await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
-                else
-                    await exceptionHandlerService.HandleExceptionAsync(ex);
-            }
-            else
-            {
-                // Re-throw the exception if configured to flow to task scheduler
-                throw;
-            }
         }
         finally
         {

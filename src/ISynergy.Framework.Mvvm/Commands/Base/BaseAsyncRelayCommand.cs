@@ -1,11 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System.ComponentModel;
-
-#nullable enable
 
 namespace ISynergy.Framework.Mvvm.Commands.Base;
 /// <summary>
@@ -122,19 +118,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
 
     internal static async void AwaitAndThrowIfFailed(Task executionTask)
     {
-        try
-        {
-            await executionTask;
-        }
-        catch (Exception ex)
-        {
-            var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-
-            if (ex.InnerException is not null)
-                await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
-            else
-                await exceptionHandlerService.HandleExceptionAsync(ex);
-        }
+        await executionTask;
     }
 
     public void Cancel()

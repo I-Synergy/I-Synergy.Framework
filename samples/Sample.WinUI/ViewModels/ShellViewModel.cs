@@ -12,6 +12,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
 using Sample.Models;
@@ -39,8 +40,9 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public ShellViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public ShellViewModel(ICommonServices commonServices, ILogger<ShellViewModel> logger)
+        : base(commonServices, logger)
     {
         _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
 
@@ -72,7 +74,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
                 PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
 
-            SelectedItem = PrimaryItems[0];
+            SetSelectedItem(PrimaryItems[0]);
         }
 
         await InitializeFirstRunAsync();
@@ -135,7 +137,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 LanguageService.Default.GetString("Language"),
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                var languageVM = new LanguageViewModel(_commonServices);
+                var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
                 languageVM.Submitted += (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
@@ -146,7 +148,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
-            var wizardVM = new SettingsViewModel(_commonServices);
+            var wizardVM = _commonServices.ScopedContextService.GetRequiredService<SettingsViewModel>();
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();

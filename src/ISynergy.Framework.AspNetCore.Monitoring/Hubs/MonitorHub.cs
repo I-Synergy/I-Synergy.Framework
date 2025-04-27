@@ -19,10 +19,10 @@ public class MonitorHub : Hub
     /// <summary>
     /// Constructor of MonitorHub.
     /// </summary>
-    /// <param name="loggerFactory">The logger.</param>
-    public MonitorHub(ILoggerFactory loggerFactory)
+    /// <param name="logger">The logger.</param>
+    public MonitorHub(ILogger<MonitorHub> logger)
     {
-        _logger = loggerFactory.CreateLogger<MonitorHub>();
+        _logger = logger;
     }
 
     /// <summary>

@@ -6,7 +6,6 @@
 		<RootNamespace>Sample</RootNamespace>
 		<UseWPF>true</UseWPF>
 		<AssemblyName>Sample</AssemblyName>
-		<StartupObject>Sample.Program</StartupObject>
 		<Product>Sample WPF Desktop</Product>
 		<ApplicationIcon>logo.ico</ApplicationIcon>
 		<IsPackable>false</IsPackable>
@@ -27,8 +26,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry\ISynergy.Framework.Logging.OpenTelemetry.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.ApplicationInsights\ISynergy.Framework.OpenTelemetry.ApplicationInsights.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.Sentry\ISynergy.Framework.OpenTelemetry.Sentry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />

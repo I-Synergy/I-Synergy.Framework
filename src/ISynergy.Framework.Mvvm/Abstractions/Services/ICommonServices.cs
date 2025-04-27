@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
-using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
@@ -9,6 +8,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 /// </summary>
 public interface ICommonServices
 {
+    /// <summary>
+    /// Gets the language service.
+    /// </summary>
+    ILanguageService LanguageService { get; }
     /// <summary>
     /// Gets the info service.
     /// </summary>
@@ -41,10 +44,6 @@ public interface ICommonServices
     /// </summary>
     /// <value>The file service.</value>
     IFileService<FileResult> FileService { get; }
-    /// <summary>
-    /// Gets the logger factory.
-    /// </summary>
-    ILoggerFactory LoggerFactory { get; }
     /// <summary>
     /// Restarts application.
     /// </summary>

@@ -14,7 +14,6 @@ public partial class LanguageWindow : ISynergy.Framework.UI.Controls.Window, ILa
     public LanguageWindow()
     {
         InitializeComponent();
-
         PrimaryButtonText = LanguageService.Default.GetString("Ok");
         SecondaryButtonText = LanguageService.Default.GetString("Cancel");
     }

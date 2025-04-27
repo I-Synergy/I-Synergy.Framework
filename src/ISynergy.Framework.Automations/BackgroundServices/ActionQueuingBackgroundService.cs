@@ -28,15 +28,15 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// </summary>
     /// <param name="actionService"></param>
     /// <param name="options"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public ActionQueuingBackgroundService(
         IActionService actionService,
         IOptions<AutomationOptions> options,
-        ILoggerFactory loggerFactory)
+        ILogger<ActionQueuingBackgroundService> logger)
     {
         _service = actionService;
         _options = options.Value;
-        _logger = loggerFactory.CreateLogger<ActionQueuingBackgroundService>();
+        _logger = logger;
     }
 
     /// <summary>

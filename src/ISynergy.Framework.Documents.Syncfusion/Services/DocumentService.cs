@@ -23,12 +23,12 @@ internal class DocumentService : IDocumentService
     /// Default constructor.
     /// </summary>
     /// <param name="options"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public DocumentService(
         IOptions<SyncfusionLicenseOptions> options,
-        ILoggerFactory loggerFactory)
+        ILogger<DocumentService> logger)
     {
-        _logger = loggerFactory.CreateLogger<DocumentService>();
+        _logger = logger;
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
     }
 

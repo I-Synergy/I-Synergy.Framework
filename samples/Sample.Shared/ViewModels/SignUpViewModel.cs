@@ -14,6 +14,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
@@ -135,8 +136,8 @@ public class SignUpViewModel : ViewModel
 
     public SignUpViewModel(
         ICommonServices commonServices,
-        bool automaticValidation = false)
-        : base(commonServices, automaticValidation)
+        ILogger<SignUpViewModel> logger)
+        : base(commonServices, logger)
     {
         this.Validator = new Action<IObservableClass>(_ =>
         {
@@ -195,7 +196,10 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        ViewModelSelectionDialog<Module> selectionVM = new ViewModelSelectionDialog<Module>(_commonServices, Modules, SelectedModules, SelectionModes.Multiple);
+        var selectionVM = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<Module>>();
+        selectionVM.SetSelectionMode(SelectionModes.Multiple);
+        selectionVM.SetItems(Modules);
+        selectionVM.SetSelectedItems(SelectedModules);
         selectionVM.Submitted += SelectionVM_Submitted;
         return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
     }
@@ -252,7 +256,7 @@ public class SignUpViewModel : ViewModel
         {
             if (SelectedCountry is not null)
             {
-                TimeZones = SelectedCountry.ISO2Code.ToTimeZoneIds();
+                TimeZones = SelectedCountry.ISO2Code!.ToTimeZoneIds();
 
                 if (TimeZones.Count == 1)
                 {
@@ -306,7 +310,7 @@ public class SignUpViewModel : ViewModel
                     Password = Password,
                     Modules = Modules,
                     UsersAllowed = 1,
-                    CountryCode = SelectedCountry.ISO2Code,
+                    CountryCode = SelectedCountry.ISO2Code!,
                     TimeZoneId = SelectedTimeZone
                 };
 

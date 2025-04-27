@@ -4,6 +4,8 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Windows;
@@ -16,7 +18,7 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : System.Windows.Application, IDisposable
 {
-    protected readonly ILogger _logger;
+    protected readonly ILogger<Application> _logger;
     protected readonly ICommonServices _commonServices;
 
     protected bool _isShuttingDown = false;
@@ -32,12 +34,19 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected Application(ICommonServices commonServices)
+    protected Application()
         : base()
     {
-        _commonServices = commonServices;
+        var host = CreateHostBuilder()
+           .Build()
+           .SetLocatorProvider();
 
-        _logger = _commonServices.ScopedContextService.GetService<ILoggerFactory>().CreateLogger<Application>();
+        _logger = host.Services.GetRequiredService<ILogger<Application>>();
+        _logger.LogTrace("Setting up global exception handler.");
+
+        _logger.LogTrace("Getting common services.");
+        _commonServices = host.Services.GetRequiredService<ICommonServices>();
+
         _logger.LogTrace("Starting application");
 
         this.ApplicationLoaded += OnApplicationLoaded;
@@ -83,6 +92,8 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         _logger.LogTrace("Finishing initialization of application");
     }
+
+    protected abstract IHostBuilder CreateHostBuilder();
 
     protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
     protected abstract void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e);

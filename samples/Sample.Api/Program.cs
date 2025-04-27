@@ -1,6 +1,6 @@
 using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Logging.Extensions;
+using ISynergy.Framework.OpenTelemetry.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -21,85 +21,86 @@ public class Program
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly!);
 
-        builder.Logging.AddOpenTelemetryLogging(
-            infoService,
-            builder.Configuration,
-                logger =>
-                {
-                    //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
-                    //{
-                    //    logger.AddAzureMonitorLogExporter(options =>
-                    //    {
-                    //        options.ConnectionString = builder.Configuration[ApplicationInsightsConnectionString];
-                    //    });
-                    //}
-                });
-
-        builder.Host.ConfigureOpenTelemetryLogging(infoService,
-            tracing =>
+        // Add telemetry
+        builder.Host
+            .ConfigureLogging((context, loggingBuilder) =>
             {
-                tracing.AddAspNetCoreInstrumentation();
+                loggingBuilder.
+                    AddTelemetry(
+                        context,
+                        infoService,
+                        tracerProviderBuilderAction: (tracing) =>
+                        {
+                            tracing.AddAspNetCoreInstrumentation(opts =>
+                            {
+                                opts.RecordException = true;
+                                opts.EnrichWithHttpRequest = (activity, request) =>
+                                {
+                                    activity.SetTag("http.request.header.user_agent", request.Headers.UserAgent);
+                                    activity.SetTag("http.request.method", request.Method);
+                                };
+                                opts.EnrichWithHttpResponse = (activity, response) =>
+                                {
+                                    activity.SetTag("http.response.status_code", response.StatusCode);
+                                };
+                            });
 
-                tracing.AddSqlClientInstrumentation(options =>
-                {
-                    options.SetDbStatementForText = true;
-                    options.RecordException = true;
-                });
+                            tracing.AddSqlClientInstrumentation(options =>
+                            {
+                                options.SetDbStatementForText = true;
+                                options.RecordException = true;
+                            });
 
-                tracing.AddEntityFrameworkCoreInstrumentation(options =>
-                {
-                    options.SetDbStatementForText = true;
-                    options.SetDbStatementForStoredProcedure = true;
-                });
+                            tracing.AddEntityFrameworkCoreInstrumentation(options =>
+                            {
+                                options.SetDbStatementForText = true;
+                                options.SetDbStatementForStoredProcedure = true;
+                            });
+                        },
+                        meterProviderBuilderAction: (metrics) =>
+                        {
+                            metrics.AddAspNetCoreInstrumentation();
 
-                //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
-                //{
-                //    // Azure Monitor tracing
-                //    tracing.AddAzureMonitorTraceExporter(options =>
-                //    {
-                //        options.ConnectionString = builder.Configuration[ApplicationInsightsConnectionString];
-                //    });
-                //}
-            },
-            metrics =>
+                            // ASP.NET Core metrics
+                            metrics.AddMeter("Microsoft.AspNetCore.Hosting");
+                            metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
+
+                            // EF Core metrics
+                            metrics.AddMeter("Microsoft.EntityFrameworkCore");
+                        },
+                        loggerProviderBuilderAction: (logger) =>
+                        {
+                        })
+                        .AddOtlpExporter()
+                        .AddApplicationInsightsExporter()
+                        .AddSentryExporter(
+                            options =>
+                            {
+                                options.Environment = builder.Environment.EnvironmentName;
+                                options.Debug = builder.Environment.IsDevelopment();
+                            });
+            })
+            .ConfigureServices((context, services) =>
             {
-                metrics.AddAspNetCoreInstrumentation();
+                services.AddHealthChecks()
+                    // Add a default liveness check to ensure app is responsive
+                    .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
-                // ASP.NET Core metrics
-                metrics.AddMeter("Microsoft.AspNetCore.Hosting");
-                metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
+                // Add services to the container.
+                services.AddControllerWithDefaultJsonSerialization();
 
-                // EF Core metrics
-                metrics.AddMeter("Microsoft.EntityFrameworkCore");
+                services.AddDbContext<TestDbContext>(options =>
+                    options.UseInMemoryDatabase("TestDb"));
 
-                //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
-                //{
-                //    // Azure Monitor metrics
-                //    metrics.AddAzureMonitorMetricExporter(options =>
-                //    {
-                //        options.ConnectionString = builder.Configuration[ApplicationInsightsConnectionString];
-                //    });
-                //}
-            },
-            logger =>
-            {
+                services.AddEndpointsApiExplorer();
+
+                services.AddOpenApiDocument();
             });
 
-        builder.Services.AddHealthChecks()
-            // Add a default liveness check to ensure app is responsive
-            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
-        // Add services to the container.
-        builder.Services.AddControllerWithDefaultJsonSerialization();
-
-        builder.Services.AddDbContext<TestDbContext>(options =>
-            options.UseInMemoryDatabase("TestDb"));
-
-        builder.Services.AddEndpointsApiExplorer();
-
-        builder.Services.AddOpenApiDocument();
-
-        var app = builder.Build();
+        var app = builder
+            .Build()
+            .SetLocatorProvider();
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
@@ -128,6 +129,9 @@ public class Program
         // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
         if (app.Environment.IsDevelopment())
         {
+            // Map health checks with telemetry
+            app.MapTelemetryHealthChecks();
+
             // All health checks must pass for app to be considered ready to accept traffic after starting
             app.MapHealthChecks("/health");
 

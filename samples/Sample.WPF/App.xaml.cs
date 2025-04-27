@@ -1,10 +1,21 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.OpenTelemetry.Extensions;
+using ISynergy.Framework.Physics.Abstractions;
+using ISynergy.Framework.Physics.Services;
+using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NugetUnlister.Extensions;
+using Sample.Models;
+using Sample.Services;
 using Sample.ViewModels;
+using System.Reflection;
 using System.Windows;
 
 namespace Sample;
@@ -15,13 +26,52 @@ namespace Sample;
 public partial class App : ISynergy.Framework.UI.Application
 {
     public App()
-        : base(ServiceLocator.Default.GetService<ICommonServices>())
+        : base()
     {
+    }
+
+    protected override IHostBuilder CreateHostBuilder()
+    {
+        var mainAssembly = Assembly.GetExecutingAssembly();
+        var infoService = new InfoService();
+        infoService.LoadAssembly(mainAssembly);
+
+        var hostBuilder = new HostBuilder();
+
+        hostBuilder
+            .ConfigureHostConfiguration(builder =>
+            {
+                builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json")!);
+            })
+            .ConfigureLogging((context, loggingBuilder) =>
+            {
+                loggingBuilder
+                    .AddTelemetry(context, infoService)
+                    .AddOtlpExporter()
+                    .AddApplicationInsightsExporter()
+                    .AddSentryExporter(
+                        options =>
+                        {
+                            options.Environment = context.HostingEnvironment.EnvironmentName;
+                            options.Debug = context.HostingEnvironment.IsDevelopment();
+                        });
+            })
+            .ConfigureServices<Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
+            {
+                services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
+
+                services.AddNugetServiceIntegrations(configuration);
+            },
+            mainAssembly,
+            f => f.Name!.StartsWith(typeof(App).Namespace!));
+
+        return hostBuilder;
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
         RaiseApplicationLoaded();
     }
 

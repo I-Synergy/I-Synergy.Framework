@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Commands;
-
-#nullable enable
+﻿using ISynergy.Framework.Mvvm.Abstractions.Commands;
 
 namespace ISynergy.Framework.Mvvm.Commands.Base;
 
@@ -35,26 +31,6 @@ public abstract class BaseRelayCommand : IRelayCommand, IDisposable
 
     public abstract bool CanExecute(object? parameter);
     public abstract void Execute(object? parameter);
-
-    protected void HandleException(Exception ex)
-    {
-        var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-
-        if (ex.InnerException is not null)
-        {
-            exceptionHandlerService.HandleExceptionAsync(ex.InnerException)
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
-        }
-        else
-        {
-            exceptionHandlerService.HandleExceptionAsync(ex)
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
-        }
-    }
 
     public void Dispose()
     {

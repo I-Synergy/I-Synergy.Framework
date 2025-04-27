@@ -26,7 +26,7 @@ internal class ClientMonitorService : IClientMonitorService
     /// <summary>
     /// The configuration options
     /// </summary>
-    protected readonly ClientMonitorOptions _configurationOptions;
+    protected readonly ClientMonitorOptions _clientMonitorOptions;
 
     /// <summary>
     /// The connection
@@ -37,16 +37,16 @@ internal class ClientMonitorService : IClientMonitorService
     /// Initializes a new instance of the <see cref="ClientMonitorService"/> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="configurationOptions">The configuration options.</param>
-    /// <param name="loggerFactory">The logger factory.</param>
+    /// <param name="clientMonitorOptions">The configuration options.</param>
+    /// <param name="logger">The logger factory.</param>
     public ClientMonitorService(
         IDialogService dialogService,
-        IOptions<ClientMonitorOptions> configurationOptions,
-        ILoggerFactory loggerFactory)
+        IOptions<ClientMonitorOptions> clientMonitorOptions,
+        ILogger<ClientMonitorService> logger)
     {
         _dialogService = dialogService;
-        _configurationOptions = configurationOptions.Value;
-        _logger = loggerFactory.CreateLogger<ClientMonitorService>();
+        _clientMonitorOptions = clientMonitorOptions.Value;
+        _logger = logger;
     }
 
     /// <summary>
@@ -57,10 +57,10 @@ internal class ClientMonitorService : IClientMonitorService
     /// <returns>Task.</returns>
     public virtual Task ConnectAsync(string? token, Action<HubConnection> connectionAction)
     {
-        _logger.LogInformation($"Connecting to {_configurationOptions.EndpointUrl}");
+        _logger.LogInformation($"Connecting to {_clientMonitorOptions.EndpointUrl}");
 
         _connection = new HubConnectionBuilder()
-            .WithUrl(_configurationOptions.EndpointUrl, options =>
+            .WithUrl(_clientMonitorOptions.EndpointUrl, options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(token);
             })

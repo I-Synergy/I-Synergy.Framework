@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.UI.Services;
@@ -13,50 +12,19 @@ namespace ISynergy.Framework.UI.Services;
 /// <seealso cref="ICommonServices" />
 public class CommonService : ICommonServices
 {
-    /// <summary>
-    /// Gets the info service.
-    /// </summary>
+    public ILanguageService LanguageService { get; }
     public IInfoService InfoService { get; }
-    /// <summary>
-    /// Gets the busy service.
-    /// </summary>
-    /// <value>The busy service.</value>
     public IBusyService BusyService { get; }
-
-    /// <summary>
-    /// Gets the dialog service.
-    /// </summary>
-    /// <value>The dialog service.</value>
     public IDialogService DialogService { get; }
-
-    /// <summary>
-    /// Gets the navigation service.
-    /// </summary>
-    /// <value>The navigation service.</value>
     public INavigationService NavigationService { get; }
-
-    /// <summary>
-    /// Gets the authentication service.
-    /// </summary>
-    /// <value>The authentication service.</value>
     public IAuthenticationService AuthenticationService { get; }
-
-    /// <summary>
-    /// Gets the scoped context service.
-    /// </summary>
     public IScopedContextService ScopedContextService { get; }
-    /// <summary>
-    /// Gets the file service.
-    /// </summary>
-    /// <value>The file service.</value>
     public IFileService<FileResult> FileService { get; }
-    /// <summary>
-    /// Gets the logger factory.
-    /// </summary>
-    public ILoggerFactory LoggerFactory { get; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="CommonService"/> class.
     /// </summary>
+    /// <param name="languageService"></param>
     /// <param name="infoService"></param>
     /// <param name="busyService">The busy.</param>
     /// <param name="dialogService">The dialog.</param>
@@ -64,17 +32,17 @@ public class CommonService : ICommonServices
     /// <param name="authenticationService"></param>
     /// <param name="scopedContextService"></param>
     /// <param name="fileService"></param>
-    /// <param name="loggerFactory"></param>
     protected CommonService(
+        ILanguageService languageService,
         IInfoService infoService,
         IBusyService busyService,
         IDialogService dialogService,
         INavigationService navigationService,
         IAuthenticationService authenticationService,
         IScopedContextService scopedContextService,
-        IFileService<FileResult> fileService,
-        ILoggerFactory loggerFactory)
+        IFileService<FileResult> fileService)
     {
+        LanguageService = languageService;
         InfoService = infoService;
         BusyService = busyService;
         DialogService = dialogService;
@@ -82,7 +50,6 @@ public class CommonService : ICommonServices
         AuthenticationService = authenticationService;
         ScopedContextService = scopedContextService;
         FileService = fileService;
-        LoggerFactory = loggerFactory;
     }
 
     /// <summary>
