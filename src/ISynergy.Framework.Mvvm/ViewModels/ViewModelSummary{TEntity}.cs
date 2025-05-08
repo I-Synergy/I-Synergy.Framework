@@ -41,7 +41,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     public TEntity? SelectedItem
     {
         get => GetValue<TEntity>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Gets or sets the submit command.
     /// </summary>
     /// <value>The submit command.</value>
-    public AsyncRelayCommand<TEntity>? SubmitCommand { get; private set; }
+    public AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether [refresh on initialization].

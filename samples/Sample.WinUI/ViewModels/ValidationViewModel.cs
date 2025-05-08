@@ -69,7 +69,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// </summary>
     public string Description { get; }
 
-    public AsyncRelayCommand? ValidateCommand { get; }
+    public AsyncRelayCommand ValidateCommand { get; }
 
     /// <summary>
     /// Default constructor.

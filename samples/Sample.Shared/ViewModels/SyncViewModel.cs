@@ -42,11 +42,11 @@ public class SyncViewModel : ViewModelNavigation<object>
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand? SyncCommand { get; set; }
-    public AsyncRelayCommand? SyncReinitializeCommand { get; set; }
-    public AsyncRelayCommand? CustomActionCommand { get; set; }
-    public AsyncRelayCommand? DeprovisionClientCommand { get; private set; }
-    public AsyncRelayCommand? ProvisionClientCommand { get; private set; }
+    public AsyncRelayCommand SyncCommand { get; set; }
+    public AsyncRelayCommand SyncReinitializeCommand { get; set; }
+    public AsyncRelayCommand CustomActionCommand { get; set; }
+    public AsyncRelayCommand DeprovisionClientCommand { get; private set; }
+    public AsyncRelayCommand ProvisionClientCommand { get; private set; }
 
 
     public SyncViewModel(

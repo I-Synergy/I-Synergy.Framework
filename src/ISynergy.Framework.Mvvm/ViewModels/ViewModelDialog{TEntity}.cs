@@ -34,7 +34,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     public TEntity? SelectedItem
     {
         get { return GetValue<TEntity>(); }
-        private set { SetValue(value); }
+        set { SetValue(value); }
     }
 
 

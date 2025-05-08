@@ -31,7 +31,7 @@ public class NoteViewModel : ViewModelDialog<string>
     public string? TargetProperty
     {
         get => GetValue<string?>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
 

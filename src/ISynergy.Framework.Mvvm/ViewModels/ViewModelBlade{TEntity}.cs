@@ -34,7 +34,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     public TEntity? SelectedItem
     {
         get { return GetValue<TEntity>(); }
-        private set { SetValue(value); }
+        set { SetValue(value); }
     }
 
     /// <summary>

@@ -20,7 +20,7 @@ public static class ReflectionExtensions
     {
         foreach (var assembly in assemblies)
             foreach (var type in assembly.GetTypes())
-                if (type.GetInterface(nameof(IViewModel), false) is not null
+                if (type.GetInterfaces().Any(i => i == typeof(IViewModel) || i.GetInterfaces().Contains(typeof(IViewModel)))
                     && (type.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(type.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     && type.Name != GenericConstants.ViewModel
                     && !type.IsAbstract
@@ -36,7 +36,7 @@ public static class ReflectionExtensions
     AppDomain.CurrentDomain.GetAssemblies()
         .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
         .SelectMany(assembly => assembly.GetTypes())
-        .Where(type => type.GetInterface(nameof(IViewModel), false) is not null
+        .Where(type => type.GetInterfaces().Any(i => i == typeof(IViewModel) || i.GetInterfaces().Contains(typeof(IViewModel)))
             && (type.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(type.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             && type.Name != GenericConstants.ViewModel
             && !type.IsAbstract

@@ -34,7 +34,7 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
     public TEntity? SelectedItem
     {
         get { return GetValue<TEntity>(); }
-        private set { SetValue(value); }
+        set { SetValue(value); }
     }
 
 

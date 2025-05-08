@@ -114,7 +114,7 @@ public static class GenericConstants
     /// <summary>
     /// The viewmodel with generic parameter
     /// </summary>
-    public const string ViewModelTRegex = ".*ViewModel`.*";
+    public const string ViewModelTRegex = @".*ViewModel.*`\d+$";
     /// <summary>
     /// The shell view model
     /// </summary>

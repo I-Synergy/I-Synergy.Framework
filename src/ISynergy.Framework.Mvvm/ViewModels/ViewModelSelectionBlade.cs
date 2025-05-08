@@ -39,7 +39,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     public SelectionModes SelectionMode
     {
         get { return GetValue<SelectionModes>(); }
-        private set { SetValue(value); }
+        set { SetValue(value); }
     }
 
     public virtual void SetSelectionMode(SelectionModes selectionMode)
@@ -54,7 +54,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     public ObservableCollection<TEntity> Items
     {
         get { return GetValue<ObservableCollection<TEntity>>(); }
-        private set { SetValue(value); }
+        set { SetValue(value); }
     }
 
     public virtual void SetItems(IEnumerable<object> e)
@@ -75,7 +75,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
     public List<object> SelectedItems
     {
         get => GetValue<List<object>>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
     public virtual void SetSelectedItems(IEnumerable<object> e)
