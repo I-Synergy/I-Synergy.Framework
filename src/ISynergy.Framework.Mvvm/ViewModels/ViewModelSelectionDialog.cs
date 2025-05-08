@@ -39,7 +39,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
     public SelectionModes SelectionMode
     {
         get { return GetValue<SelectionModes>(); }
-        private set { SetValue(value); }
+        set { SetValue(value); }
     }
 
     public virtual void SetSelectionMode(SelectionModes selectionMode)
@@ -54,7 +54,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
     public ObservableCollection<TEntity> Items
     {
         get { return GetValue<ObservableCollection<TEntity>>(); }
-        private set { SetValue(value); }
+        set { SetValue(value); }
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
     public List<object> SelectedItems
     {
         get => GetValue<List<object>>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
 

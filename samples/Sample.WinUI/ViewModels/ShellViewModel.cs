@@ -26,15 +26,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
 
-    public AsyncRelayCommand? DisplayCommand { get; private set; }
-    public AsyncRelayCommand? InfoCommand { get; private set; }
-    public AsyncRelayCommand? BrowseCommand { get; private set; }
-    public AsyncRelayCommand? ConverterCommand { get; private set; }
-    public AsyncRelayCommand? SelectionTestCommand { get; private set; }
-    public AsyncRelayCommand? ListViewTestCommand { get; private set; }
-    public AsyncRelayCommand? ValidationTestCommand { get; private set; }
-    public AsyncRelayCommand? TreeNodeTestCommand { get; private set; }
-    public AsyncRelayCommand? ChartCommand { get; private set; }
+    public AsyncRelayCommand DisplayCommand { get; private set; }
+    public AsyncRelayCommand InfoCommand { get; private set; }
+    public AsyncRelayCommand BrowseCommand { get; private set; }
+    public AsyncRelayCommand ConverterCommand { get; private set; }
+    public AsyncRelayCommand SelectionTestCommand { get; private set; }
+    public AsyncRelayCommand ListViewTestCommand { get; private set; }
+    public AsyncRelayCommand ValidationTestCommand { get; private set; }
+    public AsyncRelayCommand TreeNodeTestCommand { get; private set; }
+    public AsyncRelayCommand ChartCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -71,8 +71,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
         {
-            if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
-                PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
+            if (PrimaryItems[0].Command!.CanExecute(PrimaryItems[0].CommandParameter))
+                PrimaryItems[0].Command!.Execute(PrimaryItems[0].CommandParameter);
 
             SetSelectedItem(PrimaryItems[0]);
         }

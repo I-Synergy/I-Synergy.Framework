@@ -88,7 +88,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     public ObservableCollection<NavigationItem> PrimaryItems
     {
         get => GetValue<ObservableCollection<NavigationItem>>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     public ObservableCollection<NavigationItem> SecondaryItems
     {
         get => GetValue<ObservableCollection<NavigationItem>>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
     /// <summary>

@@ -175,10 +175,10 @@ public class AuthenticationViewModel : ViewModel
         set => SetValue(value);
     }
 
-    public RelayCommand? ShowSignInCommand { get; private set; }
-    public AsyncRelayCommand? SignInCommand { get; private set; }
-    public AsyncRelayCommand? SignUpCommand { get; private set; }
-    public AsyncRelayCommand? ForgotPasswordCommand { get; private set; }
+    public RelayCommand ShowSignInCommand { get; private set; }
+    public AsyncRelayCommand SignInCommand { get; private set; }
+    public AsyncRelayCommand SignUpCommand { get; private set; }
+    public AsyncRelayCommand ForgotPasswordCommand { get; private set; }
 
     public AuthenticationViewModel(
         ICommonServices commonServices,

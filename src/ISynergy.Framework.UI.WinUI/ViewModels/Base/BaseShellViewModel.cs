@@ -50,7 +50,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     public ObservableCollection<NavigationItem> PrimaryItems
     {
         get => GetValue<ObservableCollection<NavigationItem>>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     public ObservableCollection<NavigationItem> SecondaryItems
     {
         get => GetValue<ObservableCollection<NavigationItem>>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
     /// <summary>

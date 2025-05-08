@@ -25,22 +25,24 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
 
     public RelayCommand(Action<T?> execute)
     {
-        Argument.IsNotNull(execute);
-        _execute = execute;
+        _execute = Argument.IsNotNull(execute);
     }
 
     public RelayCommand(Action<T?> execute, Predicate<T?> canExecute)
         : this(execute)
     {
-        Argument.IsNotNull(canExecute);
-        _canExecute = canExecute;
+        _canExecute = Argument.IsNotNull(canExecute);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool CanExecute(T? parameter)
     {
         ThrowIfDisposed();
-        return _canExecute?.Invoke(parameter) != false;
+
+        lock (_syncLock)
+        {
+            return _canExecute?.Invoke(parameter) != false;
+        }
     }
 
     public override bool CanExecute(object? parameter)
@@ -59,7 +61,11 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     public void Execute(T? parameter)
     {
         ThrowIfDisposed();
-        _execute(parameter);
+
+        lock (_syncLock)
+        {
+            _execute(parameter);
+        }
     }
 
     public override void Execute(object? parameter)
@@ -75,16 +81,32 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool TryGetCommandArgument(object? parameter, out T? result)
     {
+        // Fast path for null parameter and nullable T
         if (parameter is null && default(T) is null)
         {
             result = default;
             return true;
         }
 
-        if (parameter is T argument)
+        // Fast path for exact type match
+        if (parameter is T exactMatch)
         {
-            result = argument;
+            result = exactMatch;
             return true;
+        }
+
+        // Slower path for type conversion (only executed if the above checks fail)
+        try
+        {
+            if (parameter != null && typeof(T).IsAssignableFrom(parameter.GetType()))
+            {
+                result = (T)parameter;
+                return true;
+            }
+        }
+        catch
+        {
+            // Conversion failed, fall through to default return
         }
 
         result = default;

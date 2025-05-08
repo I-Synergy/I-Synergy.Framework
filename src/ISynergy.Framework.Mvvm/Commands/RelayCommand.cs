@@ -17,27 +17,36 @@ public sealed class RelayCommand : BaseRelayCommand
 
     public RelayCommand(Action execute)
     {
-        Argument.IsNotNull(execute);
-        _execute = execute;
+        _execute = Argument.IsNotNull(execute);
     }
 
     public RelayCommand(Action execute, Func<bool> canExecute)
         : this(execute)
     {
-        Argument.IsNotNull(canExecute);
-        _canExecute = canExecute;
+        _canExecute = Argument.IsNotNull(canExecute);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool CanExecute(object? parameter)
     {
         ThrowIfDisposed();
-        return _canExecute?.Invoke() != false;
+
+        lock (_syncLock)
+        {
+            return _canExecute?.Invoke() != false;
+        }
     }
 
     public override void Execute(object? parameter)
     {
         ThrowIfDisposed();
-        _execute();
+
+        // For synchronous operations, consider using Task.Run if the operation is long-running
+        // This is a simple command, so we execute directly
+        lock (_syncLock)
+        {
+            if (_execute != null)
+                _execute();
+        }
     }
 }

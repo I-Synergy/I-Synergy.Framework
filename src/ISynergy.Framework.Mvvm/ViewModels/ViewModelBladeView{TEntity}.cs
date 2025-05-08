@@ -99,7 +99,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Gets or sets the submit command.
     /// </summary>
     /// <value>The submit command.</value>
-    public AsyncRelayCommand<TEntity>? SubmitCommand { get; private set; }
+    public AsyncRelayCommand<TEntity> SubmitCommand { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether [refresh on initialization].

@@ -45,7 +45,7 @@
     <PackageVersion Include="OpenTelemetry.Api" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.12.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.11.0-beta.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.12.0-beta.1" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry" Version="5.6.0" />
     <PackageVersion Include="Sentry.AspNetCore" Version="5.5.1" />
@@ -53,17 +53,17 @@
     <PackageVersion Include="Sentry.OpenTelemetry" Version="5.6.0" />
     <PackageVersion Include="Sentry.Profiling" Version="5.5.1" />
     <PackageVersion Include="SkiaSharp" Version="2.88.9" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="29.1.40" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="29.1.40" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="29.1.40" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="29.1.40" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="29.1.40" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="29.1.40" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="29.1.41" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="29.1.41" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="29.1.41" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="29.1.41" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="29.1.41" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="29.1.41" />
     <PackageVersion Include="Syncfusion.Maui.Core" Version="28.2.11" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="29.1.40" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="29.1.40" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="29.1.40" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="29.1.40" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="29.1.41" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="29.1.41" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="29.1.41" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="29.1.41" />
     <PackageVersion Include="System.Diagnostics.DiagnosticSource" Version="9.0.4" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
@@ -102,8 +102,8 @@
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Process" Version="1.11.0-beta.2" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Process" Version="1.12.0-beta.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />

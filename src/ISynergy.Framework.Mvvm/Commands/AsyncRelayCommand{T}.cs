@@ -16,71 +16,120 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     private readonly Func<T, CancellationToken, Task>? _cancelableExecute;
     private readonly Predicate<T>? _canExecute;
 
+    /// <summary>
+    /// Gets a value indicating whether the command uses the base execute method.
+    /// </summary>
     protected override bool IsBaseExecute => _execute is not null;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
+    /// </summary>
+    /// <param name="execute">The execution function.</param>
     public AsyncRelayCommand(Func<T, Task> execute)
         : base(AsyncRelayCommandOptions.None)
     {
-        Argument.IsNotNull(execute);
-        _execute = execute;
+        _execute = Argument.IsNotNull(execute);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
+    /// </summary>
+    /// <param name="execute">The execution function.</param>
+    /// <param name="options">Command options.</param>
     public AsyncRelayCommand(Func<T, Task> execute, AsyncRelayCommandOptions options)
         : base(options)
     {
-        Argument.IsNotNull(execute);
-        _execute = execute;
+        _execute = Argument.IsNotNull(execute);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
+    /// </summary>
+    /// <param name="cancelableExecute">The cancelable execution function.</param>
     public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute)
         : base(AsyncRelayCommandOptions.None)
     {
-        Argument.IsNotNull(cancelableExecute);
-        _cancelableExecute = cancelableExecute;
+        _cancelableExecute = Argument.IsNotNull(cancelableExecute);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
+    /// </summary>
+    /// <param name="cancelableExecute">The cancelable execution function.</param>
+    /// <param name="options">Command options.</param>
     public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute, AsyncRelayCommandOptions options)
         : base(options)
     {
-        Argument.IsNotNull(cancelableExecute);
-        _cancelableExecute = cancelableExecute;
+        _cancelableExecute = Argument.IsNotNull(cancelableExecute);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
+    /// </summary>
+    /// <param name="execute">The execution function.</param>
+    /// <param name="canExecute">The can execute function.</param>
     public AsyncRelayCommand(Func<T, Task> execute, Predicate<T> canExecute)
         : this(execute)
     {
-        Argument.IsNotNull(canExecute);
-        _canExecute = canExecute;
+        _canExecute = Argument.IsNotNull(canExecute);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
+    /// </summary>
+    /// <param name="execute">The execution function.</param>
+    /// <param name="canExecute">The can execute function.</param>
+    /// <param name="options">Command options.</param>
     public AsyncRelayCommand(Func<T, Task> execute, Predicate<T> canExecute, AsyncRelayCommandOptions options)
         : this(execute, options)
     {
-        Argument.IsNotNull(canExecute);
-        _canExecute = canExecute;
+        _canExecute = Argument.IsNotNull(canExecute);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
+    /// </summary>
+    /// <param name="cancelableExecute">The cancelable execution function.</param>
+    /// <param name="canExecute">The can execute function.</param>
     public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute, Predicate<T> canExecute)
         : this(cancelableExecute)
     {
-        Argument.IsNotNull(canExecute);
-        _canExecute = canExecute;
+        _canExecute = Argument.IsNotNull(canExecute);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
+    /// </summary>
+    /// <param name="cancelableExecute">The cancelable execution function.</param>
+    /// <param name="canExecute">The can execute function.</param>
+    /// <param name="options">Command options.</param>
     public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute, Predicate<T> canExecute, AsyncRelayCommandOptions options)
         : this(cancelableExecute, options)
     {
-        Argument.IsNotNull(canExecute);
-        _canExecute = canExecute;
+        _canExecute = Argument.IsNotNull(canExecute);
     }
 
+    /// <summary>
+    /// Determines whether this command can execute in its current state.
+    /// </summary>
+    /// <param name="parameter">Data used by the command.</param>
+    /// <returns>true if this command can be executed; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool CanExecute(T? parameter)
     {
-        var canExecute = _canExecute?.Invoke(parameter!) != false;
-        return canExecute && ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0 || ExecutionTask is not { IsCompleted: false });
+        // Handle null parameter safely
+        bool canExecutePredicate = _canExecute?.Invoke(parameter!) != false;
+
+        return canExecutePredicate &&
+            ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0 ||
+             ExecutionTask is not { IsCompleted: false });
     }
 
+    /// <summary>
+    /// Determines whether this command can execute in its current state.
+    /// </summary>
+    /// <param name="parameter">Data used by the command.</param>
+    /// <returns>true if this command can be executed; otherwise, false.</returns>
     public override bool CanExecute(object? parameter)
     {
         if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result))
@@ -92,6 +141,10 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
         return CanExecute(result);
     }
 
+    /// <summary>
+    /// Executes the command.
+    /// </summary>
+    /// <param name="parameter">Data used by the command.</param>
     public void Execute(T? parameter)
     {
         Task executionTask = ExecuteAsync(parameter);
@@ -100,6 +153,10 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
             AwaitAndThrowIfFailed(executionTask);
     }
 
+    /// <summary>
+    /// Executes the command.
+    /// </summary>
+    /// <param name="parameter">Data used by the command.</param>
     public override void Execute(object? parameter)
     {
         if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result))
@@ -108,14 +165,51 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
         Execute(result);
     }
 
+    /// <summary>
+    /// Executes the command asynchronously.
+    /// </summary>
+    /// <param name="parameter">Data used by the command.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task ExecuteAsync(object? parameter)
+    {
+        if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result))
+            RelayCommand<T>.ThrowArgumentExceptionForInvalidCommandArgument(parameter);
+
+        await ExecuteAsync(result);
+    }
+
+    /// <summary>
+    /// Executes the command asynchronously.
+    /// </summary>
+    /// <param name="parameter">Data used by the command.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task ExecuteAsync(T? parameter)
     {
-        if (IsRunning && (_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
-            return;
+        // Use a lock to ensure thread safety when checking and setting execution state
+        bool canProceed;
+        lock (_executionLock)
+        {
+            canProceed = !IsRunning || (_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0;
+            if (!canProceed) return;
+        }
+
+        CancellationTokenSource? timeoutCts = null;
+        CancellationTokenSource? linkedCts = null;
 
         try
         {
             Task executionTask;
+
+            // Handle null parameter safely
+            if (parameter == null)
+            {
+                // If parameter is null and we can't handle it, return early
+                if (typeof(T).IsValueType && !typeof(T).IsGenericType)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Cannot execute command with null parameter for non-nullable value type {typeof(T).Name}");
+                    return;
+                }
+            }
 
             if (_execute is not null)
             {
@@ -123,30 +217,65 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
             }
             else
             {
-                _cancellationTokenSource?.Cancel();
-                var cancellationTokenSource = _cancellationTokenSource = new();
-                _cancellationTokenSources.Add(cancellationTokenSource);
+                lock (_executionLock)
+                {
+                    // Cancel any existing operation
+                    if (_cancellationTokenSource != null)
+                        _cancellationTokenSource.Cancel();
 
-                executionTask = _cancelableExecute!(parameter!, cancellationTokenSource.Token);
+                    var cancellationTokenSource = _cancellationTokenSource = new CancellationTokenSource();
+
+                    // Create a timeout token source
+                    timeoutCts = new CancellationTokenSource(_defaultTimeout);
+
+                    // Link the timeout and operation token sources
+                    linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
+                        cancellationTokenSource.Token, timeoutCts.Token);
+
+                    _cancellationTokenSources.Add(cancellationTokenSource);
+
+                    // Clean up completed token sources to prevent memory leaks
+                    CleanupCompletedTokenSources();
+                }
+
+                executionTask = _cancelableExecute!(parameter!, linkedCts.Token);
             }
 
             ExecutionTask = executionTask;
-            await executionTask;
+
+            try
+            {
+                await executionTask;
+            }
+            catch (OperationCanceledException)
+            {
+                // Handle cancellation gracefully
+                System.Diagnostics.Debug.WriteLine("Command execution was canceled.");
+
+                // Re-throw if configured to flow exceptions
+                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
+                    throw;
+            }
+            catch (TimeoutException)
+            {
+                // Handle timeouts specifically
+                System.Diagnostics.Debug.WriteLine("Command execution timed out.");
+
+                // Re-throw if configured to flow exceptions
+                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
+                    throw;
+            }
         }
         finally
         {
+            // Dispose of timeout-related resources
+            timeoutCts?.Dispose();
+            linkedCts?.Dispose();
+
             ExecutionTask = null;
 
             if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
                 OnCanExecuteChanged();
         }
-    }
-
-    public override async Task ExecuteAsync(object? parameter)
-    {
-        if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result))
-            RelayCommand<T>.ThrowArgumentExceptionForInvalidCommandArgument(parameter);
-
-        await ExecuteAsync(result);
     }
 }
