@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Mvvm.Commands.Base;
@@ -14,7 +15,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// <summary>
     /// Lock object for thread synchronization.
     /// </summary>
-    protected readonly object _executionLock = new object();
+    protected readonly object _syncLock = new object();
 
     /// <summary>
     /// List of cancellation token sources for tracking and cleanup.
@@ -57,13 +58,53 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     private EventHandler? _canExecuteChanged;
 
     /// <summary>
+    /// Static pool for weak references to reduce allocations
+    /// </summary>
+    private static readonly ConcurrentQueue<WeakReference<BaseAsyncRelayCommand>> _weakReferencePool = new();
+
+    /// <summary>
+    /// Static pool for continuation cancellation tokens
+    /// </summary>
+    private static readonly ConcurrentQueue<CancellationTokenSource> _continuationCtsPool = new();
+
+    /// <summary>
+    /// Maximum size for object pools
+    /// </summary>
+    private const int MaxPoolSize = 50;
+
+    /// <summary>
+    /// Cache for timeout token sources to reduce allocations
+    /// </summary>
+    private static readonly ConcurrentDictionary<TimeSpan, Lazy<CancellationTokenSource>> _timeoutTokenCache =
+        new ConcurrentDictionary<TimeSpan, Lazy<CancellationTokenSource>>();
+
+    /// <summary>
+    /// Timer for cleaning up the token cache
+    /// </summary>
+    private static readonly Timer _cacheCleanupTimer;
+
+    /// <summary>
+    /// Static constructor to initialize resources
+    /// </summary>
+    static BaseAsyncRelayCommand()
+    {
+        // Create a timer to clean up the token cache every minute
+        _cacheCleanupTimer = new Timer(_ => CleanupTokenCache(), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+    }
+
+    /// <summary>
+    /// Error handling strategy for command execution.
+    /// </summary>
+    public ErrorHandlingStrategy ErrorHandlingStrategy { get; set; } = ErrorHandlingStrategy.ReThrow;
+
+    /// <summary>
     /// Occurs when changes occur that affect whether or not the command should execute.
     /// </summary>
     public event EventHandler? CanExecuteChanged
     {
         add
         {
-            lock (_executionLock)
+            lock (_syncLock)
             {
                 if (_isDisposed) return;
                 _canExecuteChanged += value;
@@ -71,7 +112,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         }
         remove
         {
-            lock (_executionLock)
+            lock (_syncLock)
             {
                 if (_isDisposed) return;
                 _canExecuteChanged -= value;
@@ -85,7 +126,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     protected void OnCanExecuteChanged()
     {
         EventHandler? handler;
-        lock (_executionLock)
+        lock (_syncLock)
         {
             if (_isDisposed) return;
             handler = _canExecuteChanged;
@@ -123,7 +164,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     {
         get
         {
-            lock (_executionLock)
+            lock (_syncLock)
             {
                 return _executionTask;
             }
@@ -133,7 +174,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             Task? oldTask;
             bool valueChanged;
 
-            lock (_executionLock)
+            lock (_syncLock)
             {
                 if (_isDisposed) return;
 
@@ -146,24 +187,30 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
 
             if (valueChanged)
             {
-                // Only raise property changed events if the value actually changed
-                RaisePropertyChanged(ExecutionTaskChangedEventArgs);
+                // Collect all property changes to batch them
+                var propertyChanges = new List<PropertyChangedEventArgs> { ExecutionTaskChangedEventArgs };
 
                 // Only raise IsRunning changed if the running state actually changed
                 bool wasRunning = oldTask is { IsCompleted: false };
                 bool isRunning = value is { IsCompleted: false };
                 if (wasRunning != isRunning)
                 {
-                    RaisePropertyChanged(IsRunningChangedEventArgs);
+                    propertyChanges.Add(IsRunningChangedEventArgs);
                 }
 
                 bool isAlreadyCompletedOrNull = value?.IsCompleted ?? true;
 
-                if (_cancellationTokenSource is not null)
+                lock (_syncLock)
                 {
-                    RaisePropertyChanged(CanBeCanceledChangedEventArgs);
-                    RaisePropertyChanged(IsCancellationRequestedChangedEventArgs);
+                    if (_cancellationTokenSource is not null)
+                    {
+                        propertyChanges.Add(CanBeCanceledChangedEventArgs);
+                        propertyChanges.Add(IsCancellationRequestedChangedEventArgs);
+                    }
                 }
+
+                // Batch raise all property changes
+                RaisePropertyChangedBatch(propertyChanges.ToArray());
 
                 if (!isAlreadyCompletedOrNull && value is not null)
                 {
@@ -180,13 +227,35 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     private void RaisePropertyChanged(PropertyChangedEventArgs args)
     {
         PropertyChangedEventHandler? handler;
-        lock (_executionLock)
+        lock (_syncLock)
         {
             if (_isDisposed) return;
             handler = PropertyChanged;
         }
 
         handler?.Invoke(this, args);
+    }
+
+    /// <summary>
+    /// Raises multiple property changed events at once.
+    /// </summary>
+    /// <param name="args">The property changed event args.</param>
+    private void RaisePropertyChangedBatch(PropertyChangedEventArgs[] args)
+    {
+        PropertyChangedEventHandler? handler;
+        lock (_syncLock)
+        {
+            if (_isDisposed) return;
+            handler = PropertyChanged;
+        }
+
+        if (handler != null)
+        {
+            foreach (var arg in args)
+            {
+                handler.Invoke(this, arg);
+            }
+        }
     }
 
     /// <summary>
@@ -197,16 +266,33 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     {
         // Store a local reference to avoid race conditions
         var currentTask = task;
-        var weakThis = new WeakReference<BaseAsyncRelayCommand>(this);
 
-        // Create a cancellation token source for this continuation
-        var continuationCts = new CancellationTokenSource();
+        // Get or create a weak reference from the pool
+        WeakReference<BaseAsyncRelayCommand> weakThis;
 
-        lock (_executionLock)
+        if (!_weakReferencePool.TryDequeue(out weakThis))
+        {
+            weakThis = new WeakReference<BaseAsyncRelayCommand>(this);
+        }
+        else
+        {
+            weakThis.SetTarget(this);
+        }
+
+        // Get or create a cancellation token source from the pool
+        CancellationTokenSource continuationCts;
+
+        if (!_continuationCtsPool.TryDequeue(out continuationCts))
+        {
+            continuationCts = new CancellationTokenSource();
+        }
+
+        lock (_syncLock)
         {
             if (_isDisposed)
             {
-                continuationCts.Dispose();
+                // Return resources to pool
+                ReturnToPool(weakThis, continuationCts);
                 return;
             }
 
@@ -218,26 +304,28 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             // Check if continuation was canceled
             if (continuationCts.IsCancellationRequested)
             {
+                ReturnToPool(weakThis, continuationCts);
                 return;
             }
 
             // Use weak reference to avoid keeping the command alive if it's disposed
             if (!weakThis.TryGetTarget(out var target))
             {
+                ReturnToPool(weakThis, continuationCts);
                 return;
             }
 
             bool isCurrentTask;
-            lock (target._executionLock)
+            lock (target._syncLock)
             {
                 if (target._isDisposed)
                 {
+                    ReturnToPool(weakThis, continuationCts);
                     return;
                 }
 
                 // Remove this continuation from the tracking list
                 target._continuationCancellations.Remove(continuationCts);
-
                 isCurrentTask = ReferenceEquals(target._executionTask, t);
             }
 
@@ -251,26 +339,33 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                     {
                         if (!weakThis.TryGetTarget(out var innerTarget))
                         {
+                            ReturnToPool(weakThis, continuationCts);
                             return;
                         }
 
-                        lock (innerTarget._executionLock)
+                        lock (innerTarget._syncLock)
                         {
                             if (innerTarget._isDisposed)
                             {
+                                ReturnToPool(weakThis, continuationCts);
                                 return;
                             }
 
                             // Only raise property changed events if this is still the current task
                             if (ReferenceEquals(innerTarget._executionTask, t))
                             {
-                                innerTarget.RaisePropertyChanged(ExecutionTaskChangedEventArgs);
-                                innerTarget.RaisePropertyChanged(IsRunningChangedEventArgs);
+                                var propertyChanges = new List<PropertyChangedEventArgs>
+                                {
+                                    ExecutionTaskChangedEventArgs,
+                                    IsRunningChangedEventArgs
+                                };
 
                                 if (innerTarget._cancellationTokenSource is not null)
                                 {
-                                    innerTarget.RaisePropertyChanged(CanBeCanceledChangedEventArgs);
+                                    propertyChanges.Add(CanBeCanceledChangedEventArgs);
                                 }
+
+                                innerTarget.RaisePropertyChangedBatch(propertyChanges.ToArray());
 
                                 if ((innerTarget._options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
                                 {
@@ -281,28 +376,36 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                                 innerTarget._executionTask = null;
                             }
                         }
+
+                        ReturnToPool(weakThis, continuationCts);
                     }, null);
                 }
                 else
                 {
                     // No synchronization context, update directly
-                    lock (target._executionLock)
+                    lock (target._syncLock)
                     {
                         if (target._isDisposed)
                         {
+                            ReturnToPool(weakThis, continuationCts);
                             return;
                         }
 
                         // Only raise property changed events if this is still the current task
                         if (ReferenceEquals(target._executionTask, t))
                         {
-                            target.RaisePropertyChanged(ExecutionTaskChangedEventArgs);
-                            target.RaisePropertyChanged(IsRunningChangedEventArgs);
+                            var propertyChanges = new List<PropertyChangedEventArgs>
+                            {
+                                ExecutionTaskChangedEventArgs,
+                                IsRunningChangedEventArgs
+                            };
 
                             if (target._cancellationTokenSource is not null)
                             {
-                                target.RaisePropertyChanged(CanBeCanceledChangedEventArgs);
+                                propertyChanges.Add(CanBeCanceledChangedEventArgs);
                             }
+
+                            target.RaisePropertyChangedBatch(propertyChanges.ToArray());
 
                             if ((target._options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
                             {
@@ -313,9 +416,42 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                             target._executionTask = null;
                         }
                     }
+
+                    ReturnToPool(weakThis, continuationCts);
                 }
             }
+            else
+            {
+                ReturnToPool(weakThis, continuationCts);
+            }
         }, continuationCts.Token, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+    }
+
+    /// <summary>
+    /// Returns pooled resources back to their respective pools
+    /// </summary>
+    private static void ReturnToPool(WeakReference<BaseAsyncRelayCommand> weakRef, CancellationTokenSource cts)
+    {
+        // Reset the CTS if it was used
+        if (cts.IsCancellationRequested)
+        {
+            cts = new CancellationTokenSource();
+        }
+
+        // Return to pools if not too large
+        if (_weakReferencePool.Count < MaxPoolSize)
+        {
+            _weakReferencePool.Enqueue(weakRef);
+        }
+
+        if (_continuationCtsPool.Count < MaxPoolSize)
+        {
+            _continuationCtsPool.Enqueue(cts);
+        }
+        else
+        {
+            cts.Dispose();
+        }
     }
 
     /// <summary>
@@ -325,9 +461,10 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     {
         get
         {
-            lock (_executionLock)
+            lock (_syncLock)
             {
-                return IsRunning && _cancellationTokenSource is { IsCancellationRequested: false };
+                bool isRunning = IsRunning;
+                return isRunning && _cancellationTokenSource is { IsCancellationRequested: false };
             }
         }
     }
@@ -339,7 +476,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     {
         get
         {
-            lock (_executionLock)
+            lock (_syncLock)
             {
                 return _cancellationTokenSource is { IsCancellationRequested: true };
             }
@@ -353,7 +490,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     {
         get
         {
-            lock (_executionLock)
+            lock (_syncLock)
             {
                 return ExecutionTask is { IsCompleted: false };
             }
@@ -369,6 +506,34 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// Gets a value indicating whether the command uses the base execute method.
     /// </summary>
     protected abstract bool IsBaseExecute { get; }
+
+    /// <summary>
+    /// For testing purposes only - indicates if there are active cancellation tokens.
+    /// </summary>
+    internal bool HasActiveCancellationTokens
+    {
+        get
+        {
+            lock (_syncLock)
+            {
+                return _cancellationTokenSources.Count > 0;
+            }
+        }
+    }
+
+    /// <summary>
+    /// For testing purposes only - gets the count of active continuations.
+    /// </summary>
+    internal int ContinuationCount
+    {
+        get
+        {
+            lock (_syncLock)
+            {
+                return _continuationCancellations.Count;
+            }
+        }
+    }
 
     /// <summary>
     /// Notifies that the command's ability to execute may have changed.
@@ -396,10 +561,37 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     public abstract Task ExecuteAsync(object? parameter);
 
     /// <summary>
+    /// Centralized error handling for command execution
+    /// </summary>
+    internal static class CommandErrorHandler
+    {
+        public static void HandleCommandError(Exception ex, ErrorHandlingStrategy strategy)
+        {
+            // Log the exception
+            System.Diagnostics.Debug.WriteLine($"Command execution error: {ex.Message}");
+
+            // For timeout and cancellation exceptions, follow the strategy
+            if (ex is TimeoutException || ex is OperationCanceledException)
+            {
+                if (strategy == ErrorHandlingStrategy.ReThrow)
+                {
+                    throw ex;
+                }
+                // Otherwise swallow these specific exceptions
+            }
+            else
+            {
+                // For all other exceptions, always rethrow regardless of strategy
+                throw ex;
+            }
+        }
+    }
+
+    /// <summary>
     /// Awaits a task and handles exceptions.
     /// </summary>
     /// <param name="executionTask">The task to await.</param>
-    internal static async void AwaitAndThrowIfFailed(Task executionTask)
+    internal async void AwaitAndThrowIfFailed(Task executionTask)
     {
         try
         {
@@ -410,19 +602,29 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             // Silently handle cancellations
             System.Diagnostics.Debug.WriteLine("Command execution was canceled.");
         }
-        catch (TimeoutException)
+        catch (TimeoutException ex)
         {
-            // Handle timeouts specifically
-            System.Diagnostics.Debug.WriteLine("Command execution timed out.");
-            throw; // Re-throw timeout exceptions by default
+            CommandErrorHandler.HandleCommandError(ex, ErrorHandlingStrategy);
         }
-        catch (Exception ex)
+        catch
         {
-            // Log the exception or handle it according to application policy
-            System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
-
-            // Re-throw to maintain original behavior
             throw;
+        }
+    }
+
+    /// <summary>
+    /// Cleans up the token cache periodically
+    /// </summary>
+    private static void CleanupTokenCache()
+    {
+        foreach (var key in _timeoutTokenCache.Keys)
+        {
+            if (_timeoutTokenCache.TryGetValue(key, out var lazyCts) &&
+                lazyCts.IsValueCreated &&
+                lazyCts.Value.IsCancellationRequested)
+            {
+                _timeoutTokenCache.TryRemove(key, out _);
+            }
         }
     }
 
@@ -434,21 +636,63 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     protected CancellationTokenSource CreateTimeoutTokenSource(TimeSpan? timeout = null)
     {
         var timeoutDuration = timeout ?? _defaultTimeout;
-        var timeoutCts = new CancellationTokenSource(timeoutDuration);
 
-        lock (_executionLock)
+        // For very short timeouts, always create a new token
+        if (timeoutDuration < TimeSpan.FromSeconds(1))
         {
-            if (_isDisposed)
+            var timeoutCts = new CancellationTokenSource(timeoutDuration);
+
+            lock (_syncLock)
             {
-                timeoutCts.Dispose();
-                return new CancellationTokenSource(); // Return a fresh CTS that will be disposed later
+                if (_isDisposed)
+                {
+                    timeoutCts.Dispose();
+                    return new CancellationTokenSource();
+                }
+
+                _cancellationTokenSources.Add(timeoutCts);
+                CleanupCompletedTokenSources();
             }
 
-            _cancellationTokenSources.Add(timeoutCts);
+            return timeoutCts;
         }
 
-        return timeoutCts;
+        // For common timeout values, use the cache
+        // Round the timeout to the nearest second to improve cache hits
+        var roundedTimeout = TimeSpan.FromSeconds(Math.Round(timeoutDuration.TotalSeconds));
+
+        var sharedTimeoutCts = _timeoutTokenCache.GetOrAdd(roundedTimeout,
+            key => new Lazy<CancellationTokenSource>(() => new CancellationTokenSource(key)));
+
+        try
+        {
+            // FIXED: Link with the command's cancellation token source directly
+            // This ensures cancellation propagates correctly when Cancel() is called
+            var combinedCts = CancellationTokenSource.CreateLinkedTokenSource(
+                _cancellationTokenSource!.Token, sharedTimeoutCts.Value.Token);
+
+            lock (_syncLock)
+            {
+                if (_isDisposed)
+                {
+                    combinedCts.Dispose();
+                    return new CancellationTokenSource();
+                }
+
+                _cancellationTokenSources.Add(combinedCts);
+                CleanupCompletedTokenSources();
+            }
+
+            return combinedCts;
+        }
+        catch (ObjectDisposedException)
+        {
+            // If the shared token was disposed, remove it from cache and try again
+            _timeoutTokenCache.TryRemove(roundedTimeout, out _);
+            return CreateTimeoutTokenSource(timeout);
+        }
     }
+
 
     /// <summary>
     /// Cancels the current command execution.
@@ -456,11 +700,29 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     public void Cancel()
     {
         CancellationTokenSource? tokenSource;
+        List<CancellationTokenSource> tokenSources;
 
-        lock (_executionLock)
+        lock (_syncLock)
         {
             if (_isDisposed) return;
             tokenSource = _cancellationTokenSource;
+
+            // Make a copy of the token sources collection to avoid modification during enumeration
+            tokenSources = new List<CancellationTokenSource>(_cancellationTokenSources);
+        }
+
+        // Cancel all active token sources to ensure all linked tokens are canceled
+        foreach (var cts in tokenSources)
+        {
+            try
+            {
+                if (!cts.IsCancellationRequested)
+                    cts.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Token was already disposed, ignore
+            }
         }
 
         if (tokenSource is { IsCancellationRequested: false })
@@ -468,8 +730,14 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             try
             {
                 tokenSource.Cancel();
-                RaisePropertyChanged(CanBeCanceledChangedEventArgs);
-                RaisePropertyChanged(IsCancellationRequestedChangedEventArgs);
+
+                var propertyChanges = new[]
+                {
+                CanBeCanceledChangedEventArgs,
+                IsCancellationRequestedChangedEventArgs
+            };
+
+                RaisePropertyChangedBatch(propertyChanges);
             }
             catch (ObjectDisposedException)
             {
@@ -478,12 +746,13 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         }
     }
 
+
     /// <summary>
     /// Disposes all cancellation token sources.
     /// </summary>
     protected void DisposeCancellationTokens()
     {
-        lock (_executionLock)
+        lock (_syncLock)
         {
             // Cancel and dispose all continuation cancellation tokens
             foreach (var cts in _continuationCancellations)
@@ -567,49 +836,52 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     {
         if (disposing)
         {
-            lock (_executionLock)
+            bool shouldDispose;
+
+            lock (_syncLock)
             {
-                if (_isDisposed) return;
+                shouldDispose = !_isDisposed;
                 _isDisposed = true;
+            }
 
-                // Cancel all pending task continuations
-                foreach (var cts in _continuationCancellations)
-                {
-                    try
-                    {
-                        cts.Cancel();
-                        cts.Dispose();
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        // Already disposed, ignore
-                    }
-                }
-                _continuationCancellations.Clear();
-
-                // Dispose all cancellation tokens
+            if (shouldDispose)
+            {
+                // Cancel all pending task continuations and dispose tokens
                 DisposeCancellationTokens();
 
                 // Dispose the execution task if it's completed
-                if (_executionTask?.Status == TaskStatus.RanToCompletion ||
-                    _executionTask?.Status == TaskStatus.Canceled ||
-                    _executionTask?.Status == TaskStatus.Faulted)
+                Task? taskToDispose = null;
+
+                lock (_syncLock)
+                {
+                    if (_executionTask?.Status == TaskStatus.RanToCompletion ||
+                        _executionTask?.Status == TaskStatus.Canceled ||
+                        _executionTask?.Status == TaskStatus.Faulted)
+                    {
+                        taskToDispose = _executionTask;
+                        _executionTask = null;
+                    }
+                }
+
+                if (taskToDispose != null)
                 {
                     try
                     {
-                        _executionTask.Dispose();
+                        taskToDispose.Dispose();
                     }
                     catch (Exception ex)
                     {
                         // Log any exceptions during task disposal
                         System.Diagnostics.Debug.WriteLine($"Error disposing task: {ex.Message}");
                     }
-                    _executionTask = null;
                 }
 
                 // Clear event handlers to prevent memory leaks
-                _canExecuteChanged = null;
-                PropertyChanged = null;
+                lock (_syncLock)
+                {
+                    _canExecuteChanged = null;
+                    PropertyChanged = null;
+                }
             }
         }
     }
@@ -622,25 +894,77 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         // Keep only the most recent token sources (e.g., last 5) to prevent unbounded growth
         const int maxTokenSourcesToKeep = 5;
 
-        if (_cancellationTokenSources.Count > maxTokenSourcesToKeep)
+        lock (_syncLock)
         {
-            int countToRemove = _cancellationTokenSources.Count - maxTokenSourcesToKeep;
-            for (int i = 0; i < countToRemove; i++)
+            if (_cancellationTokenSources.Count > maxTokenSourcesToKeep)
             {
-                var cts = _cancellationTokenSources[0];
-                _cancellationTokenSources.RemoveAt(0);
+                int countToRemove = _cancellationTokenSources.Count - maxTokenSourcesToKeep;
+                for (int i = 0; i < countToRemove; i++)
+                {
+                    var cts = _cancellationTokenSources[0];
+                    _cancellationTokenSources.RemoveAt(0);
 
-                try
-                {
-                    if (!cts.IsCancellationRequested)
-                        cts.Cancel();
-                    cts.Dispose();
-                }
-                catch (ObjectDisposedException)
-                {
-                    // Already disposed, ignore
+                    try
+                    {
+                        if (!cts.IsCancellationRequested)
+                            cts.Cancel();
+                        cts.Dispose();
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // Already disposed, ignore
+                    }
                 }
             }
         }
     }
+
+    /// <summary>
+    /// Cleans up static resources when the application is shutting down
+    /// </summary>
+    public static void CleanupStaticResources()
+    {
+        _cacheCleanupTimer?.Dispose();
+
+        foreach (var entry in _timeoutTokenCache)
+        {
+            if (entry.Value.IsValueCreated)
+            {
+                try
+                {
+                    entry.Value.Value.Dispose();
+                }
+                catch
+                {
+                    // Ignore disposal errors
+                }
+            }
+        }
+
+        _timeoutTokenCache.Clear();
+
+        // Clean up pooled resources
+        while (_weakReferencePool.TryDequeue(out _)) { }
+
+        while (_continuationCtsPool.TryDequeue(out var cts))
+        {
+            cts.Dispose();
+        }
+    }
+}
+
+/// <summary>
+/// Defines error handling strategies for command execution.
+/// </summary>
+public enum ErrorHandlingStrategy
+{
+    /// <summary>
+    /// Re-throw exceptions that occur during command execution.
+    /// </summary>
+    ReThrow,
+
+    /// <summary>
+    /// Swallow exceptions that occur during command execution.
+    /// </summary>
+    Swallow
 }

@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Extensions;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -198,8 +199,31 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Cleans up the instance, for example by saving its state,
     /// removing resources, etc...
     /// </summary>
-    public virtual void Cleanup()
+    public virtual void Cleanup(bool isClosing = true)
     {
+        if (isClosing)
+        {
+            // Full cleanup for closing
+            // Release all resources
+        }
+        else
+        {
+            // Partial cleanup for navigation
+            ReleaseBackgroundResources();
+        }
+    }
+
+    /// <summary>
+    /// Releases heavy resources that aren't needed when the ViewModel is in the background.
+    /// Called when the ViewModel is pushed to the backstack.
+    /// </summary>
+    protected virtual void ReleaseBackgroundResources()
+    {
+        // Base implementation is empty - derived classes should override
+        // Examples of resources to release:
+        // - Large collections that can be reloaded
+        // - Image caches
+        // - Background workers
     }
 
     /// <summary>
@@ -240,4 +264,26 @@ public abstract class ViewModel : ObservableClass, IViewModel
             base.Dispose(disposing);
         }
     }
+
+    /// <summary>
+    /// Called when navigating away from this ViewModel.
+    /// Cancel any running commands if needed.
+    /// </summary>
+    public virtual void OnNavigatedFrom() => CancelRunningCommands();
+
+    /// <summary>
+    /// Called when navigating to this ViewModel.
+    /// Reset command states.
+    /// </summary>
+    public virtual void OnNavigatedTo() => ResetCommandStates();
+
+    /// <summary>
+    /// Cancels all running commands in this ViewModel.
+    /// </summary>
+    protected virtual void CancelRunningCommands() => this.CancelAllCommands();
+
+    /// <summary>
+    /// Resets the state of commands when returning to this ViewModel.
+    /// </summary>
+    protected virtual void ResetCommandStates() => this.ResetAllCommandStates();
 }

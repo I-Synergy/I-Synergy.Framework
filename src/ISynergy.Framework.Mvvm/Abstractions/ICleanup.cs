@@ -12,5 +12,5 @@ public interface ICleanup
     /// Cleans up the instance, for example by saving its state,
     /// removing resources, etc...
     /// </summary>
-    void Cleanup();
+    void Cleanup(bool isClosing = true);
 }

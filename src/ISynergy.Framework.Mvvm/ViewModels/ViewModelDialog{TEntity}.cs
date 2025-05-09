@@ -100,7 +100,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
             SetSelectedItem(entity);
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
         try
         {
@@ -113,7 +113,7 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
             // Reset dialog state
             IsUpdate = false;
 
-            base.Cleanup();
+            base.Cleanup(isClosing);
         }
         finally
         {

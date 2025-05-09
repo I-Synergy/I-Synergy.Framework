@@ -238,7 +238,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
                     LanguageService.Default.GetString("TitleQuestion"),
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
         {
             _commonServices.RestartApplication();
         }
@@ -275,7 +275,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
                     LanguageService.Default.GetString("TitleQuestion"),
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 _commonServices.RestartApplication();
             }

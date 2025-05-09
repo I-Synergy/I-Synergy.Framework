@@ -208,7 +208,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         if (await _commonServices.DialogService.ShowMessageAsync(
             string.Format(LanguageService.Default.GetString("WarningItemRemove"), item),
             LanguageService.Default.GetString("Delete"),
-            MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
         {
             await RemoveAsync(e);
             await RefreshAsync();
@@ -259,7 +259,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
         return Task.CompletedTask;
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
         try
         {
@@ -272,7 +272,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
             Items?.Clear();
             Blades?.Clear();
 
-            base.Cleanup();
+            base.Cleanup(isClosing);
         }
         finally
         {

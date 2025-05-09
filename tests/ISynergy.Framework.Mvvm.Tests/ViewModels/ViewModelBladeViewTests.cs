@@ -132,7 +132,7 @@ public class ViewModelBladeViewTests
         var entity = new TestEntity { Id = 1, Description = "Test" };
         _mockLanguageService.Setup(x => x.GetString(It.IsAny<string>())).Returns("Test");
         _mockCommonServices.Setup(x => x.DialogService.ShowMessageAsync(
-            It.IsAny<string>(), It.IsAny<string>(), MessageBoxButton.YesNo))
+            It.IsAny<string>(), It.IsAny<string>(), MessageBoxButtons.YesNo))
             .ReturnsAsync(MessageBoxResult.Yes);
 
         // Act
@@ -140,7 +140,7 @@ public class ViewModelBladeViewTests
 
         // Assert
         _mockCommonServices.Verify(x => x.DialogService.ShowMessageAsync(
-            It.IsAny<string>(), It.IsAny<string>(), MessageBoxButton.YesNo), Times.Once);
+            It.IsAny<string>(), It.IsAny<string>(), MessageBoxButtons.YesNo), Times.Once);
     }
 
     [TestMethod]

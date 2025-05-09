@@ -6,6 +6,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
@@ -269,7 +270,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
     /// Cleans up the instance, for example by saving its state,
     /// removing resources, etc...
     /// </summary>
-    public virtual void Cleanup()
+    public virtual void Cleanup(bool isClosing = true)
     {
     }
 
@@ -316,4 +317,22 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
             CancelCommand?.Dispose();
         }
     }
+
+    /// <summary>
+    /// Called when navigating away from this ViewModel.
+    /// Cancel any running commands if needed.
+    /// </summary>
+    public virtual void OnNavigatedFrom() => this.CancelAllCommands();
+
+    /// <summary>
+    /// Called when navigating to this ViewModel.
+    /// Reset command states.
+    /// </summary>
+    public virtual void OnNavigatedTo() => this.ResetAllCommandStates();
+
+    /// <summary>
+    /// Determines if navigation away from this ViewModel is allowed.
+    /// By default, allow navigation
+    /// </summary>
+    public virtual bool CanNavigateAway() => true;
 }

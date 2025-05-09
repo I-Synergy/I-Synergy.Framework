@@ -135,7 +135,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             if (await _commonServices.DialogService.ShowMessageAsync(
                 LanguageService.Default.GetString("ChangeLanguage"),
                 LanguageService.Default.GetString("Language"),
-                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
                 languageVM.Submitted += (s, e) =>

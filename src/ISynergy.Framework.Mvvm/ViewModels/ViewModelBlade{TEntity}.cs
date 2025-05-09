@@ -114,7 +114,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
         }
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
         try
         {
@@ -124,7 +124,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
             // Clear selected item first
             SelectedItem = default;
 
-            base.Cleanup();
+            base.Cleanup(isClosing);
         }
         finally
         {

@@ -49,10 +49,10 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     {
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
-        ShowDialogYesNo = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNo));
-        ShowDialogYesNoCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
-        ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
-        ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
+        ShowDialogYesNo = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButtons.YesNo));
+        ShowDialogYesNoCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButtons.YesNoCancel));
+        ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButtons.OK));
+        ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButtons.OKCancel));
         ShowUnitsCommand = new AsyncRelayCommand(ShowUnitsAsync);
         ShowTestCommand = new AsyncRelayCommand(ShowUnitsAsync, canExecute: () => CanExecuteTest);
     }
@@ -92,7 +92,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         }
     }
 
-    private async Task ShowDialogAsync(MessageBoxButton buttons)
+    private async Task ShowDialogAsync(MessageBoxButtons buttons)
     {
         MessageBoxResult result = await _commonServices.DialogService.ShowMessageAsync(
                             $"Testing {buttons} Dialog",
@@ -221,11 +221,10 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         throw new NotImplementedException();
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
-        base.Cleanup();
-
         SelectedTestItems?.Clear();
+        base.Cleanup(isClosing);
     }
 
     protected override void Dispose(bool disposing)

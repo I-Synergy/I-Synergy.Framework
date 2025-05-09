@@ -247,7 +247,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                                 await _commonServices.DialogService.ShowMessageAsync(
                                 LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
                                 "Update",
-                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                                MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
                             {
                                 _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
                                 await updateService.DownloadAndInstallUpdateAsync();

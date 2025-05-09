@@ -146,7 +146,7 @@ public class ViewModelBaseTests
         var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Act
-        var result = viewModel.GetEnumDescription(MessageBoxButton.OK);
+        var result = viewModel.GetEnumDescription(MessageBoxButtons.OK);
 
         // Assert
         Assert.AreEqual("OK", result);

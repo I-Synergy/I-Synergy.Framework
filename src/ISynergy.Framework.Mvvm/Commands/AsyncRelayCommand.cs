@@ -167,13 +167,12 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
     {
         // Use a lock to ensure thread safety when checking and setting execution state
         bool canProceed;
-        lock (_executionLock)
+        lock (_syncLock)
         {
             canProceed = !IsRunning || (_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0;
             if (!canProceed) return;
         }
 
-        CancellationTokenSource? timeoutCts = null;
         CancellationTokenSource? linkedCts = null;
 
         try
@@ -186,27 +185,23 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
             }
             else
             {
-                lock (_executionLock)
+                lock (_syncLock)
                 {
                     // Cancel any existing operation
                     if (_cancellationTokenSource != null)
                         _cancellationTokenSource.Cancel();
 
-                    var cancellationTokenSource = _cancellationTokenSource = new CancellationTokenSource();
+                    // Create a new cancellation token source for this execution
+                    _cancellationTokenSource = new CancellationTokenSource();
 
-                    // Create a timeout token source
-                    timeoutCts = new CancellationTokenSource(_defaultTimeout);
+                    // FIXED: Store the linked token source in a field to prevent premature disposal
+                    linkedCts = CreateTimeoutTokenSource();
 
-                    // Link the timeout and operation token sources
-                    linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
-                        cancellationTokenSource.Token, timeoutCts.Token);
-
-                    _cancellationTokenSources.Add(cancellationTokenSource);
-
-                    // Clean up completed token sources to prevent memory leaks
-                    CleanupCompletedTokenSources();
+                    // Add to tracking collection for cleanup
+                    _cancellationTokenSources.Add(_cancellationTokenSource);
                 }
 
+                // Use the linked token for execution
                 executionTask = _cancelableExecute!(linkedCts.Token);
             }
 
@@ -225,24 +220,27 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                 if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
                     throw;
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
-                // Handle timeouts specifically
-                System.Diagnostics.Debug.WriteLine("Command execution timed out.");
-
-                // Re-throw if configured to flow exceptions
+                // Use the centralized error handler for timeout exceptions
                 if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
-                    throw;
+                    CommandErrorHandler.HandleCommandError(ex, ErrorHandlingStrategy);
+                else
+                    System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Always rethrow other exceptions
+                System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
+                throw;
             }
         }
         finally
         {
-            // Dispose of timeout-related resources
-            timeoutCts?.Dispose();
-            linkedCts?.Dispose();
-
+            // Clear the execution task reference
             ExecutionTask = null;
 
+            // Update CanExecute state if needed
             if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
                 OnCanExecuteChanged();
         }

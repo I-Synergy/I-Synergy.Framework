@@ -139,7 +139,7 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
         }
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
         try
         {
@@ -153,7 +153,7 @@ public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>,
             Back_IsEnabled = false;
             Submit_IsEnabled = false;
 
-            base.Cleanup();
+            base.Cleanup(isClosing);
         }
         finally
         {

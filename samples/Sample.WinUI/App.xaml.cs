@@ -148,7 +148,7 @@ public sealed partial class App : Application
     protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
-        await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);
+        _commonServices.NavigationService.CleanBackStack(suppressEvent: !e.Value);
 
         try
         {
