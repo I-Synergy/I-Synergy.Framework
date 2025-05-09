@@ -99,7 +99,7 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
             SetSelectedItem(entity);
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
         try
         {
@@ -109,7 +109,7 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
             // Clear selected item first
             SelectedItem = default(TEntity);
 
-            base.Cleanup();
+            base.Cleanup(isClosing);
         }
         finally
         {

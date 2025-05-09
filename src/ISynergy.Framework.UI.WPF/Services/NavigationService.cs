@@ -2,25 +2,30 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
 
 namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
 /// Class NavigationService.
-/// Implements the <see cref="Mvvm.Abstractions.Services.INavigationService" />
+/// Implements the <see cref="INavigationService" />
 /// </summary>
-/// <seealso cref="Mvvm.Abstractions.Services.INavigationService" />
+/// <seealso cref="INavigationService" />
 public class NavigationService : INavigationService
 {
     private readonly IScopedContextService _scopedContextService;
+    private readonly ILogger _logger;
 
     private EventHandler? _backStackChanged;
 
@@ -29,11 +34,8 @@ public class NavigationService : INavigationService
         add
         {
             // Only add if not already subscribed
-            if (_backStackChanged is null ||
-                !_backStackChanged.GetInvocationList().Contains(value))
-            {
+            if (_backStackChanged is null || !_backStackChanged.GetInvocationList().Contains(value))
                 _backStackChanged += value;
-            }
         }
         remove
         {
@@ -65,304 +67,55 @@ public class NavigationService : INavigationService
             }
         }
     }
+
     /// <summary>
     /// Navigation backstack.
     /// </summary>
     private Stack<object> _backStack = new Stack<object>();
 
     /// <summary>
+    /// Maximum size for the backstack before cleaning up old ViewModels
+    /// </summary>
+    private const int MaxBackstackSize = 10;
+
+    /// <summary>
     /// Gets a value indicating whether this instance can go back.
     /// </summary>
     /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-    public bool CanGoBack => _backStack.Count > 0 ? true : false;
+    public bool CanGoBack => _backStack.Count > 0;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="scopedContextService"></param>
-    public NavigationService(IScopedContextService scopedContextService)
+    /// <param name="logger"></param>
+    public NavigationService(
+        IScopedContextService scopedContextService,
+        ILogger<NavigationService> logger)
     {
+        _logger = logger;
+        _logger.LogTrace($"NavigationService instance created with ID: {Guid.NewGuid()}");
+
         _scopedContextService = scopedContextService;
     }
 
     /// <summary>
     /// Goes the back.
     /// </summary>
-    public async Task GoBackAsync()
+    public Task GoBackAsync()
     {
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
-            await NavigateAsync(viewModel, backNavigation: true);
-    }
-
-    /// <summary>
-    /// get navigation blade as an asynchronous operation.
-    /// </summary>
-    /// <param name="viewModel">The view model.</param>
-    /// <returns>IView.</returns>
-    /// <exception cref="ArgumentException">Page not found: {viewModelKey}. - viewModel</exception>
-    /// <exception cref="ArgumentException">Instance could not be created from {viewModelKey}</exception>
-    private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
-    {
-        var view = viewModel.GetRelatedView();
-        var viewType = view.GetRelatedViewType();
-
-        if (viewType is not null && _scopedContextService.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
         {
-            resolvedPage.ViewModel = viewModel;
-
-            if (!viewModel.IsInitialized)
-                await viewModel.InitializeAsync();
-
-            return resolvedPage;
+            return NavigateAsync(viewModel, backNavigation: true);
         }
 
-        throw new InvalidOperationException($"Instance create or navigate to page: {view}.");
+        return Task.CompletedTask;
     }
 
     /// <summary>
-    /// open blade as an asynchronous operation.
+    /// Cleans up ViewModels in the backstack beyond a certain threshold.
     /// </summary>
-    /// <param name="owner">The owner.</param>
-    /// <param name="viewmodel">The viewmodel.</param>
-    /// <returns>Task.</returns>
-    public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            bladeVm.Owner = owner;
-
-            void Viewmodel_Closed(object? sender, EventArgs e)
-            {
-                if (sender is IViewModelBlade viewModel)
-                {
-                    viewModel.Closed -= Viewmodel_Closed;
-                    RemoveBlade(viewModel.Owner, viewModel);
-                }
-            }
-
-            bladeVm.Closed += Viewmodel_Closed;
-
-            var view = await GetNavigationBladeAsync(bladeVm);
-
-            if (!owner.Blades.Any(a => a.GetType().FullName!.Equals(view.GetType().FullName)))
-            {
-                foreach (var blade in owner.Blades.EnsureNotNull())
-                {
-                    blade.IsEnabled = false;
-                }
-
-                owner.Blades.Add(view);
-            }
-
-            owner.IsPaneVisible = true;
-        }
-    }
-
-    /// <summary>
-    /// Opens blade with a custom defined view.
-    /// </summary>
-    /// <typeparam name="TView"></typeparam>
-    /// <param name="owner"></param>
-    /// <param name="viewmodel"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
-        where TView : IView
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            bladeVm.Owner = owner;
-
-            void Viewmodel_Closed(object? sender, EventArgs e)
-            {
-                if (sender is IViewModelBlade viewModel)
-                {
-                    viewModel.Closed -= Viewmodel_Closed;
-                    RemoveBlade(viewModel.Owner, viewModel);
-                }
-            }
-
-            bladeVm.Closed += Viewmodel_Closed;
-
-            if (_scopedContextService.ServiceProvider.GetRequiredService(typeof(TView)) is View view)
-            {
-                view.ViewModel = viewmodel;
-
-                if (!viewmodel.IsInitialized)
-                    await viewmodel.InitializeAsync();
-
-                if (!owner.Blades.Any(a => a.GetType().FullName!.Equals(view.GetType().FullName)))
-                {
-                    foreach (var blade in owner.Blades.EnsureNotNull())
-                    {
-                        blade.IsEnabled = false;
-                    }
-
-                    owner.Blades.Add(view);
-                }
-
-                owner.IsPaneVisible = true;
-            }
-            else
-            {
-                throw new KeyNotFoundException($"Page not found: {typeof(TView)}.");
-            }
-        }
-    }
-
-    /// <summary>
-    /// Removes the blade asynchronous.
-    /// </summary>
-    /// <param name="owner">The owner.</param>
-    /// <param name="viewmodel">The viewmodel.</param>
-    /// <returns>Task.</returns>
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            if (owner.Blades is not null)
-            {
-                var bladeToRemove = owner.Blades
-                        .FirstOrDefault(q =>
-                            q.ViewModel == bladeVm &&
-                            ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
-
-                if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
-                {
-                    if (owner.Blades.Count < 1)
-                        owner.IsPaneVisible = false;
-                    else if (owner.Blades[owner.Blades.Count - 1] is { } blade)
-                        blade.IsEnabled = true;
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Navigates to a specified viewmodel asynchronous.
-    /// </summary>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <param name="parameter"></param>
-    /// <param name="backNavigation"></param>
-    /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel =>
-        NavigateAsync(default(TViewModel)!, parameter, backNavigation);
-
-    /// <summary>
-    /// Navigates viewmodel to a specified view.
-    /// </summary>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <typeparam name="TView"></typeparam>
-    /// <param name="parameter"></param>
-    /// <param name="backNavigation"></param>
-    /// <returns></returns>
-    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView =>
-        NavigateAsync<TViewModel, TView>(default(TViewModel)!, parameter, backNavigation);
-
-    /// <summary>
-    /// navigate as an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
-    /// <param name="viewModel"></param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="backNavigation"></param>
-    /// <returns>Task&lt;IView&gt;.</returns>
-    /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-    {
-        if (Application.Current.MainWindow is not null && Application.Current.MainWindow.Content is DependencyObject dependencyObject &&
-            dependencyObject.FindChild<Frame>() is { } frame &&
-            NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter) is { } page)
-        {
-            // Check if actual page is the same as destination page.
-            if (frame.Content is View originalView)
-            {
-                if (originalView.GetType().Equals(page.GetType()))
-                    return;
-
-                if (!backNavigation && originalView.ViewModel is not null)
-                    _backStack.Push(originalView.ViewModel);
-            }
-
-            frame.Content = page;
-
-            if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
-                await page.ViewModel.InitializeAsync();
-
-            OnBackStackChanged(EventArgs.Empty);
-        }
-    }
-
-    /// <summary>
-    /// Navigates viewmodel to a specified view.
-    /// </summary>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <typeparam name="TView"></typeparam>
-    /// <param name="viewModel"></param>
-    /// <param name="parameter"></param>
-    /// <param name="backNavigation"></param>
-    /// <returns></returns>
-    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView
-    {
-        if (Application.Current.MainWindow is not null && Application.Current.MainWindow.Content is DependencyObject dependencyObject &&
-            dependencyObject.FindChild<Frame>() is { } frame &&
-            _scopedContextService.ServiceProvider.GetRequiredService(typeof(TView)) is View page)
-        {
-            if (viewModel is null && _scopedContextService.ServiceProvider.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
-                viewModel = resolvedViewModel;
-
-            if (viewModel is not null && parameter is not null)
-                viewModel.Parameter = parameter;
-
-            page.ViewModel = viewModel;
-
-            // Check if actual page is the same as destination page.
-            if (frame.Content is View originalView)
-            {
-                if (originalView.GetType().Equals(page.GetType()))
-                    return;
-
-                if (!backNavigation && originalView.ViewModel is not null)
-                    _backStack.Push(originalView.ViewModel);
-            }
-
-            frame.Content = page;
-
-            if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
-                await page.ViewModel.InitializeAsync();
-
-            OnBackStackChanged(EventArgs.Empty);
-        }
-    }
-
-    public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
-        where TViewModel : class, IViewModel
-    {
-        // Unsubscribe old handlers before modal navigation
-        _backStackChanged = null;
-
-        if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page && Application.Current is Application baseApplication)
-        {
-            baseApplication.MainWindow.Content = page;
-
-            if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
-                await page.ViewModel.InitializeAsync();
-        }
-    }
-
-    public Task CleanBackStackAsync(bool suppressEvent = false)
+    public void CleanBackStack(bool suppressEvent = false)
     {
         _backStack.Clear();
 
@@ -378,7 +131,396 @@ public class NavigationService : INavigationService
                 _backStackChanged = null;
             }
         }
+    }
 
-        return Task.CompletedTask;
+    /// <summary>
+    /// Checks if navigation away from the current ViewModel is allowed
+    /// </summary>
+    private async Task<bool> CanNavigateAwayFromAsync(IViewModel viewModel)
+    {
+        if (!HasRunningCommands(viewModel))
+            return true;
+
+        // Ask user if they want to cancel operations
+        var result = await _scopedContextService.GetRequiredService<IDialogService>().ShowMessageAsync(
+            "Operations in Progress",
+            "There are operations in progress. Do you want to cancel them and navigate away?",
+            MessageBoxButtons.YesNo);
+
+        if (result == MessageBoxResult.No)
+            return false;
+
+        // Cancel commands
+        viewModel.CancelAllCommands();
+        return true;
+    }
+
+    /// <summary>
+    /// Checks if a ViewModel has any running commands
+    /// </summary>
+    private bool HasRunningCommands(IViewModel viewModel)
+    {
+        if (viewModel == null) return false;
+
+        // Get all properties that are IAsyncRelayCommand
+        var commandProperties = viewModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => typeof(IAsyncRelayCommand).IsAssignableFrom(p.PropertyType));
+
+        foreach (var property in commandProperties)
+        {
+            if (property.GetValue(viewModel) is IAsyncRelayCommand command && command.IsRunning)
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// get navigation blade as an asynchronous operation.
+    /// </summary>
+    private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
+    {
+        var view = viewModel.GetRelatedView();
+        var viewType = view.GetRelatedViewType();
+
+        if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View resolvedPage)
+        {
+            resolvedPage.ViewModel = viewModel;
+
+            if (!viewModel.IsInitialized)
+                await viewModel.InitializeAsync();
+
+            // Call OnNavigatedTo for the blade ViewModel
+            viewModel.OnNavigatedTo();
+
+            return resolvedPage;
+        }
+
+        throw new InvalidOperationException($"Instance create or navigate to page: {view}.");
+    }
+
+    /// <summary>
+    /// Common blade setup logic
+    /// </summary>
+    private async Task<IView?> SetupBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, Func<Task<IView?>> getViewFunc)
+    {
+        // Check if owner ViewModel can navigate away (if it has running commands)
+        if (owner is IViewModel ownerVm && HasRunningCommands(ownerVm))
+        {
+            bool canNavigate = await CanNavigateAwayFromAsync(ownerVm);
+
+            if (!canNavigate)
+            {
+                // Navigation was cancelled
+                return null;
+            }
+
+            // Notify owner it's being partially navigated from
+            ownerVm.OnNavigatedFrom();
+        }
+
+        bladeVm.Owner = owner;
+
+        void Viewmodel_Closed(object? sender, EventArgs e)
+        {
+            if (sender is IViewModelBlade viewModel)
+            {
+                viewModel.Closed -= Viewmodel_Closed;
+                RemoveBlade(viewModel.Owner, viewModel);
+            }
+        }
+
+        bladeVm.Closed += Viewmodel_Closed;
+
+        return await getViewFunc();
+    }
+
+    /// <summary>
+    /// Common logic for adding a blade to the owner
+    /// </summary>
+    private void AddBladeToOwner(IViewModelBladeView owner, IView view)
+    {
+        if (!owner.Blades.Any(a => a.GetType().FullName!.Equals(view.GetType().FullName)))
+        {
+            foreach (var blade in owner.Blades.EnsureNotNull())
+            {
+                // Notify existing blades they're being backgrounded
+                if (blade.ViewModel is IViewModel existingVm)
+                {
+                    existingVm.OnNavigatedFrom();
+                }
+
+                blade.IsEnabled = false;
+            }
+
+            owner.Blades.Add(view);
+        }
+
+        owner.IsPaneVisible = true;
+    }
+
+    /// <summary>
+    /// open blade as an asynchronous operation.
+    /// </summary>
+    public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
+    {
+        Argument.IsNotNull(owner);
+
+        if (viewmodel is IViewModelBlade bladeVm)
+        {
+            var view = await SetupBladeAsync(owner, bladeVm, async () => await GetNavigationBladeAsync(bladeVm));
+
+            if (view != null)
+            {
+                AddBladeToOwner(owner, view);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Opens blade with a custom defined view.
+    /// </summary>
+    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
+        where TView : IView
+    {
+        Argument.IsNotNull(owner);
+
+        if (viewmodel is IViewModelBlade bladeVm)
+        {
+            var view = await SetupBladeAsync(owner, bladeVm, async () =>
+            {
+                if (_scopedContextService.GetRequiredService(typeof(TView)) is View view)
+                {
+                    view.ViewModel = viewmodel;
+
+                    if (!viewmodel.IsInitialized)
+                        await viewmodel.InitializeAsync();
+
+                    // Call OnNavigatedTo for the blade ViewModel
+                    viewmodel.OnNavigatedTo();
+
+                    return view;
+                }
+
+                throw new KeyNotFoundException($"Page not found: {typeof(TView)}.");
+            });
+
+            if (view != null)
+            {
+                AddBladeToOwner(owner, view);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Removes the blade asynchronous.
+    /// </summary>
+    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
+    {
+        Argument.IsNotNull(owner);
+
+        if (viewmodel is IViewModelBlade bladeVm)
+        {
+            // Notify the blade ViewModel it's being navigated from
+            viewmodel.OnNavigatedFrom();
+
+            if (owner.Blades is not null)
+            {
+                var bladeToRemove = owner.Blades
+                        .FirstOrDefault(q =>
+                            q.ViewModel == bladeVm &&
+                            ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
+
+                if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
+                {
+                    if (owner.Blades.Count < 1)
+                        owner.IsPaneVisible = false;
+                    else if (owner.Blades[owner.Blades.Count - 1] is { } blade)
+                    {
+                        blade.IsEnabled = true;
+
+                        // Notify the now-active blade it's being navigated to
+                        if (blade.ViewModel is IViewModel activeVm)
+                        {
+                            activeVm.OnNavigatedTo();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Navigates to a specified viewmodel asynchronous.
+    /// </summary>
+    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel =>
+        NavigateAsync(default(TViewModel)!, parameter, backNavigation);
+
+    /// <summary>
+    /// Navigates viewmodel to a specified view.
+    /// </summary>
+    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel
+        where TView : IView =>
+        NavigateAsync<TViewModel, TView>(default!, parameter, backNavigation);
+
+    /// <summary>
+    /// Common navigation logic for handling current ViewModel
+    /// </summary>
+    private async Task<bool> HandleCurrentViewModelAsync(IViewModel? currentViewModel, bool backNavigation)
+    {
+        if (currentViewModel == null)
+            return true;
+
+        bool canNavigate = await CanNavigateAwayFromAsync(currentViewModel);
+
+        if (!canNavigate)
+            return false;
+
+        // Notify current ViewModel it's being navigated from
+        currentViewModel.OnNavigatedFrom();
+
+        // Perform partial cleanup
+        currentViewModel.Cleanup(isClosing: false);
+
+        // Add to backstack if not a back navigation
+        if (!backNavigation)
+        {
+            _backStack.Push(currentViewModel);
+            OnBackStackChanged(EventArgs.Empty);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Common logic for initializing a view and its ViewModel
+    /// </summary>
+    private async Task InitializeViewAndViewModel(View page, bool backNavigation)
+    {
+        // Initialize if needed and notify ViewModel it's being navigated to
+        if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
+        {
+            await page.ViewModel.InitializeAsync();
+            page.ViewModel.OnNavigatedTo();
+        }
+    }
+
+    /// <summary>
+    /// navigate as an asynchronous operation.
+    /// </summary>
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel
+    {
+        if (Application.Current.MainWindow is not null &&
+            Application.Current.MainWindow.Content is DependencyObject dependencyObject &&
+            dependencyObject.FindChild<Frame>() is { } frame)
+        {
+            if (viewModel is null)
+                viewModel = _scopedContextService.GetRequiredService<TViewModel>();
+
+            if (viewModel is not null && parameter is not null)
+                viewModel.Parameter = parameter;
+
+            // Get current view and ViewModel
+            IViewModel? currentViewModel = null;
+
+            if (frame.Content is View originalView)
+                currentViewModel = originalView.ViewModel as IViewModel;
+
+            // Handle current ViewModel
+            if (!await HandleCurrentViewModelAsync(currentViewModel, backNavigation))
+                return;
+
+            // Create and set up the page
+            var page = NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter);
+
+            if (page != null)
+            {
+                page.ViewModel = viewModel;
+                frame.Content = page;
+
+                await InitializeViewAndViewModel(page, backNavigation);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Navigates viewmodel to a specified view.
+    /// </summary>
+    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    where TViewModel : class, IViewModel
+    where TView : IView
+    {
+        if (Application.Current.MainWindow is not null &&
+            Application.Current.MainWindow.Content is DependencyObject dependencyObject &&
+            dependencyObject.FindChild<Frame>() is { } frame &&
+            _scopedContextService.GetRequiredService(typeof(TView)) is View page)
+        {
+            if (viewModel is null && _scopedContextService.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
+                viewModel = resolvedViewModel;
+
+            if (viewModel is not null && parameter is not null)
+                viewModel.Parameter = parameter;
+
+            // Get current view and ViewModel
+            IViewModel? currentViewModel = null;
+
+            if (frame.Content is View originalView)
+                currentViewModel = originalView.ViewModel as IViewModel;
+
+            // Handle current ViewModel
+            if (!await HandleCurrentViewModelAsync(currentViewModel, backNavigation))
+                return;
+
+            page.ViewModel = viewModel;
+            frame.Content = page;
+
+            await InitializeViewAndViewModel(page, backNavigation);
+        }
+    }
+
+    public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
+        where TViewModel : class, IViewModel
+    {
+        // Unsubscribe old handlers before modal navigation
+        _backStackChanged = null;
+
+        if (Application.Current is Application baseApplication &&
+            NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page)
+        {
+            baseApplication.MainWindow.Content = page;
+
+            if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
+                await page.ViewModel.InitializeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        // Dispose all ViewModels in the backstack
+        foreach (var item in _backStack)
+        {
+            if (item is IDisposable disposable)
+            {
+                try
+                {
+                    disposable.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error disposing ViewModel during NavigationService disposal");
+                }
+            }
+        }
+
+        _backStack.Clear();
+        _backStackChanged = null;
+
+        GC.SuppressFinalize(this);
     }
 }

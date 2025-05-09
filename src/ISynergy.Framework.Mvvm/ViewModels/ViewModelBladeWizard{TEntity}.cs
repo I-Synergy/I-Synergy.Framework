@@ -127,7 +127,7 @@ public abstract class ViewModelBladeWizard<TEntity> : ViewModelBlade<TEntity>
             Page += 1;
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
         try
         {
@@ -141,7 +141,7 @@ public abstract class ViewModelBladeWizard<TEntity> : ViewModelBlade<TEntity>
             Back_IsEnabled = false;
             Submit_IsEnabled = false;
 
-            base.Cleanup();
+            base.Cleanup(isClosing);
         }
         finally
         {

@@ -76,4 +76,7 @@ public interface IViewModel : IObservableClass, ICleanup
     /// Gets or sets an optional parameter.
     /// </summary>
     object Parameter { get; set; }
+
+    void OnNavigatedFrom();
+    void OnNavigatedTo();
 }

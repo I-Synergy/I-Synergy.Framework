@@ -201,7 +201,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
                     LanguageService.Default.GetString("TitleQuestion"),
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
         {
             _commonServices.RestartApplication();
         }
@@ -238,7 +238,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
                     LanguageService.Default.GetString("TitleQuestion"),
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 _commonServices.RestartApplication();
             }

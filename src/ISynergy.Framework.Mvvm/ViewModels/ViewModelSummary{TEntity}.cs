@@ -177,7 +177,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         if (await _commonServices.DialogService.ShowMessageAsync(
             string.Format(LanguageService.Default.GetString("WarningItemRemove"), item),
             LanguageService.Default.GetString("Delete"),
-            MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
         {
             await RemoveAsync(e);
             await RefreshAsync();
@@ -234,7 +234,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
         return Task.CompletedTask;
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
         try
         {
@@ -245,7 +245,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
             SelectedItem = default;
             Items?.Clear();
 
-            base.Cleanup();
+            base.Cleanup(isClosing);
         }
         finally
         {

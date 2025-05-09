@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 namespace ISynergy.Framework.Mvvm.Commands;
 
 /// <summary>
-/// A generic _command that provides a more specific version of <see cref="AsyncRelayCommand"/>.
+/// A generic command that provides a more specific version of <see cref="AsyncRelayCommand"/>.
 /// </summary>
 /// <typeparam name="T">The type of parameter being passed as input to the callbacks.</typeparam>
 public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCommand<T>
@@ -110,6 +110,30 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class with a custom timeout.
+    /// </summary>
+    /// <param name="execute">The execution function.</param>
+    /// <param name="timeout">The timeout for command execution.</param>
+    public AsyncRelayCommand(Func<T, Task> execute, TimeSpan timeout)
+        : base(AsyncRelayCommandOptions.None)
+    {
+        _execute = Argument.IsNotNull(execute);
+        _defaultTimeout = timeout;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class with a custom timeout.
+    /// </summary>
+    /// <param name="cancelableExecute">The cancelable execution function.</param>
+    /// <param name="timeout">The timeout for command execution.</param>
+    public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute, TimeSpan timeout)
+        : base(AsyncRelayCommandOptions.None)
+    {
+        _cancelableExecute = Argument.IsNotNull(cancelableExecute);
+        _defaultTimeout = timeout;
+    }
+
+    /// <summary>
     /// Determines whether this command can execute in its current state.
     /// </summary>
     /// <param name="parameter">Data used by the command.</param>
@@ -187,13 +211,12 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     {
         // Use a lock to ensure thread safety when checking and setting execution state
         bool canProceed;
-        lock (_executionLock)
+        lock (_syncLock)
         {
             canProceed = !IsRunning || (_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) != 0;
             if (!canProceed) return;
         }
 
-        CancellationTokenSource? timeoutCts = null;
         CancellationTokenSource? linkedCts = null;
 
         try
@@ -217,25 +240,20 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
             }
             else
             {
-                lock (_executionLock)
+                lock (_syncLock)
                 {
                     // Cancel any existing operation
                     if (_cancellationTokenSource != null)
                         _cancellationTokenSource.Cancel();
 
-                    var cancellationTokenSource = _cancellationTokenSource = new CancellationTokenSource();
+                    // Create a new cancellation token source for this execution
+                    _cancellationTokenSource = new CancellationTokenSource();
 
-                    // Create a timeout token source
-                    timeoutCts = new CancellationTokenSource(_defaultTimeout);
+                    // FIXED: Store the linked token source in a field to prevent premature disposal
+                    linkedCts = CreateTimeoutTokenSource();
 
-                    // Link the timeout and operation token sources
-                    linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
-                        cancellationTokenSource.Token, timeoutCts.Token);
-
-                    _cancellationTokenSources.Add(cancellationTokenSource);
-
-                    // Clean up completed token sources to prevent memory leaks
-                    CleanupCompletedTokenSources();
+                    // Add to tracking collection for cleanup
+                    _cancellationTokenSources.Add(_cancellationTokenSource);
                 }
 
                 executionTask = _cancelableExecute!(parameter!, linkedCts.Token);
@@ -247,31 +265,32 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
             {
                 await executionTask;
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
                 // Handle cancellation gracefully
                 System.Diagnostics.Debug.WriteLine("Command execution was canceled.");
 
-                // Re-throw if configured to flow exceptions
+                // FIXED: Re-throw if configured to flow exceptions or if cancellation was explicitly requested
                 if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
                     throw;
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
-                // Handle timeouts specifically
-                System.Diagnostics.Debug.WriteLine("Command execution timed out.");
-
-                // Re-throw if configured to flow exceptions
+                // Use the centralized error handler for timeout exceptions
                 if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
-                    throw;
+                    CommandErrorHandler.HandleCommandError(ex, ErrorHandlingStrategy);
+                else
+                    System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Always rethrow other exceptions
+                System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
+                throw;
             }
         }
         finally
         {
-            // Dispose of timeout-related resources
-            timeoutCts?.Dispose();
-            linkedCts?.Dispose();
-
             ExecutionTask = null;
 
             if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)

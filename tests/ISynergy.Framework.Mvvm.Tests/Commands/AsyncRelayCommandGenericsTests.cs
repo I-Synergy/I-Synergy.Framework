@@ -54,7 +54,7 @@ public class AsyncRelayCommandGenericsTests
         {
             try
             {
-                await Task.Delay(1000, token);
+                await Task.Delay(5000, token);
                 executedParameters.Add(param);
             }
             catch (OperationCanceledException)
@@ -65,6 +65,10 @@ public class AsyncRelayCommandGenericsTests
 
         // Act
         var task = command.ExecuteAsync(42);
+
+        // Give a small delay to ensure the task has started
+        await Task.Delay(100);
+
         command.Cancel();
 
         try

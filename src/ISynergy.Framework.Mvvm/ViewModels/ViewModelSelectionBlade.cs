@@ -175,7 +175,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
         }
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
         try
         {
@@ -189,7 +189,7 @@ public class ViewModelSelectionBlade<TEntity> : ViewModelBlade<List<TEntity>>, I
             // Reset selection state
             SelectionMode = SelectionModes.Single;
 
-            base.Cleanup();
+            base.Cleanup(isClosing);
         }
         finally
         {
