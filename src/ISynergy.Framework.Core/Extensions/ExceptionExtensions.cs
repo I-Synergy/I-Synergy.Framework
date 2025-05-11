@@ -79,14 +79,14 @@ public static class ExceptionExtensions
                 {
                     AppendAggregateException(sb, aggregateException, verbosity);
                 }
-                else
+                else if (exception is not null && exception.InnerException is not null)
                 {
                     // Add inner exception details with recursion limit
                     AppendInnerExceptions(sb, exception.InnerException, verbosity);
                 }
             }
 
-            if (verbosity == ExceptionVerbosityLevel.Full)
+            if (verbosity == ExceptionVerbosityLevel.Full && exception is not null)
             {
                 // Add stack trace information
                 var stackTraceLines = GetStackTraceLines(exception.StackTrace ?? string.Empty);
@@ -188,7 +188,8 @@ public static class ExceptionExtensions
             }
         }
 
-        AppendInnerExceptions(sb, innerException.InnerException, verbosity, currentDepth + 1, maxDepth);
+        if (innerException is not null && innerException.InnerException is not null)
+            AppendInnerExceptions(sb, innerException.InnerException, verbosity, currentDepth + 1, maxDepth);
     }
 
     /// <summary>
@@ -207,14 +208,7 @@ public static class ExceptionExtensions
         if (string.IsNullOrEmpty(fullStackTrace))
             return new List<string>();
 
-        var stackTraceLines = GetStackTraceLines(fullStackTrace);
-
-        // Filter out non-user code to focus on relevant parts of the stack trace
-        return stackTraceLines.EnsureNotNull()
-            .Where(line => !string.IsNullOrWhiteSpace(line) &&
-                  !line.Contains("System.Runtime.ExceptionServices") &&
-                  !line.Contains("System.Runtime.CompilerServices"))
-            .ToList();
+        return GetStackTraceLines(fullStackTrace);
     }
 
     /// <summary>
