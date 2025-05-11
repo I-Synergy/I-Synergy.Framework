@@ -6,19 +6,23 @@
 public enum NotificationTypes
 {
     /// <summary>
-    /// The success
+    /// The default
     /// </summary>
-    Success = 0,
+    Default = 0,
     /// <summary>
     /// The information
     /// </summary>
     Information = 1,
     /// <summary>
+    /// The success
+    /// </summary>
+    Success = 2,
+    /// <summary>
     /// The warning
     /// </summary>
-    Warning = 2,
+    Warning = 3,
     /// <summary>
     /// The error
     /// </summary>
-    Error = 3
+    Error = 4
 }

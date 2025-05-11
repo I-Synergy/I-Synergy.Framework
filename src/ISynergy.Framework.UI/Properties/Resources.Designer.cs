@@ -196,6 +196,16 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong.
+        ///Contact support..
+        /// </summary>
+        public static string DefaultException {
+            get {
+                return ResourceManager.GetString("DefaultException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot add an instance of a behavior to a BehaviorCollection more than once..
         /// </summary>
         public static string DuplicateBehaviorInCollectionExceptionMessage {

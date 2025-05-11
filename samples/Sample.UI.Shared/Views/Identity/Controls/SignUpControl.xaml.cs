@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Models.Accounts;
-using Microsoft.UI.Xaml.Controls;
-using Sample.ViewModels;
-using Syncfusion.UI.Xaml.Editors;
+﻿using Microsoft.UI.Xaml.Controls;
 
 namespace Sample.Views.Identity.Controls;
 
@@ -21,26 +17,5 @@ public sealed partial class SignUpControl : UserControl
     public SignUpControl()
     {
         InitializeComponent();
-    }
-
-    private void ComboBox_Modules_SelectionChanged(object sender, ComboBoxSelectionChangedEventArgs e)
-    {
-        if (DataContext is AuthenticationViewModel viewModel)
-        {
-            foreach (Module item in e.AddedItems.EnsureNotNull())
-                viewModel.Registration_Modules.Add(item);
-
-            foreach (Module item in e.RemovedItems.EnsureNotNull())
-                viewModel.Registration_Modules.Remove(item);
-        }
-    }
-
-    private void ComboBox_Modules_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        if (DataContext is AuthenticationViewModel viewModel && viewModel.Modules.FirstOrDefault() is { } module)
-        {
-            ComboBox_Modules.SelectedItems.EnsureNotNull().Add(module);
-        }
-
     }
 }

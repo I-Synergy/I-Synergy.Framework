@@ -20,6 +20,7 @@ public abstract class Application : System.Windows.Application, IDisposable
 {
     protected readonly ILogger<Application> _logger;
     protected readonly ICommonServices _commonServices;
+    protected readonly IExceptionHandlerService _exceptionHandlerService;
 
     protected bool _isShuttingDown = false;
 
@@ -46,6 +47,7 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         _logger.LogTrace("Getting common services.");
         _commonServices = host.Services.GetRequiredService<ICommonServices>();
+        _exceptionHandlerService = host.Services.GetRequiredService<IExceptionHandlerService>();
 
         _logger.LogTrace("Starting application");
 
@@ -121,8 +123,8 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <param name="e"></param>
     public virtual async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
-        if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
-            await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
+        if (_exceptionHandlerService is not null)
+            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -156,8 +158,8 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <param name="e"></param>
     public virtual async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
-        if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
-            await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
+        if (_exceptionHandlerService is not null)
+            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -172,8 +174,8 @@ public abstract class Application : System.Windows.Application, IDisposable
     public virtual async void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
-            if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
-                await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(exception);
+            if (_exceptionHandlerService is not null)
+                await _exceptionHandlerService.HandleExceptionAsync(exception);
             else
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
@@ -217,6 +219,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected override void OnStartup(StartupEventArgs e)
     {
         MainWindow = new Window();
+        MainWindow.Loaded += MainWindow_Loaded;
         MainWindow.Activate();
 
         var rootFrame = MainWindow.Content as Frame;
@@ -244,6 +247,15 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         MainWindow.Show();
         MainWindow.Activate();
+    }
+
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is Window mainWindow)
+            mainWindow.Loaded -= MainWindow_Loaded;
+
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.SetApplicationInitialized();
     }
 
     /// <summary>

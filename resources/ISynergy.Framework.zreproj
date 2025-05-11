@@ -19,14 +19,14 @@
     <globalSetting name="KeepFolderStructureOnImport">False</globalSetting>
     <globalSetting name="Filter-ResourceEditorGrid">&lt;XtraSerializer version="1.0" application="View"&gt;
   &lt;property name="#LayoutVersion" /&gt;
-  &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
+  &lt;property name="#LayoutScaleFactor"&gt;@3,Width=0.5@10,Height=0.49999997&lt;/property&gt;
   &lt;property name="ActiveFilterString" /&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
     <globalSetting name="Sort-ResourceEditorGrid">&lt;XtraSerializer version="1.0" application="View"&gt;
   &lt;property name="#LayoutVersion" /&gt;
-  &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
+  &lt;property name="#LayoutScaleFactor"&gt;@3,Width=0.5@10,Height=0.49999997&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="0" checksum="-1940104444" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="0" checksum="-1075153273" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="autoTranslateForm.prefixTextBox.Text">####</globalSetting>
     <globalSetting name="autoTranslateForm.prefixCheckBox.Checked">True</globalSetting>
     <globalSetting name="autoTranslateForm.useExistingTranslationsCheckBox.Checked">False</globalSetting>
