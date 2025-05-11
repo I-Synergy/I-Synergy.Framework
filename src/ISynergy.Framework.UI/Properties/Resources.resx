@@ -468,4 +468,8 @@ Try again or update the application through the Microsoft Store.</value>
 	<data name="WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
     <value>Replacing IHostApplicationLifetime is not supported.</value>
   </data>
+	<data name="DefaultException" xml:space="preserve">
+    <value>Something went wrong.
+Contact support.</value>
+  </data>
 </root>

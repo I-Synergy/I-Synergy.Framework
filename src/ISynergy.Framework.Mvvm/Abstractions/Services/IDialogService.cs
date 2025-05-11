@@ -54,8 +54,9 @@ public interface IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
+    /// <param name="notificationTypes"></param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK);
+    Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default);
 
     /// <summary>
     /// Shows the dialog asynchronous.

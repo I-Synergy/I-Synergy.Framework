@@ -3,4 +3,5 @@
 public interface IExceptionHandlerService
 {
     Task HandleExceptionAsync(Exception exception);
+    void SetApplicationInitialized();
 }

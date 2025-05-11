@@ -3,10 +3,11 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
+using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 using MessageBoxButtons = ISynergy.Framework.Mvvm.Enumerations.MessageBoxButtons;
+using MessageBoxImage = System.Windows.MessageBoxImage;
 using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
 
 namespace ISynergy.Framework.UI.Services;
@@ -102,8 +103,9 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
+    /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResult.</returns>
-    public Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+    public Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
     {
         var result = MessageBoxResult.None;
         var button = System.Windows.MessageBoxButton.OK;

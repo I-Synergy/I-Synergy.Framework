@@ -27,6 +27,7 @@
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.23.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.23.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
+    <PackageVersion Include="Microsoft.Extensions.ObjectPool" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.2.1" />
     <PackageVersion Include="Microsoft.Graph" Version="5.77.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.71.1" />
