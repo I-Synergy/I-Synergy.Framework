@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Http" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
+		<PackageReference Include="System.Formats.Asn1" />
 		<PackageReference Include="NuGet.Commands" />
 	</ItemGroup>
 

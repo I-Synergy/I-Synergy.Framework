@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -41,10 +42,15 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// Sets the selected item.
     /// </summary>
     /// <param name="e">The entity.</param>
-    public virtual void SetSelectedItem(TEntity? e)
+    /// <param name="isUpdate"></param>
+    public virtual void SetSelectedItem(TEntity? e, bool isUpdate = true)
     {
         SelectedItem = e;
-        IsUpdate = true;
+
+        if (SelectedItem is IObservableClass observableClass)
+            observableClass.MarkAsClean();
+
+        IsUpdate = isUpdate;
     }
 
     /// <summary>

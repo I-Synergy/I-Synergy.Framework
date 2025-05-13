@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Constants;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
@@ -140,6 +141,10 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     public virtual void SetSelectedItem(TEntity e)
     {
         SelectedItem = e;
+
+        if (SelectedItem is IObservableClass observableClass)
+            observableClass.MarkAsClean();
+
         IsUpdate = true;
     }
 
