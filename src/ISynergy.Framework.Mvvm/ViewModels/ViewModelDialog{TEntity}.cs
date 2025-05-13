@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Constants;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -45,6 +46,10 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     public virtual void SetSelectedItem(TEntity? e)
     {
         SelectedItem = e;
+
+        if (SelectedItem is IObservableClass observableClass)
+            observableClass.MarkAsClean();
+
         IsUpdate = true;
     }
 

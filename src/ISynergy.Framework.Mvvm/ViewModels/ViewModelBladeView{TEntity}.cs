@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
@@ -82,6 +83,10 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     public virtual void SetSelectedItem(TEntity? e)
     {
         SelectedItem = e;
+
+        if (SelectedItem is IObservableClass observableClass)
+            observableClass.MarkAsClean();
+
         IsUpdate = true;
     }
 
