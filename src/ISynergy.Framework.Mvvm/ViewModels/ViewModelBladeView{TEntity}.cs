@@ -110,7 +110,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// Gets a value indicating whether [refresh on initialization].
     /// </summary>
     /// <value><c>true</c> if [refresh on initialization]; otherwise, <c>false</c>.</value>
-    public bool RefreshOnInitialization { get; set; }
+    public bool DisableRefreshOnInitialization { get; set; }
 
     /// <summary>
     /// Gets or sets the add command.
@@ -167,7 +167,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     {
         await base.InitializeAsync();
 
-        if (!IsInitialized && RefreshOnInitialization)
+        if (!IsInitialized && !DisableRefreshOnInitialization)
         {
             await RefreshAsync();
             IsInitialized = true;

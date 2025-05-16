@@ -13,7 +13,6 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
         ILogger<PivotViewModel> logger)
         : base(commonServices, logger)
     {
-        RefreshOnInitialization = true;
     }
 
     public override Task AddAsync()

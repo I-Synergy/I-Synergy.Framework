@@ -42,7 +42,6 @@ public class ViewModelSummaryTests
         public TestSummaryViewModel(ICommonServices commonServices, ILogger<TestSummaryViewModel> logger)
             : base(commonServices, logger)
         {
-            RefreshOnInitialization = true;
         }
 
         public override Task AddAsync()
