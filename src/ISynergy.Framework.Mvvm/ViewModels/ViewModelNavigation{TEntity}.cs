@@ -74,12 +74,10 @@ public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNaviga
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    /// <param name="automaticValidation">Validation trigger.</param>
     protected ViewModelNavigation(
         ICommonServices commonServices,
-        ILogger<ViewModelNavigation<TEntity>> logger,
-        bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        ILogger<ViewModelNavigation<TEntity>> logger)
+        : base(commonServices, logger)
     {
         SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e), e => e is not null);
     }

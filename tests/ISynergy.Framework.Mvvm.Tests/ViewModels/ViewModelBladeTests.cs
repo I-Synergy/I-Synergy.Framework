@@ -23,8 +23,8 @@ public class ViewModelBladeTests
 
     public class TestBladeViewModel : ViewModelBlade<TestEntity>
     {
-        public TestBladeViewModel(ICommonServices commonServices, ILogger<TestBladeViewModel> logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation) { }
+        public TestBladeViewModel(ICommonServices commonServices, ILogger<TestBladeViewModel> logger)
+            : base(commonServices, logger) { }
     }
 
     public class TestEntity

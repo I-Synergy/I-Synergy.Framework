@@ -65,7 +65,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// Gets a value indicating whether [refresh on initialization].
     /// </summary>
     /// <value><c>true</c> if [refresh on initialization]; otherwise, <c>false</c>.</value>
-    public bool RefreshOnInitialization { get; }
+    public bool RefreshOnInitialization { get; set; }
 
     /// <summary>
     /// Gets or sets the add command.
@@ -98,17 +98,11 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
-    /// <param name="automaticValidation"></param>
     protected ViewModelSummary(
         ICommonServices commonServices,
-        ILogger<ViewModelSummary<TEntity>> logger,
-        bool refreshOnInitialization = true,
-        bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        ILogger<ViewModelSummary<TEntity>> logger)
+        : base(commonServices, logger)
     {
-        RefreshOnInitialization = refreshOnInitialization;
-
         Items = new ObservableCollection<TEntity>();
 
         AddCommand = new AsyncRelayCommand(async () => await AddAsync());

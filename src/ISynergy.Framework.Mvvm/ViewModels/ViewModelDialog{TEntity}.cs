@@ -74,12 +74,10 @@ public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEn
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    /// <param name="automaticValidation"></param>
     protected ViewModelDialog(
         ICommonServices commonServices,
-        ILogger<ViewModelDialog<TEntity>> logger,
-        bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        ILogger<ViewModelDialog<TEntity>> logger)
+        : base(commonServices, logger)
     {
         SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e), e => e is not null);
     }

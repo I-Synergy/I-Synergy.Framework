@@ -39,8 +39,11 @@ public class ViewModelSummaryTests
 
     public class TestSummaryViewModel : ViewModelSummary<TestEntity>
     {
-        public TestSummaryViewModel(ICommonServices commonServices, ILogger<TestSummaryViewModel> logger, bool refreshOnInitialization = true)
-            : base(commonServices, logger, refreshOnInitialization) { }
+        public TestSummaryViewModel(ICommonServices commonServices, ILogger<TestSummaryViewModel> logger)
+            : base(commonServices, logger)
+        {
+            RefreshOnInitialization = true;
+        }
 
         public override Task AddAsync()
         {
@@ -83,7 +86,8 @@ public class ViewModelSummaryTests
     public async Task InitializeAsync_WithRefreshOnInitialization_RefreshesItems()
     {
         // Arrange
-        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, new Mock<ILogger<TestSummaryViewModel>>().Object, true);
+        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, new Mock<ILogger<TestSummaryViewModel>>().Object);
+        viewModel.AutomaticValidationTrigger = true;
 
         // Act
         await viewModel.InitializeAsync();

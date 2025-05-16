@@ -32,8 +32,8 @@ public class ViewModelNavigationTests
 
     public class TestNavigationViewModel : ViewModelNavigation<TestEntity>
     {
-        public TestNavigationViewModel(ICommonServices commonServices, ILogger<TestNavigationViewModel> logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation) { }
+        public TestNavigationViewModel(ICommonServices commonServices, ILogger<TestNavigationViewModel> logger)
+            : base(commonServices, logger) { }
     }
 
     [TestMethod]
