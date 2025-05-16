@@ -95,12 +95,10 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    /// <param name="automaticValidation"></param>
     protected ViewModelBlade(
         ICommonServices commonServices,
-        ILogger<ViewModelBlade<TEntity>> logger,
-        bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        ILogger<ViewModelBlade<TEntity>> logger)
+        : base(commonServices, logger)
     {
         SubmitCommand = new AsyncRelayCommand<TEntity>(async e => await SubmitAsync(e), (e) => e is not null);
     }

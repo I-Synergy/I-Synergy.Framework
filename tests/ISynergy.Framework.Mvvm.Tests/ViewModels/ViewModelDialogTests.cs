@@ -25,8 +25,8 @@ public class ViewModelDialogTests
     }
     public class TestDialogViewModel : ViewModelDialog<TestEntity>
     {
-        public TestDialogViewModel(ICommonServices commonServices, ILogger<TestDialogViewModel> logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation) { }
+        public TestDialogViewModel(ICommonServices commonServices, ILogger<TestDialogViewModel> logger)
+            : base(commonServices, logger) { }
     }
 
     public class TestEntity

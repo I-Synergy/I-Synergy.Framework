@@ -114,20 +114,14 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    /// <param name="selectionMode">The selection mode.</param>
-    /// <param name="automaticValidation"></param>
     public ViewModelSelectionDialog(
         ICommonServices commonServices,
-        ILogger<ViewModelSelectionDialog<TEntity>> logger,
-        SelectionModes selectionMode = SelectionModes.Single,
-        bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        ILogger<ViewModelSelectionDialog<TEntity>> logger)
+        : base(commonServices, logger)
     {
         RawItems = new List<TEntity>();
         Items = new ObservableCollection<TEntity>();
         SelectedItems = new List<object>();
-
-        SelectionMode = selectionMode;
 
         Validator = new Action<IObservableClass>(arg =>
         {

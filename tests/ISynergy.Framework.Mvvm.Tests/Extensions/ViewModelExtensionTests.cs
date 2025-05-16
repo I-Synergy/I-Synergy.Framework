@@ -35,16 +35,16 @@ public class ViewModelExtensionTests
     }
     public class TestViewModel : ViewModel
     {
-        public TestViewModel(ICommonServices commonServices, ILogger<TestViewModel> logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation)
+        public TestViewModel(ICommonServices commonServices, ILogger<TestViewModel> logger)
+            : base(commonServices, logger)
         {
         }
     }
 
     public class GenericViewModel<T> : TestViewModel
     {
-        public GenericViewModel(ICommonServices commonServices, ILogger<GenericViewModel<T>> logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation)
+        public GenericViewModel(ICommonServices commonServices, ILogger<GenericViewModel<T>> logger)
+            : base(commonServices, logger)
         {
         }
     }

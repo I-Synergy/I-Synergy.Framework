@@ -28,8 +28,8 @@ public class ViewModelBladeWizardTests
 
     public class TestBladeWizardViewModel : ViewModelBladeWizard<TestEntity>
     {
-        public TestBladeWizardViewModel(ICommonServices commonServices, ILogger<TestBladeWizardViewModel> logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation) { }
+        public TestBladeWizardViewModel(ICommonServices commonServices, ILogger<TestBladeWizardViewModel> logger)
+            : base(commonServices, logger) { }
     }
 
     [TestMethod]

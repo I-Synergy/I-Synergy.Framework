@@ -100,12 +100,9 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    /// <param name="automaticValidation">The validation.</param>
     protected ViewModel(
         ICommonServices commonServices,
-        ILogger<ViewModel> logger,
-        bool automaticValidation = false)
-        : base(automaticValidation)
+        ILogger<ViewModel> logger)
     {
         _commonServices = commonServices;
         _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;

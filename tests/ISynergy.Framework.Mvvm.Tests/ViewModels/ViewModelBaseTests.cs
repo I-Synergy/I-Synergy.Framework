@@ -35,8 +35,8 @@ public class ViewModelBaseTests
             set => SetValue(value);
         }
 
-        public TestViewModel(ICommonServices commonServices, ILogger<TestViewModel> logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation) { }
+        public TestViewModel(ICommonServices commonServices, ILogger<TestViewModel> logger)
+            : base(commonServices, logger) { }
 
         public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -119,7 +119,8 @@ public class ViewModelBaseTests
     public void Constructor_WithAutomaticValidation_SetsValidation()
     {
         // Arrange & Act
-        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object, true);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
+        viewModel.AutomaticValidationTrigger = true;
 
         // Assert
         // Note: You might need to expose a way to check if automatic validation is enabled

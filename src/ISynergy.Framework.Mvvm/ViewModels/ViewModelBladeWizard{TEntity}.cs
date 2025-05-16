@@ -79,12 +79,10 @@ public abstract class ViewModelBladeWizard<TEntity> : ViewModelBlade<TEntity>
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    /// <param name="automaticValidation"></param>
     protected ViewModelBladeWizard(
         ICommonServices commonServices,
-        ILogger<ViewModelBladeWizard<TEntity>> logger,
-        bool automaticValidation = false)
-        : base(commonServices, logger, automaticValidation)
+        ILogger<ViewModelBladeWizard<TEntity>> logger)
+        : base(commonServices, logger)
     {
         BackCommand = new RelayCommand(PerformBackAction);
         NextCommand = new RelayCommand(PerformNextAction);

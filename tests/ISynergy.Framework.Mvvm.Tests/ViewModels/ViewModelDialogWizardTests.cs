@@ -31,8 +31,8 @@ public class ViewModelDialogWizardTests
 
     public class TestDialogWizardViewModel : ViewModelDialogWizard<TestEntity>
     {
-        public TestDialogWizardViewModel(ICommonServices commonServices, ILogger<TestDialogWizardViewModel> logger, bool automaticValidation = false)
-            : base(commonServices, logger, automaticValidation) { }
+        public TestDialogWizardViewModel(ICommonServices commonServices, ILogger<TestDialogWizardViewModel> logger)
+            : base(commonServices, logger) { }
     }
 
     [TestMethod]

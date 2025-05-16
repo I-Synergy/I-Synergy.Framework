@@ -6,7 +6,6 @@ namespace Sample.ViewModels;
 
 public class Test2ViewModel(
     ICommonServices commonServices,
-    ILogger<Test2ViewModel> logger,
-    bool automaticValidation = false) : ViewModelDialog<object>(commonServices, logger, automaticValidation)
+    ILogger<Test2ViewModel> logger) : ViewModelDialog<object>(commonServices, logger)
 {
 }
