@@ -29,7 +29,6 @@ public class ViewModelBladeViewTests
         public TestBladeViewModel(ICommonServices commonServices, ILogger<TestBladeViewModel> logger)
             : base(commonServices, logger)
         {
-            RefreshOnInitialization = true;
         }
 
         public override Task AddAsync()
