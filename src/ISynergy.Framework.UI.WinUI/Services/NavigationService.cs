@@ -104,7 +104,10 @@ public class NavigationService : INavigationService
     public Task GoBackAsync()
     {
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
+        {
+            viewModel.IsInitialized = false;
             return NavigateAsync(viewModel, backNavigation: true);
+        }
 
         return Task.CompletedTask;
     }
