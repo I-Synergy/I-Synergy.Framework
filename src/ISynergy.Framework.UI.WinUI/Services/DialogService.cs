@@ -467,12 +467,12 @@ public class DialogService : IDialogService
                     _activeDialog.Close();
 
                     // Wait for dialog to close with timeout
-                    var timeoutTask = Task.Delay(3000);
+                    var timeoutTask = Task.Delay(500);
                     var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
 
                     if (completedTask == timeoutTask)
                     {
-                        _logger.LogWarning("Dialog close operation timed out");
+                        _logger.LogTrace("Dialog close operation timed out");
                         // Force cleanup of previous dialog reference
                         _activeDialog = null;
                     }
@@ -496,7 +496,7 @@ public class DialogService : IDialogService
 
                 if (completedTask == timeoutTask)
                 {
-                    _logger.LogWarning("Dialog show operation timed out");
+                    _logger.LogTrace("Dialog show operation timed out");
                     return ContentDialogResult.None;
                 }
 
