@@ -367,13 +367,9 @@ public class AuthenticationViewModel : ViewModel
         if (disposing)
         {
             ShowSignInCommand?.Dispose();
-            ShowSignInCommand = null;
             SignInCommand?.Dispose();
-            SignInCommand = null;
             SignUpCommand?.Dispose();
-            SignUpCommand = null;
             ForgotPasswordCommand?.Dispose();
-            ForgotPasswordCommand = null;
 
             base.Dispose(disposing);
         }

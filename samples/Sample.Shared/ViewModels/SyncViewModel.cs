@@ -206,15 +206,10 @@ public class SyncViewModel : ViewModelNavigation<object>
         if (disposing)
         {
             SyncCommand?.Dispose();
-            SyncCommand = null;
             SyncReinitializeCommand?.Dispose();
-            SyncReinitializeCommand = null;
             CustomActionCommand?.Dispose();
-            CustomActionCommand = null;
             DeprovisionClientCommand?.Dispose();
-            DeprovisionClientCommand = null;
             ProvisionClientCommand?.Dispose();
-            ProvisionClientCommand = null;
 
             MessageService.Default.Unregister<SyncMessage>(this);
             MessageService.Default.Unregister<SyncProgressMessage>(this);

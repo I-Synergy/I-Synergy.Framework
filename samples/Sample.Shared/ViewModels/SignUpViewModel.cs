@@ -328,13 +328,9 @@ public class SignUpViewModel : ViewModel
         if (disposing)
         {
             SignInCommand?.Dispose();
-            SignInCommand = null;
             SignUpCommand?.Dispose();
-            SignUpCommand = null;
             ValidateMailCommand?.Dispose();
-            ValidateMailCommand = null;
             SelectModulesCommand?.Dispose();
-            SelectModulesCommand = null;
 
             base.Dispose(disposing);
         }
