@@ -30,7 +30,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     public bool IsBackEnabled
     {
-        get => _commonServices.NavigationService.CanGoBack;
+        get => GetValue<bool>();
+        private set => SetValue(value);
     }
 
     /// <summary>
@@ -105,11 +106,14 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="logger"></param>
+    /// <param="logger"></param>
     protected BaseShellViewModel(ICommonServices commonServices, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
-        _commonServices.NavigationService.BackStackChanged += (s, e) => RaisePropertyChanged(nameof(IsBackEnabled));
+        _commonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
+
+        // Initialize IsBackEnabled with the current state
+        IsBackEnabled = _commonServices.NavigationService.CanGoBack;
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
@@ -297,6 +301,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     {
         if (disposing)
         {
+            // Remove navigation service event handlers first
+            if (_commonServices.NavigationService is not null)
+                _commonServices.NavigationService.BackStackChanged -= NavigationService_BackStackChanged;
+
             Validator = null;
 
             PrimaryItems?.Clear();
@@ -314,4 +322,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             base.Dispose(disposing);
         }
     }
+
+    private void NavigationService_BackStackChanged(object? sender, EventArgs e) => 
+        IsBackEnabled = _commonServices.NavigationService.CanGoBack;
 }

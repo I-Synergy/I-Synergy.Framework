@@ -30,7 +30,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     public bool IsBackEnabled
     {
-        get => _commonServices.NavigationService.CanGoBack;
+        get => GetValue<bool>();
+        private set => SetValue(value);
     }
 
     public AsyncRelayCommand GoBackCommand { get; private set; }
@@ -73,6 +74,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     {
         _commonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
 
+        // Initialize IsBackEnabled with the current state
+        IsBackEnabled = _commonServices.NavigationService.CanGoBack;
+
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
 
@@ -93,7 +97,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     public abstract Task InitializeFirstRunAsync();
 
 
-    private void NavigationService_BackStackChanged(object? sender, EventArgs e) => RaisePropertyChanged(nameof(IsBackEnabled));
+    private void NavigationService_BackStackChanged(object? sender, EventArgs e) => 
+        IsBackEnabled = _commonServices.NavigationService.CanGoBack;
 
     /// <summary>
     /// Opens the settings asynchronous.

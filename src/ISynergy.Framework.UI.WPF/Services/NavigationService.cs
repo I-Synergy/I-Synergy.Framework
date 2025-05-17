@@ -71,7 +71,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Navigation backstack.
     /// </summary>
-    private Stack<object> _backStack = new Stack<object>();
+    private Stack<IViewModel> _backStack = new Stack<IViewModel>();
 
     /// <summary>
     /// Maximum size for the backstack before cleaning up old ViewModels
@@ -104,8 +104,23 @@ public class NavigationService : INavigationService
     /// </summary>
     public Task GoBackAsync()
     {
+        // Keep track of whether we had items before popping
+        bool hadItems = CanGoBack;
+        
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
+        {
+            // Set IsInitialized to false to force reinitialization
+            viewModel.IsInitialized = false;
+            
+            // If this was the last item, explicitly raise the event
+            if (hadItems && !CanGoBack)
+            {
+                OnBackStackChanged(EventArgs.Empty);
+            }
+            
+            // Navigate back with the preserved ViewModel
             return NavigateAsync(viewModel, backNavigation: true);
+        }
 
         return Task.CompletedTask;
     }
@@ -426,8 +441,30 @@ public class NavigationService : INavigationService
         // Add to backstack if not a back navigation
         if (!backNavigation)
         {
+            // Store the entire ViewModel instance
             _backStack.Push(currentViewModel);
+
             OnBackStackChanged(EventArgs.Empty);
+
+            // If backstack exceeds maximum size, remove oldest entries
+            while (_backStack.Count > MaxBackstackSize)
+            {
+                var oldestEntry = _backStack.ToArray().Last();
+                _backStack = new Stack<IViewModel>(_backStack.Where(e => e != oldestEntry));
+
+                // Dispose the oldest ViewModel if needed
+                if (oldestEntry is IDisposable disposable)
+                {
+                    try
+                    {
+                        disposable.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error disposing ViewModel during backstack cleanup");
+                    }
+                }
+            }
         }
 
         return true;
@@ -614,9 +651,9 @@ public class NavigationService : INavigationService
     public void Dispose()
     {
         // Dispose all ViewModels in the backstack
-        foreach (var item in _backStack)
+        foreach (var viewModel in _backStack)
         {
-            if (item is IDisposable disposable)
+            if (viewModel is IDisposable disposable)
             {
                 try
                 {
