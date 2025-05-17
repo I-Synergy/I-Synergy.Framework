@@ -469,7 +469,6 @@ public class NavigationService : INavigationService
         {
             // Try to reuse the current ViewModel if it matches the requested type
             IViewModel? currentViewModel = null;
-            Type? viewType = null;
 
             if (frame.Content is View originalView)
             {
@@ -506,29 +505,17 @@ public class NavigationService : INavigationService
 
             if (viewModel is not null)
             {
-                // Get view from the related ViewModel
-                var view = viewModel.GetRelatedView();
-                viewType = view.GetRelatedViewType();
+                // Use the extension method to create the page
+                var page = NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter);
 
-                // Get the view from scoped context instead of creating a new one
-                if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View page)
-                {
-                    // Set ViewModel before changing frame content
-                    page.ViewModel = viewModel;
+                // Set frame content
+                frame.Content = page;
 
-                    // Set frame content
-                    frame.Content = page;
+                // Initialize the ViewModel if needed
+                if (!viewModel.IsInitialized)
+                    await viewModel.InitializeAsync();
 
-                    // Initialize the ViewModel if needed
-                    if (!viewModel.IsInitialized)
-                        await viewModel.InitializeAsync();
-
-                    viewModel.OnNavigatedTo();
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Could not resolve view for ViewModel type {typeof(TViewModel).Name}");
-                }
+                viewModel.OnNavigatedTo();
             }
             else
             {
@@ -608,12 +595,7 @@ public class NavigationService : INavigationService
             if (parameter is not null)
                 viewModel.Parameter = parameter;
 
-            // Get view from the related ViewModel
-            var view = viewModel.GetRelatedView();
-            var viewType = view.GetRelatedViewType();
-
-            // Get the view from scoped context instead of creating a new one
-            if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View page)
+            if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page)
             {
                 page.ViewModel = viewModel;
                 Application.MainWindow.Content = page;

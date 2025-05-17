@@ -178,13 +178,8 @@ public class NavigationService : INavigationService
     /// </summary>
     private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
-        var viewType = default(Type);
         var view = viewModel.GetRelatedView();
-
-        if (viewModel is ISelectionViewModel)
-            viewType = typeof(SelectionView);
-        else
-            viewType = view.GetRelatedViewType();
+        var viewType = view.GetRelatedViewType();
 
         if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View resolvedPage)
         {
@@ -373,9 +368,9 @@ public class NavigationService : INavigationService
             if (owner.Blades is not null)
             {
                 var bladeToRemove = owner.Blades
-                        .FirstOrDefault(q =>
-                            q.ViewModel == bladeVm &&
-                            ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
+                    .FirstOrDefault(q =>
+                        q.ViewModel == bladeVm &&
+                        ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
 
                 if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
                 {
@@ -466,11 +461,10 @@ public class NavigationService : INavigationService
     {
         if (Application.Current.MainWindow is not null &&
             Application.Current.MainWindow.Content is DependencyObject dependencyObject &&
-            dependencyObject.FindChild<Frame>() is { } frame)
+            dependencyObject.FindDescendant<Frame>() is { } frame)
         {
             // Try to reuse the current ViewModel if it matches the requested type
             IViewModel? currentViewModel = null;
-            Type? viewType = null;
 
             if (frame.Content is View originalView)
             {
@@ -507,29 +501,17 @@ public class NavigationService : INavigationService
 
             if (viewModel is not null)
             {
-                // Get view from the related ViewModel
-                var view = viewModel.GetRelatedView();
-                viewType = view.GetRelatedViewType();
+                // Use the extension method to create the page
+                var page = NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter);
 
-                // Get the view from scoped context instead of creating a new one
-                if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View page)
-                {
-                    // Set ViewModel before changing frame content
-                    page.ViewModel = viewModel;
+                // Set frame content
+                frame.Content = page;
 
-                    // Set frame content
-                    frame.Content = page;
+                // Initialize the ViewModel if needed
+                if (!viewModel.IsInitialized)
+                    await viewModel.InitializeAsync();
 
-                    // Initialize the ViewModel if needed
-                    if (!viewModel.IsInitialized)
-                        await viewModel.InitializeAsync();
-
-                    viewModel.OnNavigatedTo();
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Could not resolve view for ViewModel type {typeof(TViewModel).Name}");
-                }
+                viewModel.OnNavigatedTo();
             }
             else
             {
@@ -542,12 +524,12 @@ public class NavigationService : INavigationService
     /// Navigates viewmodel to a specified view.
     /// </summary>
     public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
-    where TViewModel : class, IViewModel
-    where TView : IView
+        where TViewModel : class, IViewModel
+        where TView : IView
     {
         if (Application.Current.MainWindow is not null &&
             Application.Current.MainWindow.Content is DependencyObject dependencyObject &&
-            dependencyObject.FindChild<Frame>() is { } frame &&
+            dependencyObject.FindDescendant<Frame>() is { } frame &&
             _scopedContextService.GetRequiredService(typeof(TView)) is View page)
         {
             // Try to reuse the current ViewModel if it matches the requested type
@@ -591,15 +573,6 @@ public class NavigationService : INavigationService
         // Unsubscribe old handlers before modal navigation
         _backStackChanged = null;
 
-        //if (Application.Current is Application baseApplication &&
-        //    NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page)
-        //{
-        //    baseApplication.MainWindow.Content = page;
-
-        //    if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
-        //        await page.ViewModel.InitializeAsync();
-        //}
-
         if (Application.Current.MainWindow is not null)
         {
             // Try to see if we already have an instance of this ViewModel
@@ -618,12 +591,7 @@ public class NavigationService : INavigationService
             if (parameter is not null)
                 viewModel.Parameter = parameter;
 
-            // Get view from the related ViewModel
-            var view = viewModel.GetRelatedView();
-            var viewType = view.GetRelatedViewType();
-
-            // Get the view from scoped context instead of creating a new one
-            if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View page)
+            if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page)
             {
                 page.ViewModel = viewModel;
                 Application.Current.MainWindow.Content = page;

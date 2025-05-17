@@ -36,7 +36,7 @@ public abstract class NotificationDisplayPart : UserControl
                     if (Notification.CanClose)
                     {
                         Notification.CanClose = false;
-                        var btn = this.FindChild<Button>("CloseButton");
+                        var btn = this.FindDescendant<Button>("CloseButton");
                         if (btn is not null)
                         {
                             btn.Visibility = Visibility.Visible;

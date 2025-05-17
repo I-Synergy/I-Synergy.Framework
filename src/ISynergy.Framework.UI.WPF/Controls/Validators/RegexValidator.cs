@@ -184,7 +184,7 @@ public static class RegexValidator
         else if (sender is Control control)
         {
             _control = control;
-            textBox = (sender as DependencyObject)?.FindChild<TextBox>();
+            textBox = (sender as DependencyObject)?.FindDescendant<TextBox>();
         }
 
         if (textBox is null)
