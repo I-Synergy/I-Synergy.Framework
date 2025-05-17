@@ -208,7 +208,7 @@ public class NavigationService : INavigationService
             // If the view is not yet loaded, wait for it (with a reasonable timeout)
             if (!resolvedPage.IsLoaded)
             {
-                var timeoutTask = Task.Delay(2000);
+                var timeoutTask = Task.Delay(500);
                 var completedTask = await Task.WhenAny(viewLoadedTcs.Task, timeoutTask);
 
                 // Cleanup the event handler if we timed out
@@ -258,10 +258,6 @@ public class NavigationService : INavigationService
 
         // Get the view
         var view = await getViewFunc();
-
-        // Wait for the view to be loaded if it's a WinUI View
-        if (view is View winUiView)
-            await EnsureViewLoadedAsync(winUiView);
 
         return view;
     }
@@ -339,7 +335,7 @@ public class NavigationService : INavigationService
                     // If the view is not yet loaded, wait for it (with a reasonable timeout)
                     if (!view.IsLoaded)
                     {
-                        var timeoutTask = Task.Delay(2000);
+                        var timeoutTask = Task.Delay(500);
                         var completedTask = await Task.WhenAny(viewLoadedTcs.Task, timeoutTask);
 
                         // Cleanup the event handler if we timed out
@@ -508,31 +504,35 @@ public class NavigationService : INavigationService
             if (!await HandleCurrentViewModelAsync(currentViewModel, backNavigation))
                 return;
 
-            // Get view from the related ViewModel
-            var view = viewModel.GetRelatedView();
-            viewType = view.GetRelatedViewType();
-
-            // Get the view from scoped context instead of creating a new one
-            if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View page)
+            if (viewModel is not null)
             {
-                // Set ViewModel before changing frame content
-                page.ViewModel = viewModel;
+                // Get view from the related ViewModel
+                var view = viewModel.GetRelatedView();
+                viewType = view.GetRelatedViewType();
 
-                // Set frame content
-                frame.Content = page;
+                // Get the view from scoped context instead of creating a new one
+                if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View page)
+                {
+                    // Set ViewModel before changing frame content
+                    page.ViewModel = viewModel;
 
-                // Wait for the view to be loaded
-                await EnsureViewLoadedAsync(page);
+                    // Set frame content
+                    frame.Content = page;
 
-                // Initialize the ViewModel if needed
-                if (!viewModel.IsInitialized)
-                    await viewModel.InitializeAsync();
+                    // Initialize the ViewModel if needed
+                    if (!viewModel.IsInitialized)
+                        await viewModel.InitializeAsync();
 
-                viewModel.OnNavigatedTo();
+                    viewModel.OnNavigatedTo();
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Could not resolve view for ViewModel type {typeof(TViewModel).Name}");
+                }
             }
             else
             {
-                throw new InvalidOperationException($"Could not resolve view for ViewModel type {typeof(TViewModel).Name}");
+                throw new InvalidOperationException($"Could not resolve ViewModel {typeof(TViewModel).Name}");
             }
         }
     }
@@ -541,8 +541,8 @@ public class NavigationService : INavigationService
     /// Navigates viewmodel to a specified view.
     /// </summary>
     public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
-    where TViewModel : class, IViewModel
-    where TView : IView
+        where TViewModel : class, IViewModel
+        where TView : IView
     {
         if (Application.MainWindow is not null &&
             Application.MainWindow.Content is DependencyObject dependencyObject &&
@@ -573,14 +573,14 @@ public class NavigationService : INavigationService
             page.ViewModel = viewModel;
             frame.Content = page;
 
-            // Wait for the view to be loaded
-            await EnsureViewLoadedAsync(page);
+            if (viewModel is not null)
+            {
+                // Initialize the ViewModel if needed
+                if (!viewModel.IsInitialized)
+                    await viewModel.InitializeAsync();
 
-            // Initialize the ViewModel if needed
-            if (!viewModel.IsInitialized)
-                await viewModel.InitializeAsync();
-
-            viewModel.OnNavigatedTo();
+                viewModel.OnNavigatedTo();
+            }
         }
     }
 
@@ -628,39 +628,6 @@ public class NavigationService : INavigationService
                 throw new InvalidOperationException($"Could not resolve view for ViewModel type {typeof(TViewModel).Name}");
             }
         }
-    }
-
-    /// <summary>
-    /// Sets the is loaded property for Views.
-    /// </summary>
-    /// <param name="view">The view.</param>
-    /// <returns>A task that completes when the view is loaded.</returns>
-    private Task EnsureViewLoadedAsync(View view)
-    {
-        var tcs = new TaskCompletionSource<bool>();
-
-        if (view.IsLoaded)
-        {
-            tcs.SetResult(true);
-            return tcs.Task;
-        }
-
-        void OnViewLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            view.Loaded -= OnViewLoaded;
-            tcs.TrySetResult(true);
-        }
-
-        view.Loaded += OnViewLoaded;
-
-        // Add a timeout to prevent deadlocks
-        Task.Delay(3000).ContinueWith(_ =>
-        {
-            tcs.TrySetResult(false);
-            view.Loaded -= OnViewLoaded; // Clean up
-        });
-
-        return tcs.Task;
     }
 
     /// <summary>

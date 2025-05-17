@@ -2,7 +2,6 @@
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
-using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -34,18 +33,18 @@ public static class NavigationExtensions
     public static View CreatePage<TViewModel>(IScopedContextService scopedContextService, TViewModel? viewModel, object? parameter = null) where TViewModel : class, IViewModel
     {
         if (viewModel is null)
-            viewModel = scopedContextService.ServiceProvider.GetRequiredService<TViewModel>();
+            viewModel = scopedContextService.GetRequiredService<TViewModel>();
 
         var view = typeof(TViewModel).GetRelatedView();
         var viewType = view.GetRelatedViewType();
 
-        if (viewType is not null && scopedContextService.ServiceProvider.GetRequiredService(viewType) is View resolvedPage)
+        if (viewType is not null && scopedContextService.GetRequiredService(viewType) is View resolvedPage)
         {
             if (viewModel is not null)
                 resolvedPage.ViewModel = viewModel;
 
             if (resolvedPage.ViewModel is null)
-                resolvedPage.ViewModel = scopedContextService.ServiceProvider.GetRequiredService<TViewModel>();
+                resolvedPage.ViewModel = scopedContextService.GetRequiredService<TViewModel>();
 
             if (parameter is not null && resolvedPage.ViewModel is not null)
                 resolvedPage.ViewModel.Parameter = parameter;

@@ -72,22 +72,19 @@ public class ExceptionHandlerService : IExceptionHandlerService
         // Check if we're already handling an exception to prevent recursion
         if (_isHandlingException)
         {
-            _logger.LogWarning("Recursive exception handling detected. Skipping dialog display.");
-            _logger.LogError(exception, exception.ToMessage(Environment.StackTrace));
+            _logger.LogTrace("Recursive exception handling detected. Skipping dialog display.");
             return;
         }
 
         // Queue startup exceptions for later processing
         if (!_isApplicationInitialized && !isStartupExceptionReplay)
         {
-            _logger.LogWarning("Application not fully initialized. Queuing exception for later handling.");
-            _logger.LogError(exception, exception.ToMessage(Environment.StackTrace));
+            _logger.LogTrace("Application not fully initialized. Queuing exception for later handling.");
 
             // Limit the number of queued exceptions to prevent memory issues
             if (_startupExceptions.Count < _maxStartupExceptions)
-            {
                 _startupExceptions.Enqueue(exception);
-            }
+
             return;
         }
 

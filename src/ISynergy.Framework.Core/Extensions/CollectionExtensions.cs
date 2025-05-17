@@ -449,21 +449,4 @@ public static class CollectionExtensions
     /// <returns>DataTable.</returns>
     public static DataTable ToDataTable(this ICollection collection, Type type, string tableName) =>
         collection.ToDataTableBase(tableName, type);
-
-    /// <summary>
-    /// Add new items to an ObservableCollection by safely adding each item individually to prevent binding issues
-    /// </summary>
-    /// <typeparam name="T">Type of items within the collection.</typeparam>
-    /// <param name="collection">The observable collection.</param>
-    /// <param name="range">Range of items to add.</param>
-    public static void AddItemsSafely<T>(this ObservableCollection<T> collection, IEnumerable<T> range)
-    {
-        collection.EnsureNotNull();
-
-        // Use a regular foreach to add items individually which is safer for UI bindings
-        foreach (var item in range.EnsureNotNull())
-        {
-            collection.Add(item);
-        }
-    }
 }

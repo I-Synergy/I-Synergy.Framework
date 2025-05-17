@@ -149,9 +149,7 @@ public class SignInViewModel : ViewModel
         if (disposing)
         {
             SignInCommand?.Dispose();
-            SignInCommand = null;
             SignUpCommand?.Dispose();
-            SignUpCommand = null;
 
             base.Dispose(disposing);
         }

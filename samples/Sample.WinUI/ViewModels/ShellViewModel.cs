@@ -249,23 +249,14 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
 
             DisplayCommand?.Dispose();
-            DisplayCommand = null;
             InfoCommand?.Dispose();
-            InfoCommand = null;
             BrowseCommand?.Dispose();
-            BrowseCommand = null;
             ConverterCommand?.Dispose();
-            ConverterCommand = null;
             SelectionTestCommand?.Dispose();
-            SelectionTestCommand = null;
             ListViewTestCommand?.Dispose();
-            ListViewTestCommand = null;
             ValidationTestCommand?.Dispose();
-            ValidationTestCommand = null;
             TreeNodeTestCommand?.Dispose();
-            TreeNodeTestCommand = null;
             ChartCommand?.Dispose();
-            ChartCommand = null;
 
             base.Dispose(disposing);
         }
