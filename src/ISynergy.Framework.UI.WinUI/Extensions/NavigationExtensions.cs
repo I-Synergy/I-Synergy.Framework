@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using View = ISynergy.Framework.UI.Controls.View;
 
 namespace ISynergy.Framework.UI.Extensions;

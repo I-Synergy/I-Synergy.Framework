@@ -105,10 +105,11 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
 
     public override async Task InitializeAsync()
     {
+        _logger.LogInformation("TestItemsListViewModel.InitializeAsync - Start");
+
         await base.InitializeAsync();
 
         Query = string.Empty;
-        Items = [];
 
         Years =
         [
@@ -126,6 +127,8 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
         ];
 
         SelectedYear = Years.First(e => e.Value == DateTime.Now.Date.Year);
+
+        _logger.LogInformation("TestItemsListViewModel.InitializeAsync - End");
     }
 
     /// <summary>
@@ -149,14 +152,21 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>()
+        // Clear items first before adding new ones
+        Items.Clear();
+
+        var items = new List<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
             new TestItem { Id = 2, Description = "Test 2"},
             new TestItem { Id = 3, Description = "Test 3"},
             new TestItem { Id = 4, Description = "Test 4"},
             new TestItem { Id = 5, Description = "Test 5"}
-        });
+        };
+
+        // Use the new extension method for safely adding items to an observable collection
+        Items.AddItemsSafely(items);
+
         return Task.CompletedTask;
     }
 
