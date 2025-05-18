@@ -5,7 +5,6 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -106,18 +104,18 @@ public class NavigationService : INavigationService
     {
         // Keep track of whether we had items before popping
         bool hadItems = CanGoBack;
-        
+
         if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
         {
             // Set IsInitialized to false to force reinitialization
             viewModel.IsInitialized = false;
-            
+
             // If this was the last item, explicitly raise the event
             if (hadItems && !CanGoBack)
             {
                 OnBackStackChanged(EventArgs.Empty);
             }
-            
+
             // Navigate back with the preserved ViewModel
             return NavigateAsync(viewModel, backNavigation: true);
         }
@@ -144,28 +142,6 @@ public class NavigationService : INavigationService
                 _backStackChanged = null;
             }
         }
-    }
-
-    /// <summary>
-    /// Checks if navigation away from the current ViewModel is allowed
-    /// </summary>
-    private async Task<bool> CanNavigateAwayFromAsync(IViewModel viewModel)
-    {
-        if (!HasRunningCommands(viewModel))
-            return true;
-
-        // Ask user if they want to cancel operations
-        var result = await _scopedContextService.GetRequiredService<IDialogService>().ShowMessageAsync(
-            "Operations in Progress",
-            "There are operations in progress. Do you want to cancel them and navigate away?",
-            MessageBoxButtons.YesNo);
-
-        if (result == MessageBoxResult.No)
-            return false;
-
-        // Cancel commands
-        viewModel.CancelAllCommands();
-        return true;
     }
 
     /// <summary>
@@ -244,13 +220,7 @@ public class NavigationService : INavigationService
         // Check if owner ViewModel can navigate away (if it has running commands)
         if (owner is IViewModel ownerVm && HasRunningCommands(ownerVm))
         {
-            bool canNavigate = await CanNavigateAwayFromAsync(ownerVm);
-
-            // Navigation was cancelled
-            if (!canNavigate)
-                return null;
-
-            // Notify owner it's being partially navigated from
+            ownerVm.CancelAllCommands();
             ownerVm.OnNavigatedFrom();
         }
 
@@ -422,17 +392,12 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common navigation logic for handling current ViewModel
     /// </summary>
-    private async Task<bool> HandleCurrentViewModelAsync(IViewModel? currentViewModel, bool backNavigation)
+    private bool HandleCurrentViewModel(IViewModel? currentViewModel, bool backNavigation)
     {
         if (currentViewModel == null)
             return true;
 
-        bool canNavigate = await CanNavigateAwayFromAsync(currentViewModel);
-
-        if (!canNavigate)
-            return false;
-
-        // Notify current ViewModel it's being navigated from
+        currentViewModel.CancelAllCommands();
         currentViewModel.OnNavigatedFrom();
 
         // Perform partial cleanup
@@ -533,7 +498,7 @@ public class NavigationService : INavigationService
                 viewModel.Parameter = parameter;
 
             // Handle current ViewModel
-            if (!await HandleCurrentViewModelAsync(currentViewModel, backNavigation))
+            if (!HandleCurrentViewModel(currentViewModel, backNavigation))
                 return;
 
             if (viewModel is not null)
@@ -586,7 +551,7 @@ public class NavigationService : INavigationService
                 viewModel.Parameter = parameter;
 
             // Handle current ViewModel
-            if (!await HandleCurrentViewModelAsync(currentViewModel, backNavigation))
+            if (!HandleCurrentViewModel(currentViewModel, backNavigation))
                 return;
 
             // Set ViewModel before setting frame content
