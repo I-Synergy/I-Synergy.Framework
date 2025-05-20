@@ -354,7 +354,7 @@ public class MessengerRegisterUnregisterTest
     public void TestRegisterSimpleTypes()
     {
         const string testContentString = "abcd";
-        DateTime testContentDateTime = DateTime.Now;
+        var testContentDateTime = new DateTime(2025, 5, 20, 13, 34, 1);
         const int testContentInt = 42;
 
         MessageService.Reset();
