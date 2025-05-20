@@ -51,7 +51,7 @@
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.3.0" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.78.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.79.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.72.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
