@@ -151,20 +151,18 @@ public static class StringExtensions
             }
         }
 
+        // the for-loop has found at least one numeric char at the end
         if (codePos < self.Length)
-        {
-            // the for-loop has found at least one numeric char at the end
             numberString = self.Substring(codePos, self.Length - codePos);
-        }
 
+        // no number was found at the and so we simply add the summand as string
         if (numberString.Length == 0)
-        {
-            // no number was found at the and so we simply add the summand as string
             return self + summand;
-        }
 
         var num = long.Parse(numberString) + summand;
-        return self.Substring(0, codePos) + num.ToString();
+
+        // Format the number with leading zeros to maintain the original format
+        return self.Substring(0, codePos) + num.ToString().PadLeft(numberString.Length, '0');
     }
 
     /// <summary>

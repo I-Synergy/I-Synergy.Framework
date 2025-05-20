@@ -39,6 +39,16 @@ public class StringExtensionsTests
     }
 
     /// <summary>
+    /// Defines the test method IncreaseStringAlphaNumericSummand1.
+    /// </summary>
+    [TestMethod]
+    public void IncreaseStringAlphaNumericSummand2()
+    {
+        string result = "A01".IncreaseString2Long(1);
+        Assert.AreEqual("A02", result);
+    }
+
+    /// <summary>
     /// Defines the test method IncreaseStringAlphaNumericSummand8.
     /// </summary>
     [TestMethod]
