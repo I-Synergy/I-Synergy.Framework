@@ -12,15 +12,11 @@ namespace ISynergy.Framework.Storage.Azure.Tests;
 public class StorageServiceTests
 {
     private readonly Guid tenantId = Guid.Parse("52F702C1-7304-466C-9DE6-B02FC14B4C3E");
-
+    private readonly string connectionString = "https://aka.ms/bloburl";
     /// <summary>
     /// The tenant service
     /// </summary>
     private readonly ITenantService _tenantService;
-    /// <summary>
-    /// The storage BLOB options
-    /// </summary>
-    private readonly AzureBlobOptions _storageBlobOptions;
     /// <summary>
     /// The storage service
     /// </summary>
@@ -35,12 +31,10 @@ public class StorageServiceTests
         _tenantService = tenantMock.Object;
         _tenantService.SetTenant(tenantId, "TestUser");
 
-        Mock<AzureBlobOptions> configMock = new();
-        _storageBlobOptions = configMock.Object;
-        _storageBlobOptions.ConnectionString = "https://aka.ms/bloburl";
-
         Mock<IStorageService> storageMock = new();
+
         storageMock.Setup(x => x.UploadFileAsync(
+                connectionString,
                 tenantId.ToString(),
                 It.IsAny<byte[]>(),
                 It.IsAny<string>(),
@@ -51,6 +45,7 @@ public class StorageServiceTests
             .ReturnsAsync(new Uri(@"https://aka.ms/bloburl"));
 
         storageMock.Setup(x => x.UpdateFileAsync(
+                connectionString,
                 tenantId.ToString(),
                 It.IsAny<byte[]>(),
                 It.IsAny<string>(),
@@ -60,6 +55,7 @@ public class StorageServiceTests
             .ReturnsAsync(new Uri(@"https://aka.ms/bloburl"));
 
         storageMock.Setup(x => x.DownloadFileAsync(
+                connectionString,
                 tenantId.ToString(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -67,6 +63,7 @@ public class StorageServiceTests
             .ReturnsAsync(Array.Empty<byte>());
 
         storageMock.Setup(x => x.RemoveFileAsync(
+                connectionString,
                 tenantId.ToString(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -82,7 +79,7 @@ public class StorageServiceTests
     [TestMethod]
     public async Task UploadBlobAsyncTest()
     {
-        Uri uri = await _storageService.UploadFileAsync(tenantId.ToString(), Array.Empty<byte>(), "contentType", "filename", "folder");
+        Uri uri = await _storageService.UploadFileAsync(connectionString, tenantId.ToString(), Array.Empty<byte>(), "contentType", "filename", "folder");
         Assert.IsNotNull(uri);
     }
 
@@ -92,7 +89,7 @@ public class StorageServiceTests
     [TestMethod]
     public async Task DownloadFileAsyncTest()
     {
-        byte[] bytes = await _storageService.DownloadFileAsync(tenantId.ToString(), "filename", "folder");
+        byte[] bytes = await _storageService.DownloadFileAsync(connectionString, tenantId.ToString(), "filename", "folder");
         Assert.IsNotNull(bytes);
     }
 
@@ -102,7 +99,7 @@ public class StorageServiceTests
     [TestMethod]
     public async Task UpdateBlobAsyncTest()
     {
-        Uri uri = await _storageService.UpdateFileAsync(tenantId.ToString(), Array.Empty<byte>(), "contentType", "filename", "folder");
+        Uri uri = await _storageService.UpdateFileAsync(connectionString, tenantId.ToString(), Array.Empty<byte>(), "contentType", "filename", "folder");
         Assert.IsNotNull(uri);
     }
 
@@ -112,7 +109,7 @@ public class StorageServiceTests
     [TestMethod]
     public async Task RemoveFileAsyncTest()
     {
-        bool result = await _storageService.RemoveFileAsync(tenantId.ToString(), "filename", "folder");
+        bool result = await _storageService.RemoveFileAsync(connectionString, tenantId.ToString(), "filename", "folder");
         Assert.IsTrue(result);
     }
 }

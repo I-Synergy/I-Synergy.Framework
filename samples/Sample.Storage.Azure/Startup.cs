@@ -8,6 +8,7 @@ namespace Sample.Storage.Azure;
 /// <param name="storageService">The Storage service.</param>
 public class Startup(IStorageService storageService)
 {
+    private readonly string _connectionString = "https://aka.ms/bloburl";
     private readonly string _container = Guid.Parse("ECEB4346-97AD-4919-9248-3EA1012FCA47").ToString();
 
     /// <summary>
@@ -57,22 +58,22 @@ public class Startup(IStorageService storageService)
         // Open the file and upload its data
         byte[] file = await File.ReadAllBytesAsync(path);
 
-        return await storageService.UploadFileAsync(_container, file, "text/plain", fileName, "");
+        return await storageService.UploadFileAsync(_connectionString, _container, file, "text/plain", fileName, "");
     }
 
     public Task<byte[]> DownloadAsync(string fileName)
     {
-        return storageService.DownloadFileAsync(_container, fileName, "");
+        return storageService.DownloadFileAsync(_connectionString, _container, fileName, "");
     }
 
     public Task<Uri> UpdateAsync(byte[] fileBytes, string fileName)
     {
-        return storageService.UpdateFileAsync(_container, fileBytes, "text/plain", fileName, "");
+        return storageService.UpdateFileAsync(_connectionString, _container, fileBytes, "text/plain", fileName, "");
     }
 
     public Task<bool> RemoveAsync(string fileName)
     {
-        return storageService.RemoveFileAsync(_container, fileName, "");
+        return storageService.RemoveFileAsync(_connectionString, _container, fileName, "");
     }
 
     /// <summary>

@@ -1,7 +1,5 @@
-﻿using ISynergy.Framework.Storage.Abstractions.Options;
-using ISynergy.Framework.Storage.Abstractions.Services;
+﻿using ISynergy.Framework.Storage.Abstractions.Services;
 using ISynergy.Framework.Storage.Azure.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -16,12 +14,10 @@ public static class ServiceCollectionExtensions
     /// Adds Azure storage integration.
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="configuration"></param>
     /// <returns></returns>
-    public static IServiceCollection AddStorageAzureIntegration<TStorageOptions>(this IServiceCollection services, IConfiguration configuration)
-        where TStorageOptions : class, IStorageOptions, new()
+    public static IServiceCollection AddAzureStorageIntegration(this IServiceCollection services)
     {
-        services.TryAddSingleton<IStorageService, StorageService<TStorageOptions>>();
+        services.TryAddSingleton<IStorageService, AzureStorageService>();
         return services;
     }
 }

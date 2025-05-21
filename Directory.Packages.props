@@ -52,7 +52,7 @@
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.3.0" />
     <PackageVersion Include="Microsoft.Graph" Version="5.79.0" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.72.0" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.72.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
@@ -76,23 +76,23 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.12.0-beta.1" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry" Version="5.7.0" />
+    <PackageVersion Include="Sentry" Version="5.8.0" />
     <PackageVersion Include="Sentry.AspNetCore" Version="5.5.1" />
     <PackageVersion Include="Sentry.Extensions.Logging" Version="5.5.1" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="5.7.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="5.8.0" />
     <PackageVersion Include="Sentry.Profiling" Version="5.5.1" />
     <PackageVersion Include="SkiaSharp" Version="2.88.9" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="29.2.4" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="29.2.4" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="29.2.4" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="29.2.4" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="29.2.4" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="29.2.4" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="29.2.5" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="29.2.5" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="29.2.5" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="29.2.5" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="29.2.5" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="29.2.5" />
     <PackageVersion Include="Syncfusion.Maui.Core" Version="28.2.11" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="29.2.4" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="29.2.4" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="29.2.4" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="29.2.4" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="29.2.5" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="29.2.5" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="29.2.5" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="29.2.5" />
     <PackageVersion Include="System.Diagnostics.DiagnosticSource" Version="9.0.5" />
     <PackageVersion Include="System.Drawing.Common" Version="9.0.5" />
     <PackageVersion Include="System.Formats.Asn1" Version="9.0.5" />
