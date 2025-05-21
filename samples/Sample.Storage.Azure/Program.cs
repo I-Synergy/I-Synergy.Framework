@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Sample.Storage.Azure.Options;
 
 namespace Sample.Storage.Azure;
 
@@ -23,16 +22,11 @@ internal class Program
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true)
                 .Build();
 
-            AzureBlobOptions options = new()
-            {
-                ConnectionString = config["AzureBlobOptions:ConnectionString"]!
-            };
-
             IServiceCollection services = new ServiceCollection()
                 .AddLogging()
                 .AddOptions();
 
-            services.AddStorageAzureIntegration<AzureBlobOptions>(config);
+            services.AddAzureStorageIntegration();
             services.TryAddScoped<Startup>();
 
             var serviceProvider = services.BuildServiceProvider();

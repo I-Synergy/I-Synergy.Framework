@@ -2,10 +2,9 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Storage.Abstractions.Options;
 using ISynergy.Framework.Storage.Abstractions.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace ISynergy.Framework.Storage.Azure.Services;
 
@@ -13,31 +12,29 @@ namespace ISynergy.Framework.Storage.Azure.Services;
 /// Class StorageService.
 /// Implements the <see cref="IStorageService" />
 /// </summary>
-/// <typeparam name="TStorageOptions">The type of the t azure BLOB options.</typeparam>
 /// <seealso cref="IStorageService" />
-internal class StorageService<TStorageOptions> : IStorageService
-    where TStorageOptions : class, IStorageOptions, new()
+internal class AzureStorageService : IStorageService
 {
-    private readonly ILogger _logger;
-    private readonly TStorageOptions _storageOptions;
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<AzureStorageService> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}"/> class.
+    /// Initializes a new instance of the <see cref="AzureStorageService"/> class.
     /// </summary>
-    /// <param name="storageOptions">The azure BLOB options.</param>
+    /// <param name="configuration"></param>
     /// <param name="logger"></param>
-    public StorageService(
-        IOptions<TStorageOptions> storageOptions,
-        ILogger<StorageService<TStorageOptions>> logger)
+    public AzureStorageService(
+        IConfiguration configuration,
+        ILogger<AzureStorageService> logger)
     {
-        Argument.IsNotNull(storageOptions.Value);
-        _storageOptions = storageOptions.Value;
+        _configuration = configuration;
         _logger = logger;
     }
 
     /// <summary>
     /// upload file as an asynchronous operation.
     /// </summary>
+    /// <param name="connectionStringName"></param>
     /// <param name="containerName"></param>
     /// <param name="fileBytes">The file stream.</param>
     /// <param name="contentType">Type of the content.</param>
@@ -48,11 +45,14 @@ internal class StorageService<TStorageOptions> : IStorageService
     /// <returns>Uri.</returns>
     /// <exception cref="IOException">CloudBlob not found.</exception>
     /// <exception cref="IOException">CloudBlob not found.</exception>
-    public async Task<Uri> UploadFileAsync(string containerName, byte[] fileBytes, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
+    public async Task<Uri> UploadFileAsync(string connectionStringName, string containerName, byte[] fileBytes, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
     {
+        Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
+        var connectionString = _configuration.GetConnectionString(connectionStringName);
+        var blobContainer = new BlobContainerClient(connectionString, containerName);
+
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
@@ -76,16 +76,19 @@ internal class StorageService<TStorageOptions> : IStorageService
     /// <summary>
     /// download file as an asynchronous operation.
     /// </summary>
+    /// <param name="connectionStringName"></param>
     /// <param name="containerName"></param>
     /// <param name="filename">The filename.</param>
     /// <param name="folder">The folder.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>MemoryStream.</returns>
-    public async Task<byte[]> DownloadFileAsync(string containerName, string filename, string folder, CancellationToken cancellationToken = default)
+    public async Task<byte[]> DownloadFileAsync(string connectionStringName, string containerName, string filename, string folder, CancellationToken cancellationToken = default)
     {
+        Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
+        var connectionString = _configuration.GetConnectionString(connectionStringName);
+        var blobContainer = new BlobContainerClient(connectionString, containerName);
 
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
         var stream = new MemoryStream();
@@ -105,6 +108,7 @@ internal class StorageService<TStorageOptions> : IStorageService
     /// <summary>
     /// update file as an asynchronous operation.
     /// </summary>
+    /// <param name="connectionStringName"></param>
     /// <param name="containerName"></param>
     /// <param name="fileBytes">The file stream.</param>
     /// <param name="contentType">Type of the content.</param>
@@ -114,11 +118,14 @@ internal class StorageService<TStorageOptions> : IStorageService
     /// <returns>Uri.</returns>
     /// <exception cref="IOException">CloudBlob not found.</exception>
     /// <exception cref="IOException">CloudBlob not found.</exception>
-    public async Task<Uri> UpdateFileAsync(string containerName, byte[] fileBytes, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
+    public async Task<Uri> UpdateFileAsync(string connectionStringName, string containerName, byte[] fileBytes, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
     {
+        Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
+        var connectionString = _configuration.GetConnectionString(connectionStringName);
+        var blobContainer = new BlobContainerClient(connectionString, containerName);
+
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
@@ -145,16 +152,20 @@ internal class StorageService<TStorageOptions> : IStorageService
     /// <summary>
     /// remove file as an asynchronous operation.
     /// </summary>
+    /// <param name="connectionStringName"></param>
     /// <param name="containerName"></param>
     /// <param name="filename">The filename.</param>
     /// <param name="folder">The folder.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public async Task<bool> RemoveFileAsync(string containerName, string filename, string folder, CancellationToken cancellationToken = default)
+    public async Task<bool> RemoveFileAsync(string connectionStringName, string containerName, string filename, string folder, CancellationToken cancellationToken = default)
     {
+        Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
+        var connectionString = _configuration.GetConnectionString(connectionStringName);
+        var blobContainer = new BlobContainerClient(connectionString, containerName);
+
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
