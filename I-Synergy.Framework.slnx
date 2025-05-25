@@ -1,0 +1,128 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="arm64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Documents/" />
+  <Folder Name="/Documents/Diagrams/">
+    <File Path="docs/diagrams/codemap.dgml" />
+  </Folder>
+  <Folder Name="/Performance/">
+    <Project Path="performance/ISynergy.Framework.AspNetCore.Performance/ISynergy.Framework.AspNetCore.Performance.csproj" />
+    <Project Path="performance/ISynergy.Framework.Core.Performance/ISynergy.Framework.Core.Performance.csproj" />
+    <Project Path="performance/ISynergy.Framework.MessageBus.Performance/ISynergy.Framework.MessageBus.Performance.csproj" />
+  </Folder>
+  <Folder Name="/Projects/">
+    <Project Path="src/ISynergy.Framework.AspNetCore.Authentication/ISynergy.Framework.AspNetCore.Authentication.csproj" />
+    <Project Path="src/ISynergy.Framework.AspNetCore.Globalization/ISynergy.Framework.AspNetCore.Globalization.csproj" />
+    <Project Path="src/ISynergy.Framework.AspNetCore.Monitoring/ISynergy.Framework.AspNetCore.Monitoring.csproj" />
+    <Project Path="src/ISynergy.Framework.AspNetCore.MultiTenancy/ISynergy.Framework.AspNetCore.MultiTenancy.csproj" />
+    <Project Path="src/ISynergy.Framework.AspNetCore/ISynergy.Framework.AspNetCore.csproj" />
+    <Project Path="src/ISynergy.Framework.Automations/ISynergy.Framework.Automations.csproj" />
+    <Project Path="src/ISynergy.Framework.Core/ISynergy.Framework.Core.csproj" />
+    <Project Path="src/ISynergy.Framework.Documents.Syncfusion/ISynergy.Framework.Documents.Syncfusion.csproj" />
+    <Project Path="src/ISynergy.Framework.Documents/ISynergy.Framework.Documents.csproj" />
+    <Project Path="src/ISynergy.Framework.EntityFramework/ISynergy.Framework.EntityFramework.csproj" />
+    <Project Path="src/ISynergy.Framework.Financial/ISynergy.Framework.Financial.csproj" />
+    <Project Path="src/ISynergy.Framework.Geography/ISynergy.Framework.Geography.csproj" />
+    <Project Path="src/ISynergy.Framework.IO/ISynergy.Framework.IO.csproj" />
+    <Project Path="src/ISynergy.Framework.Mail.Microsoft365/ISynergy.Framework.Mail.Microsoft365.csproj" />
+    <Project Path="src/ISynergy.Framework.Mail.SendGrid/ISynergy.Framework.Mail.SendGrid.csproj" />
+    <Project Path="src/ISynergy.Framework.Mail/ISynergy.Framework.Mail.csproj" />
+    <Project Path="src/ISynergy.Framework.Mathematics/ISynergy.Framework.Mathematics.csproj" />
+    <Project Path="src/ISynergy.Framework.MessageBus.Azure/ISynergy.Framework.MessageBus.Azure.csproj" />
+    <Project Path="src/ISynergy.Framework.MessageBus/ISynergy.Framework.MessageBus.csproj" />
+    <Project Path="src/ISynergy.Framework.Monitoring.Client/ISynergy.Framework.Monitoring.Client.csproj" />
+    <Project Path="src/ISynergy.Framework.Monitoring/ISynergy.Framework.Monitoring.csproj" />
+    <Project Path="src/ISynergy.Framework.Mvvm/ISynergy.Framework.Mvvm.csproj" />
+    <Project Path="src/ISynergy.Framework.OpenTelemetry.ApplicationInsights/ISynergy.Framework.OpenTelemetry.ApplicationInsights.csproj" />
+    <Project Path="src/ISynergy.Framework.OpenTelemetry.Sentry/ISynergy.Framework.OpenTelemetry.Sentry.csproj" />
+    <Project Path="src/ISynergy.Framework.OpenTelemetry/ISynergy.Framework.OpenTelemetry.csproj" />
+    <Project Path="src/ISynergy.Framework.Physics/ISynergy.Framework.Physics.csproj" />
+    <Project Path="src/ISynergy.Framework.Printer.Label.Dymo/ISynergy.Framework.Printer.Label.Dymo.csproj" />
+    <Project Path="src/ISynergy.Framework.Printer.Label/ISynergy.Framework.Printer.Label.csproj" />
+    <Project Path="src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj" />
+    <Project Path="src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj" />
+    <Project Path="src/ISynergy.Framework.Synchronization/ISynergy.Framework.Synchronization.csproj" />
+    <Project Path="src/ISynergy.Framework.UI.WinUI/ISynergy.Framework.UI.WinUI.csproj" />
+    <Project Path="src/ISynergy.Framework.UI.WPF/ISynergy.Framework.UI.WPF.csproj" />
+    <Project Path="src/ISynergy.Framework.UI/ISynergy.Framework.UI.csproj" />
+  </Folder>
+  <Folder Name="/Samples/" />
+  <Folder Name="/Samples/Applications/">
+    <Project Path="samples/Sample.Shared/Sample.Shared.csproj" />
+    <Project Path="samples/Sample.UI.Shared/Sample.UI.Shared.shproj" />
+    <Project Path="samples/Sample.WinUI/Sample.WinUI.csproj">
+      <Platform Solution="*|Any CPU" Project="x64" />
+      <Platform Solution="*|arm64" Project="arm64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Deploy />
+    </Project>
+    <Project Path="samples/Sample.WPF/Sample.WPF.csproj" />
+  </Folder>
+  <Folder Name="/Samples/Services/" />
+  <Folder Name="/Samples/Services/AspNetCore/">
+    <Project Path="samples/Sample.Api/Sample.Api.csproj" />
+    <Project Path="samples/Sample.Automation/Sample.Automation.csproj" />
+    <Project Path="samples/Sample.Synchronization/Sample.Synchronization.csproj" />
+  </Folder>
+  <Folder Name="/Samples/Services/Azure/">
+    <Project Path="samples/Sample.Storage.Azure/Sample.Storage.Azure.csproj" />
+  </Folder>
+  <Folder Name="/Samples/Services/MessageBus/">
+    <Project Path="samples/Sample.MessageBus.Publisher/Sample.MessageBus.Publisher.csproj" />
+    <Project Path="samples/Sample.MessageBus.Subscriber/Sample.MessageBus.Subscriber.csproj" />
+  </Folder>
+  <Folder Name="/Samples/Services/Shared/">
+    <Project Path="samples/Sample.MessageBus.Shared/Sample.MessageBus.Shared.csproj" />
+  </Folder>
+  <Folder Name="/Samples/Services/SignalR/">
+    <Project Path="samples/Sample.Monitor.SignalR/Sample.Monitor.SignalR.csproj" />
+  </Folder>
+  <Folder Name="/Samples/Services/Syncfusion/">
+    <Project Path="samples/Sample.Syncfusion/Sample.Syncfusion.csproj" />
+  </Folder>
+  <Folder Name="/Samples/Tools/">
+    <Project Path="tools/NugetUnlister/NugetUnlister.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="azure-pipelines.yml" />
+    <File Path="codecoverage.runsettings" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="docfx.json" />
+    <File Path="global.json" />
+    <File Path="icon.png" />
+    <File Path="license.md" />
+    <File Path="nuget.config" />
+    <File Path="README.md" />
+    <File Path="toc.yml" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/ISynergy.Framework.AspNetCore.Authentication.Tests/ISynergy.Framework.AspNetCore.Authentication.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.AspNetCore.Globalization.Tests/ISynergy.Framework.AspNetCore.Globalization.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.AspNetCore.Monitoring.Tests/ISynergy.Framework.AspNetCore.Monitoring.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.AspNetCore.Tests/ISynergy.Framework.AspNetCore.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Automations.Tests/ISynergy.Framework.Automations.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Core.Tests/ISynergy.Framework.Core.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.EntityFramework.Tests/ISynergy.Framework.EntityFramework.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Financial.Tests/ISynergy.Framework.Financial.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Geography.Tests/ISynergy.Framework.Geography.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.IO.Tests/ISynergy.Framework.IO.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Mail.Microsoft365.Tests/ISynergy.Framework.Mail.Microsoft365.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Mathematics.Tests/ISynergy.Framework.Mathematics.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.MessageBus.Tests/ISynergy.Framework.MessageBus.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Mvvm.Tests/ISynergy.Framework.Mvvm.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.OpenTelemetry.Tests/ISynergy.Framework.OpenTelemetry.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Physics.Tests/ISynergy.Framework.Physics.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Storage.Azure.Tests/ISynergy.Framework.Storage.Azure.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Storage.Tests/ISynergy.Framework.Storage.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.UI.WinUI.Tests/ISynergy.Framework.UI.WinUI.Tests.csproj" />
+  </Folder>
+</Solution>
