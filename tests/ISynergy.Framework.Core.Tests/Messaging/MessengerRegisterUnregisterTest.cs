@@ -7,47 +7,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests;
 [TestClass]
 public class MessengerRegisterUnregisterTest
 {
-    public DateTime ReceivedContentDateTime1
-    {
-        get;
-        private set;
-    }
-
-    public DateTime ReceivedContentDateTime2
-    {
-        get;
-        private set;
-    }
-
-    public Exception? ReceivedContentException
-    {
-        get;
-        private set;
-    }
-
-    public int ReceivedContentInt
-    {
-        get;
-        private set;
-    }
-
-    public string? ReceivedContentStringA1
-    {
-        get;
-        private set;
-    }
-
-    public string? ReceivedContentStringA2
-    {
-        get;
-        private set;
-    }
-
-    public string? ReceivedContentStringB
-    {
-        get;
-        private set;
-    }
+    public DateTime ReceivedContentDateTime1 { get; set; }
+    public DateTime ReceivedContentDateTime2 { get; set; }
+    public Exception? ReceivedContentException { get; set; }
+    public int ReceivedContentInt { get; set; }
+    public string? ReceivedContentStringA1 { get; set; }
+    public string? ReceivedContentStringA2 { get; set; }
+    public string? ReceivedContentStringB { get; set; }
 
     [TestMethod]
     public void TestRegisterForGenericMessageBase()
