@@ -14,7 +14,7 @@ namespace ISynergy.Framework.UI.Services;
 public class DialogService : IDialogService
 {
     private readonly IScopedContextService _scopedContextService;
-    private readonly ILogger _logger;
+    private readonly ILogger<DialogService> _logger;
 
     private Window? _activeDialog = null;
     private readonly SemaphoreSlim _dialogSemaphore = new SemaphoreSlim(1, 1);

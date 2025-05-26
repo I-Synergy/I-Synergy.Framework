@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Core.Validation;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Commands.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System.Runtime.CompilerServices;
@@ -174,6 +176,7 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
         }
 
         CancellationTokenSource? linkedCts = null;
+        bool hasStarted = false;
 
         try
         {
@@ -194,7 +197,6 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                     // Create a new cancellation token source for this execution
                     _cancellationTokenSource = new CancellationTokenSource();
 
-                    // FIXED: Store the linked token source in a field to prevent premature disposal
                     linkedCts = CreateTimeoutTokenSource();
 
                     // Add to tracking collection for cleanup
@@ -205,6 +207,8 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                 executionTask = _cancelableExecute!(linkedCts.Token);
             }
 
+            // Setting this flag before ExecutionTask to ensure we reset state even if property setter throws
+            hasStarted = true;
             ExecutionTask = executionTask;
 
             try
@@ -222,23 +226,58 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
             }
             catch (TimeoutException ex)
             {
-                // Use the centralized error handler for timeout exceptions
-                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
-                    CommandErrorHandler.HandleCommandError(ex, ErrorHandlingStrategy);
-                else
+                // Only handle exceptions if not configured to flow them to the task scheduler
+                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
+                {
+                    var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+
+                    if (ex.InnerException is not null)
+                        await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                    else
+                        await exceptionHandlerService.HandleExceptionAsync(ex);
+
                     System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
+                }
+                else
+                {
+                    // Re-throw if configured to flow exceptions
+                    System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
+                    throw;
+                }
             }
             catch (Exception ex)
             {
-                // Always rethrow other exceptions
-                System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
-                throw;
+                // Only handle exceptions if not configured to flow them to the task scheduler
+                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
+                {
+                    var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+
+                    if (ex.InnerException is not null)
+                        await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                    else
+                        await exceptionHandlerService.HandleExceptionAsync(ex);
+
+                    System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
+                }
+                else
+                {
+                    // Re-throw if configured to flow exceptions
+                    System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
+                    throw;
+                }
             }
         }
         finally
         {
-            // Clear the execution task reference
-            ExecutionTask = null;
+            // Always ensure we reset the execution state, especially after exceptions
+            lock (_syncLock)
+            {
+                // Only clear ExecutionTask if we set it in the first place
+                if (hasStarted)
+                {
+                    ExecutionTask = null;
+                }
+            }
 
             // Update CanExecute state if needed
             if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)

@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System.Collections.Concurrent;
@@ -561,33 +563,6 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     public abstract Task ExecuteAsync(object? parameter);
 
     /// <summary>
-    /// Centralized error handling for command execution
-    /// </summary>
-    internal static class CommandErrorHandler
-    {
-        public static void HandleCommandError(Exception ex, ErrorHandlingStrategy strategy)
-        {
-            // Log the exception
-            System.Diagnostics.Debug.WriteLine($"Command execution error: {ex.Message}");
-
-            // For timeout and cancellation exceptions, follow the strategy
-            if (ex is TimeoutException || ex is OperationCanceledException)
-            {
-                if (strategy == ErrorHandlingStrategy.ReThrow)
-                {
-                    throw ex;
-                }
-                // Otherwise swallow these specific exceptions
-            }
-            else
-            {
-                // For all other exceptions, always rethrow regardless of strategy
-                throw ex;
-            }
-        }
-    }
-
-    /// <summary>
     /// Awaits a task and handles exceptions.
     /// </summary>
     /// <param name="executionTask">The task to await.</param>
@@ -595,20 +570,16 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     {
         try
         {
-            await executionTask.ConfigureAwait(false);
+            await executionTask;
         }
-        catch (OperationCanceledException)
+        catch (Exception ex)
         {
-            // Silently handle cancellations
-            System.Diagnostics.Debug.WriteLine("Command execution was canceled.");
-        }
-        catch (TimeoutException ex)
-        {
-            CommandErrorHandler.HandleCommandError(ex, ErrorHandlingStrategy);
-        }
-        catch
-        {
-            throw;
+            var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+
+            if (ex.InnerException is not null)
+                await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+            else
+                await exceptionHandlerService.HandleExceptionAsync(ex);
         }
     }
 

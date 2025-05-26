@@ -15,7 +15,7 @@ public class ExceptionHandlerService : IExceptionHandlerService
 {
     private readonly IBusyService _busyService;
     private readonly IDialogService _dialogService;
-    private readonly ILogger _logger;
+    private readonly ILogger<ExceptionHandlerService> _logger;
     private readonly Queue<Exception> _startupExceptions = new Queue<Exception>();
 
     private int _lastErrorMessage = 0;
@@ -89,7 +89,15 @@ public class ExceptionHandlerService : IExceptionHandlerService
         }
 
         // Check for duplicate error messages
-        if (exception.HResult.Equals(_lastErrorMessage) && exception.Message == exception.Message)
+        var isDuplicateException = exception.HResult.Equals(_lastErrorMessage) && exception.Message == exception.Message;
+
+        // Skip duplicate checks for NotImplementedException
+        if (isDuplicateException && !(
+            exception is NotImplementedException ||
+            exception is UnauthorizedAccessException ||
+            exception is IOException ||
+            exception is ArgumentException ||
+            exception is ArgumentNullException))
             return;
 
         // Ignore the exception if it is a TaskCanceledException and the cancellation token is requested
