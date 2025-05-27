@@ -22,6 +22,7 @@
     <Project Path="src/ISynergy.Framework.AspNetCore/ISynergy.Framework.AspNetCore.csproj" />
     <Project Path="src/ISynergy.Framework.Automations/ISynergy.Framework.Automations.csproj" />
     <Project Path="src/ISynergy.Framework.Core/ISynergy.Framework.Core.csproj" />
+    <Project Path="src/ISynergy.Framework.CQRS/ISynergy.Framework.CQRS.csproj" Id="ccbdaf2c-33d4-4b98-97c7-354041fa6b02" />
     <Project Path="src/ISynergy.Framework.Documents.Syncfusion/ISynergy.Framework.Documents.Syncfusion.csproj" />
     <Project Path="src/ISynergy.Framework.Documents/ISynergy.Framework.Documents.csproj" />
     <Project Path="src/ISynergy.Framework.EntityFramework/ISynergy.Framework.EntityFramework.csproj" />
@@ -111,6 +112,7 @@
     <Project Path="tests/ISynergy.Framework.AspNetCore.Tests/ISynergy.Framework.AspNetCore.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Automations.Tests/ISynergy.Framework.Automations.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Core.Tests/ISynergy.Framework.Core.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.CQRS.Tests/ISynergy.Framework.CQRS.Tests.csproj" Id="b84f3f8e-a874-4f99-9d3e-8fb2f96c9b7a" />
     <Project Path="tests/ISynergy.Framework.EntityFramework.Tests/ISynergy.Framework.EntityFramework.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Financial.Tests/ISynergy.Framework.Financial.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Geography.Tests/ISynergy.Framework.Geography.Tests.csproj" />

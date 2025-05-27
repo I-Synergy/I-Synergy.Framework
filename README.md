@@ -22,6 +22,7 @@ ___
 | [I-Synergy.Framework.AspNetCore.MultiTenancy](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.MultiTenancy/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.MultiTenancy) |
 | [I-Synergy.Framework.Automations](https://www.nuget.org/packages/I-Synergy.Framework.Automations/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Automations) |
 | [I-Synergy.Framework.Core](https://www.nuget.org/packages/I-Synergy.Framework.Core/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Core) |
+| [I-Synergy.Framework.CQRS](https://www.nuget.org/packages/I-Synergy.Framework.CQRS/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.CQRS) |
 | [I-Synergy.Framework.Documents](https://www.nuget.org/packages/I-Synergy.Framework.Documents/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Documents) |
 | [I-Synergy.Framework.Documents.Syncfusion](https://www.nuget.org/packages/I-Synergy.Framework.Documents.Syncfusion/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Documents.Syncfusion) |
 | [I-Synergy.Framework.EntityFramework](https://www.nuget.org/packages/I-Synergy.Framework.EntityFramework/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EntityFramework) |
