@@ -1,23 +1,30 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls;
 
+[Bindable(true)]
 [Lifetime(Lifetimes.Scoped)]
 public class Window : ContentPage, IWindow
 {
-    public static readonly BindableProperty ViewModelProperty = BindableProperty.Create(nameof(ViewModel), typeof(IViewModel), typeof(Window), null);
+    private IViewModel? _viewModel;
 
-    public IViewModel ViewModel
+    /// <summary>
+    /// Gets or sets the viewmodel and data context for a window.
+    /// </summary>
+    /// <value>The data context.</value>
+    public IViewModel? ViewModel
     {
-        get => (IViewModel)GetValue(ViewModelProperty);
+        get => _viewModel;
         set
         {
-            SetValue(ViewModelProperty, value);
-            BindingContext = value;
+            _viewModel = value;
+            BindingContext = _viewModel;
         }
     }
+
 
     public Window()
     {

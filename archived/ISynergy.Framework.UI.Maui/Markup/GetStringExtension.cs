@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Services;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Markup;
@@ -34,7 +33,7 @@ public class GetStringExtension : IMarkupExtension<string>
     {
         if (!string.IsNullOrEmpty(Key))
         {
-            return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
+            return LanguageService.Default.GetString(Key);
         }
 
         return $"[{Key}]";

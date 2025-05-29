@@ -91,9 +91,9 @@ public static class ResourceUtility
     public static T? FindResource<T>(string resourceKey)
     {
         //Verify Current Application
-        if (Application.Current is not null)
+        if (Microsoft.Maui.Controls.Application.Current is not null)
             //Attempt to find resource
-            return Application.Current.Resources.FindResource<T>(resourceKey);
+            return Microsoft.Maui.Controls.Application.Current.Resources.FindResource<T>(resourceKey);
         else
             //If nothing found, return default
             return default;

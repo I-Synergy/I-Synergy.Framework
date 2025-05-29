@@ -46,7 +46,7 @@ public static partial class MauiWinUIApplicationExtensions
 
     private static void OnAppInstanceActivated(object? sender, AppActivationArguments e)
     {
-        ServiceLocator.Default.GetInstance<ILifecycleEventService>().OnAppInstanceActivated(sender, e);
+        ServiceLocator.Default.GetRequiredService<ILifecycleEventService>().OnAppInstanceActivated(sender, e);
 
         var window = (Microsoft.UI.Xaml.Window)Microsoft.Maui.Controls.Application.Current!.MainPage!.Window!.Handler!.PlatformView!;
 

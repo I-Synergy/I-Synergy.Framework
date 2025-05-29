@@ -49,55 +49,55 @@ public class ThemeService : IThemeService
     /// </summary>
     public void SetStyle()
     {
-        Application.AccentColor = Color.FromArgb(Style.Color);
+        Microsoft.Maui.Controls.Application.AccentColor = Color.FromArgb(Style.Color);
 
-        if (Application.Current is BaseApplication application)
+        if (Microsoft.Maui.Controls.Application.Current is Application application)
         {
             if (ResourceUtility.FindResource<Color>(Primary) is Color color)
-                Application.AccentColor = color;
+                Microsoft.Maui.Controls.Application.AccentColor = color;
 
             if (application.Resources.ContainsKey(Primary))
-                application.Resources[Primary] = Application.AccentColor;
+                application.Resources[Primary] = Microsoft.Maui.Controls.Application.AccentColor;
             else
-                application.Resources.Add(Primary, Application.AccentColor);
+                application.Resources.Add(Primary, Microsoft.Maui.Controls.Application.AccentColor);
 
             if (application.Resources.ContainsKey(Secondary))
-                application.Resources[Secondary] = Application.AccentColor.AddLuminosity(0.25f);
+                application.Resources[Secondary] = Microsoft.Maui.Controls.Application.AccentColor.AddLuminosity(0.25f);
             else
-                application.Resources.Add(Secondary, Application.AccentColor.AddLuminosity(0.25f));
+                application.Resources.Add(Secondary, Microsoft.Maui.Controls.Application.AccentColor.AddLuminosity(0.25f));
 
             if (application.Resources.ContainsKey(Tertiary))
-                application.Resources[Tertiary] = Application.AccentColor.AddLuminosity(-0.25f);
+                application.Resources[Tertiary] = Microsoft.Maui.Controls.Application.AccentColor.AddLuminosity(-0.25f);
             else
-                application.Resources.Add(Tertiary, Application.AccentColor.AddLuminosity(-0.25f));
+                application.Resources.Add(Tertiary, Microsoft.Maui.Controls.Application.AccentColor.AddLuminosity(-0.25f));
 
 #if ANDROID
             if (application.Resources.ContainsKey("colorPrimary"))
-                application.Resources["colorPrimary"] = Application.AccentColor;
+                application.Resources["colorPrimary"] = Microsoft.Maui.Controls.Application.AccentColor;
             else
-                application.Resources.Add("colorPrimary", Application.AccentColor);
+                application.Resources.Add("colorPrimary", Microsoft.Maui.Controls.Application.AccentColor);
 
             if (application.Resources.ContainsKey("colorAccent"))
-                application.Resources["colorAccent"] = Application.AccentColor;
+                application.Resources["colorAccent"] = Microsoft.Maui.Controls.Application.AccentColor;
             else
-                application.Resources.Add("colorAccent", Application.AccentColor);
+                application.Resources.Add("colorAccent", Microsoft.Maui.Controls.Application.AccentColor);
 
             if (application.Resources.ContainsKey("colorPrimaryDark"))
-                application.Resources["colorPrimaryDark"] = Application.AccentColor.AddLuminosity(-0.25f);
+                application.Resources["colorPrimaryDark"] = Microsoft.Maui.Controls.Application.AccentColor.AddLuminosity(-0.25f);
             else
-                application.Resources.Add("colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
+                application.Resources.Add("colorPrimaryDark", Microsoft.Maui.Controls.Application.AccentColor.AddLuminosity(-0.25f));
 #endif
 
 #if WINDOWS
             if (application.Resources.ContainsKey("SystemAccentColor"))
-                application.Resources["SystemAccentColor"] = Application.AccentColor;
+                application.Resources["SystemAccentColor"] = Microsoft.Maui.Controls.Application.AccentColor;
             else
-                application.Resources.Add("SystemAccentColor", Application.AccentColor);
+                application.Resources.Add("SystemAccentColor", Microsoft.Maui.Controls.Application.AccentColor);
 
             if (application.Resources.ContainsKey("SystemColorControlAccentColor"))
-                application.Resources["SystemColorControlAccentColor"] = Application.AccentColor;
+                application.Resources["SystemColorControlAccentColor"] = Microsoft.Maui.Controls.Application.AccentColor;
             else
-                application.Resources.Add("SystemColorControlAccentColor", Application.AccentColor);
+                application.Resources.Add("SystemColorControlAccentColor", Microsoft.Maui.Controls.Application.AccentColor);
 #endif
         }
 

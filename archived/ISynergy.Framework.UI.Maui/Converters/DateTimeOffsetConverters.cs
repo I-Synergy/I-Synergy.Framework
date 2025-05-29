@@ -274,7 +274,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
     {
         if (value is DateTimeOffset datetime)
         {
-            var context = ServiceLocator.Default.GetInstance<IContext>();
+            var context = ServiceLocator.Default.GetRequiredService<IContext>();
             var timeZone = context.TimeZone;
             var dt = TimeZoneInfo.ConvertTimeFromUtc(datetime.DateTime, timeZone);
 

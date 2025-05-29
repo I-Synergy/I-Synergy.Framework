@@ -1,29 +1,31 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using Application = Microsoft.Maui.Controls.Application;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.UI.Services;
 
 public class DialogService : IDialogService
 {
-    private readonly ILanguageService _languageService;
-    private readonly IContext _context;
+    private readonly IScopedContextService _scopedContextService;
+    private readonly ILogger<DialogService> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="languageService">The language service.</param>
+    /// <param name="scopedContextService"></param>
+    /// <param name="logger"></param>
     public DialogService(
-        IContext context,
-        ILanguageService languageService)
+        IScopedContextService scopedContextService,
+        ILogger<DialogService> logger)
     {
-        _context = context;
-        _languageService = languageService;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _logger.LogTrace($"DialogService instance created with ID: {Guid.NewGuid()}");
+
+        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
     }
 
     /// <summary>
@@ -33,7 +35,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "") =>
-        ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK);
+        ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
     /// Shows the error asynchronous.
@@ -42,7 +44,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
     /// Shows the information asynchronous.
@@ -51,7 +53,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButton.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleInfo"), MessageBoxButtons.OK);
 
     /// <summary>
     /// Shows the warning asynchronous.
@@ -60,7 +62,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButton.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleWarning"), MessageBoxButtons.OK);
 
     /// <summary>
     /// Shows the greeting asynchronous.
@@ -71,22 +73,22 @@ public class DialogService : IDialogService
     {
         if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
         {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
+            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Night"), name),
+                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButtons.OK);
         }
 
         if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
         {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
+            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Morning"), name),
+                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButtons.OK);
         }
         if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
         {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
+            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Afternoon"), name),
+                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButtons.OK);
         }
-        return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
-            _languageService.GetString("TitleWelcome"), MessageBoxButton.OK);
+        return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Evening"), name),
+            LanguageService.Default.GetString("TitleWelcome"), MessageBoxButtons.OK);
     }
 
     /// <summary>
@@ -95,32 +97,33 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
+    /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
+    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
     {
         switch (buttons)
         {
-            case MessageBoxButton.OKCancel:
-                if (await Application.Current.MainPage.DisplayAlert(
+            case MessageBoxButtons.OKCancel:
+                if (await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
                     title,
                     message,
-                    _languageService.GetString("Ok"),
-                    _languageService.GetString("Cancel")))
+                    LanguageService.Default.GetString("Ok"),
+                    LanguageService.Default.GetString("Cancel")))
                     return MessageBoxResult.OK;
                 return MessageBoxResult.Cancel;
-            case MessageBoxButton.YesNo:
-                if (await Application.Current.MainPage.DisplayAlert(
+            case MessageBoxButtons.YesNo:
+                if (await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
                     title,
                     message,
-                    _languageService.GetString("Yes"),
-                    _languageService.GetString("No")))
+                    LanguageService.Default.GetString("Yes"),
+                    LanguageService.Default.GetString("No")))
                     return MessageBoxResult.Yes;
                 return MessageBoxResult.No;
             default:
-                await Application.Current.MainPage.DisplayAlert(
+                await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
                     title,
                     message,
-                    _languageService.GetString("Ok"));
+                    LanguageService.Default.GetString("Ok"));
                 return MessageBoxResult.OK;
         }
     }
@@ -136,8 +139,8 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+        if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+            _scopedContextService.GetRequiredService(typeof(TWindow)) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -153,8 +156,8 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            _context.ScopedServices.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+        if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+            _scopedContextService.GetRequiredService(typeof(TWindow)) is Window dialog)
         {
             viewmodel.SetSelectedItem(e);
             await CreateDialogAsync(dialog, viewmodel);
@@ -170,7 +173,7 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
+        if (_scopedContextService.GetRequiredService(window.GetType()) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -183,7 +186,7 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
-        if (_context.ScopedServices.ServiceProvider.GetRequiredService(type) is Window dialog)
+        if (_scopedContextService.GetRequiredService(type) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -204,7 +207,7 @@ public class DialogService : IDialogService
             {
                 viewmodel.Closed -= ViewModelClosedHandler;
 
-                await Application.Current.MainPage.Navigation.PopModalAsync();
+                await Microsoft.Maui.Controls.Application.Current.MainPage.Navigation.PopModalAsync();
 
                 viewmodel.Dispose();
                 viewmodel = null;
@@ -217,7 +220,7 @@ public class DialogService : IDialogService
 
             await viewmodel.InitializeAsync();
 
-            await Application.Current.MainPage.Navigation.PushModalAsync(window, true);
+            await Microsoft.Maui.Controls.Application.Current.MainPage.Navigation.PushModalAsync(window, true);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
@@ -21,16 +20,13 @@ public class CurrencyConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var currencySymbol = "$";
+        if (!DesignMode.IsDesignModeEnabled)
+        {
+            if (decimal.TryParse(value.ToString(), out var amount))
+                return amount.ToCurrency();
+        }
 
-        if (decimal.TryParse(value.ToString(), out var amount))
-            return ServiceLocator.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount);
-
-        var info = culture.NumberFormat;
-        info.CurrencySymbol = $"{currencySymbol} ";
-        info.CurrencyNegativePattern = 1;
-
-        return string.Format(info, "{0:C2}", 0);
+        return 0m.ToCurrency();
     }
 
     /// <summary>
@@ -65,16 +61,13 @@ public class NegativeCurrencyConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var currencySymbol = "$";
+        if (!DesignMode.IsDesignModeEnabled)
+        {
+            if (decimal.TryParse(value.ToString(), out var amount))
+                return (amount * -1).ToCurrency();
+        }
 
-        if (decimal.TryParse(value.ToString(), out var amount))
-            return ServiceLocator.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount * -1);
-
-        var info = culture.NumberFormat;
-        info.CurrencySymbol = $"{currencySymbol} ";
-        info.CurrencyNegativePattern = 1;
-
-        return string.Format(info, "{0:C2}", 0);
+        return 0m.ToCurrency();
     }
 
     /// <summary>

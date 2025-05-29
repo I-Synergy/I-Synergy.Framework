@@ -22,7 +22,7 @@ public static class PreferencesExtensions
         string jsonValue = null;
 
         if (obj != null)
-            jsonValue = JsonSerializer.Serialize<T>(obj, DefaultJsonSerializers.Web());
+            jsonValue = JsonSerializer.Serialize<T>(obj, DefaultJsonSerializers.Web);
 
         preferences.Set<string>(key, jsonValue, sharedName);
     }
@@ -44,6 +44,6 @@ public static class PreferencesExtensions
         if (jsonValue == null)
             return defaultValue;
 
-        return JsonSerializer.Deserialize<T>(jsonValue, DefaultJsonSerializers.Web());
+        return JsonSerializer.Deserialize<T>(jsonValue, DefaultJsonSerializers.Web);
     }
 }
