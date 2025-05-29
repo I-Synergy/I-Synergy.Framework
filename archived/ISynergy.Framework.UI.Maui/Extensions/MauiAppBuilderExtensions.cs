@@ -1,107 +1,89 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using System.Reflection;
 using FileResult = ISynergy.Framework.Mvvm.Models.FileResult;
+
+#if WINDOWS
+using ISynergy.Framework.UI.Abstractions.Services;
+#endif
 
 namespace ISynergy.Framework.UI.Extensions;
 
 public static class MauiAppBuilderExtensions
 {
     /// <summary>
-    /// Returns an instance of the <see cref="MauiAppBuilder"/> and adds logging.
+    /// Returns an instance of the <see cref="IServiceCollection"/> and configures all windowsAppBuilder.
     /// </summary>
-    /// <param name="appBuilder"></param>
-    /// <param name="logging"></param>
-    /// <returns></returns>
-    public static MauiAppBuilder ConfigureLogging(this MauiAppBuilder appBuilder, Action<ILoggingBuilder, IConfiguration> logging)
-    {
-        appBuilder.Services.AddLogging();
-
-        // Register singleton action
-        appBuilder.Services.TryAddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
-        {
-            builder.AddDebug();
-            builder.SetMinimumLevel(LogLevel.Trace);
-        }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
-
-#if DEBUG
-        appBuilder.Logging.AddDebug();
-#endif
-
-        logging.Invoke(appBuilder.Logging, appBuilder.Configuration);
-
-        return appBuilder;
-    }
-
-    /// <summary>
-    /// Returns an instance of the <see cref="IServiceCollection"/> and configures all services.
-    /// </summary>
-    /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TExceptionHandler"></typeparam>
+    /// <typeparam name="TCommonServices"></typeparam>
+    /// <typeparam name="TAuthenticationService"></typeparam>
+    /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
-    /// <typeparam name="TLoadingView"></typeparam>
     /// <param name="appBuilder"></param>
+    /// <param name="infoService"></param>
     /// <param name="action"></param>
+    /// <param name="assembly"></param>
+    /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource, TLoadingView>(this MauiAppBuilder appBuilder, Action<MauiAppBuilder> action)
-    where TApplication : class, Microsoft.Maui.IApplication
-    where TContext : class, IContext
-    where TExceptionHandler : class, IExceptionHandlerService
-    where TResource : class
-    where TLoadingView : class, ILoadingView
+    public static MauiAppBuilder ConfigureServices<TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
+        this MauiAppBuilder appBuilder,
+        IInfoService infoService,
+        Action<MauiAppBuilder> action,
+        Assembly assembly,
+        Func<AssemblyName, bool> assemblyFilter)
+        where TContext : class, IContext
+        where TCommonServices : class, ICommonServices
+        where TSettingsService : class, ISettingsService
+        where TAuthenticationService : class, IAuthenticationService
+        where TResource : class
     {
         appBuilder.Services.AddOptions();
-        appBuilder.Services.AddPageResolver();
 
-        var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
-
-        appBuilder.Services.Configure<ConfigurationOptions>(appBuilder.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
-
-        var infoService = InfoService.Default;
-        infoService.LoadAssembly(mainAssembly);
+        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
+        appBuilder.Services.Configure<ApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ApplicationOptions)).BindWithReload);
 
         var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
         languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
 
-        appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
-        appBuilder.Services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
+        appBuilder.Services.TryAddSingleton<IInfoService>(s => infoService);
+        appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
         appBuilder.Services.TryAddSingleton<IMessageService>(s => MessageService.Default);
-        appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
-        appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
 
-        appBuilder.Services.TryAddSingleton<TContext>();
-        appBuilder.Services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
+        appBuilder.Services.TryAddScoped<TContext>();
+        appBuilder.Services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
 
-        appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandler>();
+        appBuilder.Services.TryAddScoped<ISettingsService, TSettingsService>();
+        appBuilder.Services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
+        appBuilder.Services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
+
+        appBuilder.Services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
+        appBuilder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
-        appBuilder.Services.TryAddSingleton<ILocalizationService, LocalizationService>();
-        appBuilder.Services.TryAddSingleton<IConverterService, ConverterService>();
-        appBuilder.Services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
         appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
         appBuilder.Services.TryAddSingleton<IDialogService, DialogService>();
-        appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
         appBuilder.Services.TryAddSingleton<IClipboardService, ClipboardService>();
-        appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();
         appBuilder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
+        appBuilder.Services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
+        appBuilder.Services.TryAddSingleton<ICommonServices, TCommonServices>();
 
-        appBuilder.RegisterAssemblies();
+#if WINDOWS
+        appBuilder.Services.TryAddSingleton<IUpdateService, UpdateService>();
+#endif
+
+        appBuilder.RegisterAssemblies(assembly, assemblyFilter);
 
         action.Invoke(appBuilder);
 
@@ -122,8 +104,6 @@ public static class MauiAppBuilderExtensions
                 fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
             });
 
-        ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
-
         return appBuilder;
     }
 
@@ -131,17 +111,41 @@ public static class MauiAppBuilderExtensions
     /// Registers the assemblies.
     /// </summary>
     /// <param name="appBuilder"></param>
-    private static void RegisterAssemblies(this MauiAppBuilder appBuilder)
+    /// <param name="assembly"></param>
+    /// <param name="assemblyFilter">The assembly filter.</param>
+    private static void RegisterAssemblies(this MauiAppBuilder appBuilder, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
-        var viewTypes = ReflectionExtensions.GetViewTypes();
-        var windowTypes = ReflectionExtensions.GetWindowTypes();
-        var viewModelTypes = ReflectionExtensions.GetViewModelTypes();
+        var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
+        var assemblies = new List<Assembly>();
 
-        appBuilder.Services.RegisterViewModels(viewModelTypes);
-        appBuilder.Services.RegisterViews(viewTypes);
-        appBuilder.Services.RegisterWindows(windowTypes);
+        if (assemblyFilter is not null)
+            foreach (var item in referencedAssemblies.Where(assemblyFilter).EnsureNotNull())
+                assemblies.Add(Assembly.Load(item));
 
-        appBuilder.Services.RegisterViewModelRoutes(viewModelTypes, viewTypes);
+        foreach (var item in referencedAssemblies.Where(x =>
+            x.Name!.StartsWith("ISynergy.Framework.UI") ||
+            x.Name!.StartsWith("ISynergy.Framework.Mvvm")).EnsureNotNull())
+            assemblies.Add(Assembly.Load(item));
+
+        appBuilder.Services.RegisterAssemblies(assemblies);
+    }
+
+    /// <summary>
+    /// Registers the assemblies.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="assemblies"></param>
+    private static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
+    {
+        var viewTypes = assemblies.ToViewTypes();
+        var windowTypes = assemblies.ToWindowTypes();
+        var viewModelTypes = assemblies.ToViewModelTypes();
+
+        services.RegisterViewModels(viewModelTypes);
+        services.RegisterViews(viewTypes);
+        services.RegisterWindows(windowTypes);
+
+        services.RegisterViewModelRoutes(viewModelTypes, viewTypes);
     }
 
     private static void RegisterViewModelRoutes(this IServiceCollection services, IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)

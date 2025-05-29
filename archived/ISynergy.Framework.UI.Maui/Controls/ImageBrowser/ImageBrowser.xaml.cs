@@ -60,7 +60,7 @@ public partial class ImageBrowser : ContentView
 
     private async void PasteButton_Clicked(object sender, EventArgs e)
     {
-        if (ServiceLocator.Default.GetInstance<IClipboardService>() is { } clipboardService &&
+        if (ServiceLocator.Default.GetRequiredService<IClipboardService>() is { } clipboardService &&
             await clipboardService.GetImageFromClipboardAsync() is { } imageResult)
         {
             FileBytes = imageResult.FileBytes;
@@ -78,7 +78,7 @@ public partial class ImageBrowser : ContentView
 
     private async void CameraButton_Clicked(object sender, EventArgs e)
     {
-        if (ServiceLocator.Default.GetInstance<ICameraService>() is { } cameraService)
+        if (ServiceLocator.Default.GetRequiredService<ICameraService>() is { } cameraService)
         {
             var result = await cameraService.TakePictureAsync();
 
@@ -89,13 +89,14 @@ public partial class ImageBrowser : ContentView
                 FileName = result.FileName;
                 DateTime = System.DateTime.Now;
             }
-        };
+        }
+        ;
     }
 
     private async void BrowseButton_Clicked(object sender, EventArgs e)
     {
-        if (ServiceLocator.Default.GetInstance<ILanguageService>() is { } languageService &&
-            ServiceLocator.Default.GetInstance<IFileService<FileResult>>() is { } fileService)
+        if (ServiceLocator.Default.GetRequiredService<ILanguageService>() is { } languageService &&
+            ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
         {
             var result = await fileService.BrowseFileAsync(FileTypeConstants.FileTypesImages);
 
@@ -106,6 +107,7 @@ public partial class ImageBrowser : ContentView
                 FileName = result[0].FileName;
                 DateTime = System.DateTime.Now;
             }
-        };
+        }
+        ;
     }
 }

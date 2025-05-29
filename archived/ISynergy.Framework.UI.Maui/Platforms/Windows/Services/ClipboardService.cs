@@ -1,6 +1,8 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Extensions;
 using Windows.ApplicationModel.DataTransfer;
 
 namespace ISynergy.Framework.UI.Services;
@@ -18,7 +20,11 @@ public class ClipboardService : IClipboardService
             var image = await imageStream.AsStreamForRead().ToByteArrayAsync();
 
             if (imageStream.ContentType == "image/bmp")
-                return new ImageResult(image.ToImageBytes(100, System.Drawing.Imaging.ImageFormat.Png), "image/png");
+            {
+                var pngImage = await image.ToImageBytesAsync(100, ImageFormats.png);
+                return new ImageResult(pngImage, "image/png");
+            }
+
             return new ImageResult(image, imageStream.ContentType);
         }
 

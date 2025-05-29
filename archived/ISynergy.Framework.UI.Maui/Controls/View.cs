@@ -1,77 +1,33 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls;
 
-[Lifetime(Lifetimes.Singleton)]
+[Bindable(true)]
+[Lifetime(Lifetimes.Scoped)]
 public abstract class View : ContentPage, IView
 {
-    private IViewModel _viewModel;
-
-    protected IContext Context { get; private set; }
+    private IViewModel? _viewModel;
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel ViewModel
+    public IViewModel? ViewModel
     {
         get => _viewModel;
         set
         {
             _viewModel = value;
             BindingContext = _viewModel;
-            SetBinding(View.TitleProperty, new Binding(nameof(ViewModel.Title)));
         }
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the view class.
-    /// </summary>
-    protected View()
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the view class.
-    /// </summary>
-    /// <param name="context"></param>
-    protected View(IContext context)
-        : this()
-    {
-        Argument.IsNotNull(context);
-        Context = context;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the view class.
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="viewModelType"></param>
-    protected View(IContext context, Type viewModelType)
-    : this(context)
-    {
-        Argument.IsNotNull(viewModelType);
-        ViewModel = context.ScopedServices.ServiceProvider.GetRequiredService(viewModelType) as IViewModel;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the view class.
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="viewModel"></param>
-    protected View(IContext context, IViewModel viewModel)
-    : this(context)
-    {
-        Argument.IsNotNull(viewModel);
-        ViewModel = viewModel;
     }
 
     #region IDisposable
     // Dispose() calls Dispose(true)
+#if WINDOWS
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
@@ -80,8 +36,20 @@ public abstract class View : ContentPage, IView
         Dispose(true);
         GC.SuppressFinalize(this);
     }
+#else
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+#endif
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
+
+#if IOS || MACCATALYST || ANDROID
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
     /// </summary>
@@ -92,10 +60,23 @@ public abstract class View : ContentPage, IView
         {
             // free managed resources
             ViewModel?.Dispose();
-            ViewModel = null;
+        }
+    }
+#else
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // free managed resources
+            ViewModel?.Dispose();
         }
 
         // free native resources if there are any.
     }
+#endif
     #endregion
 }

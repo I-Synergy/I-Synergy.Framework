@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices;
 
 
@@ -16,47 +17,77 @@ namespace ISynergy.Framework.UI.Services;
 public class CredentialLockerService : ICredentialLockerService
 {
 #if WINDOWS
+    private readonly ILogger _logger;
     private readonly IInfoService _infoService;
 
-    public CredentialLockerService(IInfoService infoService)
+    public CredentialLockerService(IInfoService infoService, ILogger<CredentialLockerService> logger)
     {
         _infoService = infoService;
+        _logger = logger;
+        _logger.LogTrace($"CredentialLockerService instance created with ID: {Guid.NewGuid()}");
     }
 
     public Task<string> GetPasswordFromCredentialLockerAsync(string username)
     {
-        return Task.FromResult(TryCatchUtility.IgnoreErrors<string, COMException>(() =>
+        return Task.FromResult(TryCatchUtility.IgnoreErrors<string, COMException>(
+        () =>
         {
-            PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
+            try
+            {
+                PasswordVault vault = new();
+                IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
 
-            if (credentials.Count > 0)
-                return vault.Retrieve(_infoService.ProductName, username)?.Password;
+                if (credentials.Count > 0)
+                    return vault.Retrieve(_infoService.ProductName, username).Password;
 
-            return string.Empty;
-        }));
+                return string.Empty;
+            }
+            catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
+            {
+                return string.Empty;
+            }
+        },
+        string.Empty)!);
     }
 
     public Task<List<string>> GetUsernamesFromCredentialLockerAsync()
     {
-        return Task.FromResult(TryCatchUtility.IgnoreErrors<List<string>, COMException>(() =>
+        return Task.FromResult(TryCatchUtility.IgnoreErrors<List<string>, COMException>(
+        () =>
         {
-            PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
-            return credentials.Select(q => q.UserName).ToList();
-        }));
+            try
+            {
+                var vault = new PasswordVault();
+                var credentials = vault.FindAllByResource(_infoService.ProductName);
+                return credentials.Select(q => q.UserName).ToList();
+            }
+            catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
+            {
+                return new List<string>();
+            }
+        },
+        new List<string>())!);
     }
 
     public Task AddCredentialToCredentialLockerAsync(string username, string password)
     {
         TryCatchUtility.IgnoreErrors<COMException>(async () =>
         {
-            PasswordVault vault = new();
-            string oldPassword = await GetPasswordFromCredentialLockerAsync(username);
+            var vault = new PasswordVault();
 
-            if (oldPassword != password)
+            // Use nested try-catch for handling the specific "not found" case
+            try
             {
-                await RemoveCredentialFromCredentialLockerAsync(username);
+                var oldPassword = await GetPasswordFromCredentialLockerAsync(username);
+                if (oldPassword != password)
+                {
+                    await RemoveCredentialFromCredentialLockerAsync(username);
+                    vault.Add(new PasswordCredential(_infoService.ProductName, username, password));
+                }
+            }
+            catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
+            {
+                // No existing credential found, just add new one
                 vault.Add(new PasswordCredential(_infoService.ProductName, username, password));
             }
         });
@@ -68,12 +99,22 @@ public class CredentialLockerService : ICredentialLockerService
     {
         TryCatchUtility.IgnoreErrors<COMException>(() =>
         {
-            PasswordVault vault = new();
-            IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(_infoService.ProductName);
-            PasswordCredential credential = credentials.FirstOrDefault(q => q.UserName == username);
+            var vault = new PasswordVault();
 
-            if (credential is not null)
-                vault.Remove(credential);
+            try
+            {
+                var credentials = vault.FindAllByResource(_infoService.ProductName);
+                var credential = credentials.FirstOrDefault(q => q.UserName == username);
+
+                if (credential is not null)
+                {
+                    vault.Remove(credential);
+                }
+            }
+            catch (COMException ex) when (ex.HResult == unchecked((int)0x80070490))
+            {
+                // No credentials found, nothing to remove
+            }
         });
 
         return Task.CompletedTask;

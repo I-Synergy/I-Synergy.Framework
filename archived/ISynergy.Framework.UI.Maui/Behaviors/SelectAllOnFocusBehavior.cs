@@ -49,7 +49,7 @@ public class SelectAllOnFocusBehavior : Behavior<Entry>
 #endif
     }
 
-    private void Bindable_Focused(object sender, FocusEventArgs e)
+    private void Bindable_Focused(object? sender, FocusEventArgs e)
     {
         Entry entry = (Entry)sender;
 
@@ -61,7 +61,7 @@ public class SelectAllOnFocusBehavior : Behavior<Entry>
     }
 
 #if ANDROID
-    private void Bindable_Loaded(object sender, EventArgs e) =>
+    private void Bindable_Loaded(object? sender, EventArgs e) =>
         ((Android.Widget.EditText)((Entry)sender).Handler.PlatformView).SetSelectAllOnFocus(true);
 #endif
 }

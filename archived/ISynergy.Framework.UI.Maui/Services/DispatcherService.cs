@@ -14,9 +14,9 @@ public class DispatcherService : IDispatcherService
 {
     public bool Invoke(Action action)
     {
-        if (Application.Current.Windows[0] is not null && Application.Current.Windows[0].Dispatcher is IDispatcher dispatcher)
+        if (Microsoft.Maui.Controls.Application.Current.Windows[0] is not null && Microsoft.Maui.Controls.Application.Current.Windows[0].Dispatcher is IDispatcher dispatcher)
             return dispatcher.Dispatch(action);
         else
-            return Application.Current.Dispatcher.Dispatch(action);
+            return Microsoft.Maui.Controls.Application.Current.Dispatcher.Dispatch(action);
     }
 }
