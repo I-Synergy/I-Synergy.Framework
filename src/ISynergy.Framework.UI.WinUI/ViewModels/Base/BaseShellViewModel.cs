@@ -36,7 +36,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
     public AsyncRelayCommand GoBackCommand { get; private set; }
     public AsyncRelayCommand RestartUpdateCommand { get; private set; }
-    public RelayCommand SignInCommand { get; private set; }
+    public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand LanguageCommand { get; private set; }
     public AsyncRelayCommand ColorCommand { get; private set; }
     public AsyncRelayCommand HelpCommand { get; private set; }
@@ -82,7 +82,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
         GoBackCommand = new AsyncRelayCommand(async () => await _commonServices.NavigationService.GoBackAsync());
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
-        SignInCommand = new RelayCommand(SignOut);
+        SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
         ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
@@ -97,7 +97,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     public abstract Task InitializeFirstRunAsync();
 
 
-    private void NavigationService_BackStackChanged(object? sender, EventArgs e) => 
+    private void NavigationService_BackStackChanged(object? sender, EventArgs e) =>
         IsBackEnabled = _commonServices.NavigationService.CanGoBack;
 
     /// <summary>
@@ -116,7 +116,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Sign out.
     /// </summary>
     /// <returns></returns>
-    protected virtual void SignOut() => _commonServices.AuthenticationService.SignOut();
+    protected virtual Task SignOutAsync() => _commonServices.AuthenticationService.SignOutAsync();
 
     /// <summary>
     /// Shows the dialog restart after update asynchronous.
@@ -197,7 +197,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             vm.Submitted -= LanguageVM_Submitted;
 
         _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+        await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
 
         e.Result.SetLocalizationLanguage();
 
@@ -238,7 +238,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
             _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
 
-            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+            if (await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync() &&
+                await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),

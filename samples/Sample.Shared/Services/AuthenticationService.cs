@@ -73,7 +73,7 @@ public class AuthenticationService : IAuthenticationService
             {
                 _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = true;
                 _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser = username;
-                _scopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+                await _scopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
             }
 
             await _scopedContextService.GetService<ICredentialLockerService>().AddCredentialToCredentialLockerAsync(username, password);
@@ -107,10 +107,11 @@ public class AuthenticationService : IAuthenticationService
         throw new NotImplementedException();
     }
 
-    public void SignOut()
+    public Task SignOutAsync()
     {
         _scopedContextService.CreateNewScope();
         ValidateToken(null);
+        return Task.CompletedTask;
     }
 
     private void ValidateToken(Token? token)
