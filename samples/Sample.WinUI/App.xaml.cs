@@ -281,7 +281,7 @@ public sealed partial class App : Application
                     {
                         _logger?.LogTrace("Saving refresh token");
                         _settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
-                        _settingsService.SaveLocalSettings();
+                        await _settingsService.SaveLocalSettingsAsync();
                     }
 
                     _logger?.LogTrace("Setting culture");

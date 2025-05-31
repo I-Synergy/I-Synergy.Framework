@@ -45,25 +45,23 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
             File.Move(oldSettings, Path.Combine(_settingsFolder, _fileName), true);
             Directory.Delete(oldPath, true);
         }
-
-        LoadLocalSettings();
     }
 
-    public void LoadLocalSettings()
+    public async Task LoadLocalSettingsAsync()
     {
         try
         {
             string file = Path.Combine(_settingsFolder, _fileName);
 
             if (!File.Exists(file))
-                SaveLocalSettings();
+                await SaveLocalSettingsAsync();
 
             string json = File.ReadAllText(file);
             _localSettings = JsonSerializer.Deserialize<TLocalSettings>(json);
         }
         catch (JsonException)
         {
-            SaveLocalSettings();
+            await SaveLocalSettingsAsync();
         }
         catch (FileNotFoundException)
         {
@@ -71,7 +69,7 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
         }
     }
 
-    public bool SaveLocalSettings()
+    public async Task<bool> SaveLocalSettingsAsync()
     {
         try
         {
@@ -80,7 +78,7 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
 
             string file = Path.Combine(_settingsFolder, _fileName);
             string json = JsonSerializer.Serialize(_localSettings);
-            File.WriteAllText(file, json);
+            await File.WriteAllTextAsync(file, json);
 
             return true;
         }

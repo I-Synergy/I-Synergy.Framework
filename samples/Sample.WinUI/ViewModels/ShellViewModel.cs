@@ -109,17 +109,17 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
-    protected override void SignOut()
+    protected override async Task SignOutAsync()
     {
         try
         {
             // Clear profile before base sign out
-            base.SignOut();
+            await base.SignOutAsync();
 
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
             {
                 _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = false;
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
             }
         }
         catch (ObjectDisposedException)
@@ -138,10 +138,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
-                languageVM.Submitted += (s, e) =>
+                languageVM.Submitted += async (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+                    await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };

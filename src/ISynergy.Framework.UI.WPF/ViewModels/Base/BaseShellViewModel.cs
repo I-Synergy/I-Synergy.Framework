@@ -44,7 +44,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the login command.
     /// </summary>
     /// <value>The login command.</value>
-    public RelayCommand SignInCommand { get; private set; }
+    public AsyncRelayCommand SignInCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the language command.
@@ -119,7 +119,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         SecondaryItems = new ObservableCollection<NavigationItem>();
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
-        SignInCommand = new RelayCommand(SignOut);
+        SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
         ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
@@ -142,7 +142,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Sign out.
     /// </summary>
     /// <returns></returns>
-    protected virtual void SignOut() => _commonServices.AuthenticationService.SignOut();
+    protected virtual Task SignOutAsync() => _commonServices.AuthenticationService.SignOutAsync();
 
     /// <summary>
     /// Shows the dialog restart after update asynchronous.
@@ -233,7 +233,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             vm.Submitted -= LanguageVM_Submitted;
 
         _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+        await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
 
         e.Result.SetLocalizationLanguage();
 
@@ -274,7 +274,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
             _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
 
-            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
+            if (await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync() &&
+                await _commonServices.DialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
@@ -323,6 +324,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         }
     }
 
-    private void NavigationService_BackStackChanged(object? sender, EventArgs e) => 
+    private void NavigationService_BackStackChanged(object? sender, EventArgs e) =>
         IsBackEnabled = _commonServices.NavigationService.CanGoBack;
 }

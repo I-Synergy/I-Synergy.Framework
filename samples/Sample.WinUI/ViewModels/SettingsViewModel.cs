@@ -71,7 +71,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
             if (!IsInitialized)
             {
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LoadLocalSettings();
+                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LoadLocalSettingsAsync();
 
                 if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings localSetting)
                     LocalSettings = localSetting;
@@ -103,7 +103,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
             _commonServices.BusyService.StartBusy();
 
             if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings)
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
 
             if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
                 await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().AddOrUpdateGlobalSettingsAsync(globalSetting);
