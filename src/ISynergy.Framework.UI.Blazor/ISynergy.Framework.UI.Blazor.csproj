@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0;</TargetFrameworks>
+		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
+		<PackageId>I-Synergy.Framework.UI.Blazor</PackageId>
+		<Description>I-Synergy Framework UI for Blazor</Description>
+		<PackageTags>I-Synergy, Framework, UI, Blazor</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" />
+		<PackageReference Include="Microsoft.Extensions.Http.Resilience" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	</ItemGroup>
+</Project>
