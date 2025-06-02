@@ -160,6 +160,7 @@ public class ValidationTests
         Assert.IsFalse(fixture.Validate());
         Assert.AreEqual(1, fixture.Errors.Count);
         Assert.AreEqual(_selectedItemNull, fixture.Errors.Single().Value);
+        Assert.IsTrue(fixture.HasError(nameof(fixture.SelectedItem)));
     }
 
     [TestMethod]
@@ -173,8 +174,16 @@ public class ValidationTests
         Assert.IsFalse(fixture.Validate());
         Assert.AreEqual(2, fixture.Errors.Count);
 
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem)));
+        Assert.IsTrue(fixture.HasError(nameof(fixture.SelectedItem.ProductGroups)));
+        Assert.IsTrue(fixture.HasError(nameof(fixture.SelectedItem.Quantity)));
+
         Assert.IsTrue(fixture.Validate(false));
         Assert.AreEqual(0, fixture.Errors.Count);
+
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem)));
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem.ProductGroups)));
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem.Quantity)));
     }
 
     [TestMethod]
@@ -188,8 +197,16 @@ public class ValidationTests
         Assert.IsFalse(fixture.Validate());
         Assert.AreEqual(1, fixture.Errors.Count);
 
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem)));
+        Assert.IsTrue(fixture.HasError(nameof(fixture.SelectedItem.ProductGroups)));
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem.Quantity)));
+
         Assert.IsTrue(fixture.Validate(false));
         Assert.AreEqual(0, fixture.Errors.Count);
+
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem)));
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem.ProductGroups)));
+        Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem.Quantity)));
     }
 
     [TestMethod]
