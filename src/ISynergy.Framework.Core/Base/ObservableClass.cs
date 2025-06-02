@@ -431,6 +431,8 @@ public abstract class ObservableClass : IObservableClass
     {
         get => Errors.Any(a => a.Value.Any());
     }
+
+    public bool HasError(string property) => Errors.Any(a => a.Key.Equals(property));
     #endregion
 
     #region INotifyPropertyChanged
