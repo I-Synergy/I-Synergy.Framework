@@ -24,7 +24,6 @@ public partial class View : ComponentBase, IView
         set => _viewModel = value;
     }
 
-
     /// <summary>
     /// Gets or sets the IsEnabled property value.
     /// </summary>
@@ -32,6 +31,24 @@ public partial class View : ComponentBase, IView
     {
         get => _isEnabled;
         set => _isEnabled = value;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (ViewModel is not null)
+        {
+            if (!ViewModel.IsInitialized)
+                await ViewModel.InitializeAsync();
+
+            ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        base.StateHasChanged();
     }
 
     #region IDisposable
@@ -52,8 +69,11 @@ public partial class View : ComponentBase, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            if (ViewModel is not null)
+            {
+                ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+                ViewModel.Dispose();
+            }
         }
 
         // free native resources if there are any.
