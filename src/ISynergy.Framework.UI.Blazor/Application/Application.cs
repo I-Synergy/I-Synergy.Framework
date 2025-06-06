@@ -6,7 +6,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
@@ -81,12 +80,6 @@ public abstract class Application : ComponentBase
             throw;
         }
     }
-
-    /// <summary>
-    /// Creates the host builder.
-    /// </summary>
-    /// <returns></returns>
-    protected abstract IHostApplicationBuilder CreateHostBuilder();
 
     protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
 
