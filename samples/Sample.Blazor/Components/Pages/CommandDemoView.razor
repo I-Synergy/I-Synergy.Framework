@@ -1,4 +1,4 @@
-﻿@page "/command-demo"
+﻿@page "/commanddemoview"
 @using System.ComponentModel
 @using ISynergy.Framework.UI.Components
 @using ISynergy.Framework.UI.Extensions
@@ -26,8 +26,7 @@
         ViewModel.IncrementCommand.Execute(null); 
         StateHasChanged(); 
     })"
-    disabled="@(!ViewModel.IncrementCommand.CanExecute(null))" class="btn btn-outline-primary">
+    disabled="@(!ViewModel.IncrementCommand.CanExecute(null))"
+    class="btn btn-outline-primary">
     Increment
 </button>
-
-
