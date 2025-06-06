@@ -80,6 +80,12 @@ public partial class Window : System.Windows.Window, IWindow
         return Task.FromResult(false);
     }
 
+    public Task CloseAsync()
+    {
+        Close();
+        return Task.CompletedTask;
+    }
+
     #region IDisposable
     // Dispose() calls Dispose(true)
     /// <summary>

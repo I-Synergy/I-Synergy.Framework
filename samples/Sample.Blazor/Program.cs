@@ -1,11 +1,34 @@
+using ISynergy.Framework.AspNetCore.Extensions;
+using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.OpenTelemetry.Extensions;
+using ISynergy.Framework.UI.Blazor.Extensions;
 using Sample.Components;
+using Sample.Models;
+using Sample.Services;
+using System.Reflection;
 
 namespace Sample;
 public class Program
 {
     public static void Main(string[] args)
     {
+        var mainAssembly = Assembly.GetExecutingAssembly();
+        var infoService = new InfoService();
+        infoService.LoadAssembly(mainAssembly);
+
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.ConfigureServices<Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(
+            infoService,
+            (builder) =>
+            {
+                builder.Logging
+                    .AddTelemetry(builder, infoService)
+                    .AddOtlpExporter();
+            },
+            mainAssembly,
+            f => f.Name!.StartsWith(typeof(Program).Namespace!));
+
 
         // Add services to the container.
         builder.Services.AddRazorComponents()

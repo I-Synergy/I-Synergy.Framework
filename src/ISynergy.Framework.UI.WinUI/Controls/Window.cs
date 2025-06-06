@@ -31,7 +31,11 @@ public partial class Window : ContentDialog, IWindow
     /// <summary>
     /// Closes this instance.
     /// </summary>
-    public void Close() => Hide();
+    public Task CloseAsync()
+    {
+        Hide();
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a window.

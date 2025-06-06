@@ -23,7 +23,7 @@ public static class ApplicationInsightsTelemetryExtensions
         Argument.IsNotNull(telemetryBuilder);
 
         var options = new AzureMonitorExporterOptions();
-        telemetryBuilder.HostBuilderContext.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
 
         telemetryExporterOptions?.Invoke(options);
 

@@ -27,7 +27,7 @@ public static class TelemetryExtensions
     /// <returns>The service collection for chaining.</returns>
     public static TelemetryBuilder AddTelemetry(
         this ILoggingBuilder loggingBuilder,
-        HostBuilderContext hostBuilderContext,
+        IHostApplicationBuilder hostBuilderContext,
         IInfoService infoService,
         Action<TracerProviderBuilder>? tracerProviderBuilderAction = null,
         Action<MeterProviderBuilder>? meterProviderBuilderAction = null,
@@ -54,7 +54,7 @@ public static class TelemetryExtensions
             loggingBuilder.AddOpenTelemetry(loggerOptions =>
             {
                 // Add default console exporter in development
-                if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+                if (hostBuilderContext.Environment.IsDevelopment())
                     loggerOptions.AddConsoleExporter();
 
                 //loggerOptions.AddProcessor(new UserContextEnrichingLogProcessor());
@@ -69,7 +69,7 @@ public static class TelemetryExtensions
                 .AddHttpClientInstrumentation();
 
             // Add default console exporter in development
-            if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+            if (hostBuilderContext.Environment.IsDevelopment())
                 tracerProviderBuilder.AddConsoleExporter();
 
             tracerProviderBuilderAction?.Invoke(tracerProviderBuilder);
@@ -84,7 +84,7 @@ public static class TelemetryExtensions
                 .AddRuntimeInstrumentation();
 
             // Add default console exporter in development
-            if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+            if (hostBuilderContext.Environment.IsDevelopment())
                 meterProviderBuilder.AddConsoleExporter();
 
             meterProviderBuilderAction?.Invoke(meterProviderBuilder);
@@ -95,6 +95,6 @@ public static class TelemetryExtensions
             loggerProviderBuilderAction?.Invoke(loggerProviderBuilder);
         });
 
-        return new TelemetryBuilder(telemetryBuilder, hostBuilderContext, infoService);
+        return new TelemetryBuilder(telemetryBuilder, hostBuilderContext.Configuration, infoService);
     }
 }

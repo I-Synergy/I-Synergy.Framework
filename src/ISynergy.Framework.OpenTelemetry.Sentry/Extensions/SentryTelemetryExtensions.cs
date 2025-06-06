@@ -25,7 +25,7 @@ public static class SentryTelemetryExtensions
         Argument.IsNotNull(telemetryBuilder);
 
         var options = new SentryOptions();
-        telemetryBuilder.HostBuilderContext.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
 
         telemetryExporterOptions?.Invoke(options);
 

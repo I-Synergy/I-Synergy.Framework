@@ -98,6 +98,6 @@ public static class TelemetryExtensions
         // Register application monitor as a singleton
         loggingBuilder.Services.TryAddSingleton<ApplicationMonitor>();
 
-        return new TelemetryBuilder(telemetryBuilder, hostBuilderContext, infoService);
+        return new TelemetryBuilder(telemetryBuilder, hostBuilderContext.Configuration, infoService);
     }
 }

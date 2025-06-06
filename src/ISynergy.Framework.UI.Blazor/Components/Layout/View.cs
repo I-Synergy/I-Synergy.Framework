@@ -2,21 +2,17 @@
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Microsoft.UI.Xaml.Controls;
+using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
 
-namespace ISynergy.Framework.UI.Controls;
+namespace ISynergy.Framework.UI.Components.Layout;
 
-/// <summary>
-/// Class View.
-/// Implements the <see cref="IView" />
-/// </summary>
-/// <seealso cref="IView" />
 [Bindable(true)]
 [Lifetime(Lifetimes.Scoped)]
-public abstract partial class View : Page, IView
+public partial class View : ComponentBase, IView
 {
     private IViewModel? _viewModel;
+    private bool _isEnabled = true;
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
@@ -28,9 +24,17 @@ public abstract partial class View : Page, IView
         set => _viewModel = value;
     }
 
+
+    /// <summary>
+    /// Gets or sets the IsEnabled property value.
+    /// </summary>
+    public bool IsEnabled
+    {
+        get => _isEnabled;
+        set => _isEnabled = value;
+    }
+
     #region IDisposable
-    // Dispose() calls Dispose(true)
-#if WINDOWS
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
@@ -39,38 +43,7 @@ public abstract partial class View : Page, IView
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-#else
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public new void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-        base.Dispose();
-    }
-#endif
 
-    // The bulk of the clean-up code is implemented in Dispose(bool)
-
-#if IOS || MACCATALYST || ANDROID
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    protected virtual new void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            // free managed resources
-            ViewModel?.Dispose();
-        }
-
-        // free native resources if there are any.
-
-        base.Dispose(disposing);
-    }
-#else
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
     /// </summary>
@@ -85,6 +58,5 @@ public abstract partial class View : Page, IView
 
         // free native resources if there are any.
     }
-#endif
     #endregion
 }

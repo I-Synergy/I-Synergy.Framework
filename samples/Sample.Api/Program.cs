@@ -23,11 +23,11 @@ public class Program
 
         // Add telemetry
         builder.Host
-            .ConfigureLogging((context, loggingBuilder) =>
+            .ConfigureLogging(loggingBuilder =>
             {
                 loggingBuilder.
                     AddTelemetry(
-                        context,
+                        builder,
                         infoService,
                         tracerProviderBuilderAction: (tracing) =>
                         {
