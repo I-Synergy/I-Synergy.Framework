@@ -14,9 +14,7 @@ public static class ComponentExtensions
             ["onclick"] = EventCallback.Factory.Create<MouseEventArgs>(component, async (e) =>
             {
                 if (command?.CanExecute(parameter) == true)
-                {
                     command.Execute(parameter);
-                }
             }),
             ["disabled"] = !canExecute || disabled,
             ["class"] = $"{cssClass} {(!canExecute ? "disabled" : "")}"
@@ -28,9 +26,7 @@ public static class ComponentExtensions
         return EventCallback.Factory.Create<MouseEventArgs>(component, async (e) =>
         {
             if (command?.CanExecute(parameter) == true)
-            {
                 command.Execute(parameter);
-            }
         });
     }
 }
