@@ -1,9 +1,12 @@
-using Microsoft.AspNetCore.Components;
 using Sample.ViewModels;
 
 namespace Sample.Components.Layout;
 public partial class NavMenu
 {
-    [Inject]
-    public MainViewModel? ViewModel { get; set; }
+    public MainViewModel? ViewModel { get; private set; }
+
+    public NavMenu(MainViewModel mainViewModel)
+    {
+        ViewModel = mainViewModel;
+    }
 }
