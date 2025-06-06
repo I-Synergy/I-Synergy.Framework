@@ -23,6 +23,24 @@ public partial class Window : FluentDialog, IWindow
         set => _viewModel = value;
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (ViewModel is not null)
+        {
+            if (!ViewModel.IsInitialized)
+                await ViewModel.InitializeAsync();
+
+            ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        base.StateHasChanged();
+    }
+
     #region IDisposable
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -41,8 +59,11 @@ public partial class Window : FluentDialog, IWindow
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            if (ViewModel is not null)
+            {
+                ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+                ViewModel.Dispose();
+            }
         }
 
         // free native resources if there are any.
