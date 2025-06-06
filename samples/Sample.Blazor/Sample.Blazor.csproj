@@ -7,4 +7,11 @@
       <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+    <ProjectReference Include="..\..\src\ISynergy.Framework.UI.Blazor\ISynergy.Framework.UI.Blazor.csproj" />
+    <ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

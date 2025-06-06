@@ -1,0 +1,33 @@
+﻿@page "/command-demo"
+@using System.ComponentModel
+@using ISynergy.Framework.UI.Components
+@using ISynergy.Framework.UI.Extensions
+@using Sample.ViewModels
+@implements IDisposable
+@rendermode InteractiveServer
+
+<h3>Command Binding Demo</h3>
+
+<p>Current count: @ViewModel.Counter</p>
+
+<button @attributes="@this.CommandBinding(ViewModel.DecrementCommand, cssClass: "btn btn-secondary")">
+    Decrement
+</button>
+
+<button @attributes="@this.CommandBinding(ViewModel.ResetCommand, cssClass: "btn btn-danger")">
+    Reset
+</button>
+
+<hr />
+
+<!-- Manual approach for comparison -->
+<button @onclick="@(() => 
+    { 
+        ViewModel.IncrementCommand.Execute(null); 
+        StateHasChanged(); 
+    })"
+    disabled="@(!ViewModel.IncrementCommand.CanExecute(null))" class="btn btn-outline-primary">
+    Increment
+</button>
+
+

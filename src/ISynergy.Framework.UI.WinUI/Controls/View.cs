@@ -25,11 +25,7 @@ public abstract partial class View : Page, IView
     public IViewModel? ViewModel
     {
         get => _viewModel;
-        set
-        {
-            _viewModel = value;
-            DataContext = _viewModel;
-        }
+        set => _viewModel = value;
     }
 
     #region IDisposable

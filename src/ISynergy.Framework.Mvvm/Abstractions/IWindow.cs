@@ -16,5 +16,5 @@ public interface IWindow : IDisposable
     /// <summary>
     /// Closes the current window.
     /// </summary>
-    void Close();
+    Task CloseAsync();
 }

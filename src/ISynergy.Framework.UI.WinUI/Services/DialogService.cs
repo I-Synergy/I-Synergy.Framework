@@ -407,7 +407,7 @@ public class DialogService : IDialogService
                 }
 
                 EventHandler? viewModelClosedHandler = null;
-                viewModelClosedHandler = (sender, e) =>
+                viewModelClosedHandler = async (sender, e) =>
                 {
                     try
                     {
@@ -415,7 +415,7 @@ public class DialogService : IDialogService
                             vm.Closed -= viewModelClosedHandler;
 
                         window.ViewModel?.Dispose();
-                        window.Close();
+                        await window.CloseAsync();
                     }
                     catch (Exception ex)
                     {
@@ -464,7 +464,7 @@ public class DialogService : IDialogService
                     _activeDialog.Closed += (s, e) => tcs.TrySetResult(true);
 
                     // Close the active dialog
-                    _activeDialog.Close();
+                    await _activeDialog.CloseAsync();
 
                     // Wait for dialog to close with timeout
                     var timeoutTask = Task.Delay(500);
@@ -537,7 +537,7 @@ public class DialogService : IDialogService
                 {
                     try
                     {
-                        _activeDialog.Close();
+                        _activeDialog.CloseAsync().GetAwaiter().GetResult();
                     }
                     catch (Exception ex)
                     {

@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 using OpenTelemetry;
 
 namespace ISynergy.Framework.OpenTelemetry.Models;
@@ -7,13 +7,13 @@ namespace ISynergy.Framework.OpenTelemetry.Models;
 public class TelemetryBuilder
 {
     public OpenTelemetryBuilder OpenTelemetryBuilder { get; }
-    public HostBuilderContext HostBuilderContext { get; }
+    public IConfiguration Configuration { get; }
     public IInfoService InfoService { get; }
 
-    public TelemetryBuilder(OpenTelemetryBuilder openTelemetryBuilder, HostBuilderContext hostBuilderContext, IInfoService infoService)
+    public TelemetryBuilder(OpenTelemetryBuilder openTelemetryBuilder, IConfiguration configuration, IInfoService infoService)
     {
         OpenTelemetryBuilder = openTelemetryBuilder;
-        HostBuilderContext = hostBuilderContext;
+        Configuration = configuration;
         InfoService = infoService;
     }
 }

@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
@@ -64,6 +65,9 @@ public static class BlazorAppBuilderExtensions
         builder.Services.TryAddScoped<ISettingsService, TSettingsService>();
         builder.Services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
 
+        builder.Services.TryAddSingleton<Microsoft.FluentUI.AspNetCore.Components.DialogService>();
+        builder.Services.TryAddSingleton<Microsoft.FluentUI.AspNetCore.Components.IDialogService>(s => s.GetRequiredService<Microsoft.FluentUI.AspNetCore.Components.DialogService>());
+
         builder.Services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
         builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         builder.Services.TryAddSingleton<INavigationService, NavigationService>();
@@ -71,6 +75,8 @@ public static class BlazorAppBuilderExtensions
         builder.Services.TryAddSingleton<IDialogService, DialogService>();
         builder.Services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
         builder.Services.TryAddSingleton<ICommonServices, TCommonServices>();
+
+        builder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
         builder.Services.RegisterAssemblies(assembly, assemblyFilter);
 
@@ -109,7 +115,12 @@ public static class BlazorAppBuilderExtensions
     /// <param name="assemblies"></param>
     private static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
+        var viewTypes = assemblies.ToViewTypes();
+        var windowTypes = assemblies.ToWindowTypes();
         var viewModelTypes = assemblies.ToViewModelTypes();
+
         services.RegisterViewModels(viewModelTypes);
+        services.RegisterViews(viewTypes);
+        services.RegisterWindows(windowTypes);
     }
 }
