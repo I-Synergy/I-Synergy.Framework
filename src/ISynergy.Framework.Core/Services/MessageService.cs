@@ -425,7 +425,7 @@ public class MessageService : IMessageService
         {
             var listClone = _recipientsOfSubclassesAction.Keys.Take(_recipientsOfSubclassesAction.Count).ToList();
 
-            foreach (var type in listClone)
+            foreach (var type in listClone.EnsureNotNull())
             {
                 List<WeakActionAndToken>? list = null;
 
@@ -435,9 +435,10 @@ public class MessageService : IMessageService
                 {
                     lock (_recipientsOfSubclassesActionLock)
                     {
-                        if (_recipientsOfSubclassesAction.ContainsKey(type))
+                        if (_recipientsOfSubclassesAction.ContainsKey(type) && _recipientsOfSubclassesAction[type].Count > 0)
                         {
-                            list = _recipientsOfSubclassesAction[type].Take(_recipientsOfSubclassesAction[type].Count).ToList();
+                            // Create a safe copy of the list to avoid index out of range exceptions
+                            list = _recipientsOfSubclassesAction[type].ToList();
                         }
                     }
 
@@ -452,9 +453,10 @@ public class MessageService : IMessageService
 
             lock (_recipientsStrictActionLock)
             {
-                if (_recipientsStrictAction.ContainsKey(messageType))
+                if (_recipientsStrictAction.ContainsKey(messageType) && _recipientsStrictAction[messageType].Count > 0)
                 {
-                    list = _recipientsStrictAction[messageType].Take(_recipientsStrictAction[messageType].Count).ToList();
+                    // Create a safe copy of the list to avoid index out of range exceptions
+                    list = _recipientsStrictAction[messageType].ToList();
                 }
             }
 
@@ -492,12 +494,7 @@ public class MessageService : IMessageService
         if (message is null)
             return;
 
-        if (list is null)
-            return;
-
-        var listClone = list.Take(list.Count).ToList();
-
-        foreach (var item in listClone)
+        foreach (var item in list.EnsureNotNull())
         {
             if (item.Action is IExecuteWithObject executeAction
                 && item.Action.IsAlive
@@ -524,9 +521,9 @@ public class MessageService : IMessageService
 
         lock (lists)
         {
-            foreach (var messageType in lists.Keys)
+            foreach (var messageType in lists.Keys.EnsureNotNull())
             {
-                foreach (var item in lists[messageType])
+                foreach (var item in lists[messageType].EnsureNotNull())
                 {
                     if (item.Action is not null
                         && item.Action.Target == recipient)
@@ -556,7 +553,7 @@ public class MessageService : IMessageService
 
         lock (lists)
         {
-            foreach (var item in lists[messageType])
+            foreach (var item in lists[messageType].EnsureNotNull())
             {
                 if (item.Action is not null
                     && item.Action.Target == recipient
@@ -587,7 +584,7 @@ public class MessageService : IMessageService
                     .Where(item => item.Action is null || !item.Action.IsAlive)
                     .ToList();
 
-                foreach (var recipient in recipientsToRemove)
+                foreach (var recipient in recipientsToRemove.EnsureNotNull())
                 {
                     lists[messageType].Remove(recipient);
                 }
@@ -629,4 +626,3 @@ public class MessageService : IMessageService
         _defaultInstance = null;
     }
 }
-
