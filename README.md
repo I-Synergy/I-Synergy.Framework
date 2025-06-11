@@ -50,6 +50,7 @@ ___
 | [I-Synergy.Framework.UI](https://www.nuget.org/packages/I-Synergy.Framework.UI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI) |
 | [I-Synergy.Framework.UI.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.UI.WinUI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WinUI) |
 | [I-Synergy.Framework.UI.WPF](https://www.nuget.org/packages/I-Synergy.Framework.UI.WPF/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WPF) |
+| [I-Synergy.Framework.UI.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.UI.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Blazor) |
 
 ## Nuget Deprecated Deployment Status
 | Release | Status |

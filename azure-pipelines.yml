@@ -99,7 +99,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Build I-Synergy Framework'
           inputs:
-            solution: 'I-Synergy.Framework.sln'
+            solution: 'I-Synergy.Framework.slnx'
             msbuildArchitecture: 'x64'
             configuration: $(BuildConfiguration)
             msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true /nr:false' #this flag is important to avoid DLL lock for the 2nd build/analysis
@@ -108,7 +108,7 @@ stages:
           displayName: 'Test I-Synergy Framework'
           inputs:
             command: test
-            projects: 'I-Synergy.Framework.sln'
+            projects: 'I-Synergy.Framework.slnx'
             arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
        
         - task: CopyFiles@2
