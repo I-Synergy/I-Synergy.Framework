@@ -106,7 +106,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param="logger"></param>
+    /// <param name="logger"></param>
     protected BaseShellViewModel(ICommonServices commonServices, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
