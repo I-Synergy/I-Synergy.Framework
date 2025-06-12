@@ -131,9 +131,13 @@ public class MaxConcurrentRequestsTests
             {"MaxConcurrentRequestsOptions:LimitExceededPolicy", MaxConcurrentRequestsLimitExceededPolicy.Drop.ToString() }
         };
 
-        HttpResponseInformation[] responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
+        HttpResponseInformation[] responseInformation = GetResponseInformationWithBarrier(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
-        Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
+        int serviceUnavailableCount = responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable);
+        Assert.AreEqual(
+            SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT,
+            serviceUnavailableCount,
+            $"Expected {SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT} unavailable responses, got {serviceUnavailableCount}");
     }
 
     /// <summary>
@@ -149,9 +153,13 @@ public class MaxConcurrentRequestsTests
             {"MaxConcurrentRequestsOptions:MaxQueueLength", SOME_MAX_QUEUE_LENGTH.ToString() }
         };
 
-        HttpResponseInformation[] responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
+        HttpResponseInformation[] responseInformation = GetResponseInformationWithBarrier(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
-        Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
+        int serviceUnavailableCount = responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable);
+        Assert.AreEqual(
+            SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH,
+            serviceUnavailableCount,
+            $"Expected {SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH} unavailable responses, got {serviceUnavailableCount}");
     }
 
     /// <summary>
@@ -167,9 +175,13 @@ public class MaxConcurrentRequestsTests
             {"MaxConcurrentRequestsOptions:MaxQueueLength", SOME_MAX_QUEUE_LENGTH.ToString() }
         };
 
-        HttpResponseInformation[] responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
+        HttpResponseInformation[] responseInformation = GetResponseInformationWithBarrier(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
-        Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
+        int serviceUnavailableCount = responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable);
+        Assert.AreEqual(
+            SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH,
+            serviceUnavailableCount,
+            $"Expected {SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH} unavailable responses, got {serviceUnavailableCount}");
     }
 
     /// <summary>
@@ -186,9 +198,13 @@ public class MaxConcurrentRequestsTests
             {"MaxConcurrentRequestsOptions:MaxTimeInQueue", TIME_SHORTER_THAN_PROCESSING.ToString() }
         };
 
-        HttpResponseInformation[] responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
+        HttpResponseInformation[] responseInformation = GetResponseInformationWithBarrier(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
-        Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
+        int serviceUnavailableCount = responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable);
+        Assert.AreEqual(
+            SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT,
+            serviceUnavailableCount,
+            $"Expected {SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT} unavailable responses, got {serviceUnavailableCount}");
     }
 
     /// <summary>
@@ -197,6 +213,7 @@ public class MaxConcurrentRequestsTests
     /// <param name="configuration">The configuration.</param>
     /// <param name="concurrentRequestsCount">The concurrent requests count.</param>
     /// <returns>HttpResponseInformation[].</returns>
+    [Obsolete("Use GetResponseInformationWithBarrier instead for more reliable concurrency testing")]
     private HttpResponseInformation[] GetResponseInformation(Dictionary<string, string> configuration, int concurrentRequestsCount)
     {
         HttpResponseInformation[] responseInformation;
@@ -217,6 +234,57 @@ public class MaxConcurrentRequestsTests
             }
 
             Task.WaitAll(responsesWithTimingsTasks.ToArray());
+
+            clients.ForEach(client => client.Dispose());
+
+            responseInformation = responsesWithTimingsTasks.Select(task => new HttpResponseInformation
+            {
+                StatusCode = task.Result.Response!.StatusCode,
+                Timing = task.Result.Timing
+            }).ToArray();
+        }
+
+        return responseInformation;
+    }
+
+    /// <summary>
+    /// Gets the response information with a barrier to ensure true concurrency.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="concurrentRequestsCount">The concurrent requests count.</param>
+    /// <returns>HttpResponseInformation[].</returns>
+    private HttpResponseInformation[] GetResponseInformationWithBarrier(Dictionary<string, string> configuration, int concurrentRequestsCount)
+    {
+        HttpResponseInformation[] responseInformation;
+
+        using (TestServer server = PrepareTestServer(configuration))
+        {
+            List<HttpClient> clients = [];
+            for (int i = 0; i < concurrentRequestsCount; i++)
+            {
+                clients.Add(server.CreateClient());
+            }
+
+            List<Task<HttpResponseMessageWithTiming>> responsesWithTimingsTasks = [];
+
+            // Create a barrier to ensure all requests start at the same time
+            var barrier = new Barrier(concurrentRequestsCount);
+
+            foreach (HttpClient client in clients)
+            {
+                responsesWithTimingsTasks.Add(Task.Run(async () =>
+                {
+                    // Wait for all threads to reach this point before proceeding
+                    barrier.SignalAndWait();
+                    return await client.GetWithTimingAsync("/");
+                }));
+            }
+
+            // Wait for all tasks to complete with a reasonable timeout
+            if (!Task.WaitAll(responsesWithTimingsTasks.ToArray(), TimeSpan.FromSeconds(30)))
+            {
+                throw new TimeoutException("Not all concurrent requests completed within the expected timeout");
+            }
 
             clients.ForEach(client => client.Dispose());
 
