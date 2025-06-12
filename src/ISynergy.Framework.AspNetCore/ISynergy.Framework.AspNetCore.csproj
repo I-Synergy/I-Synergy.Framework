@@ -13,6 +13,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+	  <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+	  <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj" />

@@ -25,6 +25,8 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" />
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
 	</ItemGroup>
 
 	<ItemGroup>
