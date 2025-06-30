@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0;</TargetFrameworks>
+		<TargetFrameworks>net9.0;</TargetFrameworks>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<PackageId>I-Synergy.Framework.UI.Blazor</PackageId>
 		<Description>I-Synergy Framework UI for Blazor</Description>
@@ -11,15 +11,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" />
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" />
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" />
 		<PackageReference Include="Microsoft.Extensions.Http.Resilience" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
 	</ItemGroup>
 
