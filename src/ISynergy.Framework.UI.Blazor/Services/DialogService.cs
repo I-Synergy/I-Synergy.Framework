@@ -5,59 +5,67 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Components.Layout;
+using ISynergy.Framework.UI.Messages;
+using ISynergy.Framework.UI.Requests;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
 using IDialogService = ISynergy.Framework.Mvvm.Abstractions.Services.IDialogService;
+using MessageService = ISynergy.Framework.Core.Services.MessageService;
 
 namespace ISynergy.Framework.UI.Services;
 
 public class DialogService : IDialogService
 {
-    private readonly Microsoft.FluentUI.AspNetCore.Components.DialogService _dialogService;
     private readonly IScopedContextService _scopedContextService;
     private readonly ILogger<DialogService> _logger;
 
     public DialogService(
-        Microsoft.FluentUI.AspNetCore.Components.DialogService dialogService,
         IScopedContextService scopedContextService,
         ILogger<DialogService> logger)
     {
-        _dialogService = dialogService;
         _scopedContextService = scopedContextService;
         _logger = logger;
     }
 
     public async Task<MessageBoxResult> ShowInformationAsync(string message, string title = "")
     {
-        var dialogResult = await _dialogService.ShowInfoAsync(message, title, LanguageService.Default.GetString("OK"));
+        var request = new MessageBoxRequest(message, title);
+        MessageService.Default.Send(new ShowInformationMessage(request));
 
-        if (dialogResult is not null)
-        {
-            var result = await dialogResult.Result;
+        //var dialogService = _scopedContextService.GetRequiredService<Microsoft.FluentUI.AspNetCore.Components.IDialogService>();
+        //var dialogResult = await dialogService.ShowInfoAsync(message, title, LanguageService.Default.GetString("OK"));
 
-            if (result.Cancelled)
-                return MessageBoxResult.Cancel;
+        //if (dialogResult is not null)
+        //{
+        //    var result = await dialogResult.Result;
 
-            return MessageBoxResult.OK;
-        }
+        //    if (result.Cancelled)
+        //        return MessageBoxResult.Cancel;
+
+        //    return MessageBoxResult.OK;
+        //}
 
         return MessageBoxResult.None;
     }
 
     public async Task<MessageBoxResult> ShowWarningAsync(string message, string title = "")
     {
-        var dialogResult = await _dialogService.ShowWarningAsync(message, title, LanguageService.Default.GetString("OK"));
+        var request = new MessageBoxRequest(message, title);
+        MessageService.Default.Send(new ShowWarningMessage(request));
 
-        if (dialogResult is not null)
-        {
-            var result = await dialogResult.Result;
+        //var dialogService = _scopedContextService.GetRequiredService<Microsoft.FluentUI.AspNetCore.Components.IDialogService>();
+        //var dialogResult = await dialogService.ShowWarningAsync(message, title, LanguageService.Default.GetString("OK"));
 
-            if (result.Cancelled)
-                return MessageBoxResult.Cancel;
+        //if (dialogResult is not null)
+        //{
+        //    var result = await dialogResult.Result;
 
-            return MessageBoxResult.OK;
-        }
+        //    if (result.Cancelled)
+        //        return MessageBoxResult.Cancel;
+
+        //    return MessageBoxResult.OK;
+        //}
 
         return MessageBoxResult.None;
     }
@@ -69,17 +77,21 @@ public class DialogService : IDialogService
 
     public async Task<MessageBoxResult> ShowErrorAsync(string message, string title = "")
     {
-        var dialogResult = await _dialogService.ShowErrorAsync(message, title, LanguageService.Default.GetString("OK"));
+        var request = new MessageBoxRequest(message, title);
+        MessageService.Default.Send(new ShowErrorMessage(request));
 
-        if (dialogResult is not null)
-        {
-            var result = await dialogResult.Result;
+        //var dialogService = _scopedContextService.GetRequiredService<Microsoft.FluentUI.AspNetCore.Components.IDialogService>();
+        //var dialogResult = await dialogService.ShowErrorAsync(message, title, LanguageService.Default.GetString("OK"));
 
-            if (result.Cancelled)
-                return MessageBoxResult.Cancel;
+        //if (dialogResult is not null)
+        //{
+        //    var result = await dialogResult.Result;
 
-            return MessageBoxResult.OK;
-        }
+        //    if (result.Cancelled)
+        //        return MessageBoxResult.Cancel;
+
+        //    return MessageBoxResult.OK;
+        //}
 
         return MessageBoxResult.None;
     }
@@ -149,7 +161,8 @@ public class DialogService : IDialogService
                     break;
             }
 
-            var dialogReference = await _dialogService.ShowMessageBoxAsync(parameters);
+            var dialogService = _scopedContextService.GetRequiredService<Microsoft.FluentUI.AspNetCore.Components.IDialogService>();
+            var dialogReference = await dialogService.ShowMessageBoxAsync(parameters);
 
             if (dialogReference is not null)
             {
@@ -187,7 +200,8 @@ public class DialogService : IDialogService
 
     private async Task<DialogResult?> OpenDialogAsync(DialogParameters<MessageBoxContent> parameters)
     {
-        var dialog = await _dialogService.ShowMessageBoxAsync(parameters);
+        var dialogService = _scopedContextService.GetRequiredService<Microsoft.FluentUI.AspNetCore.Components.IDialogService>();
+        var dialog = await dialogService.ShowMessageBoxAsync(parameters);
         return await dialog.Result;
     }
 

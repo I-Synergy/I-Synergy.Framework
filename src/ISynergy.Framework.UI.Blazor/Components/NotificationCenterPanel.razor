@@ -1,0 +1,18 @@
+﻿@using ISynergy.Framework.UI.Constants
+@using Microsoft.FluentUI.AspNetCore.Components
+
+@inject IMessageService MessageService
+
+<div>
+
+    <FluentStack>
+        <FluentSpacer />
+        <FluentAnchor Appearance="@Appearance.Hypertext" Href="" OnClick="@(e => MessageService.Clear(MessageConstants.MESSAGES_NOTIFICATION_CENTER))">
+            Dismiss all
+        </FluentAnchor>
+    </FluentStack>
+
+    <br />
+
+    <FluentMessageBarProvider Section="@MessageConstants.MESSAGES_NOTIFICATION_CENTER" MaxMessageCount="-1" Type="@MessageType.Notification" />
+</div>

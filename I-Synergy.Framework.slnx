@@ -48,6 +48,7 @@
     <Project Path="src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj" />
     <Project Path="src/ISynergy.Framework.Synchronization/ISynergy.Framework.Synchronization.csproj" />
     <Project Path="src/ISynergy.Framework.UI.Blazor/ISynergy.Framework.UI.Blazor.csproj" Id="2533bd51-a65b-483e-9d9e-d9abf12f97ca" />
+    <Project Path="src/ISynergy.Framework.UI.Maui.Blazor/ISynergy.Framework.UI.Maui.Blazor.csproj" Id="eb5895d9-489e-404d-b833-b5142373eb52" />
     <Project Path="src/ISynergy.Framework.UI.WinUI/ISynergy.Framework.UI.WinUI.csproj" />
     <Project Path="src/ISynergy.Framework.UI.WPF/ISynergy.Framework.UI.WPF.csproj" />
     <Project Path="src/ISynergy.Framework.UI/ISynergy.Framework.UI.csproj" />
