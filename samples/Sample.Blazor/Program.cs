@@ -1,7 +1,7 @@
 using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.OpenTelemetry.Extensions;
-using ISynergy.Framework.UI.Blazor.Extensions;
+using ISynergy.Framework.UI.Extensions;
 using Sample.Components;
 using Sample.Models;
 using Sample.Services;

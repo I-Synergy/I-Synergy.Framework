@@ -53,7 +53,6 @@ public static class AppBuilderExtensions
     {
         builder.Services.AddOptions();
 
-        builder.Services.Configure<ApplicationFeatures>(builder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
         builder.Services.Configure<ApplicationOptions>(builder.Configuration.GetSection(nameof(ApplicationOptions)).BindWithReload);
         builder.Services.Configure<AnalyticOptions>(builder.Configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
