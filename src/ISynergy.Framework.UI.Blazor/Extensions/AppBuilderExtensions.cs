@@ -5,7 +5,6 @@ using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
-using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -20,7 +19,7 @@ using IDialogService = ISynergy.Framework.Mvvm.Abstractions.Services.IDialogServ
 using IMessageService = ISynergy.Framework.Core.Abstractions.Services.IMessageService;
 using MessageService = ISynergy.Framework.Core.Services.MessageService;
 
-namespace ISynergy.Framework.UI.Blazor.Extensions;
+namespace ISynergy.Framework.UI.Extensions;
 
 public static class AppBuilderExtensions
 {
@@ -52,7 +51,6 @@ public static class AppBuilderExtensions
     {
         builder.Services.AddOptions();
 
-        builder.Services.Configure<ApplicationFeatures>(builder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
         builder.Services.Configure<ApplicationOptions>(builder.Configuration.GetSection(nameof(ApplicationOptions)).BindWithReload);
         builder.Services.Configure<AnalyticOptions>(builder.Configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 

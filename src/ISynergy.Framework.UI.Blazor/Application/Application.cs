@@ -4,10 +4,8 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Options;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.UI;
@@ -17,8 +15,6 @@ public abstract class Application : ComponentBase
     protected readonly ISettingsService? _settingsService;
     protected readonly IExceptionHandlerService? _exceptionHandlerService;
     protected readonly ILogger<Application>? _logger;
-
-    protected readonly ApplicationFeatures? _features;
 
     private int _lastErrorMessage = 0;
     private bool _isInitialized = false;
@@ -33,14 +29,12 @@ public abstract class Application : ComponentBase
         ICommonServices commonServices,
         ISettingsService settingsService,
         IExceptionHandlerService exceptionHandlerService,
-        IOptions<ApplicationFeatures> features,
         ILogger<Application> logger)
         : base()
     {
         _commonServices = commonServices;
         _settingsService = settingsService;
         _exceptionHandlerService = exceptionHandlerService;
-        _features = features.Value;
         _logger = logger;
 
         try
