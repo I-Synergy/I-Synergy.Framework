@@ -89,8 +89,6 @@ public static class AppBuilderExtensions
 
         builder.Services.TryAddTransient<IAntiforgeryHttpClientFactory, AntiforgeryHttpClientFactory>();
 
-        builder.Services.TryAddScoped<CookieConsentService>();
-
         builder.Services.AddCascadingAuthenticationState();
 
         builder.Services.TryAddScoped<MauiAuthenticationStateProvider>();
