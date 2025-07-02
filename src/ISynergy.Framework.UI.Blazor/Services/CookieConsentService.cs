@@ -6,7 +6,8 @@ using Microsoft.JSInterop;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class CookieConsentService(IOptions<AnalyticOptions> analyticOptions, IJSRuntime jsRuntime) : JSModule(jsRuntime, "./_content/ISynergy.Framework.UI.Blazor/Components/Cookies/CookieConsent.razor.js")
+public class CookieConsentService(IOptions<AnalyticOptions> analyticOptions, IJSRuntime jsRuntime)
+    : JSModule(jsRuntime, "./_content/ISynergy.Framework.UI.Blazor/Components/Cookies/CookieConsent.razor.js")
 {
     private CookieState? _cookieState;
 
