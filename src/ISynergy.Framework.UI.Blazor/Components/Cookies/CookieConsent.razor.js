@@ -1,5 +1,8 @@
 ﻿window.dataLayer = window.dataLayer || [];
-function gtag() { dataLayer.push(arguments) };
+function gtag()
+{
+    dataLayer.push(arguments)
+};
 
 const injectGAScript = (measurementId) => {
     // Load the Google tag manager script dynamically
@@ -19,6 +22,7 @@ const injectGAScript = (measurementId) => {
         console.error('Failed to load Google Analytics 4');
     };
 };
+
 function injectMCScript(projectId) {
     try {
         (function (c, l, a, r, i, t, y) {

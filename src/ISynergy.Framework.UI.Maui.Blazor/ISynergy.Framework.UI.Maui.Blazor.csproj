@@ -8,6 +8,7 @@
 	  <PackageTags>I-Synergy, Framework, UI, Maui, Hybrid, Blazor</PackageTags>
 	  <GenerateLibraryLayout>true</GenerateLibraryLayout>
 	  <IncludeSymbols>true</IncludeSymbols>
+	  <StaticWebAssetSupport>true</StaticWebAssetSupport>
   </PropertyGroup>
 
 	<ItemGroup>
