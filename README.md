@@ -15,6 +15,7 @@ ___
 ## Nuget Active Deployment Status
 | Release | Status |
 |:---|---|
+| [I-Synergy.Framework.Aspire.Proxy](https://www.nuget.org/packages/I-Synergy.Framework.Aspire.Proxy/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Aspire.Proxy) |
 | [I-Synergy.Framework.AspNetCore](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore) |
 | [I-Synergy.Framework.AspNetCore.Authentication](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Authentication/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Authentication) |
 | [I-Synergy.Framework.AspNetCore.Globalization](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Globalization/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Globalization) |

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Aspire.Proxy</PackageId>
+		<Description>I-Synergy Framework Proxy (Yarp) for .Net Aspire</Description>
+		<PackageTags>I-Synergy, Framework, Proxy, AspNetCore, Yarp, Aspire</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Aspire.Hosting" />
+	  <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" />
+	</ItemGroup>
+</Project>
