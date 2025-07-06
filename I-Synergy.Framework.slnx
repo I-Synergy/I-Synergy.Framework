@@ -15,6 +15,7 @@
     <Project Path="performance/ISynergy.Framework.MessageBus.Performance/ISynergy.Framework.MessageBus.Performance.csproj" />
   </Folder>
   <Folder Name="/Projects/">
+    <Project Path="src/ISynergy.Framework.Aspire.Proxy/ISynergy.Framework.Aspire.Proxy.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.Authentication/ISynergy.Framework.AspNetCore.Authentication.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.Globalization/ISynergy.Framework.AspNetCore.Globalization.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.Monitoring/ISynergy.Framework.AspNetCore.Monitoring.csproj" />
