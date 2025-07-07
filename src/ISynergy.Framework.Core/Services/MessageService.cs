@@ -496,7 +496,8 @@ public class MessageService : IMessageService
 
         foreach (var item in list.EnsureNotNull())
         {
-            if (item.Action is IExecuteWithObject executeAction
+            if (item is not null  // Add this null check
+                && item.Action is IExecuteWithObject executeAction
                 && item.Action.IsAlive
                 && item.Action.Target is not null
                 && (targetType is null

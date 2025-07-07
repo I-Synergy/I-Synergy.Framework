@@ -34,6 +34,27 @@ public class MauiAuthenticationStateProvider : AuthenticationStateProvider, IDis
         return Task.FromResult(new AuthenticationState(principal));
     }
 
+    /// <summary>
+    /// Manually trigger authentication state change notification
+    /// </summary>
+    public void NotifyAuthenticationStateChanged()
+    {
+        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+    }
+
+    /// <summary>
+    /// Clear authentication state and notify change
+    /// </summary>
+    public void ClearAuthenticationState()
+    {
+        // Clear the context authentication state
+        var context = _scopedContextService.GetRequiredService<IContext>();
+        context.Profile = null;
+
+        // Notify that authentication state has changed
+        NotifyAuthenticationStateChanged(_anonymousState);
+    }
+
     private ClaimsPrincipal GetClaimsPrincipalFromJwt(string jwtToken)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
