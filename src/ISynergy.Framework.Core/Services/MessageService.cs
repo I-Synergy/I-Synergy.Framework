@@ -10,17 +10,17 @@ namespace ISynergy.Framework.Core.Services;
 /// </summary>
 public class MessageService : IMessageService
 {
-    private readonly object _registerLock = new object();
-    private readonly object _recipientsOfSubclassesActionLock = new object();
-    private readonly object _recipientsStrictActionLock = new object();
     private readonly object _recipientsLock = new object();
-    private readonly object _listLock = new object();
+    private readonly object _cleanupLock = new object();
 
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsOfSubclassesAction;
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsStrictAction;
 
     private static readonly object _creationLock = new object();
     private static IMessageService? _defaultInstance;
+
+    // Use int for atomic operations instead of bool
+    private int _isCleanupRegistered = 0;
 
     /// <summary>
     /// Gets the Messenger's default instance, allowing
@@ -148,7 +148,7 @@ public class MessageService : IMessageService
         Action<TMessage> action,
         bool keepTargetAlive = false)
     {
-        lock (_registerLock)
+        lock (_recipientsLock)
         {
             var messageType = typeof(TMessage);
 
@@ -156,47 +156,30 @@ public class MessageService : IMessageService
 
             if (receiveDerivedMessagesToo)
             {
-                if (_recipientsOfSubclassesAction is null)
-                {
-                    _recipientsOfSubclassesAction = new Dictionary<Type, List<WeakActionAndToken>>();
-                }
-
+                _recipientsOfSubclassesAction ??= new Dictionary<Type, List<WeakActionAndToken>>();
                 recipients = _recipientsOfSubclassesAction;
             }
             else
             {
-                if (_recipientsStrictAction is null)
-                {
-                    _recipientsStrictAction = new Dictionary<Type, List<WeakActionAndToken>>();
-                }
-
+                _recipientsStrictAction ??= new Dictionary<Type, List<WeakActionAndToken>>();
                 recipients = _recipientsStrictAction;
             }
 
-            lock (_recipientsLock)
+            if (!recipients.TryGetValue(messageType, out var list))
             {
-                List<WeakActionAndToken> list;
-
-                if (!recipients.ContainsKey(messageType))
-                {
-                    list = new List<WeakActionAndToken>();
-                    recipients.Add(messageType, list);
-                }
-                else
-                {
-                    list = recipients[messageType];
-                }
-
-                var weakAction = new WeakAction<TMessage>(recipient, action, keepTargetAlive);
-
-                var item = new WeakActionAndToken
-                {
-                    Action = weakAction,
-                    Token = token
-                };
-
-                list.Add(item);
+                list = new List<WeakActionAndToken>();
+                recipients.Add(messageType, list);
             }
+
+            var weakAction = new WeakAction<TMessage>(recipient, action, keepTargetAlive);
+
+            var item = new WeakActionAndToken
+            {
+                Action = weakAction,
+                Token = token
+            };
+
+            list.Add(item);
         }
 
         RequestCleanup();
@@ -240,8 +223,6 @@ public class MessageService : IMessageService
     {
         Register(recipient, null, receiveDerivedMessagesToo, action, keepTargetAlive);
     }
-
-    private bool _isCleanupRegistered;
 
     /// <summary>
     /// Sends a message to registered recipients. The message will
@@ -371,17 +352,23 @@ public class MessageService : IMessageService
     /// </summary>
     public void RequestCleanup()
     {
-        if (_isCleanupRegistered)
+        // Use atomic compare and exchange to prevent race conditions
+        if (Interlocked.CompareExchange(ref _isCleanupRegistered, 1, 0) == 1)
         {
             return;
         }
 
-        _isCleanupRegistered = true;
-
         Task.Run(() =>
         {
-            Cleanup();
-            _isCleanupRegistered = false;
+            try
+            {
+                Cleanup();
+            }
+            finally
+            {
+                // Reset the flag atomically
+                Interlocked.Exchange(ref _isCleanupRegistered, 0);
+            }
         });
     }
 
@@ -395,8 +382,11 @@ public class MessageService : IMessageService
     /// </summary>
     private void Cleanup()
     {
-        CleanupList(_recipientsOfSubclassesAction);
-        CleanupList(_recipientsStrictAction);
+        lock (_cleanupLock)
+        {
+            CleanupList(_recipientsOfSubclassesAction);
+            CleanupList(_recipientsStrictAction);
+        }
     }
 
     /// <summary>
@@ -419,48 +409,64 @@ public class MessageService : IMessageService
         Type? targetType,
         object? token)
     {
+        if (message is null)
+            return;
+
         var messageType = typeof(TMessage);
 
+        // Handle subclass recipients
         if (_recipientsOfSubclassesAction is not null)
         {
-            var listClone = _recipientsOfSubclassesAction.Keys.Take(_recipientsOfSubclassesAction.Count).ToList();
-
-            foreach (var type in listClone.EnsureNotNull())
+            List<Type> typesToProcess;
+            lock (_recipientsLock)
             {
-                List<WeakActionAndToken>? list = null;
+                // Create a simple copy of the keys - removed unnecessary Take() operation
+                typesToProcess = _recipientsOfSubclassesAction.Keys.ToList();
+            }
 
+            foreach (var type in typesToProcess)
+            {
                 if (messageType == type
                     || messageType.IsSubclassOf(type)
                     || type.IsAssignableFrom(messageType))
                 {
-                    lock (_recipientsOfSubclassesActionLock)
+                    List<WeakActionAndToken>? list = null;
+
+                    lock (_recipientsLock)
                     {
-                        if (_recipientsOfSubclassesAction.ContainsKey(type) && _recipientsOfSubclassesAction[type].Count > 0)
+                        if (_recipientsOfSubclassesAction.TryGetValue(type, out var sourceList) && sourceList.Count > 0)
                         {
-                            // Create a safe copy of the list to avoid index out of range exceptions
-                            list = _recipientsOfSubclassesAction[type].ToList();
+                            // Create a safe copy of the list to avoid modification during iteration
+                            list = sourceList.ToList();
                         }
                     }
 
-                    SendToList(message, list, messageType, targetType, token);
+                    if (list is not null)
+                    {
+                        SendToList(message, list, messageType, targetType, token);
+                    }
                 }
             }
         }
 
+        // Handle strict type recipients
         if (_recipientsStrictAction is not null)
         {
             List<WeakActionAndToken>? list = null;
 
-            lock (_recipientsStrictActionLock)
+            lock (_recipientsLock)
             {
-                if (_recipientsStrictAction.ContainsKey(messageType) && _recipientsStrictAction[messageType].Count > 0)
+                if (_recipientsStrictAction.TryGetValue(messageType, out var sourceList) && sourceList.Count > 0)
                 {
-                    // Create a safe copy of the list to avoid index out of range exceptions
-                    list = _recipientsStrictAction[messageType].ToList();
+                    // Create a safe copy of the list to avoid modification during iteration
+                    list = sourceList.ToList();
                 }
             }
 
-            SendToList(message, list, messageType, targetType, token);
+            if (list is not null)
+            {
+                SendToList(message, list, messageType, targetType, token);
+            }
         }
 
         RequestCleanup();
@@ -486,18 +492,15 @@ public class MessageService : IMessageService
     /// token, will not be delivered to that recipient.</param>
     private static void SendToList<TMessage>(
         TMessage message,
-        List<WeakActionAndToken>? list,
+        List<WeakActionAndToken> list,
         Type messageType,
         Type? targetType,
         object? token)
     {
-        if (message is null)
-            return;
-
-        foreach (var item in list.EnsureNotNull())
+        foreach (var item in list)
         {
-            if (item is not null  // Add this null check
-                && item.Action is IExecuteWithObject executeAction
+            // Enhanced null safety and exception handling
+            if (item?.Action is IExecuteWithObject executeAction
                 && item.Action.IsAlive
                 && item.Action.Target is not null
                 && (targetType is null
@@ -506,28 +509,36 @@ public class MessageService : IMessageService
                 && ((item.Token is null && token is null)
                     || item.Token is not null && item.Token.Equals(token)))
             {
-                executeAction.ExecuteWithObject(message);
+                try
+                {
+                    executeAction.ExecuteWithObject(message);
+                }
+                catch
+                {
+                    // Silently catch exceptions to prevent one failing recipient from affecting others
+                    // In a production environment, you might want to log these exceptions
+                    // or provide a configurable exception handling strategy
+                }
             }
         }
     }
 
     private static void UnregisterFromLists(object recipient, Dictionary<Type, List<WeakActionAndToken>>? lists)
     {
-        if (recipient is null
-            || lists is null
-            || lists.Count == 0)
+        if (recipient is null || lists is null || lists.Count == 0)
         {
             return;
         }
 
         lock (lists)
         {
-            foreach (var messageType in lists.Keys.EnsureNotNull())
+            foreach (var messageType in lists.Keys)
             {
-                foreach (var item in lists[messageType].EnsureNotNull())
+                var items = lists[messageType];
+                for (int i = 0; i < items.Count; i++)
                 {
-                    if (item.Action is not null
-                        && item.Action.Target == recipient)
+                    var item = items[i];
+                    if (item?.Action is not null && item.Action.Target == recipient)
                     {
                         item.Action.MarkForDeletion();
                     }
@@ -547,21 +558,20 @@ public class MessageService : IMessageService
         if (recipient is null
             || lists is null
             || lists.Count == 0
-            || !lists.ContainsKey(messageType))
+            || !lists.TryGetValue(messageType, out var items))
         {
             return;
         }
 
         lock (lists)
         {
-            foreach (var item in lists[messageType].EnsureNotNull())
+            for (int i = 0; i < items.Count; i++)
             {
-                if (item.Action is not null
+                var item = items[i];
+                if (item?.Action is not null
                     && item.Action.Target == recipient
-                    && (action is null
-                        || item.Action.MethodName == action.Method.Name)
-                    && (token is null
-                        || item.Token is not null && item.Token.Equals(token)))
+                    && (action is null || item.Action.MethodName == action.Method.Name)
+                    && (token is null || item.Token is not null && item.Token.Equals(token)))
                 {
                     item.Action.MarkForDeletion();
                 }
@@ -578,25 +588,30 @@ public class MessageService : IMessageService
 
         lock (lists)
         {
-            var listsToRemove = new List<Type>();
-            foreach (var messageType in lists.Keys)
-            {
-                var recipientsToRemove = lists[messageType]
-                    .Where(item => item.Action is null || !item.Action.IsAlive)
-                    .ToList();
+            var typesToRemove = new List<Type>();
 
-                foreach (var recipient in recipientsToRemove.EnsureNotNull())
+            foreach (var kvp in lists)
+            {
+                var messageType = kvp.Key;
+                var recipients = kvp.Value;
+
+                // Remove dead references in reverse order to avoid index issues
+                for (int i = recipients.Count - 1; i >= 0; i--)
                 {
-                    lists[messageType].Remove(recipient);
+                    var item = recipients[i];
+                    if (item?.Action is null || !item.Action.IsAlive)
+                    {
+                        recipients.RemoveAt(i);
+                    }
                 }
 
-                if (lists[messageType].Count == 0)
+                if (recipients.Count == 0)
                 {
-                    listsToRemove.Add(messageType);
+                    typesToRemove.Add(messageType);
                 }
             }
 
-            foreach (var key in listsToRemove)
+            foreach (var key in typesToRemove)
             {
                 lists.Remove(key);
             }

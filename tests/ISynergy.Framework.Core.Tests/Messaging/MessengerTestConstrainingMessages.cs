@@ -140,7 +140,7 @@ public class MessengerTestConstrainingMessages
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-        MessageService.Default.Unregister<ITestMessage>(this);
+        MessageService.Default.Unregister<BaseMessage>(this);
         MessageService.Default.Register<BaseMessage>(this, true, ReceiveMessageBase);
 
         MessageService.Default.Send(testMessage);
