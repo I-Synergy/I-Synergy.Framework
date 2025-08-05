@@ -18,7 +18,7 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.ConfigureServices<Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(
+        builder.ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(
             infoService,
             (builder) =>
             {

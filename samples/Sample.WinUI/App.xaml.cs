@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
+using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
@@ -106,7 +107,7 @@ public sealed partial class App : Application
                         throw;
                     }
                 })
-                .ConfigureServices<Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
+                .ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
                 {
                     services.TryAddSingleton<ICameraService, CameraService>();
                 },
@@ -143,9 +144,9 @@ public sealed partial class App : Application
                 {
                     string? password = await _credentialLockerService.GetPasswordFromCredentialLockerAsync(username);
 
-                    if (!string.IsNullOrEmpty(password) && _commonServices?.AuthenticationService != null)
+                    if (!string.IsNullOrEmpty(password) && _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>() is AuthenticationService authenticationService)
                     {
-                        await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(
+                        await authenticationService.AuthenticateWithUsernamePasswordAsync(
                             username,
                             password,
                             _settingsService.LocalSettings.IsAutoLogin);

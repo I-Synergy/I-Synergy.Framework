@@ -28,7 +28,6 @@ public static class AppBuilderExtensions
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
-    /// <typeparam name="TAuthenticationService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="builder"></param>
@@ -37,7 +36,7 @@ public static class AppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostApplicationBuilder ConfigureServices<TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
+    public static IHostApplicationBuilder ConfigureServices<TContext, TCommonServices, TSettingsService, TResource>(
         this IHostApplicationBuilder builder,
         IInfoService infoService,
         Action<IHostApplicationBuilder> action,
@@ -46,7 +45,6 @@ public static class AppBuilderExtensions
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
         where TSettingsService : class, ISettingsService
-        where TAuthenticationService : class, IAuthenticationService
         where TResource : class
     {
         builder.Services.AddOptions();
@@ -76,7 +74,6 @@ public static class AppBuilderExtensions
         builder.Services.TryAddScoped<INavigationService, NavigationService>();
         builder.Services.TryAddSingleton<IBusyService, BusyService>();
         builder.Services.TryAddSingleton<IDialogService, DialogService>();
-        builder.Services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
         builder.Services.TryAddSingleton<ICommonServices, TCommonServices>();
 
         builder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();

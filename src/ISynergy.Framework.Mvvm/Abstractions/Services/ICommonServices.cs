@@ -32,10 +32,6 @@ public interface ICommonServices
     /// <value>The navigation service.</value>
     INavigationService NavigationService { get; }
     /// <summary>
-    /// Gets the authentication service.
-    /// </summary>
-    IAuthenticationService AuthenticationService { get; }
-    /// <summary>
     /// Gets the scoped context service.
     /// </summary>
     IScopedContextService ScopedContextService { get; }

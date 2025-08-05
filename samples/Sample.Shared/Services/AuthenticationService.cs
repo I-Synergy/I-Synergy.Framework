@@ -1,11 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions.Services;
 using Sample.Models;
 
 namespace Sample.Services;
@@ -19,12 +18,6 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly IScopedContextService _scopedContextService;
     private readonly ILogger _logger;
-
-    public event EventHandler<ReturnEventArgs<SoftwareEnvironments>>? SoftwareEnvironmentChanged;
-    public event EventHandler<ReturnEventArgs<bool>>? AuthenticationChanged;
-
-    private void RaiseSoftwareEnvironmentChanged(SoftwareEnvironments softwareEnvironment) => SoftwareEnvironmentChanged?.Invoke(this, new ReturnEventArgs<SoftwareEnvironments>(softwareEnvironment));
-    private void RaiseAuthenticationChanged(bool e) => AuthenticationChanged?.Invoke(this, new ReturnEventArgs<bool>(e));
 
     public AuthenticationService(IScopedContextService scopedContextService, ILogger<AuthenticationService> logger)
     {
@@ -82,31 +75,6 @@ public class AuthenticationService : IAuthenticationService
         ValidateToken(new Token());
     }
 
-    public Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<Country>> GetCountriesAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<Module>> GetModulesAsync(CancellationToken cancellationToken = default)
-    {
-        return Task.FromResult(new List<Module>());
-    }
-
-    public Task<bool> RegisterNewAccountAsync(IRegistrationData registration, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> ResetPasswordAsync(string email, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task SignOutAsync()
     {
         _scopedContextService.CreateNewScope();
@@ -132,13 +100,10 @@ public class AuthenticationService : IAuthenticationService
                 DateTimeOffset.Now.AddDays(7),
                 1,
                 DateTime.Now.AddHours(24));
-
-            RaiseAuthenticationChanged(_scopedContextService.GetRequiredService<IContext>().IsAuthenticated);
-            RaiseSoftwareEnvironmentChanged(_scopedContextService.GetRequiredService<IContext>().Environment);
         }
         else
         {
-            RaiseAuthenticationChanged(false);
+            _scopedContextService.GetRequiredService<IContext>().Profile = null;
         }
     }
 }

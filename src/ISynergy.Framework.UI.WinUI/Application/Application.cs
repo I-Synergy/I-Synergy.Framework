@@ -122,11 +122,8 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 _logger.LogTrace("Setting up main page.");
                 _commonServices.BusyService.StartBusy();
 
-                _logger.LogTrace("Setting up authentication service.");
-                _commonServices.AuthenticationService.AuthenticationChanged += OnAuthenticationChanged;
-                _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
-
                 _logger.LogTrace("Setting up localization service.");
+
                 if (_settingsService.LocalSettings is not null)
                     _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
@@ -637,13 +634,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         {
             try
             {
-                // free managed resources
-                if (_commonServices?.AuthenticationService is not null)
-                {
-                    _commonServices.AuthenticationService.AuthenticationChanged -= OnAuthenticationChanged;
-                    _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
-                }
-
                 AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;

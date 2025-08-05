@@ -91,7 +91,6 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         BackgroundCommand = new AsyncRelayCommand(OpenBackgroundAsync);
     }
 
-
     public abstract Task ShellLoadedAsync();
 
     public abstract Task InitializeFirstRunAsync();
@@ -116,7 +115,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Sign out.
     /// </summary>
     /// <returns></returns>
-    protected virtual Task SignOutAsync() => _commonServices.AuthenticationService.SignOutAsync();
+    protected abstract Task SignOutAsync();
 
     /// <summary>
     /// Shows the dialog restart after update asynchronous.

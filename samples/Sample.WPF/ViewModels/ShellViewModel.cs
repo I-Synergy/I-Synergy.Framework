@@ -221,4 +221,6 @@ public class ShellViewModel : BaseShellViewModel
     public override Task ShellLoadedAsync() => Task.CompletedTask;
 
     public override Task InitializeFirstRunAsync() => Task.CompletedTask;
+
+    protected override Task SignOutAsync() => Task.CompletedTask;
 }

@@ -26,7 +26,6 @@ public static class WpfAppBuilderExtensions
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
-    /// <typeparam name="TAuthenticationService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="wpfAppBuilder"></param>
@@ -35,7 +34,7 @@ public static class WpfAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
+    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TSettingsService, TResource>(
         this IHostBuilder wpfAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
@@ -44,7 +43,6 @@ public static class WpfAppBuilderExtensions
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
         where TSettingsService : class, ISettingsService
-        where TAuthenticationService : class, IAuthenticationService
         where TResource : class
     {
         wpfAppBuilder.ConfigureServices((context, services) =>
@@ -78,7 +76,6 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<IToastMessageService, ToastMessageService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
-            services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
             services.TryAddSingleton<ICommonServices, TCommonServices>();
 
             services.RegisterAssemblies(assembly, assemblyFilter);

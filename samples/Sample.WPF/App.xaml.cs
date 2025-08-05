@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.Extensions;
+using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
@@ -56,7 +57,7 @@ public partial class App : ISynergy.Framework.UI.Application
                             options.Debug = context.HostingEnvironment.IsDevelopment();
                         });
             })
-            .ConfigureServices<Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
+            .ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
 
@@ -90,9 +91,9 @@ public partial class App : ISynergy.Framework.UI.Application
                 string username = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser;
                 string password = await _commonServices.ScopedContextService.GetRequiredService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
 
-                if (!string.IsNullOrEmpty(password))
+                if (!string.IsNullOrEmpty(password) && _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>() is AuthenticationService authenticationService)
                 {
-                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin);
+                    await authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin);
                     navigateToAuthentication = false;
                 }
             }
