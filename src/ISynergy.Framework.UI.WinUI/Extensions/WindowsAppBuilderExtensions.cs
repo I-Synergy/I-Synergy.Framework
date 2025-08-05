@@ -26,7 +26,6 @@ public static class WindowsAppBuilderExtensions
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
-    /// <typeparam name="TAuthenticationService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="windowsAppBuilder"></param>
@@ -35,7 +34,7 @@ public static class WindowsAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
+    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TSettingsService, TResource>(
         this IHostBuilder windowsAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
@@ -44,7 +43,6 @@ public static class WindowsAppBuilderExtensions
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
         where TSettingsService : class, ISettingsService
-        where TAuthenticationService : class, IAuthenticationService
         where TResource : class
     {
         windowsAppBuilder.ConfigureServices((context, services) =>
@@ -77,7 +75,6 @@ public static class WindowsAppBuilderExtensions
             services.TryAddSingleton<IDialogService, DialogService>();
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
-            services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
             services.TryAddSingleton<ICommonServices, TCommonServices>();
             services.TryAddSingleton<IUpdateService, UpdateService>();
 

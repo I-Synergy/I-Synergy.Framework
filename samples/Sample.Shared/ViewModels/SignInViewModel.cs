@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions.Services;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
@@ -16,6 +17,8 @@ namespace Sample.ViewModels;
 
 public class SignInViewModel : ViewModel
 {
+    private readonly IAuthenticationService _authenticationService;
+
     public override string Title { get { return LanguageService.Default.GetString("Login"); } }
 
     /// <summary>
@@ -60,9 +63,12 @@ public class SignInViewModel : ViewModel
 
     public SignInViewModel(
         ICommonServices commonServices,
+        IAuthenticationService authenticationService,
         ILogger<SignInViewModel> logger)
         : base(commonServices, logger)
     {
+        _authenticationService = authenticationService;
+
         SignInCommand = new AsyncRelayCommand(SignInAsync);
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
 
@@ -139,7 +145,7 @@ public class SignInViewModel : ViewModel
         await Task.Delay(5000);
 
         if (Validate())
-            await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
 
         _commonServices.BusyService.StopBusy();
     }

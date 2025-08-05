@@ -142,7 +142,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Sign out.
     /// </summary>
     /// <returns></returns>
-    protected virtual Task SignOutAsync() => _commonServices.AuthenticationService.SignOutAsync();
+    protected abstract Task SignOutAsync();
 
     /// <summary>
     /// Shows the dialog restart after update asynchronous.

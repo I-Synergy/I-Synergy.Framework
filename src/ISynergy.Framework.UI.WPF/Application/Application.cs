@@ -67,10 +67,6 @@ public abstract class Application : System.Windows.Application, IDisposable
         _logger.LogTrace("Getting common services.");
         _commonServices.BusyService.StartBusy();
 
-        _logger.LogInformation("Setting up authentication service.");
-        _commonServices.AuthenticationService.AuthenticationChanged += OnAuthenticationChanged;
-        _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
-
         _logger.LogTrace("Setting up localization service.");
 
         if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is not null)
@@ -290,13 +286,6 @@ public abstract class Application : System.Windows.Application, IDisposable
     {
         if (disposing)
         {
-            // free managed resources
-            if (_commonServices.AuthenticationService is not null)
-            {
-                _commonServices.AuthenticationService.AuthenticationChanged -= OnAuthenticationChanged;
-                _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
-            }
-
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;

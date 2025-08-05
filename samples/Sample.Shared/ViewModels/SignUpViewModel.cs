@@ -231,8 +231,8 @@ public class SignUpViewModel : ViewModel
         {
             ArePickersAvailable = true;
 
-            List<Module> modules = await _commonServices.AuthenticationService.GetModulesAsync();
-            List<Country> countries = await _commonServices.AuthenticationService.GetCountriesAsync();
+            var modules = new List<Module>();
+            var countries = new List<Country>();
 
             Modules = modules.OrderBy(o => o.ModuleId).ToList();
 
@@ -297,7 +297,6 @@ public class SignUpViewModel : ViewModel
             }
 
             if (!HasErrors &&
-                await _commonServices.AuthenticationService.CheckRegistrationEmailAsync(emailaddress) &&
                 PasswordCheck is not null && Password is not null &&
                 PasswordCheck.Equals(Password) &&
                 Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
@@ -314,11 +313,8 @@ public class SignUpViewModel : ViewModel
                     TimeZoneId = SelectedTimeZone
                 };
 
-                if (await _commonServices.AuthenticationService.RegisterNewAccountAsync(registrationData))
-                {
-                    await _commonServices.DialogService.ShowInformationAsync(LanguageService.Default.GetString("WarningRegistrationConfirmEmail"));
-                    await SignInAsync();
-                }
+                await _commonServices.DialogService.ShowInformationAsync(LanguageService.Default.GetString("WarningRegistrationConfirmEmail"));
+                await SignInAsync();
             }
         }
     }

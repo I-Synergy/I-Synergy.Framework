@@ -44,8 +44,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     public ShellViewModel(ICommonServices commonServices, ILogger<ShellViewModel> logger)
         : base(commonServices, logger)
     {
-        _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
-
         SetClock();
 
         _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
@@ -113,9 +111,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         try
         {
-            // Clear profile before base sign out
-            await base.SignOutAsync();
-
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
             {
                 _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = false;
@@ -244,9 +239,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _clockTimer.Stop();
                 _clockTimer.Tick -= ClockTimerCallBack;
             }
-
-            if (_commonServices.AuthenticationService is not null)
-                _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
 
             DisplayCommand?.Dispose();
             InfoCommand?.Dispose();

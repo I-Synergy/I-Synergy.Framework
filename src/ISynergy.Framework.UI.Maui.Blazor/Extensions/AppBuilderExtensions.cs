@@ -30,7 +30,6 @@ public static class AppBuilderExtensions
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
-    /// <typeparam name="TAuthenticationService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="builder"></param>
@@ -39,7 +38,7 @@ public static class AppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TContext, TCommonServices, TAuthenticationService, TSettingsService, TResource>(
+    public static MauiAppBuilder ConfigureServices<TContext, TCommonServices, TSettingsService, TResource>(
         this MauiAppBuilder builder,
         IInfoService infoService,
         Action<MauiAppBuilder> action,
@@ -48,7 +47,6 @@ public static class AppBuilderExtensions
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
         where TSettingsService : class, ISettingsService
-        where TAuthenticationService : class, IAuthenticationService
         where TResource : class
     {
         builder.Services.AddOptions();
@@ -78,7 +76,6 @@ public static class AppBuilderExtensions
         builder.Services.TryAddSingleton<INavigationService, NavigationService>();
         builder.Services.TryAddSingleton<IBusyService, BusyService>();
         builder.Services.TryAddSingleton<IDialogService, DialogService>();
-        builder.Services.TryAddSingleton<IAuthenticationService, TAuthenticationService>();
 
         builder.Services.TryAddSingleton<TCommonServices>();
         builder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());

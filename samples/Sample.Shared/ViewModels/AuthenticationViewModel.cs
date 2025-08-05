@@ -13,6 +13,7 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
@@ -21,6 +22,8 @@ namespace Sample.ViewModels;
 
 public class AuthenticationViewModel : ViewModel
 {
+    private readonly IAuthenticationService _authenticationService;
+
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -182,9 +185,12 @@ public class AuthenticationViewModel : ViewModel
 
     public AuthenticationViewModel(
         ICommonServices commonServices,
+        IAuthenticationService authenticationService,
         ILogger<AuthenticationViewModel> logger)
         : base(commonServices, logger)
     {
+        _authenticationService = authenticationService;
+
         ShowSignInCommand = new RelayCommand(SetLoginVisibility);
         SignInCommand = new AsyncRelayCommand(SignInAsync);
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
@@ -261,7 +267,7 @@ public class AuthenticationViewModel : ViewModel
 
         if (!IsInitialized)
         {
-            Modules = await _commonServices.AuthenticationService.GetModulesAsync();
+            Modules = new List<Module>();
 
             if (Modules.FirstOrDefault() is { } module)
                 Registration_Modules.Add(module);
@@ -357,7 +363,7 @@ public class AuthenticationViewModel : ViewModel
         await Task.Delay(1000);
 
         if (Validate())
-            await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
 
         _commonServices.BusyService.StopBusy();
     }
