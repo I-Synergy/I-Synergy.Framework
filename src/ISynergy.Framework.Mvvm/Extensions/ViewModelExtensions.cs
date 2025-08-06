@@ -120,7 +120,7 @@ public static class ViewModelExtensions
                 AppDomain.CurrentDomain.GetAssemblies()
                     .Where(assemblyFilter)
                     .Reverse()
-                    .SelectMany(assembly => assembly.GetTypes())
+                    .SelectMany(assembly => assembly.GetExportedTypes())
                     .FirstOrDefault(t => t.Name.Equals(name));
     }
 

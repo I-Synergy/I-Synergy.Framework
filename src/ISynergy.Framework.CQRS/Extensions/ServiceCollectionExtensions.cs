@@ -158,7 +158,7 @@ public static class ServiceCollectionExtensions
     {
         // Find all command handler implementations
         var handlerTypes = assemblies
-            .SelectMany(a => a.GetTypes())
+            .SelectMany(a => a.GetExportedTypes())
             .Where(t => t.GetInterfaces().Any(i => IsCommandHandlerInterface(i)))
             .ToList();
 
@@ -177,7 +177,7 @@ public static class ServiceCollectionExtensions
     {
         // Find all query handler implementations
         var handlerTypes = assemblies
-            .SelectMany(a => a.GetTypes())
+            .SelectMany(a => a.GetExportedTypes())
             .Where(t => t.GetInterfaces().Any(i => IsQueryHandlerInterface(i)))
             .ToList();
 
