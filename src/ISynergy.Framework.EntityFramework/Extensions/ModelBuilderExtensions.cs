@@ -197,7 +197,7 @@ public static class ModelBuilderExtensions
         // Filter assemblies that contain classes implementing IEntityTypeConfiguration<>
         var entityAssemblies = assemblies
             .Where(a => !a.IsDynamic &&
-                        a.GetTypes().Any(t =>
+                        a.GetExportedTypes().Any(t =>
                             t.IsClass &&
                             !t.IsAbstract &&
                             t.GetInterfaces().Any(i =>
