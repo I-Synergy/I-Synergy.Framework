@@ -1,5 +1,5 @@
-﻿
-using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Attributes;
+using DescriptionAttribute = ISynergy.Framework.Core.Attributes.DescriptionAttribute;
 
 namespace ISynergy.Framework.Core.Tests.Data.TestClasses;
 
