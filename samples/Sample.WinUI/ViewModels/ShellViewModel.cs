@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
@@ -25,6 +26,7 @@ namespace Sample.ViewModels;
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
+    private readonly IFileService<FileResult> _fileService;
 
     public AsyncRelayCommand DisplayCommand { get; private set; }
     public AsyncRelayCommand InfoCommand { get; private set; }
@@ -40,11 +42,17 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="fileService"></param>
     /// <param name="logger"></param>
-    public ShellViewModel(ICommonServices commonServices, ILogger<ShellViewModel> logger)
+    public ShellViewModel(
+        ICommonServices commonServices,
+        IFileService<FileResult> fileService,
+        ILogger<ShellViewModel> logger)
         : base(commonServices, logger)
     {
         SetClock();
+
+        _fileService = fileService;
 
         _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
         _clockTimer.Tick += ClockTimerCallBack;
@@ -196,7 +204,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
-        if (await _commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
+        if (await _fileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
             await _commonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 

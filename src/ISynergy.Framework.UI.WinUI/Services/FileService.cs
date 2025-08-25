@@ -53,7 +53,6 @@ public class FileService : IFileService<FileResult>
 
         return new FileResult(
                 createdFile.Path,
-                createdFile.Name,
                 () => createdFile.OpenStreamForReadAsync().GetAwaiter().GetResult());
     }
 
@@ -192,7 +191,6 @@ public class FileService : IFileService<FileResult>
 
                     result.Add(new FileResult(
                         file.Path,
-                        file.Name,
                         () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
                 }
             }
@@ -207,7 +205,6 @@ public class FileService : IFileService<FileResult>
 
                 result.Add(new FileResult(
                     file.Path,
-                    file.Name,
                     () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
             }
         }

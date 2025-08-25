@@ -62,7 +62,6 @@ public class CameraService : ICameraService
                     var fileName = $"Capture {DateTime.Now}";
                     return new FileResult(
                         $"{fileName}.png",
-                        fileName,
                         () => photo.Frame.AsStreamForRead());
                 }
 

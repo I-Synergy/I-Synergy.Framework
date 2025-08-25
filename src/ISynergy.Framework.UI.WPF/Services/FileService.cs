@@ -58,7 +58,7 @@ public class FileService : IFileService<FileResult>
 
         if (dialogResult)
         {
-            result.AddRange(fileDialog.FileNames.Select(file => new FileResult(file, Path.GetFileName(file), () => File.OpenRead(file))));
+            result.AddRange(fileDialog.FileNames.Select(file => new FileResult(file, () => File.OpenRead(file))));
         }
 
         return Task.FromResult(result);
@@ -109,7 +109,6 @@ public class FileService : IFileService<FileResult>
             return Task.FromResult<FileResult?>(
                 new FileResult(
                     fileDialog.FileName,
-                    Path.GetFileName(fileDialog.FileName),
                     () => File.OpenRead(fileDialog.FileName)));
         }
 

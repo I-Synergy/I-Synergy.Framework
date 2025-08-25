@@ -18,8 +18,6 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Scoped)]
 public partial class Window : ContentDialog, IWindow
 {
-    private IViewModel? _viewModel;
-
     /// <summary>
     /// Default constructor.
     /// </summary>
@@ -43,11 +41,16 @@ public partial class Window : ContentDialog, IWindow
     /// <value>The data context.</value>
     public IViewModel? ViewModel
     {
-        get => _viewModel;
+        get
+        {
+            if (DataContext is IViewModel viewModel)
+                return viewModel;
+
+            return null;
+        }
         set
         {
-            _viewModel = value;
-            DataContext = _viewModel;
+            DataContext = value;
         }
     }
 

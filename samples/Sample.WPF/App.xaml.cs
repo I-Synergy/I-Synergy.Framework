@@ -3,10 +3,12 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -59,6 +61,8 @@ public partial class App : ISynergy.Framework.UI.Application
             })
             .ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
+                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                services.TryAddSingleton<IFileService<FileResult>, FileService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
 
                 services.AddNugetServiceIntegrations(configuration);

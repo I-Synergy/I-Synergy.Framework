@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
@@ -109,6 +110,8 @@ public sealed partial class App : Application
                 })
                 .ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
                 {
+                    services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                    services.TryAddSingleton<IFileService<FileResult>, FileService>();
                     services.TryAddSingleton<ICameraService, CameraService>();
                 },
                 mainAssembly,

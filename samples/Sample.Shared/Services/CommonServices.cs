@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
 using System.Diagnostics;
 
 namespace Sample.Services;
@@ -44,12 +43,6 @@ public class CommonServices : ICommonServices
     public IScopedContextService ScopedContextService { get; }
 
     /// <summary>
-    /// Gets the file service.
-    /// </summary>
-    /// <value>The file service.</value>
-    public IFileService<FileResult> FileService { get; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="CommonServices"/> class.
     /// </summary>
     /// <param name="languageService"></param>
@@ -57,17 +50,14 @@ public class CommonServices : ICommonServices
     /// <param name="busyService">The busy.</param>
     /// <param name="dialogService">The dialog.</param>
     /// <param name="navigationService">The navigation.</param>
-    /// <param name="authenticationService"></param>
     /// <param name="scopedContextService"></param>
-    /// <param name="fileService"></param>
     public CommonServices(
         ILanguageService languageService,
         IInfoService infoService,
         IBusyService busyService,
         IDialogService dialogService,
         INavigationService navigationService,
-        IScopedContextService scopedContextService,
-        IFileService<FileResult> fileService)
+        IScopedContextService scopedContextService)
     {
         LanguageService = languageService;
         InfoService = infoService;
@@ -75,7 +65,6 @@ public class CommonServices : ICommonServices
         DialogService = dialogService;
         NavigationService = navigationService;
         ScopedContextService = scopedContextService;
-        FileService = fileService;
     }
 
     /// <summary>
