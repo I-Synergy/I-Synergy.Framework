@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace ISynergy.Framework.Mvvm.Models.Tests;
+﻿namespace ISynergy.Framework.Mvvm.Models.Tests;
 
 [TestClass]
 public class FileResultTests
@@ -26,7 +24,7 @@ public class FileResultTests
     public void Constructor_InitializesProperties()
     {
         // Arrange & Act
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream);
+        var fileResult = new FileResult(TestFilePath, () => _testStream);
 
         // Assert
         Assert.AreEqual(TestFilePath, fileResult.FilePath);
@@ -37,7 +35,7 @@ public class FileResultTests
     public void GetStream_ReturnsValidStream()
     {
         // Arrange
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream);
+        var fileResult = new FileResult(TestFilePath, () => _testStream);
 
         // Act
         using var stream = fileResult.GetStream();
@@ -51,7 +49,7 @@ public class FileResultTests
     public void File_ReturnsCorrectData()
     {
         // Arrange
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => new MemoryStream(_testData));
+        var fileResult = new FileResult(TestFilePath, () => new MemoryStream(_testData));
 
         // Act
         var resultData = fileResult.File;
@@ -65,7 +63,7 @@ public class FileResultTests
     public void GetStream_WhenDisposed_ThrowsObjectDisposedException()
     {
         // Arrange
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream);
+        var fileResult = new FileResult(TestFilePath, () => _testStream);
         fileResult.Dispose();
 
         // Act
@@ -77,7 +75,7 @@ public class FileResultTests
     public void FileName_Get_WhenDisposed_ThrowsObjectDisposedException()
     {
         // Arrange
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream);
+        var fileResult = new FileResult(TestFilePath, () => _testStream);
         fileResult.Dispose();
 
         // Act
@@ -86,38 +84,14 @@ public class FileResultTests
 
     [TestMethod]
     [ExpectedException(typeof(ObjectDisposedException))]
-    public void FileName_Set_WhenDisposed_ThrowsObjectDisposedException()
-    {
-        // Arrange
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream);
-        fileResult.Dispose();
-
-        // Act
-        fileResult.FileName = "new.txt";
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(ObjectDisposedException))]
     public void FilePath_Get_WhenDisposed_ThrowsObjectDisposedException()
     {
         // Arrange
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream);
+        var fileResult = new FileResult(TestFilePath, () => _testStream);
         fileResult.Dispose();
 
         // Act
         _ = fileResult.FilePath;
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(ObjectDisposedException))]
-    public void FilePath_Set_WhenDisposed_ThrowsObjectDisposedException()
-    {
-        // Arrange
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream);
-        fileResult.Dispose();
-
-        // Act
-        fileResult.FilePath = @"C:\new\path.txt";
     }
 
     [TestMethod]
@@ -138,7 +112,7 @@ public class FileResultTests
     {
         // Arrange
         bool disposeCalled = false;
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream,
+        var fileResult = new FileResult(TestFilePath, () => _testStream,
             disposing => disposeCalled = true);
 
         // Act
@@ -153,7 +127,7 @@ public class FileResultTests
     {
         // Arrange
         int disposeCount = 0;
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream,
+        var fileResult = new FileResult(TestFilePath, () => _testStream,
             disposing => disposeCount++);
 
         // Act
@@ -168,7 +142,7 @@ public class FileResultTests
     public void Dispose_SetsIsDisposedFlag()
     {
         // Arrange
-        var fileResult = new FileResult(TestFilePath, TestFileName, () => _testStream);
+        var fileResult = new FileResult(TestFilePath, () => _testStream);
 
         // Act
         fileResult.Dispose();

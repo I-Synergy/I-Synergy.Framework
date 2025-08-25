@@ -16,16 +16,23 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Scoped)]
 public abstract partial class View : Page, IView
 {
-    private IViewModel? _viewModel;
-
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
     public IViewModel? ViewModel
     {
-        get => _viewModel;
-        set => _viewModel = value;
+        get
+        {
+            if (DataContext is IViewModel viewModel)
+                return viewModel;
+
+            return null;
+        }
+        set
+        {
+            DataContext = value;
+        }
     }
 
     #region IDisposable

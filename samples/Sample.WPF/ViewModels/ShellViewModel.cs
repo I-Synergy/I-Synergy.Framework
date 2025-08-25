@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,7 @@ namespace Sample.ViewModels;
 public class ShellViewModel : BaseShellViewModel
 {
     private readonly IToastMessageService _toastMessageService;
+    private readonly IFileService<FileResult> _fileService;
 
     /// <summary>
     /// Gets or sets the Version property value.
@@ -66,13 +68,16 @@ public class ShellViewModel : BaseShellViewModel
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
+    /// <param name="fileService"></param>
     /// <param name="toastMessageService"></param>
     public ShellViewModel(
         ICommonServices commonServices,
         ILogger<ShellViewModel> logger,
+        IFileService<FileResult> fileService,
         IToastMessageService toastMessageService)
         : base(commonServices, logger)
     {
+        _fileService = fileService;
         _toastMessageService = toastMessageService;
 
         Title = _commonServices.InfoService.ProductName;
@@ -208,7 +213,7 @@ public class ShellViewModel : BaseShellViewModel
     {
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
-        if (await _commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
+        if (await _fileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
             await _commonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 

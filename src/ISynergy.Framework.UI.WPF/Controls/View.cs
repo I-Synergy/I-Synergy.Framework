@@ -15,19 +15,22 @@ namespace ISynergy.Framework.UI.Controls;
 [Bindable(true)]
 public abstract partial class View : Page, IView
 {
-    private IViewModel? _viewModel;
-
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
     public IViewModel? ViewModel
     {
-        get => _viewModel;
+        get
+        {
+            if (DataContext is IViewModel viewModel)
+                return viewModel;
+
+            return null;
+        }
         set
         {
-            _viewModel = value;
-            DataContext = _viewModel;
+            DataContext = value;
         }
     }
 

@@ -13,7 +13,7 @@ public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
         var attributes = new List<KeyValuePair<string, object?>>();
 
         // Add user context information to all log entries
-        var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
+        var scopedContextService = ServiceLocator.Default.GetRequiredService<IScopedContextService>();
         var context = scopedContextService.GetRequiredService<IContext>();
 
         if (context is not null && context.Profile is not null)
@@ -32,7 +32,7 @@ public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
         }
 
         // Add application context info
-        var infoService = ServiceLocator.Default.GetService<IInfoService>();
+        var infoService = ServiceLocator.Default.GetRequiredService<IInfoService>();
 
         if (infoService is not null)
         {

@@ -69,7 +69,7 @@ public sealed partial class ImageBrowser : UserControl
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     private async void Button_Browse_Tapped(object? sender, TappedRoutedEventArgs e)
     {
-        if (ServiceLocator.Default.GetService<IFileService<FileResult>>() is { } fileService)
+        if (ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
         {
             var result = await fileService.BrowseFileAsync($"{LanguageService.Default.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp");
 
@@ -90,7 +90,7 @@ public sealed partial class ImageBrowser : UserControl
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     private async void Button_Camera_Tapped(object? sender, TappedRoutedEventArgs e)
     {
-        if (ServiceLocator.Default.GetService<ICameraService>() is { } cameraService)
+        if (ServiceLocator.Default.GetRequiredService<ICameraService>() is { } cameraService)
         {
             var result = await cameraService.TakePictureAsync();
 
@@ -120,7 +120,7 @@ public sealed partial class ImageBrowser : UserControl
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     private async void Button_Paste_Tapped(object? sender, TappedRoutedEventArgs e)
     {
-        if (ServiceLocator.Default.GetService<IClipboardService>() is { } clipboardService &&
+        if (ServiceLocator.Default.GetRequiredService<IClipboardService>() is { } clipboardService &&
             await clipboardService.GetImageFromClipboardAsync() is { } imageResult)
         {
             FileBytes = imageResult.FileBytes;

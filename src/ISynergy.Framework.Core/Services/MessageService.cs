@@ -19,9 +19,6 @@ public class MessageService : IMessageService
     private static readonly object _creationLock = new object();
     private static IMessageService? _defaultInstance;
 
-    // Use int for atomic operations instead of bool
-    private int _isCleanupRegistered = 0;
-
     /// <summary>
     /// Gets the Messenger's default instance, allowing
     /// to register and send messages in a static manner.
@@ -182,7 +179,7 @@ public class MessageService : IMessageService
             list.Add(item);
         }
 
-        RequestCleanup();
+        Cleanup();
     }
 
     /// <summary>
@@ -344,32 +341,7 @@ public class MessageService : IMessageService
     {
         UnregisterFromLists(recipient, token, action, _recipientsStrictAction);
         UnregisterFromLists(recipient, token, action, _recipientsOfSubclassesAction);
-        RequestCleanup();
-    }
-
-    /// <summary>
-    /// Requests a cleanup of the Messenger's lists.
-    /// </summary>
-    public void RequestCleanup()
-    {
-        // Use atomic compare and exchange to prevent race conditions
-        if (Interlocked.CompareExchange(ref _isCleanupRegistered, 1, 0) == 1)
-        {
-            return;
-        }
-
-        Task.Run(() =>
-        {
-            try
-            {
-                Cleanup();
-            }
-            finally
-            {
-                // Reset the flag atomically
-                Interlocked.Exchange(ref _isCleanupRegistered, 0);
-            }
-        });
+        Cleanup();
     }
 
     /// <summary>
@@ -469,7 +441,7 @@ public class MessageService : IMessageService
             }
         }
 
-        RequestCleanup();
+        Cleanup();
     }
 
     /// <summary>
@@ -639,6 +611,8 @@ public class MessageService : IMessageService
     /// </summary>
     public static void Reset()
     {
+        var currentInstance = _defaultInstance as MessageService;
         _defaultInstance = null;
+        currentInstance?.Cleanup();
     }
 }

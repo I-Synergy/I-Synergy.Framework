@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
+//using ISynergy.Framework.Mvvm.Models;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
@@ -35,11 +35,6 @@ public interface ICommonServices
     /// Gets the scoped context service.
     /// </summary>
     IScopedContextService ScopedContextService { get; }
-    /// <summary>
-    /// Gets the file service.
-    /// </summary>
-    /// <value>The file service.</value>
-    IFileService<FileResult> FileService { get; }
     /// <summary>
     /// Restarts application.
     /// </summary>

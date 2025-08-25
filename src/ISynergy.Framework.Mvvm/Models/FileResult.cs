@@ -24,13 +24,12 @@ public sealed class FileResult : IDisposable
     /// Initializes a new instance of the <see cref="FileResult"/> class.
     /// </summary>
     /// <param name="filePath">The file path.</param>
-    /// <param name="fileName">Name of the file.</param>
     /// <param name="streamGetter">The stream getter.</param>
     /// <param name="dispose">The dispose.</param>
-    public FileResult(string filePath, string fileName, Func<Stream> streamGetter, Action<bool>? dispose = null)
+    public FileResult(string filePath, Func<Stream> streamGetter, Action<bool>? dispose = null)
     {
         _filePath = filePath;
-        _fileName = fileName;
+        _fileName = Path.GetFileName(_filePath);
         _dispose = dispose;
         _streamGetter = streamGetter;
     }
@@ -49,14 +48,6 @@ public sealed class FileResult : IDisposable
                 throw new ObjectDisposedException(null);
 
             return _fileName;
-        }
-
-        set
-        {
-            if (_isDisposed)
-                throw new ObjectDisposedException(null);
-
-            _fileName = value;
         }
     }
 
@@ -105,14 +96,6 @@ public sealed class FileResult : IDisposable
                 throw new ObjectDisposedException(null);
 
             return _filePath;
-        }
-
-        set
-        {
-            if (_isDisposed)
-                throw new ObjectDisposedException(null);
-
-            _filePath = value;
         }
     }
 
