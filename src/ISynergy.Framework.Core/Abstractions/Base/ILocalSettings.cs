@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Abstractions.Base;
 
@@ -7,6 +8,8 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 /// </summary>
 public interface ILocalSettings
 {
+    event PropertyChangedEventHandler? PropertyChanged;
+
     /// <summary>
     /// Setting for maintaining the default culture used.
     /// </summary>
@@ -48,6 +51,10 @@ public interface ILocalSettings
     /// Setting for maintaining the advanced mode of the application.
     /// </summary>
     bool IsAdvanced { get; set; }
+    /// <summary>
+    /// Setting for maintaining if the console window should be shown.
+    /// </summary>
+    bool ShowConsole { get; set; }
     /// <summary>
     /// Setting for maintaining the last used migration version of the application.
     /// </summary>

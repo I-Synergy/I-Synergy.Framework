@@ -18,6 +18,7 @@ public class LocalSettings : ObservableClass, ILocalSettings
     public bool IsAutoLogin { get; set; }
     public bool IsAdvanced { get; set; }
     public int MigrationVersion { get; set; }
+    public bool ShowConsole { get; set; }
 
     public LocalSettings()
     {
