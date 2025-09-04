@@ -76,9 +76,6 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<TCommonServices>();
         services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());
 
-        services.TryAddSingleton<IDialogService, DialogService>();
-        services.TryAddSingleton<NavigationManager>();
-
         services.AddAuthorizationCore();
 
         services.TryAddTransient<IAntiforgeryHttpClientFactory, AntiforgeryHttpClientFactory>();
