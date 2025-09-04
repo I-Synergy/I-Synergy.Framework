@@ -18,17 +18,20 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(
-            infoService,
-            (builder) =>
-            {
-                builder.Logging
-                    .AddTelemetry(builder, infoService)
-                    .AddOtlpExporter();
-            },
-            mainAssembly,
-            f => f.Name!.StartsWith(typeof(Program).Namespace!));
+        builder.Logging
+            .AddTelemetry(builder, infoService)
+            .AddOtlpExporter();
 
+        builder.Services
+            .ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(
+                builder.Configuration,
+                infoService,
+                (builder) =>
+                {
+
+                },
+                mainAssembly,
+                f => f.Name!.StartsWith(typeof(Program).Namespace!));
 
         // Add services to the container.
         builder.Services.AddRazorComponents()
