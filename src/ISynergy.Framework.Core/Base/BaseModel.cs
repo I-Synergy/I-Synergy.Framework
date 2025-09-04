@@ -4,12 +4,12 @@ namespace ISynergy.Framework.Core.Base;
 
 /// <summary>
 /// Class ModelBase.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// Implements the <see cref="IModel" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IModel" />
-public abstract class BaseModel : ObservableClass, IModel
+public abstract class BaseModel : ObservableValidatedClass, IModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseModel"/> class.

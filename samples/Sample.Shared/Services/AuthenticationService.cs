@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Models;
@@ -68,8 +67,6 @@ public class AuthenticationService : IAuthenticationService
                 _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser = username;
                 await _scopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
             }
-
-            await _scopedContextService.GetService<ICredentialLockerService>().AddCredentialToCredentialLockerAsync(username, password);
         }
 
         ValidateToken(new Token());

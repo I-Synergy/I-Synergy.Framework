@@ -4,10 +4,10 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses;
 
 /// <summary>
 /// Class ProductGroup.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
-public class ProductGroup : ObservableClass
+/// <seealso cref="ObservableValidatedClass" />
+public class ProductGroup : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the GroupId property value.

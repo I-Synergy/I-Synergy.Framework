@@ -22,6 +22,9 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />
+		<EmbeddedResource Include="Assets\Fonts\fontawesome6free-regular-400.otf" />
+		<EmbeddedResource Include="Assets\gta.mp4" />
+		<EmbeddedResource Include="Assets\sample.mp4" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -52,5 +55,16 @@
 		<Using Include="ISynergy.Framework.UI.Application">
 			<Alias>Application</Alias>
 		</Using>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\ShellView.xaml.cs">
+	    <DependentUpon>ShellView.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Styles\Style.xaml" Link="Styles\Style.xaml" />
+	  <Page Update="Views\ShellView.xaml" Link="Views\ShellView.xaml" />
 	</ItemGroup>
 </Project>

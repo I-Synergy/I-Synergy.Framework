@@ -11,6 +11,9 @@ namespace Sample.ViewModels;
 
 public class SettingsViewModel : ViewModelNavigation<object>
 {
+    private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
+
     public override string Title { get => LanguageService.Default.GetString("Settings"); }
 
     /// <summary>
@@ -42,9 +45,14 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
     public SettingsViewModel(
         ICommonServices commonServices,
+        IDialogService dialogService,
+        INavigationService navigationService,
         ILogger<SettingsViewModel> logger)
         : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
 
@@ -93,7 +101,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
     public override async Task CancelAsync()
     {
         await base.CancelAsync();
-        await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
+        await _navigationService.NavigateModalAsync<IShellViewModel>();
     }
 
     public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)

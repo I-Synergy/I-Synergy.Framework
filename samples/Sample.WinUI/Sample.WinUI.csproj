@@ -22,6 +22,11 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Content Remove="Assets\Fonts\fontawesome6free-regular-400.otf" />
+	  <Content Remove="Assets\gta.mp4" />
+	  <Content Remove="Assets\sample.mp4" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<AppxManifest Include="Package.appxmanifest">
@@ -34,6 +39,9 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />
+		<EmbeddedResource Include="Assets\Fonts\fontawesome6free-regular-400.otf" />
+		<EmbeddedResource Include="Assets\gta.mp4" />
+		<EmbeddedResource Include="Assets\sample.mp4" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -69,11 +77,27 @@
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
 
-	<Import Project="..\Sample.UI.Shared\Sample.UI.Shared.projitems" Label="Shared" />
-
 	<ItemGroup>
 		<Using Include="ISynergy.Framework.UI.Application">
 			<Alias>Application</Alias>
 		</Using>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\ShellView.xaml.cs">
+	    <DependentUpon>ShellView.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Styles\Images.xaml" Link="Styles\Images.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="Styles\Style.xaml" Link="Styles\Style.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="Views\ShellView.xaml" Link="Views\ShellView.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
 	</ItemGroup>
 </Project>

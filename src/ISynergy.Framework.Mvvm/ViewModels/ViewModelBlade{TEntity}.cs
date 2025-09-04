@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
@@ -47,7 +47,7 @@ public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     {
         SelectedItem = e;
 
-        if (SelectedItem is IObservableClass observableClass)
+        if (SelectedItem is IObservableValidatedClass observableClass)
             observableClass.MarkAsClean();
 
         IsUpdate = isUpdate;

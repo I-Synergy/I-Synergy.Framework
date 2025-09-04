@@ -22,10 +22,10 @@ public class MessengerRegisterUnregisterTest
         DateTime testContentDateTime = DateTime.Now;
         const string testContentString = "abcd";
 
-        MessageService.Reset();
+        MessengerService.Reset();
         Reset();
 
-        MessageService.Default.Register<TestMessageGenericBase>(
+        MessengerService.Default.Register<TestMessageGenericBase>(
             this,
             true,
             m =>
@@ -58,7 +58,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(null, ReceivedContentException);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
-        MessageService.Default.Send(new TestMessageGeneric<Exception>
+        MessengerService.Default.Send(new TestMessageGeneric<Exception>
         {
             Content = testContentException
         });
@@ -67,7 +67,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentException, ReceivedContentException);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
-        MessageService.Default.Send(new TestMessageGeneric<DateTime>
+        MessengerService.Default.Send(new TestMessageGeneric<DateTime>
         {
             Content = testContentDateTime
         });
@@ -76,7 +76,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentException, ReceivedContentException);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
 
-        MessageService.Default.Send(new TestMessageGeneric<string>
+        MessengerService.Default.Send(new TestMessageGeneric<string>
         {
             Content = testContentString
         });
@@ -93,18 +93,18 @@ public class MessengerRegisterUnregisterTest
         DateTime testContentDateTime = DateTime.Now;
         const string testContentString = "abcd";
 
-        MessageService.Reset();
+        MessengerService.Reset();
         Reset();
 
-        MessageService.Default.Register<TestMessageGeneric<DateTime>>(this, m => ReceivedContentDateTime1 = m.Content);
-        MessageService.Default.Register<TestMessageGeneric<Exception>>(this, m => ReceivedContentException = m.Content);
-        MessageService.Default.Register<TestMessageGeneric<string>>(this, m => ReceivedContentStringA1 = m.Content);
+        MessengerService.Default.Register<TestMessageGeneric<DateTime>>(this, m => ReceivedContentDateTime1 = m.Content);
+        MessengerService.Default.Register<TestMessageGeneric<Exception>>(this, m => ReceivedContentException = m.Content);
+        MessengerService.Default.Register<TestMessageGeneric<string>>(this, m => ReceivedContentStringA1 = m.Content);
 
         Assert.AreEqual(null, ReceivedContentStringA1);
         Assert.AreEqual(null, ReceivedContentException);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
-        MessageService.Default.Send(new TestMessageGeneric<Exception>
+        MessengerService.Default.Send(new TestMessageGeneric<Exception>
         {
             Content = testContentException
         });
@@ -113,7 +113,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentException, ReceivedContentException);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
-        MessageService.Default.Send(new TestMessageGeneric<DateTime>
+        MessengerService.Default.Send(new TestMessageGeneric<DateTime>
         {
             Content = testContentDateTime
         });
@@ -122,7 +122,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentException, ReceivedContentException);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
 
-        MessageService.Default.Send(new TestMessageGeneric<string>
+        MessengerService.Default.Send(new TestMessageGeneric<string>
         {
             Content = testContentString
         });
@@ -138,12 +138,12 @@ public class MessengerRegisterUnregisterTest
         DateTime testContentDateTime = DateTime.Now;
         const string testContentString = "abcd";
 
-        MessageService.Reset();
+        MessengerService.Reset();
         Reset();
 
         int receivedMessages = 0;
 
-        MessageService.Default.Register<TestMessageGenericBase>(
+        MessengerService.Default.Register<TestMessageGenericBase>(
             this,
             true,
             m =>
@@ -166,7 +166,7 @@ public class MessengerRegisterUnregisterTest
                 }
             });
 
-        MessageService.Default.Register<TestMessageGeneric<DateTime>>(this,
+        MessengerService.Default.Register<TestMessageGeneric<DateTime>>(this,
                                                                  m =>
                                                                  {
                                                                      receivedMessages++;
@@ -177,7 +177,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime2);
 
-        MessageService.Default.Send(new TestMessageGeneric<DateTime>
+        MessengerService.Default.Send(new TestMessageGeneric<DateTime>
         {
             Content = testContentDateTime
         });
@@ -187,7 +187,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime2);
 
-        MessageService.Default.Send(new TestMessageGeneric<string>
+        MessengerService.Default.Send(new TestMessageGeneric<string>
         {
             Content = testContentString
         });
@@ -214,9 +214,9 @@ public class MessengerRegisterUnregisterTest
         const string testContentB = "efgh";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<object>(
+        MessengerService.Default.Register<object>(
             this,
             true,
             m =>
@@ -239,7 +239,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(null, ReceivedContentStringA1);
         Assert.AreEqual(null, ReceivedContentStringB);
 
-        MessageService.Default.Send(new TestMessageA
+        MessengerService.Default.Send(new TestMessageA
         {
             Content = testContentA
         });
@@ -247,7 +247,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentA, ReceivedContentStringA1);
         Assert.AreEqual(null, ReceivedContentStringB);
 
-        MessageService.Default.Send(new TestMessageB
+        MessengerService.Default.Send(new TestMessageB
         {
             Content = testContentB
         });
@@ -264,9 +264,9 @@ public class MessengerRegisterUnregisterTest
         const string testContentB = "efgh";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<TestMessageA>(
+        MessengerService.Default.Register<TestMessageA>(
             this,
             true,
             m =>
@@ -288,7 +288,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(null, ReceivedContentStringA2);
         Assert.AreEqual(null, ReceivedContentStringB);
 
-        MessageService.Default.Send(new TestMessageA
+        MessengerService.Default.Send(new TestMessageA
         {
             Content = testContentA
         });
@@ -297,7 +297,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(null, ReceivedContentStringA2);
         Assert.AreEqual(null, ReceivedContentStringB);
 
-        MessageService.Default.Send(new TestMessageAa
+        MessengerService.Default.Send(new TestMessageAa
         {
             Content = testContentAa
         });
@@ -306,7 +306,7 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentAa, ReceivedContentStringA2);
         Assert.AreEqual(null, ReceivedContentStringB);
 
-        MessageService.Default.Send(new TestMessageB
+        MessengerService.Default.Send(new TestMessageB
         {
             Content = testContentB
         });
@@ -323,30 +323,30 @@ public class MessengerRegisterUnregisterTest
         var testContentDateTime = new DateTime(2025, 5, 20, 13, 34, 1);
         const int testContentInt = 42;
 
-        MessageService.Reset();
+        MessengerService.Reset();
         Reset();
 
-        MessageService.Default.Register<string>(this, m => ReceivedContentStringA1 = m);
-        MessageService.Default.Register<DateTime>(this, m => ReceivedContentDateTime1 = m);
-        MessageService.Default.Register<int>(this, m => ReceivedContentInt = m);
+        MessengerService.Default.Register<string>(this, m => ReceivedContentStringA1 = m);
+        MessengerService.Default.Register<DateTime>(this, m => ReceivedContentDateTime1 = m);
+        MessengerService.Default.Register<int>(this, m => ReceivedContentInt = m);
 
         Assert.AreEqual(null, ReceivedContentStringA1);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
         Assert.AreEqual(default, ReceivedContentInt);
 
-        MessageService.Default.Send(testContentString);
+        MessengerService.Default.Send(testContentString);
 
         Assert.AreEqual(testContentString, ReceivedContentStringA1);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
         Assert.AreEqual(default, ReceivedContentInt);
 
-        MessageService.Default.Send(testContentDateTime);
+        MessengerService.Default.Send(testContentDateTime);
 
         Assert.AreEqual(testContentString, ReceivedContentStringA1);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
         Assert.AreEqual(default, ReceivedContentInt);
 
-        MessageService.Default.Send(testContentInt);
+        MessengerService.Default.Send(testContentInt);
 
         Assert.AreEqual(testContentString, ReceivedContentStringA1);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
@@ -362,16 +362,16 @@ public class MessengerRegisterUnregisterTest
         const string testContentB2 = "5678";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
         Action<TestMessageA> actionA1 = m => ReceivedContentStringA1 = m.Content;
 
-        MessageService.Default.Register(this, actionA1);
-        MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
-        MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
+        MessengerService.Default.Register(this, actionA1);
+        MessengerService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
+        MessengerService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
         TestRecipient externalRecipient = new();
-        externalRecipient.RegisterWith(MessageService.Default);
+        externalRecipient.RegisterWith(MessengerService.Default);
 
         Assert.AreEqual(null, ReceivedContentStringA1);
         Assert.AreEqual(null, ReceivedContentStringA2);
@@ -379,12 +379,12 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(null, externalRecipient.ReceivedContentA);
         Assert.AreEqual(null, externalRecipient.ReceivedContentB);
 
-        MessageService.Default.Send(new TestMessageA
+        MessengerService.Default.Send(new TestMessageA
         {
             Content = testContentA1
         });
 
-        MessageService.Default.Send(new TestMessageB
+        MessengerService.Default.Send(new TestMessageB
         {
             Content = testContentB1
         });
@@ -395,14 +395,14 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentA1, externalRecipient.ReceivedContentA);
         Assert.AreEqual(testContentB1, externalRecipient.ReceivedContentB);
 
-        MessageService.Default.Unregister(this, actionA1);
+        MessengerService.Default.Unregister(this, actionA1);
 
-        MessageService.Default.Send(new TestMessageA
+        MessengerService.Default.Send(new TestMessageA
         {
             Content = testContentA2
         });
 
-        MessageService.Default.Send(new TestMessageB
+        MessengerService.Default.Send(new TestMessageB
         {
             Content = testContentB2
         });
@@ -423,14 +423,14 @@ public class MessengerRegisterUnregisterTest
         const string testContentB2 = "5678";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA1 = m.Content);
-        MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
-        MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
+        MessengerService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA1 = m.Content);
+        MessengerService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
+        MessengerService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
         TestRecipient externalRecipient = new();
-        externalRecipient.RegisterWith(MessageService.Default);
+        externalRecipient.RegisterWith(MessengerService.Default);
 
         Assert.AreEqual(null, ReceivedContentStringA1);
         Assert.AreEqual(null, ReceivedContentStringA2);
@@ -438,12 +438,12 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(null, externalRecipient.ReceivedContentA);
         Assert.AreEqual(null, externalRecipient.ReceivedContentB);
 
-        MessageService.Default.Send(new TestMessageA
+        MessengerService.Default.Send(new TestMessageA
         {
             Content = testContentA1
         });
 
-        MessageService.Default.Send(new TestMessageB
+        MessengerService.Default.Send(new TestMessageB
         {
             Content = testContentB1
         });
@@ -454,14 +454,14 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentA1, externalRecipient.ReceivedContentA);
         Assert.AreEqual(testContentB1, externalRecipient.ReceivedContentB);
 
-        MessageService.Default.Unregister(this);
+        MessengerService.Default.Unregister(this);
 
-        MessageService.Default.Send(new TestMessageA
+        MessengerService.Default.Send(new TestMessageA
         {
             Content = testContentA2
         });
 
-        MessageService.Default.Send(new TestMessageB
+        MessengerService.Default.Send(new TestMessageB
         {
             Content = testContentB2
         });
@@ -482,14 +482,14 @@ public class MessengerRegisterUnregisterTest
         const string testContentB2 = "5678";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA1 = m.Content);
-        MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
-        MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
+        MessengerService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA1 = m.Content);
+        MessengerService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
+        MessengerService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
         TestRecipient externalRecipient = new();
-        externalRecipient.RegisterWith(MessageService.Default);
+        externalRecipient.RegisterWith(MessengerService.Default);
 
         Assert.AreEqual(null, ReceivedContentStringA1);
         Assert.AreEqual(null, ReceivedContentStringA2);
@@ -497,12 +497,12 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(null, externalRecipient.ReceivedContentA);
         Assert.AreEqual(null, externalRecipient.ReceivedContentB);
 
-        MessageService.Default.Send(new TestMessageA
+        MessengerService.Default.Send(new TestMessageA
         {
             Content = testContentA1
         });
 
-        MessageService.Default.Send(new TestMessageB
+        MessengerService.Default.Send(new TestMessageB
         {
             Content = testContentB1
         });
@@ -513,14 +513,14 @@ public class MessengerRegisterUnregisterTest
         Assert.AreEqual(testContentA1, externalRecipient.ReceivedContentA);
         Assert.AreEqual(testContentB1, externalRecipient.ReceivedContentB);
 
-        MessageService.Default.Unregister<TestMessageA>(this);
+        MessengerService.Default.Unregister<TestMessageA>(this);
 
-        MessageService.Default.Send(new TestMessageA
+        MessengerService.Default.Send(new TestMessageA
         {
             Content = testContentA2
         });
 
-        MessageService.Default.Send(new TestMessageB
+        MessengerService.Default.Send(new TestMessageB
         {
             Content = testContentB2
         });
@@ -539,19 +539,19 @@ public class MessengerRegisterUnregisterTest
         const string testContent2 = "efgh";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<IMessage>(this, true, m => ReceivedContentStringA1 = m.GetValue());
+        MessengerService.Default.Register<IMessage>(this, true, m => ReceivedContentStringA1 = m.GetValue());
 
         Assert.AreEqual(null, ReceivedContentStringA1);
 
-        MessageService.Default.Send(new TestMessageImplementsIMessage(testContent1));
+        MessengerService.Default.Send(new TestMessageImplementsIMessage(testContent1));
 
         Assert.AreEqual(testContent1, ReceivedContentStringA1);
 
-        MessageService.Default.Unregister<IMessage>(this);
+        MessengerService.Default.Unregister<IMessage>(this);
 
-        MessageService.Default.Send(new TestMessageImplementsIMessage(testContent2));
+        MessengerService.Default.Send(new TestMessageImplementsIMessage(testContent2));
 
         Assert.AreEqual(testContent1, ReceivedContentStringA1);
     }
@@ -567,26 +567,26 @@ public class MessengerRegisterUnregisterTest
         const int token2 = 4567;
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
         Action<string> action1 = m => ReceivedContentStringA1 = m;
         Action<string> action2 = m => ReceivedContentStringA2 = m;
         Action<string> action3 = m => ReceivedContentStringB = m;
 
-        MessageService.Default.Register(this, token1, action1);
-        MessageService.Default.Register(this, token2, action2);
-        MessageService.Default.Register(this, token2, action3);
+        MessengerService.Default.Register(this, token1, action1);
+        MessengerService.Default.Register(this, token2, action2);
+        MessengerService.Default.Register(this, token2, action3);
 
-        MessageService.Default.Send(testContent1, token1);
-        MessageService.Default.Send(testContent2, token2);
+        MessengerService.Default.Send(testContent1, token1);
+        MessengerService.Default.Send(testContent2, token2);
 
         Assert.AreEqual(testContent1, ReceivedContentStringA1);
         Assert.AreEqual(testContent2, ReceivedContentStringA2);
         Assert.AreEqual(testContent2, ReceivedContentStringB);
 
-        MessageService.Default.Unregister(this, token2, action3);
-        MessageService.Default.Send(testContent3, token1);
-        MessageService.Default.Send(testContent4, token2);
+        MessengerService.Default.Unregister(this, token2, action3);
+        MessengerService.Default.Send(testContent3, token1);
+        MessengerService.Default.Send(testContent4, token2);
 
         Assert.AreEqual(testContent3, ReceivedContentStringA1);
         Assert.AreEqual(testContent4, ReceivedContentStringA2);
@@ -603,26 +603,26 @@ public class MessengerRegisterUnregisterTest
         const int token2 = 4567;
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<string>(this, token1, m => ReceivedContentStringA1 = m);
-        MessageService.Default.Register<string>(this, token2, m => ReceivedContentStringA2 = m);
+        MessengerService.Default.Register<string>(this, token1, m => ReceivedContentStringA1 = m);
+        MessengerService.Default.Register<string>(this, token2, m => ReceivedContentStringA2 = m);
 
         Assert.AreEqual(null, ReceivedContentStringA1);
         Assert.AreEqual(null, ReceivedContentStringA2);
 
-        MessageService.Default.Send(testContent1, token1);
+        MessengerService.Default.Send(testContent1, token1);
 
         Assert.AreEqual(testContent1, ReceivedContentStringA1);
         Assert.AreEqual(null, ReceivedContentStringA2);
 
-        MessageService.Default.Send(testContent2, token2);
+        MessengerService.Default.Send(testContent2, token2);
 
         Assert.AreEqual(testContent1, ReceivedContentStringA1);
         Assert.AreEqual(testContent2, ReceivedContentStringA2);
 
-        MessageService.Default.Unregister<string>(this, token1);
-        MessageService.Default.Send(testContent3, token1);
+        MessengerService.Default.Unregister<string>(this, token1);
+        MessengerService.Default.Send(testContent3, token1);
 
         Assert.AreEqual(testContent1, ReceivedContentStringA1);
         Assert.AreEqual(testContent2, ReceivedContentStringA2);
@@ -632,11 +632,11 @@ public class MessengerRegisterUnregisterTest
     public void TestRegisterStaticHandler()
     {
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
         _context = this;
 
-        MessageService.Default.Register<TestMessageImpl>(
+        MessengerService.Default.Register<TestMessageImpl>(
             this,
             msg =>
             {
@@ -647,7 +647,7 @@ public class MessengerRegisterUnregisterTest
             });
 
         Assert.IsFalse(_result);
-        MessageService.Default.Send(
+        MessengerService.Default.Send(
             new TestMessageImpl(_context)
             {
                 Result = true
@@ -720,7 +720,7 @@ public class MessengerRegisterUnregisterTest
             private set;
         }
 
-        internal void RegisterWith(IMessageService messenger)
+        internal void RegisterWith(IMessengerService messenger)
         {
             messenger.Register<TestMessageA>(this, m => ReceivedContentA = m.Content);
             messenger.Register<TestMessageB>(this, m => ReceivedContentB = m.Content);

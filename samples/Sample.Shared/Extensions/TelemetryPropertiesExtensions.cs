@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 
 namespace Sample.Extensions;
@@ -28,8 +29,8 @@ public static class TelemetryPropertiesExtensions
         properties.Add(nameof(infoService.ProductName), infoService.ProductName);
         properties.Add(nameof(infoService.ProductVersion), infoService.ProductVersion.ToString());
 
-        properties.Add("host.name", infoService.HostName);
-        properties.Add("host.ip", infoService.IPAddress);
+        properties.Add("host.name", System.Net.Dns.GetHostName() ?? "localhost");
+        properties.Add("host.ip", NetworkUtility.GetInternetIPAddress() ?? string.Empty);
 
         properties.Add("os.version", Environment.OSVersion.Version);
         properties.Add("os.architecture", Environment.Is64BitOperatingSystem ? "x64" : "x86");

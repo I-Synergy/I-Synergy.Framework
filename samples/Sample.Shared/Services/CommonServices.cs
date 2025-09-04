@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Diagnostics;
 
 namespace Sample.Services;
@@ -26,16 +25,9 @@ public class CommonServices : ICommonServices
     public IBusyService BusyService { get; }
 
     /// <summary>
-    /// Gets the dialog service.
+    /// Gets the messenger service.
     /// </summary>
-    /// <value>The dialog service.</value>
-    public IDialogService DialogService { get; }
-
-    /// <summary>
-    /// Gets the navigation service.
-    /// </summary>
-    /// <value>The navigation service.</value>
-    public INavigationService NavigationService { get; }
+    public IMessengerService MessengerService { get; }
 
     /// <summary>
     /// Gets the scoped context service.
@@ -48,22 +40,19 @@ public class CommonServices : ICommonServices
     /// <param name="languageService"></param>
     /// <param name="infoService"></param>
     /// <param name="busyService">The busy.</param>
-    /// <param name="dialogService">The dialog.</param>
-    /// <param name="navigationService">The navigation.</param>
+    /// <param name="messengerService"></param>
     /// <param name="scopedContextService"></param>
     public CommonServices(
         ILanguageService languageService,
         IInfoService infoService,
         IBusyService busyService,
-        IDialogService dialogService,
-        INavigationService navigationService,
+        IMessengerService messengerService,
         IScopedContextService scopedContextService)
     {
         LanguageService = languageService;
         InfoService = infoService;
         BusyService = busyService;
-        DialogService = dialogService;
-        NavigationService = navigationService;
+        MessengerService = messengerService;
         ScopedContextService = scopedContextService;
     }
 

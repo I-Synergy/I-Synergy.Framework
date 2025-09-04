@@ -30,7 +30,7 @@ public class TestItem : BaseModel
 
     public TestItem()
     {
-        Validator = new Action<IObservableClass>(_ =>
+        Validator = new Action<IObservableValidatedClass>(_ =>
         {
             if (Id < 1)
                 AddValidationError(nameof(Id), "Id cannot be zero!");

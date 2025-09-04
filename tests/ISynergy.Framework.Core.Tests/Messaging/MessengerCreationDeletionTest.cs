@@ -26,15 +26,15 @@ public class MessengerCreationDeletionTest
         const string TestContent1 = "abcd";
         const string TestContent2 = "efgh";
 
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<string>(recipient1, recipient1.ReceiveMessage);
-        MessageService.Default.Register<string>(recipient2, recipient2.ReceiveMessage);
+        MessengerService.Default.Register<string>(recipient1, recipient1.ReceiveMessage);
+        MessengerService.Default.Register<string>(recipient2, recipient2.ReceiveMessage);
 
         Assert.AreEqual(null, recipient1.ReceivedContentString);
         Assert.AreEqual(null, recipient2.ReceivedContentString);
 
-        MessageService.Default.Send(TestContent1);
+        MessengerService.Default.Send(TestContent1);
 
         Assert.AreEqual(TestContent1, recipient1.ReceivedContentString);
         Assert.AreEqual(TestContent1, recipient2.ReceivedContentString);
@@ -42,14 +42,14 @@ public class MessengerCreationDeletionTest
         recipient1 = null!;
         GC.Collect();
 
-        MessageService.Default.Send(TestContent2);
+        MessengerService.Default.Send(TestContent2);
 
         Assert.AreEqual(TestContent2, recipient2.ReceivedContentString);
 
         recipient2 = null!;
         GC.Collect();
 
-        MessageService.Default.Send(TestContent2);
+        MessengerService.Default.Send(TestContent2);
     }
 
     [TestMethod]
@@ -58,7 +58,7 @@ public class MessengerCreationDeletionTest
         const string TestContent = "abcd";
 
         Reset();
-        MessageService messenger = new();
+        MessengerService messenger = new();
 
         messenger.Register<TestMessage>(this, m => StringContent = m.Content);
 
@@ -78,13 +78,13 @@ public class MessengerCreationDeletionTest
         const string TestContent = "abcd";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<TestMessage>(this, m => StringContent = m.Content);
+        MessengerService.Default.Register<TestMessage>(this, m => StringContent = m.Content);
 
         Assert.AreEqual(null, StringContent);
 
-        MessageService.Default.Send(new TestMessage
+        MessengerService.Default.Send(new TestMessage
         {
             Content = TestContent
         });
@@ -98,14 +98,14 @@ public class MessengerCreationDeletionTest
         const string TestContent = "abcd";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<TestMessage>(this, m => StringContent = m.Content);
+        MessengerService.Default.Register<TestMessage>(this, m => StringContent = m.Content);
 
         Assert.AreEqual(null, StringContent);
 
-        MessageService.Reset();
-        MessageService.Default.Send(new TestMessage
+        MessengerService.Reset();
+        MessengerService.Default.Send(new TestMessage
         {
             Content = TestContent
         });

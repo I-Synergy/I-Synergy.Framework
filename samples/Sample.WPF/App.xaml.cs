@@ -1,12 +1,12 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +26,7 @@ namespace Sample;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : ISynergy.Framework.UI.Application
+public partial class App : Application
 {
     public App()
         : base()
@@ -105,7 +105,7 @@ public partial class App : ISynergy.Framework.UI.Application
             if (navigateToAuthentication)
             {
                 _logger.LogTrace("Navigate to SignIn page");
-                await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+                await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
             }
         }
         finally
@@ -117,17 +117,17 @@ public partial class App : ISynergy.Framework.UI.Application
     protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
-        _commonServices.NavigationService.CleanBackStack(suppressEvent: !e.Value);
+        _navigationService.CleanBackStack(suppressEvent: !e.Value);
 
         if (e.Value)
         {
             _logger.LogTrace("Navigate to Shell");
-            await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
+            await _navigationService.NavigateModalAsync<IShellViewModel>();
         }
         else
         {
             _logger.LogTrace("Navigate to SignIn page");
-            await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
     }
 
@@ -139,27 +139,27 @@ public partial class App : ISynergy.Framework.UI.Application
 
             try
             {
-                _commonServices.BusyService.BusyMessage = "Start doing important stuff";
+                _commonServices.BusyService.UpdateMessage("Start doing important stuff");
                 await Task.Delay(2000);
-                _commonServices.BusyService.BusyMessage = "Done doing important stuff";
+                _commonServices.BusyService.UpdateMessage("Done doing important stuff");
                 await Task.Delay(2000);
             }
             catch (Exception)
             {
-                await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
+                await _dialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
             }
 
             try
             {
-                _commonServices.BusyService.BusyMessage = "Applying migrations";
+                _commonServices.BusyService.UpdateMessage("Applying migrations");
                 //await _migrationService.ApplyMigrationAsync<_001>();
                 await Task.Delay(2000);
-                _commonServices.BusyService.BusyMessage = "Done applying migrations";
+                _commonServices.BusyService.UpdateMessage("Done applying migrations");
                 await Task.Delay(2000);
             }
             catch (Exception)
             {
-                await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
+                await _dialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
             }
 
             RaiseApplicationInitialized();

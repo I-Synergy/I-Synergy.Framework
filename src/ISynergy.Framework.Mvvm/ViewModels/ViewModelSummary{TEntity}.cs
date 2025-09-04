@@ -1,12 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -105,12 +102,12 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     {
         Items = new ObservableCollection<TEntity>();
 
-        AddCommand = new AsyncRelayCommand(async () => await AddAsync());
+        AddCommand = new AsyncRelayCommand(AddAsync);
         EditCommand = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()), e => e is not null);
-        DeleteCommand = new AsyncRelayCommand<TEntity>(async (e) => await DeleteAsync(e), e => e is not null);
-        RefreshCommand = new AsyncRelayCommand(async () => await RefreshAsync());
-        SearchCommand = new AsyncRelayCommand<object>(async (e) => await SearchAsync(e));
-        SubmitCommand = new AsyncRelayCommand<TEntity>(async (e) => await SubmitAsync(e), e => e is not null);
+        DeleteCommand = new AsyncRelayCommand<TEntity>(RemoveAsync, e => e is not null);
+        RefreshCommand = new AsyncRelayCommand(RefreshAsync);
+        SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
+        SubmitCommand = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e), e => e is not null);
     }
 
     /// <summary>
@@ -136,7 +133,7 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     {
         SelectedItem = e;
 
-        if (SelectedItem is IObservableClass observableClass)
+        if (SelectedItem is IObservableValidatedClass observableClass)
             observableClass.MarkAsClean();
 
         IsUpdate = true;
@@ -153,35 +150,6 @@ public abstract class ViewModelSummary<TEntity> : ViewModel, IViewModelSummary<T
     /// <param name="e">The e.</param>
     /// <returns>Task.</returns>
     public abstract Task EditAsync(TEntity e);
-
-    /// <summary>
-    /// delete as an asynchronous operation.
-    /// </summary>
-    /// <param name="e">The e.</param>
-    public async Task DeleteAsync(TEntity e)
-    {
-        Argument.IsNotNull(e);
-
-        string item;
-
-        if (e!.GetType().HasProperty("Description") && e.GetType().GetProperty("Description")!.GetValue(e) is string value)
-        {
-            item = value;
-        }
-        else
-        {
-            item = LanguageService.Default.GetString("ThisItem");
-        }
-
-        if (await _commonServices.DialogService.ShowMessageAsync(
-            string.Format(LanguageService.Default.GetString("WarningItemRemove"), item),
-            LanguageService.Default.GetString("Delete"),
-            MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-        {
-            await RemoveAsync(e);
-            await RefreshAsync();
-        }
-    }
 
     /// <summary>
     /// Removes the asynchronous.

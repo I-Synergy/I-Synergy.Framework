@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Base;
 
 namespace ISynergy.Framework.Core.Tests.Fixtures;
-internal class TestObservableClass : ObservableClass
+internal class TestObservableClass : ObservableValidatedClass
 {
     public bool IsAsyncDisposed { get; private set; }
 

@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Utilities;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
@@ -62,7 +62,7 @@ public class EditableComboViewModel : ViewModelNavigation<object>
         MaskExpression = "9999aa";
         RegexExpression = "0000>LL"; //1111Ab 0000Xx
 
-        this.Validator = new Action<IObservableClass>(_ =>
+        this.Validator = new Action<IObservableValidatedClass>(_ =>
         {
             Regex regex = RegexUtility.MaskToRegexConverter(RegexExpression);
 

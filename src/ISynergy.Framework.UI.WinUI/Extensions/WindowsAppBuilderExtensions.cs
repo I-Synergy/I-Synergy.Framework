@@ -1,10 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
@@ -59,7 +59,7 @@ public static class WindowsAppBuilderExtensions
 
             services.TryAddSingleton<IInfoService>(s => infoService);
             services.TryAddSingleton<ILanguageService>(s => languageService);
-            services.TryAddSingleton<IMessageService>(s => MessageService.Default);
+            services.TryAddSingleton<IMessengerService>(s => MessengerService.Default);
 
             services.TryAddScoped<TContext>();
             services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());

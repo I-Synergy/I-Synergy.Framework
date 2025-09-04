@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Enumerations;

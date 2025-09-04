@@ -1,41 +1,46 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.AspNetCore.Components;
 
 namespace Sample.ViewModels;
 
 public class MainViewModel : ViewModel
 {
-    public AsyncRelayCommand NavigateToHomeCommand { get; private set; }
-    public AsyncRelayCommand NavigateToCounterCommand { get; private set; }
-    public AsyncRelayCommand NavigateToWeatherCommand { get; private set; }
-    public AsyncRelayCommand NavigateToCommandDemoCommand { get; private set; }
+    private readonly NavigationManager _navigationService;
 
-    public MainViewModel(ICommonServices commonServices, ILogger<ViewModel> logger)
+    public RelayCommand NavigateToHomeCommand { get; private set; }
+    public RelayCommand NavigateToCounterCommand { get; private set; }
+    public RelayCommand NavigateToWeatherCommand { get; private set; }
+    public RelayCommand NavigateToCommandDemoCommand { get; private set; }
+
+    public MainViewModel(ICommonServices commonServices, NavigationManager navigationService, ILogger<ViewModel> logger)
         : base(commonServices, logger)
     {
-        NavigateToHomeCommand = new AsyncRelayCommand(ExecuteNavigateToHomeAsync);
-        NavigateToCounterCommand = new AsyncRelayCommand(ExecuteNavigateToCounterAsync);
-        NavigateToWeatherCommand = new AsyncRelayCommand(ExecuteNavigateToWeatherAsync);
-        NavigateToCommandDemoCommand = new AsyncRelayCommand(ExecuteNavigateToCommandDemoAsync);
+        _navigationService = navigationService;
+
+        NavigateToHomeCommand = new RelayCommand(ExecuteNavigateToHome);
+        NavigateToCounterCommand = new RelayCommand(ExecuteNavigateToCounter);
+        NavigateToWeatherCommand = new RelayCommand(ExecuteNavigateToWeather);
+        NavigateToCommandDemoCommand = new RelayCommand(ExecuteNavigateToCommandDemo);
     }
 
-    private Task ExecuteNavigateToCommandDemoAsync()
+    private void ExecuteNavigateToCommandDemo()
     {
-        return _commonServices.NavigationService.NavigateAsync<CommandDemoViewModel>();
+        _navigationService.NavigateTo("/commanddemoview");
     }
 
-    private Task ExecuteNavigateToWeatherAsync()
-    {
-        throw new NotImplementedException();
-    }
-
-    private Task ExecuteNavigateToCounterAsync()
+    private void ExecuteNavigateToWeather()
     {
         throw new NotImplementedException();
     }
 
-    private Task ExecuteNavigateToHomeAsync()
+    private void ExecuteNavigateToCounter()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void ExecuteNavigateToHome()
     {
         throw new NotImplementedException();
     }

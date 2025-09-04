@@ -26,8 +26,8 @@ public class MessengerTestConstrainingMessages
     public void TestConstrainingMessageByInterface()
     {
         Reset();
-        MessageService.Reset();
-        MessageService.Default.Register<ITestMessage>(this, ReceiveITestMessage);
+        MessengerService.Reset();
+        MessengerService.Default.Register<ITestMessage>(this, ReceiveITestMessage);
 
         TestMessageImpl testMessage = new(this)
         {
@@ -38,16 +38,16 @@ public class MessengerTestConstrainingMessages
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
-        MessageService.Default.Send(testMessage);
+        MessengerService.Default.Send(testMessage);
         Assert.IsFalse(_messageWasReceived);
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-        MessageService.Default.Unregister<ITestMessage>(this);
-        MessageService.Default.Register<ITestMessage>(this, true, ReceiveITestMessage);
+        MessengerService.Default.Unregister<ITestMessage>(this);
+        MessengerService.Default.Register<ITestMessage>(this, true, ReceiveITestMessage);
 
-        MessageService.Default.Send(testMessage);
+        MessengerService.Default.Send(testMessage);
         Assert.IsTrue(_messageWasReceived);
         Assert.IsTrue(_messageWasReceivedInITestMessage);
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
@@ -58,8 +58,8 @@ public class MessengerTestConstrainingMessages
     public void TestConstrainingMessageByBaseClass()
     {
         Reset();
-        MessageService.Reset();
-        MessageService.Default.Register<TestMessageBase>(this, ReceiveTestMessageBase);
+        MessengerService.Reset();
+        MessengerService.Default.Register<TestMessageBase>(this, ReceiveTestMessageBase);
 
         TestMessageImpl testMessage = new(this)
         {
@@ -70,16 +70,16 @@ public class MessengerTestConstrainingMessages
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
-        MessageService.Default.Send(testMessage);
+        MessengerService.Default.Send(testMessage);
         Assert.IsFalse(_messageWasReceived);
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-        MessageService.Default.Unregister<ITestMessage>(this);
-        MessageService.Default.Register<TestMessageBase>(this, true, ReceiveTestMessageBase);
+        MessengerService.Default.Unregister<ITestMessage>(this);
+        MessengerService.Default.Register<TestMessageBase>(this, true, ReceiveTestMessageBase);
 
-        MessageService.Default.Send(testMessage);
+        MessengerService.Default.Send(testMessage);
         Assert.IsTrue(_messageWasReceived);
         Assert.IsTrue(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
@@ -90,8 +90,8 @@ public class MessengerTestConstrainingMessages
     public void TestConstrainingMessageByBaseClassAndReceiveWithInterface()
     {
         Reset();
-        MessageService.Reset();
-        MessageService.Default.Register<TestMessageBase>(this, ReceiveITestMessage);
+        MessengerService.Reset();
+        MessengerService.Default.Register<TestMessageBase>(this, ReceiveITestMessage);
 
         TestMessageImpl testMessage = new(this)
         {
@@ -102,16 +102,16 @@ public class MessengerTestConstrainingMessages
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
-        MessageService.Default.Send(testMessage);
+        MessengerService.Default.Send(testMessage);
         Assert.IsFalse(_messageWasReceived);
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-        MessageService.Default.Unregister<ITestMessage>(this);
-        MessageService.Default.Register<TestMessageBase>(this, true, ReceiveITestMessage);
+        MessengerService.Default.Unregister<ITestMessage>(this);
+        MessengerService.Default.Register<TestMessageBase>(this, true, ReceiveITestMessage);
 
-        MessageService.Default.Send(testMessage);
+        MessengerService.Default.Send(testMessage);
         Assert.IsTrue(_messageWasReceived);
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
@@ -122,8 +122,8 @@ public class MessengerTestConstrainingMessages
     public void TestConstrainingMessageByBaseBaseClass()
     {
         Reset();
-        MessageService.Reset();
-        MessageService.Default.Register<BaseMessage>(this, ReceiveMessageBase);
+        MessengerService.Reset();
+        MessengerService.Default.Register<BaseMessage>(this, ReceiveMessageBase);
 
         TestMessageImpl testMessage = new(this)
         {
@@ -134,16 +134,16 @@ public class MessengerTestConstrainingMessages
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
-        MessageService.Default.Send(testMessage);
+        MessengerService.Default.Send(testMessage);
         Assert.IsFalse(_messageWasReceived);
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsFalse(_messageWasReceivedInMessageBase);
         Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-        MessageService.Default.Unregister<BaseMessage>(this);
-        MessageService.Default.Register<BaseMessage>(this, true, ReceiveMessageBase);
+        MessengerService.Default.Unregister<BaseMessage>(this);
+        MessengerService.Default.Register<BaseMessage>(this, true, ReceiveMessageBase);
 
-        MessageService.Default.Send(testMessage);
+        MessengerService.Default.Send(testMessage);
         Assert.IsTrue(_messageWasReceived);
         Assert.IsFalse(_messageWasReceivedInTestMessageBase);
         Assert.IsTrue(_messageWasReceivedInMessageBase);

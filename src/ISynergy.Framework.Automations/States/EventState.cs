@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Automations.States;
 /// <summary>
 /// Default constructor.
 /// </summary>
-public class EventState : ObservableClass, IState
+public class EventState : ObservableValidatedClass, IState
 {
     /// <summary>
     /// Gets or sets the StateId property value.

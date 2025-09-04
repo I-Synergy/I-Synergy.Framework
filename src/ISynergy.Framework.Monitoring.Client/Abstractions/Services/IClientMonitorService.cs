@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using ISynergy.Framework.Monitoring.Messages;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ISynergy.Framework.Monitoring.Client.Abstractions.Services;
 
@@ -19,4 +20,7 @@ public interface IClientMonitorService
     /// </summary>
     /// <returns>Task.</returns>
     Task DisconnectAsync();
+
+    void OnConnected(HubMessage message);
+    void OnDisconnected(HubMessage message);
 }

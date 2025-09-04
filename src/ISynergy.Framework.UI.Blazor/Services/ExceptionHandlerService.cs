@@ -2,8 +2,7 @@
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.UI.Messages;
-using ISynergy.Framework.UI.Requests;
+using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
 using System.Net.Sockets;
 using System.Net.WebSockets;
@@ -31,7 +30,7 @@ public class ExceptionHandlerService : IExceptionHandlerService
     {
     }
 
-    public virtual async Task HandleExceptionAsync(Exception exception)
+    public virtual Task HandleExceptionAsync(Exception exception)
     {
         Argument.IsNotNull(exception);
 
@@ -39,7 +38,7 @@ public class ExceptionHandlerService : IExceptionHandlerService
         if (_isHandlingException)
         {
             _logger.LogTrace("Recursive exception handling detected. Skipping dialog display.");
-            return;
+            return Task.CompletedTask;
         }
 
         // Check for duplicate error messages
@@ -53,28 +52,28 @@ public class ExceptionHandlerService : IExceptionHandlerService
             exception is ArgumentException ||
             exception is ArgumentNullException ||
             exception is SocketException))
-            return;
+            return Task.CompletedTask;
 
         // Ignore the exception if it is a TaskCanceledException and the cancellation token is requested
         if (exception is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested)
-            return;
+            return Task.CompletedTask;
 
         // Ignore the exception if it is an OperationCanceledException or a TaskCanceledException
         if (exception is OperationCanceledException)
-            return;
+            return Task.CompletedTask;
 
         // Ignore the exception if it is a TaskCanceledException inside an aggregated exception and the cancellation token is requested
         if (exception is AggregateException ae && ae.InnerExceptions?.Any(ex => ex is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested) == true)
-            return;
+            return Task.CompletedTask;
 
         if (exception is IOException io && io.Message.Contains("The I/O operation has been aborted"))
-            return;
+            return Task.CompletedTask;
 
         if (exception.InnerException is WebSocketException)
-            return;
+            return Task.CompletedTask;
 
         if (exception.Message.Equals(@"A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. ()"))
-            return;
+            return Task.CompletedTask;
 
         try
         {
@@ -84,7 +83,7 @@ public class ExceptionHandlerService : IExceptionHandlerService
 
             if (exception is NotImplementedException)
             {
-                MessageService.Default.Send(new ShowInformationMessage(new MessageBoxRequest(ExceptionConstants.WARNING_FUTURE_MODULE, "Features")));
+                MessengerService.Default.Send(new ShowInformationMessage(new MessageBoxRequest(ExceptionConstants.WARNING_FUTURE_MODULE, "Features")));
             }
             else if (exception is UnauthorizedAccessException unauthorizedAccessException)
             {
@@ -93,34 +92,34 @@ public class ExceptionHandlerService : IExceptionHandlerService
                 if (message.StartsWith("[") && message.EndsWith("]"))
                     message = LanguageService.Default.GetString(message.Substring(1, message.Length - 2));
 
-                MessageService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(message)));
+                MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(message)));
             }
             else if (exception is IOException iOException)
             {
                 if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
                 {
-                    MessageService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(LanguageService.Default.GetString(ExceptionConstants.ERROR_FILE_IN_USE))));
+                    MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(LanguageService.Default.GetString(ExceptionConstants.ERROR_FILE_IN_USE))));
                 }
                 else
                 {
-                    MessageService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(LanguageService.Default.GetString(ExceptionConstants.ERROR_DEFAULT))));
+                    MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(LanguageService.Default.GetString(ExceptionConstants.ERROR_DEFAULT))));
                 }
             }
             else if (exception is SocketException socketException)
             {
-                MessageService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(LanguageService.Default.GetString(ExceptionConstants.ERROR_DEFAULT))));
+                MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(LanguageService.Default.GetString(ExceptionConstants.ERROR_DEFAULT))));
             }
             else if (exception is ArgumentException argumentException)
             {
-                MessageService.Default.Send(new ShowWarningMessage(new MessageBoxRequest(argumentException.Message)));
+                MessengerService.Default.Send(new ShowWarningMessage(new MessageBoxRequest(argumentException.Message)));
             }
             else if (exception is ArgumentNullException argumentNullException)
             {
-                MessageService.Default.Send(new ShowWarningMessage(new MessageBoxRequest(argumentNullException.Message)));
+                MessengerService.Default.Send(new ShowWarningMessage(new MessageBoxRequest(argumentNullException.Message)));
             }
             else
             {
-                MessageService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(LanguageService.Default.GetString(ExceptionConstants.ERROR_DEFAULT))));
+                MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(LanguageService.Default.GetString(ExceptionConstants.ERROR_DEFAULT))));
             }
 
             if (!exception.HResult.Equals(_lastErrorMessage))
@@ -134,5 +133,7 @@ public class ExceptionHandlerService : IExceptionHandlerService
         {
             _isHandlingException = false;
         }
+
+        return Task.CompletedTask;
     }
 }

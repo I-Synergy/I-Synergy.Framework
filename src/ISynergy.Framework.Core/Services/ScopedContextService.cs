@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Services;
 
-public class ScopedContextService : IScopedContextService
+public sealed class ScopedContextService : IScopedContextService
 {
     private readonly IServiceProvider _serviceProvider;
 

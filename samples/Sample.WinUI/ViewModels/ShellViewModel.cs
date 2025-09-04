@@ -3,13 +3,13 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
@@ -42,13 +42,17 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
     /// <param name="fileService"></param>
     /// <param name="logger"></param>
     public ShellViewModel(
         ICommonServices commonServices,
+        IDialogService dialogService,
+        INavigationService navigationService,
         IFileService<FileResult> fileService,
         ILogger<ShellViewModel> logger)
-        : base(commonServices, logger)
+        : base(commonServices, dialogService, navigationService, logger)
     {
         SetClock();
 
@@ -135,7 +139,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings!.IsFirstRun)
         {
-            if (await _commonServices.DialogService.ShowMessageAsync(
+            if (await _dialogService.ShowMessageAsync(
                 LanguageService.Default.GetString("ChangeLanguage"),
                 LanguageService.Default.GetString("Language"),
                 MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
@@ -148,7 +152,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };
-                await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+                await _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
             var wizardVM = _commonServices.ScopedContextService.GetRequiredService<SettingsViewModel>();
@@ -161,40 +165,44 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _commonServices.RestartApplication();
             };
 
-            await _commonServices.NavigationService.OpenBladeAsync(this, wizardVM);
+            await _navigationService.OpenBladeAsync(this, wizardVM);
         }
     }
 
     private void ClockTimerCallBack(object? sender, object e) => SetClock();
 
-    private void SetClock() => base.Title = $"{_commonServices.InfoService.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+    private void SetClock()
+    {
+        if (_commonServices.ScopedContextService.GetRequiredService<IContext>() is Context context)
+            base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({context.Environment.ToString()}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+    }
 
     private Task OpenChartTestAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<ChartsViewModel>();
+        _navigationService.NavigateAsync<ChartsViewModel>();
 
     private Task OpenTreenNodeTestAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
+        _navigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
 
     /// <summary>
     /// Opens the validation test asynchronous.
     /// </summary>
     /// <returns></returns>
     private Task OpenValidationTestAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<ValidationViewModel>();
+        _navigationService.NavigateAsync<ValidationViewModel>();
 
     /// <summary>
     /// Opens the ListView test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenListViewTestAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
+        _navigationService.NavigateAsync<TestItemsListViewModel>();
 
     /// <summary>
     /// Opens the converters asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenConvertersAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
+        _navigationService.NavigateAsync<ConvertersViewModel>();
 
     /// <summary>
     /// browse file as an asynchronous operation.
@@ -205,7 +213,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
         if (await _fileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
-            await _commonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
+            await _dialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
     /// <summary>
@@ -213,28 +221,28 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenInfoAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<InfoViewModel>();
+        _navigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
     /// Opens the display asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenDisplayAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
+        _navigationService.NavigateAsync<SlideShowViewModel>();
 
     /// <summary>
     /// Opens the selection test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenSelectionTestAsync() =>
-       base._commonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
+       _navigationService.NavigateAsync<SelectionTestViewModel>();
 
     /// <summary>
     /// Opens the settings asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        base._commonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
+        _navigationService.NavigateModalAsync<SettingsViewModel>();
 
     protected override Task OpenBackgroundAsync() => throw new NotImplementedException();
 

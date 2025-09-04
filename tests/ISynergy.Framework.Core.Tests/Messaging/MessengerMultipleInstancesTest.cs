@@ -9,8 +9,8 @@ public class MessengerMultipleInstancesTest
     [TestMethod]
     public void TestMultipleMessengerInstances()
     {
-        MessageService messenger1 = new();
-        MessageService messenger2 = new();
+        MessengerService messenger1 = new();
+        MessengerService messenger2 = new();
 
         TestRecipient1 recipient11 = new();
         TestRecipient1 recipient12 = new();

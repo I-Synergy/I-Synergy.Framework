@@ -1,0 +1,102 @@
+﻿<c:View
+    x:Class="Sample.Views.ShellView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Converters="using:ISynergy.Framework.UI.Converters"
+    xmlns:FrameworkNavigation="using:ISynergy.Framework.UI.Navigation"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:ISynergy.Framework.Core.Models"
+    xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    x:Name="MainWindow"
+    mc:Ignorable="d">
+
+    <c:View.Resources>
+        <Converters:BooleanToVisibilityConverter
+            x:Key="BooleanToVisibilityConverter"
+            False="Collapsed"
+            True="Visible" />
+        <Converters:NavigationViewBackButtonVisibleConverter x:Key="NavigationViewBackButtonVisibleConverter" />
+        <Converters:BooleanToStringConverter
+            x:Key="BooleanToStringConverter"
+            False="Login"
+            True="Logoff" />
+
+        <FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
+            <FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
+                <DataTemplate x:DataType="models:NavigationItem">
+                    <NavigationViewItem Content="{x:Bind Name}">
+                        <NavigationViewItem.Icon>
+                            <PathIcon Data="{x:Bind Icon, Converter={StaticResource StringToGeometryConverter}}" />
+                        </NavigationViewItem.Icon>
+                        <i:Interaction.Behaviors>
+                            <i:EventTriggerBehavior EventName="Tapped">
+                                <i:InvokeCommandAction Command="{x:Bind Command}" CommandParameter="{x:Bind CommandParameter}" />
+                            </i:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </NavigationViewItem>
+                </DataTemplate>
+            </FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
+        </FrameworkNavigation:MenuItemTemplateSelector>
+    </c:View.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Grid.Row="0"
+            Margin="18,0"
+            Orientation="Horizontal">
+            <Image
+                Width="18"
+                Height="18"
+                Source="ms-appx:///Sample/Assets/icon.png" />
+            <TextBlock
+                Margin="18,0"
+                VerticalAlignment="Center"
+                Text="{Binding Title}" />
+        </StackPanel>
+
+        <NavigationView
+            x:Name="RootNavigationView"
+            Grid.Row="1"
+            BackRequested="RootNavigationView_BackRequested"
+            FooterMenuItemsSource="{Binding SecondaryItems}"
+            IsBackButtonVisible="{Binding IsBackEnabled, Mode=OneWay, Converter={StaticResource NavigationViewBackButtonVisibleConverter}}"
+            IsBackEnabled="{Binding IsBackEnabled, Mode=OneWay}"
+            IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            IsSettingsVisible="False"
+            IsTitleBarAutoPaddingEnabled="False"
+            MenuItemTemplateSelector="{StaticResource ItemSelector}"
+            MenuItemsSource="{Binding PrimaryItems}"
+            PaneDisplayMode="Left">
+            <Frame x:Name="ContentRootFrame" IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+                <not_wasm:Frame.ContentTransitions>
+                    <not_wasm:TransitionCollection>
+                        <not_wasm:NavigationThemeTransition />
+                    </not_wasm:TransitionCollection>
+                </not_wasm:Frame.ContentTransitions>
+            </Frame>
+        </NavigationView>
+
+        <Grid Grid.RowSpan="2" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressRing
+                    x:Name="IsBusyProgressRing"
+                    Width="48"
+                    Height="48"
+                    IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" />
+                <TextBlock
+                    FontSize="16"
+                    Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}"
+                    Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}"
+                    Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</c:View>

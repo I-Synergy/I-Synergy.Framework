@@ -1,4 +1,7 @@
-﻿namespace ISynergy.Framework.Mvvm.Models.Tests;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Results;
+
+namespace ISynergy.Framework.Mvvm.Models.Tests;
 
 [TestClass]
 public class FileResultTests
@@ -101,7 +104,7 @@ public class FileResultTests
         using var stream = new MemoryStream(_testData);
 
         // Act
-        var result = FileResult.ReadFully(stream);
+        var result = stream.ToByteArray();
 
         // Assert
         CollectionAssert.AreEqual(_testData, result);

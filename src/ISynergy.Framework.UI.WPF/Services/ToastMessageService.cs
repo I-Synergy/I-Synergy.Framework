@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls.ToastMessage.Error;
 using ISynergy.Framework.UI.Controls.ToastMessage.Information;
 using ISynergy.Framework.UI.Controls.ToastMessage.Success;
@@ -11,7 +11,6 @@ using ISynergy.Framework.UI.Controls.ToastNotification.Position;
 using ISynergy.Framework.UI.Controls.ToastNotification.Supervisors;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Options;
-using System.Windows;
 
 namespace ISynergy.Framework.UI.Services;
 

@@ -35,9 +35,9 @@ public class PropertyChangedMessageTest
 
         TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
 
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<BasePropertyChangedMessage>(
+        MessengerService.Default.Register<BasePropertyChangedMessage>(
             this,
             true,
             m =>
@@ -134,9 +134,9 @@ public class PropertyChangedMessageTest
 
         TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
 
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<PropertyChangedMessage<DateTime>>(
+        MessengerService.Default.Register<PropertyChangedMessage<DateTime>>(
             this,
             m =>
             {
@@ -152,7 +152,7 @@ public class PropertyChangedMessageTest
                 }
             });
 
-        MessageService.Default.Register<PropertyChangedMessage<InvalidOperationException>>(
+        MessengerService.Default.Register<PropertyChangedMessage<InvalidOperationException>>(
             this,
             m =>
             {
@@ -243,9 +243,9 @@ public class PropertyChangedMessageTest
         object? receivedSender = null;
         object? receivedTarget = null;
 
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<PropertyChangedMessage<string>>(this,
+        MessengerService.Default.Register<PropertyChangedMessage<string>>(this,
                                                                    m =>
                                                                    {
                                                                        receivedSender = m.Sender;
@@ -307,7 +307,7 @@ public class PropertyChangedMessageTest
             }
         }
 
-        MessageService.Default.Send(propertyMessage1);
+        MessengerService.Default.Send(propertyMessage1);
 
         Assert.AreEqual(sender, receivedSender);
         Assert.AreEqual(target, receivedTarget);
@@ -319,7 +319,7 @@ public class PropertyChangedMessageTest
         receivedTarget = null;
         receivedSender = null;
 
-        MessageService.Default.Send(propertyMessage2);
+        MessengerService.Default.Send(propertyMessage2);
 
         Assert.AreEqual(sender, receivedSender);
         Assert.AreEqual(target, receivedTarget);
@@ -329,7 +329,7 @@ public class PropertyChangedMessageTest
         Assert.AreEqual(TestNewContent2, receivedNewContent2);
     }
 
-    public class TestViewModel : ObservableClass
+    public class TestViewModel : ObservableValidatedClass
     {
         public TestViewModel(DateTime initialValueDateTime, InvalidOperationException initialValueException)
         {
@@ -350,7 +350,7 @@ public class PropertyChangedMessageTest
                 DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
                 PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(AnotherDate));
-                MessageService.Default.Send(message);
+                MessengerService.Default.Send(message);
             }
         }
 
@@ -367,7 +367,7 @@ public class PropertyChangedMessageTest
                 DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
                 PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(MyDate));
-                MessageService.Default.Send(message);
+                MessengerService.Default.Send(message);
             }
         }
 
@@ -382,7 +382,7 @@ public class PropertyChangedMessageTest
                 InvalidOperationException oldValue = GetValue<InvalidOperationException>();
                 SetValue(value);
                 PropertyChangedMessage<InvalidOperationException> message = new PropertyChangedMessage<InvalidOperationException>(this, oldValue, value, nameof(MyException));
-                MessageService.Default.Send(message);
+                MessengerService.Default.Send(message);
             }
         }
     }

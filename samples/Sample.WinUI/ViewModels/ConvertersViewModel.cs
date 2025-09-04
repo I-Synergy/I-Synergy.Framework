@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
@@ -13,6 +14,9 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ConvertersViewModel : ViewModelNavigation<object>
 {
+    private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
+
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -54,10 +58,15 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
     /// <param name="logger"></param>
-    public ConvertersViewModel(ICommonServices commonServices, ILogger<ConvertersViewModel> logger)
+    public ConvertersViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<ConvertersViewModel> logger)
         : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+
         SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
         NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
         NavigateToPivotCommand = new AsyncRelayCommand<TestItem>(NavigateToPivotAsync);
@@ -114,12 +123,12 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     private async Task NavigateToDetailAsync(TestItem item)
     {
         var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailsViewModel>();
-        await _commonServices.NavigationService.NavigateAsync(detailsVm);
+        await _navigationService.NavigateAsync(detailsVm);
     }
 
     private async Task NavigateToPivotAsync(TestItem item)
     {
         var detailsVm = _commonServices.ScopedContextService.GetRequiredService<PivotViewModel>();
-        await _commonServices.NavigationService.NavigateAsync(detailsVm);
+        await _navigationService.NavigateAsync(detailsVm);
     }
 }

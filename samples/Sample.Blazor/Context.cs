@@ -8,10 +8,10 @@ namespace Sample;
 
 /// <summary>
 /// Class Context. This class cannot be inherited.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// Implements the <see cref="IContext" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IContext" />
 public sealed class Context : IContext
 {

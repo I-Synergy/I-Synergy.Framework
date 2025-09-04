@@ -22,7 +22,7 @@ public class ValidationTests
         using ModelFixture<string> model = new()
         {
             Value = null!,
-            Validator = new Action<IObservableClass>(arg =>
+            Validator = new Action<IObservableValidatedClass>(arg =>
             {
                 var i = arg as ModelFixture<string>;
 
@@ -44,7 +44,7 @@ public class ValidationTests
         using ModelFixture<string> model = new()
         {
             Value = "192.168.1.0",
-            Validator = new Action<IObservableClass>(arg =>
+            Validator = new Action<IObservableValidatedClass>(arg =>
             {
                 var i = arg as ModelFixture<string>;
 
@@ -69,7 +69,7 @@ public class ValidationTests
         using ModelFixture<int> model = new()
         {
             Value = 9999,
-            Validator = new Action<IObservableClass>(arg =>
+            Validator = new Action<IObservableValidatedClass>(arg =>
             {
                 var i = arg as ModelFixture<int>;
 
@@ -91,7 +91,7 @@ public class ValidationTests
         using ModelFixture<int> model = new()
         {
             Value = 80,
-            Validator = new Action<IObservableClass>(arg =>
+            Validator = new Action<IObservableValidatedClass>(arg =>
             {
                 var i = arg as ModelFixture<int>;
 
@@ -115,7 +115,7 @@ public class ValidationTests
         using ModelFixture<string> model = new()
         {
             Value = "",
-            Validator = new Action<IObservableClass>(arg =>
+            Validator = new Action<IObservableValidatedClass>(arg =>
             {
                 var i = arg as ModelFixture<string>;
 
@@ -137,7 +137,7 @@ public class ValidationTests
         using ModelFixture<string> model = new()
         {
             Value = "192.168.1.0",
-            Validator = new Action<IObservableClass>(arg =>
+            Validator = new Action<IObservableValidatedClass>(arg =>
             {
                 var i = arg as ModelFixture<string>;
 
