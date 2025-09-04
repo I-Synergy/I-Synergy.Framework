@@ -1,7 +1,0 @@
-﻿<Project>
-	<Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))" />
-	<ItemGroup>
-		<!-- Removes native usings to avoid Ambiguous reference -->
-		<Using Remove="@(Using->HasMetadata('Platform'))" />
-	</ItemGroup>
-</Project>
