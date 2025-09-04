@@ -3,7 +3,7 @@ using Microsoft.FluentUI.AspNetCore.Components.Utilities;
 using Microsoft.JSInterop;
 
 namespace ISynergy.Framework.UI.Services;
-public class CacheStorageService(IJSRuntime js, IInfoService vs) : JSModule(js, "./_content/ISynergy.Framework.UI.Blazor/js/cache_storage_accessor.js")
+public class CacheStorageService(IJSRuntime js, IInfoService vs) : JSModule(js, "./_content/I-Synergy.Framework.UI.Blazor/js/cache_storage_accessor.js")
 {
     private readonly IInfoService vs = vs;
     private Version? CurrentCacheVersion = default;
