@@ -1,8 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
@@ -13,6 +14,8 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ValidationViewModel : ViewModelNavigation<object>
 {
+    private readonly IDialogService _dialogService;
+
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -73,15 +76,18 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// Default constructor.
     /// </summary>
     /// <param name="commonServices"></param>
+    /// <param name="dialogService"></param>
     /// <param name="logger"></param>
-    public ValidationViewModel(ICommonServices commonServices, ILogger<ValidationViewModel> logger)
+    public ValidationViewModel(ICommonServices commonServices, IDialogService dialogService, ILogger<ValidationViewModel> logger)
         : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";
         Description = LanguageService.Default.GetString("ValidationDescription");
 
-        Validator = new Action<IObservableClass>(_ =>
+        Validator = new Action<IObservableValidatedClass>(_ =>
         {
             if (string.IsNullOrEmpty(Test))
             {
@@ -114,7 +120,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
 
         if (Validate())
         {
-            await _commonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
+            await _dialogService.ShowInformationAsync($"Validation succeeded.");
         }
     }
 }

@@ -3,21 +3,19 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Security;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
+using ISynergy.Framework.UI.Security;
 using ISynergy.Framework.UI.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.Reflection;
-using DialogService = ISynergy.Framework.UI.Services.DialogService;
-using FileResult = ISynergy.Framework.Mvvm.Models.FileResult;
-using IDialogService = ISynergy.Framework.Mvvm.Abstractions.Services.IDialogService;
-using IMessageService = ISynergy.Framework.Core.Abstractions.Services.IMessageService;
-using MessageService = ISynergy.Framework.Core.Services.MessageService;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -59,7 +57,9 @@ public static class AppBuilderExtensions
 
         builder.Services.TryAddSingleton<IInfoService>(s => infoService);
         builder.Services.TryAddSingleton<ILanguageService>(s => languageService);
-        builder.Services.TryAddSingleton<IMessageService>(s => MessageService.Default);
+        builder.Services.TryAddSingleton<IMessengerService>(s => MessengerService.Default);
+        builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
+        builder.Services.TryAddSingleton<IBusyService, BusyService>();
 
         builder.Services.TryAddScoped<TContext>();
         builder.Services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
@@ -70,13 +70,20 @@ public static class AppBuilderExtensions
         builder.Services.AddFluentUIComponents();
 
         builder.Services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
-        builder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
-        builder.Services.TryAddScoped<INavigationService, NavigationService>();
-        builder.Services.TryAddSingleton<IBusyService, BusyService>();
-        builder.Services.TryAddSingleton<IDialogService, DialogService>();
-        builder.Services.TryAddSingleton<ICommonServices, TCommonServices>();
 
-        builder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
+        builder.Services.TryAddSingleton<TCommonServices>();
+        builder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());
+
+        builder.Services.TryAddSingleton<IDialogService, DialogService>();
+        builder.Services.TryAddSingleton<NavigationManager>();
+
+        builder.Services.AddAuthorizationCore();
+
+        builder.Services.TryAddTransient<IAntiforgeryHttpClientFactory, AntiforgeryHttpClientFactory>();
+
+        builder.Services.AddCascadingAuthenticationState();
+
+        builder.Services.AddSingleton<IFormFactorService, FormFactorService>();
 
         builder.Services.RegisterAssemblies(assembly, assemblyFilter);
 

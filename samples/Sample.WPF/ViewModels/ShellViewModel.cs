@@ -2,13 +2,13 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
@@ -67,15 +67,19 @@ public class ShellViewModel : BaseShellViewModel
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
     /// <param name="logger"></param>
     /// <param name="fileService"></param>
     /// <param name="toastMessageService"></param>
     public ShellViewModel(
         ICommonServices commonServices,
+        IDialogService dialogService,
+        INavigationService navigationService,
         ILogger<ShellViewModel> logger,
         IFileService<FileResult> fileService,
         IToastMessageService toastMessageService)
-        : base(commonServices, logger)
+        : base(commonServices, dialogService, navigationService, logger)
     {
         _fileService = fileService;
         _toastMessageService = toastMessageService;
@@ -141,7 +145,7 @@ public class ShellViewModel : BaseShellViewModel
         selectionVm.SetItems(Items);
         selectionVm.SetSelectedItems(SelectedTestItems);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
-        return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        return _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
     private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
@@ -149,7 +153,7 @@ public class ShellViewModel : BaseShellViewModel
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
 
-        await _commonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
+        await _dialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
     }
 
     private Task SelectMultipleAsync()
@@ -159,7 +163,7 @@ public class ShellViewModel : BaseShellViewModel
         selectionVm.SetItems(Items);
         selectionVm.SetSelectedItems(SelectedTestItems);
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-        return _commonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        return _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
     private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
@@ -170,18 +174,18 @@ public class ShellViewModel : BaseShellViewModel
         SelectedTestItems = new ObservableCollection<TestItem>();
         SelectedTestItems.AddRange(e.Result);
 
-        await _commonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
+        await _dialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
     }
 
     private Task UnlistNugetAsync() =>
-        CommonServices.NavigationService.NavigateAsync<NugetViewModel>();
+        _navigationService.NavigateAsync<NugetViewModel>();
 
     /// <summary>
     /// Opens the Unit conversion view asynchronous.
     /// </summary>
     /// <returns></returns>
     private Task OpenUnitConversionAsync() =>
-        CommonServices.NavigationService.NavigateAsync<UnitConversionViewModel>();
+        _navigationService.NavigateAsync<UnitConversionViewModel>();
 
 
     /// <summary>
@@ -189,21 +193,21 @@ public class ShellViewModel : BaseShellViewModel
     /// </summary>
     /// <returns></returns>
     private Task OpenValidationTestAsync() =>
-        CommonServices.NavigationService.NavigateAsync<ValidationViewModel>();
+        _navigationService.NavigateAsync<ValidationViewModel>();
 
     /// <summary>
     /// Opens the information asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenInfoAsync() =>
-        CommonServices.NavigationService.NavigateAsync<InfoViewModel>();
+        _navigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
     /// Opens the editable combobox sample.
     /// </summary>
     /// <returns></returns>
     private Task OpenEditableComboAsync() =>
-        CommonServices.NavigationService.NavigateAsync<EditableComboViewModel>();
+        _navigationService.NavigateAsync<EditableComboViewModel>();
 
     /// <summary>
     /// browse file as an asynchronous operation.
@@ -214,7 +218,7 @@ public class ShellViewModel : BaseShellViewModel
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
         if (await _fileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
-            await _commonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
+            await _dialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
     /// <summary>

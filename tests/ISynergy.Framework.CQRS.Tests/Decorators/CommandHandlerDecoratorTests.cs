@@ -19,7 +19,7 @@ public class CommandHandlerDecoratorTests
     {
         // Arrange
         var handlerMock = new Mock<ICommandHandler<DummyCommand>>();
-        var messageServiceMock = new Mock<IMessageService>();
+        var messageServiceMock = new Mock<IMessengerService>();
         var decorator = new NotificationCommandHandlerDecorator<DummyCommand>(handlerMock.Object, messageServiceMock.Object);
         var command = new DummyCommand();
 
@@ -37,7 +37,7 @@ public class CommandHandlerDecoratorTests
         // Arrange
         var handlerMock = new Mock<ICommandHandler<DummyResultCommand, string>>();
         handlerMock.Setup(h => h.HandleAsync(It.IsAny<DummyResultCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("result");
-        var messageServiceMock = new Mock<IMessageService>();
+        var messageServiceMock = new Mock<IMessengerService>();
         var decorator = new NotificationCommandHandlerDecorator<DummyResultCommand, string>(handlerMock.Object, messageServiceMock.Object);
         var command = new DummyResultCommand();
 

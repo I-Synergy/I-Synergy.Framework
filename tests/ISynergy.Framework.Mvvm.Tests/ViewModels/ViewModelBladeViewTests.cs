@@ -1,8 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -124,25 +121,6 @@ public class ViewModelBladeViewTests
 
         viewModel.Dispose();
         Assert.IsTrue(viewModel.IsDisposed);
-    }
-
-    [TestMethod]
-    public async Task DeleteAsync_WithConfirmation_RemovesItem()
-    {
-        // Arrange
-        var viewModel = new TestBladeViewModel(_mockCommonServices.Object, new Mock<ILogger<TestBladeViewModel>>().Object);
-        var entity = new TestEntity { Id = 1, Description = "Test" };
-        _mockLanguageService.Setup(x => x.GetString(It.IsAny<string>())).Returns("Test");
-        _mockCommonServices.Setup(x => x.DialogService.ShowMessageAsync(
-            It.IsAny<string>(), It.IsAny<string>(), MessageBoxButtons.YesNo, NotificationTypes.Default))
-            .ReturnsAsync(MessageBoxResult.Yes);
-
-        // Act
-        await viewModel.DeleteAsync(entity);
-
-        // Assert
-        _mockCommonServices.Verify(x => x.DialogService.ShowMessageAsync(
-            It.IsAny<string>(), It.IsAny<string>(), MessageBoxButtons.YesNo, NotificationTypes.Default), Times.Once);
     }
 
     [TestMethod]

@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Extensions;
@@ -13,13 +13,13 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 
 /// <summary>
 /// Class ViewModel.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// Implements the <see cref="IViewModel" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IViewModel" />
 [Bindable(true)]
-public abstract class ViewModel : ObservableClass, IViewModel
+public abstract class ViewModel : ObservableValidatedClass, IViewModel
 {
     protected readonly ICommonServices _commonServices;
     protected readonly ILogger _logger;

@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
@@ -28,6 +27,8 @@ namespace ISynergy.Framework.UI;
 public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 {
     protected readonly ICommonServices? _commonServices;
+    protected readonly IDialogService _dialogService;
+    protected readonly INavigationService _navigationService;
     protected readonly ISettingsService? _settingsService;
     protected readonly IExceptionHandlerService? _exceptionHandlerService;
     protected readonly ILogger<Application>? _logger;
@@ -100,6 +101,9 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
                 // Get required services
                 _commonServices = host.Services.GetRequiredService<ICommonServices>();
+                _dialogService = host.Services.GetRequiredService<IDialogService>();
+                _navigationService = host.Services.GetRequiredService<INavigationService>();
+
                 _features = host.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
                 _exceptionHandlerService = host.Services.GetRequiredService<IExceptionHandlerService>();
 
@@ -150,18 +154,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     protected abstract IHostBuilder CreateHostBuilder();
 
     protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
-
-    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e)
-    {
-        try
-        {
-            _commonServices?.InfoService?.SetTitle(e.Value);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error in OnSoftwareEnvironmentChanged");
-        }
-    }
 
     /// <summary>
     /// Handles the first chance exception event.
@@ -383,19 +375,19 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                             {
                                 try
                                 {
-                                    _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
+                                    _commonServices.BusyService.UpdateMessage(LanguageService.Default.GetString("UpdateCheckForUpdates"));
 
                                     var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
 
                                     if (updateService != null &&
                                         await updateService.CheckForUpdateAsync() &&
-                                        _commonServices.DialogService != null &&
-                                        await _commonServices.DialogService.ShowMessageAsync(
+                                        _dialogService != null &&
+                                        await _dialogService.ShowMessageAsync(
                                             LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
                                             "Update",
                                             MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
                                     {
-                                        _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
+                                        _commonServices.BusyService.UpdateMessage(LanguageService.Default.GetString("UpdateDownloadAndInstall"));
                                         await updateService.DownloadAndInstallUpdateAsync();
                                         Environment.Exit(Environment.ExitCode);
                                     }
@@ -403,11 +395,11 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                                 catch (Exception ex)
                                 {
                                     _logger?.LogError(ex, "Failed to check for updates");
-                                    if (_commonServices?.DialogService != null)
+                                    if (_dialogService != null)
                                     {
                                         try
                                         {
-                                            await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
+                                            await _dialogService.ShowErrorAsync("Failed to check for updates");
                                         }
                                         catch (Exception dialogEx)
                                         {

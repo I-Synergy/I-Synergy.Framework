@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI;
 
 namespace Sample.Components;

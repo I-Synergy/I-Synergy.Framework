@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
 using Microsoft.Extensions.Logging;
 using Windows.Storage;
 using Windows.Storage.AccessCache;

@@ -218,7 +218,7 @@ public static class ReflectionExtensions
     /// <param name="selector"></param>
     /// <returns></returns>
     public static Property<TValue>? GetProperty<T, TValue>(this T _self, Expression<Func<T, TValue>> selector)
-        where T : class, IObservableClass
+        where T : class, IObservableValidatedClass
     {
         Expression body = selector;
 

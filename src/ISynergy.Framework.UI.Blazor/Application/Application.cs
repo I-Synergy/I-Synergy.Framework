@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
@@ -73,18 +71,6 @@ public abstract class Application : ComponentBase
     }
 
     protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
-
-    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e)
-    {
-        try
-        {
-            _commonServices?.InfoService?.SetTitle(e.Value);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error in OnSoftwareEnvironmentChanged");
-        }
-    }
 
     /// <summary>
     /// Handles the first chance exception event.
@@ -167,7 +153,7 @@ public abstract class Application : ComponentBase
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void CurrentDomain_UnhandledException(object? sender, System.UnhandledExceptionEventArgs e)
+    protected virtual async void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         if (_isDisposing)
             return;

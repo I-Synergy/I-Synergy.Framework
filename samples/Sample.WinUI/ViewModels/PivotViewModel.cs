@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -8,11 +9,18 @@ using Sample.Models;
 namespace Sample.ViewModels;
 public class PivotViewModel : ViewModelBladeView<TestItem>
 {
+    private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
+
     public PivotViewModel(
         ICommonServices commonServices,
+        IDialogService dialogService,
+        INavigationService navigationService,
         ILogger<PivotViewModel> logger)
         : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+        _navigationService = navigationService;
     }
 
     public override Task AddAsync()
@@ -54,6 +62,6 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
 
         var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailViewModel>();
         detailsVm.SetSelectedItem(e);
-        await _commonServices.NavigationService.OpenBladeAsync(this, detailsVm);
+        await _navigationService.OpenBladeAsync(this, detailsVm);
     }
 }

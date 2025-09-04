@@ -13,11 +13,11 @@ namespace ISynergy.Framework.CQRS.Decorators;
 public class NotificationCommandHandlerDecorator<TCommand> : CommandHandlerDecorator<TCommand>
     where TCommand : ICommand
 {
-    private readonly IMessageService _messageService;
+    private readonly IMessengerService _messageService;
 
     public NotificationCommandHandlerDecorator(
         ICommandHandler<TCommand> decorated,
-        IMessageService messageService) : base(decorated)
+        IMessengerService messageService) : base(decorated)
     {
         _messageService = messageService;
     }
@@ -43,11 +43,11 @@ public class NotificationCommandHandlerDecorator<TCommand> : CommandHandlerDecor
 public class NotificationCommandHandlerDecorator<TCommand, TResult> : CommandHandlerDecorator<TCommand, TResult>
     where TCommand : ICommand<TResult>
 {
-    private readonly IMessageService _messageService;
+    private readonly IMessengerService _messageService;
 
     public NotificationCommandHandlerDecorator(
         ICommandHandler<TCommand, TResult> decorated,
-        IMessageService messageService) : base(decorated)
+        IMessengerService messageService) : base(decorated)
     {
         _messageService = messageService;
     }

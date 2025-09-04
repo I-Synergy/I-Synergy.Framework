@@ -11,7 +11,7 @@ public static class ComponentExtensions
 
         return new Dictionary<string, object>
         {
-            ["onclick"] = EventCallback.Factory.Create<MouseEventArgs>(component, async (e) =>
+            ["onclick"] = EventCallback.Factory.Create<MouseEventArgs>(component, (e) =>
             {
                 if (command?.CanExecute(parameter) == true)
                     command.Execute(parameter);
@@ -21,9 +21,9 @@ public static class ComponentExtensions
         };
     }
 
-    public static EventCallback<MouseEventArgs> CommandClick(this ComponentBase component, ICommand command, object parameter = null)
+    public static EventCallback<MouseEventArgs> CommandClick(this ComponentBase component, ICommand command, object? parameter = null)
     {
-        return EventCallback.Factory.Create<MouseEventArgs>(component, async (e) =>
+        return EventCallback.Factory.Create<MouseEventArgs>(component, (e) =>
         {
             if (command?.CanExecute(parameter) == true)
                 command.Execute(parameter);

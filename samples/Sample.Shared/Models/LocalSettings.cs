@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace Sample.Models;
 
-public class LocalSettings : ObservableClass, ILocalSettings
+public class LocalSettings : ObservableValidatedClass, ILocalSettings
 {
     public Languages Language { get; set; } = Languages.English;
     public bool IsFullscreen { get; set; }

@@ -1,8 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,6 +19,8 @@ public abstract class Application : System.Windows.Application, IDisposable
 {
     protected readonly ILogger<Application> _logger;
     protected readonly ICommonServices _commonServices;
+    protected readonly IDialogService _dialogService;
+    protected readonly INavigationService _navigationService;
     protected readonly IExceptionHandlerService _exceptionHandlerService;
 
     protected bool _isShuttingDown = false;
@@ -47,11 +48,13 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         _logger.LogTrace("Getting common services.");
         _commonServices = host.Services.GetRequiredService<ICommonServices>();
+        _dialogService = host.Services.GetRequiredService<IDialogService>();
+        _navigationService = host.Services.GetRequiredService<INavigationService>();
         _exceptionHandlerService = host.Services.GetRequiredService<IExceptionHandlerService>();
 
         _logger.LogTrace("Starting application");
 
-        this.ApplicationLoaded += OnApplicationLoaded;
+        ApplicationLoaded += OnApplicationLoaded;
 
         // Pass a timeout to limit the execution time.
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -95,11 +98,6 @@ public abstract class Application : System.Windows.Application, IDisposable
 
     protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
     protected abstract void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e);
-
-    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e)
-    {
-        _commonServices.InfoService.SetTitle(e.Value);
-    }
 
     /// <summary>
     /// Sets the global exception handler.
@@ -226,12 +224,12 @@ public abstract class Application : System.Windows.Application, IDisposable
             rootFrame.NavigationFailed += OnNavigationFailed;
 
             // Add custom resourcedictionaries from code.
-            if (Application.Current.Resources?.MergedDictionaries is not null)
+            if (Current.Resources?.MergedDictionaries is not null)
             {
                 foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
                 {
-                    if (!Application.Current.Resources.MergedDictionaries.Contains(item))
-                        Application.Current.Resources.MergedDictionaries.Add(item);
+                    if (!Current.Resources.MergedDictionaries.Contains(item))
+                        Current.Resources.MergedDictionaries.Add(item);
                 }
             }
 
@@ -291,7 +289,7 @@ public abstract class Application : System.Windows.Application, IDisposable
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
             DispatcherUnhandledException -= BaseApplication_DispatcherUnhandledException;
 
-            this.ApplicationLoaded -= OnApplicationLoaded;
+            ApplicationLoaded -= OnApplicationLoaded;
         }
 
         // free native resources if there are any.

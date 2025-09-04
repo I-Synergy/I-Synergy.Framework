@@ -25,6 +25,9 @@ namespace ISynergy.Framework.UI.ViewModels.Base;
 /// <seealso cref="IShellViewModel" />
 public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, IShellViewModel
 {
+    protected readonly INavigationService _navigationService;
+    protected readonly IDialogService _dialogService;
+
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
     /// </summary>
@@ -68,19 +71,24 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
     /// <param name="logger"></param>
-    protected BaseShellViewModel(ICommonServices commonServices, ILogger<BaseShellViewModel> logger)
+    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
-        _commonServices.NavigationService.BackStackChanged += NavigationService_BackStackChanged;
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+
+        _navigationService.BackStackChanged += NavigationService_BackStackChanged;
 
         // Initialize IsBackEnabled with the current state
-        IsBackEnabled = _commonServices.NavigationService.CanGoBack;
+        IsBackEnabled = _navigationService.CanGoBack;
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
 
-        GoBackCommand = new AsyncRelayCommand(async () => await _commonServices.NavigationService.GoBackAsync());
+        GoBackCommand = new AsyncRelayCommand(async () => await _navigationService.GoBackAsync());
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
@@ -97,7 +105,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
 
     private void NavigationService_BackStackChanged(object? sender, EventArgs e) =>
-        IsBackEnabled = _commonServices.NavigationService.CanGoBack;
+        IsBackEnabled = _navigationService.CanGoBack;
 
     /// <summary>
     /// Opens the settings asynchronous.
@@ -122,7 +130,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <returns>Task.</returns>
     protected Task ShowDialogRestartAfterUpdateAsync() =>
-        _commonServices.DialogService.ShowInformationAsync(LanguageService.Default.GetString("UpdateRestart"));
+        _dialogService.ShowInformationAsync(LanguageService.Default.GetString("UpdateRestart"));
 
     /// <summary>
     /// Gets or sets the LastSelectedItem property value.
@@ -182,7 +190,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     {
         var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
         languageVM.Submitted += LanguageVM_Submitted;
-        return _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+        return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
 
     /// <summary>
@@ -200,7 +208,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
         e.Result.SetLocalizationLanguage();
 
-        if (await _commonServices.DialogService.ShowMessageAsync(
+        if (await _dialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningLanguageChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
@@ -219,7 +227,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     {
         var themeVM = _commonServices.ScopedContextService.GetRequiredService<ThemeViewModel>();
         themeVM.Submitted += ThemeVM_Submitted;
-        return _commonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
+        return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
 
     /// <summary>
@@ -238,7 +246,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
 
             if (await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync() &&
-                await _commonServices.DialogService.ShowMessageAsync(
+                await _dialogService.ShowMessageAsync(
                     LanguageService.Default.GetString("WarningColorChange") +
                     Environment.NewLine +
                     LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
@@ -273,8 +281,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         if (disposing)
         {
             // Remove navigation service event handlers first
-            if (_commonServices.NavigationService is not null)
-                _commonServices.NavigationService.BackStackChanged -= NavigationService_BackStackChanged;
+            if (_navigationService is not null)
+                _navigationService.BackStackChanged -= NavigationService_BackStackChanged;
 
             Validator = null;
 

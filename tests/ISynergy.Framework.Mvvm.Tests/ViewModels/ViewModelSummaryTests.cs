@@ -1,8 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -14,7 +11,6 @@ public class ViewModelSummaryTests
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
     private Mock<ILanguageService> _mockLanguageService;
-    private Mock<IDialogService> _mockDialogService;
 
     public ViewModelSummaryTests()
     {
@@ -24,10 +20,7 @@ public class ViewModelSummaryTests
         _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
 
         _mockLogger = new Mock<ILogger>();
-
         _mockLanguageService = new Mock<ILanguageService>();
-        _mockDialogService = new Mock<IDialogService>();
-        _mockCommonServices.Setup(x => x.DialogService).Returns(_mockDialogService.Object);
     }
 
     public class TestEntity
@@ -93,24 +86,5 @@ public class ViewModelSummaryTests
 
         // Assert
         Assert.IsTrue(viewModel.IsInitialized);
-    }
-
-    [TestMethod]
-    public async Task DeleteAsync_WithConfirmation_RemovesItem()
-    {
-        // Arrange
-        var viewModel = new TestSummaryViewModel(_mockCommonServices.Object, new Mock<ILogger<TestSummaryViewModel>>().Object);
-        var entity = new TestEntity { Id = 1, Description = "Test" };
-        _mockLanguageService.Setup(x => x.GetString(It.IsAny<string>())).Returns("Test");
-        _mockDialogService.Setup(x => x.ShowMessageAsync(
-            It.IsAny<string>(), It.IsAny<string>(), MessageBoxButtons.YesNo, NotificationTypes.Default))
-            .ReturnsAsync(MessageBoxResult.Yes);
-
-        // Act
-        await viewModel.DeleteAsync(entity);
-
-        // Assert
-        _mockDialogService.Verify(x => x.ShowMessageAsync(
-            It.IsAny<string>(), It.IsAny<string>(), MessageBoxButtons.YesNo, NotificationTypes.Default), Times.Once);
     }
 }

@@ -1,11 +1,12 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.OpenTelemetry.Extensions;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -165,21 +166,21 @@ public sealed partial class App : Application
                 }
             }
 
-            if (navigateToAuthentication && _commonServices?.NavigationService != null)
+            if (navigateToAuthentication && _navigationService != null)
             {
                 _logger?.LogTrace("Navigate to SignIn page");
                 try
                 {
-                    await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+                    await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
                 }
                 catch (Exception ex)
                 {
                     _logger?.LogError(ex, "Error navigating to authentication");
 
                     // Show error dialog as last resort
-                    if (_commonServices?.DialogService != null)
+                    if (_dialogService != null)
                     {
-                        await _commonServices.DialogService.ShowErrorAsync("Failed to navigate to login screen. The application may need to be restarted.");
+                        await _dialogService.ShowErrorAsync("Failed to navigate to login screen. The application may need to be restarted.");
                     }
                 }
             }
@@ -189,11 +190,11 @@ public sealed partial class App : Application
             _logger?.LogError(ex, "Error in HandleApplicationInitializedAsync");
 
             // Show error dialog if possible
-            if (_commonServices?.DialogService != null)
+            if (_dialogService != null)
             {
                 try
                 {
-                    await _commonServices.DialogService.ShowErrorAsync("Application initialization failed. Please restart the application.");
+                    await _dialogService.ShowErrorAsync("Application initialization failed. Please restart the application.");
                 }
                 catch
                 {
@@ -213,9 +214,9 @@ public sealed partial class App : Application
         {
             if (_commonServices?.BusyService != null)
             {
-                _commonServices.BusyService.BusyMessage = "Start doing important stuff";
+                _commonServices.BusyService.UpdateMessage("Start doing important stuff");
                 await Task.Delay(2000);
-                _commonServices.BusyService.BusyMessage = "Done doing important stuff";
+                _commonServices.BusyService.UpdateMessage("Done doing important stuff");
                 await Task.Delay(2000);
             }
         }
@@ -223,11 +224,11 @@ public sealed partial class App : Application
         {
             _logger?.LogError(ex, "Error in first part of InitializeApplicationAsync");
 
-            if (_commonServices?.DialogService != null)
+            if (_dialogService != null)
             {
                 try
                 {
-                    await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
+                    await _dialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
                 }
                 catch (Exception dialogEx)
                 {
@@ -240,10 +241,10 @@ public sealed partial class App : Application
         {
             if (_commonServices?.BusyService != null)
             {
-                _commonServices.BusyService.BusyMessage = "Applying migrations";
+                _commonServices.BusyService.UpdateMessage("Applying migrations");
                 //await _migrationService.ApplyMigrationAsync<_001>();
                 await Task.Delay(2000);
-                _commonServices.BusyService.BusyMessage = "Done applying migrations";
+                _commonServices.BusyService.UpdateMessage("Done applying migrations");
                 await Task.Delay(2000);
             }
         }
@@ -251,11 +252,11 @@ public sealed partial class App : Application
         {
             _logger?.LogError(ex, "Error in second part of InitializeApplicationAsync");
 
-            if (_commonServices?.DialogService != null)
+            if (_dialogService != null)
             {
                 try
                 {
-                    await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
+                    await _dialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
                 }
                 catch (Exception dialogEx)
                 {
@@ -268,7 +269,7 @@ public sealed partial class App : Application
     protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
-        _commonServices?.NavigationService.CleanBackStack(suppressEvent: !e.Value);
+        _navigationService.CleanBackStack(suppressEvent: !e.Value);
 
         try
         {
@@ -314,20 +315,20 @@ public sealed partial class App : Application
                     }
 
                     _logger?.LogTrace("Navigate to Shell");
-                    if (_commonServices?.NavigationService != null)
+                    if (_navigationService != null)
                     {
-                        await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
+                        await _navigationService.NavigateModalAsync<IShellViewModel>();
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger?.LogError(ex, "Error handling authentication success");
 
-                    if (_commonServices?.DialogService != null)
+                    if (_dialogService != null)
                     {
                         try
                         {
-                            await _commonServices.DialogService.ShowErrorAsync("Error occurred after login. The application may need to be restarted.");
+                            await _dialogService.ShowErrorAsync("Error occurred after login. The application may need to be restarted.");
                         }
                         catch
                         {
@@ -343,20 +344,20 @@ public sealed partial class App : Application
                     Baggage.ClearBaggage();
 
                     _logger?.LogTrace("Navigate to SignIn page");
-                    if (_commonServices?.NavigationService != null)
+                    if (_navigationService != null)
                     {
-                        await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+                        await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger?.LogError(ex, "Error handling authentication failure");
 
-                    if (_commonServices?.DialogService != null)
+                    if (_dialogService != null)
                     {
                         try
                         {
-                            await _commonServices.DialogService.ShowErrorAsync("Error occurred during logout. The application may need to be restarted.");
+                            await _dialogService.ShowErrorAsync("Error occurred during logout. The application may need to be restarted.");
                         }
                         catch
                         {

@@ -4,11 +4,11 @@ namespace ISynergy.Framework.Core.Fixtures;
 
 /// <summary>
 /// Class ObservableClassFixture.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// Implements the <see cref="IDisposable" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IDisposable" />
-public class ObservableClassFixture : ObservableClass
+public class ObservableClassFixture : ObservableValidatedClass
 {
 }

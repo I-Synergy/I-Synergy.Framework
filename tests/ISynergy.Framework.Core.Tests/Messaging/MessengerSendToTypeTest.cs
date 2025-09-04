@@ -9,17 +9,17 @@ public class MessengerSendToTypeTest
     [TestMethod]
     public void TestBroadcastToOneType()
     {
-        MessageService.Reset();
+        MessengerService.Reset();
 
         TestRecipient1 recipient11 = new();
         TestRecipient1 recipient12 = new();
         TestRecipient2 recipient21 = new();
         TestRecipient2 recipient22 = new();
 
-        MessageService.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
-        MessageService.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
-        MessageService.Default.Register<string>(recipient21, recipient21.ReceiveMessage);
-        MessageService.Default.Register<string>(recipient22, recipient22.ReceiveMessage);
+        MessengerService.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
+        MessengerService.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
+        MessengerService.Default.Register<string>(recipient21, recipient21.ReceiveMessage);
+        MessengerService.Default.Register<string>(recipient22, recipient22.ReceiveMessage);
 
         const string testContent1 = "abcd";
         const string testContent2 = "efgh";
@@ -29,14 +29,14 @@ public class MessengerSendToTypeTest
         Assert.AreEqual(null, recipient21.ReceivedContentString);
         Assert.AreEqual(null, recipient22.ReceivedContentString);
 
-        MessageService.Default.Send<string, TestRecipient1>(testContent1);
+        MessengerService.Default.Send<string, TestRecipient1>(testContent1);
 
         Assert.AreEqual(testContent1, recipient11.ReceivedContentString);
         Assert.AreEqual(testContent1, recipient12.ReceivedContentString);
         Assert.AreEqual(null, recipient21.ReceivedContentString);
         Assert.AreEqual(null, recipient22.ReceivedContentString);
 
-        MessageService.Default.Send<string, TestRecipient2>(testContent2);
+        MessengerService.Default.Send<string, TestRecipient2>(testContent2);
 
         Assert.AreEqual(testContent1, recipient11.ReceivedContentString);
         Assert.AreEqual(testContent1, recipient12.ReceivedContentString);
@@ -47,7 +47,7 @@ public class MessengerSendToTypeTest
     [TestMethod]
     public void TestBroadcastToOneInterface()
     {
-        MessageService.Reset();
+        MessengerService.Reset();
 
         TestRecipient1 recipient11 = new();
         TestRecipient1 recipient12 = new();
@@ -56,12 +56,12 @@ public class MessengerSendToTypeTest
         TestRecipient3 recipient31 = new();
         TestRecipient3 recipient32 = new();
 
-        MessageService.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
-        MessageService.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
-        MessageService.Default.Register<string>(recipient21, recipient21.DoSomething);
-        MessageService.Default.Register<string>(recipient22, recipient22.DoSomething);
-        MessageService.Default.Register<string>(recipient31, recipient31.DoSomething);
-        MessageService.Default.Register<string>(recipient32, recipient32.DoSomething);
+        MessengerService.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
+        MessengerService.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
+        MessengerService.Default.Register<string>(recipient21, recipient21.DoSomething);
+        MessengerService.Default.Register<string>(recipient22, recipient22.DoSomething);
+        MessengerService.Default.Register<string>(recipient31, recipient31.DoSomething);
+        MessengerService.Default.Register<string>(recipient32, recipient32.DoSomething);
 
         const string testContent1 = "abcd";
 
@@ -72,7 +72,7 @@ public class MessengerSendToTypeTest
         Assert.AreEqual(null, recipient31.ReceivedContentString);
         Assert.AreEqual(null, recipient32.ReceivedContentString);
 
-        MessageService.Default.Send<string, ITestRecipient>(testContent1);
+        MessengerService.Default.Send<string, ITestRecipient>(testContent1);
 
         Assert.AreEqual(null, recipient11.ReceivedContentString);
         Assert.AreEqual(null, recipient12.ReceivedContentString);

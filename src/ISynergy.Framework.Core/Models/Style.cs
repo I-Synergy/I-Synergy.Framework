@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Models;
 /// Application style model.
 /// </summary>
 [Bindable(BindableSupport.Yes)]
-public class Style : ObservableClass
+public class Style : ObservableValidatedClass
 {
 
     /// <summary>

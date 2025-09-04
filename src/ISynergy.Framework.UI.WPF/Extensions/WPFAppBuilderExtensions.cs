@@ -1,10 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
@@ -58,21 +57,25 @@ public static class WpfAppBuilderExtensions
 
             services.TryAddSingleton<IInfoService>(s => infoService);
             services.TryAddSingleton<ILanguageService>(s => languageService);
-            services.TryAddSingleton<IMessageService>(s => MessageService.Default);
+            services.TryAddSingleton<IMessengerService>(s => MessengerService.Default);
 
             services.TryAddScoped<TContext>();
             services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
 
             services.TryAddScoped<ISettingsService, TSettingsService>();
             services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
-            services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
+
 
             services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
+
             services.TryAddSingleton<IScopedContextService, ScopedContextService>();
-            services.TryAddSingleton<INavigationService, NavigationService>();
             services.TryAddSingleton<IBusyService, BusyService>();
-            services.TryAddSingleton<IDialogService, DialogService>();
+
             services.TryAddSingleton<IClipboardService, ClipboardService>();
+
+            services.TryAddScoped<ICredentialLockerService, CredentialLockerService>();
+            services.TryAddSingleton<INavigationService, NavigationService>();
+            services.TryAddSingleton<IDialogService, DialogService>();
             services.TryAddSingleton<IToastMessageService, ToastMessageService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
 

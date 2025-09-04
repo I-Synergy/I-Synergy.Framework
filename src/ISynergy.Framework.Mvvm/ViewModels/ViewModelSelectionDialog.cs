@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -123,7 +123,7 @@ public class ViewModelSelectionDialog<TEntity> : ViewModelDialog<List<TEntity>>,
         Items = new ObservableCollection<TEntity>();
         SelectedItems = new List<object>();
 
-        Validator = new Action<IObservableClass>(arg =>
+        Validator = new Action<IObservableValidatedClass>(arg =>
         {
             if (SelectionMode == SelectionModes.Single && SelectedItems.Count < 1)
                 AddValidationError(nameof(SelectedItems), LanguageService.Default.GetString("WarningSelectItem"));

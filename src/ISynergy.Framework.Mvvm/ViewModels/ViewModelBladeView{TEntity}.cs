@@ -1,13 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -84,7 +81,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     {
         SelectedItem = e;
 
-        if (SelectedItem is IObservableClass observableClass)
+        if (SelectedItem is IObservableValidatedClass observableClass)
             observableClass.MarkAsClean();
 
         IsUpdate = true;
@@ -153,7 +150,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
 
         AddCommand = new AsyncRelayCommand(AddAsync);
         EditCommand = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()), e => e is not null);
-        DeleteCommand = new AsyncRelayCommand<TEntity>(DeleteAsync, e => e is not null);
+        DeleteCommand = new AsyncRelayCommand<TEntity>(RemoveAsync, e => e is not null);
         RefreshCommand = new AsyncRelayCommand(RefreshAsync);
         SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
         SubmitCommand = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e), e => e is not null);
@@ -179,6 +176,7 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     /// </summary>
     /// <returns>Task.</returns>
     public abstract Task AddAsync();
+
     /// <summary>
     /// Edits the asynchronous.
     /// </summary>
@@ -187,39 +185,12 @@ public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeVi
     public abstract Task EditAsync(TEntity e);
 
     /// <summary>
-    /// delete as an asynchronous operation.
-    /// </summary>
-    /// <param name="e">The e.</param>
-    public async Task DeleteAsync(TEntity e)
-    {
-        Argument.IsNotNull(e);
-
-        string item;
-        if (e!.GetType().GetProperty("Description")?.GetValue(e) is string value)
-        {
-            item = value;
-        }
-        else
-        {
-            item = LanguageService.Default.GetString("ThisItem");
-        }
-
-        if (await _commonServices.DialogService.ShowMessageAsync(
-            string.Format(LanguageService.Default.GetString("WarningItemRemove"), item),
-            LanguageService.Default.GetString("Delete"),
-            MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-        {
-            await RemoveAsync(e);
-            await RefreshAsync();
-        }
-    }
-
-    /// <summary>
     /// Removes the asynchronous.
     /// </summary>
     /// <param name="e">The e.</param>
     /// <returns>Task.</returns>
     public abstract Task RemoveAsync(TEntity e);
+
     /// <summary>
     /// Searches the asynchronous.
     /// </summary>

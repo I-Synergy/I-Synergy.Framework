@@ -6,12 +6,12 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 /// <summary>
 /// Interface IViewModel
-/// Implements the <see cref="IObservableClass" />
+/// Implements the <see cref="IObservableValidatedClass" />
 /// Implements the <see cref="ICleanup" />
 /// </summary>
-/// <seealso cref="IObservableClass" />
+/// <seealso cref="IObservableValidatedClass" />
 /// <seealso cref="ICleanup" />
-public interface IViewModel : IObservableClass, ICleanup
+public interface IViewModel : IObservableValidatedClass, ICleanup
 {
     /// <summary>
     /// Occurs when [cancelled].

@@ -13,6 +13,11 @@ public interface IBusyService : INotifyPropertyChanged
     /// <param name="message">The message.</param>
     void StartBusy(string? message = null);
     /// <summary>
+    /// Updates the busy message.
+    /// </summary>
+    /// <param name="message"></param>
+    void UpdateMessage(string message);
+    /// <summary>
     /// Ends the busy.
     /// </summary>
     void StopBusy();
@@ -20,10 +25,14 @@ public interface IBusyService : INotifyPropertyChanged
     /// Gets or sets the busy message.
     /// </summary>
     /// <value>The busy message.</value>
-    string BusyMessage { get; set; }
+    string BusyMessage { get; }
     /// <summary>
     /// Gets or sets a value indicating whether this instance is busy.
     /// </summary>
     /// <value><c>true</c> if this instance is busy; otherwise, <c>false</c>.</value>
-    bool IsBusy { get; set; }
+    bool IsBusy { get; }
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is enabled.
+    /// </summary>
+    bool IsEnabled { get; }
 }

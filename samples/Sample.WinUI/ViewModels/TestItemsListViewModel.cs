@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -20,6 +21,9 @@ namespace Sample.ViewModels;
 /// </summary>
 public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBladeView
 {
+    private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
+
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -96,10 +100,15 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}" /> class.
     /// </summary>
     /// <param name="commonServices">The common service.</param>
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
     /// <param name="logger"></param>
-    public TestItemsListViewModel(ICommonServices commonServices, ILogger<TestItemsListViewModel> logger)
+    public TestItemsListViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<TestItemsListViewModel> logger)
         : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+
         ClearCommand = new RelayCommand(ClearItems);
     }
 
@@ -199,7 +208,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
         selectionVM.SetSelectedItems(SelectedItems);
         selectionVM.SetSelectionMode(SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;
-        return _commonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
+        return _navigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }
 
     /// <summary>

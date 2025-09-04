@@ -25,20 +25,20 @@ public class MessengerSendToAllTest
         const string TestContent = "abcd";
 
         Reset();
-        MessageService.Reset();
+        MessengerService.Reset();
 
-        MessageService.Default.Register<TestMessage>(this, m => StringContent1 = m.Content);
+        MessengerService.Default.Register<TestMessage>(this, m => StringContent1 = m.Content);
 
-        MessageService.Default.Register<TestMessage>(this, m => StringContent2 = m.Content);
+        MessengerService.Default.Register<TestMessage>(this, m => StringContent2 = m.Content);
 
         TestRecipient externalRecipient = new();
-        externalRecipient.RegisterWith(MessageService.Default);
+        externalRecipient.RegisterWith(MessengerService.Default);
 
         Assert.AreEqual(null, StringContent1);
         Assert.AreEqual(null, StringContent2);
         Assert.AreEqual(null, externalRecipient.StringContent);
 
-        MessageService.Default.Send(new TestMessage
+        MessengerService.Default.Send(new TestMessage
         {
             Content = TestContent
         });
@@ -51,8 +51,8 @@ public class MessengerSendToAllTest
     //[TestMethod]
     public void TestSendingNullMessage()
     {
-        MessageService.Reset();
-        MessageService.Default.Send<TestMessageImpl>(null!);
+        MessengerService.Reset();
+        MessengerService.Default.Send<TestMessageImpl>(null!);
     }
 
     //// Helpers
@@ -80,7 +80,7 @@ public class MessengerSendToAllTest
             private set;
         }
 
-        internal void RegisterWith(IMessageService messenger)
+        internal void RegisterWith(IMessengerService messenger)
         {
             messenger.Register<TestMessage>(this, m => StringContent = m.Content);
         }
