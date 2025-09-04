@@ -8,7 +8,7 @@ using Microsoft.JSInterop;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class CookieConsentService(IJSRuntime jsRuntime) : JSModule(jsRuntime, "./_content/ISynergy.Framework.UI.Blazor/js/cookie_consent.js")
+public class CookieConsentService(IJSRuntime jsRuntime) : JSModule(jsRuntime, "./_content/I-Synergy.Framework.UI.Blazor/js/cookie_consent.js")
 {
     private CookieState? _cookieState;
 
