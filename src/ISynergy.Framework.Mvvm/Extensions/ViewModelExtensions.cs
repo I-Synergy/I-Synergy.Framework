@@ -89,8 +89,23 @@ public static class ViewModelExtensions
         return result;
     }
 
+    public static string GetRelatedWindow(this Type viewModelType)
+    {
+        var result = viewModelType.Name;
+
+        if (viewModelType.IsInterface && result.StartsWith("I"))
+            result = result.Substring(1, result.Length - 1);
+
+        result = result.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.Window);
+
+        return result;
+    }
+
     public static string GetRelatedView(this IViewModel viewModel) =>
         viewModel.GetType().GetRelatedView();
+
+    public static string GetRelatedWindow(this IViewModel viewModel) =>
+        viewModel.GetType().GetRelatedWindow();
 
     public static string GetRelatedViewModel(this Type type)
     {
@@ -99,7 +114,10 @@ public static class ViewModelExtensions
         if (type.IsInterface && result.StartsWith("I"))
             result = result.Substring(1, result.Length - 1);
 
-        result = result.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
+        if (type.GetInterfaces().Contains(typeof(IWindow)))
+            result = result.ReplaceLastOf(GenericConstants.Window, GenericConstants.ViewModel);
+        else if (type.GetInterfaces().Contains(typeof(IView)))
+            result = result.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
 
         return result;
     }
@@ -107,6 +125,8 @@ public static class ViewModelExtensions
     public static string GetRelatedViewModel(this IView view) =>
         view.GetType().GetRelatedViewModel();
 
+    public static string GetRelatedViewModel(this IWindow window) =>
+        window.GetType().GetRelatedViewModel();
 
     public static Type? GetRelatedViewType(this string name)
     {
