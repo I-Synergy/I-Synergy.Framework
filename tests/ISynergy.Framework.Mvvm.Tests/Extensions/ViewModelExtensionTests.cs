@@ -3,7 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.Extensions.Tests;
@@ -32,6 +31,20 @@ public class ViewModelExtensionTests
         {
         }
     }
+
+    public class TestWindow : IWindow
+    {
+        public IViewModel? ViewModel { get; set; }
+        public bool IsEnabled { get; set; }
+
+        public Task CloseAsync() =>
+            throw new NotImplementedException();
+
+        public void Dispose()
+        {
+        }
+    }
+
     public class TestViewModel : ViewModel
     {
         public TestViewModel(ICommonServices commonServices, ILogger<TestViewModel> logger)
@@ -177,10 +190,23 @@ public class ViewModelExtensionTests
     public void GetRelatedViewModel_FromViewInstance_ReturnsViewModelName()
     {
         // Arrange
-        IView view = new TestView();
+        var view = new TestView();
 
         // Act
         var result = view.GetRelatedViewModel();
+
+        // Assert
+        Assert.AreEqual("TestViewModel", result);
+    }
+
+    [TestMethod]
+    public void GetRelatedViewModel_FromWindowInstance_ReturnsViewModelName()
+    {
+        // Arrange
+        var window = new TestWindow();
+
+        // Act
+        var result = window.GetRelatedViewModel();
 
         // Assert
         Assert.AreEqual("TestViewModel", result);
