@@ -1,4 +1,8 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Events;
+
+namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 /// <summary>
 /// Interface IViewModelBlade
@@ -7,14 +11,18 @@
 /// <seealso cref="IViewModel" />
 public interface IViewModelBlade : IViewModel
 {
-    /// <summary>
-    /// Gets or sets the owner.
-    /// </summary>
-    /// <value>The owner.</value>
-    IViewModelBladeView Owner { get; set; }
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is disabled.
-    /// </summary>
-    /// <value><c>true</c> if this instance is disabled; otherwise, <c>false</c>.</value>
     bool IsDisabled { get; set; }
+    bool IsUpdate { get; set; }
+    IViewModelBladeView Owner { get; set; }
+}
+
+public interface IViewModelBlade<TModel> : IViewModelBlade
+{
+    TModel? SelectedItem { get; set; }
+    AsyncRelayCommand<TModel> SubmitCommand { get; }
+
+    event EventHandler<SubmitEventArgs<TModel>>? Submitted;
+
+    void SetSelectedItem(TModel? e, bool isUpdate = true);
+    Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true);
 }
