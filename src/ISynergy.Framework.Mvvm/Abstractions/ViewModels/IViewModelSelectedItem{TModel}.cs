@@ -19,7 +19,8 @@ public interface IViewModelSelectedItem<TModel> : IViewModel
     /// Sets the selected item.
     /// </summary>
     /// <param name="e">The entity.</param>
-    void SetSelectedItem(TModel e);
+    /// <param name="isUpdate"></param>
+    void SetSelectedItem(TModel e, bool isUpdate = true);
     /// <summary>
     /// Gets the selected item.
     /// </summary>

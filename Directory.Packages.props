@@ -27,7 +27,7 @@
     <PackageVersion Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.23.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.23.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.23.0" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.91.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.92.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.76.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.250907003" />
@@ -39,7 +39,7 @@
     <PackageVersion Include="NodaTime" Version="3.2.2" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.5.0" />
     <PackageVersion Include="NuGet.Commands" Version="6.14.0" />
-    <PackageVersion Include="OpenIddict.Abstractions" Version="7.0.0" />
+    <PackageVersion Include="OpenIddict.Abstractions" Version="7.1.0" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry" Version="5.14.1" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="5.14.1" />

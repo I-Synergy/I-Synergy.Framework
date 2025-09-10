@@ -42,15 +42,16 @@ public abstract class ViewModelDialog<TModel> : ViewModel, IViewModelDialog<TMod
     /// <summary>
     /// Sets the selected item.
     /// </summary>
-    /// <param name="e">The entity.</param>
-    public virtual void SetSelectedItem(TModel? e)
+    /// <param name="e">The e.</param>
+    /// <param name="isUpdate"></param>
+    public virtual void SetSelectedItem(TModel e, bool isUpdate = true)
     {
         SelectedItem = e;
 
         if (SelectedItem is IObservableValidatedClass observableClass)
             observableClass.MarkAsClean();
 
-        IsUpdate = true;
+        IsUpdate = isUpdate;
     }
 
     /// <summary>

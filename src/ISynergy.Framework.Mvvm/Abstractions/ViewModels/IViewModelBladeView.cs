@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Mvvm.Commands;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using System.Collections.ObjectModel;
 
@@ -38,6 +37,6 @@ public interface IViewModelBladeView<TModel> : IViewModelBladeView
 
     Task EditAsync(TModel e);
     Task RemoveAsync(TModel e);
-    void SetSelectedItem(TModel? e);
+    void SetSelectedItem(TModel e, bool isUpdate = true);
     Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true);
 }
