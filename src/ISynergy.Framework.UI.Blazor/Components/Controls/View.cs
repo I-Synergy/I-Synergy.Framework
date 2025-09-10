@@ -12,32 +12,21 @@ namespace ISynergy.Framework.UI.Components.Controls;
 public partial class View<TViewModel> : ComponentBase, IView
     where TViewModel : class, IViewModel
 {
-    private TViewModel? _viewModel;
-    private bool _isEnabled = true;
-
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public TViewModel? ViewModel
-    {
-        get => _viewModel;
-        set => _viewModel = value;
-    }
+    [Inject] public TViewModel? ViewModel { get; set; }
+
+    /// <summary>
+    /// Gets or sets the IsEnabled property value.
+    /// </summary>
+    [CascadingParameter] public bool IsEnabled { get; set; }
 
     IViewModel? IView.ViewModel
     {
         get => ViewModel;
         set => ViewModel = value is null ? null : (TViewModel)value;
-    }
-
-    /// <summary>
-    /// Gets or sets the IsEnabled property value.
-    /// </summary>
-    public bool IsEnabled
-    {
-        get => _isEnabled;
-        set => _isEnabled = value;
     }
 
     protected override async Task OnInitializedAsync()
