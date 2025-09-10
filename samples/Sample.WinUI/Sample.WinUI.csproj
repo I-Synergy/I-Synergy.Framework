@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+		<TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 		<RootNamespace>Sample</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -70,9 +70,11 @@
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
 
-	<!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-	   Tools extension to be activated for this project even if the Windows App SDK Nuget
-	   package has not yet been restored -->
+	 <!--
+	 Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+	 Tools extension to be activated for this project even if the Windows App SDK Nuget
+	 package has not yet been restored
+	 --> 
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
@@ -81,23 +83,5 @@
 		<Using Include="ISynergy.Framework.UI.Application">
 			<Alias>Application</Alias>
 		</Using>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Views\ShellView.xaml.cs">
-	    <DependentUpon>ShellView.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Styles\Images.xaml" Link="Styles\Images.xaml">
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="Styles\Style.xaml" Link="Styles\Style.xaml">
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="Views\ShellView.xaml" Link="Views\ShellView.xaml">
-	    <SubType>Designer</SubType>
-	  </Page>
 	</ItemGroup>
 </Project>
