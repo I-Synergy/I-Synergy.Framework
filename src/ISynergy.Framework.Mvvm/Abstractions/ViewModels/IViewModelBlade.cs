@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Mvvm.Commands;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -23,6 +22,6 @@ public interface IViewModelBlade<TModel> : IViewModelBlade
 
     event EventHandler<SubmitEventArgs<TModel>>? Submitted;
 
-    void SetSelectedItem(TModel? e, bool isUpdate = true);
+    void SetSelectedItem(TModel e, bool isUpdate = true);
     Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true);
 }

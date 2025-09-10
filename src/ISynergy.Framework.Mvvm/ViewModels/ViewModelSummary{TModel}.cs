@@ -129,14 +129,15 @@ public abstract class ViewModelSummary<TModel> : ViewModel, IViewModelSummary<TM
     /// Sets the selected item.
     /// </summary>
     /// <param name="e">The e.</param>
-    public virtual void SetSelectedItem(TModel e)
+    /// <param name="isUpdate"></param>
+    public virtual void SetSelectedItem(TModel e, bool isUpdate = true)
     {
         SelectedItem = e;
 
         if (SelectedItem is IObservableValidatedClass observableClass)
             observableClass.MarkAsClean();
 
-        IsUpdate = true;
+        IsUpdate = isUpdate;
     }
 
     /// <summary>

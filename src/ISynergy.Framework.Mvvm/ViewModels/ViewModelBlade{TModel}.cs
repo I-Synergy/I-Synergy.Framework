@@ -43,7 +43,7 @@ public abstract class ViewModelBlade<TModel> : ViewModel, IViewModelBlade<TModel
     /// </summary>
     /// <param name="e">The entity.</param>
     /// <param name="isUpdate"></param>
-    public virtual void SetSelectedItem(TModel? e, bool isUpdate = true)
+    public virtual void SetSelectedItem(TModel e, bool isUpdate = true)
     {
         SelectedItem = e;
 
