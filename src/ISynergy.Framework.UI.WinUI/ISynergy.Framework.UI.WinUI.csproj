@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-windows10.0.26100.0;net9.0-windows10.0.26100.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-windows10.0.26100.0;net9.0-windows10.0.26100.0;net10.0-windows10.0.26100.0</TargetFrameworks>
 		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<AssemblyName>ISynergy.Framework.UI.WinUI</AssemblyName>
@@ -34,7 +34,7 @@
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<!--<ItemGroup>
 		<None Remove="Controls\BladeView\BladeView.xaml" />
 		<None Remove="Controls\Buttons\BaseDialogButtons.xaml" />
 		<None Remove="Controls\Console\Console.xaml" />
@@ -146,7 +146,7 @@
 		<Content Include="Styles\Themeff4343.xaml" />
 		<Content Include="Styles\Themeff8c00.xaml" />
 		<Content Include="Styles\Themeffb900.xaml" />
-	</ItemGroup>
+	</ItemGroup>-->
 
 	<ItemGroup>
 		<Content Include="Assets\Fonts\*.*">
