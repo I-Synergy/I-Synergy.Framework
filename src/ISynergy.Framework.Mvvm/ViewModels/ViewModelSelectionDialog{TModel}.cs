@@ -1,0 +1,202 @@
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
+using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
+
+namespace ISynergy.Framework.Mvvm.ViewModels;
+
+/// <summary>
+/// Class ViewModelDialogSelection.
+/// Implements the <see name="ViewModelDialog{List{object}}" />
+/// </summary>
+/// <seealso name="ViewModelDialog{List{object}}" />
+public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, ISelectionViewModel
+{
+    /// <summary>
+    /// Gets the title.
+    /// </summary>
+    /// <value>The title.</value>
+    public override string Title { get { return LanguageService.Default.GetString("Selection"); } }
+
+    /// <summary>
+    /// Gets or sets the raw items.
+    /// </summary>
+    /// <value>The raw items.</value>
+    [IgnoreValidation]
+    private List<TModel> RawItems { get; set; }
+
+    /// <summary>
+    /// Gets or sets the SelectionMode property value.
+    /// </summary>
+    /// <value>The selection mode.</value>
+    public SelectionModes SelectionMode
+    {
+        get { return GetValue<SelectionModes>(); }
+        set { SetValue(value); }
+    }
+
+    public virtual void SetSelectionMode(SelectionModes selectionMode)
+    {
+        SelectionMode = selectionMode;
+    }
+
+    /// <summary>
+    /// Gets or sets the Item property value.
+    /// </summary>
+    /// <value>The items.</value>
+    public ObservableCollection<TModel> Items
+    {
+        get { return GetValue<ObservableCollection<TModel>>(); }
+        set { SetValue(value); }
+    }
+
+    /// <summary>
+    /// Sets the selected item.
+    /// </summary>
+    /// <param name="e">The entity.</param>
+    public virtual void SetItems(IEnumerable<object> e)
+    {
+        RawItems = new List<TModel>();
+        Items = new ObservableCollection<TModel>();
+
+        foreach (TModel item in e.EnsureNotNull())
+        {
+            RawItems.Add(item);
+            Items.Add(item);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the SelectedItems property value.
+    /// </summary>
+    public List<object> SelectedItems
+    {
+        get => GetValue<List<object>>();
+        set => SetValue(value);
+    }
+
+
+    /// <summary>
+    /// Sets the selected item.
+    /// </summary>
+    /// <param name="e">The entity.</param>
+    public virtual void SetSelectedItems(IEnumerable<object> e)
+    {
+        SelectedItems = new List<object>();
+
+        foreach (var item in e.EnsureNotNull())
+        {
+            SelectedItems.Add(item!);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the Query property value.
+    /// </summary>
+    public string Query
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public AsyncRelayCommand<string> RefreshCommand { get; private set; }
+    public AsyncRelayCommand<List<object>> SelectCommand { get; private set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
+    /// </summary>
+    /// <param name="commonServices">The common services.</param>
+    /// <param name="logger"></param>
+    public ViewModelSelectionDialog(
+        ICommonServices commonServices,
+        ILogger<ViewModelSelectionDialog<TModel>> logger)
+        : base(commonServices, logger)
+    {
+        RawItems = new List<TModel>();
+        Items = new ObservableCollection<TModel>();
+        SelectedItems = new List<object>();
+
+        Validator = new Action<IObservableValidatedClass>(arg =>
+        {
+            if (SelectionMode == SelectionModes.Single && SelectedItems.Count < 1)
+                AddValidationError(nameof(SelectedItems), LanguageService.Default.GetString("WarningSelectItem"));
+
+            if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
+                AddValidationError(nameof(SelectedItems), LanguageService.Default.GetString("WarningSelectItem"));
+        });
+
+        RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
+        SelectCommand = new AsyncRelayCommand<List<object>>((e) => SelectAsync(e), (s) => s is not null && s.Count > 0);
+
+        IsInitialized = true;
+    }
+
+    /// <summary>
+    /// Queries the items.
+    /// </summary>
+    /// <param name="query">Query parameter.</param>
+    protected virtual Task QueryItemsAsync(string query)
+    {
+        if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
+        {
+            Items = new ObservableCollection<TModel>(RawItems);
+        }
+        else
+        {
+            var filteredList = new List<TModel>();
+
+            foreach (var item in RawItems.EnsureNotNull())
+            {
+                if (item!.ToString()?.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    filteredList.Add(item);
+                }
+            }
+
+            Items = new ObservableCollection<TModel>();
+            Items.AddRange(filteredList);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Submits selection
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="validateUnderlayingProperties"></param>
+    /// <returns></returns>
+    private async Task SelectAsync(List<object> e, bool validateUnderlayingProperties = true)
+    {
+        if (Validate(validateUnderlayingProperties))
+        {
+            var result = new List<TModel>();
+
+            foreach (TModel item in SelectedItems)
+            {
+                result.Add(item);
+            }
+
+            OnSubmitted(new SubmitEventArgs<List<TModel>>(result));
+            await CloseAsync();
+        }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            RefreshCommand?.Dispose();
+            SelectCommand?.Dispose();
+
+            base.Dispose(disposing);
+        }
+    }
+}
