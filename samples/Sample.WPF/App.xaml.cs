@@ -15,7 +15,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.Extensions;
 using Sample.Abstractions.Services;
-using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
@@ -59,7 +58,7 @@ public partial class App : Application
                             options.Debug = context.HostingEnvironment.IsDevelopment();
                         });
             })
-            .ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
+            .ConfigureServices<Context, CommonServices, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IFileService<FileResult>, FileService>();

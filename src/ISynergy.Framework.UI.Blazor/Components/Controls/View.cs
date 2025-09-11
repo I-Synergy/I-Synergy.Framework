@@ -4,6 +4,8 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
+using System.Reflection;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.UI.Components.Controls;
 
@@ -23,6 +25,11 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// </summary>
     [Parameter] public bool IsEnabled { get; set; }
 
+    /// <summary>
+    /// Collection of commands that have been subscribed to for CanExecuteChanged events.
+    /// </summary>
+    private readonly List<ICommand> _subscribedCommands = new();
+
     IViewModel? IView.ViewModel
     {
         get => ViewModel;
@@ -39,10 +46,56 @@ public partial class View<TViewModel> : ComponentBase, IView
                 await ViewModel.InitializeAsync();
 
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+
+            SubscribeToViewModelCommands();
         }
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Automatically subscribes to CanExecuteChanged events for all ICommand properties in the ViewModel.
+    /// </summary>
+    private void SubscribeToViewModelCommands()
+    {
+        if (ViewModel is null)
+            return;
+
+        var commandProperties = ViewModel.GetType()
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => typeof(ICommand).IsAssignableFrom(p.PropertyType))
+            .ToList();
+
+        foreach (var property in commandProperties)
+        {
+            if (property.GetValue(ViewModel) is ICommand command)
+            {
+                command.CanExecuteChanged += OnCommandCanExecuteChanged;
+                _subscribedCommands.Add(command);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Unsubscribes from CanExecuteChanged events for all subscribed commands.
+    /// </summary>
+    private void UnsubscribeFromViewModelCommands()
+    {
+        foreach (var command in _subscribedCommands)
+        {
+            command.CanExecuteChanged -= OnCommandCanExecuteChanged;
+        }
+
+        _subscribedCommands.Clear();
+    }
+
+    /// <summary>
+    /// Handles CanExecuteChanged events from commands and triggers a UI refresh.
+    /// </summary>
+    private void OnCommandCanExecuteChanged(object? sender, EventArgs e)
     {
         StateHasChanged();
     }
@@ -68,6 +121,7 @@ public partial class View<TViewModel> : ComponentBase, IView
             if (ViewModel is not null)
             {
                 ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+                UnsubscribeFromViewModelCommands();
                 ViewModel.Dispose();
             }
         }

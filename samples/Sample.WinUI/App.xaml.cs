@@ -15,7 +15,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Sample.Abstractions.Services;
-using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Globalization;
@@ -109,7 +108,7 @@ public sealed partial class App : Application
                         throw;
                     }
                 })
-                .ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(infoService, (configuration, environment, services) =>
+                .ConfigureServices<Context, CommonServices, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
                 {
                     services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                     services.TryAddSingleton<IFileService<FileResult>, FileService>();

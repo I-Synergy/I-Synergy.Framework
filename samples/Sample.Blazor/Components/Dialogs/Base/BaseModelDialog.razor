@@ -1,0 +1,125 @@
+﻿@using ISynergy.Framework.Core.Abstractions.Services
+@using ISynergy.Framework.Core.Services
+@using ISynergy.Framework.Mvvm.Abstractions
+@using ISynergy.Framework.Mvvm.Abstractions.ViewModels
+@using Microsoft.FluentUI.AspNetCore.Components
+@using ISynergy.Framework.UI.Extensions
+@using System.ComponentModel
+
+@typeparam TModel where TModel : class, new()
+@typeparam TViewModel where TViewModel : class, IViewModelDialog<TModel>
+
+@implements IDialogContentComponent<TViewModel>
+
+<FluentDialogHeader>
+	<FluentStack Orientation="Orientation.Vertical" VerticalGap="4">
+		@if (!string.IsNullOrEmpty(DialogSubtitle))
+		{
+			<FluentLabel Typo="Typography.Body">
+				@DialogSubtitle
+			</FluentLabel>
+		}
+	</FluentStack>
+</FluentDialogHeader>
+
+<FluentDialogBody>
+	@DialogContent
+</FluentDialogBody>
+
+<FluentDialogFooter>
+	<FluentStack Orientation="Orientation.Horizontal"
+				 HorizontalAlignment="HorizontalAlignment.Right"
+				 Style="gap: 0.5rem; margin-top: 1rem;">
+		<FluentButton Appearance="Appearance.Neutral"
+					  @attributes="@this.CommandBinding(Content.CancelCommand, cssClass: "btn btn-secondary")">
+			@CancelButtonText
+		</FluentButton>
+		<FluentButton Appearance="Appearance.Accent"
+					  @attributes="@this.CommandBinding(Content.SubmitCommand, parameter: Content.SelectedItem, cssClass: "btn btn-primary")">
+			@SaveButtonText
+		</FluentButton>
+	</FluentStack>
+</FluentDialogFooter>
+
+	@code {
+	private TViewModel _viewModel = default!;
+
+	[CascadingParameter] public FluentDialog? Dialog { get; set; }
+
+	[Parameter] public RenderFragment? DialogContent { get; set; } = default!;
+	[Parameter] public string? DialogSubtitle { get; set; }
+
+	[Parameter]
+	public TViewModel Content
+	{
+		get => _viewModel;
+		set
+		{
+			if (_viewModel != value)
+			{
+				// Unsubscribe from old ViewModel if it exists
+				if (_viewModel != null)
+				{
+					_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+					_viewModel.Closed -= OnViewModelClosed;
+				}
+
+				_viewModel = value;
+
+				// Subscribe to new ViewModel if it exists
+				if (_viewModel != null)
+				{
+					_viewModel.PropertyChanged += OnViewModelPropertyChanged;
+					_viewModel.Closed += OnViewModelClosed;
+				}
+			}
+		}
+	}
+
+	protected virtual string SaveButtonText => Content.IsUpdate ? "Update" : "Add";
+	protected virtual string CancelButtonText => "Cancel";
+
+	private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		StateHasChanged();
+	}
+
+	private async void OnViewModelClosed(object? sender, EventArgs e)
+	{
+		if (Dialog is not null)
+			await Dialog.CloseAsync();
+		
+		StateHasChanged();
+	}
+
+	#region IDisposable
+	/// <summary>
+	/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+	/// </summary>
+	public void Dispose()
+	{
+		Dispose(true);
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	/// Releases unmanaged and - optionally - managed resources.
+	/// </summary>
+	/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+	protected virtual void Dispose(bool disposing)
+	{
+		if (disposing)
+		{
+			if (_viewModel is not null)
+			{
+				_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+				_viewModel.Closed -= OnViewModelClosed;
+				_viewModel.Dispose();
+			}
+		}
+
+		// free native resources if there are any.
+	}
+	#endregion
+
+}

@@ -1,13 +1,15 @@
 using ISynergy.Framework.AspNetCore.Extensions;
+using ISynergy.Framework.Core.Serializers;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.OpenTelemetry.Extensions;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Sample.Components;
-using Sample.Models;
 using Sample.Services;
 using System.Reflection;
 
 namespace Sample;
+
 public class Program
 {
     public static void Main(string[] args)
@@ -23,19 +25,20 @@ public class Program
             .AddOtlpExporter();
 
         builder.Services
-            .ConfigureServices<Context, CommonServices, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>(
+            .ConfigureServices<Context, CommonServices, SettingsService, Properties.Resources>(
                 builder.Configuration,
                 infoService,
-                (builder) =>
+                services =>
                 {
+                    builder.Services.AddSingleton((s) => DefaultJsonSerializers.Web);
 
+                    builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+
+                    builder.Services.AddSingleton<INavigationMenuService, NavigationMenuService>();
                 },
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(Program).Namespace!));
 
-        // Add services to the container.
-        builder.Services.AddRazorComponents()
-            .AddInteractiveServerComponents();
 
         var app = builder
             .Build()

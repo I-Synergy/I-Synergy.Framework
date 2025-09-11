@@ -1,10 +1,7 @@
 ﻿@page "/commanddemoview"
-@using System.ComponentModel
-@using ISynergy.Framework.UI.Components
-@using ISynergy.Framework.UI.Extensions
-@using Sample.ViewModels
-@implements IDisposable
 @rendermode InteractiveServer
+
+@inherits View<CommandDemoViewModel>
 
 <h3>Command Binding Demo</h3>
 
@@ -16,6 +13,10 @@
 
 <button @attributes="@this.CommandBinding(ViewModel.ResetCommand, cssClass: "btn btn-danger")">
     Reset
+</button>
+
+<button @attributes="@this.CommandBinding(ViewModel.OpenSampleDialogCommand, cssClass: "btn btn-primary")">
+	Open Sample Dialog
 </button>
 
 <hr />
