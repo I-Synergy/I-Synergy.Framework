@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.ComponentModel;
 
@@ -12,22 +13,34 @@ namespace ISynergy.Framework.UI.Components.Controls;
 public partial class Window<TViewModel> : FluentDialog, IWindow, IDialogContentComponent<TViewModel?>
     where TViewModel : class, IViewModel
 {
+    private TViewModel? _viewModel;
+
     /// <summary>
     /// Gets or sets the viewmodel and data context for a window.
     /// </summary>
     /// <value>The data context.</value>
+    /// <summary>
+    /// Gets or sets the viewmodel and data context for a window.
+    /// </summary>
+    /// <value>The data context.</value>
+    [Parameter]
     public TViewModel? ViewModel
     {
-        get
-        {
-            if (Content is TViewModel viewModel)
-                return viewModel;
-
-            return null;
-        }
+        get => _viewModel;
         set
         {
-            Content = value;
+            if (_viewModel != value)
+            {
+                // Unsubscribe from old ViewModel if it exists
+                if (_viewModel != null)
+                    _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+
+                _viewModel = value;
+
+                // Subscribe to new ViewModel if it exists
+                if (_viewModel != null)
+                    _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+            }
         }
     }
 
@@ -37,19 +50,20 @@ public partial class Window<TViewModel> : FluentDialog, IWindow, IDialogContentC
         set => ViewModel = value is null ? null : (TViewModel)value;
     }
 
-    public TViewModel? Content { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        if (ViewModel is not null)
-        {
-            if (!ViewModel.IsInitialized)
-                await ViewModel.InitializeAsync();
+        if (ViewModel is not null && !ViewModel.IsInitialized)
+            await ViewModel.InitializeAsync();
+    }
 
-            ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        }
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        if (ViewModel is not null && !ViewModel.IsInitialized)
+            await ViewModel.InitializeAsync();
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

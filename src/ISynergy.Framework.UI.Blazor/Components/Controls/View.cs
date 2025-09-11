@@ -21,7 +21,7 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// <summary>
     /// Gets or sets the IsEnabled property value.
     /// </summary>
-    [CascadingParameter] public bool IsEnabled { get; set; }
+    [Parameter] public bool IsEnabled { get; set; }
 
     IViewModel? IView.ViewModel
     {
