@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -10,10 +11,13 @@ namespace ISynergy.Framework.UI.Components.Controls;
 
 [Bindable(true)]
 [Lifetime(Lifetimes.Scoped)]
-public partial class Window<TViewModel> : FluentDialog, IWindow, IDialogContentComponent<TViewModel?>
-    where TViewModel : class, IViewModel
+public partial class Window<TModel, TViewModel> : FluentDialog, IWindow
+    where TModel : class
+    where TViewModel : class, IViewModelDialog<TModel>
 {
     private TViewModel? _viewModel;
+
+    [Inject] private ICommonServices _commonServices { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a window.
@@ -33,13 +37,19 @@ public partial class Window<TViewModel> : FluentDialog, IWindow, IDialogContentC
             {
                 // Unsubscribe from old ViewModel if it exists
                 if (_viewModel != null)
+                {
                     _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+                    _viewModel.Closed -= OnViewModelClosed;
+                }
 
                 _viewModel = value;
 
                 // Subscribe to new ViewModel if it exists
                 if (_viewModel != null)
+                {
                     _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+                    _viewModel.Closed += OnViewModelClosed;
+                }
             }
         }
     }
@@ -50,25 +60,36 @@ public partial class Window<TViewModel> : FluentDialog, IWindow, IDialogContentC
         set => ViewModel = value is null ? null : (TViewModel)value;
     }
 
+    [Parameter]
+    public TViewModel? Content { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
+        if (Content is TViewModel viewModel)
+            ViewModel = viewModel;
+
         if (ViewModel is not null && !ViewModel.IsInitialized)
             await ViewModel.InitializeAsync();
+
+        StateHasChanged();
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnParametersSetAsync();
-
-        if (ViewModel is not null && !ViewModel.IsInitialized)
-            await ViewModel.InitializeAsync();
+        if (firstRender && Instance is not null && Instance.Parameters.OnDialogOpened.HasDelegate)
+            await Instance.Parameters.OnDialogOpened.InvokeAsync(Instance);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         StateHasChanged();
+    }
+
+    private async void OnViewModelClosed(object? sender, EventArgs e)
+    {
+        await CloseAsync();
     }
 
     #region IDisposable
@@ -92,6 +113,7 @@ public partial class Window<TViewModel> : FluentDialog, IWindow, IDialogContentC
             if (ViewModel is not null)
             {
                 ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+                ViewModel.Closed -= OnViewModelClosed;
                 ViewModel.Dispose();
             }
         }

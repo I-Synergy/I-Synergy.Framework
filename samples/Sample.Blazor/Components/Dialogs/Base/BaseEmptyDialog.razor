@@ -1,0 +1,107 @@
+﻿@using ISynergy.Framework.Mvvm.Abstractions
+@using ISynergy.Framework.Mvvm.Abstractions.ViewModels
+@using Microsoft.FluentUI.AspNetCore.Components
+@using ISynergy.Framework.UI.Components.Controls
+@using System.ComponentModel
+
+@typeparam TModel where TModel : class, new()
+@typeparam TViewModel where TViewModel : class, IViewModelDialog<TModel>
+
+@implements IWindow
+@implements IDialogContentComponent<TViewModel>
+
+@inherits FluentDialog
+
+<FluentDialogHeader>
+    <FluentStack Orientation="Orientation.Vertical" VerticalGap="4">
+        @if (!string.IsNullOrEmpty(DialogSubtitle))
+        {
+            <FluentLabel Typo="Typography.Body">
+                @DialogSubtitle
+            </FluentLabel>
+        }
+    </FluentStack>
+</FluentDialogHeader>
+
+<FluentDialogBody>
+    @DialogContent
+</FluentDialogBody>
+
+@code {
+    [Parameter] public RenderFragment? DialogContent { get; set; }
+    [Parameter] public string? DialogSubtitle { get; set; }
+    [Parameter] public TViewModel Content { get; set; } = default!;
+
+	public TViewModel? ViewModel
+	{
+		get => Content;
+		set
+		{
+			if (Content != value)
+			{
+				// Unsubscribe from old ViewModel if it exists
+				if (Content != null)
+				{
+					Content.PropertyChanged -= OnViewModelPropertyChanged;
+					Content.Closed -= OnViewModelClosed;
+				}
+
+				Content = value;
+
+				// Subscribe to new ViewModel if it exists
+				if (Content != null)
+				{
+					Content.PropertyChanged += OnViewModelPropertyChanged;
+					Content.Closed += OnViewModelClosed;
+				}
+			}
+		}
+	}
+
+	IViewModel? IWindow.ViewModel
+	{
+		get => ViewModel;
+		set => ViewModel = value is null ? null : (TViewModel)value;
+	}
+
+	private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		StateHasChanged();
+	}
+
+	private async void OnViewModelClosed(object? sender, EventArgs e)
+	{
+		await CloseAsync();
+	}
+
+	#region IDisposable
+	/// <summary>
+	/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+	/// </summary>
+	public void Dispose()
+	{
+		Dispose(true);
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	/// Releases unmanaged and - optionally - managed resources.
+	/// </summary>
+	/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+	protected virtual void Dispose(bool disposing)
+	{
+		if (disposing)
+		{
+			if (ViewModel is not null)
+			{
+				ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+				ViewModel.Closed -= OnViewModelClosed;
+				ViewModel.Dispose();
+			}
+		}
+
+		// free native resources if there are any.
+	}
+	#endregion
+
+}
