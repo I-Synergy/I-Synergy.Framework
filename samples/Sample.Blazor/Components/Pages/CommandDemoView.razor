@@ -7,15 +7,15 @@
 
 <p>Current count: @ViewModel.Counter</p>
 
-<button @attributes="@this.CommandBinding(ViewModel.DecrementCommand, cssClass: "btn btn-secondary")">
+<button @attributes="@this.CommandBinding(ViewModel.DecrementCommand)">
     Decrement
 </button>
 
-<button @attributes="@this.CommandBinding(ViewModel.ResetCommand, cssClass: "btn btn-danger")">
+<button @attributes="@this.CommandBinding(ViewModel.ResetCommand)">
     Reset
 </button>
 
-<button @attributes="@this.CommandBinding(ViewModel.OpenSampleDialogCommand, cssClass: "btn btn-primary")">
+<button @attributes="@this.CommandBinding(ViewModel.OpenSampleDialogCommand)">
 	Open Sample Dialog
 </button>
 
