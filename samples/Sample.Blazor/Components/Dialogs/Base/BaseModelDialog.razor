@@ -5,6 +5,8 @@
 @using Microsoft.FluentUI.AspNetCore.Components
 @using ISynergy.Framework.UI.Extensions
 @using System.ComponentModel
+@using System.Windows.Input
+@using System.Reflection
 
 @typeparam TModel where TModel : class, new()
 @typeparam TViewModel where TViewModel : class, IViewModelDialog<TModel>
@@ -44,6 +46,11 @@
 	@code {
 	private TViewModel _viewModel = default!;
 
+	/// <summary>
+	/// Collection of commands that have been subscribed to for CanExecuteChanged events.
+	/// </summary>
+	private readonly List<ICommand> _subscribedCommands = new();
+
 	[CascadingParameter] public FluentDialog? Dialog { get; set; }
 
 	[Parameter] public RenderFragment? DialogContent { get; set; } = default!;
@@ -78,6 +85,65 @@
 
 	protected virtual string SaveButtonText => Content.IsUpdate ? "Update" : "Add";
 	protected virtual string CancelButtonText => "Cancel";
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		if (_viewModel is not null)
+		{
+			if (!_viewModel.IsInitialized)
+				await _viewModel.InitializeAsync();
+
+			_viewModel.PropertyChanged += OnViewModelPropertyChanged;
+
+			SubscribeToViewModelCommands();
+		}
+	}
+
+	/// <summary>
+	/// Automatically subscribes to CanExecuteChanged events for all ICommand properties in the ViewModel.
+	/// </summary>
+	private void SubscribeToViewModelCommands()
+	{
+		if (_viewModel is null)
+			return;
+
+		var commandProperties = _viewModel.GetType()
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			.Where(p => typeof(ICommand).IsAssignableFrom(p.PropertyType))
+			.ToList();
+
+		foreach (var property in commandProperties)
+		{
+			if (property.GetValue(_viewModel) is ICommand command)
+			{
+				command.CanExecuteChanged += OnCommandCanExecuteChanged;
+				_subscribedCommands.Add(command);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Unsubscribes from CanExecuteChanged events for all subscribed commands.
+	/// </summary>
+	private void UnsubscribeFromViewModelCommands()
+	{
+		foreach (var command in _subscribedCommands)
+		{
+			command.CanExecuteChanged -= OnCommandCanExecuteChanged;
+		}
+
+		_subscribedCommands.Clear();
+	}
+
+	/// <summary>
+	/// Handles CanExecuteChanged events from commands and triggers a UI refresh.
+	/// </summary>
+	private void OnCommandCanExecuteChanged(object? sender, EventArgs e)
+	{
+		StateHasChanged();
+	}
 
 	private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
@@ -114,6 +180,7 @@
 			{
 				_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
 				_viewModel.Closed -= OnViewModelClosed;
+				UnsubscribeFromViewModelCommands();
 				_viewModel.Dispose();
 			}
 		}
