@@ -33,11 +33,11 @@
 				 HorizontalAlignment="HorizontalAlignment.Right"
 				 Style="gap: 0.5rem; margin-top: 1rem;">
 		<FluentButton Appearance="Appearance.Neutral"
-					  @attributes="@this.CommandBinding(Content.CancelCommand, cssClass: "btn btn-secondary")">
+					  @attributes="@this.CommandBinding(Content.CancelCommand)">
 			@CancelButtonText
 		</FluentButton>
 		<FluentButton Appearance="Appearance.Accent"
-					  @attributes="@this.CommandBinding(Content.SubmitCommand, parameter: Content.SelectedItem, cssClass: "btn btn-primary")">
+					  @attributes="@this.CommandBinding(Content.SubmitCommand, parameter: Content.SelectedItem)">
 			@SaveButtonText
 		</FluentButton>
 	</FluentStack>
