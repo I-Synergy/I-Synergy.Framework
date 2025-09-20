@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.FluentUI.AspNetCore.Components;
 using Sample.Components;
 using Sample.Services;
 using System.Reflection;
@@ -33,6 +34,8 @@ public class Program
                     builder.Services.AddSingleton((s) => DefaultJsonSerializers.Web);
 
                     builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+
+                    builder.Services.AddFluentUIComponents();
 
                     builder.Services.AddSingleton<INavigationMenuService, NavigationMenuService>();
                 },

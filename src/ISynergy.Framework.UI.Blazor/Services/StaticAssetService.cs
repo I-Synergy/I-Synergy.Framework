@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Components;
 
 namespace ISynergy.Framework.UI.Services;
+
 public class StaticAssetService : IStaticAssetService
 {
     private readonly HttpClient _httpClient;
-    private readonly CacheStorageService _cacheStorageAccessor;
+    private readonly ICacheStorageService _cacheStorageAccessor;
 
-    public StaticAssetService(HttpClient httpClient, NavigationManager navigationManager, CacheStorageService cacheStorageAccessor)
+    public StaticAssetService(HttpClient httpClient, NavigationManager navigationManager, ICacheStorageService cacheStorageAccessor)
     {
         _httpClient = httpClient;
         _httpClient.BaseAddress ??= new Uri(navigationManager.BaseUri);

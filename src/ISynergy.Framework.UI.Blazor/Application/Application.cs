@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.UI;
+
 public abstract class Application : ComponentBase
 {
     protected readonly ICommonServices? _commonServices;
@@ -15,7 +16,6 @@ public abstract class Application : ComponentBase
     protected readonly ILogger<Application>? _logger;
 
     private int _lastErrorMessage = 0;
-    private bool _isInitialized = false;
     private bool _isDisposing = false;
 
     private readonly Dictionary<string, Exception> _processedExceptions = new Dictionary<string, Exception>();
@@ -59,8 +59,6 @@ public abstract class Application : ComponentBase
 
             if (_settingsService.LocalSettings is not null)
                 _settingsService.LocalSettings.Language.SetLocalizationLanguage();
-
-            _isInitialized = true;
         }
         catch (Exception ex)
         {

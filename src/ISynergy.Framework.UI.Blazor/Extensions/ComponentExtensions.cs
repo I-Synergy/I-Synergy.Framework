@@ -6,7 +6,7 @@ namespace ISynergy.Framework.UI.Extensions;
 
 public static class ComponentExtensions
 {
-    public static Dictionary<string, object> CommandBinding(this ComponentBase component, ICommand command, object parameter = null, bool disabled = false)
+    public static Dictionary<string, object> CommandBinding(this ComponentBase component, ICommand command, object? parameter = null, bool disabled = false)
     {
         var canExecute = command?.CanExecute(parameter) ?? false;
 

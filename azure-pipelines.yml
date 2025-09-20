@@ -145,10 +145,10 @@ stages:
           inputs:
             pollingTimeoutSec: '300'
 
-        # - bash: |
-        #     git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
-        #         +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
-        #   displayName: 'Copy source to Github'
+        - bash: |
+            git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
+                +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
+          displayName: 'Copy source to Github'
 
   # - stage: DocStage
   #   displayName: 'Documentation'
