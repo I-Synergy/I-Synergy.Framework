@@ -1,6 +1,6 @@
-﻿async function openCacheStorage() {
+﻿async function openCacheStorage(storageName) {
     try {
-        return await window.caches.open("I-Synergy")
+        return await window.caches.open(storageName)
     }
     catch (err) {
         return undefined;
@@ -22,7 +22,7 @@ function createRequest(url, method, body = "") {
     return request;
 }
 
-export async function put(url, method, body = "", responseString) {
+export async function put(storageName, url, method, body = "", responseString) {
     const CACHING_DURATION = 7 * 24 * 3600;
 
     const expires = new Date();
@@ -32,7 +32,7 @@ export async function put(url, method, body = "", responseString) {
         headers: { 'fluent-cache-expires': expires.toUTCString() },
     };
 
-    let cache = await openCacheStorage();
+    let cache = await openCacheStorage(storageName);
     if (cache != null) {
 
         let request = createRequest(url, method, body);
@@ -42,8 +42,8 @@ export async function put(url, method, body = "", responseString) {
     }
 }
 
-export async function get(url, method, body = "") {
-    let cache = await openCacheStorage();
+export async function get(storageName, url, method, body = "") {
+    let cache = await openCacheStorage(storageName);
     if (cache == null) {
         return "";
     }
@@ -68,8 +68,8 @@ export async function get(url, method, body = "") {
     return "";
 }
 
-export async function remove(url, method, body = "") {
-    let cache = await openCacheStorage();
+export async function remove(storageName, url, method, body = "") {
+    let cache = await openCacheStorage(storageName);
 
     if (cache != null) {
         let request = createRequest(url, method, body);
@@ -77,8 +77,8 @@ export async function remove(url, method, body = "") {
     }
 }
 
-export async function removeAll() {
-    let cache = await openCacheStorage();
+export async function removeAll(storageName) {
+    let cache = await openCacheStorage(storageName);
 
     if (cache != null) {
         cache.keys().then(function (names) {

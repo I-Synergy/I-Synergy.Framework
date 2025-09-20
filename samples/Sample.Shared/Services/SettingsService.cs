@@ -19,7 +19,7 @@ public class SettingsService : ISettingsService
     private GlobalSettings? _globalSettings;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SettingsService{TLocalSettings, TRoamingSettings, TGlobalSettings}"/> class.
+    /// Initializes a new instance of the <see cref="SettingsService"/> class.
     /// </summary>
     public SettingsService(ILogger<SettingsService> logger)
     {

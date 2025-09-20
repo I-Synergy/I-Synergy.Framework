@@ -10,11 +10,9 @@ using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Security;
 using ISynergy.Framework.UI.Services;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.FluentUI.AspNetCore.Components;
 using System.Reflection;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -69,24 +67,19 @@ public static class ServiceCollectionExtensions
         services.TryAddScoped<ISettingsService, TSettingsService>();
         services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
 
-        services.AddFluentUIComponents();
-
         services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
 
         services.TryAddSingleton<TCommonServices>();
         services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());
 
         services.AddAuthorizationCore();
-
-        services.TryAddTransient<IAntiforgeryHttpClientFactory, AntiforgeryHttpClientFactory>();
-        services.TryAddScoped<CacheStorageService>();
-        services.TryAddScoped<CookieConsentService>();
-        services.AddHttpClient<IStaticAssetService, StaticAssetService>();
-
         services.AddCascadingAuthenticationState();
 
-        services.AddSingleton<IFormFactorService, FormFactorService>();
+        services.AddHttpClient<IStaticAssetService, StaticAssetService>();
 
+        services.TryAddTransient<IAntiforgeryHttpClientFactory, AntiforgeryHttpClientFactory>();
+
+        services.TryAddSingleton<IFormFactorService, FormFactorService>();
         services.TryAddSingleton<RequestCancellationService>();
 
         services.RegisterAssemblies(assembly, assemblyFilter);
