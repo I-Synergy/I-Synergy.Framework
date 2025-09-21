@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Sample.Abstractions.Services;
+using Sample.Extensions;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Globalization;
