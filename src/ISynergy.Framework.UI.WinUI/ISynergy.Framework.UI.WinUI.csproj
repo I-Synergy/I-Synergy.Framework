@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net8.0-windows10.0.26100.0;net9.0-windows10.0.26100.0;net10.0-windows10.0.26100.0</TargetFrameworks>
 		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<AssemblyName>ISynergy.Framework.UI.WinUI</AssemblyName>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -13,7 +14,6 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
-		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 		<UseWinUI>true</UseWinUI>
 		<EnableCoreMrtTooling Condition="'$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
 		<EnableMsixTooling>true</EnableMsixTooling>

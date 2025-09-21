@@ -1,0 +1,55 @@
+<c:View
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    x:Class="Sample.Views.SettingsView">
+    
+    <Grid Margin="20,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}"/>
+        
+        <Pivot Grid.Row="1">
+            <PivotItem Header="{m:LanguageResource Key=General}">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="10">
+                    <StackPanel Orientation="Vertical" Spacing="10">
+                        <ComboBox 
+                            Header="{m:LanguageResource Key=COMPort}"
+                            ItemsSource="{Binding COMPorts}"
+                            HorizontalAlignment="Left"
+                            Width="100" />
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+        </Pivot>
+        
+        <StackPanel 
+            Orientation="Horizontal" 
+            HorizontalAlignment="Center" 
+            Spacing="10" 
+            Grid.Row="2" 
+            Margin="10">
+            <Button
+                Content="{m:LanguageResource Key=SaveRestart}" 
+                Command="{Binding SubmitCommand}"
+                Style="{StaticResource DefaultButtonStyle}"/>
+
+            <Button
+                Content="{m:LanguageResource Key=Cancel}" 
+                Command="{Binding CancelCommand}"
+                Style="{StaticResource DefaultButtonStyle}"/>
+        </StackPanel>
+
+        <Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Grid.RowSpan="3">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
+                <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</c:View>

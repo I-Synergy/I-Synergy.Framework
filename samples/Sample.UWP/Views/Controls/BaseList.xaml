@@ -1,0 +1,89 @@
+﻿<UserControl
+    x:Class="Sample.Views.Controls.BaseList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:Sample.Models"
+    d:DesignHeight="800"
+    d:DesignWidth="1024"
+    mc:Ignorable="d">
+
+    <RelativePanel x:Name="LayoutRoot">
+        <StackPanel
+            x:Name="TopLayout"
+            Orientation="Horizontal"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignTopWithPanel="True"
+            Spacing="4">
+            <ComboBox
+                x:Name="SearchOptions"
+                DisplayMemberPath="Value"
+                Header="{m:LanguageResource Key=SearchIn}"
+                ItemsSource="{Binding QueryTypes, Converter={StaticResource EnumToArrayConverter}}"
+                SelectedValue="{Binding SelectedQueryType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="Key" />
+            <AutoSuggestBox
+                x:Name="SearchQuery"
+                Header="{m:LanguageResource Key=SearchValue}"
+                IsTabStop="True"
+                PlaceholderText="{m:LanguageResource Key=Search}"
+                QueryIcon="Find">
+                <i:Interaction.Behaviors>
+                    <i:EventTriggerBehavior EventName="QuerySubmitted">
+                        <i:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
+                    </i:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </AutoSuggestBox>
+        </StackPanel>
+
+        <ListView
+            x:Name="DataSummary"
+            Margin="1,4"
+            ItemsSource="{Binding Items}"
+            RelativePanel.AlignBottomWithPanel="True"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.Below="TopLayout"
+            SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectionMode="Single">
+            <i:Interaction.Behaviors>
+                <i:EventTriggerBehavior EventName="DoubleTapped">
+                    <i:InvokeCommandAction Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" />
+                </i:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="model:TestItem">
+                    <Grid Margin="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <PersonPicture
+                            Width="32"
+                            Height="32"
+                            Margin="6"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            DisplayName="{x:Bind Description}" />
+
+                        <StackPanel Grid.Column="2" VerticalAlignment="Top">
+                            <TextBlock Margin="4" FontSize="18">
+                                <TextBlock.Inlines>
+                                    <Run Text="{x:Bind Description}" />
+                                    <Run Text="-" />
+                                    <Run Text="{x:Bind Id}" />
+                                </TextBlock.Inlines>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </RelativePanel>
+</UserControl>
