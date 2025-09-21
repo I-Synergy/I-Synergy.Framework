@@ -39,7 +39,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     protected Microsoft.UI.Xaml.Window? _mainWindow;
 
     private int _lastErrorMessage = 0;
-    private bool _isInitialized = false;
     private bool _isDisposing = false;
     private readonly Dictionary<string, Exception> _processedExceptions = new Dictionary<string, Exception>();
 
@@ -130,8 +129,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
                 if (_settingsService.LocalSettings is not null)
                     _settingsService.LocalSettings.Language.SetLocalizationLanguage();
-
-                _isInitialized = true;
             }
             catch (Exception ex)
             {

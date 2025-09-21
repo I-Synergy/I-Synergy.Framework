@@ -24,8 +24,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 	  <ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
 </Project>
