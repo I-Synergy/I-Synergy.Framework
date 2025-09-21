@@ -48,6 +48,7 @@
     <Project Path="src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj" />
     <Project Path="src/ISynergy.Framework.Synchronization/ISynergy.Framework.Synchronization.csproj" />
     <Project Path="src/ISynergy.Framework.UI.Blazor/ISynergy.Framework.UI.Blazor.csproj" Id="2533bd51-a65b-483e-9d9e-d9abf12f97ca" />
+    <Project Path="src/ISynergy.Framework.UI.UWP/ISynergy.Framework.UI.UWP.csproj" Id="4cb056e8-2b39-4ed8-b50b-08db2960000a" />
     <Project Path="src/ISynergy.Framework.UI.WinUI/ISynergy.Framework.UI.WinUI.csproj" />
     <Project Path="src/ISynergy.Framework.UI.WPF/ISynergy.Framework.UI.WPF.csproj" />
     <Project Path="src/ISynergy.Framework.UI/ISynergy.Framework.UI.csproj" />
@@ -56,6 +57,13 @@
   <Folder Name="/Samples/Applications/">
     <Project Path="samples/Sample.Blazor/Sample.Blazor.csproj" Id="15f7434b-4561-41d7-b6f8-9fca7f65a2ca" />
     <Project Path="samples/Sample.Shared/Sample.Shared.csproj" />
+    <Project Path="samples/Sample.UWP/Sample.UWP.csproj">
+      <Platform Solution="*|Any CPU" Project="x64" />
+      <Platform Solution="*|arm64" Project="arm64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Deploy />
+    </Project>
     <Project Path="samples/Sample.WinUI/Sample.WinUI.csproj">
       <Platform Solution="*|Any CPU" Project="x64" />
       <Platform Solution="*|arm64" Project="arm64" />

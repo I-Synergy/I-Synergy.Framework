@@ -1,0 +1,34 @@
+﻿<c:View
+    x:Class="Sample.Views.InfoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Margin="8">
+        <StackPanel Orientation="Vertical">
+            <TextBox
+                Header="Company name"
+                IsReadOnly="True"
+                Text="{Binding CompanyName}" />
+            <TextBox
+                Header="Product name"
+                IsReadOnly="True"
+                Text="{Binding ProductName}" />
+            <TextBox
+                Header="Version"
+                IsReadOnly="True"
+                Text="{Binding Version}" />
+            <TextBox
+                Header="Copyrights"
+                IsReadOnly="True"
+                Text="{Binding Copyrights}" />
+            <TextBox
+                Header="Activation"
+                IsReadOnly="True"
+                Text="{Binding Startup}" />
+        </StackPanel>
+    </Grid>
+</c:View>
