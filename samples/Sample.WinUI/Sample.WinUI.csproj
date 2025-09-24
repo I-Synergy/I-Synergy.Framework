@@ -98,8 +98,4 @@
 			<Alias>Application</Alias>
 		</Using>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <PRIResource Remove="AppPackages\**" />
-	</ItemGroup>
 </Project>
