@@ -8,8 +8,8 @@
     <PackageVersion Include="Azure.Identity" Version="1.16.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.4.0" />
-    <PackageVersion Include="Azure.Storage.Blobs" Version="12.25.0" />
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.3" />
+    <PackageVersion Include="Azure.Storage.Blobs" Version="12.25.1" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.4" />
     <PackageVersion Include="CommunityToolkit.Maui.MediaElement" Version="4.1.2" />
     <PackageVersion Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
     <PackageVersion Include="CompareNETObjects" Version="4.84.0" />
@@ -28,14 +28,14 @@
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.23.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.23.0" />
     <PackageVersion Include="Microsoft.Graph" Version="5.93.0" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.77.0" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.77.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.250907003" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="MSTest.TestAdapter" Version="3.10.4" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.10.4" />
@@ -47,17 +47,16 @@
     <PackageVersion Include="Sentry" Version="5.15.1" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="5.15.1" />
     <PackageVersion Include="SkiaSharp" Version="2.88.9" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="28.2.11" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="31.1.20" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="31.1.20" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="31.1.21" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="31.1.21" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="System.Private.Uri" Version="4.3.2" />
