@@ -47,7 +47,6 @@ public class Program
 
                             tracing.AddSqlClientInstrumentation(options =>
                             {
-                                options.SetDbStatementForText = true;
                                 options.RecordException = true;
                             });
 
