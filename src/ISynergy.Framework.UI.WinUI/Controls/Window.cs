@@ -19,24 +19,7 @@ namespace ISynergy.Framework.UI.Controls;
 public partial class Window : ContentDialog, IWindow
 {
     /// <summary>
-    /// Default constructor.
-    /// </summary>
-    public Window()
-    {
-        CornerRadius = new CornerRadius(8);
-    }
-
-    /// <summary>
-    /// Closes this instance.
-    /// </summary>
-    public Task CloseAsync()
-    {
-        Hide();
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Gets or sets the viewmodel and data context for a window.
+    /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
     public IViewModel? ViewModel
@@ -52,6 +35,23 @@ public partial class Window : ContentDialog, IWindow
         {
             DataContext = value;
         }
+    }
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public Window()
+    {
+        CornerRadius = new CornerRadius(8);
+    }
+
+    /// <summary>
+    /// Closes this instance.
+    /// </summary>
+    public Task CloseAsync()
+    {
+        Hide();
+        return Task.CompletedTask;
     }
 
     private void Window_Unloaded(object? sender, RoutedEventArgs e)

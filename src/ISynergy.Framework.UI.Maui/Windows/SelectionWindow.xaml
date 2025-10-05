@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:Window
+    x:Class="ISynergy.Framework.UI.Windows.SelectionWindow"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    Title="{Binding Title}">
+
+    <c:Window.Resources>
+        <converters:SelectionModeConverter x:Key="SelectionModeConverter" />
+    </c:Window.Resources>
+
+    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}" WidthRequest="{OnPlatform WinUI=600, Default=400}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="44" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Entry
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="2"
+                ClearButtonVisibility="WhileEditing"
+                Placeholder="{m:GetString Search}"
+                ReturnCommand="{Binding RefreshCommand}"
+                ReturnCommandParameter="{Binding Query}"
+                Text="{Binding Query, Mode=TwoWay}" />
+
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="2"
+                Command="{Binding RefreshCommand}"
+                CommandParameter="{Binding Query}"
+                Text="{m:GetString Search}" />
+
+            <CollectionView
+                x:Name="DataSummary"
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                ItemsSource="{Binding Items}"
+                MinimumHeightRequest="400"
+                SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10">
+                            <Label Margin="10,0" Text="{Binding}" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <c:ErrorPresenter
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                VerticalOptions="Start" />
+        </Grid>
+    </ContentView>
+</c:Window>

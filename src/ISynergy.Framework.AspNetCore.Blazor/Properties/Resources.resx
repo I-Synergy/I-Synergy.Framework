@@ -1,0 +1,475 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+	<data name="By" xml:space="preserve">
+    <value>by</value>
+  </data>
+	<data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+	<data name="Collapsed" xml:space="preserve">
+    <value>Collapsed</value>
+  </data>
+	<data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+	<data name="Day_s" xml:space="preserve">
+    <value>Day(s)</value>
+  </data>
+	<data name="WarningDoYouWantToDoItNow" xml:space="preserve">
+    <value>Do you want to do it now?</value>
+  </data>
+	<data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+	<data name="Expanded" xml:space="preserve">
+    <value>Expanded</value>
+  </data>
+	<data name="Greeting_Afternoon" xml:space="preserve">
+    <value>Good afternoon {0}</value>
+  </data>
+	<data name="Greeting_Evening" xml:space="preserve">
+    <value>Good evening {0}</value>
+  </data>
+	<data name="Greeting_Morning" xml:space="preserve">
+    <value>Good morning {0}</value>
+  </data>
+	<data name="Greeting_Night" xml:space="preserve">
+    <value>Good night {0}</value>
+  </data>
+	<data name="Hour_s" xml:space="preserve">
+    <value>Hour(s)</value>
+  </data>
+	<data name="InputFirst" xml:space="preserve">
+    <value>Created</value>
+  </data>
+	<data name="InputLast" xml:space="preserve">
+    <value>Last change</value>
+  </data>
+	<data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+	<data name="Language_Dutch" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
+	<data name="Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+	<data name="Language_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+	<data name="Language_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+	<data name="Minute_s" xml:space="preserve">
+    <value>Minute(s)</value>
+  </data>
+	<data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+	<data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+	<data name="Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+	<data name="PleaseWait" xml:space="preserve">
+    <value>One moment please</value>
+  </data>
+	<data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+	<data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+	<data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+	<data name="TitleCriticalError" xml:space="preserve">
+    <value>Critical error</value>
+  </data>
+	<data name="TitleError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+	<data name="TitleInfo" xml:space="preserve">
+    <value>Information</value>
+  </data>
+	<data name="TitleQuestion" xml:space="preserve">
+    <value>Question</value>
+  </data>
+	<data name="TitleWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+	<data name="TitleWelcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+	<data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+	<data name="UpdateRestart" xml:space="preserve">
+    <value>There is an update available.
+Save your work and restart the application.</value>
+  </data>
+	<data name="WarningColorChange" xml:space="preserve">
+    <value>You need to restart the application to apply the color changes.</value>
+  </data>
+	<data name="WarningDocumentSizeTooBig" xml:space="preserve">
+    <value>Document size cannot exceed {0}.</value>
+  </data>
+	<data name="WarningLanguageChange" xml:space="preserve">
+    <value>You need to restart the application to apply the language changes.</value>
+  </data>
+	<data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+	<data name="ThisItem" xml:space="preserve">
+    <value>this item</value>
+  </data>
+	<data name="UpdateCheckForUpdates" xml:space="preserve">
+    <value>Checking for updates...</value>
+  </data>
+	<data name="UpdateDownloadAndInstall" xml:space="preserve">
+    <value>Downloading and installing update...</value>
+  </data>
+	<data name="UpdateExecuteNow" xml:space="preserve">
+    <value>Do you really want to install the update now?</value>
+  </data>
+	<data name="UpdateFoundNewUpdate" xml:space="preserve">
+    <value>There is a new update.</value>
+  </data>
+	<data name="CannotAttachBehaviorMultipleTimesExceptionMessage" xml:space="preserve">
+    <value>An instance of a behavior cannot be attached to more than one object at a time.</value>
+  </data>
+	<data name="DuplicateBehaviorInCollectionExceptionMessage" xml:space="preserve">
+    <value>Cannot add an instance of a behavior to a BehaviorCollection more than once.</value>
+  </data>
+	<data name="InvalidAssociatedObjectExceptionMessage" xml:space="preserve">
+    <value>AssociatedObject is of type {0} but should be of type {1}.</value>
+  </data>
+	<data name="NonActionAddedToActionCollectionExceptionMessage" xml:space="preserve">
+    <value>Only IAction types are supported in an ActionCollection.</value>
+  </data>
+	<data name="NonBehaviorAddedToBehaviorCollectionExceptionMessage" xml:space="preserve">
+    <value>Only IBehavior types are supported in a BehaviorCollection.</value>
+  </data>
+	<data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+	<data name="SignOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+	<data name="SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+	<data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+	<data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+	<data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+	<data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+	<data name="Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+	<data name="NoItems" xml:space="preserve">
+    <value>No items available</value>
+  </data>
+	<data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+	<data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+	<data name="LoginAccount" xml:space="preserve">
+    <value>Already have an account?</value>
+  </data>
+	<data name="LoginNoAccount" xml:space="preserve">
+    <value>Don't have an account?</value>
+  </data>
+	<data name="LoginText" xml:space="preserve">
+    <value>If you already have an account, you can use your e-mail address and password to login.</value>
+  </data>
+	<data name="LoginTitle" xml:space="preserve">
+    <value>Have an account?</value>
+  </data>
+	<data name="SignInHere" xml:space="preserve">
+    <value>Sign in here</value>
+  </data>
+	<data name="SignupHere" xml:space="preserve">
+    <value>Register here</value>
+  </data>
+	<data name="SignupText" xml:space="preserve">
+    <value>If you don't have an account, fill out the required fields and register. 
+After confirmation of your registration you can use your e-mail address and password to login.</value>
+  </data>
+	<data name="SignupTitle" xml:space="preserve">
+    <value>Don't have an account?</value>
+  </data>
+	<data name="WarningNoModulesSelected" xml:space="preserve">
+    <value>There are no modules selected. Select at least one.</value>
+  </data>
+	<data name="WarningPasswordMatch" xml:space="preserve">
+    <value>Passwords don't match!</value>
+  </data>
+	<data name="WarningPasswordSize" xml:space="preserve">
+    <value>The password should have at least 6 characters and at least 1 lower case letter, 1 upper case letter and 1 number.</value>
+  </data>
+	<data name="WarningResetPassword" xml:space="preserve">
+    <value>You will receive an email with a link to reset your password.</value>
+  </data>
+	<data name="PasswordForgot" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
+	<data name="PasswordRetype" xml:space="preserve">
+    <value>Retype password</value>
+  </data>
+	<data name="EmailAddress" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+	<data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+	<data name="Modules" xml:space="preserve">
+    <value>Modules</value>
+  </data>
+	<data name="TimeZone" xml:space="preserve">
+    <value>Timezone</value>
+  </data>
+	<data name="WarningNoCountrySelected" xml:space="preserve">
+    <value>There is no country selected.</value>
+  </data>
+	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
+    <value>There is no timezone selected.</value>
+  </data>
+	<data name="WarningInvalidEmail" xml:space="preserve">
+    <value>Entered e-mail address is invalid.</value>
+  </data>
+	<data name="WarningLicenseNameSize" xml:space="preserve">
+    <value>You have to enter an (company) name existing of at least 3 characters.</value>
+  </data>
+	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
+    <value>You will receive an email that you first need to confirm before you are able to log in.</value>
+  </data>
+	<data name="Fullname" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+	<data name="WarningBuildCalled" xml:space="preserve">
+    <value>Build can only be called once.</value>
+  </data>
+	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+    <value>CreateBuilder must be called before CreateServiceProvider.</value>
+  </data>
+	<data name="WarningNullIServiceProvider" xml:space="preserve">
+    <value>The IServiceProviderFactory returned a null IServiceProvider.</value>
+  </data>
+	<data name="WarningResolverReturnedNull" xml:space="preserve">
+    <value>The resolver returned a null IServiceProviderFactory.</value>
+  </data>
+	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+    <value>Replacing IHostApplicationLifetime is not supported.</value>
+  </data>
+	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
+    <value>File name is null or empty. Specify a valid file name.</value>
+  </data>
+	<data name="CannotFindUpdateFile" xml:space="preserve">
+    <value>Cannot find update file.</value>
+  </data>
+	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
+    <value>Could not retrieve version information.</value>
+  </data>
+	<data name="NoInternetConnectionAvailable" xml:space="preserve">
+    <value>No internet connection is available.</value>
+  </data>
+	<data name="CannotInstallUpdate" xml:space="preserve">
+    <value>Cannot install update.</value>
+  </data>
+	<data name="MandatoryUpdateFailed" xml:space="preserve">
+    <value>Mandatory update has failed!</value>
+  </data>
+	<data name="WarningUsernameSize" xml:space="preserve">
+    <value>Username should contain at least 3 characters.</value>
+  </data>
+	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
+    <value>The mandatory package update failed.
+Try again or update the application through the Microsoft Store.</value>
+  </data>
+	<data name="Remember" xml:space="preserve">
+    <value>Remember</value>
+  </data>
+	<data name="WarningEmailExists" xml:space="preserve">
+    <value>Entered e-mail address already exists. Provide a new one and try again.</value>
+  </data>
+	<data name="WarningNameExists" xml:space="preserve">
+    <value>Entered name already exists. Specify a new one and try again.</value>
+  </data>
+	<data name="WarningRegistrationExists" xml:space="preserve">
+    <value>The combination of name and e-mail address already exists. Provide a new name and/or e-mail address and try again.</value>
+  </data>
+	<data name="EnterNote" xml:space="preserve">
+    <value>Enter note here...</value>
+  </data>
+	<data name="Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+	<data name="WarningSynchronizationRestart" xml:space="preserve">
+    <value>WarningSynchronizationRestart</value>
+  </data>
+	<data name="TakePhoto" xml:space="preserve">
+    <value>Take photo</value>
+  </data>
+	<data name="Browse" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+	<data name="Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+	<data name="SelectCountry" xml:space="preserve">
+    <value>Select country</value>
+  </data>
+	<data name="SelectTimeZone" xml:space="preserve">
+    <value>Select time zone</value>
+  </data>
+	<data name="CreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+    <value>CreateBuilder must be called before CreateServiceProvider</value>
+  </data>
+	<data name="NullIServiceProvider" xml:space="preserve">
+    <value>The IServiceProviderFactory returned a null IServiceProvider</value>
+  </data>
+	<data name="ResolverReturnedNull" xml:space="preserve">
+    <value>The resolver returned a null IServiceProviderFactory</value>
+  </data>
+	<data name="WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+    <value>Replacing IHostApplicationLifetime is not supported.</value>
+  </data>
+	<data name="DefaultException" xml:space="preserve">
+    <value>Something went wrong.
+Contact support.</value>
+  </data>
+</root>

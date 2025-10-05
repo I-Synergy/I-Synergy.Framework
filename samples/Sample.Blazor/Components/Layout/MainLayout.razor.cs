@@ -1,10 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Messages;
-using ISynergy.Framework.UI.Messages;
-using ISynergy.Framework.UI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -69,11 +68,6 @@ public partial class MainLayout
         _prevUri = _navigationManager.Uri;
 
         _commonServices.BusyService.PropertyChanged += BusyService_PropertyChanged;
-
-        MessengerService.Default.Register<AuthenticationChangedMessage>(this, m =>
-        {
-            _navigationManager.NavigateTo("/");
-        });
 
         MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
         {

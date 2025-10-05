@@ -16,6 +16,7 @@
   </Folder>
   <Folder Name="/Projects/">
     <Project Path="src/ISynergy.Framework.AspNetCore.Authentication/ISynergy.Framework.AspNetCore.Authentication.csproj" />
+    <Project Path="src/ISynergy.Framework.AspNetCore.Blazor/ISynergy.Framework.AspNetCore.Blazor.csproj" Id="28f9504a-3fd5-4a9f-a3fb-f7cb277dce1a" />
     <Project Path="src/ISynergy.Framework.AspNetCore.Globalization/ISynergy.Framework.AspNetCore.Globalization.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.Monitoring/ISynergy.Framework.AspNetCore.Monitoring.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.MultiTenancy/ISynergy.Framework.AspNetCore.MultiTenancy.csproj" />
@@ -48,6 +49,9 @@
     <Project Path="src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj" />
     <Project Path="src/ISynergy.Framework.Synchronization/ISynergy.Framework.Synchronization.csproj" />
     <Project Path="src/ISynergy.Framework.UI.Blazor/ISynergy.Framework.UI.Blazor.csproj" Id="2533bd51-a65b-483e-9d9e-d9abf12f97ca" />
+    <Project Path="src/ISynergy.Framework.UI.Maui/ISynergy.Framework.UI.Maui.csproj">
+      <Deploy />
+    </Project>
     <Project Path="src/ISynergy.Framework.UI.UWP/ISynergy.Framework.UI.UWP.csproj" Id="4cb056e8-2b39-4ed8-b50b-08db2960000a" />
     <Project Path="src/ISynergy.Framework.UI.WinUI/ISynergy.Framework.UI.WinUI.csproj" />
     <Project Path="src/ISynergy.Framework.UI.WPF/ISynergy.Framework.UI.WPF.csproj" />
@@ -56,6 +60,9 @@
   <Folder Name="/Samples/" />
   <Folder Name="/Samples/Applications/">
     <Project Path="samples/Sample.Blazor/Sample.Blazor.csproj" Id="15f7434b-4561-41d7-b6f8-9fca7f65a2ca" />
+    <Project Path="samples/Sample.Maui/Sample.Maui.csproj">
+      <Deploy Solution="Debug|Any CPU" />
+    </Project>
     <Project Path="samples/Sample.Shared/Sample.Shared.csproj" />
     <Project Path="samples/Sample.UWP/Sample.UWP.csproj">
       <Platform Solution="*|Any CPU" Project="x64" />
@@ -134,6 +141,7 @@
     <Project Path="tests/ISynergy.Framework.Physics.Tests/ISynergy.Framework.Physics.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Storage.Azure.Tests/ISynergy.Framework.Storage.Azure.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Storage.Tests/ISynergy.Framework.Storage.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.UI.Maui.Tests/ISynergy.Framework.UI.Maui.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.UI.WinUI.Tests/ISynergy.Framework.UI.WinUI.Tests.csproj" />
   </Folder>
 </Solution>

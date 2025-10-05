@@ -1,0 +1,85 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst;net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0;net10.0-windows10.0.19041.0</TargetFrameworks>
+		
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+
+		<PackageId>I-Synergy.Framework.UI.Maui</PackageId>
+		<Description>I-Synergy UI Framework for .Net Maui</Description>
+		<PackageTags>I-Synergy, Framework, UI, Windows, Linux, Android, IOS, Maui</PackageTags>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<ItemGroup>
+		<MauiFont Include="Resources\Fonts\*" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Fonts\opendyslexic3-bold.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\opendyslexic3-regular.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\opensans-medium.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\opensans-regular.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\opensans-semibold.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\segoemdl2.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\segoeui.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\segoeuib.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\segoeuil.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\segoeuisb.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\segoeuisl.ttf" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.Logging" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+		<PackageReference Include="SkiaSharp" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Models.Style">
+			<Alias>Style</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.IView">
+			<Alias>IView</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.IWindow">
+			<Alias>IWindow</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Controls.Window">
+			<Alias>Window</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Controls.View">
+			<Alias>View</Alias>
+		</Using>
+	</ItemGroup>
+	<ItemGroup>
+		<MauiXaml Update="Controls\ErrorPresenter\ErrorPresenter.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Controls\ImageBrowser\ImageBrowser.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Controls\NavigationMenu\NavigationMenu.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Generic.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Windows\NoteWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Windows\SelectionWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+	</ItemGroup>
+</Project>

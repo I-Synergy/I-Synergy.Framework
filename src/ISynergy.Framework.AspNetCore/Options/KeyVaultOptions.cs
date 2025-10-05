@@ -5,7 +5,7 @@ namespace ISynergy.Framework.AspNetCore.Options;
 /// <summary>
 /// Class KeyVaultOptions.
 /// </summary>
-public class KeyVaultOptions : ApplicationOptions
+public class KeyVaultOptions : ClientApplicationOptions
 {
     /// <summary>
     /// Gets or sets the key vault URI.
