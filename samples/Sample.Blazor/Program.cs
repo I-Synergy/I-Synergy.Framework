@@ -1,9 +1,9 @@
+using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Services;
+using ISynergy.Framework.AspNetCore.Blazor.Extensions;
 using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.Core.Serializers;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.OpenTelemetry.Extensions;
-using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Extensions;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Sample.Components;
 using Sample.Services;

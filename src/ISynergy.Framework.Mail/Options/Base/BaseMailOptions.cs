@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Mail.Options.Base;
 /// <summary>
 /// Mail service options.
 /// </summary>
-public abstract class BaseMailOptions : ApplicationOptions
+public abstract class BaseMailOptions : ClientApplicationOptions
 {
     /// <summary>
     /// Gets or sets the email address of the sender.

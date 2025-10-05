@@ -1,7 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Models;
@@ -97,10 +99,14 @@ public class AuthenticationService : IAuthenticationService
                 DateTimeOffset.Now.AddDays(7),
                 1,
                 DateTime.Now.AddHours(24));
+
+            MessengerService.Default.Send(new AuthenticationChangedMessage(true));
         }
         else
         {
             _scopedContextService.GetRequiredService<IContext>().Profile = null;
+
+            MessengerService.Default.Send(new AuthenticationChangedMessage(false));
         }
     }
 }

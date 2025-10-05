@@ -48,7 +48,7 @@ public static class WpfAppBuilderExtensions
         {
             services.AddOptions();
 
-            services.Configure<ApplicationOptions>(context.Configuration.GetSection(nameof(ApplicationOptions)).BindWithReload);
+            services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
 
             var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));

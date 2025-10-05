@@ -47,7 +47,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddOptions();
 
-        services.Configure<ApplicationOptions>(configuration.GetSection(nameof(ApplicationOptions)).BindWithReload);
+        services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
         var languageService = LanguageService.Default;

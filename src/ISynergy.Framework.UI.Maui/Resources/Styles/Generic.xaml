@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    x:Class="ISynergy.Framework.UI.Resources.Styles.Generic"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui">
+
+    <Color x:Key="White">White</Color>
+    <Color x:Key="Black">Black</Color>
+    <Color x:Key="OffBlack">#1f1f1f</Color>
+
+    <Color x:Key="RedAccent">#ffE62626</Color>
+    <Color x:Key="LightRedAccent">#ffffaaab</Color>
+    <Color x:Key="DarkRedAccent">#ff7f0000</Color>
+    <Color x:Key="GreenAccent">#ff45e63d</Color>
+    <Color x:Key="LightGreenAccent">#ffb2f8af</Color>
+    <Color x:Key="DarkGreenAccent">#ff007200</Color>
+
+    <Color x:Key="Gray000">#F0F0F0</Color>
+    <Color x:Key="Gray100">#E1E1E1</Color>
+    <Color x:Key="Gray200">#C8C8C8</Color>
+    <Color x:Key="Gray300">#ACACAC</Color>
+    <Color x:Key="Gray400">#919191</Color>
+    <Color x:Key="Gray500">#6E6E6E</Color>
+    <Color x:Key="Gray600">#404040</Color>
+    <Color x:Key="Gray900">#212121</Color>
+    <Color x:Key="Gray950">#141414</Color>
+
+    <Color x:Key="Yellow100Accent">#F7B548</Color>
+    <Color x:Key="Yellow200Accent">#FFD590</Color>
+    <Color x:Key="Yellow300Accent">#FFE5B9</Color>
+    <Color x:Key="Cyan100Accent">#28C2D1</Color>
+    <Color x:Key="Cyan200Accent">#7BDDEF</Color>
+    <Color x:Key="Cyan300Accent">#C3F2F4</Color>
+    <Color x:Key="Blue100Accent">#3E8EED</Color>
+    <Color x:Key="Blue200Accent">#72ACF1</Color>
+    <Color x:Key="Blue300Accent">#A7CBF6</Color>
+
+    <Thickness x:Key="DefaultMargin">4</Thickness>
+
+    <x:Int32 x:Key="DefaultCornerRadius">8</x:Int32>
+
+    <x:Double x:Key="DefaultFontSize">10</x:Double>
+    <x:Double x:Key="DefaultMinimumHeightRequest">40</x:Double>
+    <x:Double x:Key="DefaultMinimumWidthRequest">125</x:Double>
+
+    <ControlTemplate x:Key="DefaultDialogTemplate">
+        <Border
+            Background="{AppThemeBinding Light={DynamicResource White},
+                                         Dark={DynamicResource Gray900}}"
+            BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
+            HeightRequest="{TemplateBinding HeightRequest}"
+            HorizontalOptions="Center"
+            MaximumHeightRequest="{TemplateBinding MaximumHeightRequest}"
+            MaximumWidthRequest="{TemplateBinding MaximumWidthRequest}"
+            MinimumHeightRequest="{TemplateBinding MinimumHeightRequest}"
+            MinimumWidthRequest="{TemplateBinding MinimumWidthRequest}"
+            VerticalOptions="Center"
+            WidthRequest="{TemplateBinding WidthRequest}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="{DynamicResource DefaultCornerRadius}" />
+            </Border.StrokeShape>
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </Grid.GestureRecognizers>
+
+                <Label
+                    Margin="8,4"
+                    FontSize="Subtitle"
+                    HorizontalOptions="StartAndExpand"
+                    Text="{Binding Title}" />
+
+                <ContentPresenter Grid.Row="1" Margin="{DynamicResource DefaultMargin}" />
+
+                <Grid Grid.Row="2">
+                    <HorizontalStackLayout HorizontalOptions="EndAndExpand" Spacing="8">
+                        <Button
+                            Command="{Binding SubmitCommand}"
+                            CommandParameter="{Binding SelectedItem}"
+                            HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"
+                            Text="{m:GetString Ok}"
+                            WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" />
+                        <Button
+                            Command="{Binding CancelCommand}"
+                            HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"
+                            Text="{m:GetString Cancel}"
+                            WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Grid>
+        </Border>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="DefaultCleanDialogTemplate">
+        <Border
+            Background="{AppThemeBinding Light={DynamicResource White},
+                                         Dark={DynamicResource Gray900}}"
+            BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
+            HeightRequest="{TemplateBinding HeightRequest}"
+            HorizontalOptions="Center"
+            MaximumHeightRequest="{TemplateBinding MaximumHeightRequest}"
+            MaximumWidthRequest="{TemplateBinding MaximumWidthRequest}"
+            MinimumHeightRequest="{TemplateBinding MinimumHeightRequest}"
+            MinimumWidthRequest="{TemplateBinding MinimumWidthRequest}"
+            VerticalOptions="Center"
+            WidthRequest="{TemplateBinding WidthRequest}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="{DynamicResource DefaultCornerRadius}" />
+            </Border.StrokeShape>
+
+            <Grid Margin="10">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </Grid.GestureRecognizers>
+                <ContentPresenter Margin="{DynamicResource DefaultMargin}" />
+            </Grid>
+        </Border>
+    </ControlTemplate>
+</ResourceDictionary>

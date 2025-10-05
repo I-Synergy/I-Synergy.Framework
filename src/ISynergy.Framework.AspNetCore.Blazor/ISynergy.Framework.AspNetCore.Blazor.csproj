@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.AspNetCore.Blazor</PackageId>
+		<Description>I-Synergy Framework Blazor</Description>
+		<PackageTags>I-Synergy, Framework, AspNetCore, Blazor, OAuth</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<StaticWebAssetSupport>true</StaticWebAssetSupport>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DependentUpon>Resources.resx</DependentUpon>
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	  </EmbeddedResource>
+	</ItemGroup>
+</Project>

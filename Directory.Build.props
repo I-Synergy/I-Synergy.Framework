@@ -3,7 +3,6 @@
 		<LangVersion>14</LangVersion>
 		<NeutralLanguage>en</NeutralLanguage>
 		<DefaultLanguage>en</DefaultLanguage>
-		<UseRidGraph>true</UseRidGraph>
 		<Authors>Ismail Hassani</Authors>
 		<Company>International Intelligence</Company>
 		<Product>I-Synergy Framework</Product>
@@ -30,7 +29,6 @@
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 		<AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\..\..\..\I-Synergy.Framework.snk')">..\..\..\..\..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
-		<UnoUIDisableLongPathWarning>true</UnoUIDisableLongPathWarning>
 		<WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
 		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
 	</PropertyGroup>
@@ -44,14 +42,6 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">31.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 	
 	<ItemGroup>

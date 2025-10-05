@@ -50,7 +50,7 @@ public static class WindowsAppBuilderExtensions
             services.AddOptions();
 
             services.Configure<ApplicationFeatures>(context.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
-            services.Configure<ApplicationOptions>(context.Configuration.GetSection(nameof(ApplicationOptions)).BindWithReload);
+            services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
 
             var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
