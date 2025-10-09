@@ -40,7 +40,7 @@ public class ObservableValidatedClassEventTests
         observable.Dispose();
 
         // Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TestProperty = "New Value");
+        Assert.Throws<ObjectDisposedException>(() => observable.TestProperty = "New Value");
         Assert.IsFalse(eventFired);
     }
 
@@ -78,7 +78,7 @@ public class ObservableValidatedClassEventTests
         observable.Dispose();
 
         // Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.AddError("TestProperty"));
+        Assert.Throws<ObjectDisposedException>(() => observable.AddError("TestProperty"));
         Assert.IsFalse(eventFired);
     }
 
@@ -103,7 +103,7 @@ public class ObservableValidatedClassEventTests
         observable.Dispose();
 
         // Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerPropertyChanged("TestProperty"));
+        Assert.Throws<ObjectDisposedException>(() => observable.TriggerPropertyChanged("TestProperty"));
         Assert.IsFalse(handler1Called);
         Assert.IsFalse(handler2Called);
         Assert.IsFalse(handler3Called);
@@ -124,8 +124,8 @@ public class ObservableValidatedClassEventTests
         await observable.DisposeAsync();
 
         // Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerPropertyChanged("TestProperty"));
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerErrorsChanged("TestProperty"));
+        Assert.Throws<ObjectDisposedException>(() => observable.TriggerPropertyChanged("TestProperty"));
+        Assert.Throws<ObjectDisposedException>(() => observable.TriggerErrorsChanged("TestProperty"));
         Assert.IsFalse(propertyChangedCalled);
         Assert.IsFalse(errorsChangedCalled);
     }
@@ -138,9 +138,9 @@ public class ObservableValidatedClassEventTests
         observable.Dispose();
 
         // Act & Assert
-        Assert.ThrowsException<ObjectDisposedException>(() =>
+        Assert.Throws<ObjectDisposedException>(() =>
             observable.PropertyChanged += (s, e) => { });
-        Assert.ThrowsException<ObjectDisposedException>(() =>
+        Assert.Throws<ObjectDisposedException>(() =>
             observable.ErrorsChanged += (s, e) => { });
     }
 
@@ -177,8 +177,8 @@ public class ObservableValidatedClassEventTests
         observable.Dispose();
 
         // Verify events are cleaned up
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerPropertyChanged("TestProperty"));
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TriggerErrorsChanged("TestProperty"));
+        Assert.Throws<ObjectDisposedException>(() => observable.TriggerPropertyChanged("TestProperty"));
+        Assert.Throws<ObjectDisposedException>(() => observable.TriggerErrorsChanged("TestProperty"));
 
         // No events should have been added to disposalOrder during disposal
         Assert.AreEqual(0, disposalOrder.Count);

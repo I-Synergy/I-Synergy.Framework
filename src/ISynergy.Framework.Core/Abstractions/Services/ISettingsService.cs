@@ -33,11 +33,11 @@ public interface ISettingsService
     /// <summary>
     /// Loads the local settings.
     /// </summary>
-    Task LoadLocalSettingsAsync();
+    void LoadLocalSettings();
     /// <summary>
     /// Saves the local settings.
     /// </summary>
-    Task<bool> SaveLocalSettingsAsync();
+    bool SaveLocalSettings();
     #endregion
 
     #region "Roaming Settings"

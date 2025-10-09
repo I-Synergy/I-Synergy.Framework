@@ -62,7 +62,6 @@ public class FileResultTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ObjectDisposedException))]
     public void GetStream_WhenDisposed_ThrowsObjectDisposedException()
     {
         // Arrange
@@ -70,11 +69,10 @@ public class FileResultTests
         fileResult.Dispose();
 
         // Act
-        fileResult.GetStream();
+        Assert.Throws<ObjectDisposedException>(() => fileResult.GetStream());
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ObjectDisposedException))]
     public void FileName_Get_WhenDisposed_ThrowsObjectDisposedException()
     {
         // Arrange
@@ -82,11 +80,10 @@ public class FileResultTests
         fileResult.Dispose();
 
         // Act
-        _ = fileResult.FileName;
+        Assert.Throws<ObjectDisposedException>(() => _ = fileResult.FileName);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ObjectDisposedException))]
     public void FilePath_Get_WhenDisposed_ThrowsObjectDisposedException()
     {
         // Arrange
@@ -94,7 +91,7 @@ public class FileResultTests
         fileResult.Dispose();
 
         // Act
-        _ = fileResult.FilePath;
+        Assert.Throws<ObjectDisposedException>(() => _ = fileResult.FilePath);
     }
 
     [TestMethod]
@@ -151,6 +148,6 @@ public class FileResultTests
         fileResult.Dispose();
 
         // Assert - verify through property access exceptions
-        Assert.ThrowsException<ObjectDisposedException>(() => fileResult.GetStream());
+        Assert.Throws<ObjectDisposedException>(() => fileResult.GetStream());
     }
 }

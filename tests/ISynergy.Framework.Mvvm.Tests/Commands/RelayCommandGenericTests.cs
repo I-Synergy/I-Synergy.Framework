@@ -106,7 +106,7 @@ public class RelayCommandGenericTests
         var command = new RelayCommand<int>(_ => { });
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
             command.Execute("invalid parameter type"));
     }
 
@@ -172,11 +172,11 @@ public class RelayCommandGenericTests
     public void ThrowArgumentExceptionForInvalidCommandArgument_ThrowsCorrectException()
     {
         // Act & Assert
-        var ex1 = Assert.ThrowsException<ArgumentException>(() =>
+        var ex1 = Assert.Throws<ArgumentException>(() =>
             RelayCommand<int>.ThrowArgumentExceptionForInvalidCommandArgument(null));
         Assert.IsTrue(ex1.Message.Contains("must not be null"));
 
-        var ex2 = Assert.ThrowsException<ArgumentException>(() =>
+        var ex2 = Assert.Throws<ArgumentException>(() =>
             RelayCommand<int>.ThrowArgumentExceptionForInvalidCommandArgument("invalid"));
         Assert.IsTrue(ex2.Message.Contains("cannot be of type"));
     }
@@ -200,7 +200,7 @@ public class RelayCommandGenericTests
         command.Dispose();
 
         // Act & Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => command.Execute("test"));
+        Assert.Throws<ObjectDisposedException>(() => command.Execute("test"));
     }
 
     [TestMethod]
@@ -211,7 +211,7 @@ public class RelayCommandGenericTests
         command.Dispose();
 
         // Act & Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => command.CanExecute("test"));
+        Assert.Throws<ObjectDisposedException>(() => command.CanExecute("test"));
     }
 
     [TestMethod]
@@ -233,7 +233,7 @@ public class RelayCommandGenericTests
     public void Constructor_WithNullAction_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new RelayCommand<string>(null!));
     }
 
@@ -241,7 +241,7 @@ public class RelayCommandGenericTests
     public void Constructor_WithNullPredicate_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new RelayCommand<string>(_ => { }, null!));
     }
 

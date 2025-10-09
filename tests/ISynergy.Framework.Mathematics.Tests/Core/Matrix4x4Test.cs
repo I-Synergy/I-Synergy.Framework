@@ -112,13 +112,13 @@ public class Matrix4x4Test
         Assert.AreEqual(row3, matrix.GetRow(3));
 
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetRow(-1);
         }
         );
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetRow(4);
         }
@@ -146,13 +146,13 @@ public class Matrix4x4Test
         Assert.AreEqual(column2, matrix.GetColumn(2));
         Assert.AreEqual(column3, matrix.GetColumn(3));
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetColumn(-1);
         }
         );
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetColumn(4);
         }

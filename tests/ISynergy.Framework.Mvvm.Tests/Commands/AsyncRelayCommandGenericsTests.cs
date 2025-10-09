@@ -208,7 +208,7 @@ public class AsyncRelayCommandGenericsTests
         );
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => command.CanExecute("invalid type"));
+        Assert.Throws<ArgumentException>(() => command.CanExecute("invalid type"));
         Assert.IsFalse(command.CanExecute(null));  // null for value type
         Assert.IsTrue(command.CanExecute(1));      // valid value
     }
@@ -368,10 +368,10 @@ public class AsyncRelayCommandGenericsTests
     public void Constructor_WithNullParameter_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new AsyncRelayCommand<string>((Func<string?, Task>)null!));
 
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new AsyncRelayCommand<string>((Func<string?, CancellationToken, Task>)null!));
     }
 
@@ -415,7 +415,7 @@ public class AsyncRelayCommandGenericsTests
         var task = command.ExecuteAsync("test");
 
         // The exception should flow to the task rather than being handled internally
-        var actualException = await Assert.ThrowsExceptionAsync<InvalidOperationException>(
+        var actualException = await Assert.ThrowsAsync<InvalidOperationException>(
             async () => await task);
 
         Assert.AreEqual(expectedException, actualException);

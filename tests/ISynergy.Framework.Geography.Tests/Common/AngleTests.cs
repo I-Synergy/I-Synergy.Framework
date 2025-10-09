@@ -44,7 +44,7 @@ public class AngleTests
     [TestMethod]
     public void TestConstructor4()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 60));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 60));
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class AngleTests
     [TestMethod]
     public void TestConstructor6()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 30, 60));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 30, 60));
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public class AngleTests
     [TestMethod]
     public void TestConstructor7()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 60, 30));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 60, 30));
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class AngleTests
     [TestMethod]
     public void TestConstructor9()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, -1, 30));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, -1, 30));
     }
 
     /// <summary>

@@ -774,11 +774,11 @@ public partial class MatrixTest
         double[,] broadcasted2 = matrix.Add(vec, dimension: VectorType.RowVector);
 
 #if DEBUG
-        Assert.ThrowsException<DimensionMismatchException>(() => matrix.Add(vec, dimension: (VectorType)1));
-        Assert.ThrowsException<DimensionMismatchException>(() => matrix.Add(vec, dimension: VectorType.ColumnVector));
+        Assert.Throws<DimensionMismatchException>(() => matrix.Add(vec, dimension: (VectorType)1));
+        Assert.Throws<DimensionMismatchException>(() => matrix.Add(vec, dimension: VectorType.ColumnVector));
 #else
-        Assert.ThrowsException<IndexOutOfRangeException>(() => matrix.Add(vec, dimension: (VectorType)1));
-        Assert.ThrowsException<IndexOutOfRangeException>(() => matrix.Add(vec, dimension: VectorType.ColumnVector));
+        Assert.Throws<IndexOutOfRangeException>(() => matrix.Add(vec, dimension: (VectorType)1));
+        Assert.Throws<IndexOutOfRangeException>(() => matrix.Add(vec, dimension: VectorType.ColumnVector));
 #endif
 
         for (int i = 0; i < rows; i++)
@@ -3658,9 +3658,9 @@ public partial class MatrixTest
         Assert.AreEqual(0, a.First(x => x == 5));
         Assert.AreEqual(1, a.First(x => x == 1));
         Assert.AreEqual(2, a.First(x => x == 10));
-        Assert.ThrowsException<IndexOutOfRangeException>(() => a.First(x => x == 0));
-        Assert.ThrowsException<IndexOutOfRangeException>(() => a.First(x => x == 2));
-        Assert.ThrowsException<IndexOutOfRangeException>(() => a.First(x => x == 11));
+        Assert.Throws<IndexOutOfRangeException>(() => a.First(x => x == 0));
+        Assert.Throws<IndexOutOfRangeException>(() => a.First(x => x == 2));
+        Assert.Throws<IndexOutOfRangeException>(() => a.First(x => x == 11));
     }
 
     [TestMethod]

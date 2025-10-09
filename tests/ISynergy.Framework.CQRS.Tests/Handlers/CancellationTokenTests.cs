@@ -40,7 +40,7 @@ public class CancellationTokenTests
         cts.Cancel();
 
         // Assert
-        await Assert.ThrowsExceptionAsync<OperationCanceledException>(async () =>
+        await Assert.ThrowsAsync<OperationCanceledException>(async () =>
             await dispatcher.DispatchAsync(command, cts.Token));
 
         // Verify handler was called with the token
@@ -80,7 +80,7 @@ public class CancellationTokenTests
         cts.Cancel();
 
         // Assert
-        await Assert.ThrowsExceptionAsync<OperationCanceledException>(async () =>
+        await Assert.ThrowsAsync<OperationCanceledException>(async () =>
             await dispatcher.DispatchAsync<string>(query, cts.Token));
 
         // Verify handler was called with the token

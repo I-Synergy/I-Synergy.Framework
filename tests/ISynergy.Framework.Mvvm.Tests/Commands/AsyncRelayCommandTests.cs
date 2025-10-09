@@ -236,7 +236,7 @@ public class AsyncRelayCommandTests
         var task = command.ExecuteAsync(null);
 
         // The exception should flow to the task rather than being handled internally
-        var actualException = await Assert.ThrowsExceptionAsync<InvalidOperationException>(
+        var actualException = await Assert.ThrowsAsync<InvalidOperationException>(
             async () => await task);
 
         Assert.AreEqual(expectedException, actualException);

@@ -30,7 +30,7 @@ public class SettingsService : ISettingsService
         _roamingSettings = new RoamingSettings();
         _globalSettings = new GlobalSettings();
 
-        _settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Settings");
+        _settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "I-Synergy Framework Sample", "Settings");
 
         if (!Directory.Exists(_settingsFolder))
             Directory.CreateDirectory(_settingsFolder);
@@ -43,23 +43,25 @@ public class SettingsService : ISettingsService
             File.Move(oldSettings, Path.Combine(_settingsFolder, _fileName), true);
             Directory.Delete(oldPath, true);
         }
+
+        LoadLocalSettings();
     }
 
-    public async Task LoadLocalSettingsAsync()
+    public void LoadLocalSettings()
     {
         try
         {
             string file = Path.Combine(_settingsFolder, _fileName);
 
             if (!File.Exists(file))
-                await SaveLocalSettingsAsync();
+                SaveLocalSettings();
 
             string json = File.ReadAllText(file);
             _localSettings = JsonSerializer.Deserialize<LocalSettings>(json);
         }
         catch (JsonException)
         {
-            await SaveLocalSettingsAsync();
+            SaveLocalSettings();
         }
         catch (FileNotFoundException)
         {
@@ -67,7 +69,7 @@ public class SettingsService : ISettingsService
         }
     }
 
-    public async Task<bool> SaveLocalSettingsAsync()
+    public bool SaveLocalSettings()
     {
         try
         {
@@ -76,7 +78,7 @@ public class SettingsService : ISettingsService
 
             string file = Path.Combine(_settingsFolder, _fileName);
             string json = JsonSerializer.Serialize(_localSettings);
-            await File.WriteAllTextAsync(file, json);
+            File.WriteAllText(file, json);
 
             return true;
         }

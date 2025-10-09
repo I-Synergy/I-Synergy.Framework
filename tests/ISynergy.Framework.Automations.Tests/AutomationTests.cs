@@ -11,7 +11,6 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Diagnostics;
 
@@ -218,7 +217,7 @@ public class AutomationTests
         automation.Actions.Add(new DelayAction(automation.AutomationId, actionDelay));
 
         _stopwatch.Start();
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() =>
+        await Assert.ThrowsAsync<TaskCanceledException>(() =>
             _automationService!.ExecuteAsync(automation, default!, cancellationTokenSource));
         _stopwatch.Stop();
 
@@ -325,7 +324,7 @@ public class AutomationTests
     [TestMethod]
     public void AutomationScenario9Test()
     {
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             BooleanStateTrigger stateTrigger = new(
                 new Automation().AutomationId,

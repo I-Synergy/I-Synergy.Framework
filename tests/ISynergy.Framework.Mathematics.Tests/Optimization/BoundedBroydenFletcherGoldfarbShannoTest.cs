@@ -136,7 +136,7 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
     {
         BoundedBroydenFletcherGoldfarbShanno target = new(2);
 
-        Assert.ThrowsException<InvalidOperationException>(() => target.Minimize(), "");
+        Assert.Throws<InvalidOperationException>(() => target.Minimize(), "");
     }
 
     [TestMethod]
@@ -161,7 +161,7 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
             Gradient = (x) => new double[1]
         };
 
-        Assert.ThrowsException<InvalidOperationException>(() => target.Minimize(), "");
+        Assert.Throws<InvalidOperationException>(() => target.Minimize(), "");
     }
 
     [TestMethod]
@@ -173,7 +173,7 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
             Gradient = (x) => x
         };
 
-        Assert.ThrowsException<InvalidOperationException>(() => target.Minimize(), "");
+        Assert.Throws<InvalidOperationException>(() => target.Minimize(), "");
     }
 
     [TestMethod]

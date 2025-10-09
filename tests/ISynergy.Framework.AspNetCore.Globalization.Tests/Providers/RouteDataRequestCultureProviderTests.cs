@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.Globalization.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.AspNetCore.Globalization.Providers.Tests;
@@ -145,12 +144,9 @@ public class RouteDataRequestCultureProviderTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public async Task DetermineProviderCultureResult_WithNullHttpContext_ThrowsArgumentNullException()
+    public Task DetermineProviderCultureResult_WithNullHttpContext_ThrowsArgumentNullException()
     {
-        // Act
-        await _provider.DetermineProviderCultureResult(null!);
-
         // Assert is handled by ExpectedException attribute
+        return Assert.ThrowsAsync<ArgumentNullException>(() => _provider.DetermineProviderCultureResult(null!));
     }
 }

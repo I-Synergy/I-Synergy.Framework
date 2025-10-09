@@ -229,10 +229,9 @@ public class ServiceLocatorTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void ServiceLocator_GetNonExistentService_ShouldThrowException()
     {
-        _locator.GetRequiredService<INonExistentService>();
+        Assert.Throws<InvalidOperationException>(() => _locator.GetRequiredService<INonExistentService>());
     }
 
     [TestMethod]
@@ -322,13 +321,12 @@ public class ServiceLocatorTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ObjectDisposedException))]
     public void ServiceLocator_GetServiceAfterDispose_ThrowsException()
     {
         // Arrange
         _locator.Dispose();
 
         // Act
-        _locator.GetRequiredService<ITestService>();
+        Assert.Throws<ObjectDisposedException>(() => _locator.GetRequiredService<ITestService>());
     }
 }

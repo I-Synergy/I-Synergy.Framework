@@ -85,7 +85,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
             if (!IsInitialized)
             {
-                await _settingsService.LoadLocalSettingsAsync();
+                _settingsService.LoadLocalSettings();
 
                 if (_settingsService.LocalSettings is LocalSettings localSetting)
                     LocalSettings = localSetting;
@@ -117,7 +117,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
             _commonServices.BusyService.StartBusy();
 
             if (_settingsService.LocalSettings is LocalSettings)
-                await _settingsService.SaveLocalSettingsAsync();
+                _settingsService.SaveLocalSettings();
 
             if (_settingsService.GlobalSettings is GlobalSettings globalSetting)
                 await _settingsService.AddOrUpdateGlobalSettingsAsync(globalSetting);
