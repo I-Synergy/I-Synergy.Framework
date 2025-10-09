@@ -23,7 +23,7 @@ public class TimeOnlyConverterTests
     {
         const string json = "{\"dt\":null}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, TimeOnly>>(json, options);
-        Assert.ThrowsException<FormatException>(act);
+        Assert.Throws<FormatException>(act);
     }
 
     [TestMethod]
@@ -31,6 +31,6 @@ public class TimeOnlyConverterTests
     {
         const string json = "{\"dt\":\"not-time\"}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, TimeOnly>>(json, options);
-        Assert.ThrowsException<FormatException>(act);
+        Assert.Throws<FormatException>(act);
     }
 }

@@ -29,7 +29,7 @@ public class DriveInformationTests
         // otherwise its a boolean value.
         if (result == -1)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.IsNetworkDrive(path));
+            Assert.Throws<ArgumentException>(() => DriveInformation.IsNetworkDrive(path));
         }
         else
         {
@@ -58,7 +58,7 @@ public class DriveInformationTests
         // otherwise its a string value with the drive name.
         if (result is null)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.GetDriveName(path));
+            Assert.Throws<ArgumentException>(() => DriveInformation.GetDriveName(path));
         }
         else
         {
@@ -87,7 +87,7 @@ public class DriveInformationTests
         // otherwise its a string value with the drive name.
         if (result is null)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.ResolveToRootUNC(path));
+            Assert.Throws<ArgumentException>(() => DriveInformation.ResolveToRootUNC(path));
         }
         else
         {
@@ -116,7 +116,7 @@ public class DriveInformationTests
         // otherwise its a string value with the drive name.
         if (result is null)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.ResolveToUNC(path));
+            Assert.Throws<ArgumentException>(() => DriveInformation.ResolveToUNC(path));
         }
         else
         {
@@ -147,7 +147,7 @@ public class DriveInformationTests
         // otherwise its a string value with the drive name.
         if (result is null)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.IsFreeSpaceAvailable(path, fileSize));
+            Assert.Throws<ArgumentException>(() => DriveInformation.IsFreeSpaceAvailable(path, fileSize));
         }
         else
         {

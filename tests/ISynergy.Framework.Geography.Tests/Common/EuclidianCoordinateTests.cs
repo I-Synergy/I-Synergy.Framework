@@ -43,7 +43,7 @@ public class EuclidianCoordinateTests
     [TestMethod]
     public void TestConstructor3()
     {
-        Assert.ThrowsException<IndexOutOfRangeException>(() => new EuclidianCoordinate(projection, new double[] { -3, -4, -5 }));
+        Assert.Throws<IndexOutOfRangeException>(() => new EuclidianCoordinate(projection, new double[] { -3, -4, -5 }));
     }
 
     /// <summary>
@@ -120,6 +120,6 @@ public class EuclidianCoordinateTests
     {
         EuclidianCoordinate e1 = new(projection, -3, -4);
         EuclidianCoordinate e2 = new(new EllipticalMercatorProjection(), -3, -4);
-        Assert.ThrowsException<ArgumentException>(() => e1.DistanceTo(e2));
+        Assert.Throws<ArgumentException>(() => e1.DistanceTo(e2));
     }
 }

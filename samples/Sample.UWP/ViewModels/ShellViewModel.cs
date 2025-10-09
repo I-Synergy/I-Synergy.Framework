@@ -14,9 +14,9 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
-using Windows.UI.Xaml;
 using Sample.Abstractions;
 using Sample.Models;
+using Windows.UI.Xaml;
 
 namespace Sample.ViewModels;
 
@@ -126,7 +126,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
             {
                 _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = false;
-                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
             }
         }
         catch (ObjectDisposedException)
@@ -148,7 +148,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 languageVM.Submitted += async (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-                    await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
+                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };

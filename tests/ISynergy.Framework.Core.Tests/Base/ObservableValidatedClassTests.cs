@@ -16,7 +16,7 @@ public class ObservableValidatedClassTests
 
         // Assert
         Assert.IsTrue(observable.IsDisposed);
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.EnsureNotDisposed());
+        Assert.Throws<ObjectDisposedException>(() => observable.EnsureNotDisposed());
     }
 
     [TestMethod]
@@ -69,7 +69,7 @@ public class ObservableValidatedClassTests
 
         // Assert
         Assert.IsTrue(observable.IsAsyncDisposed);
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.EnsureNotDisposed());
+        Assert.Throws<ObjectDisposedException>(() => observable.EnsureNotDisposed());
     }
 
     [TestMethod]
@@ -110,7 +110,7 @@ public class ObservableValidatedClassTests
         observable.Dispose();
 
         // Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => observable.TestProperty = "new value");
+        Assert.Throws<ObjectDisposedException>(() => observable.TestProperty = "new value");
     }
 
     [TestMethod]

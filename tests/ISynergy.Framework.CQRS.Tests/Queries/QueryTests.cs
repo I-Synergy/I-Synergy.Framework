@@ -30,7 +30,7 @@ public class QueryTests
         cts.Cancel();
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(async () =>
+        await Assert.ThrowsAsync<TaskCanceledException>(async () =>
         {
             await Task.Delay(100, cts.Token); // This will throw when used with the canceled token
             await handler.HandleAsync(query, cts.Token);

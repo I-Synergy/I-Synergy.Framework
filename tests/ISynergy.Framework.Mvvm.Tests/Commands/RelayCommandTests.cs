@@ -130,7 +130,7 @@ public class RelayCommandTests
         command.Dispose();
 
         // Act & Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => command.Execute(null));
+        Assert.Throws<ObjectDisposedException>(() => command.Execute(null));
     }
 
     [TestMethod]
@@ -141,21 +141,21 @@ public class RelayCommandTests
         command.Dispose();
 
         // Act & Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => command.CanExecute(null));
+        Assert.Throws<ObjectDisposedException>(() => command.CanExecute(null));
     }
 
     [TestMethod]
     public void Constructor_WithNullAction_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() => new RelayCommand(null!));
+        Assert.Throws<ArgumentNullException>(() => new RelayCommand(null!));
     }
 
     [TestMethod]
     public void Constructor_WithNullPredicate_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new RelayCommand(() => { }, null!));
     }
 

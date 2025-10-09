@@ -175,7 +175,7 @@ public partial class MainLayout
         if (_localSettings is not null)
         {
             _settingsService.LocalSettings.ShowConsole = !_localSettings.ShowConsole;
-            _settingsService.SaveLocalSettingsAsync().GetAwaiter().GetResult();
+            _settingsService.SaveLocalSettings();
             StateHasChanged();
         }
     }

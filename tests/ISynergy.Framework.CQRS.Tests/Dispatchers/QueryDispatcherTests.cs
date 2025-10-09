@@ -37,7 +37,7 @@ public class QueryDispatcherTests
         var query = new TestQuery();
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await dispatcher.DispatchAsync<string>(query));
     }
 
@@ -50,7 +50,7 @@ public class QueryDispatcherTests
         var dispatcher = new QueryDispatcher(provider);
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<NullReferenceException>(async () =>
+        await Assert.ThrowsAsync<NullReferenceException>(async () =>
             await dispatcher.DispatchAsync<string>(null));
     }
 
@@ -103,7 +103,7 @@ public class QueryDispatcherTests
         cts.Cancel();
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<OperationCanceledException>(async () =>
+        await Assert.ThrowsAsync<OperationCanceledException>(async () =>
             await dispatcher.DispatchAsync<string>(query, cts.Token));
     }
 }

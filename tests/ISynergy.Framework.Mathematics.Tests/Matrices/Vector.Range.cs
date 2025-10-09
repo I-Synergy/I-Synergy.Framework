@@ -102,7 +102,7 @@ public partial class VectorTest
 
         // However, it is not allowed to specify a negative step size when
         // a < b is not allowed since it would result in an infinite loop:
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Vector.Range(1, 3, -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Vector.Range(1, 3, -1));
     }
 
     [TestMethod]
@@ -112,7 +112,7 @@ public partial class VectorTest
         CollectionAssert.AreEqual(new int[] { 1, 2 }, Vector.Range(1, 3, +1));
         CollectionAssert.AreEqual(new int[] { 3, 2 }, Vector.Range(3, 1, -1));
         CollectionAssert.AreEqual(new int[] { 3, 2 }, Vector.Range(3, 1, +1));
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Vector.Range(1, 3, -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Vector.Range(1, 3, -1));
         CollectionAssert.AreEqual(new int[] { 1 }, Vector.Range(1, 3, +5));
         CollectionAssert.AreEqual(new int[] { 3 }, Vector.Range(3, 1, -5));
         Assert.IsTrue(new double[] { 0, 0.3, 0.6, 0.9 }.IsEqual(Vector.Range(0, 1, 0.3), 1e-10));
@@ -143,7 +143,7 @@ public partial class VectorTest
         CollectionAssert.AreEqual(new double[] { 1, 2 }, Vector.EnumerableRange(1, 3, +1).ToArray());
         CollectionAssert.AreEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1, -1).ToArray());
         CollectionAssert.AreEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1, +1).ToArray());
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Vector.EnumerableRange(1, 3, -1).ToArray());
+        Assert.Throws<ArgumentOutOfRangeException>(() => Vector.EnumerableRange(1, 3, -1).ToArray());
         CollectionAssert.AreEqual(new double[] { 1 }, Vector.EnumerableRange(1, 3, +5).ToArray());
         CollectionAssert.AreEqual(new double[] { 3 }, Vector.EnumerableRange(3, 1, -5).ToArray());
         Assert.IsTrue(new double[] { 0, 0.3, 0.6, 0.9 }.IsEqual(Vector.EnumerableRange(0, 1, 0.3).ToArray(), 1e-10));
@@ -210,7 +210,7 @@ public partial class VectorTest
         {
             if (step == 0)
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
+                Assert.Throws<ArgumentOutOfRangeException>(() => func());
             }
             else
             {
@@ -224,7 +224,7 @@ public partial class VectorTest
                     }
                     else
                     {
-                        Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
+                        Assert.Throws<ArgumentOutOfRangeException>(() => func());
                     }
                 }
                 else

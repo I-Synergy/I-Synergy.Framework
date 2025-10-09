@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests;
 
@@ -124,19 +123,19 @@ public class ContextServiceExtensionTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void ExecuteInContext_WithUnregisteredService_ShouldThrow()
     {
         // Arrange
         var serviceProvider = CreateTestServiceProvider();
 
         // Act
+        Assert.Throws<InvalidOperationException>(() =>
         serviceProvider.ExecuteInContext(
             context =>
             {
                 // Try to resolve unregistered service
                 var unregistered = context.GetService<IUnregisteredService>();
-            });
+            }));
     }
 
     #region Test interfaces and implementations

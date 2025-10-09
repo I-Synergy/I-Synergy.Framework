@@ -205,7 +205,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
                 vm.Submitted -= LanguageVM_Submitted;
 
             _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-            await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
 
             e.Result.SetLocalizationLanguage();
 
@@ -246,7 +246,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
                 _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
                 _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
 
-                if (await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync() &&
+                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
                     await _dialogService.ShowMessageAsync(
                         LanguageService.Default.GetString("WarningColorChange") +
                         Environment.NewLine +

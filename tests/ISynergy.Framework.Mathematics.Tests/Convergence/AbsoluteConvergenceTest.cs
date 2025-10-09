@@ -84,6 +84,6 @@ public class AbsoluteConvergenceTest
     [TestMethod]
     public void AbsoluteConvergenceConstructorTest5()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new AbsoluteConvergence(iterations: -10, tolerance: 1e-10, startValue: 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new AbsoluteConvergence(iterations: -10, tolerance: 1e-10, startValue: 1));
     }
 }

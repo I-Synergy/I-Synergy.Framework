@@ -49,6 +49,7 @@ public class ThemeService : IThemeService
     /// </summary>
     public void SetStyle()
     {
+        // Set the accent color from settings - this is the primary fix
         Application.AccentColor = Color.FromArgb(Style.Color);
 
         if (Application.Current is Application application)

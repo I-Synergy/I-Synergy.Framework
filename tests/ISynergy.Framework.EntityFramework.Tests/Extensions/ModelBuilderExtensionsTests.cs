@@ -306,7 +306,7 @@ public class ModelBuilderExtensionsTests
         Assembly[]? nullAssemblies = null;
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             _modelBuilder.ApplyModelBuilderConfigurations(nullAssemblies!));
     }
 

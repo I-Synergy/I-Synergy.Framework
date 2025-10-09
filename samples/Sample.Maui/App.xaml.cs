@@ -223,7 +223,7 @@ public partial class App : Application
                     {
                         _logger?.LogTrace("Saving refresh token");
                         _settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
-                        await _settingsService.SaveLocalSettingsAsync();
+                        _settingsService.SaveLocalSettings();
                     }
 
                     _logger?.LogTrace("Setting culture");

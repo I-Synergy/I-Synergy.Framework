@@ -17,6 +17,7 @@ ___
 |:---|---|
 | [I-Synergy.Framework.AspNetCore](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore) |
 | [I-Synergy.Framework.AspNetCore.Authentication](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Authentication/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Authentication) |
+| [I-Synergy.Framework.AspNetCore.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Blazor) |
 | [I-Synergy.Framework.AspNetCore.Globalization](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Globalization/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Globalization) |
 | [I-Synergy.Framework.AspNetCore.Monitoring](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Monitoring/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Monitoring) |
 | [I-Synergy.Framework.AspNetCore.MultiTenancy](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.MultiTenancy/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.MultiTenancy) |
@@ -48,10 +49,11 @@ ___
 | [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage.Azure) |
 | [I-Synergy.Framework.Synchronization](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Synchronization) |
 | [I-Synergy.Framework.UI](https://www.nuget.org/packages/I-Synergy.Framework.UI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI) |
+| [I-Synergy.Framework.UI.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.UI.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Blazor) |
+| [I-Synergy.Framework.UI.Maui](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui) |
 | [I-Synergy.Framework.UI.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.UI.WinUI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WinUI) |
 | [I-Synergy.Framework.UI.WPF](https://www.nuget.org/packages/I-Synergy.Framework.UI.WPF/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WPF) |
 | [I-Synergy.Framework.UI.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.UI.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Blazor) |
-| [I-Synergy.Framework.UI.Maui.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui.Blazor) |
 
 ## Nuget Deprecated Deployment Status
 | Release | Status |
@@ -60,7 +62,7 @@ ___
 | [I-Synergy.Framework.Logging.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Logging.ApplicationInsights/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.ApplicationInsights) |
 | [I-Synergy.Framework.Logging.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Logging.AppCenter/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.AppCenter) |
 | [I-Synergy.Framework.UI.Uno](https://www.nuget.org/packages/I-Synergy.Framework.UI.Uno/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Uno) |
-| [I-Synergy.Framework.UI.Maui](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui) |
+| [I-Synergy.Framework.UI.Maui.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui.Blazor) |
 | [I-Synergy.Framework.Update](https://www.nuget.org/packages/I-Synergy.Framework.Update/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update) |
 | [I-Synergy.Framework.Update.Maui](https://www.nuget.org/packages/I-Synergy.Framework.Update.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Maui) |
 | [I-Synergy.Framework.Update.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.Update.WinUI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WinUI) |

@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Locators.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Reflection;
 using static ISynergy.Framework.Core.Locators.Tests.ServiceLocatorTests;
@@ -191,14 +190,13 @@ public class ScopedContextServiceTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ObjectDisposedException))]
     public void ScopedContextService_GetServiceAfterDispose_ThrowsException()
     {
         // Arrange
         _scopedContextService.Dispose();
 
         // Act
-        _scopedContextService.GetService<ITestService>();
+        Assert.Throws<ObjectDisposedException>(() => _scopedContextService.GetService<ITestService>());
     }
 
     [TestMethod]

@@ -188,7 +188,7 @@ public class CobylaTest
 
         Func<double> func = () => 1.0;
 
-        Assert.ThrowsException<ArgumentException>(() => new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= func()));
+        Assert.Throws<ArgumentException>(() => new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= func()));
     }
 
     private static NonlinearConstraint[] create_constraints(double a)

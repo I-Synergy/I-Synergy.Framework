@@ -23,7 +23,7 @@ public class MigrationService : IMigrationService
             await migration.UpAsync();
 
             _settingsService.LocalSettings.MigrationVersion = migration.MigrationVersion;
-            await _settingsService.SaveLocalSettingsAsync();
+            _settingsService.SaveLocalSettings();
         }
     }
 
@@ -37,7 +37,7 @@ public class MigrationService : IMigrationService
             await migration.DownAsync();
 
             _settingsService.LocalSettings.MigrationVersion = migration.MigrationVersion;
-            await _settingsService.SaveLocalSettingsAsync();
+            _settingsService.SaveLocalSettings();
         }
     }
 }

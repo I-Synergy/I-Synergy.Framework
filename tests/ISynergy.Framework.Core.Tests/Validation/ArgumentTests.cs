@@ -16,7 +16,7 @@ public class ArgumentTests
     public void IsNotNullTest()
     {
         Product? test = null;
-        Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNull(test));
+        Assert.Throws<ArgumentNullException>(() => Argument.IsNotNull(test));
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class ArgumentTests
     public void IsNotNullOrEmptyTest()
     {
         string test = string.Empty;
-        Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(test));
+        Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(test));
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class ArgumentTests
     public void GuidIsNotEmptyTest()
     {
         Guid test = Guid.Empty;
-        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEmpty(test));
+        Assert.Throws<ArgumentException>(() => Argument.IsNotEmpty(test));
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class ArgumentTests
     public void GuidIsNotNullOrEmptyTest()
     {
         Guid test = default;
-        Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(test));
+        Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(test));
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public class ArgumentTests
     public void IsNotNullOrWhitespaceTest()
     {
         string test = " ";
-        Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrWhitespace(test));
+        Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrWhitespace(test));
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class ArgumentTests
     public void IsNotNullOrEmptyArrayTest()
     {
         Array test = Array.Empty<object>();
-        Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyArray(test));
+        Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmptyArray(test));
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ public class ArgumentTests
     public void IsNotNullOrEmptyListTTest()
     {
         List<object> test = [];
-        Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(test));
+        Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(test));
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class ArgumentTests
     public void IsNotEnumTTest()
     {
         object test = new();
-        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotNullEnum(test));
+        Assert.Throws<ArgumentException>(() => Argument.IsNotNullEnum(test));
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public class ArgumentTests
     {
         List<Product> test = [new Product(), null];
 
-        Assert.ThrowsException<ArgumentNullException>(() => Argument.HasNoNulls(test));
+        Assert.Throws<ArgumentNullException>(() => Argument.HasNoNulls(test));
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public class ArgumentTests
     public void IsNotOutOfRangeTTest()
     {
         int test = 1975;
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsNotOutOfRange(test, 2000, 2021));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Argument.IsNotOutOfRange(test, 2000, 2021));
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ public class ArgumentTests
     public void IsMinimalTTest()
     {
         int test = 1975;
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMinimal(test, 2000));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Argument.IsMinimal(test, 2000));
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ public class ArgumentTests
     public void IsMaximumTTest()
     {
         int test = 1975;
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMaximum(test, 1970));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Argument.IsMaximum(test, 1970));
     }
 
     /// <summary>
@@ -137,7 +137,7 @@ public class ArgumentTests
     public void ConditionFailTest()
     {
         int test = 10;
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
             Argument.Condition(test, x => x < 5));
     }
 
@@ -160,7 +160,7 @@ public class ArgumentTests
     {
         int test = 5;
         int compareValue = 5;
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
             Argument.Equals(test, compareValue));
     }
 
@@ -183,7 +183,7 @@ public class ArgumentTests
     public void IsNotOutOfRangeWithCustomValidationFailTest()
     {
         int test = 15;
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
             Argument.IsNotOutOfRange(test, 0, 10,
                 (value, min, max) => value % 2 == 0 && value >= min && value <= max));
     }
@@ -207,7 +207,7 @@ public class ArgumentTests
     public void IsMinimalWithCustomValidationFailTest()
     {
         int test = 5;
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
             Argument.IsMinimal(test, 10, (value, min) => value > min));
     }
 
@@ -229,7 +229,7 @@ public class ArgumentTests
     public void IsMaximumWithCustomValidationFailTest()
     {
         int test = 15;
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
             Argument.IsMaximum(test, 10, (value, max) => value < max));
     }
 
@@ -317,7 +317,7 @@ public class ArgumentTests
         TestEnum? nullEnum = null;
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotNullEnum(nullEnum));
+        Assert.Throws<ArgumentException>(() => Argument.IsNotNullEnum(nullEnum));
     }
 
     [TestMethod]
@@ -327,7 +327,7 @@ public class ArgumentTests
         Type nonEnumType = typeof(string);
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotNullEnum(nonEnumType));
+        Assert.Throws<ArgumentException>(() => Argument.IsNotNullEnum(nonEnumType));
     }
 
     [TestMethod]
@@ -338,7 +338,7 @@ public class ArgumentTests
 
         // Act & Assert
         // This will fail because IsNotNullEnum checks if T is an enum, not if the value represents an enum type
-        Assert.ThrowsException<ArgumentException>(() => Argument.IsNotNullEnum(enumType));
+        Assert.Throws<ArgumentException>(() => Argument.IsNotNullEnum(enumType));
     }
 
     [TestMethod]
@@ -361,7 +361,7 @@ public class ArgumentTests
         Type nonEnumType = typeof(string);
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => Argument.IsEnumType(nonEnumType));
+        Assert.Throws<ArgumentException>(() => Argument.IsEnumType(nonEnumType));
     }
 
     [TestMethod]
@@ -371,6 +371,6 @@ public class ArgumentTests
         Type? nullType = null;
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => Argument.IsEnumType(nullType));
+        Assert.Throws<ArgumentException>(() => Argument.IsEnumType(nullType));
     }
 }

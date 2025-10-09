@@ -32,7 +32,7 @@ public class ArrayExtensionsTests
     [TestMethod]
     public void NullArrayFailableTest()
     {
-        Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
+        Assert.ThrowsAsync<NullReferenceException>(() =>
         {
             object[]? list = null;
 

@@ -18,7 +18,7 @@ public class BitmapExtensionsTests
         var format = ImageFormats.jpg;
 
         // Assert
-        await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => bitmap.ToImageBytesAsync(quality, format));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => bitmap.ToImageBytesAsync(quality, format));
     }
 
     [TestMethod]

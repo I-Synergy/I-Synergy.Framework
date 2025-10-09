@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Commands;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Windows.Input;
 
@@ -10,11 +9,10 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests;
 public class CommandExtensionsTests
 {
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void CreateCancelCommand_WithNull_ThrowsArgumentNullException()
     {
         // Act
-        CommandExtensions.CreateCancelCommand(null!);
+        Assert.Throws<ArgumentNullException>(() => CommandExtensions.CreateCancelCommand(null!));
     }
 
     [TestMethod]

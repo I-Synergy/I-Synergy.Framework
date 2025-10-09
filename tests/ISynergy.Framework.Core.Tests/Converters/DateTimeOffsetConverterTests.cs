@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Serializers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -75,7 +74,7 @@ public class DateTimeOffsetConverterTests
     {
         const string json = "{\"dt\":null}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTimeOffset>>(json, _serializerOptions);
-        Assert.ThrowsException<FormatException>(act);
+        Assert.Throws<FormatException>(act);
     }
 
     [TestMethod]
@@ -83,7 +82,7 @@ public class DateTimeOffsetConverterTests
     {
         const string json = "{\"dt\":\"not-date\"}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTimeOffset>>(json, _serializerOptions);
-        Assert.ThrowsException<FormatException>(act);
+        Assert.Throws<FormatException>(act);
     }
 
     [TestMethod]
@@ -143,14 +142,13 @@ public class DateTimeOffsetConverterTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(FormatException))]
     public void Read_InvalidFormat_ThrowsFormatException()
     {
         // Arrange
         string json = "\"not-a-date\"";
 
         // Act & Assert - Should throw
-        JsonSerializer.Deserialize<DateTimeOffset>(json, _serializerOptions);
+        Assert.Throws<FormatException>(() => JsonSerializer.Deserialize<DateTimeOffset>(json, _serializerOptions));
     }
 
     [TestMethod]

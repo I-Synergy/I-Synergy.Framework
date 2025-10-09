@@ -83,7 +83,7 @@ public class CommandHandlerDecoratorTests
         var command = new DummyCommand();
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () => await decorator.HandleAsync(command));
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await decorator.HandleAsync(command));
         loggerMock.Verify(l => l.Log(
             LogLevel.Error,
             It.IsAny<EventId>(),

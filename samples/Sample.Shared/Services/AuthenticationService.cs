@@ -67,7 +67,7 @@ public class AuthenticationService : IAuthenticationService
             {
                 _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = true;
                 _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser = username;
-                await _scopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
+                _scopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
             }
         }
 

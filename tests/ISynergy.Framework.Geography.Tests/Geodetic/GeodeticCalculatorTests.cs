@@ -92,7 +92,7 @@ public class GeodeticCalculatorTests
     [TestMethod]
     public void TestEndingNegDist()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => calc.CalculateEndingGlobalCoordinates(
+        Assert.Throws<ArgumentOutOfRangeException>(() => calc.CalculateEndingGlobalCoordinates(
             Constants.MyHome,
             0.0,
             -1.0));
@@ -143,7 +143,7 @@ public class GeodeticCalculatorTests
     [TestMethod]
     public void TestPath3()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice, 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice, 1));
     }
 
     /// <summary>

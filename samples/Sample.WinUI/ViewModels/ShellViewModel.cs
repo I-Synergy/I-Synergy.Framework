@@ -119,20 +119,22 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
-    protected override async Task SignOutAsync()
+    protected override Task SignOutAsync()
     {
         try
         {
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
             {
                 _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = false;
-                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
             }
         }
         catch (ObjectDisposedException)
         {
             // Context already disposed, nothing to sign out
         }
+
+        return Task.CompletedTask;
     }
 
     public override async Task InitializeFirstRunAsync()
@@ -145,10 +147,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
-                languageVM.Submitted += async (s, e) =>
+                languageVM.Submitted += (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-                    await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettingsAsync();
+                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };

@@ -57,7 +57,7 @@ public class CommandDispatcherTests
         var command = new TestCommand();
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await dispatcher.DispatchAsync(command));
     }
 }
