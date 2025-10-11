@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Messages;
 
-namespace ISynergy.Framework.UI.Abstractions.Views;
+namespace ISynergy.Framework.Mvvm.Abstractions.Views;
 
 public interface ILoadingView : IView
 {

@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Services;

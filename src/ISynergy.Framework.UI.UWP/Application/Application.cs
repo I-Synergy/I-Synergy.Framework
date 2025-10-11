@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
@@ -18,6 +17,8 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+
+#pragma warning disable IDE0130, S1200
 
 namespace ISynergy.Framework.UI;
 
@@ -344,7 +345,6 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
         }
 
         _themeSelector = ServiceLocator.Default.GetRequiredService<IThemeService>();
-        _themeSelector.InitializeMainWindow(MainWindow);
 
         MainWindow.Activate();
     }

@@ -6,7 +6,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.OpenTelemetry.Extensions;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -29,8 +28,6 @@ namespace Sample;
 /// </summary>
 public sealed partial class App : Application
 {
-    private readonly ICredentialLockerService? _credentialLockerService;
-
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -48,8 +45,6 @@ public sealed partial class App : Application
         try
         {
             InitializeComponent();
-
-            _credentialLockerService = _commonServices?.ScopedContextService.GetService<ICredentialLockerService>();
         }
         catch (Exception ex)
         {
@@ -139,31 +134,9 @@ public sealed partial class App : Application
 
             if (_settingsService?.LocalSettings != null &&
                 !string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) &&
-                _settingsService.LocalSettings.IsAutoLogin &&
-                _credentialLockerService != null)
+                _settingsService.LocalSettings.IsAutoLogin)
             {
                 string username = _settingsService.LocalSettings.DefaultUser;
-
-                try
-                {
-                    string? password = await _credentialLockerService.GetPasswordFromCredentialLockerAsync(username);
-
-                    if (!string.IsNullOrEmpty(password) && _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>() is AuthenticationService authenticationService)
-                    {
-                        await authenticationService.AuthenticateWithUsernamePasswordAsync(
-                            username,
-                            password,
-                            _settingsService.LocalSettings.IsAutoLogin);
-
-                        navigateToAuthentication = false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Error retrieving credentials");
-                    // Continue to authentication screen on credential error
-                    navigateToAuthentication = true;
-                }
             }
 
             if (navigateToAuthentication && _navigationService != null)
@@ -269,7 +242,7 @@ public sealed partial class App : Application
     protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
-        _navigationService.CleanBackStack(suppressEvent: !e.Value);
+        await _navigationService.CleanBackStackAsync(suppressEvent: !e.Value);
 
         try
         {

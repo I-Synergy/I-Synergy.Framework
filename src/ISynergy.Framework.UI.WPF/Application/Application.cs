@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+
+#pragma warning disable IDE0130, S1200
 
 namespace ISynergy.Framework.UI;
 

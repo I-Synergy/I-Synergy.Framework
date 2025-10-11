@@ -1,16 +1,15 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
@@ -280,9 +279,7 @@ public class AuthenticationViewModel : ViewModel
 
             AutoLogin = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin;
 
-            var users = await _commonServices.ScopedContextService.GetService<ICredentialLockerService>().GetUsernamesFromCredentialLockerAsync();
             Usernames = new ObservableCollection<string>();
-            Usernames.AddRange(users);
 
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
                 Username = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser;

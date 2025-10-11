@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Globalization;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml.Data;

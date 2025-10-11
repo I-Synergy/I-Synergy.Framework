@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel.DataTransfer;

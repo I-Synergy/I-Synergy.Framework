@@ -6,7 +6,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.OpenTelemetry.Extensions;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -234,7 +233,7 @@ public sealed partial class App : Application
     protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
-        _navigationService.CleanBackStack(suppressEvent: !e.Value);
+        await _navigationService.CleanBackStackAsync(suppressEvent: !e.Value);
 
         try
         {

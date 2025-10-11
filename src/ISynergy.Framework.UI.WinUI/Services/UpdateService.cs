@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Windows.Services.Store;
 

@@ -1,24 +1,23 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.UI.Controls;
-using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.Core.Messages;
-
-
 
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
 using ISynergy.Framework.UI.Helpers;
 #endif
+
+#pragma warning disable IDE0130, S1200
 
 [assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]
 [assembly: ExportFont("opendyslexic3-regular.ttf", Alias = "OpenDyslexic3-Regular")]

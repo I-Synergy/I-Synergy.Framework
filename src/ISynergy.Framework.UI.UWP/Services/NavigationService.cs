@@ -8,9 +8,9 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System.Reflection;
 using View = ISynergy.Framework.UI.Controls.View;
 
 namespace ISynergy.Framework.UI.Services;
@@ -126,7 +126,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Cleans up ViewModels in the backstack beyond a certain threshold.
     /// </summary>
-    public void CleanBackStack(bool suppressEvent = false)
+    public Task CleanBackStackAsync(bool suppressEvent = false)
     {
         _backStack.Clear();
 
@@ -142,6 +142,8 @@ public class NavigationService : INavigationService
                 _backStackChanged = null;
             }
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>

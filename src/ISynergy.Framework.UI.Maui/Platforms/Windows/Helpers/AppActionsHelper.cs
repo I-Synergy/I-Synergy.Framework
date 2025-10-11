@@ -1,5 +1,7 @@
 ﻿using System.Text;
 
+#pragma warning disable IDE0130, S1200
+
 namespace ISynergy.Framework.UI.Helpers;
 
 public static class AppActionsHelper

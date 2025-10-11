@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Constants;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
 

@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Net.WebSockets;

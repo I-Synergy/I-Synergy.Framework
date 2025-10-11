@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
+#pragma warning disable IDE0130, S1200
+
 namespace ISynergy.Framework.UI;
 
 public abstract class Application : ComponentBase

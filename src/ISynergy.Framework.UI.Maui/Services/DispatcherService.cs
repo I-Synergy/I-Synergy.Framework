@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services;
 
