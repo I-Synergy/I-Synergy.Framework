@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Utilities;
 
 namespace ISynergy.Framework.UI.Services;

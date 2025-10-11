@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Converters;
 using System.IO;
 using System.Runtime.InteropServices;

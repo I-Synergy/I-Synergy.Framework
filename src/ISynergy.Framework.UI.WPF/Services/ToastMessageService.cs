@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Controls.ToastMessage.Error;
 using ISynergy.Framework.UI.Controls.ToastMessage.Information;
 using ISynergy.Framework.UI.Controls.ToastMessage.Success;

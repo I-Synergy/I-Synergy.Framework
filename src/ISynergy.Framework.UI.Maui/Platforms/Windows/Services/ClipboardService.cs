@@ -1,7 +1,9 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using SkiaSharp;
+
+#pragma warning disable IDE0130, S1200
 
 namespace ISynergy.Framework.UI.Services;
 

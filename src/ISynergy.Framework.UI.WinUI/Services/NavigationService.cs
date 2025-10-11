@@ -126,7 +126,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Cleans up ViewModels in the backstack beyond a certain threshold.
     /// </summary>
-    public void CleanBackStack(bool suppressEvent = false)
+    public Task CleanBackStackAsync(bool suppressEvent = false)
     {
         _backStack.Clear();
 
@@ -142,6 +142,8 @@ public class NavigationService : INavigationService
                 _backStackChanged = null;
             }
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>

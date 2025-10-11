@@ -1,6 +1,8 @@
 ﻿using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Windows.AppLifecycle;
 
+#pragma warning disable IDE0130, S1200
+
 namespace ISynergy.Framework.UI.Extensions;
 
 public delegate void OnAppInstanceActivated(object sender, AppActivationArguments e);

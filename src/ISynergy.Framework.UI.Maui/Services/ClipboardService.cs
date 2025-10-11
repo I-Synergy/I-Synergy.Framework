@@ -1,7 +1,6 @@
 ﻿#if !WINDOWS
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services;
 

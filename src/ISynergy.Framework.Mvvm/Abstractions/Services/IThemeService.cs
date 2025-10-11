@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.UI.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Models;
+
+namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
 public interface IThemeService
 {

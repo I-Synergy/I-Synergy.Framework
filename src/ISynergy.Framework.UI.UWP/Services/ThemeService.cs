@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.UI;
@@ -20,7 +19,6 @@ namespace ISynergy.Framework.UI.Services
     /// <seealso cref="IThemeService" />
     public class ThemeService : IThemeService
     {
-        private Window _window;
         private Style _style;
 
         /// <summary>
@@ -47,57 +45,32 @@ namespace ISynergy.Framework.UI.Services
                 Color = settingsService.LocalSettings.Color
             };
 
-            SetStyle(_style);
+            SetStyle();
         }
 
-        /// <summary>
-        /// Ininitialize main window for service.
-        /// </summary>
-        /// <param name="mainWindow"></param>
-        /// <exception cref="ArgumentException"></exception>
-        public void InitializeMainWindow(object mainWindow)
+        public void SetStyle()
         {
-            if (mainWindow is Window window)
-            {
-                _window = window;
-            }
-            else
-            {
-                throw new ArgumentException("MainWindow could not be set.");
-            }
-        }
-
-        /// <summary>
-        /// Sets the theme.
-        /// </summary>
-        /// <param name="style">The theme.</param>
-        public void SetStyle(Style style)
-        {
-            Argument.IsNotNull(style);
-
-            _style = style;
-
             if (Window.Current.Content is FrameworkElement frameworkElement && !new AccessibilitySettings().HighContrast)
             {
                 var palette = FindColorPaletteResourcesForTheme(_style.Theme.ToString());
 
                 if (palette is not null)
                 {
-                    palette.Accent = ColorHelper.HexStringToColor(style.Color);
+                    palette.Accent = ColorHelper.HexStringToColor(_style.Color);
                 }
                 else
                 {
                     palette = new ColorPaletteResources();
-                    palette.Accent = ColorHelper.HexStringToColor(style.Color);
+                    palette.Accent = ColorHelper.HexStringToColor(_style.Color);
                     Application.Current.Resources.MergedDictionaries.Add(palette);
                 }
 
-                Application.Current.Resources["SystemAccentColor"] = style.Color;
-                Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = style.Color;
+                Application.Current.Resources["SystemAccentColor"] = _style.Color;
+                Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = _style.Color;
             }
 
             SetupTitlebar();
-            ReloadPageTheme(style.Theme);
+            ReloadPageTheme(_style.Theme);
         }
 
         private void ReloadPageTheme(Themes theme)

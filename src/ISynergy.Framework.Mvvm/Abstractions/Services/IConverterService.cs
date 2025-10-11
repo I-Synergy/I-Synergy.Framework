@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Abstractions.Services;
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
 /// <summary>
 /// Interface IConverterService

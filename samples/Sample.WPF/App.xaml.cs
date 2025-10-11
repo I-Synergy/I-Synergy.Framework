@@ -2,11 +2,11 @@
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -92,13 +92,6 @@ public partial class App : Application
             if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin)
             {
                 string username = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser;
-                string password = await _commonServices.ScopedContextService.GetRequiredService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
-
-                if (!string.IsNullOrEmpty(password) && _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>() is AuthenticationService authenticationService)
-                {
-                    await authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin);
-                    navigateToAuthentication = false;
-                }
             }
 
             if (navigateToAuthentication)
@@ -116,7 +109,7 @@ public partial class App : Application
     protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
         // Suppress backstack change event during sign out
-        _navigationService.CleanBackStack(suppressEvent: !e.Value);
+        await _navigationService.CleanBackStackAsync(suppressEvent: !e.Value);
 
         if (e.Value)
         {

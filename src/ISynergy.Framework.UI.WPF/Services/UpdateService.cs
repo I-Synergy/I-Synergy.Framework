@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

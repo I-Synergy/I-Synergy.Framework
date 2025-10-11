@@ -4,6 +4,8 @@ using Microsoft.UI.Windowing;
 using Microsoft.Windows.AppLifecycle;
 using Windows.ApplicationModel.Activation;
 
+#pragma warning disable IDE0130, S1200
+
 namespace ISynergy.Framework.UI.Extensions;
 
 public static class AppWindowExtensions

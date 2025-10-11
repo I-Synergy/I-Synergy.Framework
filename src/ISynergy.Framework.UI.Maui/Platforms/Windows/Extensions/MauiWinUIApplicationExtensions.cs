@@ -4,6 +4,7 @@ using Microsoft.Windows.AppLifecycle;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0130, S1200
 #nullable enable
 
 namespace ISynergy.Framework.UI.Extensions;

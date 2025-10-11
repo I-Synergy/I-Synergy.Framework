@@ -3,9 +3,9 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
@@ -126,7 +126,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Cleans up ViewModels in the backstack beyond a certain threshold.
     /// </summary>
-    public void CleanBackStack(bool suppressEvent = false)
+    public Task CleanBackStackAsync(bool suppressEvent = false)
     {
         _backStack.Clear();
 
@@ -142,6 +142,8 @@ public class NavigationService : INavigationService
                 _backStackChanged = null;
             }
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>

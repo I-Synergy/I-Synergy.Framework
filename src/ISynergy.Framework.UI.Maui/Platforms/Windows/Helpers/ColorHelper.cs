@@ -4,6 +4,8 @@ using Color = Windows.UI.Color;
 using Colors = Microsoft.UI.Colors;
 using SolidColorBrush = Microsoft.UI.Xaml.Media.SolidColorBrush;
 
+#pragma warning disable IDE0130, S1200
+
 namespace ISynergy.Framework.UI.Helpers;
 
 /// <summary>
