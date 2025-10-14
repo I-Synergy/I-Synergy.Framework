@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Storage.Azure</PackageId>
         <Description>I-Synergy Framework Azure Storage</Description>
         <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>

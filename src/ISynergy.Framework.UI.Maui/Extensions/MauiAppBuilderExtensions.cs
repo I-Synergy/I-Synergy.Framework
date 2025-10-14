@@ -58,7 +58,11 @@ public static class MauiAppBuilderExtensions
     /// <param name="appBuilder"></param>
     /// <param name="action"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TSettingsService, TResource>(this MauiAppBuilder appBuilder, Action<MauiAppBuilder> action)
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TSettingsService, TResource>(
+        this MauiAppBuilder appBuilder,
+        Action<MauiAppBuilder> action,
+        Assembly assembly,
+        Func<AssemblyName, bool> assemblyFilter)
     where TApplication : class, Microsoft.Maui.IApplication
     where TContext : class, IContext
     where TCommonServices : class, ICommonServices
@@ -103,7 +107,7 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
         appBuilder.Services.TryAddSingleton<ICommonServices, TCommonServices>();
 
-        appBuilder.RegisterAssemblies();
+        appBuilder.Services.RegisterAssemblies(assembly, assemblyFilter);
 
         action.Invoke(appBuilder);
 
@@ -127,23 +131,6 @@ public static class MauiAppBuilderExtensions
         ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
 
         return appBuilder;
-    }
-
-    /// <summary>
-    /// Registers the assemblies.
-    /// </summary>
-    /// <param name="appBuilder"></param>
-    private static void RegisterAssemblies(this MauiAppBuilder appBuilder)
-    {
-        var viewTypes = ReflectionExtensions.GetViewTypes();
-        var windowTypes = ReflectionExtensions.GetWindowTypes();
-        var viewModelTypes = ReflectionExtensions.GetViewModelTypes();
-
-        appBuilder.Services.RegisterViewModels(viewModelTypes);
-        appBuilder.Services.RegisterViews(viewTypes);
-        appBuilder.Services.RegisterWindows(windowTypes);
-
-        appBuilder.Services.RegisterViewModelRoutes(viewModelTypes, viewTypes);
     }
 
     private static void RegisterViewModelRoutes(this IServiceCollection services, IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)

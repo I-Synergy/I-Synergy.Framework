@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.IO</PackageId>
 		<Description>I-Synergy IO Framework</Description>
 		<PackageTags>I-Synergy, Framework, IO</PackageTags>
