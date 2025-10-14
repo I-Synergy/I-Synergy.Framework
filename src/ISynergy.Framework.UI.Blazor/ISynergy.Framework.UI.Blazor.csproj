@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<PackageId>I-Synergy.Framework.UI.Blazor</PackageId>
 		<Description>I-Synergy Framework UI for Blazor</Description>

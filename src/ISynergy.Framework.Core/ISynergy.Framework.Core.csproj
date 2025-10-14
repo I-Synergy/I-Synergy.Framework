@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Core</PackageId>
 		<Description>I-Synergy Framework Core</Description>
 		<PackageTags>I-Synergy, Framework, Core</PackageTags>
@@ -12,7 +12,6 @@
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" />
 		<PackageReference Include="Microsoft.Extensions.Hosting"/>
 		<PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
-		<PackageReference Include="System.Text.Json" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 	</ItemGroup>

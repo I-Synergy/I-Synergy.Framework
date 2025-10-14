@@ -80,7 +80,9 @@ public static class MauiProgram
                 appBuilder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
 
                 appBuilder.Services.TryAddSingleton<ICameraService, CameraService>();
-            })
+            },
+                mainAssembly,
+                f => f.Name!.StartsWith(typeof(App).Namespace!))
 #if WINDOWS
             //.ConfigureStoreUpdateIntegration()
             .ConfigureSingleInstanceApp(async e =>

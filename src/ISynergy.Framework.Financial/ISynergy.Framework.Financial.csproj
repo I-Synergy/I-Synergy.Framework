@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Financial</PackageId>
         <Description>I-Synergy Financial Framework</Description>
         <PackageTags>I-Synergy, Financial, Framework</PackageTags>
