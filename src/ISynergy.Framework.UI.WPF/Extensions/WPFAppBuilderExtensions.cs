@@ -75,7 +75,6 @@ public static class WpfAppBuilderExtensions
 
             services.TryAddSingleton<INavigationService, NavigationService>();
             services.TryAddSingleton<IDialogService, DialogService>();
-            services.TryAddSingleton<IToastMessageService, ToastMessageService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
             services.TryAddSingleton<ICommonServices, TCommonServices>();
