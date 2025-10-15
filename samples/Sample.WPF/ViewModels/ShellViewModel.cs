@@ -22,7 +22,6 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ShellViewModel : BaseShellViewModel
 {
-    private readonly IToastMessageService _toastMessageService;
     private readonly IFileService<FileResult> _fileService;
 
     /// <summary>
@@ -60,7 +59,6 @@ public class ShellViewModel : BaseShellViewModel
     public AsyncRelayCommand NugetUnlisterCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
-    public AsyncRelayCommand ShowToastMessageCommand { get; private set; }
 
 
     /// <summary>
@@ -71,18 +69,15 @@ public class ShellViewModel : BaseShellViewModel
     /// <param name="navigationService"></param>
     /// <param name="logger"></param>
     /// <param name="fileService"></param>
-    /// <param name="toastMessageService"></param>
     public ShellViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
         ILogger<ShellViewModel> logger,
-        IFileService<FileResult> fileService,
-        IToastMessageService toastMessageService)
+        IFileService<FileResult> fileService)
         : base(commonServices, dialogService, navigationService, logger)
     {
         _fileService = fileService;
-        _toastMessageService = toastMessageService;
 
         Title = _commonServices.InfoService.ProductName;
         Version = _commonServices.InfoService.ProductVersion;
@@ -95,7 +90,6 @@ public class ShellViewModel : BaseShellViewModel
         NugetUnlisterCommand = new AsyncRelayCommand(UnlistNugetAsync);
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
-        ShowToastMessageCommand = new AsyncRelayCommand(ShowToastMessageAsync);
 
         Items =
         [
@@ -123,19 +117,9 @@ public class ShellViewModel : BaseShellViewModel
             PrimaryItems.Add(new NavigationItem("Select single item", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectSingleCommand));
             PrimaryItems.Add(new NavigationItem("Select multiple items", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectMultipleCommand));
             PrimaryItems.Add(new NavigationItem("Nuget Unlister", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, NugetUnlisterCommand));
-            PrimaryItems.Add(new NavigationItem("Show toast message", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ShowToastMessageCommand));
         }
 
         PrimaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
-    }
-
-    private Task ShowToastMessageAsync()
-    {
-        _toastMessageService.ShowInformation("This is an informational message!");
-        _toastMessageService.ShowSuccess("This is a success message!");
-        _toastMessageService.ShowError("This is an error message!");
-        _toastMessageService.ShowWarning("This is a warning message!");
-        return Task.CompletedTask;
     }
 
     private Task SelectSingleAsync()

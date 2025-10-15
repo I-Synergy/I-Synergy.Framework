@@ -119,6 +119,7 @@
     <File Path="license.md" />
     <File Path="nuget.config" />
     <File Path="README.md" />
+    <File Path="Remove-UnusedPackages.ps1" />
     <File Path="toc.yml" />
   </Folder>
   <Folder Name="/Tests/">
