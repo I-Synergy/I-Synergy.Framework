@@ -31,6 +31,9 @@
 		<AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\..\..\..\I-Synergy.Framework.snk')">..\..\..\..\..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 		<WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
 		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<NuGetAuditMode>direct</NuGetAuditMode>
+		<IsAotCompatible>True</IsAotCompatible>
+		<IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
