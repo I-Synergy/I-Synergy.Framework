@@ -64,17 +64,12 @@ public static class ModelBuilderExtensions
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
     /// <param name="tenantId"></param>
-    /// <summary>
-    /// Applies the query filters.
-    /// </summary>
     public static ModelBuilder ApplyTenantFilters(this ModelBuilder modelBuilder, Func<Guid> tenantId)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
 
-        // Apply tenantFilter 
         foreach (var type in clrTypes.Where(t => typeof(ITenantEntity).IsAssignableFrom(t)).EnsureNotNull())
         {
-            // Create a properly typed parameter for the specific entity type
             var parameter = Expression.Parameter(type, "e");
             var tenantIdProperty = Expression.Property(parameter, nameof(ITenantEntity.TenantId));
             var tenantIdCall = Expression.Call(Expression.Constant(tenantId.Target), tenantId.Method);
@@ -85,18 +80,23 @@ public static class ModelBuilderExtensions
             if (entityType is null)
                 continue;
 
-            var existingFilter = entityType.GetQueryFilter();
+            var existingFilters = entityType.GetDeclaredQueryFilters();
+            var existingFilter = existingFilters?.FirstOrDefault();
 
             if (existingFilter is null)
             {
-                // Directly apply the tenant filter if no existing filter
                 modelBuilder.Entity(type).HasQueryFilter(tenantFilter);
             }
             else
             {
-                // Combine with existing filter only if necessary
-                modelBuilder.Entity(type)
-                    .HasQueryFilter(CombineQueryFilters(type, new[] { existingFilter, tenantFilter }));
+                // Filter out nulls to satisfy the non-nullable IEnumerable<LambdaExpression> parameter
+                var filters = new[] { (LambdaExpression?)existingFilter.Expression, tenantFilter }
+                    .Where(f => f is not null)!
+                    .Cast<LambdaExpression>();
+
+                var combinedFilter = CombineQueryFilters(type, filters);
+
+                modelBuilder.Entity(type).HasQueryFilter(combinedFilter);
             }
         }
 
@@ -107,9 +107,6 @@ public static class ModelBuilderExtensions
     /// Applies the soft delete query filters.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
-    /// <summary>
-    /// Applies the query filters.
-    /// </summary>
     public static ModelBuilder ApplySoftDeleteFilters(this ModelBuilder modelBuilder)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes()
@@ -117,10 +114,8 @@ public static class ModelBuilderExtensions
             .Where(t => typeof(IEntity).IsAssignableFrom(t) && !t.GetCustomAttributes(typeof(IgnoreSoftDeleteAttribute), true).Any())
             .ToList();
 
-        // Apply softDeleteFilter 
         foreach (var type in clrTypes.Where(t => typeof(IEntity).IsAssignableFrom(t)).EnsureNotNull())
         {
-            // Create a properly typed parameter for the specific entity type
             var parameter = Expression.Parameter(type, "e");
             var isDeletedProperty = Expression.Property(parameter, nameof(IEntity.IsDeleted));
             var notExpression = Expression.Not(isDeletedProperty);
@@ -130,18 +125,23 @@ public static class ModelBuilderExtensions
             if (entityType is null)
                 continue;
 
-            var existingFilter = entityType.GetQueryFilter();
+            var existingFilters = entityType.GetDeclaredQueryFilters();
+            var existingFilter = existingFilters?.FirstOrDefault();
 
             if (existingFilter is null)
             {
-                // Directly apply the soft delete filter if no existing filter
                 modelBuilder.Entity(type).HasQueryFilter(softDeleteFilter);
             }
             else
             {
-                // Combine with existing filter only if necessary
-                modelBuilder.Entity(type)
-                    .HasQueryFilter(CombineQueryFilters(type, new[] { existingFilter, softDeleteFilter }));
+                // Filter out nulls to satisfy the non-nullable IEnumerable<LambdaExpression> parameter
+                var filters = new[] { (LambdaExpression?)existingFilter.Expression, softDeleteFilter }
+                    .Where(f => f is not null)!
+                    .Cast<LambdaExpression>();
+
+                var combinedFilter = CombineQueryFilters(type, filters);
+
+                modelBuilder.Entity(type).HasQueryFilter(combinedFilter);
             }
         }
 

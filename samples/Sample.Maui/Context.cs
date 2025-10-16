@@ -29,13 +29,13 @@ public class Context : IContext
     /// Gets or sets the current profile.
     /// </summary>
     /// <value>The current profile.</value>
-    public IProfile? Profile { get; set; }
+    public IProfile Profile { get; set; }
 
     /// <summary>
     /// Gets the current time zone.
     /// </summary>
     /// <value>The current time zone.</value>
-    public TimeZoneInfo? TimeZone
+    public TimeZoneInfo TimeZone
     {
         get
         {

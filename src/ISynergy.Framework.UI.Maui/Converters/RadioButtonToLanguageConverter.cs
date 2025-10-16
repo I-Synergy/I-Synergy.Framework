@@ -9,7 +9,7 @@ public class RadioButtonToLanguageConverter : IMarkupExtension<RadioButtonToLang
 
     public Languages Language { get; set; }
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is Languages languages)
             _value = languages;

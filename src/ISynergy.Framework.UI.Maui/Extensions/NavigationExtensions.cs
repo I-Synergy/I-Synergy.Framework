@@ -14,7 +14,7 @@ public static class NavigationExtensions
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     /// <exception cref="FileNotFoundException"></exception>
-    public static IView CreatePage<TViewModel>(object parameter = null) where TViewModel : class, IViewModel
+    public static IView CreatePage<TViewModel>(object? parameter = null) where TViewModel : class, IViewModel
         => CreatePage<TViewModel>(default(TViewModel), parameter);
 
     /// <summary>
@@ -26,7 +26,7 @@ public static class NavigationExtensions
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     /// <exception cref="FileNotFoundException"></exception>
-    public static IView CreatePage<TViewModel>(TViewModel viewModel = null, object parameter = null) where TViewModel : class, IViewModel
+    public static IView CreatePage<TViewModel>(TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
     {
         var view = typeof(TViewModel).GetRelatedView();
         var viewType = view.GetRelatedViewType();
@@ -56,7 +56,7 @@ public static class NavigationExtensions
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, TViewModel viewModel = null, object parameter = null)
+    public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, TViewModel? viewModel = null, object? parameter = null)
         where TViewModel : class, IViewModel
     {
         var page = CreatePage<TViewModel>(viewModel, parameter);
@@ -73,7 +73,7 @@ public static class NavigationExtensions
     /// <param name="viewModel"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public static async Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, TViewModel viewModel = null, object parameter = null) where TViewModel : class, IViewModel
+    public static async Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
     {
         var page = CreatePage<TViewModel>(viewModel, parameter);
 

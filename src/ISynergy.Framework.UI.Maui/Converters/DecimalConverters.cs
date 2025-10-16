@@ -17,7 +17,7 @@ public class DecimalToIsVisibleConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if ((decimal)value == 0 || value is null)
         {
@@ -36,7 +36,7 @@ public class DecimalToIsVisibleConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -57,7 +57,7 @@ public class ZeroDecimalToIsVisibleConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if ((decimal)value == 0 || value is null)
         {
@@ -76,7 +76,7 @@ public class ZeroDecimalToIsVisibleConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -97,7 +97,7 @@ public class DecimalEqualsConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test == limit)
             return true;
@@ -114,7 +114,7 @@ public class DecimalEqualsConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -135,7 +135,7 @@ public class DecimalLesserThenConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test < limit)
             return true;
@@ -152,7 +152,7 @@ public class DecimalLesserThenConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -173,7 +173,7 @@ public class DecimalGreaterThenConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test > limit)
             return true;
@@ -190,7 +190,7 @@ public class DecimalGreaterThenConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -211,7 +211,7 @@ public class DecimalEqualsOrLesserThenConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test <= limit)
             return true;
@@ -228,7 +228,7 @@ public class DecimalEqualsOrLesserThenConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -249,7 +249,7 @@ public class DecimalEqualsOrGreaterThenConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test >= limit)
             return true;
@@ -266,7 +266,7 @@ public class DecimalEqualsOrGreaterThenConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -287,7 +287,7 @@ public class DecimalToStringConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is decimal @decimal)
         {
@@ -315,7 +315,7 @@ public class DecimalToStringConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (decimal.TryParse(value.ToString(), out var result))
         {
@@ -341,7 +341,7 @@ public class DecimalToDoubleConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is decimal decimalValue)
         {
@@ -359,7 +359,7 @@ public class DecimalToDoubleConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is double doubleValue)
         {

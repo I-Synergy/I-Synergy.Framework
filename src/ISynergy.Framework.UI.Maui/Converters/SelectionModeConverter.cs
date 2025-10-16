@@ -18,7 +18,7 @@ public class SelectionModeConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is SelectionModes selectionMode && selectionMode == SelectionModes.Multiple)
             return SelectionMode.Multiple;
@@ -35,7 +35,7 @@ public class SelectionModeConverter : IValueConverter
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

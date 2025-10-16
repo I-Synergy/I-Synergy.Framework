@@ -17,7 +17,7 @@ public class ZeroDoubleToIsVisibleConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is double doubleValue && doubleValue == 0d)
         {
@@ -36,7 +36,7 @@ public class ZeroDoubleToIsVisibleConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -57,7 +57,7 @@ public class DoubleToIsVisibleConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if ((double)value == 0 || value is null)
         {
@@ -76,7 +76,7 @@ public class DoubleToIsVisibleConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -97,7 +97,7 @@ public class DoubleOfDoubleConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         double result = 0;
 
@@ -119,7 +119,7 @@ public class DoubleOfDoubleConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -140,7 +140,7 @@ public class DoubleIsLesserThenConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test < limit)
             return true;
@@ -157,7 +157,7 @@ public class DoubleIsLesserThenConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -178,7 +178,7 @@ public class DoubleIsLesserOrEqualThenConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test <= limit)
             return true;
@@ -195,7 +195,7 @@ public class DoubleIsLesserOrEqualThenConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -216,7 +216,7 @@ public class DoubleIsGreaterThenConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test > limit)
             return true;
@@ -233,7 +233,7 @@ public class DoubleIsGreaterThenConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -254,7 +254,7 @@ public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test >= limit)
             return true;
@@ -271,7 +271,7 @@ public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

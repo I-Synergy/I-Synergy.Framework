@@ -83,7 +83,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         await InitializeFirstRunAsync();
     }
 
-    private void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e) => SetClock();
+    private void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e) => SetClock();
 
     private void PopulateNavigationMenuItems()
     {
@@ -106,7 +106,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     }
 
-    protected override async Task SignOutAsync()
+    protected override Task SignOutAsync()
     {
         try
         {
@@ -120,6 +120,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         {
             // Context already disposed, nothing to sign out
         }
+
+        return Task.CompletedTask;
     }
 
     public override async Task InitializeFirstRunAsync()
@@ -132,7 +134,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
-                languageVM.Submitted += async (s, e) =>
+                languageVM.Submitted += (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();

@@ -17,7 +17,7 @@ public sealed class BoolNegationConverter : IValueConverter
     /// <param name="parameter">Optional parameter. Not used.</param>
     /// <param name="culture">The culture of the conversion. Not used</param>
     /// <returns>The value to be passed to the target dependency property.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return !(value is bool x && x);
     }
@@ -30,7 +30,7 @@ public sealed class BoolNegationConverter : IValueConverter
     /// <param name="parameter">Optional parameter. Not used.</param>
     /// <param name="culture">The culture of the conversion. Not used</param>
     /// <returns>The value to be passed to the target dependency property.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return !(value is bool x && x);
     }
@@ -51,7 +51,7 @@ public sealed class BoolToStateConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not bool)
             return GenericConstants.InactiveStateKey.GetLocalized();
@@ -70,7 +70,7 @@ public sealed class BoolToStateConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return GenericConstants.ActivateStateKey.Equals(value.ToString(), StringComparison.CurrentCultureIgnoreCase);
     }
@@ -116,7 +116,7 @@ public sealed class NullToBooleanConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not null)
         {
@@ -135,7 +135,7 @@ public sealed class NullToBooleanConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -157,7 +157,7 @@ public sealed class InverseBooleanConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="InvalidOperationException">The target must be a boolean</exception>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is bool x)
             return !x;
@@ -174,7 +174,7 @@ public sealed class InverseBooleanConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="InvalidOperationException">The target must be a boolean</exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         Convert(value, targetType, parameter, culture);
 }
 
@@ -260,7 +260,7 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public virtual object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is null)
         {
@@ -278,7 +278,7 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public virtual object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return value is not null && value.Equals(True);
     }

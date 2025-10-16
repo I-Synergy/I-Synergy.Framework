@@ -63,7 +63,7 @@ public class FileService : IFileService<FileResult>
     /// <param name="file"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public Task<FileResult> SaveFileAsync(string folder, string filename, byte[] file)
+    public Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] file)
     {
         throw new NotImplementedException();
     }

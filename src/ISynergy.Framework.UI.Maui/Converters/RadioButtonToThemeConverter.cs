@@ -9,7 +9,7 @@ public class RadioButtonToThemeConverter : IMarkupExtension<RadioButtonToThemeCo
 
     public Themes Theme { get; set; }
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is Themes theme)
             _value = theme;

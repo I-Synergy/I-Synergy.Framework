@@ -15,7 +15,7 @@ public class ListToStringConverter : IValueConverter
     /// <param name="culture"></param>
     /// <returns>Returns the string value of the list</returns>
     /// <exception cref="ArgumentException"></exception>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var separator = string.Empty;
 
@@ -41,7 +41,7 @@ public class ListToStringConverter : IValueConverter
         return string.Empty;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

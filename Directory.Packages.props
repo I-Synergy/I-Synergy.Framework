@@ -75,8 +75,8 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.12.0-beta.3" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry" Version="5.16.0" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="5.16.0" />
+    <PackageVersion Include="Sentry" Version="5.16.1" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="5.16.1" />
     <PackageVersion Include="SkiaSharp" Version="3.119.1" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="31.2.2" />
     <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="31.2.2" />
