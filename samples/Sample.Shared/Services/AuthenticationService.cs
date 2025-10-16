@@ -43,7 +43,7 @@ public class AuthenticationService : IAuthenticationService
         return Task.CompletedTask;
     }
 
-    public async Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
+    public Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
     {
         _scopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
         _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
@@ -72,6 +72,8 @@ public class AuthenticationService : IAuthenticationService
         }
 
         ValidateToken(new Token());
+
+        return Task.CompletedTask;
     }
 
     public Task SignOutAsync()

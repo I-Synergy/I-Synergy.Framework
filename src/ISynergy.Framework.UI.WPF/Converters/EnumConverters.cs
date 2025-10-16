@@ -20,7 +20,7 @@ public class EnumToArrayConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var list = new List<KeyValuePair<int, string>>();
 
@@ -41,7 +41,7 @@ public class EnumToArrayConverter : IValueConverter
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

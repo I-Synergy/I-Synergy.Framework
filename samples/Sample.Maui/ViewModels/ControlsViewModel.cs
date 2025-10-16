@@ -21,11 +21,12 @@ public class ControlsViewModel : ViewModelNavigation<object>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private System.Timers.Timer? _timer;
 
     public override string Title { get { return LanguageService.Default.GetString("Controls"); } }
 
-    public ObservableCollection<TestItem> Items { get; set; }
-    public ObservableCollection<TestItem> SelectedTestItems { get; set; }
+    public ObservableCollection<TestItem> Items { get; set; } = new();
+    public ObservableCollection<TestItem> SelectedTestItems { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the File property value.
@@ -81,7 +82,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
         await _dialogService.ShowDialogAsync(typeof(ITestExceptionWindow), testVm);
     }
 
-    private void TestVm_Submitted(object sender, SubmitEventArgs<object> e)
+    private void TestVm_Submitted(object? sender, SubmitEventArgs<object> e)
     {
     }
 
@@ -124,7 +125,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
@@ -140,7 +141,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
@@ -155,15 +156,13 @@ public class ControlsViewModel : ViewModelNavigation<object>
         await _dialogService.ShowDialogAsync(typeof(INoteWindow), noteVM);
     }
 
-    private async void NoteVM_Submitted(object sender, SubmitEventArgs<string> e)
+    private async void NoteVM_Submitted(object? sender, SubmitEventArgs<string> e)
     {
         if (sender is NoteViewModel vm)
             vm.Submitted -= NoteVM_Submitted;
 
         await _dialogService.ShowInformationAsync(e.Result);
     }
-
-    private System.Timers.Timer _timer;
 
     private void StartTimer()
     {
@@ -175,7 +174,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
         _timer.Start();
     }
 
-    private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+    private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
         _commonServices.BusyService.StopBusy();
     }

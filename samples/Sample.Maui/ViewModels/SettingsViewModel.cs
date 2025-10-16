@@ -18,7 +18,6 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
     public override string Title { get => LanguageService.Default.GetString("Settings"); }
 
-    private readonly ICommonServices _commonServices;
     private readonly ISettingsService _settingsService;
 
     /// <summary>
@@ -55,7 +54,6 @@ public class SettingsViewModel : ViewModelNavigation<object>
         ILogger<SettingsViewModel> logger)
         : base(commonServices, logger)
     {
-        _commonServices = commonServices;
         _navigationService = navigationService;
         _settingsService = settingsService;
 
