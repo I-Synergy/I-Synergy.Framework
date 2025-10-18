@@ -320,6 +320,13 @@ public partial class App : Application
         base.Dispose(disposing);
 
         if (disposing)
+        {
             MessengerService.Default.Unregister<ApplicationLoadedMessage>(this);
+            MessengerService.Default.Unregister<AuthenticationChangedMessage>(this);
+            MessengerService.Default.Unregister<ShowInformationMessage>(this);
+            MessengerService.Default.Unregister<ShowWarningMessage>(this);
+            MessengerService.Default.Unregister<ShowErrorMessage>(this);
+        }
+
     }
 }
