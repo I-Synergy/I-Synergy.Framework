@@ -1,12 +1,11 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
+using Sample.Abstractions;
 using Sample.ViewModels;
 using System.Globalization;
 using Application = ISynergy.Framework.UI.Application;
@@ -217,14 +216,11 @@ public partial class App : Application
             {
                 try
                 {
-                    var context = _commonServices?.ScopedContextService.GetRequiredService<IContext>();
+                    _logger?.LogTrace("Loading master data");
+                    var masterDataService = _commonServices?.ScopedContextService.GetRequiredService<IMasterDataService>();
 
-                    if (context != null && _settingsService?.LocalSettings != null)
-                    {
-                        _logger?.LogTrace("Saving refresh token");
-                        _settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
-                        _settingsService.SaveLocalSettings();
-                    }
+                    if (masterDataService is not null)
+                        await masterDataService.LoadMasterItemsAsync();
 
                     _logger?.LogTrace("Setting culture");
                     if (_settingsService?.GlobalSettings is not null &&
@@ -233,6 +229,7 @@ public partial class App : Application
                     {
                         try
                         {
+                            // Set default currency symbol to Euro
                             culture.NumberFormat.CurrencySymbol = "€";
 
                             culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;

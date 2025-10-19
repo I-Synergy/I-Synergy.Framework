@@ -16,10 +16,10 @@ public static class PreferencesExtensions
     /// <param name="key">The key under which the object will be stored.</param>
     /// <param name="obj">The object to be stored as a preference.</param>
     /// <param name="sharedName">The shared preferences name (optional).</param>
-    public static void SetObject<T>(this IPreferences preferences, string key, T obj, string sharedName = null)
+    public static void SetObject<T>(this IPreferences preferences, string key, T obj, string? sharedName = null)
         where T : class
     {
-        string jsonValue = null;
+        string? jsonValue = null;
 
         if (obj != null)
             jsonValue = JsonSerializer.Serialize<T>(obj, DefaultJsonSerializers.Web);
@@ -36,10 +36,10 @@ public static class PreferencesExtensions
     /// <param name="defaultValue"></param>
     /// <param name="sharedName"></param>
     /// <returns></returns>
-    public static T GetObject<T>(this IPreferences preferences, string key, T defaultValue, string sharedName = null)
+    public static T GetObject<T>(this IPreferences preferences, string key, T defaultValue, string? sharedName = null)
         where T : class
     {
-        string jsonValue = preferences.Get<string>(key, null, sharedName);
+        string? jsonValue = preferences.Get<string>(key, null, sharedName);
 
         if (jsonValue == null)
             return defaultValue;

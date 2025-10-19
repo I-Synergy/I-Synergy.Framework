@@ -92,9 +92,9 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         SlideshowTimer.Enabled = false;
 
 
-        Task.Run(() =>
+        Task.Run(async () =>
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if ((SelectedItem is null && Items is not null) || (SelectedItem is not null && Items is not null && SelectedItem.Index == Items.Count - 1))
                 {

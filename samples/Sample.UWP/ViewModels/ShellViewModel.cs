@@ -119,7 +119,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
-    protected override async Task SignOutAsync()
+    protected override Task SignOutAsync()
     {
         try
         {
@@ -133,6 +133,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         {
             // Context already disposed, nothing to sign out
         }
+
+        return Task.CompletedTask;
     }
 
     public override async Task InitializeFirstRunAsync()
@@ -145,7 +147,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
-                languageVM.Submitted += async (s, e) =>
+                languageVM.Submitted += (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();

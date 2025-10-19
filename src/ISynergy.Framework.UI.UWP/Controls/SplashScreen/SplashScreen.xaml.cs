@@ -42,7 +42,7 @@ public sealed partial class SplashScreen
             {
                 await loadingViewModel.WaitForCompletionAsync();
                 _initializationComplete = true;
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     SignInButton.IsEnabled = true;
                 });
@@ -103,9 +103,9 @@ public sealed partial class SplashScreen
         }
     }
 
-    private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
+    private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
     {
-        CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, () =>
+        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, () =>
         {
             if (_initializationComplete && !_userInteracted)
             {

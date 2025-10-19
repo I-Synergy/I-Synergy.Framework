@@ -50,7 +50,8 @@ public class AuthenticationProvider : IAuthenticationProvider
         {
             var roles = authorizationTag.Split([";"], StringSplitOptions.RemoveEmptyEntries);
 
-            if (Context.Profile.Roles.Intersect(roles).Any()) return true;
+            if (Context.Profile.Roles.Intersect(roles).Any())
+                return true;
         }
 
         return false;
