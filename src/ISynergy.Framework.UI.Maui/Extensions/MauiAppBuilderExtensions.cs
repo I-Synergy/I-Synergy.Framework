@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -52,11 +53,13 @@ public static class MauiAppBuilderExtensions
     /// </summary>
     /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TExceptionHandler"></typeparam>
+    /// <typeparam name="TCommonServices"></typeparam>
+    /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
-    /// <typeparam name="TLoadingView"></typeparam>
     /// <param name="appBuilder"></param>
     /// <param name="action"></param>
+    /// <param name="assembly"></param>
+    /// <param name="assemblyFilter"></param>
     /// <returns></returns>
     public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TSettingsService, TResource>(
         this MauiAppBuilder appBuilder,
@@ -95,6 +98,8 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.Services.TryAddScoped<ISettingsService, TSettingsService>();
         appBuilder.Services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
+
+        appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
 
         appBuilder.Services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();

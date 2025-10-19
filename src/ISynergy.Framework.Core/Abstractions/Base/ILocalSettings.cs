@@ -27,10 +27,6 @@ public interface ILocalSettings
     /// </summary>
     string DefaultUser { get; set; }
     /// <summary>
-    /// Setting for storing the refresh token received on authentication.
-    /// </summary>
-    string? RefreshToken { get; set; }
-    /// <summary>
     /// Setting for storing the theme color.
     /// </summary>
     string Color { get; set; }

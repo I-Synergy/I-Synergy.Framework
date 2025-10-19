@@ -1,6 +1,4 @@
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -244,15 +242,6 @@ public sealed partial class App : Application
             {
                 try
                 {
-                    var context = _commonServices?.ScopedContextService.GetRequiredService<IContext>();
-
-                    if (context != null && _settingsService?.LocalSettings != null)
-                    {
-                        _logger?.LogTrace("Saving refresh token");
-                        _settingsService.LocalSettings.RefreshToken = context.ToEnvironmentalRefreshToken();
-                        _settingsService.SaveLocalSettings();
-                    }
-
                     _logger?.LogTrace("Setting culture");
                     if (_settingsService?.GlobalSettings is not null &&
                         CultureInfo.DefaultThreadCurrentCulture != null &&

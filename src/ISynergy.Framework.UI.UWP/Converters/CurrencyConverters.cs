@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using System.Globalization;
-using Windows.ApplicationModel;
+﻿using Windows.ApplicationModel;
 using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Framework.UI.Converters
@@ -23,21 +20,13 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var currencySymbol = "$";
-
             if (!DesignMode.DesignModeEnabled)
             {
                 if (decimal.TryParse(value.ToString(), out var amount))
-                {
-                    return ServiceLocator.Default.GetRequiredService<IConverterService>().ConvertDecimalToCurrency(amount);
-                }
+                    return amount.ToString("C2");
             }
 
-            var info = CultureInfo.CurrentCulture.NumberFormat;
-            info.CurrencySymbol = $"{currencySymbol} ";
-            info.CurrencyNegativePattern = 1;
-
-            return string.Format(info, "{0:C2}", 0);
+            return 0m.ToString("C2");
         }
 
         /// <summary>
@@ -72,21 +61,13 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var currencySymbol = "$";
-
             if (!DesignMode.DesignModeEnabled)
             {
                 if (decimal.TryParse(value.ToString(), out var amount))
-                {
-                    return ServiceLocator.Default.GetRequiredService<IConverterService>().ConvertDecimalToCurrency(amount * -1);
-                }
+                    return (amount * -1).ToString("C2");
             }
 
-            var info = CultureInfo.CurrentCulture.NumberFormat;
-            info.CurrencySymbol = $"{currencySymbol} ";
-            info.CurrencyNegativePattern = 1;
-
-            return string.Format(info, "{0:C2}", 0);
+            return 0m.ToString("C2");
         }
 
         /// <summary>

@@ -234,7 +234,7 @@ public class SignUpViewModel : ViewModel
         SelectedModules = selectedItems;
     }
 
-    private async Task ValidateMailAsync()
+    private Task ValidateMailAsync()
     {
         if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_commonServices.ScopedContextService.GetRequiredService<IContext>())))
         {
@@ -254,6 +254,8 @@ public class SignUpViewModel : ViewModel
         }
         else
             ArePickersAvailable = false;
+
+        return Task.CompletedTask;
     }
 
     private Task SignInAsync() =>
