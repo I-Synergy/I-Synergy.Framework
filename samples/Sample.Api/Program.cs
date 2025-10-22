@@ -50,11 +50,7 @@ public class Program
                                 options.RecordException = true;
                             });
 
-                            tracing.AddEntityFrameworkCoreInstrumentation(options =>
-                            {
-                                options.SetDbStatementForText = true;
-                                options.SetDbStatementForStoredProcedure = true;
-                            });
+                            tracing.AddEntityFrameworkCoreInstrumentation();
                         },
                         meterProviderBuilderAction: (metrics) =>
                         {
