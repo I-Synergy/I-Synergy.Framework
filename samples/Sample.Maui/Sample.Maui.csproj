@@ -53,11 +53,18 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Remove="Resources\Fonts\FluentUI.cs" />
+	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Resources\Raw\gta.mp4" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiFont Include="Extensions\FluentUI.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />

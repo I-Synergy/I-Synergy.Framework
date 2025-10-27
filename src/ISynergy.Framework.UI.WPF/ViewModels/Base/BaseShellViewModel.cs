@@ -272,15 +272,14 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<Style> e)
+    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)
     {
         if (sender is ThemeViewModel vm)
+        {
             vm.Submitted -= ThemeVM_Submitted;
 
-        if (e.Result is { } style)
-        {
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = e.Result.Theme;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
 
             if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
                 await _dialogService.ShowMessageAsync(

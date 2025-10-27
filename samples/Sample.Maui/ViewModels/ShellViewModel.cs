@@ -14,6 +14,7 @@ using ISynergy.Framework.UI.Utilities;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
+using Sample.Extensions;
 using Timer = System.Timers.Timer;
 
 namespace Sample.ViewModels;
@@ -90,16 +91,16 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
         {
             PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("Info", ResourceUtility.FindResource<string>("info"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("Controls", ResourceUtility.FindResource<string>("search"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ControlsCommand));
-            PrimaryItems.Add(new NavigationItem("SlideShow", ResourceUtility.FindResource<string>("info"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SlideshowCommand));
-            PrimaryItems.Add(new NavigationItem("Sync", ResourceUtility.FindResource<string>("Sync"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SyncCommand));
+            PrimaryItems.Add(new NavigationItem("Info", FluentUI.info_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("Controls", FluentUI.control_button_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ControlsCommand));
+            PrimaryItems.Add(new NavigationItem("SlideShow", FluentUI.slide_layout_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SlideshowCommand));
+            PrimaryItems.Add(new NavigationItem("Sync", FluentUI.cloud_sync_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SyncCommand));
 
             SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", ResourceUtility.FindResource<string>("help"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, HelpCommand));
-            SecondaryItems.Add(new NavigationItem("Language", ResourceUtility.FindResource<string>("language"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, LanguageCommand));
-            SecondaryItems.Add(new NavigationItem("Theme", ResourceUtility.FindResource<string>("theme"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ColorCommand));
-            SecondaryItems.Add(new NavigationItem("Settings", ResourceUtility.FindResource<string>("settings"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SettingsCommand));
+            SecondaryItems.Add(new NavigationItem("Help", FluentUI.chat_help_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", FluentUI.local_language_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", FluentUI.dark_theme_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ColorCommand));
+            SecondaryItems.Add(new NavigationItem("Settings", FluentUI.settings_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SettingsCommand));
         }
 
         SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("user2"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));

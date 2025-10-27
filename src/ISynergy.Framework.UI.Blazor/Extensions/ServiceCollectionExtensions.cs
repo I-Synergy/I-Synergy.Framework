@@ -57,7 +57,7 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
-        services.TryAddSingleton<IMessengerService>(s => MessengerService.Default);
+        services.TryAddSingleton<IMessengerService>(s => new MessengerService());
         services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         services.TryAddSingleton<IBusyService, BusyService>();
 

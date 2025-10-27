@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
 	<!-- 
     Microsoft ResX Schema 
@@ -297,6 +297,9 @@ Save your work and restart the application.</value>
   </data>
 	<data name="Dark" xml:space="preserve">
     <value>Dark</value>
+  </data>
+	<data name="System" xml:space="preserve">
+  <value>System</value>
   </data>
 	<data name="NoItems" xml:space="preserve">
     <value>No items available</value>

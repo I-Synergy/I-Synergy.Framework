@@ -87,7 +87,7 @@ public class AuthenticationService : IAuthenticationService
     {
         if (token is not null)
         {
-            _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
+            MessengerService.Default.Send(new AuthenticationChangedMessage(new Profile(
                 token,
                 Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
                 "Test",
@@ -100,15 +100,11 @@ public class AuthenticationService : IAuthenticationService
                 [],
                 DateTimeOffset.Now.AddDays(7),
                 1,
-                DateTime.Now.AddHours(24));
-
-            MessengerService.Default.Send(new AuthenticationChangedMessage(true));
+                DateTime.Now.AddHours(24))));
         }
         else
         {
-            _scopedContextService.GetRequiredService<IContext>().Profile = null;
-
-            MessengerService.Default.Send(new AuthenticationChangedMessage(false));
+            MessengerService.Default.Send(new AuthenticationChangedMessage(null));
         }
     }
 }

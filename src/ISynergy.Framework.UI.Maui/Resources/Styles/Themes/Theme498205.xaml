@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary x:Class="ISynergy.Framework.UI.Resources.Styles.Themes.Theme498205" xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <!-- Primary Colors -->
+    <Color x:Key="Primary">#498205</Color>
+    <Color x:Key="Secondary">#709B3F</Color>
+    <Color x:Key="Tertiary">#376204</Color>
+    
+    <!-- Tinted Grays (15% blend with Primary #498205) -->
+    <Color x:Key="TintedGray000">#E8EDDE</Color>
+    <Color x:Key="TintedGray100">#DBE1D0</Color>
+    <Color x:Key="TintedGray200">#C3C9B7</Color>
+    <Color x:Key="TintedGray300">#A9AF9D</Color>
+    <Color x:Key="TintedGray400">#8F9684</Color>
+    <Color x:Key="TintedGray500">#6D7462</Color>
+    <Color x:Key="TintedGray600">#424A38</Color>
+    <Color x:Key="TintedGray900">#272C1E</Color>
+    <Color x:Key="TintedGray950">#1A1F13</Color>
+</ResourceDictionary>

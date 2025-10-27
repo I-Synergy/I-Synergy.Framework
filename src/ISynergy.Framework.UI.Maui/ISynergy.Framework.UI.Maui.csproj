@@ -42,19 +42,19 @@
 		<PackageReference Include="SkiaSharp" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Common.Java8"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Android"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState.Android"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Process"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel.Ktx"/>
-		<PackageReference Include="Xamarin.AndroidX.SavedState.SavedState.Ktx"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx.Android"/>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx"/>
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Common.Java8" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Android" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState.Android" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel.Ktx" />
+		<PackageReference Include="Xamarin.AndroidX.SavedState.SavedState.Ktx" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx.Android" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -62,9 +62,6 @@
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Core.Models.Style">
-			<Alias>Style</Alias>
-		</Using>
 		<Using Include="ISynergy.Framework.Mvvm.Abstractions.IView">
 			<Alias>IView</Alias>
 		</Using>
@@ -90,6 +87,114 @@
 		</MauiXaml>
 		<MauiXaml Update="Resources\Styles\Generic.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme0063b1.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme0078d7.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme0099bc.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme00b294.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme00b7c3.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme00cc6a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme018574.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme038387.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme107c10.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme10893e.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme2d7d9a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme486860.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme498205.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme4a5459.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme4c4a48.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme515c6b.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme525e54.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme567c73.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme5d5a58.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme647c64.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme68768a.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme69797e.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme6b69d6.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme744da9.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme767676.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme7a7574.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme7e735f.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme847545.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme8764b8.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme881798.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme8e8cd8.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Theme9a0089.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Themeb146c2.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Themec239b3.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Themeef6950.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Styles\Themes\Themeffb900.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Windows\NoteWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>

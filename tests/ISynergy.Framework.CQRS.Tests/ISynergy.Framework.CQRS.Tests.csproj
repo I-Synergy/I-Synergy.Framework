@@ -12,6 +12,9 @@
 		<PackageReference Include="Moq" />
 		<PackageReference Include="MSTest.TestFramework" />
 		<PackageReference Include="MSTest.TestAdapter" />
+		<PackageReference Include="Reqnroll" />
+		<PackageReference Include="Reqnroll.MSTest" />
+		<PackageReference Include="Reqnroll.Tools.MsBuild.Generation" />
 		<PackageReference Include="coverlet.collector">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

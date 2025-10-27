@@ -43,6 +43,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     public AsyncRelayCommand ColorCommand { get; private set; }
     public AsyncRelayCommand HelpCommand { get; private set; }
     public AsyncRelayCommand SettingsCommand { get; private set; }
+    public AsyncRelayCommand BackgroundCommand { get; private set; }
     public AsyncRelayCommand FeedbackCommand { get; private set; }
 
     /// <summary>
@@ -93,6 +94,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
+        BackgroundCommand = new AsyncRelayCommand(() => Task.CompletedTask);
     }
 
     public abstract Task ShellLoadedAsync();
@@ -216,7 +218,14 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     protected virtual Task OpenColorsAsync()
     {
         var themeVM = _commonServices.ScopedContextService.GetRequiredService<ThemeViewModel>();
+        var settings = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings;
+        var style = new ThemeStyle
+        {
+            Theme = settings.Theme,
+            Color = settings.Color
+        };
         themeVM.Submitted += ThemeVM_Submitted;
+        themeVM.SetSelectedItem(style);
         return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
 
@@ -225,15 +234,15 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<Style> e)
+    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)
     {
         if (sender is ThemeViewModel vm)
             vm.Submitted -= ThemeVM_Submitted;
 
-        if (e.Result is { } style)
+        if (e.Result is ThemeStyle style)
         {
             _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (style.Color ?? string.Empty).ToLowerInvariant();
 
             if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
                 await _dialogService.ShowMessageAsync(
@@ -276,13 +285,17 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
             Validator = null;
 
-            RestartUpdateCommand?.Cancel();
-            SignInCommand?.Cancel();
-            LanguageCommand?.Cancel();
-            ColorCommand?.Cancel();
-            HelpCommand?.Cancel();
-            SettingsCommand?.Cancel();
-            FeedbackCommand?.Cancel();
+            PrimaryItems?.Clear();
+            SecondaryItems?.Clear();
+
+            RestartUpdateCommand?.Dispose();
+            SignInCommand?.Dispose();
+            LanguageCommand?.Dispose();
+            ColorCommand?.Dispose();
+            HelpCommand?.Dispose();
+            SettingsCommand?.Dispose();
+            BackgroundCommand?.Dispose();
+            FeedbackCommand?.Dispose();
 
             base.Dispose(disposing);
         }

@@ -4,12 +4,10 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -55,15 +53,15 @@ public static class MauiProgram
                 },
                 loggerProviderBuilderAction: (logger) =>
                 {
-                })
-                .AddOtlpExporter()
-                .AddApplicationInsightsExporter()
-                .AddSentryExporter(
-                    options =>
-                    {
-                        options.Environment = builder.Environment.EnvironmentName;
-                        options.Debug = builder.Environment.IsDevelopment();
-                    });
+                });
+        //.AddOtlpExporter();
+        //.AddApplicationInsightsExporter()
+        //.AddSentryExporter(
+        //    options =>
+        //    {
+        //        options.Environment = builder.Environment.EnvironmentName;
+        //        options.Debug = builder.Environment.IsDevelopment();
+        //    });
 
         builder
             .UseMauiApp<App>()
@@ -71,6 +69,7 @@ public static class MauiProgram
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Font Awesome 6 Pro-Regular-400.otf", "fontawesome");
+                fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
             })
             .ConfigureServices<App, Context, CommonServices, SettingsService, Properties.Resources>(appBuilder =>
             {
@@ -106,7 +105,7 @@ public static class MauiProgram
             {
                 Debug.WriteLine("Configuring offline synchronization");
             })
-            .ConfigureSyncfusionCore();
+        .ConfigureSyncfusionCore();
 
         return builder.Build();
     }

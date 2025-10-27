@@ -9,7 +9,7 @@
     Title="{Binding Title}"
     x:DataType="viewmodels:SignInViewModel">
 
-    <Grid HorizontalOptions="Center">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -106,7 +106,7 @@
             Grid.RowSpan="4"
             Grid.ColumnSpan="3"
             IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-            <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.8" />
+            <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}" Opacity="0.8"/>
             <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
                 <Label
                     FontSize="14"

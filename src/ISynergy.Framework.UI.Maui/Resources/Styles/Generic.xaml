@@ -47,8 +47,9 @@
 
     <ControlTemplate x:Key="DefaultDialogTemplate">
         <Border
-            Background="{AppThemeBinding Light={DynamicResource White},
-                                         Dark={DynamicResource Gray900}}"
+            Background="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
+            Stroke="{AppThemeBinding Light={DynamicResource TintedGray300}, Dark={DynamicResource TintedGray600}}"
+            StrokeThickness="1"
             BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
             HeightRequest="{TemplateBinding HeightRequest}"
             HorizontalOptions="Center"
@@ -67,9 +68,6 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer />
-                </Grid.GestureRecognizers>
 
                 <Label
                     Margin="8,4"
@@ -100,8 +98,9 @@
 
     <ControlTemplate x:Key="DefaultCleanDialogTemplate">
         <Border
-            Background="{AppThemeBinding Light={DynamicResource White},
-                                         Dark={DynamicResource Gray900}}"
+            Background="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
+            Stroke="{AppThemeBinding Light={DynamicResource TintedGray300}, Dark={DynamicResource TintedGray600}}"
+            StrokeThickness="1"
             BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
             HeightRequest="{TemplateBinding HeightRequest}"
             HorizontalOptions="Center"
@@ -116,9 +115,6 @@
             </Border.StrokeShape>
 
             <Grid Margin="10">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer />
-                </Grid.GestureRecognizers>
                 <ContentPresenter Margin="{DynamicResource DefaultMargin}" />
             </Grid>
         </Border>

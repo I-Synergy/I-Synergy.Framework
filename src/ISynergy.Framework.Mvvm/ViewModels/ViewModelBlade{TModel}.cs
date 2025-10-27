@@ -5,6 +5,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -35,7 +36,40 @@ public abstract class ViewModelBlade<TModel> : ViewModel, IViewModelBlade<TModel
     public TModel? SelectedItem
     {
         get { return GetValue<TModel>(); }
-        set { SetValue(value); }
+        set
+        {
+            var oldValue = GetValue<TModel>();
+
+            // Unsubscribe from old item
+            if (oldValue is INotifyPropertyChanged oldItem)
+            {
+                oldItem.PropertyChanged -= SelectedItem_PropertyChanged;
+            }
+
+            SetValue(value);
+
+            // Subscribe to new item if it implements INotifyPropertyChanged
+            if (value is INotifyPropertyChanged newItem)
+            {
+                newItem.PropertyChanged += SelectedItem_PropertyChanged;
+            }
+
+            // Notify command that SelectedItem changed
+            SubmitCommand?.NotifyCanExecuteChanged();
+        }
+    }
+
+    /// <summary>
+    /// Handles property changes within SelectedItem and propagates them.
+    /// </summary>
+    private void SelectedItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        _logger.LogTrace($"SelectedItem property '{e.PropertyName}' changed in {GetType().Name}");
+
+        // When any property in SelectedItem changes, notify that SelectedItem itself changed
+        // This ensures the UI and commands re-evaluate
+        RaisePropertyChanged(nameof(SelectedItem));
+        SubmitCommand?.NotifyCanExecuteChanged();
     }
 
     /// <summary>
@@ -96,11 +130,14 @@ public abstract class ViewModelBlade<TModel> : ViewModel, IViewModelBlade<TModel
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
     protected ViewModelBlade(
-        ICommonServices commonServices,
+    ICommonServices commonServices,
         ILogger<ViewModelBlade<TModel>> logger)
         : base(commonServices, logger)
     {
-        SubmitCommand = new AsyncRelayCommand<TModel>(async e => await SubmitAsync(e), (e) => e is not null);
+        // CanExecute checks both parameter and property to handle MAUI Button visual state correctly
+        SubmitCommand = new AsyncRelayCommand<TModel>(
+     execute: async e => await SubmitAsync(e ?? SelectedItem!), 
+ canExecute: e => (e ?? SelectedItem) is not null);
     }
 
     /// <summary>
@@ -125,6 +162,13 @@ public abstract class ViewModelBlade<TModel> : ViewModel, IViewModelBlade<TModel
             // Set flag to prevent property change notifications during cleanup
             IsInCleanup = true;
 
+            // Unsubscribe from SelectedItem before clearing
+            var currentItem = GetValue<TModel>();
+            if (currentItem is INotifyPropertyChanged item)
+            {
+                item.PropertyChanged -= SelectedItem_PropertyChanged;
+            }
+
             // Clear selected item first
             SelectedItem = default;
 
@@ -140,6 +184,13 @@ public abstract class ViewModelBlade<TModel> : ViewModel, IViewModelBlade<TModel
     {
         if (disposing)
         {
+            // Unsubscribe before disposal
+            var currentItem = GetValue<TModel>();
+            if (currentItem is INotifyPropertyChanged item)
+            {
+                item.PropertyChanged -= SelectedItem_PropertyChanged;
+            }
+
             // Make sure cleanup is done before disposal
             if (!IsInCleanup)
             {

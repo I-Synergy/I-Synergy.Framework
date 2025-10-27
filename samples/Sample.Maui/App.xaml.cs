@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Events;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -6,6 +7,7 @@ using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Sample.Abstractions;
+using Sample.Models;
 using Sample.ViewModels;
 using System.Globalization;
 using Application = ISynergy.Framework.UI.Application;
@@ -21,10 +23,10 @@ public partial class App : Application
         {
             InitializeComponent();
 
-            MessengerService.Default.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
-            MessengerService.Default.Register<AuthenticationChangedMessage>(this, async m => await AuthenticationChangedAsync(m));
+            _commonServices.MessengerService.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
+            _commonServices.MessengerService.Register<AuthenticationChangedMessage>(this, async m => await AuthenticationChangedAsync(m));
 
-            MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
+            _commonServices.MessengerService.Register<ShowInformationMessage>(this, async m =>
             {
                 var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
 
@@ -41,7 +43,7 @@ public partial class App : Application
                 //return MessageBoxResult.None;
             });
 
-            MessengerService.Default.Register<ShowWarningMessage>(this, async m =>
+            _commonServices.MessengerService.Register<ShowWarningMessage>(this, async m =>
             {
                 var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
 
@@ -83,10 +85,16 @@ public partial class App : Application
 
     private async Task AuthenticationChangedAsync(AuthenticationChangedMessage authenticationChangedMessage)
     {
-        if (authenticationChangedMessage.Content)
+        if (authenticationChangedMessage.Content is Profile profile)
+        {
+            _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile = profile;
             await _navigationService.NavigateModalAsync<ShellViewModel>();
+        }
         else
+        {
+            _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile = null;
             await _navigationService.NavigateModalAsync<SignInViewModel>();
+        }
     }
 
     protected override async Task InitializeApplicationAsync()
