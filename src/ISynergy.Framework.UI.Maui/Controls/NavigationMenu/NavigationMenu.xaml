@@ -6,6 +6,7 @@
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:ISynergy.Framework.Mvvm.Abstractions.ViewModels;assembly=ISynergy.Framework.Mvvm"
     Title="Menu"
+    BackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
     x:DataType="viewmodels:IShellViewModel">
 
     <Grid

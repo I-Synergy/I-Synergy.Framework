@@ -1,107 +1,196 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Utilities;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
-/// Class ThemeSelectorService.
-/// Implements the <see cref="IThemeService" />
+/// Provides functionality to apply the application's theme and accent color across platforms.
 /// </summary>
-/// <seealso cref="IThemeService" />
+/// <remarks>
+/// The service reads the persisted <see cref="Themes"/> and color value from <see cref="ISettingsService"/> during construction.
+/// It then applies the theme via <see cref="Application.UserAppTheme"/> and sets the global <see cref="Application.AccentColor"/>.
+/// Platform-specific resources (Android, Windows) are updated to keep native UI elements in sync.
+/// </remarks>
 public class ThemeService : IThemeService
 {
     private const string Primary = nameof(Primary);
     private const string Secondary = nameof(Secondary);
     private const string Tertiary = nameof(Tertiary);
 
-    private readonly ISettingsService _settingsService;
+    private readonly Themes _theme;
+    private readonly string _color;
+    private readonly ILogger<ThemeService> _logger;
 
     /// <summary>
-    /// Gets or sets the theme.
+    /// Gets a value that indicates whether the light theme is enabled.
     /// </summary>
-    /// <value>The theme.</value>
-    public Style Style
+    /// <value><see langword="true"/> if the current theme equals <see cref="Themes.Light"/>; otherwise, <see langword="false"/>.</value>
+    public bool IsLightThemeEnabled => _theme == Themes.Light;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ThemeService"/> class.
+    /// </summary>
+    /// <param name="settingsService">An application settings service that provides persisted theme and color values.</param>
+    /// <param name="logger">A logger used for diagnostics and structured logging.</param>
+    public ThemeService(
+        ISettingsService settingsService,
+        ILogger<ThemeService> logger)
     {
-        get => new(_settingsService.LocalSettings.Color, _settingsService.LocalSettings.Theme);
+        _logger = logger;
+
+        _theme = settingsService.LocalSettings.Theme;
+        _color = settingsService.LocalSettings.Color;
     }
 
     /// <summary>
-    /// Gets a value indicating whether this instance is light theme enabled.
+    /// Applies the configured theme and accent color to the MAUI <see cref="Application"/> instance.
     /// </summary>
-    /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
-    public bool IsLightThemeEnabled => Style.Theme == Themes.Light;
-
-    /// <summary>
-    /// Default constructor.
-    /// </summary>
-    /// <param name="settingsService"></param>
-    public ThemeService(ISettingsService settingsService)
+    /// <remarks>
+    /// The method safely handles a missing <see cref="Application.Current"/> instance and logs diagnostics.
+    /// For Windows, it updates the title bar colors; for Android, it updates common color resources.
+    /// </remarks>
+    public void ApplyTheme()
     {
-        _settingsService = settingsService;
-    }
+        _logger.LogInformation("Setting application style with color {Color} and theme {Theme}",
+            _color, _theme);
 
-    /// <summary>
-    /// Sets the theme.
-    /// </summary>
-    public void SetStyle()
-    {
-        // Set the accent color from settings - this is the primary fix
-        Application.AccentColor = Color.FromArgb(Style.Color);
-
-        if (Application.Current is Application application)
+        if (Application.Current is not Application application)
         {
-            if (ResourceUtility.FindResource<Color>(Primary) is Color color)
-                Application.AccentColor = color;
+            _logger.LogWarning("Application.Current is not available");
+            return;
+        }
 
-            if (application.Resources.ContainsKey(Primary))
-                application.Resources[Primary] = Application.AccentColor;
+        try
+        {
+            if (IsLightThemeEnabled)
+                Application.Current.UserAppTheme = AppTheme.Light;
             else
-                application.Resources.Add(Primary, Application.AccentColor);
+                Application.Current.UserAppTheme = AppTheme.Dark;
 
-            if (application.Resources.ContainsKey(Secondary))
-                application.Resources[Secondary] = Application.AccentColor.AddLuminosity(0.25f);
+            // Use the new ApplicationExtensions to dynamically load the theme
+            application.SetApplicationColor(_color, _logger);
+
+            // Set the accent color from the loaded theme
+            if (ResourceUtility.FindResource<Color>(Primary) is Color primaryColor)
+            {
+                Application.AccentColor = primaryColor;
+                _logger.LogTrace("AccentColor set to {Color}", primaryColor);
+            }
             else
-                application.Resources.Add(Secondary, Application.AccentColor.AddLuminosity(0.25f));
+            {
+                // Fallback to parsing the color from settings
+                Application.AccentColor = Color.FromArgb(_color);
+                _logger.LogTrace("AccentColor set to {Color} from settings", _color);
+            }
 
-            if (application.Resources.ContainsKey(Tertiary))
-                application.Resources[Tertiary] = Application.AccentColor.AddLuminosity(-0.25f);
-            else
-                application.Resources.Add(Tertiary, Application.AccentColor.AddLuminosity(-0.25f));
+            // Update platform-specific color resources
+            UpdatePlatformColors(application);
 
+            _logger.LogInformation("Application style successfully applied");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to set application style");
+        }
+    }
+
+    /// <summary>
+    /// Updates platform-specific color resources.
+    /// </summary>
+    /// <param name="application">An application instance whose resources are updated.</param>
+    private void UpdatePlatformColors(Application application)
+    {
 #if ANDROID
-            if (application.Resources.ContainsKey("colorPrimary"))
-                application.Resources["colorPrimary"] = Application.AccentColor;
-            else
-                application.Resources.Add("colorPrimary", Application.AccentColor);
+        _logger.LogTrace("Updating Android-specific colors");
 
-            if (application.Resources.ContainsKey("colorAccent"))
-                application.Resources["colorAccent"] = Application.AccentColor;
-            else
-                application.Resources.Add("colorAccent", Application.AccentColor);
-
-            if (application.Resources.ContainsKey("colorPrimaryDark"))
-                application.Resources["colorPrimaryDark"] = Application.AccentColor.AddLuminosity(-0.25f);
-            else
-                application.Resources.Add("colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
+        UpdateOrAddResource(application, "colorPrimary", Application.AccentColor);
+        UpdateOrAddResource(application, "colorAccent", Application.AccentColor);
+        UpdateOrAddResource(application, "colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
 #endif
 
 #if WINDOWS
-            if (application.Resources.ContainsKey("SystemAccentColor"))
-                application.Resources["SystemAccentColor"] = Application.AccentColor;
-            else
-                application.Resources.Add("SystemAccentColor", Application.AccentColor);
+        _logger.LogTrace("Updating Windows-specific colors");
 
-            if (application.Resources.ContainsKey("SystemColorControlAccentColor"))
-                application.Resources["SystemColorControlAccentColor"] = Application.AccentColor;
-            else
-                application.Resources.Add("SystemColorControlAccentColor", Application.AccentColor);
+        UpdateOrAddResource(application, "SystemAccentColor", Application.AccentColor);
+        UpdateOrAddResource(application, "SystemColorControlAccentColor", Application.AccentColor);
+        UpdateOrAddResource(application, "SystemAccentColorDark1", Application.AccentColor);
+        UpdateOrAddResource(application, "SystemAccentColorDark2", Application.AccentColor);
+        UpdateOrAddResource(application, "SystemAccentColorDark3", Application.AccentColor);
+        UpdateOrAddResource(application, "SystemAccentColorLight1", Application.AccentColor);
+        UpdateOrAddResource(application, "SystemAccentColorLight2", Application.AccentColor);
+        UpdateOrAddResource(application, "SystemAccentColorLight3", Application.AccentColor);
+
+        // Update Windows title bar colors
+        UpdateWindowsTitleBar();
 #endif
-        }
 
-        MessengerService.Default.Send(new StyleChangedMessage(Style));
+        _logger.LogTrace("Platform-specific colors updated");
+    }
+
+#if WINDOWS
+    /// <summary>
+    /// Updates Windows title bar colors to match the current accent color.
+    /// </summary>
+    private void UpdateWindowsTitleBar()
+    {
+        try
+        {
+            var window = Microsoft.Maui.Controls.Application.Current?.Windows?.FirstOrDefault()?.Handler?.PlatformView as Microsoft.UI.Xaml.Window;
+
+            if (window?.AppWindow?.TitleBar is null)
+            {
+                _logger.LogTrace("Windows title bar not available for customization");
+                return;
+            }
+
+            var primaryColor = Application.AccentColor;
+
+            // Convert MAUI Color to Windows.UI.Color (use global:: to avoid namespace conflict)
+            var winColor = global::Windows.UI.Color.FromArgb(
+                (byte)(primaryColor.Alpha * 255),
+                (byte)(primaryColor.Red * 255),
+                (byte)(primaryColor.Green * 255),
+                (byte)(primaryColor.Blue * 255)
+             );
+
+            var titleBar = window.AppWindow.TitleBar;
+
+            // Set background colors
+            titleBar.ButtonBackgroundColor = winColor;
+            titleBar.ButtonInactiveBackgroundColor = winColor;
+            titleBar.BackgroundColor = winColor;
+
+            // Set text colors to white for contrast
+            var whiteColor = global::Windows.UI.Color.FromArgb(255, 255, 255, 255);
+            titleBar.ForegroundColor = whiteColor;
+            titleBar.ButtonForegroundColor = whiteColor;
+            titleBar.ButtonHoverForegroundColor = whiteColor;
+            titleBar.ButtonPressedForegroundColor = whiteColor;
+
+            _logger.LogTrace("Windows title bar colors updated to accent color");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to update Windows title bar colors");
+        }
+    }
+#endif
+
+    /// <summary>
+    /// Updates an existing resource or adds it to the application resources when absent.
+    /// </summary>
+    /// <param name="application">An application instance whose resource dictionary is modified.</param>
+    /// <param name="key">A resource key.</param>
+    /// <param name="value">A resource value.</param>
+    private static void UpdateOrAddResource(Application application, string key, object value)
+    {
+        if (application.Resources.ContainsKey(key))
+            application.Resources[key] = value;
+        else
+            application.Resources.Add(key, value);
     }
 }

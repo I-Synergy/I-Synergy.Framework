@@ -7,8 +7,6 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using ColorHelper = ISynergy.Framework.UI.Helpers.ColorHelper;
-using Style = ISynergy.Framework.Core.Models.Style;
-
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -19,19 +17,14 @@ namespace ISynergy.Framework.UI.Services
     /// <seealso cref="IThemeService" />
     public class ThemeService : IThemeService
     {
-        private Style _style;
-
-        /// <summary>
-        /// Gets or sets the theme.
-        /// </summary>
-        /// <value>The theme.</value>
-        public Style Style { get => _style; }
+        private readonly Themes _theme;
+        private readonly string _color;
 
         /// <summary>
         /// Gets a value indicating whether this instance is light theme enabled.
         /// </summary>
         /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
-        public bool IsLightThemeEnabled => _style.Theme == Themes.Light;
+        public bool IsLightThemeEnabled => _theme == Themes.Light;
 
         /// <summary>
         /// Default constructor.
@@ -39,38 +32,35 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="settingsService"></param>
         public ThemeService(ISettingsService settingsService)
         {
-            _style = new Style
-            {
-                Theme = settingsService.LocalSettings.Theme,
-                Color = settingsService.LocalSettings.Color
-            };
+            _theme = settingsService.LocalSettings.Theme;
+            _color = settingsService.LocalSettings.Color;
 
-            SetStyle();
+            ApplyTheme();
         }
 
-        public void SetStyle()
+        public void ApplyTheme()
         {
             if (Window.Current.Content is FrameworkElement frameworkElement && !new AccessibilitySettings().HighContrast)
             {
-                var palette = FindColorPaletteResourcesForTheme(_style.Theme.ToString());
+                var palette = FindColorPaletteResourcesForTheme(_theme.ToString());
 
                 if (palette is not null)
                 {
-                    palette.Accent = ColorHelper.HexStringToColor(_style.Color);
+                    palette.Accent = ColorHelper.HexStringToColor(_color);
                 }
                 else
                 {
                     palette = new ColorPaletteResources();
-                    palette.Accent = ColorHelper.HexStringToColor(_style.Color);
+                    palette.Accent = ColorHelper.HexStringToColor(_color);
                     Application.Current.Resources.MergedDictionaries.Add(palette);
                 }
 
-                Application.Current.Resources["SystemAccentColor"] = _style.Color;
-                Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = _style.Color;
+                Application.Current.Resources["SystemAccentColor"] = _color;
+                Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = _color;
             }
 
             SetupTitlebar();
-            ReloadPageTheme(_style.Theme);
+            ReloadPageTheme(_theme);
         }
 
         private void ReloadPageTheme(Themes theme)
@@ -130,7 +120,7 @@ namespace ISynergy.Framework.UI.Services
                 {
                     titleBar.ButtonBackgroundColor = Colors.Transparent;
 
-                    if (_style.Theme == Themes.Dark)
+                    if (_theme == Themes.Dark)
                     {
                         titleBar.ButtonForegroundColor = Colors.White;
                         titleBar.ForegroundColor = Colors.White;

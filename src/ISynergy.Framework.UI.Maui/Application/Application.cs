@@ -11,6 +11,7 @@ using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Threading;
 
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
@@ -48,6 +49,11 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     private Task? Initialize { get; set; }
 
     private bool _isDisposing = false;
+
+    // Coordination flags for eventless startup flow
+    private volatile bool _uiReady; // First page loaded
+    private volatile bool _initialized; // App initialization finished
+    private int _loadedPublished; //0 = not sent,1 = sent
 
     /// <summary>
     /// Default constructor.
@@ -96,11 +102,6 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _logger.LogTrace("Setting up theming service.");
                 _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
 
-                if (_themeService.IsLightThemeEnabled)
-                    Application.Current.UserAppTheme = AppTheme.Light;
-                else
-                    Application.Current.UserAppTheme = AppTheme.Dark;
-
                 _logger.LogTrace("Setting up localization service.");
 
                 if (_settingsService.LocalSettings is not null)
@@ -108,6 +109,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
                 _logger.LogTrace("Starting initialization of application");
                 _commonServices.BusyService.StartBusy();
+
+                // Register for coordination messages on the instance messenger
+                _commonServices.MessengerService.Register<ApplicationUiReadyMessage>(this, OnUiReady);
+                _commonServices.MessengerService.Register<ApplicationInitializedMessage>(this, OnInitialized);
 
                 _logger.LogTrace("Setting up main page.");
                 Application.Current.MainPage = new NavigationPage(new EmptyView(_commonServices));
@@ -123,6 +128,34 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             // Last resort exception handling if logger isn't available
             Debug.WriteLine($"Fatal error in Application constructor: {ex}");
             throw;
+        }
+    }
+
+    private void OnUiReady(ApplicationUiReadyMessage _)
+    {
+        _uiReady = true;
+        TryPublishApplicationLoaded();
+    }
+
+    private void OnInitialized(ApplicationInitializedMessage _)
+    {
+        _initialized = true;
+        TryPublishApplicationLoaded();
+    }
+
+    private void TryPublishApplicationLoaded()
+    {
+        if (_uiReady && _initialized && Interlocked.CompareExchange(ref _loadedPublished,1,0) ==0)
+        {
+            try
+            {
+                _logger?.LogTrace("Publishing ApplicationLoadedMessage");
+                _commonServices?.MessengerService.Send(new ApplicationLoadedMessage());
+            }
+            finally
+            {
+                _commonServices?.BusyService.StopBusy();
+            }
         }
     }
 
@@ -194,19 +227,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _window = base.CreateWindow(activationState);
         _window.Title = InfoService.Default.ProductName ?? string.Empty;
 
-        _logger.LogTrace("Setting style.");
-        MessengerService.Default.Register<StyleChangedMessage>(this, m => StyleChanged(m));
-        _themeService.SetStyle();
+        _themeService.ApplyTheme();
 
         return _window;
     }
-
-    /// <summary>
-    /// Handles the style changed event.
-    /// </summary>
-    /// <param name="m"></param>
-    public virtual void StyleChanged(StyleChangedMessage m) =>
-        UpdateMauiHandlers(m.Content);
 
     /// <summary>
     /// Allows to add or update platform specific handlers.
@@ -235,7 +259,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         {
             _isDisposing = true;
 
-            MessengerService.Default.Unregister<StyleChangedMessage>(this);
+            // Unregister messenger callbacks
+            _commonServices?.MessengerService.Unregister<ApplicationUiReadyMessage>(this);
+            _commonServices?.MessengerService.Unregister<ApplicationInitializedMessage>(this);
 
             // Let ExceptionHandlerService clean up its own handlers
             if (_exceptionHandlerService is IDisposable disposableHandler)

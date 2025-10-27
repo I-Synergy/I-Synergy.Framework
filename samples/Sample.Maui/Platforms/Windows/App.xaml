@@ -5,22 +5,12 @@
     xmlns:maui="using:Microsoft.Maui"
     xmlns:local="using:Sample.WinUI">
 
-    <!--<maui:MauiWinUIApplication.Resources>
-        <DataTemplate x:Key="MauiAppTitleBarTemplate">
-            <Grid >
-                <Border
-                  Canvas.ZIndex="1"
-                  VerticalAlignment="Stretch"
-                  Background="Azure"
-                  Margin="0,0,0,0">
-                    <TextBlock
-                      Foreground="Red"
-                      VerticalAlignment="Center"
-                      HorizontalAlignment="Center"
-                      Text="Custom your  application title"
-                      FontWeight="Bold"/>
-                </Border>
-            </Grid>
-        </DataTemplate>
-    </maui:MauiWinUIApplication.Resources>-->
+    <maui:MauiWinUIApplication.Resources>
+        <!--<StaticResource x:Key="SystemAccentColorDark1" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorDark2" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorDark3" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorLight1" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorLight2" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorLight3" ResourceKey="Primary"/>-->
+    </maui:MauiWinUIApplication.Resources>
 </maui:MauiWinUIApplication>

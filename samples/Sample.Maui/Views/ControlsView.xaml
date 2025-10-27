@@ -8,8 +8,8 @@
     Title="ControlsView">
 
     <Grid>
-        <ScrollView Margin="10">
-            <VerticalStackLayout Spacing="10">
+        <ScrollView >
+            <VerticalStackLayout Margin="12" Spacing="12">
                 <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
 
                 <VerticalStackLayout Spacing="4">
@@ -43,7 +43,7 @@
         </ScrollView>
 
         <Grid IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-            <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.8"/>
+            <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}" Opacity="0.8"/>
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                 <Label FontSize="Default" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" TextColor="{DynamicResource Primary}" IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
                 <ActivityIndicator IsRunning="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Color="{DynamicResource Primary}" />

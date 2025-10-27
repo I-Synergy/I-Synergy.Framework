@@ -9,7 +9,7 @@
     Title="InfoView">
 
     <Grid>
-        <VerticalStackLayout Margin="10" Spacing="10">
+        <VerticalStackLayout Margin="12" Spacing="12">
             <Label Text="Company name" />
             <Entry Text="{Binding CompanyName}" IsReadOnly="True"/>
 

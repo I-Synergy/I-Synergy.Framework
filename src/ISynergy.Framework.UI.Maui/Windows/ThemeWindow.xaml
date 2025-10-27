@@ -16,51 +16,92 @@
     </c:Window.Resources>
 
     <Grid>
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
-        </Grid.GestureRecognizers>
         <ContentView
             ControlTemplate="{DynamicResource DefaultDialogTemplate}"
             HeightRequest="600"
             WidthRequest="400">
 
-            <VerticalStackLayout>
-                <Grid
-                    ColumnDefinitions="*,*"
-                    HorizontalOptions="EndAndExpand"
-                    WidthRequest="300">
+            <VerticalStackLayout Spacing="12">
+                <!-- Theme Selection (System, Light, Dark) -->
+                <Grid HorizontalOptions="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
                     <RadioButton
-                        Grid.Column="0"
-                        Content="{m:GetString Light}"
+                        Content="{m:GetString System}"
+                        Grid.Column="1"
+                        HorizontalOptions="Center"
                         GroupName="Theme"
-                        HorizontalOptions="EndAndExpand"
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Default}, Mode=TwoWay}" />
+                    <RadioButton
+                        Content="{m:GetString Light}"
+                        Grid.Column="2"
+                        HorizontalOptions="Center"
+                        GroupName="Theme"
                         IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Light}, Mode=TwoWay}" />
                     <RadioButton
-                        Grid.Column="1"
                         Content="{m:GetString Dark}"
+                        Grid.Column="3"
+                        HorizontalOptions="Center"
                         GroupName="Theme"
-                        HorizontalOptions="StartAndExpand"
                         IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Dark}, Mode=TwoWay}" />
                 </Grid>
 
+                <!-- Color Grid -->
                 <CollectionView
                     HorizontalOptions="Center"
                     ItemsSource="{Binding ThemeColors.Colors}"
                     SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay}"
                     SelectionMode="Single">
                     <CollectionView.ItemsLayout>
-                        <GridItemsLayout Orientation="Vertical" Span="6" />
+                        <GridItemsLayout Orientation="Vertical" Span="8" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="x:String">
-                            <Grid>
+                            <Grid Padding="2">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup Name="CommonStates">
+                                        <VisualState Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter TargetName="SelectionBorder" Property="Border.IsVisible" Value="False" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState Name="Selected">
+                                            <VisualState.Setters>
+                                                <Setter TargetName="SelectionBorder" Property="Border.IsVisible" Value="True" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <!-- Color Circle -->
                                 <Ellipse
                                     Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}"
-                                    HeightRequest="32"
+                                    HeightRequest="28"
                                     HorizontalOptions="Center"
                                     ToolTipProperties.Text="{Binding}"
                                     VerticalOptions="Center"
-                                    WidthRequest="32" />
+                                    WidthRequest="28" />
+
+                                <!-- Selection Border - Controlled by VisualStateManager -->
+                                <Border
+                                    x:Name="SelectionBorder"
+                                    Stroke="{AppThemeBinding Light={DynamicResource TintedGray900}, Dark={DynamicResource TintedGray100}}"
+                                    StrokeThickness="2"
+                                    BackgroundColor="Transparent"
+                                    HeightRequest="32"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    WidthRequest="32">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+                                </Border>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

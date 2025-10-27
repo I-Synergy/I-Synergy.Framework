@@ -48,13 +48,13 @@
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.13.0" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="4.13.0" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.13.0" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.94.0" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.77.1" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.95.0" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.78.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.0-rc.2.25504.7" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.0-rc.2.25504.7" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.251003001" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
@@ -74,6 +74,9 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.13.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.13.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.13.0-beta.1" />
+    <PackageVersion Include="Reqnroll" Version="3.2.0" />
+    <PackageVersion Include="Reqnroll.MSTest" Version="3.2.0" />
+    <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.2.0" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry" Version="5.16.1" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="5.16.1" />

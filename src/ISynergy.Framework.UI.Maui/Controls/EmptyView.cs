@@ -30,13 +30,9 @@ internal class EmptyView : ContentPage
 
         this.Content = stackLayout;
 
+        // Notify that the initial UI is ready. Consumers can coordinate with
+        // initialization to decide when to proceed.
         Loaded += (s, e) =>
-            MessengerService.Default.Register<ApplicationInitializedMessage>(this, (m) =>
-            {
-                MessengerService.Default.Send(new ApplicationLoadedMessage());
-            });
-
-        Unloaded += (s, e) =>
-            MessengerService.Default.Unregister<ApplicationInitializedMessage>(this);
+            commonServices.MessengerService.Send(new ApplicationUiReadyMessage());
     }
 }

@@ -120,6 +120,7 @@
     <File Path="nuget.config" />
     <File Path="README.md" />
     <File Path="Remove-UnusedPackages.ps1" />
+    <File Path="SOLUTION_SUMMARY.md" />
     <File Path="toc.yml" />
   </Folder>
   <Folder Name="/Tests/">

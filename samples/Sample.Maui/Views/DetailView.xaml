@@ -9,7 +9,7 @@
     Title="Detail View">
 
     <Grid>
-        <VerticalStackLayout Margin="10" Spacing="10">
+        <VerticalStackLayout Margin="12" Spacing="12">
             <Label Text="Id" />
             <Label Text="{Binding SelectedItem.Id}"/>
 
