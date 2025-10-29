@@ -6,33 +6,75 @@ namespace Sample.Models;
 /// <summary>
 /// Immutable user profile record.
 /// </summary>
-public sealed record class Profile(
-     Token Token,
-     Guid AccountId,
-     string AccountDescription,
-     string TimeZoneId,
-     string CountryCode,
-     Guid UserId,
-     string Username,
-     string Email,
-     List<string> Roles,
-     List<string> Modules,
-     DateTimeOffset LicenseExpration,
-     int LicenseUsers,
-     DateTime Expiration) : IProfile
+public sealed class Profile : IProfile
 {
     /// <summary>
-    /// Gets a value indicating whether this instance is authenticated.
-    /// Determined by token/session expiration.
+    /// Gets the account identifier.
     /// </summary>
-    public bool IsAuthenticated() =>
-        DateTime.UtcNow < Expiration;
+    /// <value>The account identifier.</value>
+    public Guid AccountId { get; set; }
+    /// <summary>
+    /// Gets the account description.
+    /// </summary>
+    /// <value>The account description.</value>
+    public required string Description { get; set; }
 
     /// <summary>
-    /// Determines whether the user is in the specified role (case-insensitive).
+    /// Gets the time zone identifier.
     /// </summary>
-    /// <param name="role">The role.</param>
-    /// <returns>true if the role is present; otherwise, false.</returns>
-    public bool IsInRole(string role) =>
-        !string.IsNullOrWhiteSpace(role) && Roles.Exists(r => string.Equals(r, role, StringComparison.OrdinalIgnoreCase));
+    /// <value>The time zone identifier.</value>
+    public required string TimeZoneId { get; set; }
+
+    /// <summary>
+    /// Gets the country code.
+    /// </summary>
+    public required string CountryCode { get; set; }
+
+    /// <summary>
+    /// Gets the culture code.
+    /// </summary>
+    /// <value>The culture code.</value>
+    public required string CultureCode { get; set; }
+
+    /// <summary>
+    /// Gets the user identifier.
+    /// </summary>
+    /// <value>The user identifier.</value>
+    public Guid UserId { get; set; }
+
+    /// <summary>
+    /// Gets the username.
+    /// </summary>
+    /// <value>The username.</value>
+    public required string Username { get; set; }
+
+    /// <summary>
+    /// Gets the email.
+    /// </summary>
+    /// <value>The email.</value>
+    public required string Email { get; set; }
+
+    /// <summary>
+    /// Gets the roles.
+    /// </summary>
+    /// <value>The roles.</value>
+    public List<string> Roles { get; set; } = new();
+
+    /// <summary>
+    /// Gets the modules.
+    /// </summary>
+    /// <value>The modules.</value>
+    public List<string> Modules { get; set; } = new();
+
+    /// <summary>
+    /// Gets the license expration.
+    /// </summary>
+    /// <value>The license expration.</value>
+    public DateTimeOffset Expration { get; set; } = DateTimeOffset.Now;
+
+    /// <summary>
+    /// Gets the token.
+    /// </summary>
+    /// <value>The token.</value>
+    public required Token Token { get; set; }
 }

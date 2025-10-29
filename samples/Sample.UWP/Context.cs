@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using Sample.Constants;
 
 namespace Sample;
@@ -86,7 +87,7 @@ public sealed class Context : IContext
         get
         {
             if (Profile is not null)
-                return Profile.IsAuthenticated();
+                return true;
 
             return false;
         }

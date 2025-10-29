@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using Sample.Constants;
 
 namespace Sample;
@@ -29,7 +30,7 @@ public class Context : IContext
     /// Gets or sets the current profile.
     /// </summary>
     /// <value>The current profile.</value>
-    public IProfile Profile { get; set; }
+    public IProfile? Profile { get; set; }
 
     /// <summary>
     /// Gets the current time zone.
@@ -86,7 +87,7 @@ public class Context : IContext
         get
         {
             if (Profile is not null)
-                return Profile.IsAuthenticated();
+                return true;
 
             return false;
         }

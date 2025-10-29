@@ -46,20 +46,21 @@ public class AuthenticationService : IAuthenticationService
     public Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
     {
         _scopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
-        _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
-            new Token(),
-            Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
-            "Test",
-            "Europe/Amsterdam",
-            "NL",
-            Guid.NewGuid(),
-            username,
-            "admin@demo.com",
-            ["Administrator"],
-            [],
-            DateTimeOffset.Now.AddDays(7),
-            1,
-            DateTime.Now.AddHours(24));
+        _scopedContextService.GetRequiredService<IContext>().Profile = new Profile
+        {
+            Token = new Token(),
+            AccountId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
+            Description = "Test",
+            TimeZoneId = "Europe/Amsterdam",
+            CountryCode = "NL",
+            CultureCode = "nl-NL",
+            UserId = Guid.NewGuid(),
+            Username = username,
+            Email = "admin@demo.com",
+            Roles = ["Administrator"],
+            Modules = [],
+            Expration = DateTimeOffset.Now.AddHours(24)
+        };
 
         if (remember)
         {
@@ -87,20 +88,23 @@ public class AuthenticationService : IAuthenticationService
     {
         if (token is not null)
         {
-            MessengerService.Default.Send(new AuthenticationChangedMessage(new Profile(
-                token,
-                Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
-                "Test",
-                "Europe/Amsterdam",
-                "NL",
-                Guid.NewGuid(),
-                "admin",
-                "admin@demo.com",
-                ["Administrator"],
-                [],
-                DateTimeOffset.Now.AddDays(7),
-                1,
-                DateTime.Now.AddHours(24))));
+            MessengerService.Default.Send(new AuthenticationChangedMessage(
+                new Profile
+                {
+                    Token = token,
+                    AccountId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
+                    Description = "Test",
+                    TimeZoneId = "Europe/Amsterdam",
+                    CountryCode = "NL",
+                    CultureCode = "nl-NL",
+                    UserId = Guid.NewGuid(),
+                    Username = "admin",
+                    Email = "admin@demo.com",
+                    Roles = ["Administrator"],
+                    Modules = [],
+                    Expration = DateTimeOffset.Now.AddHours(24)
+                }
+            ));
         }
         else
         {
