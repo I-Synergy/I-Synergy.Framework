@@ -20,7 +20,7 @@ public static class TelemetryPropertiesExtensions
 
             properties.Add(nameof(profile.AccountId), profile.AccountId.ToString());
             properties.Add(nameof(profile.Description), profile.Description);
-            properties.Add(nameof(profile.Expration), profile.Expration.ToString());
+            properties.Add(nameof(profile.Expiration), profile.Expiration.ToString());
 
             properties.Add(nameof(profile.CountryCode), profile.CountryCode);
             properties.Add(nameof(profile.CultureCode), profile.CultureCode);

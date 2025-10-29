@@ -59,7 +59,7 @@ public class AuthenticationService : IAuthenticationService
             Email = "admin@demo.com",
             Roles = ["Administrator"],
             Modules = [],
-            Expration = DateTimeOffset.Now.AddHours(24)
+            Expiration = DateTimeOffset.Now.AddHours(24)
         };
 
         if (remember)
@@ -102,7 +102,7 @@ public class AuthenticationService : IAuthenticationService
                     Email = "admin@demo.com",
                     Roles = ["Administrator"],
                     Modules = [],
-                    Expration = DateTimeOffset.Now.AddHours(24)
+                    Expiration = DateTimeOffset.Now.AddHours(24)
                 }
             ));
         }

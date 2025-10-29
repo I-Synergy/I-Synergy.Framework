@@ -19,7 +19,7 @@ public static class ContextExtensions
 
             Baggage.SetBaggage(nameof(profile.AccountId), profile.AccountId.ToString());
             Baggage.SetBaggage(nameof(profile.Description), profile.Description);
-            Baggage.SetBaggage(nameof(profile.Expration), profile.Expration.ToString());
+            Baggage.SetBaggage(nameof(profile.Expiration), profile.Expiration.ToString());
 
             Baggage.SetBaggage(nameof(profile.CountryCode), profile.CountryCode);
             Baggage.SetBaggage(nameof(profile.CultureCode), profile.CultureCode);

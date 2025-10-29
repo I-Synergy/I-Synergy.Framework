@@ -70,7 +70,7 @@ public sealed class Profile : IProfile
     /// Gets the license expration.
     /// </summary>
     /// <value>The license expration.</value>
-    public DateTimeOffset Expration { get; set; } = DateTimeOffset.Now;
+    public DateTimeOffset Expiration { get; set; } = DateTimeOffset.Now;
 
     /// <summary>
     /// Gets the token.
