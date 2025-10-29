@@ -77,6 +77,224 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
     </Style>
 
+    <Style x:Key="DefaultButtonStyle" TargetType="Button">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource PrimaryDarkText}}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
+
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="TextColor" Value="{DynamicResource White}" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.5" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource Tertiary}" />
+                            <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="DefaultRedButtonStyle"
+    BasedOn="{StaticResource DefaultButtonStyle}"
+    TargetType="Button">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource PrimaryDarkText}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource RedAccent}, Dark={DynamicResource RedAccent}}" />
+        <Setter Property="Shadow" Value="{DynamicResource DefaultRedButtonShadow}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="TextColor" Value="{DynamicResource White}" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource RedAccent}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.5" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource RedAccent}" />
+                            <Setter Property="Shadow" Value="{DynamicResource DefaultRedButtonShadow}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="DefaultGreenButtonStyle"
+    BasedOn="{StaticResource DefaultButtonStyle}"
+    TargetType="Button">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource PrimaryDarkText}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource GreenAccent}, Dark={DynamicResource GreenAccent}}" />
+        <Setter Property="Shadow" Value="{DynamicResource DefaultGreenButtonShadow}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="TextColor" Value="{DynamicResource White}" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource GreenAccent}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.5" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray950}, Dark={DynamicResource Gray200}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource GreenAccent}" />
+                            <Setter Property="Shadow" Value="{DynamicResource DefaultGreenButtonShadow}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button" />
+
+    <Style x:Key="DefaultImageButtonStyle" TargetType="ImageButton">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray600}}" />
+                            <Setter Property="Opacity" Value="0.5" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource Tertiary}" />
+                            <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="DefaultRedImageButtonStyle"
+    BasedOn="{StaticResource DefaultImageButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource RedAccent}, Dark={DynamicResource RedAccent}}" />
+        <Setter Property="Shadow" Value="{DynamicResource DefaultRedButtonShadow}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource RedAccent}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray600}}" />
+                            <Setter Property="Opacity" Value="0.5" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource RedAccent}" />
+                            <Setter Property="Shadow" Value="{DynamicResource DefaultRedButtonShadow}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="DefaultGreenImageButtonStyle"
+    BasedOn="{StaticResource DefaultImageButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource GreenAccent}, Dark={DynamicResource GreenAccent}}" />
+        <Setter Property="Shadow" Value="{DynamicResource DefaultGreenButtonShadow}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource GreenAccent}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray600}}" />
+                            <Setter Property="Opacity" Value="0.5" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="BackgroundColor" Value="{DynamicResource GreenAccent}" />
+                            <Setter Property="Shadow" Value="{DynamicResource DefaultGreenButtonShadow}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultImageButtonStyle}" TargetType="ImageButton" />
+
     <!-- Default Button Style: Uses lighter accent color for light theme, tinted gray for dark -->
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
@@ -579,32 +797,259 @@
 
     <DataTemplate x:Key="DefaultMenuItemStyle" x:DataType="models:NavigationItem">
         <Grid
-            Padding="10"
-            ColumnDefinitions="Auto,*"
-            ColumnSpacing="10">
+    Padding="10"
+    ColumnDefinitions="Auto,*"
+    ColumnSpacing="10">
             <Image
-                Grid.Column="0"
-                HeightRequest="18"
-                VerticalOptions="Center"
-                WidthRequest="18">
+        Grid.Column="0"
+        HeightRequest="18"
+        VerticalOptions="Center"
+        WidthRequest="18">
                 <Image.Source>
                     <FontImageSource
-                        FontFamily="FluentUI"
-                        Glyph="{Binding Icon}"
-                        Color="{DynamicResource Primary}" />
+                FontFamily="FluentUI"
+                Glyph="{Binding Icon}"
+                Color="{DynamicResource Primary}" />
                 </Image.Source>
             </Image>
             <Label
-                Grid.Column="1"
-                FontSize="Caption"
-                Text="{Binding Name}"
-                VerticalOptions="Center" />
+        Grid.Column="1"
+        FontSize="Caption"
+        Text="{Binding Name}"
+        VerticalOptions="Center" />
             <Grid.GestureRecognizers>
                 <TapGestureRecognizer
-                    Command="{Binding Command}"
-                    CommandParameter="{Binding CommandParameter}"
-                    NumberOfTapsRequired="1" />
+            Command="{Binding Command}"
+            CommandParameter="{Binding CommandParameter}"
+            NumberOfTapsRequired="1" />
             </Grid.GestureRecognizers>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="ShellMenuItemTemplate" x:DataType="models:NavigationItem">
+        <ViewCell>
+            <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand">
+                <Label
+                TextColor="{AppThemeBinding Light={DynamicResource Primary},
+                                            Dark={DynamicResource White}}"
+                VerticalOptions="FillAndExpand"
+                VerticalTextAlignment="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span
+                            CharacterSpacing="10"
+                            FontFamily="fontawesome"
+                            FontSize="{DynamicResource DefaultFontSize}"
+                            Text="{Binding Symbol}" />
+                            <Span FontSize="{DynamicResource DefaultFontSize}" Text="{Binding Name}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+        </ViewCell>
+    </DataTemplate>
+
+    <Style x:Key="DefaultLineStyle" TargetType="Line">
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
+        <Setter Property="StrokeThickness" Value="2" />
+    </Style>
+
+    <Style
+    x:Key="DefaultRoundImageButtonStyle"
+    BasedOn="{StaticResource DefaultImageButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="HeightRequest" Value="100" />
+        <Setter Property="WidthRequest" Value="100" />
+        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="VerticalOptions" Value="End" />
+        <Setter Property="CornerRadius" Value="50" />
+    </Style>
+
+    <Style
+    x:Key="DefaultSwipeButtonStyle"
+    BasedOn="{StaticResource DefaultRoundImageButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="WidthRequest" Value="60" />
+        <Setter Property="MaximumWidthRequest" Value="60" />
+        <Setter Property="MinimumWidthRequest" Value="60" />
+        <Setter Property="HeightRequest" Value="60" />
+        <Setter Property="CornerRadius" Value="30" />
+        <Setter Property="Scale" Value="0.75" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style
+    x:Key="EditSwipeButtonStyle"
+    BasedOn="{StaticResource DefaultSwipeButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="ToolTipProperties.Text" Value="{m:GetString Edit}" />
+        <Setter Property="Background" Value="Green" />
+        <Setter Property="Aspect" Value="Center" />
+        <Setter Property="Source">
+            <FontImageSource
+            FontFamily="FontAwesomeLight"
+            Glyph="{DynamicResource edit}"
+            Color="{DynamicResource White}" />
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="DeleteSwipeButtonStyle"
+    BasedOn="{StaticResource DefaultSwipeButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="ToolTipProperties.Text" Value="{m:GetString Delete}" />
+        <Setter Property="Background" Value="Red" />
+        <Setter Property="Aspect" Value="Center" />
+        <Setter Property="Source">
+            <FontImageSource
+            FontFamily="FontAwesomeLight"
+            Glyph="{DynamicResource delete}"
+            Color="{DynamicResource White}" />
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="AddButtonStyle"
+    BasedOn="{StaticResource DefaultRoundImageButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="ToolTipProperties.Text" Value="{m:GetString Add}" />
+        <Setter Property="HeightRequest" Value="64" />
+        <Setter Property="MinimumHeightRequest" Value="64" />
+        <Setter Property="MaximumHeightRequest" Value="64" />
+        <Setter Property="WidthRequest" Value="64" />
+        <Setter Property="MinimumWidthRequest" Value="64" />
+        <Setter Property="MaximumWidthRequest" Value="64" />
+        <Setter Property="CornerRadius" Value="32" />
+        <Setter Property="Padding" Value="18" />
+        <Setter Property="Aspect" Value="Center" />
+        <Setter Property="Source">
+            <FontImageSource
+            FontFamily="FontAwesomeRegular"
+            Glyph="{DynamicResource add}"
+            Color="{DynamicResource White}" />
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="AddToolButtonStyle"
+    BasedOn="{StaticResource DefaultRoundImageButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="HeightRequest" Value="32" />
+        <Setter Property="MinimumHeightRequest" Value="32" />
+        <Setter Property="MaximumHeightRequest" Value="32" />
+        <Setter Property="WidthRequest" Value="32" />
+        <Setter Property="MinimumWidthRequest" Value="32" />
+        <Setter Property="MaximumWidthRequest" Value="32" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Aspect" Value="Center" />
+        <Setter Property="Source">
+            <FontImageSource
+            FontFamily="FontAwesomeLight"
+            Glyph="{DynamicResource plus}"
+            Size="14"
+            Color="{DynamicResource White}" />
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="SearchToolButtonStyle"
+    BasedOn="{StaticResource DefaultRoundImageButtonStyle}"
+    TargetType="ImageButton">
+        <Setter Property="ToolTipProperties.Text" Value="{m:GetString Search}" />
+        <Setter Property="Background" Value="{DynamicResource Primary}" />
+        <Setter Property="Source">
+            <FontImageSource
+            FontFamily="FontAwesomeRegular"
+            Glyph="{DynamicResource search}"
+            Size="16"
+            Color="{DynamicResource White}" />
+        </Setter>
+        <Setter Property="Aspect" Value="Center" />
+        <Setter Property="HeightRequest" Value="32" />
+        <Setter Property="WidthRequest" Value="32" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Margin" Value="4,0" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style
+    x:Key="RefreshButtonStyle"
+    BasedOn="{StaticResource DefaultButtonStyle}"
+    TargetType="Button">
+        <Setter Property="MinimumWidthRequest" Value="64" />
+        <Setter Property="ToolTipProperties.Text" Value="{m:GetString Refresh}" />
+        <Setter Property="Text" Value="{OnPlatform WinUI={m:GetString Refresh}}" />
+        <Setter Property="ImageSource">
+            <FontImageSource
+            FontFamily="FontAwesomeRegular"
+            Glyph="{DynamicResource refresh}"
+            Size="16"
+            Color="{DynamicResource White}" />
+        </Setter>
+    </Style>
+
+
+    <!-- Default Button Style: Uses lighter accent color for light theme, tinted gray for dark -->
+    <Style TargetType="Button">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource TintedGray600}}" />
+        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray900}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Secondary}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ImageButton">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource TintedGray600}}" />
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
+        <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.5" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray900}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Secondary}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

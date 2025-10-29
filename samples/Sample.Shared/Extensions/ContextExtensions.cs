@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Validation;
 using OpenTelemetry;
 
 namespace Sample.Extensions;
+
 public static class ContextExtensions
 {
     public static void CreateBaggage(this IContext context, IInfoService infoService)
@@ -17,11 +18,11 @@ public static class ContextExtensions
             Baggage.SetBaggage(nameof(profile.UserId), profile.UserId.ToString());
 
             Baggage.SetBaggage(nameof(profile.AccountId), profile.AccountId.ToString());
-            Baggage.SetBaggage(nameof(profile.AccountDescription), profile.AccountDescription);
-            Baggage.SetBaggage(nameof(profile.LicenseExpration), profile.LicenseExpration.ToString());
-            Baggage.SetBaggage(nameof(profile.LicenseUsers), profile.LicenseUsers.ToString());
+            Baggage.SetBaggage(nameof(profile.Description), profile.Description);
+            Baggage.SetBaggage(nameof(profile.Expration), profile.Expration.ToString());
 
             Baggage.SetBaggage(nameof(profile.CountryCode), profile.CountryCode);
+            Baggage.SetBaggage(nameof(profile.CultureCode), profile.CultureCode);
             Baggage.SetBaggage(nameof(profile.TimeZoneId), profile.TimeZoneId);
         }
 
