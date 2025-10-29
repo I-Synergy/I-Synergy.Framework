@@ -17,6 +17,6 @@ public interface IProfile
     string Email { get; set; }
     List<string> Roles { get; set; }
     List<string> Modules { get; set; }
-    DateTimeOffset Expration { get; set; }
+    DateTimeOffset Expiration { get; set; }
     Token Token { get; set; }
 }

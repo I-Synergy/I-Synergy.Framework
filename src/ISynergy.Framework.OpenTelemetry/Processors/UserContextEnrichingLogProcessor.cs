@@ -27,7 +27,7 @@ public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
             attributes.Add(new KeyValuePair<string, object?>("CountryCode", context.Profile.CountryCode));
             attributes.Add(new KeyValuePair<string, object?>("CultureCode", context.Profile.CultureCode));
             attributes.Add(new KeyValuePair<string, object?>("TimeZoneId", context.Profile.TimeZoneId));
-            attributes.Add(new KeyValuePair<string, object?>("Expration", context.Profile.Expration));
+            attributes.Add(new KeyValuePair<string, object?>("Expration", context.Profile.Expiration));
             attributes.Add(new KeyValuePair<string, object?>("Modules", JsonSerializer.Serialize(context.Profile.Modules)));
             attributes.Add(new KeyValuePair<string, object?>("Roles", JsonSerializer.Serialize(context.Profile.Roles)));
         }
