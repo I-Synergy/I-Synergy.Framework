@@ -43,6 +43,14 @@ public sealed partial class App : Application
         try
         {
             InitializeComponent();
+
+            // Subscribe to authentication events after component initialization
+            var authenticationService = _commonServices?.ScopedContextService.GetRequiredService<IAuthenticationService>();
+            if (authenticationService != null)
+            {
+                authenticationService.AuthenticationSucceeded += async (s, args) => await OnAuthenticationSucceededAsync(args);
+                authenticationService.AuthenticationFailed += async (s, args) => await OnAuthenticationFailedAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -237,106 +245,105 @@ public sealed partial class App : Application
         }
     }
 
+    /// <summary>
+    /// Called when authentication changes (legacy support).
+    /// This is now handled via AuthenticationService events.
+    /// </summary>
     protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
-        // Suppress backstack change event during sign out
-        await _navigationService.CleanBackStackAsync(suppressEvent: !e.Value);
+        // This method is kept for base class compatibility but is no longer used
+        // Authentication state changes are now handled through AuthenticationService events
+        await Task.CompletedTask;
+    }
 
+    /// <summary>
+    /// Called when authentication succeeds (user has logged in).
+    /// </summary>
+    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e)
+    {
         try
         {
-            if (_commonServices?.BusyService != null)
-                _commonServices.BusyService.StartBusy();
-
-            if (e.Value)
+            _logger?.LogTrace("Authentication succeeded event received");
+            _logger?.LogTrace("Setting culture");
+            if (_settingsService?.GlobalSettings is not null &&
+                CultureInfo.DefaultThreadCurrentCulture != null &&
+                CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
             {
                 try
                 {
-                    _logger?.LogTrace("Setting culture");
-                    if (_settingsService?.GlobalSettings is not null &&
-                        CultureInfo.DefaultThreadCurrentCulture != null &&
-                        CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
-                    {
-                        try
-                        {
-                            culture.NumberFormat.CurrencySymbol = "€";
+                    culture.NumberFormat.CurrencySymbol = "€";
 
-                            culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
-                            culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
+                    culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
+                    culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
 
-                            culture.NumberFormat.CurrencyNegativePattern = 1;
-                            culture.NumberFormat.NumberNegativePattern = 1;
-                            culture.NumberFormat.PercentNegativePattern = 1;
+                    culture.NumberFormat.CurrencyNegativePattern = 1;
+                    culture.NumberFormat.NumberNegativePattern = 1;
+                    culture.NumberFormat.PercentNegativePattern = 1;
 
-                            CultureInfo.DefaultThreadCurrentCulture = culture;
-                            CultureInfo.DefaultThreadCurrentUICulture = culture;
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Error setting culture");
-                        }
-                    }
-
-                    _logger?.LogTrace("Navigate to Shell");
-                    if (_navigationService != null)
-                    {
-                        await _navigationService.NavigateModalAsync<IShellViewModel>();
-                    }
+                    CultureInfo.DefaultThreadCurrentCulture = culture;
+                    CultureInfo.DefaultThreadCurrentUICulture = culture;
                 }
                 catch (Exception ex)
                 {
-                    _logger?.LogError(ex, "Error handling authentication success");
-
-                    if (_dialogService != null)
-                    {
-                        try
-                        {
-                            await _dialogService.ShowErrorAsync("Error occurred after login. The application may need to be restarted.");
-                        }
-                        catch
-                        {
-                            // Can't show dialog
-                        }
-                    }
+                    _logger?.LogError(ex, "Error setting culture");
                 }
             }
-            else
+
+            _logger?.LogTrace("Navigate to Shell");
+            if (_navigationService != null)
             {
-                try
-                {
-                    Baggage.ClearBaggage();
-
-                    _logger?.LogTrace("Navigate to SignIn page");
-                    if (_navigationService != null)
-                    {
-                        await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Error handling authentication failure");
-
-                    if (_dialogService != null)
-                    {
-                        try
-                        {
-                            await _dialogService.ShowErrorAsync("Error occurred during logout. The application may need to be restarted.");
-                        }
-                        catch
-                        {
-                            // Can't show dialog
-                        }
-                    }
-                }
+                await _navigationService.NavigateModalAsync<IShellViewModel>();
             }
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Unhandled error in OnAuthenticationChanged");
+            _logger?.LogError(ex, "Error in OnAuthenticationSucceededAsync");
+
+            if (_dialogService != null)
+            {
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Error occurred after login. The application may need to be restarted.");
+                }
+                catch
+                {
+                    // Can't show dialog
+                }
+            }
         }
-        finally
+    }
+
+    /// <summary>
+    /// Called when authentication fails or user logs out.
+    /// </summary>
+    private async Task OnAuthenticationFailedAsync()
+    {
+        try
         {
-            if (_commonServices?.BusyService != null)
-                _commonServices.BusyService.StopBusy();
+            _logger?.LogTrace("Authentication failed event received");
+            Baggage.ClearBaggage();
+
+            _logger?.LogTrace("Navigate to SignIn page");
+            if (_navigationService != null)
+            {
+                await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error in OnAuthenticationFailedAsync");
+
+            if (_dialogService != null)
+            {
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Error occurred during logout. The application may need to be restarted.");
+                }
+                catch
+                {
+                    // Can't show dialog
+                }
+            }
         }
     }
 

@@ -21,7 +21,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools"/>
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" />
@@ -191,9 +191,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\ImageView\ImageView.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="Controls\SplashScreen\SplashScreen.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Controls\Menu\BaseMenu.xaml">

@@ -1,9 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
@@ -11,7 +11,6 @@ using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using System.Threading;
 
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
@@ -44,16 +43,13 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
+    protected LoadingView? _loadingView;
 
     private Microsoft.Maui.Controls.Window _window;
     private Task? Initialize { get; set; }
-
     private bool _isDisposing = false;
+    private IApplicationLifecycleService? _lifecycleService;
 
-    // Coordination flags for eventless startup flow
-    private volatile bool _uiReady; // First page loaded
-    private volatile bool _initialized; // App initialization finished
-    private int _loadedPublished; //0 = not sent,1 = sent
 
     /// <summary>
     /// Default constructor.
@@ -63,7 +59,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         try
         {
-            _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
+            _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
 
             // Get logger first for proper error tracking
             try
@@ -110,12 +106,22 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _logger.LogTrace("Starting initialization of application");
                 _commonServices.BusyService.StartBusy();
 
-                // Register for coordination messages on the instance messenger
-                _commonServices.MessengerService.Register<ApplicationUiReadyMessage>(this, OnUiReady);
-                _commonServices.MessengerService.Register<ApplicationInitializedMessage>(this, OnInitialized);
+                // Get or create the ApplicationLifecycleService for event-driven coordination
+                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+
+                // Subscribe to lifecycle events
+                _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
                 _logger.LogTrace("Setting up main page.");
-                Application.Current.MainPage = new NavigationPage(new EmptyView(_commonServices));
+
+                var mainPage = _splashScreenOptions.SplashScreenType switch
+                {
+                    SplashScreenTypes.Video => CreateLoadingViewPage(),
+                    SplashScreenTypes.Image => CreateLoadingViewPage(),
+                    _ => new NavigationPage(new EmptyView(_commonServices))
+                };
+
+                Application.Current.MainPage = mainPage;
             }
             catch (Exception ex)
             {
@@ -131,32 +137,13 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         }
     }
 
-    private void OnUiReady(ApplicationUiReadyMessage _)
+    /// <summary>
+    /// Called when the application is fully loaded (UI ready + initialization complete).
+    /// Override or subscribe to this event to handle post-load operations.
+    /// </summary>
+    protected virtual void OnApplicationLoaded(object? sender, EventArgs e)
     {
-        _uiReady = true;
-        TryPublishApplicationLoaded();
-    }
-
-    private void OnInitialized(ApplicationInitializedMessage _)
-    {
-        _initialized = true;
-        TryPublishApplicationLoaded();
-    }
-
-    private void TryPublishApplicationLoaded()
-    {
-        if (_uiReady && _initialized && Interlocked.CompareExchange(ref _loadedPublished,1,0) ==0)
-        {
-            try
-            {
-                _logger?.LogTrace("Publishing ApplicationLoadedMessage");
-                _commonServices?.MessengerService.Send(new ApplicationLoadedMessage());
-            }
-            finally
-            {
-                _commonServices?.BusyService.StopBusy();
-            }
-        }
+        _logger?.LogTrace("Application lifecycle event: ApplicationLoaded raised");
     }
 
     /// <summary>
@@ -165,6 +152,31 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected abstract void AuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
+
+    /// <summary>
+    /// Creates a loading view page and stores a reference for completion tracking.
+    /// </summary>
+    private NavigationPage CreateLoadingViewPage()
+    {
+        _loadingView = new LoadingView(_commonServices, _splashScreenOptions);
+        return new NavigationPage(_loadingView);
+    }
+
+    /// <summary>
+    /// Waits for the loading view to complete if it's a video splash screen.
+    /// For Image and None types, returns immediately.
+    /// </summary>
+    protected async Task WaitForLoadingViewAsync()
+    {
+        // Only wait for LoadingView if splash screen type is Video
+        if (_splashScreenOptions.SplashScreenType == SplashScreenTypes.Video && _loadingView is LoadingView loadingView)
+        {
+            _logger?.LogInformation("Waiting for video loading view to complete...");
+            await loadingView.WaitForLoadingCompleteAsync();
+            _logger?.LogInformation("Video loading view completed");
+        }
+        // For Image and None types, this returns immediately
+    }
 
     /// <summary>
     /// Initializes the application asynchronously.
@@ -259,9 +271,12 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         {
             _isDisposing = true;
 
-            // Unregister messenger callbacks
-            _commonServices?.MessengerService.Unregister<ApplicationUiReadyMessage>(this);
-            _commonServices?.MessengerService.Unregister<ApplicationInitializedMessage>(this);
+            // Unregister lifecycle event handlers
+            if (_lifecycleService is not null)
+            {
+                _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
+                _lifecycleService.Dispose();
+            }
 
             // Let ExceptionHandlerService clean up its own handlers
             if (_exceptionHandlerService is IDisposable disposableHandler)

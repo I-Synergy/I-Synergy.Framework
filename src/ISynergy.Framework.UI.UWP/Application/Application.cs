@@ -67,7 +67,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
     {
         try
         {
-            _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
+            _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
 
             // Create host and set up dependency injection
             IHost? host = null;

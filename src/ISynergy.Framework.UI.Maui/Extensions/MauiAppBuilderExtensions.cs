@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
@@ -101,6 +102,8 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
 
+        appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
+
         appBuilder.Services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
         appBuilder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
@@ -117,6 +120,7 @@ public static class MauiAppBuilderExtensions
         action.Invoke(appBuilder);
 
         appBuilder
+            .UseMauiCommunityToolkitMediaElement()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("segoeui.ttf", "SegoeUI");
