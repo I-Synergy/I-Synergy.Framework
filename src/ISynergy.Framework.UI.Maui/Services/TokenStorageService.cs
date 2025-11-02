@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Abstractions.Services;
 
 #if WINDOWS
@@ -55,19 +54,17 @@ public class TokenStorageService : ITokenStorageService
         return null;
     }
 
-    public async Task<SoftwareEnvironments?> GetEnvironmentAsync()
+    public async Task<string?> GetEnvironmentAsync()
     {
         var environmentString = await GetSecureValueAsync(EnvironmentKey);
+
         if (string.IsNullOrEmpty(environmentString))
             return null;
 
-        if (Enum.TryParse<SoftwareEnvironments>(environmentString, out var environment))
-            return environment;
-
-        return null;
+        return environmentString;
     }
 
-    public async Task SaveTokensAsync(string? accessToken, string? refreshToken, string? idToken, DateTimeOffset? expiry, SoftwareEnvironments? environment)
+    public async Task SaveTokensAsync(string? accessToken, string? refreshToken, string? idToken, DateTimeOffset? expiry, string environment)
     {
         try
         {
@@ -83,8 +80,8 @@ public class TokenStorageService : ITokenStorageService
             if (expiry.HasValue)
                 await SetSecureValueAsync(TokenExpiryKey, expiry.Value.ToString("O"));
 
-            if (environment.HasValue)
-                await SetSecureValueAsync(EnvironmentKey, environment.Value.ToString());
+            if (!string.IsNullOrEmpty(environment))
+                await SetSecureValueAsync(EnvironmentKey, environment);
 
 
             _logger.LogDebug("Tokens saved successfully");

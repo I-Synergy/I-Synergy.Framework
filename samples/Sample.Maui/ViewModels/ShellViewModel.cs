@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -84,8 +82,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         await InitializeFirstRunAsync();
     }
 
-    private void OnSoftwareEnvironmentChanged(object sender, ReturnEventArgs<SoftwareEnvironments> e) => SetClock();
-
     private void PopulateNavigationMenuItems()
     {
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
@@ -164,7 +160,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     private void SetClock()
     {
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>() is Context context)
-            base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({context.Environment.ToString()}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+            base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
     }
 
     /// <summary>

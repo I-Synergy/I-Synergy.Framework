@@ -143,16 +143,6 @@ public static class GenericConstants
     public const string Relations = "relations";
 
     /// <summary>
-    /// The username prefix test
-    /// </summary>
-    public const string UsernamePrefixTest = "test?";
-
-    /// <summary>
-    /// The username prefix local
-    /// </summary>
-    public const string UsernamePrefixLocal = "local?";
-
-    /// <summary>
     /// The temporary URL
     /// </summary>
     public const string TemporaryUrl = @"temp:///";

@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -7,9 +8,11 @@ using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Globalization;
 
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
@@ -108,6 +111,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 // Get or create the ApplicationLifecycleService for event-driven coordination
                 _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
+
+                // Initialize environment variables from configuration and command-line parameters
+                InitializeEnvironmentVariables();
             }
             catch (Exception ex)
             {
@@ -228,6 +234,78 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _themeService.ApplyTheme();
 
         return window;
+    }
+
+    /// <summary>
+    /// Initializes environment variables from appsettings.json with command-line parameter override.
+    /// </summary>
+    protected virtual void InitializeEnvironmentVariables()
+    {
+        try
+        {
+            _logger?.LogTrace("Initializing environment variables");
+
+            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+
+            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment));
+
+            if (!string.IsNullOrEmpty(environmentFromConfig))
+            {
+                var normalizedEnvironment = NormalizeEnvironmentValue(environmentFromConfig);
+                Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                _logger?.LogTrace("Environment variable set from configuration: {Environment}", normalizedEnvironment);
+            }
+
+            // Handle command-line parameters which override configuration
+            HandleCommandArguments();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error during environment variable initialization");
+        }
+    }
+
+    /// <summary>
+    /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
+    /// </summary>
+    private string NormalizeEnvironmentValue(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return value;
+
+        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Handles environment and country parameters from command line arguments.
+    /// Command-line parameters override configuration values.
+    /// </summary>
+    protected virtual void HandleCommandArguments()
+    {
+        var commandLineArgs = Environment.GetCommandLineArgs();
+
+        foreach (var arg in commandLineArgs.EnsureNotNull())
+        {
+            if (string.IsNullOrEmpty(arg))
+                continue;
+
+            // Look for query string format arguments (e.g., "?environment=development&country=nl")
+            if (arg.Contains("?"))
+            {
+                var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
+
+                if (!string.IsNullOrEmpty(environmentValue))
+                {
+                    var normalizedEnvironment = NormalizeEnvironmentValue(environmentValue);
+                    Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                    _logger?.LogTrace("Environment variable overridden from command-line: {Environment}", normalizedEnvironment);
+                }
+            }
+            else
+            {
+                _logger?.LogTrace("Command line argument: {Argument}", arg);
+            }
+        }
     }
 
     /// <summary>

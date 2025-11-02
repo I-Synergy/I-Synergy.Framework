@@ -1,8 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -236,7 +234,7 @@ public class SignUpViewModel : ViewModel
 
     private Task ValidateMailAsync()
     {
-        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail.GetNormalizedCredentials(_commonServices.ScopedContextService.GetRequiredService<IContext>())))
+        if (!string.IsNullOrEmpty(Mail) && NetworkUtility.IsValidEMail(Mail))
         {
             ArePickersAvailable = true;
 
@@ -286,27 +284,6 @@ public class SignUpViewModel : ViewModel
     {
         if (Validate())
         {
-            string emailaddress;
-
-            // if email starts with "test:" or "local:"
-            // remove this prefix and set environment to test.
-            if (Mail.StartsWith(GenericConstants.UsernamePrefixTest, StringComparison.InvariantCultureIgnoreCase))
-            {
-                emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixTest, "");
-                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
-            }
-            // remove this prefix and set environment to local.
-            else if (Mail.StartsWith(GenericConstants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
-            {
-                emailaddress = Mail.ToLower().Replace(GenericConstants.UsernamePrefixLocal, "");
-                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Local;
-            }
-            else
-            {
-                emailaddress = Mail;
-                _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Production;
-            }
-
             if (!HasErrors &&
                 PasswordCheck is not null && Password is not null &&
                 PasswordCheck.Equals(Password) &&
@@ -316,7 +293,7 @@ public class SignUpViewModel : ViewModel
                 {
                     ApplicationId = 1,
                     LicenseName = Name,
-                    Email = emailaddress,
+                    Email = Mail,
                     Password = Password,
                     Modules = Modules,
                     UsersAllowed = 1,

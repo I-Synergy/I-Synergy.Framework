@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
-using Sample.Constants;
 
 namespace Sample;
 
@@ -16,16 +14,6 @@ namespace Sample;
 /// <seealso cref="IContext" />
 public class Context : IContext
 {
-    private SoftwareEnvironments _environment;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Context" /> class.
-    /// </summary>
-    public Context()
-    {
-        Environment = SoftwareEnvironments.Production;
-    }
-
     /// <summary>
     /// Gets or sets the current profile.
     /// </summary>
@@ -44,37 +32,6 @@ public class Context : IContext
                 return TimeZoneInfo.FindSystemTimeZoneById(Profile.TimeZoneId);
 
             return TimeZoneInfo.Local;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the environment.
-    /// </summary>
-    /// <value>The environment.</value>
-    public SoftwareEnvironments Environment
-    {
-        get => _environment;
-        set
-        {
-            _environment = value;
-
-            switch (_environment)
-            {
-                case SoftwareEnvironments.Local:
-                case SoftwareEnvironments.Test:
-                default:
-                    if (Properties.ContainsKey(Endpoints.ApiEndpoint))
-                        Properties[Endpoints.ApiEndpoint] = @"https://localhost:5000";
-                    else
-                        Properties.Add(Endpoints.ApiEndpoint, @"https://localhost:5000");
-
-                    if (Properties.ContainsKey(Endpoints.IdentityEndpoint))
-                        Properties[Endpoints.IdentityEndpoint] = @"https://localhost:5000";
-                    else
-                        Properties.Add(Endpoints.IdentityEndpoint, @"https://localhost:5000");
-
-                    break;
-            }
         }
     }
 

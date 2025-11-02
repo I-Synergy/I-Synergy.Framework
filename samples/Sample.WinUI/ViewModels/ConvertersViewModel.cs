@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
@@ -67,39 +66,8 @@ public class ConvertersViewModel : ViewModelNavigation<object>
         _dialogService = dialogService;
         _navigationService = navigationService;
 
-        SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
         NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
         NavigateToPivotCommand = new AsyncRelayCommand<TestItem>(NavigateToPivotAsync);
-    }
-
-    /// <summary>
-    /// Gets or sets the SoftwareEnvironments property value.
-    /// </summary>
-    /// <value>The software environments.</value>
-    public SoftwareEnvironments SoftwareEnvironments
-    {
-        get { return GetValue<SoftwareEnvironments>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the SelectedSoftwareEnvironment property value.
-    /// </summary>
-    /// <value>The selected software environment.</value>
-    public int SelectedSoftwareEnvironment
-    {
-        get { return GetValue<int>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the SoftwareEnvironments property value by enum value.
-    /// </summary>
-    /// <value>The software environments.</value>
-    public SoftwareEnvironments SelectedSoftwareEnvironmentByEnum
-    {
-        get { return GetValue<SoftwareEnvironments>(); }
-        set { SetValue(value); }
     }
 
     /// <summary>
