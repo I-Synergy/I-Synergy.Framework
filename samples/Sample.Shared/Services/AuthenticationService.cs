@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
@@ -82,9 +81,6 @@ public class AuthenticationService : IAuthenticationService
         CancellationToken cancellationToken = default)
     {
         _logger.LogTrace("Demo authentication attempt for user: {Username}", username);
-
-        // Set environment
-        _scopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
 
         // Create profile with demo data
         var profile = new Profile

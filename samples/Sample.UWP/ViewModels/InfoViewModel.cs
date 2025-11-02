@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -80,7 +79,6 @@ public class InfoViewModel : ViewModelNavigation<object>
         ProductName = _commonServices.InfoService.ProductName;
         Version = _commonServices.InfoService.ProductVersion;
         Copyrights = _commonServices.InfoService.Copyrights;
-
-        Startup = _commonServices.ScopedContextService.GetRequiredService<IContext>().Environment.ToString();
+        Startup = Environment.GetEnvironmentVariable(nameof(Environment)) ?? "";
     }
 }

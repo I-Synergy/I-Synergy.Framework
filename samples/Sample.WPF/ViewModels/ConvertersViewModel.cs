@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -53,27 +52,5 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     public ConvertersViewModel(ICommonServices commonServices, ILogger<ConvertersViewModel> logger)
         : base(commonServices, logger)
     {
-        SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
     }
-
-    /// <summary>
-    /// Gets or sets the SoftwareEnvironments property value.
-    /// </summary>
-    /// <value>The software environments.</value>
-    public SoftwareEnvironments SoftwareEnvironments
-    {
-        get { return GetValue<SoftwareEnvironments>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the SelectedSoftwareEnvironment property value.
-    /// </summary>
-    /// <value>The selected software environment.</value>
-    public int SelectedSoftwareEnvironment
-    {
-        get { return GetValue<int>(); }
-        set { SetValue(value); }
-    }
-
 }

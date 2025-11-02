@@ -2,7 +2,7 @@
   "profiles": {
     "Sample.Maui (Packaged)": {
       "commandName": "MsixPackage",
-      "commandLineArgs": "?environment=local&country=nl"
+      "commandLineArgs": "?environment=development&country=nl"
     }
   }
 }

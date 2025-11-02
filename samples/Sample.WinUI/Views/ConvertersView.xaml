@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical" Spacing="4">
-        <StackPanel Orientation="Horizontal" Spacing="4">
+        <!--<StackPanel Orientation="Horizontal" Spacing="4">
             <ComboBox
                 DisplayMemberPath="Value"
                 Header="ComboBox with EnumToArrayConverter"
@@ -39,7 +39,7 @@
                 SelectedValue="{Binding SelectedSoftwareEnvironmentByEnum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock VerticalAlignment="Bottom" Text="{Binding SelectedSoftwareEnvironmentByEnum, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}" />
-        </StackPanel>
+        </StackPanel>-->
 
         <NumberBox
             HorizontalAlignment="Left"

@@ -702,4 +702,38 @@ public static class StringExtensions
 
         return path;
     }
+
+    /// <summary>
+    /// Extracts environment or country parameters from query string format (e.g., "?environment=development").
+    /// </summary>
+    public static string? ExtractQueryParameter(this string queryString, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(queryString))
+            return null;
+
+        try
+        {
+            // Remove leading '?' if present
+            var cleanQuery = queryString.TrimStart('?');
+
+            var parameters = cleanQuery.Split('&', StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var parameter in parameters)
+            {
+                var keyValue = parameter.Split('=', StringSplitOptions.RemoveEmptyEntries);
+
+                if (keyValue.Length == 2
+                    && keyValue[0].Equals(parameterName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return Uri.UnescapeDataString(keyValue[1]);
+                }
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }
