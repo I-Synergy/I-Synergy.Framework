@@ -472,4 +472,7 @@ Réessayez ou mettez à jour l’application via le Microsoft Store.</value>
     <value>Quelque chose a mal tourné.
 Contactez l’assistance.</value>
   </data>
+	<data name="System" xml:space="preserve">
+		<value>Système</value>
+	</data>
 </root>

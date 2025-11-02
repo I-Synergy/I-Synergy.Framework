@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Services;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Locators;
 
@@ -36,9 +37,24 @@ public class ServiceLocator
         _default = new ServiceLocator(serviceProvider);
     }
 
-    public TService GetRequiredService<TService>() where TService : notnull => _scopedContextService.GetRequiredService<TService>();
+#pragma warning disable CS8603
+    [return: NotNull]
+    public TService GetRequiredService<TService>()
+        where TService : notnull
+    {
+        return _scopedContextService.GetRequiredService<TService>()
+            ?? throw new InvalidOperationException($"Service of type {typeof(TService).Name} could not be resolved.");
+    }
+#pragma warning restore CS8603
 
-    public object GetRequiredService(Type serviceType) => _scopedContextService.GetRequiredService(serviceType);
+#pragma warning disable CS8603
+    [return: NotNull]
+    public object GetRequiredService(Type serviceType)
+    {
+        return _scopedContextService.GetRequiredService(serviceType)
+            ?? throw new InvalidOperationException($"Service of type {serviceType.Name} could not be resolved.");
+    }
+#pragma warning restore CS8603
 
     public void CreateNewScope() => _scopedContextService.CreateNewScope();
 

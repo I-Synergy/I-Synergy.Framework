@@ -472,4 +472,7 @@ Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
     <value>Er ging iets mis.
 Neem contact op met ondersteuning.</value>
   </data>
+	<data name="System" xml:space="preserve">
+		<value>Systeem</value>
+	</data>
 </root>

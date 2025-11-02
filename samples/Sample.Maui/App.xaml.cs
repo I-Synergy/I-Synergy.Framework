@@ -1,7 +1,5 @@
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Messages;
-using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.ViewModels;
@@ -11,8 +9,6 @@ namespace Sample;
 
 public partial class App : Application
 {
-    private IApplicationLifecycleService? _lifecycleService;
-
     public App()
         : base()
     //: base(new SplashScreenOptions(SplashScreenTypes.Video, "gta.mp4"))
@@ -20,12 +16,6 @@ public partial class App : Application
         try
         {
             InitializeComponent();
-
-            // Get the lifecycle service for application startup coordination
-            _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
-
-            // Subscribe to the ApplicationLoaded event
-            _lifecycleService.ApplicationLoaded += async (s, e) => await ApplicationLoadedAsync();
 
             // Get the authentication service for authentication state changes
             var authenticationService = _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>();
@@ -54,18 +44,6 @@ public partial class App : Application
         {
             _logger?.LogCritical(ex, "Error in App constructor");
         }
-    }
-
-    /// <summary>
-    /// Called when authentication changes (legacy support).
-    /// This is now handled via AuthenticationService events.
-    /// </summary>
-    protected override async void AuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
-    {
-        // This method is kept for base class compatibility but is no longer used
-        // Authentication state changes are now handled through AuthenticationService events
-        // (OnAuthenticationSucceededAsync and OnAuthenticationFailedAsync)
-        await Task.CompletedTask;
     }
 
     /// <summary>
@@ -146,8 +124,10 @@ public partial class App : Application
     /// This replaces the legacy ApplicationLoadedMessage handler.
     /// Handle post-load navigation, auto-login, and other startup operations here.
     /// </summary>
-    private async Task ApplicationLoadedAsync()
+    protected override async void OnApplicationLoaded(object? sender, EventArgs e)
     {
+        base.OnApplicationLoaded(sender, e);
+
         try
         {
             _commonServices.BusyService.StartBusy();

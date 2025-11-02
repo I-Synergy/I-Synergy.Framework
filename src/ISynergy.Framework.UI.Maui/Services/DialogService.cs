@@ -43,7 +43,7 @@ public class DialogService : IDialogService
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "") =>
+    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "") =>
         ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -52,7 +52,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "") =>
+    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -61,7 +61,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "") =>
+    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -70,7 +70,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "") =>
+    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -108,7 +108,7 @@ public class DialogService : IDialogService
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
+    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
     {
         // Input validation
         if (string.IsNullOrWhiteSpace(message))
@@ -137,7 +137,12 @@ public class DialogService : IDialogService
         await _dialogSemaphore.WaitAsync();
         try
         {
-            return await ShowMessageWithRetryAsync(message, title, buttons);
+
+
+            return await ShowMessageWithRetryAsync(
+                message,
+                title,
+                buttons);
         }
         finally
         {
@@ -194,16 +199,16 @@ public class DialogService : IDialogService
     {
         try
         {
-            // Check Application.Current
-            if (Application.Current == null)
-            {
-                _logger?.LogError("Application.Current is null");
-                return false;
-            }
+            // Additional safety check right before showing dialog
+            if (Application.Current == null ||
+                Application.Current?.Windows.Count == 0 ||
+                Application.Current?.Windows[0] == null ||
+                Application.Current?.Windows[0].Page == null)
+                throw new InvalidOperationException("Main page not available for dialog display");
 
             // Check MainPage with timeout
             var timeoutTask = Task.Delay(5000);
-            var checkTask = Task.Run(() => Application.Current.MainPage != null);
+            var checkTask = Task.Run(() => Application.Current?.Windows[0]?.Page != null);
 
             var completedTask = await Task.WhenAny(checkTask, timeoutTask);
             if (completedTask == timeoutTask)
@@ -231,44 +236,50 @@ public class DialogService : IDialogService
     private async Task<MessageBoxResult> ShowMessageInternalAsync(string message, string title, MessageBoxButtons buttons)
     {
         // Additional safety check right before showing dialog
-        if (Application.Current?.MainPage == null)
-        {
-            throw new InvalidOperationException("MainPage not available for dialog display");
-        }
+        if (Application.Current == null ||
+            Application.Current?.Windows.Count == 0 ||
+            Application.Current?.Windows[0] == null ||
+            Application.Current?.Windows[0].Page == null)
+            throw new InvalidOperationException("Main page not available for dialog display");
 
         // Add timeout to dialog operations
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
         try
         {
-            switch (buttons)
+            if (Application.Current?.Windows[0].Page is Page page)
             {
-                case MessageBoxButtons.OKCancel:
-                    var okCancelResult = await Application.Current.MainPage.DisplayAlert(
-                        title,
-                        message,
-                        _languageService.GetString("Ok"),
-                        _languageService.GetString("Cancel"));
+                switch (buttons)
+                {
+                    case MessageBoxButtons.OKCancel:
+                        var okCancelResult = await page.DisplayAlertAsync(
+                            title,
+                            message,
+                            _languageService.GetString("Ok"),
+                            _languageService.GetString("Cancel"));
 
-                    return okCancelResult ? MessageBoxResult.OK : MessageBoxResult.Cancel;
+                        return okCancelResult ? MessageBoxResult.OK : MessageBoxResult.Cancel;
 
-                case MessageBoxButtons.YesNo:
-                    var yesNoResult = await Application.Current.MainPage.DisplayAlert(
-                        title,
-                        message,
-                        _languageService.GetString("Yes"),
-                        _languageService.GetString("No"));
+                    case MessageBoxButtons.YesNo:
+                        var yesNoResult = await page.DisplayAlertAsync(
+                            title,
+                            message,
+                            _languageService.GetString("Yes"),
+                            _languageService.GetString("No"));
 
-                    return yesNoResult ? MessageBoxResult.Yes : MessageBoxResult.No;
+                        return yesNoResult ? MessageBoxResult.Yes : MessageBoxResult.No;
 
-                default:
-                    await Application.Current.MainPage.DisplayAlert(
-                        title,
-                        message,
-                        _languageService.GetString("Ok"));
+                    default:
+                        await page.DisplayAlertAsync(
+                            title ?? "",
+                            message,
+                            _languageService.GetString("Ok"));
 
-                    return MessageBoxResult.OK;
+                        return MessageBoxResult.OK;
+                }
             }
+
+            return MessageBoxResult.Cancel;
         }
         catch (OperationCanceledException) when (cts.Token.IsCancellationRequested)
         {
@@ -395,25 +406,22 @@ public class DialogService : IDialogService
         return true;
     }
 
-    private async Task<bool> TryEventLogNotificationAsync(string message, string title)
+    private Task<bool> TryEventLogNotificationAsync(string message, string title)
     {
 #if WINDOWS
         try
         {
-            await Task.Run(() =>
-            {
-                using var eventLog = new System.Diagnostics.EventLog("Application");
-                eventLog.Source = "MAUI DialogService";
-                eventLog.WriteEntry($"{title}: {message}", System.Diagnostics.EventLogEntryType.Warning);
-            });
-            return true;
+            using var eventLog = new System.Diagnostics.EventLog("Application");
+            eventLog.Source = "MAUI DialogService";
+            eventLog.WriteEntry($"{title}: {message}", System.Diagnostics.EventLogEntryType.Warning);
+            return Task.FromResult(true);
         }
         catch
         {
-            return false;
+            return Task.FromResult(false);
         }
 #else
-        return false;
+        return Task.FromResult(false);
 #endif
     }
 
@@ -553,16 +561,16 @@ public class DialogService : IDialogService
 
             window.ViewModel = viewmodel;
 
-            async void ViewModelClosedHandler(object sender, EventArgs e)
+            async void ViewModelClosedHandler(object? sender, EventArgs e)
             {
                 try
                 {
                     if (viewModelRef != null)
                         viewModelRef.Closed -= ViewModelClosedHandler;
 
-                    if (Application.Current?.MainPage?.Navigation != null)
+                    if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
                     {
-                        await Application.Current.MainPage.Navigation.PopModalAsync();
+                        await navigation.PopModalAsync();
                     }
                     else
                     {
@@ -585,9 +593,9 @@ public class DialogService : IDialogService
 
             await viewmodel.InitializeAsync();
 
-            if (Application.Current?.MainPage?.Navigation != null)
+            if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
             {
-                await Application.Current.MainPage.Navigation.PushModalAsync(window, true);
+                await navigation.PushModalAsync(window, true);
             }
             else
             {

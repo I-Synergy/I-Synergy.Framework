@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -33,22 +32,22 @@ namespace ISynergy.Framework.UI;
 
 public abstract class Application : Microsoft.Maui.Controls.Application, IDisposable
 {
-    protected readonly ICommonServices? _commonServices;
+    protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
     protected readonly INavigationService _navigationService;
-    protected readonly ISettingsService? _settingsService;
-    protected readonly IExceptionHandlerService? _exceptionHandlerService;
+    protected readonly ISettingsService _settingsService;
+    protected readonly IExceptionHandlerService _exceptionHandlerService;
+    protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly IThemeService _themeService;
-    protected readonly ILogger<Application>? _logger;
+    protected readonly ILogger<Application> _logger;
 
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
     protected LoadingView? _loadingView;
 
-    private Microsoft.Maui.Controls.Window _window;
     private Task? Initialize { get; set; }
     private bool _isDisposing = false;
-    private IApplicationLifecycleService? _lifecycleService;
+
 
 
     /// <summary>
@@ -108,20 +107,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
                 // Get or create the ApplicationLifecycleService for event-driven coordination
                 _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
-
-                // Subscribe to lifecycle events
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
-
-                _logger.LogTrace("Setting up main page.");
-
-                var mainPage = _splashScreenOptions.SplashScreenType switch
-                {
-                    SplashScreenTypes.Video => CreateLoadingViewPage(),
-                    SplashScreenTypes.Image => CreateLoadingViewPage(),
-                    _ => new NavigationPage(new EmptyView(_commonServices))
-                };
-
-                Application.Current.MainPage = mainPage;
             }
             catch (Exception ex)
             {
@@ -145,13 +131,6 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         _logger?.LogTrace("Application lifecycle event: ApplicationLoaded raised");
     }
-
-    /// <summary>
-    /// Handles the authentication changed event.   
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected abstract void AuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
 
     /// <summary>
     /// Creates a loading view page and stores a reference for completion tracking.
@@ -236,12 +215,19 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
     protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState? activationState)
     {
-        _window = base.CreateWindow(activationState);
-        _window.Title = InfoService.Default.ProductName ?? string.Empty;
+        var mainPage = _splashScreenOptions.SplashScreenType switch
+        {
+            SplashScreenTypes.Video => CreateLoadingViewPage(),
+            SplashScreenTypes.Image => CreateLoadingViewPage(),
+            _ => new NavigationPage(new EmptyView(_commonServices))
+        };
+
+        var window = new Microsoft.Maui.Controls.Window(mainPage);
+        window.Title = InfoService.Default.ProductName ?? string.Empty;
 
         _themeService.ApplyTheme();
 
-        return _window;
+        return window;
     }
 
     /// <summary>
