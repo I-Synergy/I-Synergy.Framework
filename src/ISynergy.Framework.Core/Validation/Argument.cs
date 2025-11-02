@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Core.Validation;
 
+#pragma warning disable CS8603
+
 /// <summary>
 /// Class Argument.
 /// </summary>

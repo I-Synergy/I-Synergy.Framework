@@ -472,4 +472,7 @@ Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsof
     <value>Irgendetwas ist schief gelaufen.
 Wenden Sie sich an den Support.</value>
   </data>
+	<data name="System" xml:space="preserve">
+		<value>System</value>
+	</data>
 </root>
