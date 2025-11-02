@@ -29,7 +29,7 @@ public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
     private Func<DispatcherQueue, Task>[]? _tasks;
 
     public ICommonServices CommonServices => _commonServices;
-    public SplashScreenOptions Configuration => _splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
+    public SplashScreenOptions Configuration => _splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
 
     /// <summary>
     /// Occurs when [cancelled].

@@ -1,80 +1,53 @@
-﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Messages;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry;
-using Sample.Abstractions;
-using Sample.Models;
+using Sample.Abstractions.Services;
 using Sample.ViewModels;
-using System.Globalization;
 using Application = ISynergy.Framework.UI.Application;
 
 namespace Sample;
 
 public partial class App : Application
 {
+    private IApplicationLifecycleService? _lifecycleService;
+
     public App()
         : base()
+    //: base(new SplashScreenOptions(SplashScreenTypes.Video, "gta.mp4"))
     {
         try
         {
             InitializeComponent();
 
-            _commonServices.MessengerService.Register<ApplicationLoadedMessage>(this, async (m) => await ApplicationLoadedAsync(m));
-            _commonServices.MessengerService.Register<AuthenticationChangedMessage>(this, async m => await AuthenticationChangedAsync(m));
+            // Get the lifecycle service for application startup coordination
+            _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
 
+            // Subscribe to the ApplicationLoaded event
+            _lifecycleService.ApplicationLoaded += async (s, e) => await ApplicationLoadedAsync();
+
+            // Get the authentication service for authentication state changes
+            var authenticationService = _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>();
+
+            // Subscribe to authentication events
+            authenticationService.AuthenticationSucceeded += async (s, e) => await OnAuthenticationSucceededAsync(e);
+            authenticationService.AuthenticationFailed += async (s, e) => await OnAuthenticationFailedAsync();
+
+            // Dialog message handlers (unchanged)
             _commonServices.MessengerService.Register<ShowInformationMessage>(this, async m =>
             {
                 var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
-
-                //if (dialogResult is not null)
-                //{
-                //    var result = await dialogResult.Result;
-
-                //    //if (result.Cancelled)
-                //    //    return MessageBoxResult.Cancel;
-
-                //    //return MessageBoxResult.OK;
-                //}
-
-                //return MessageBoxResult.None;
             });
 
             _commonServices.MessengerService.Register<ShowWarningMessage>(this, async m =>
             {
                 var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
-
-                //if (dialogResult is not null)
-                //{
-                //    var result = await dialogResult.Result;
-
-                //    //if (result.Cancelled)
-                //    //    return MessageBoxResult.Cancel;
-
-                //    //return MessageBoxResult.OK;
-                //}
-
-                //return MessageBoxResult.None;
             });
 
-            MessengerService.Default.Register<ShowErrorMessage>(this, async m =>
+            _commonServices.MessengerService.Register<ShowErrorMessage>(this, async m =>
             {
                 var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
-
-                //if (dialogResult is not null)
-                //{
-                //    var result = await dialogResult.Result;
-
-                //    //if (result.Cancelled)
-                //    //    return MessageBoxResult.Cancel;
-
-                //    //return MessageBoxResult.OK;
-                //}
-
-                //return MessageBoxResult.None;
             });
         }
         catch (Exception ex)
@@ -83,20 +56,22 @@ public partial class App : Application
         }
     }
 
-    private async Task AuthenticationChangedAsync(AuthenticationChangedMessage authenticationChangedMessage)
+    /// <summary>
+    /// Called when authentication changes (legacy support).
+    /// This is now handled via AuthenticationService events.
+    /// </summary>
+    protected override async void AuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
     {
-        if (authenticationChangedMessage.Content is Profile profile)
-        {
-            _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile = profile;
-            await _navigationService.NavigateModalAsync<ShellViewModel>();
-        }
-        else
-        {
-            _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile = null;
-            await _navigationService.NavigateModalAsync<SignInViewModel>();
-        }
+        // This method is kept for base class compatibility but is no longer used
+        // Authentication state changes are now handled through AuthenticationService events
+        // (OnAuthenticationSucceededAsync and OnAuthenticationFailedAsync)
+        await Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Called during framework initialization. Override to perform backend initialization,
+    /// load data, apply migrations, etc. Must call SignalApplicationInitialized at the end.
+    /// </summary>
     protected override async Task InitializeApplicationAsync()
     {
         try
@@ -106,6 +81,7 @@ public partial class App : Application
             // Initialize exception handling first
             await InitializeExceptionHandlingAsync();
 
+            // Perform backend initialization, data loading, migrations, etc.
             if (_commonServices?.BusyService != null)
             {
                 _commonServices.BusyService.UpdateMessage("Start doing important stuff");
@@ -159,44 +135,29 @@ public partial class App : Application
             }
         }
 
-        _logger?.LogTrace("Sending ApplicationInitializedMessage");
-        MessengerService.Default.Send(new ApplicationInitializedMessage());
+        // Signal to the framework that initialization is complete.
+        // This will trigger ApplicationLoaded event if UI is also ready.
+        _logger?.LogTrace("Application initialization complete, signaling framework");
+        _lifecycleService?.SignalApplicationInitialized();
     }
 
-    private async Task ApplicationLoadedAsync(ApplicationLoadedMessage message)
+    /// <summary>
+    /// Called when both UI is ready AND application initialization is complete.
+    /// This replaces the legacy ApplicationLoadedMessage handler.
+    /// Handle post-load navigation, auto-login, and other startup operations here.
+    /// </summary>
+    private async Task ApplicationLoadedAsync()
     {
         try
         {
-#if WINDOWS
-            //commonServices.BusyService.StartBusy(commonServices.LanguageService.GetString("UpdateCheckForUpdates"));
-
-            //if (await ServiceLocator.Default.GetInstance<IUpdateService>().CheckForUpdateAsync() && await commonServices.DialogService.ShowMessageAsync(
-            //    commonServices.LanguageService.GetString("UpdateFoundNewUpdate") + System.Environment.NewLine + commonServices.LanguageService.GetString("UpdateExecuteNow"),
-            //    "Update",
-            //    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //{
-            //    commonServices.BusyService.BusyMessage = commonServices.LanguageService.GetString("UpdateDownloadAndInstall");
-            //    await ServiceLocator.Default.GetInstance<IUpdateService>().DownloadAndInstallUpdateAsync();
-            //    Environment.Exit(Environment.ExitCode);
-            //}
-#endif
             _commonServices.BusyService.StartBusy();
+
+            // Wait for the loading view to complete if it's a video (for Image and None types, this returns immediately)
+            await WaitForLoadingViewAsync();
 
             bool navigateToAuthentication = true;
 
-            _logger.LogInformation("Retrieve default user and check for auto login");
-
-            //if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && _settingsService.LocalSettings.IsAutoLogin)
-            //{
-            //    string username = _settingsService.LocalSettings.DefaultUser;
-            //    string password = await ServiceLocator.Default.GetRequiredService<ICredentialLockerService>().GetPasswordFromCredentialLockerAsync(username);
-
-            //    if (!string.IsNullOrEmpty(password))
-            //    {
-            //        await _authenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _settingsService.LocalSettings.IsAutoLogin);
-            //        navigateToAuthentication = false;
-            //    }
-            //}
+            _logger.LogInformation("Application loaded event: checking for auto-login");
 
             if (navigateToAuthentication)
             {
@@ -204,119 +165,77 @@ public partial class App : Application
                 await _navigationService.NavigateModalAsync<SignInViewModel>();
             }
         }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error in ApplicationLoaded");
+        }
         finally
         {
             _commonServices.BusyService.StopBusy();
         }
     }
 
-    protected override async void AuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
+    /// <summary>
+    /// Called when authentication succeeds (user has logged in).
+    /// The profile has already been set in the context by the AuthenticationService.
+    /// </summary>
+    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e)
     {
-        // Suppress backstack change event during sign out
-        await _navigationService.CleanBackStackAsync(suppressEvent: !e.Value);
-
         try
         {
-            if (_commonServices?.BusyService != null)
-                _commonServices.BusyService.StartBusy();
+            _logger?.LogTrace("Authentication succeeded event received");
 
-            if (e.Value)
-            {
-                try
-                {
-                    _logger?.LogTrace("Loading master data");
-                    var masterDataService = _commonServices?.ScopedContextService.GetRequiredService<IMasterDataService>();
-
-                    if (masterDataService is not null)
-                        await masterDataService.LoadMasterItemsAsync();
-
-                    _logger?.LogTrace("Setting culture");
-                    if (_settingsService?.GlobalSettings is not null &&
-                        CultureInfo.DefaultThreadCurrentCulture != null &&
-                        CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
-                    {
-                        try
-                        {
-                            // Set default currency symbol to Euro
-                            culture.NumberFormat.CurrencySymbol = "€";
-
-                            culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
-                            culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
-
-                            culture.NumberFormat.CurrencyNegativePattern = 1;
-                            culture.NumberFormat.NumberNegativePattern = 1;
-                            culture.NumberFormat.PercentNegativePattern = 1;
-
-                            CultureInfo.DefaultThreadCurrentCulture = culture;
-                            CultureInfo.DefaultThreadCurrentUICulture = culture;
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Error setting culture");
-                        }
-                    }
-
-                    _logger?.LogTrace("Navigate to Shell");
-                    if (_navigationService != null)
-                    {
-                        await _navigationService.NavigateModalAsync<IShellViewModel>();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Error handling authentication success");
-
-                    if (_dialogService != null)
-                    {
-                        try
-                        {
-                            await _dialogService.ShowErrorAsync("Error occurred after login. The application may need to be restarted.");
-                        }
-                        catch
-                        {
-                            // Can't show dialog
-                        }
-                    }
-                }
-            }
-            else
-            {
-                try
-                {
-                    Baggage.ClearBaggage();
-
-                    _logger?.LogTrace("Navigate to SignIn page");
-                    if (_navigationService != null)
-                    {
-                        await _navigationService.NavigateModalAsync<SignInViewModel>();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Error handling authentication failure");
-
-                    if (_dialogService != null)
-                    {
-                        try
-                        {
-                            await _dialogService.ShowErrorAsync("Error occurred during logout. The application may need to be restarted.");
-                        }
-                        catch
-                        {
-                            // Can't show dialog
-                        }
-                    }
-                }
-            }
+            // Profile should already be set in context by AuthenticationService
+            // Navigate to Shell to show authenticated UI
+            await _navigationService.NavigateModalAsync<ShellViewModel>();
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Unhandled error in OnAuthenticationChanged");
+            _logger?.LogError(ex, "Error in OnAuthenticationSucceededAsync");
+
+            if (_dialogService != null)
+            {
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Error occurred during authentication success handling. The application may need to be restarted.");
+                }
+                catch
+                {
+                    // Can't show dialog
+                }
+            }
         }
-        finally
+    }
+
+    /// <summary>
+    /// Called when authentication fails or user logs out.
+    /// The context has already been cleared by the AuthenticationService.
+    /// </summary>
+    private async Task OnAuthenticationFailedAsync()
+    {
+        try
         {
-            if (_commonServices?.BusyService != null)
-                _commonServices.BusyService.StopBusy();
+            _logger?.LogTrace("Authentication failed event received");
+
+            // Context should already be cleared by AuthenticationService
+            // Navigate to SignIn page
+            await _navigationService.NavigateModalAsync<SignInViewModel>();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error in OnAuthenticationFailedAsync");
+
+            if (_dialogService != null)
+            {
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Error occurred during authentication failure handling. The application may need to be restarted.");
+                }
+                catch
+                {
+                    // Can't show dialog
+                }
+            }
         }
     }
 
@@ -326,12 +245,10 @@ public partial class App : Application
 
         if (disposing)
         {
-            MessengerService.Default.Unregister<ApplicationLoadedMessage>(this);
-            MessengerService.Default.Unregister<AuthenticationChangedMessage>(this);
+            // Unregister message handlers
             MessengerService.Default.Unregister<ShowInformationMessage>(this);
             MessengerService.Default.Unregister<ShowWarningMessage>(this);
             MessengerService.Default.Unregister<ShowErrorMessage>(this);
         }
-
     }
 }

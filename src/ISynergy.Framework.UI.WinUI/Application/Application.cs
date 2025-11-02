@@ -1,15 +1,11 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Options;
-using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -65,7 +61,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     {
         try
         {
-            _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
+            _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
 
             // Create host and set up dependency injection
             IHost? host = null;
@@ -332,110 +328,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                     _logger?.LogWarning(ex, "Error setting application color");
                 }
             }
-
-            _logger?.LogTrace("Settings initial view");
-
-            var splashScreen = new SplashScreen();
-            var viewModel = _commonServices?.ScopedContextService.GetService<SplashScreenViewModel>();
-
-            if (_mainWindow is not null && viewModel is not null)
-            {
-                viewModel.Initialize(
-                    dispatcherQueue: _mainWindow.DispatcherQueue,
-                    onLoadingComplete: async () =>
-                    {
-                        try
-                        {
-                            await HandleApplicationInitializedAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Error in HandleApplicationInitializedAsync");
-                        }
-                    },
-                    splashScreenOptions: _splashScreenOptions,
-                    async (dispatcher) =>
-                    {
-                        try
-                        {
-                            await HandleLaunchArgumentsAsync(args);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Error handling launch arguments");
-                        }
-                    },
-                    async (dispatcher) =>
-                    {
-                        if (_commonServices is not null && _features?.CheckForUpdatesInMicrosoftStore == true)
-                        {
-                            await dispatcher.EnqueueAsync(async () =>
-                            {
-                                try
-                                {
-                                    _commonServices.BusyService.UpdateMessage(LanguageService.Default.GetString("UpdateCheckForUpdates"));
-
-                                    var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
-
-                                    if (updateService != null &&
-                                        await updateService.CheckForUpdateAsync() &&
-                                        _dialogService != null &&
-                                        await _dialogService.ShowMessageAsync(
-                                            LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-                                            "Update",
-                                            MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-                                    {
-                                        _commonServices.BusyService.UpdateMessage(LanguageService.Default.GetString("UpdateDownloadAndInstall"));
-                                        await updateService.DownloadAndInstallUpdateAsync();
-                                        Environment.Exit(Environment.ExitCode);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    _logger?.LogError(ex, "Failed to check for updates");
-                                    if (_dialogService != null)
-                                    {
-                                        try
-                                        {
-                                            await _dialogService.ShowErrorAsync("Failed to check for updates");
-                                        }
-                                        catch (Exception dialogEx)
-                                        {
-                                            _logger?.LogError(dialogEx, "Error showing dialog");
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    async (dispatcher) =>
-                    {
-                        try
-                        {
-                            _logger?.LogTrace("Starting initialization of application");
-                            await InitializeApplicationAsync();
-                            _logger?.LogTrace("Finishing initialization of application");
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Error in InitializeApplicationAsync");
-                        }
-                    });
-
-                splashScreen.ViewModel = viewModel;
-
-                splashScreen.Loaded += SplashScreen_Loaded;
-                splashScreen.Unloaded += SplashScreen_Unloaded;
-
-                _mainWindow.Content = splashScreen;
-
-                _logger?.LogTrace("Activate main window");
-                _mainWindow.Activate();
-            }
-            else
-            {
-                _logger?.LogWarning("Failed to create a main window");
-            }
         }
         catch (Exception ex)
         {
@@ -464,38 +356,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 // Last resort - can't even show an error window
                 Environment.Exit(1);
             }
-        }
-    }
-
-    protected virtual async void SplashScreen_Loaded(object? sender, RoutedEventArgs e)
-    {
-        try
-        {
-            if (sender is SplashScreen splashScreen && splashScreen.ViewModel is SplashScreenViewModel viewModel)
-                await viewModel.StartInitializationAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error in SplashScreen_Loaded");
-        }
-    }
-
-    protected virtual void SplashScreen_Unloaded(object? sender, RoutedEventArgs e)
-    {
-        try
-        {
-            if (sender is SplashScreen splashScreen)
-            {
-                splashScreen.Loaded -= SplashScreen_Loaded;
-                splashScreen.Unloaded -= SplashScreen_Unloaded;
-            }
-
-            if (_exceptionHandlerService is not null)
-                _exceptionHandlerService.SetApplicationInitialized();
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error in SplashScreen_Unloaded");
         }
     }
 

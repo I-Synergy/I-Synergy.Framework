@@ -212,7 +212,6 @@ public partial class MainLayout
         }
 
         // Unregister message handlers
-        _commonServices.MessengerService.Unregister<AuthenticationChangedMessage>(this);
         _commonServices.MessengerService.Unregister<ShowInformationMessage>(this);
         _commonServices.MessengerService.Unregister<ShowWarningMessage>(this);
         _commonServices.MessengerService.Unregister<ShowErrorMessage>(this);

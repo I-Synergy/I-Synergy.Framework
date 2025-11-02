@@ -76,6 +76,11 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        // Subscribe to authentication events
+        var authenticationService = _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>();
+        authenticationService.AuthenticationSucceeded += async (s, args) => await OnAuthenticationSucceededAsync(args);
+        authenticationService.AuthenticationFailed += async (s, args) => await OnAuthenticationFailedAsync();
+
         RaiseApplicationLoaded();
     }
 
@@ -106,21 +111,49 @@ public partial class App : Application
         }
     }
 
-    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
+    /// <summary>
+    /// Called when authentication succeeds (user has logged in).
+    /// </summary>
+    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e)
     {
-        // Suppress backstack change event during sign out
-        await _navigationService.CleanBackStackAsync(suppressEvent: !e.Value);
-
-        if (e.Value)
+        try
         {
-            _logger.LogTrace("Navigate to Shell");
+            _logger?.LogTrace("Authentication succeeded event received");
+            _logger?.LogTrace("Navigate to Shell");
             await _navigationService.NavigateModalAsync<IShellViewModel>();
         }
-        else
+        catch (Exception ex)
         {
-            _logger.LogTrace("Navigate to SignIn page");
+            _logger?.LogError(ex, "Error in OnAuthenticationSucceededAsync");
+        }
+    }
+
+    /// <summary>
+    /// Called when authentication fails or user logs out.
+    /// </summary>
+    private async Task OnAuthenticationFailedAsync()
+    {
+        try
+        {
+            _logger?.LogTrace("Authentication failed event received");
+            _logger?.LogTrace("Navigate to SignIn page");
             await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error in OnAuthenticationFailedAsync");
+        }
+    }
+
+    /// <summary>
+    /// Called when authentication changes (legacy support).
+    /// This is now handled via AuthenticationService events.
+    /// </summary>
+    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
+    {
+        // This method is kept for base class compatibility but is no longer used
+        // Authentication state changes are now handled through AuthenticationService events
+        await Task.CompletedTask;
     }
 
     public override async Task InitializeApplicationAsync()

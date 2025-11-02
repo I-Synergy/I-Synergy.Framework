@@ -26,7 +26,6 @@
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
-		<WindowsPackageType>None</WindowsPackageType>
 		
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
@@ -56,9 +55,6 @@
 	
 	<ItemGroup>
 	  <Compile Remove="Resources\Fonts\FluentUI.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Remove="Resources\Raw\gta.mp4" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />
@@ -128,9 +124,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\SettingsView.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\SlideShowView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\TestExceptionWindow.xaml">
