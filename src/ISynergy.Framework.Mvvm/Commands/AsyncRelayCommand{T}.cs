@@ -286,9 +286,9 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
                     var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
 
                     if (ex.InnerException is not null)
-                        await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                        exceptionHandlerService.HandleException(ex.InnerException);
                     else
-                        await exceptionHandlerService.HandleExceptionAsync(ex);
+                        exceptionHandlerService.HandleException(ex);
 
                     System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
                 }
@@ -307,9 +307,9 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
                     var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
 
                     if (ex.InnerException is not null)
-                        await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                        exceptionHandlerService.HandleException(ex.InnerException);
                     else
-                        await exceptionHandlerService.HandleExceptionAsync(ex);
+                        exceptionHandlerService.HandleException(ex);
 
                     System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
                 }

@@ -23,22 +23,6 @@ public partial class App : Application
             // Subscribe to authentication events
             authenticationService.AuthenticationSucceeded += async (s, e) => await OnAuthenticationSucceededAsync(e);
             authenticationService.AuthenticationFailed += async (s, e) => await OnAuthenticationFailedAsync();
-
-            // Dialog message handlers (unchanged)
-            _commonServices.MessengerService.Register<ShowInformationMessage>(this, async m =>
-            {
-                var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
-            });
-
-            _commonServices.MessengerService.Register<ShowWarningMessage>(this, async m =>
-            {
-                var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
-            });
-
-            _commonServices.MessengerService.Register<ShowErrorMessage>(this, async m =>
-            {
-                var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
-            });
         }
         catch (Exception ex)
         {

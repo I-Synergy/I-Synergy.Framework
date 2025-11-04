@@ -196,10 +196,10 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    public virtual void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
-            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+            _exceptionHandlerService.HandleException(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -231,10 +231,10 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    public virtual void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
-            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+            _exceptionHandlerService.HandleException(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -246,11 +246,11 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
+    public virtual void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
             if (_exceptionHandlerService is not null)
-                await _exceptionHandlerService.HandleExceptionAsync(exception);
+                _exceptionHandlerService.HandleException(exception);
             else
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }

@@ -577,9 +577,9 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
 
             if (ex.InnerException is not null)
-                await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                exceptionHandlerService.HandleException(ex.InnerException);
             else
-                await exceptionHandlerService.HandleExceptionAsync(ex);
+                exceptionHandlerService.HandleException(ex);
         }
     }
 
