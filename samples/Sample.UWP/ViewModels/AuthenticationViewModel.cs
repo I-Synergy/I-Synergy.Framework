@@ -170,15 +170,6 @@ public class AuthenticationViewModel : ViewModel
         }
     }
 
-    /// <summary>
-    /// Gets or sets the AutoLogin property value.
-    /// </summary>
-    public bool AutoLogin
-    {
-        get => GetValue<bool>();
-        set => SetValue(value);
-    }
-
     public RelayCommand ShowSignInCommand { get; private set; }
     public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand SignUpCommand { get; private set; }
@@ -277,16 +268,6 @@ public class AuthenticationViewModel : ViewModel
             if (Modules.FirstOrDefault() is { } module)
                 Registration_Modules.Add(module);
 
-            AutoLogin = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin;
-
-            Usernames = new ObservableCollection<string>();
-
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
-                Username = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser;
-
-            if (string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser) && Usernames.Count > 0)
-                Username = Usernames[0];
-
             IsInitialized = true;
         }
     }
@@ -366,7 +347,7 @@ public class AuthenticationViewModel : ViewModel
         await Task.Delay(1000);
 
         if (Validate())
-            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
 
         _commonServices.BusyService.StopBusy();
     }

@@ -15,7 +15,7 @@ public partial class SelectionWindow : ISelectionWindow
         DataSummary.SelectionChanged += DataSummary_SelectionChanged;
     }
 
-    private void SelectionWindow_BindingContextChanged(object sender, EventArgs e)
+    private void SelectionWindow_BindingContextChanged(object? sender, EventArgs e)
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {
@@ -35,7 +35,7 @@ public partial class SelectionWindow : ISelectionWindow
         }
     }
 
-    private void DataSummary_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void DataSummary_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {

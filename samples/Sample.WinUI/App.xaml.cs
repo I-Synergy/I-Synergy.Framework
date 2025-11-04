@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -110,7 +109,7 @@ public sealed partial class App : Application
                         throw;
                     }
                 })
-                .ConfigureServices<Context, CommonServices, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
+                .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
                 {
                     services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                     services.TryAddSingleton<IFileService<FileResult>, FileService>();
@@ -135,15 +134,6 @@ public sealed partial class App : Application
             _commonServices?.BusyService.StartBusy();
 
             bool navigateToAuthentication = true;
-
-            _logger?.LogTrace("Retrieve default user and check for auto login");
-
-            if (_settingsService?.LocalSettings != null &&
-                !string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) &&
-                _settingsService.LocalSettings.IsAutoLogin)
-            {
-                string username = _settingsService.LocalSettings.DefaultUser;
-            }
 
             if (navigateToAuthentication && _navigationService != null)
             {
@@ -243,17 +233,6 @@ public sealed partial class App : Application
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// Called when authentication changes (legacy support).
-    /// This is now handled via AuthenticationService events.
-    /// </summary>
-    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
-    {
-        // This method is kept for base class compatibility but is no longer used
-        // Authentication state changes are now handled through AuthenticationService events
-        await Task.CompletedTask;
     }
 
     /// <summary>

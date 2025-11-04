@@ -12,6 +12,7 @@ using ISynergy.Framework.UI.Utilities;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions.Services;
 using Sample.Extensions;
 using Timer = System.Timers.Timer;
 
@@ -103,23 +104,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     }
 
-    protected override Task SignOutAsync()
-    {
-        try
-        {
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
-            {
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = false;
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-            }
-        }
-        catch (ObjectDisposedException)
-        {
-            // Context already disposed, nothing to sign out
-        }
-
-        return Task.CompletedTask;
-    }
+    protected override Task SignOutAsync() =>
+        _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {
@@ -155,7 +141,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 
-    private void ClockTimerCallBack(object sender, System.Timers.ElapsedEventArgs e) => SetClock();
+    private void ClockTimerCallBack(object? sender, System.Timers.ElapsedEventArgs e) => SetClock();
 
     private void SetClock()
     {

@@ -25,6 +25,7 @@ public static class WindowsAppBuilderExtensions
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
+    /// <typeparam name="TExceptionHandlerService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="windowsAppBuilder"></param>
@@ -33,7 +34,7 @@ public static class WindowsAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TSettingsService, TResource>(
+    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IHostBuilder windowsAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
@@ -41,6 +42,7 @@ public static class WindowsAppBuilderExtensions
         Func<AssemblyName, bool> assemblyFilter)
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
+        where TExceptionHandlerService : class, IExceptionHandlerService
         where TSettingsService : class, ISettingsService
         where TResource : class
     {
@@ -66,14 +68,16 @@ public static class WindowsAppBuilderExtensions
             services.TryAddScoped<ISettingsService, TSettingsService>();
             services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
 
-            services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
+            services.TryAddSingleton<TCommonServices>();
+            services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());
+
+            services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
             services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
             services.TryAddSingleton<IBusyService, BusyService>();
             services.TryAddSingleton<IDialogService, DialogService>();
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
-            services.TryAddSingleton<ICommonServices, TCommonServices>();
             services.TryAddSingleton<IUpdateService, UpdateService>();
 
             services.RegisterAssemblies(assembly, assemblyFilter);

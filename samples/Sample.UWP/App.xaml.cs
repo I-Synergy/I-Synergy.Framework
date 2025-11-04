@@ -1,8 +1,6 @@
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
@@ -10,12 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry;
 using Sample.Abstractions.Services;
 using Sample.Extensions;
 using Sample.Services;
 using Sample.ViewModels;
-using System.Globalization;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 
@@ -102,7 +98,7 @@ public sealed partial class App : Application
                         throw;
                     }
                 })
-                .ConfigureServices<Context, CommonServices, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
+                .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
                 {
                     services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                     services.TryAddSingleton<IFileService<FileResult>, FileService>();
@@ -225,109 +221,6 @@ public sealed partial class App : Application
                     _logger?.LogError(dialogEx, "Error showing dialog");
                 }
             }
-        }
-    }
-
-    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
-    {
-        // Suppress backstack change event during sign out
-        await _navigationService.CleanBackStackAsync(suppressEvent: !e.Value);
-
-        try
-        {
-            if (_commonServices?.BusyService != null)
-                _commonServices.BusyService.StartBusy();
-
-            if (e.Value)
-            {
-                try
-                {
-                    _logger?.LogTrace("Setting culture");
-                    if (_settingsService?.GlobalSettings is not null &&
-                        CultureInfo.DefaultThreadCurrentCulture != null &&
-                        CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
-                    {
-                        try
-                        {
-                            culture.NumberFormat.CurrencySymbol = "€";
-
-                            culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
-                            culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
-
-                            culture.NumberFormat.CurrencyNegativePattern = 1;
-                            culture.NumberFormat.NumberNegativePattern = 1;
-                            culture.NumberFormat.PercentNegativePattern = 1;
-
-                            CultureInfo.DefaultThreadCurrentCulture = culture;
-                            CultureInfo.DefaultThreadCurrentUICulture = culture;
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Error setting culture");
-                        }
-                    }
-
-                    _logger?.LogTrace("Navigate to Shell");
-                    if (_navigationService != null)
-                    {
-                        await _navigationService.NavigateModalAsync<IShellViewModel>();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Error handling authentication success");
-
-                    if (_dialogService != null)
-                    {
-                        try
-                        {
-                            await _dialogService.ShowErrorAsync("Error occurred after login. The application may need to be restarted.");
-                        }
-                        catch
-                        {
-                            // Can't show dialog
-                        }
-                    }
-                }
-            }
-            else
-            {
-                try
-                {
-                    Baggage.ClearBaggage();
-
-                    _logger?.LogTrace("Navigate to SignIn page");
-                    if (_navigationService != null)
-                    {
-                        await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Error handling authentication failure");
-
-                    if (_dialogService != null)
-                    {
-                        try
-                        {
-                            await _dialogService.ShowErrorAsync("Error occurred during logout. The application may need to be restarted.");
-                        }
-                        catch
-                        {
-                            // Can't show dialog
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Unhandled error in OnAuthenticationChanged");
-        }
-        finally
-        {
-            if (_commonServices?.BusyService != null)
-                _commonServices.BusyService.StopBusy();
         }
     }
 

@@ -55,6 +55,7 @@ public static class MauiAppBuilderExtensions
     /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
+    /// <typeparam name="TExceptionHandlerService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="appBuilder"></param>
@@ -62,16 +63,17 @@ public static class MauiAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TSettingsService, TResource>(
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this MauiAppBuilder appBuilder,
         Action<MauiAppBuilder> action,
         Assembly assembly,
         Func<AssemblyName, bool> assemblyFilter)
-    where TApplication : class, Microsoft.Maui.IApplication
-    where TContext : class, IContext
-    where TCommonServices : class, ICommonServices
-    where TSettingsService : class, ISettingsService
-    where TResource : class
+        where TApplication : class, Microsoft.Maui.IApplication
+        where TContext : class, IContext
+        where TCommonServices : class, ICommonServices
+        where TExceptionHandlerService : class, IExceptionHandlerService
+        where TSettingsService : class, ISettingsService
+        where TResource : class
     {
         appBuilder.Services.AddOptions();
         appBuilder.Services.AddPageResolver();
@@ -97,14 +99,16 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<TContext>();
         appBuilder.Services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
 
+        appBuilder.Services.TryAddSingleton<TCommonServices>();
+        appBuilder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());
+
+        appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
+
         appBuilder.Services.TryAddScoped<ISettingsService, TSettingsService>();
         appBuilder.Services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
 
         appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
-
         appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
-
-        appBuilder.Services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
         appBuilder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
@@ -113,7 +117,6 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();
         appBuilder.Services.TryAddSingleton<IClipboardService, ClipboardService>();
         appBuilder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
-        appBuilder.Services.TryAddSingleton<ICommonServices, TCommonServices>();
 
         appBuilder.Services.RegisterAssemblies(assembly, assemblyFilter);
 

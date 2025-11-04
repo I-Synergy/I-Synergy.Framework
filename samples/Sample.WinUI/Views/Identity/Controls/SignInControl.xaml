@@ -17,14 +17,10 @@
                 Foreground="{StaticResource SystemAccentBrush}"
                 Text="{m:LanguageResource Key=SignIn}" />
 
-            <AutoSuggestBox
+            <TextBox
                 x:Name="TextBox_Username"
                 Header="{m:LanguageResource Key=Username}"
-                ItemsSource="{Binding Usernames}"
-                QuerySubmitted="TextBox_Username_QuerySubmitted"
-                SuggestionChosen="TextBox_Username_SuggestionChosen"
                 Text="{Binding Username, Mode=TwoWay}"
-                TextChanged="TextBox_Username_TextChanged"
                 ToolTipService.ToolTip="{m:LanguageResource Key=Email}" />
             <PasswordBox
                 x:Name="TextBox_Password"

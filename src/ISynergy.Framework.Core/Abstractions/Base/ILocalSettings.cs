@@ -19,14 +19,6 @@ public interface ILocalSettings
     /// </summary>
     bool IsFullscreen { get; set; }
     /// <summary>
-    /// Setting for maintaining a list of users used.
-    /// </summary>
-    List<string> Users { get; set; }
-    /// <summary>
-    /// Setting for maintaining last succesfull username logged in.
-    /// </summary>
-    string DefaultUser { get; set; }
-    /// <summary>
     /// Setting for storing the theme color.
     /// </summary>
     string Color { get; set; }
@@ -39,10 +31,6 @@ public interface ILocalSettings
     /// </summary>
     /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
     bool IsLightThemeEnabled { get; }
-    /// <summary>
-    /// If RefreshToken is available or user is available in Windows Credentials locker and setting is true, the application can login automatically. 
-    /// </summary>
-    bool IsAutoLogin { get; set; }
     /// <summary>
     /// Setting for maintaining the advanced mode of the application.
     /// </summary>

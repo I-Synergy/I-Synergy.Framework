@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xaml.Interactivity;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -89,7 +88,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
-        void SourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void SourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (_isUpdatingSource)
                 return;

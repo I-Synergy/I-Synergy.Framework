@@ -13,6 +13,7 @@ using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions;
+using Sample.Abstractions.Services;
 using Sample.Models;
 using Windows.UI.Xaml;
 
@@ -115,23 +116,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
-    protected override Task SignOutAsync()
-    {
-        try
-        {
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
-            {
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = false;
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-            }
-        }
-        catch (ObjectDisposedException)
-        {
-            // Context already disposed, nothing to sign out
-        }
-
-        return Task.CompletedTask;
-    }
+    protected override Task SignOutAsync() =>
+        _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {

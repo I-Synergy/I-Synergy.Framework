@@ -1,5 +1,4 @@
 using CommunityToolkit.Maui;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
@@ -71,12 +70,9 @@ public static class MauiProgram
                 fonts.AddFont("Font Awesome 6 Pro-Regular-400.otf", "fontawesome");
                 fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
             })
-            .ConfigureServices<App, Context, CommonServices, SettingsService, Properties.Resources>(appBuilder =>
+            .ConfigureServices<App, Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(appBuilder =>
             {
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-
-                appBuilder.Services.TryAddSingleton<CommonServices>();
-                appBuilder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<CommonServices>());
 
                 appBuilder.Services.TryAddSingleton<ICameraService, CameraService>();
             },
