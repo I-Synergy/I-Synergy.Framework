@@ -188,7 +188,7 @@ public abstract class Application : ComponentBase
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    protected virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
         if (_isDisposing)
             return;
@@ -210,7 +210,7 @@ public abstract class Application : ComponentBase
         {
             try
             {
-                await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+                _exceptionHandlerService.HandleException(e.Exception);
             }
             catch (Exception handlerEx)
             {
@@ -233,7 +233,7 @@ public abstract class Application : ComponentBase
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    protected virtual void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_isDisposing)
         {
@@ -245,7 +245,7 @@ public abstract class Application : ComponentBase
         {
             try
             {
-                await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+                _exceptionHandlerService.HandleException(e.Exception);
             }
             catch (Exception handlerEx)
             {
@@ -264,7 +264,7 @@ public abstract class Application : ComponentBase
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
+    protected virtual void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         if (_isDisposing)
             return;
@@ -275,7 +275,7 @@ public abstract class Application : ComponentBase
             {
                 try
                 {
-                    await _exceptionHandlerService.HandleExceptionAsync(exception);
+                    _exceptionHandlerService.HandleException(exception);
                 }
                 catch (Exception handlerEx)
                 {

@@ -321,7 +321,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     public virtual void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
         if (_exceptionHandlerService is not null)
-            _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+            _exceptionHandlerService.HandleException(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -337,7 +337,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (e.ExceptionObject is Exception exception)
             if (_exceptionHandlerService is not null)
-                _exceptionHandlerService.HandleExceptionAsync(exception);
+                _exceptionHandlerService.HandleException(exception);
             else
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
