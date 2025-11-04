@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Utilities;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Sample.ViewModels;
@@ -66,8 +65,6 @@ public sealed partial class SignInControl : UserControl
     private void LoginScreen_Loaded(object sender, RoutedEventArgs e)
     {
         SetCapsLockOnState();
-
-        TextBox_Username.ItemsSource = ViewModel!.Usernames;
 
         if (TextBox_Username.Text.Length < 1)
         {
@@ -147,45 +144,5 @@ public sealed partial class SignInControl : UserControl
         {
             TextBox_CapsLockOn.Visibility = Visibility.Collapsed;
         }
-    }
-
-    /// <summary>
-    /// Texts the box username text changed.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="args">The <see cref="AutoSuggestBoxTextChangedEventArgs"/> instance containing the event data.</param>
-    private void TextBox_Username_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-    {
-        if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-        {
-            if (string.IsNullOrWhiteSpace(sender.Text))
-            {
-                sender.ItemsSource = ViewModel!.Usernames;
-            }
-            else
-            {
-                sender.ItemsSource = ViewModel!.Usernames?.Where(q => q.Contains(sender.Text, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Texts the box username query submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="args">The <see cref="AutoSuggestBoxQuerySubmittedEventArgs"/> instance containing the event data.</param>
-    private void TextBox_Username_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-    {
-    }
-
-    /// <summary>
-    /// Texts the box username suggestion chosen.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="args">The <see cref="AutoSuggestBoxSuggestionChosenEventArgs"/> instance containing the event data.</param>
-    private void TextBox_Username_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-    {
-        if (NetworkUtility.IsValidEMail(args.SelectedItem.ToString()))
-            sender.Text = args.SelectedItem.ToString();
     }
 }

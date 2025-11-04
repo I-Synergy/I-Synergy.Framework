@@ -13,7 +13,6 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
@@ -30,16 +29,6 @@ public class AuthenticationViewModel : ViewModel
     /// </summary>
     /// <value>The title.</value>
     public override string Title { get { return LanguageService.Default.GetString("Login"); } }
-
-    /// <summary>
-    /// Gets or sets the Usernames property value.
-    /// </summary>
-    /// <value>The usernames.</value>
-    public ObservableCollection<string> Usernames
-    {
-        get { return GetValue<ObservableCollection<string>>(); }
-        set { SetValue(value); }
-    }
 
     /// <summary>
     /// Gets or sets the Username property value.
@@ -170,15 +159,6 @@ public class AuthenticationViewModel : ViewModel
         }
     }
 
-    /// <summary>
-    /// Gets or sets the AutoLogin property value.
-    /// </summary>
-    public bool AutoLogin
-    {
-        get => GetValue<bool>();
-        set => SetValue(value);
-    }
-
     public RelayCommand ShowSignInCommand { get; private set; }
     public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand SignUpCommand { get; private set; }
@@ -260,7 +240,6 @@ public class AuthenticationViewModel : ViewModel
             }
         });
 
-        Usernames = [];
         Registration_TimeZone = null;
         Registration_Modules = [];
         LoginVisible = true;
@@ -276,16 +255,6 @@ public class AuthenticationViewModel : ViewModel
 
             if (Modules.FirstOrDefault() is { } module)
                 Registration_Modules.Add(module);
-
-            AutoLogin = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin;
-
-            Usernames = new ObservableCollection<string>();
-
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
-                Username = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser;
-
-            if (string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser) && Usernames.Count > 0)
-                Username = Usernames[0];
 
             IsInitialized = true;
         }
@@ -366,7 +335,7 @@ public class AuthenticationViewModel : ViewModel
         await Task.Delay(1000);
 
         if (Validate())
-            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password, AutoLogin);
+            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
 
         _commonServices.BusyService.StopBusy();
     }

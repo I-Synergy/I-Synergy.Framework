@@ -3,9 +3,11 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.UI.Exceptions;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Configuration;
@@ -35,11 +37,11 @@ namespace ISynergy.Framework.UI;
 
 public abstract class Application : Microsoft.Maui.Controls.Application, IDisposable
 {
+    protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
     protected readonly INavigationService _navigationService;
     protected readonly ISettingsService _settingsService;
-    protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly IThemeService _themeService;
     protected readonly ILogger<Application> _logger;
@@ -50,8 +52,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
     private Task? Initialize { get; set; }
     private bool _isDisposing = false;
-
-
+    private int lastErrorMessage = 0;
 
     /// <summary>
     /// Default constructor.
@@ -82,35 +83,42 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _commonServices = ServiceLocator.Default.GetRequiredService<ICommonServices>();
                 _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
                 _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+                _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+                _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
+                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
 
                 _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
-                // This single line sets up ALL exception handling for the entire application
-                _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-
-                _logger.LogTrace("Retrieving scoped SettingsService");
-                _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
-
-                _logger.LogTrace("Starting application");
+                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+                MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
+                TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
                 // Pass a timeout to limit the execution time.
                 // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
                 AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-                _logger.LogTrace("Setting up theming service.");
-                _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
-
-                _logger.LogTrace("Setting up localization service.");
+                _commonServices.BusyService.StartBusy();
 
                 if (_settingsService.LocalSettings is not null)
                     _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
-                _logger.LogTrace("Starting initialization of application");
-                _commonServices.BusyService.StartBusy();
-
-                // Get or create the ApplicationLifecycleService for event-driven coordination
-                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
+
+                MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+                });
+
+                MessengerService.Default.Register<ShowWarningMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+                });
+
+                MessengerService.Default.Register<ShowErrorMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+                });
 
                 // Initialize environment variables from configuration and command-line parameters
                 InitializeEnvironmentVariables();
@@ -181,30 +189,6 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// </example>
     /// <returns></returns>
     protected abstract Task InitializeApplicationAsync();
-
-    /// <summary>
-    /// Base implementation of InitializeApplicationAsync that handles exception service initialization.
-    /// Derived classes should override InitializeApplicationAsync and call this method first if needed.
-    /// </summary>
-    /// <returns></returns>
-    protected virtual async Task InitializeExceptionHandlingAsync()
-    {
-        try
-        {
-            _logger?.LogTrace("Initializing exception handling");
-
-            // Signal that application is ready for exception dialogs
-            _exceptionHandlerService?.SetApplicationInitialized();
-
-            _logger?.LogTrace("Exception handling initialization completed");
-            await Task.CompletedTask;
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error during exception handling initialization");
-            throw;
-        }
-    }
 
     /// <summary>
     /// Get a new list of additional resource dictionaries which can be merged.
@@ -315,6 +299,49 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
     }
 
+    /// <summary>
+    /// Handles the first chance exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    {
+        if (e.Exception.HResult != lastErrorMessage)
+        {
+            lastErrorMessage = e.Exception.HResult;
+            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+        }
+    }
+
+    /// <summary>
+    /// Handles the unobserved task exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public virtual void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+        else
+            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+
+        e.SetObserved();
+    }
+
+    /// <summary>
+    /// Handles the unhandled exception.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public virtual void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception exception)
+            if (_exceptionHandlerService is not null)
+                _exceptionHandlerService.HandleExceptionAsync(exception);
+            else
+                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+    }
+
     #region IDisposable
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -335,17 +362,19 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         {
             _isDisposing = true;
 
+            MessengerService.Default.Unregister<ShowInformationMessage>(this);
+            MessengerService.Default.Unregister<ShowWarningMessage>(this);
+            MessengerService.Default.Unregister<ShowErrorMessage>(this);
+
+            AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
+            MauiExceptions.UnhandledException -= CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+
             // Unregister lifecycle event handlers
             if (_lifecycleService is not null)
             {
                 _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
                 _lifecycleService.Dispose();
-            }
-
-            // Let ExceptionHandlerService clean up its own handlers
-            if (_exceptionHandlerService is IDisposable disposableHandler)
-            {
-                disposableHandler.Dispose();
             }
         }
     }

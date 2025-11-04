@@ -26,7 +26,7 @@ public class Program
             .AddOtlpExporter();
 
         builder.Services
-            .ConfigureServices<Context, CommonServices, SettingsService, Properties.Resources>(
+            .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(
                 builder.Configuration,
                 infoService,
                 services =>

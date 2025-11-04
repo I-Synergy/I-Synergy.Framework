@@ -56,9 +56,6 @@ public partial class App : Application
         {
             _logger?.LogTrace("Starting application initialization");
 
-            // Initialize exception handling first
-            await InitializeExceptionHandlingAsync();
-
             // Perform backend initialization, data loading, migrations, etc.
             if (_commonServices?.BusyService != null)
             {

@@ -71,13 +71,11 @@ public class AuthenticationService : IAuthenticationService
     /// </summary>
     /// <param name="username">Any username (for demo purposes)</param>
     /// <param name="password">Any password (for demo purposes)</param>
-    /// <param name="remember">Unused in demo service (for interface compatibility)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Task that completes when authentication is processed</returns>
     public Task AuthenticateWithUsernamePasswordAsync(
-    string username,
- string password,
-        bool remember,
+        string username,
+        string password,
         CancellationToken cancellationToken = default)
     {
         _logger.LogTrace("Demo authentication attempt for user: {Username}", username);

@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
+    /// <typeparam name="TExceptionHandlerService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
     /// <param name="services"></param>
@@ -33,7 +34,7 @@ public static class ServiceCollectionExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TSettingsService, TResource>(
+    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IServiceCollection services,
         IConfiguration configuration,
         IInfoService infoService,
@@ -42,6 +43,7 @@ public static class ServiceCollectionExtensions
         Func<AssemblyName, bool> assemblyFilter)
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
+        where TExceptionHandlerService : class, IExceptionHandlerService
         where TSettingsService : class, ISettingsService
         where TResource : class
     {
@@ -64,10 +66,10 @@ public static class ServiceCollectionExtensions
         services.TryAddScoped<TContext>();
         services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
 
+        services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
+
         services.TryAddScoped<ISettingsService, TSettingsService>();
         services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
-
-        services.TryAddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
 
         services.TryAddSingleton<TCommonServices>();
         services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());

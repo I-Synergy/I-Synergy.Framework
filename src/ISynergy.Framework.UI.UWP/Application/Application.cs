@@ -1,17 +1,21 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Messages;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Globalization;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -27,12 +31,14 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : Windows.UI.Xaml.Application, IDisposable
 {
-    protected readonly ICommonServices? _commonServices;
+    protected readonly IExceptionHandlerService _exceptionHandlerService;
+    protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
     protected readonly INavigationService _navigationService;
-    protected readonly ISettingsService? _settingsService;
-    protected readonly IExceptionHandlerService? _exceptionHandlerService;
-    protected readonly ILogger<Application>? _logger;
+    protected readonly ISettingsService _settingsService;
+    protected readonly IApplicationLifecycleService _lifecycleService;
+    protected readonly IThemeService _themeService;
+    protected readonly ILogger<Application> _logger;
 
     protected IThemeService _themeSelector;
 
@@ -99,39 +105,50 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
 
             try
             {
-                _logger.LogTrace("Setting up global exception handler.");
+                _logger.LogTrace("Setting up services and global exception handler.");
 
-                // Get required services
-                _commonServices = host.Services.GetRequiredService<ICommonServices>();
-                _dialogService = host.Services.GetRequiredService<IDialogService>();
-                _navigationService = host.Services.GetRequiredService<INavigationService>();
-
-                _features = host.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
-                _exceptionHandlerService = host.Services.GetRequiredService<IExceptionHandlerService>();
-
-                _logger.LogTrace("Retrieving scoped SettingsService");
+                _commonServices = ServiceLocator.Default.GetRequiredService<ICommonServices>();
+                _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
+                _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
                 _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+                _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
+                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
 
-                // Set up exception handling
+                _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+
                 AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
-                _logger.LogTrace("Starting application");
 
                 // Pass a timeout to limit the execution time.
                 // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
                 AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-                _logger.LogTrace("Starting initialization of application");
-
-                _logger.LogTrace("Setting up main page.");
                 _commonServices.BusyService.StartBusy();
-
-                _logger.LogTrace("Setting up localization service.");
 
                 if (_settingsService.LocalSettings is not null)
                     _settingsService.LocalSettings.Language.SetLocalizationLanguage();
+
+                _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
+
+                MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+                });
+
+                MessengerService.Default.Register<ShowWarningMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+                });
+
+                MessengerService.Default.Register<ShowErrorMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+                });
+
+                // Initialize environment variables from configuration and command-line parameters
+                InitializeEnvironmentVariables();
             }
             catch (Exception ex)
             {
@@ -153,7 +170,88 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
     /// <returns></returns>
     protected abstract IHostBuilder CreateHostBuilder();
 
-    protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
+
+    /// <summary>
+    /// Called when the application is fully loaded (UI ready + initialization complete).
+    /// Override or subscribe to this event to handle post-load operations.
+    /// </summary>
+    protected virtual void OnApplicationLoaded(object? sender, EventArgs e)
+    {
+        _logger?.LogTrace("Application lifecycle event: ApplicationLoaded raised");
+    }
+
+    /// <summary>
+    /// Initializes environment variables from appsettings.json with command-line parameter override.
+    /// </summary>
+    protected virtual void InitializeEnvironmentVariables()
+    {
+        try
+        {
+            _logger?.LogTrace("Initializing environment variables");
+
+            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+
+            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment));
+
+            if (!string.IsNullOrEmpty(environmentFromConfig))
+            {
+                var normalizedEnvironment = NormalizeEnvironmentValue(environmentFromConfig);
+                Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                _logger?.LogTrace("Environment variable set from configuration: {Environment}", normalizedEnvironment);
+            }
+
+            // Handle command-line parameters which override configuration
+            HandleCommandArguments();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error during environment variable initialization");
+        }
+    }
+
+    /// <summary>
+    /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
+    /// </summary>
+    private string NormalizeEnvironmentValue(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return value;
+
+        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Handles environment and country parameters from command line arguments.
+    /// Command-line parameters override configuration values.
+    /// </summary>
+    protected virtual void HandleCommandArguments()
+    {
+        var commandLineArgs = Environment.GetCommandLineArgs();
+
+        foreach (var arg in commandLineArgs.EnsureNotNull())
+        {
+            if (string.IsNullOrEmpty(arg))
+                continue;
+
+            // Look for query string format arguments (e.g., "?environment=development&country=nl")
+            if (arg.Contains("?"))
+            {
+                var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
+
+                if (!string.IsNullOrEmpty(environmentValue))
+                {
+                    var normalizedEnvironment = NormalizeEnvironmentValue(environmentValue);
+                    Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                    _logger?.LogTrace("Environment variable overridden from command-line: {Environment}", normalizedEnvironment);
+                }
+            }
+            else
+            {
+                _logger?.LogTrace("Command line argument: {Argument}", arg);
+            }
+        }
+    }
+
 
     /// <summary>
     /// Handles the first chance exception event.
@@ -369,7 +467,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="BackRequestedEventArgs" /> instance containing the event data.</param>
-    private static void OnBackRequested(object sender, BackRequestedEventArgs e)
+    private static void OnBackRequested(object? sender, BackRequestedEventArgs e)
     {
         var rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
 
@@ -510,6 +608,10 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
         {
             try
             {
+                MessengerService.Default.Unregister<ShowInformationMessage>(this);
+                MessengerService.Default.Unregister<ShowWarningMessage>(this);
+                MessengerService.Default.Unregister<ShowErrorMessage>(this);
+
                 AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;

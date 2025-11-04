@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
+﻿using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -58,7 +57,7 @@ public partial class App : Application
                             options.Debug = context.HostingEnvironment.IsDevelopment();
                         });
             })
-            .ConfigureServices<Context, CommonServices, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
+            .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
                 services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IFileService<FileResult>, FileService>();
@@ -91,13 +90,6 @@ public partial class App : Application
             _commonServices.BusyService.StartBusy();
 
             bool navigateToAuthentication = true;
-
-            _logger.LogTrace("Retrieve default user and check for auto login");
-
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser) && _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin)
-            {
-                string username = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser;
-            }
 
             if (navigateToAuthentication)
             {
@@ -143,17 +135,6 @@ public partial class App : Application
         {
             _logger?.LogError(ex, "Error in OnAuthenticationFailedAsync");
         }
-    }
-
-    /// <summary>
-    /// Called when authentication changes (legacy support).
-    /// This is now handled via AuthenticationService events.
-    /// </summary>
-    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
-    {
-        // This method is kept for base class compatibility but is no longer used
-        // Authentication state changes are now handled through AuthenticationService events
-        await Task.CompletedTask;
     }
 
     public override async Task InitializeApplicationAsync()

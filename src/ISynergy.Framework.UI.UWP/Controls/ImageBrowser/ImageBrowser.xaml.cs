@@ -14,9 +14,9 @@ namespace ISynergy.Framework.UI.Controls
         /// Gets or sets the Image property value.
         /// </summary>
         /// <value>The file.</value>
-        public byte[] FileBytes
+        public byte[]? FileBytes
         {
-            get { return (byte[])GetValue(FileProperty); }
+            get { return (byte[]?)GetValue(FileProperty); }
             set { SetValue(FileProperty, value); }
         }
 
