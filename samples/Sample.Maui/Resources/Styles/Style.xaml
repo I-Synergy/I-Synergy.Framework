@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary
     x:Class="Sample.Resources.Styles.Style"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -108,6 +108,7 @@
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
 
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -214,6 +215,7 @@
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -314,6 +316,7 @@
         <Setter Property="Padding" Value="14,10" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -345,6 +348,7 @@
         <Setter Property="Padding" Value="14,10" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -368,6 +372,7 @@
 
     <Style TargetType="CheckBox">
         <Setter Property="Color" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -388,6 +393,7 @@
         <Setter Property="FontSize" Value="Caption" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -502,6 +508,7 @@
         <Setter Property="FontSize" Value="Caption" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -540,6 +547,7 @@
         <Setter Property="FontSize" Value="Caption" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -651,6 +659,7 @@
     <Style TargetType="Switch">
         <Setter Property="OnColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
         <Setter Property="ThumbColor" Value="{DynamicResource White}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -683,6 +692,7 @@
         <Setter Property="FontSize" Value="Caption" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
+        <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -750,7 +760,8 @@
         <Grid
             Padding="10"
             ColumnDefinitions="Auto,*"
-            ColumnSpacing="10">
+            ColumnSpacing="10"
+            behaviors:CursorBehavior.Cursor="Hand">
             <Image
                 Grid.Column="0"
                 HeightRequest="18"
