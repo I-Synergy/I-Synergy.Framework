@@ -5,7 +5,7 @@ using Microsoft.Windows.AppLifecycle;
 
 namespace ISynergy.Framework.UI.Extensions;
 
-public delegate void OnAppInstanceActivated(object sender, AppActivationArguments e);
+public delegate void OnAppInstanceActivated(object? sender, AppActivationArguments e);
 
 public static class WindowsLifeCycleExtensions
 {
@@ -15,7 +15,7 @@ public static class WindowsLifeCycleExtensions
         return builder;
     }
 
-    public static void OnAppInstanceActivated(this ILifecycleEventService lifecycle, object sender, AppActivationArguments e)
+    public static void OnAppInstanceActivated(this ILifecycleEventService lifecycle, object? sender, AppActivationArguments e)
     {
         lifecycle.InvokeEvents<OnAppInstanceActivated>(nameof(OnAppInstanceActivated), del => del(sender, e));
     }
