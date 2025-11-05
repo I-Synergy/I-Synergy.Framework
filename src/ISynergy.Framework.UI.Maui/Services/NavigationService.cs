@@ -89,28 +89,33 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <returns></returns>
     public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
-         where TViewModel : class, IViewModel
+        where TViewModel : class, IViewModel
     {
         if (Application.Current is not null)
         {
-            if (Application.Current.Dispatcher.IsDispatchRequired && NavigationExtensions.CreatePage<TViewModel>(parameter) is { } view && view is Page page)
+            if (!Application.Current.Dispatcher.IsDispatchRequired)
             {
-                // Added this nullification of handler becuase of some issues with TabbedPage.
-                // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
-                page.Handler = null;
+                if (NavigationExtensions.CreatePage<TViewModel>(parameter) is { } view && view is Page page)
+                {
+                    // Added this nullification of handler because of some issues with TabbedPage.
+                    // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
+                    page.Handler = null;
 
-                var mainPage = GetMainPage();
+                    var mainPage = GetMainPage();
 
-                if (mainPage is null)
-                    throw new InvalidOperationException("Main page is not available.");
+                    if (mainPage is null)
+                        throw new InvalidOperationException("Main page is not available.");
 
-                Application.Current.Windows[0].Page = page;
+                    Application.Current.Windows[0].Page = page;
 
-                if (view is not null && view.ViewModel is not null)
-                    await view.ViewModel.InitializeAsync();
+                    if (view is not null && view.ViewModel is not null)
+                        await view.ViewModel.InitializeAsync();
+                }
             }
             else
+            {
                 await Application.Current.Dispatcher.DispatchAsync(async () => await NavigateModalAsync<TViewModel>(parameter));
+            }
         }
     }
 
