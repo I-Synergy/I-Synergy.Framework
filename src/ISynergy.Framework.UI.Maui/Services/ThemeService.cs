@@ -12,7 +12,7 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 /// <remarks>
 /// The service reads the persisted <see cref="Themes"/> and color value from <see cref="ISettingsService"/> during construction.
-/// It then applies the theme via <see cref="Application.UserAppTheme"/> and sets the global <see cref="Application.AccentColor"/>.
+/// It then applies the theme via Application.UserAppTheme and sets the global Application.AccentColor.
 /// Platform-specific resources (Android, Windows) are updated to keep native UI elements in sync.
 /// </remarks>
 public class ThemeService : IThemeService
@@ -50,7 +50,7 @@ public class ThemeService : IThemeService
     /// Applies the configured theme and accent color to the MAUI <see cref="Application"/> instance.
     /// </summary>
     /// <remarks>
-    /// The method safely handles a missing <see cref="Application.Current"/> instance and logs diagnostics.
+    /// The method safely handles a missing Application.Current instance and logs diagnostics.
     /// For Windows, it updates the title bar colors; for Android, it updates common color resources.
     /// </remarks>
     public void ApplyTheme()
@@ -104,31 +104,33 @@ public class ThemeService : IThemeService
     /// <param name="application">An application instance whose resources are updated.</param>
     private void UpdatePlatformColors(Application application)
     {
+        if (Application.AccentColor is not null)
+        {
 #if ANDROID
-        _logger.LogTrace("Updating Android-specific colors");
+            _logger.LogTrace("Updating Android-specific colors");
 
-        UpdateOrAddResource(application, "colorPrimary", Application.AccentColor);
-        UpdateOrAddResource(application, "colorAccent", Application.AccentColor);
-        UpdateOrAddResource(application, "colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
+            UpdateOrAddResource(application, "colorPrimary", Application.AccentColor);
+            UpdateOrAddResource(application, "colorAccent", Application.AccentColor);
+            UpdateOrAddResource(application, "colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
 #endif
 
 #if WINDOWS
-        _logger.LogTrace("Updating Windows-specific colors");
+            _logger.LogTrace("Updating Windows-specific colors");
 
-        UpdateOrAddResource(application, "SystemAccentColor", Application.AccentColor);
-        UpdateOrAddResource(application, "SystemColorControlAccentColor", Application.AccentColor);
-        UpdateOrAddResource(application, "SystemAccentColorDark1", Application.AccentColor);
-        UpdateOrAddResource(application, "SystemAccentColorDark2", Application.AccentColor);
-        UpdateOrAddResource(application, "SystemAccentColorDark3", Application.AccentColor);
-        UpdateOrAddResource(application, "SystemAccentColorLight1", Application.AccentColor);
-        UpdateOrAddResource(application, "SystemAccentColorLight2", Application.AccentColor);
-        UpdateOrAddResource(application, "SystemAccentColorLight3", Application.AccentColor);
+            UpdateOrAddResource(application, "SystemAccentColor", Application.AccentColor);
+            UpdateOrAddResource(application, "SystemColorControlAccentColor", Application.AccentColor);
+            UpdateOrAddResource(application, "SystemAccentColorDark1", Application.AccentColor);
+            UpdateOrAddResource(application, "SystemAccentColorDark2", Application.AccentColor);
+            UpdateOrAddResource(application, "SystemAccentColorDark3", Application.AccentColor);
+            UpdateOrAddResource(application, "SystemAccentColorLight1", Application.AccentColor);
+            UpdateOrAddResource(application, "SystemAccentColorLight2", Application.AccentColor);
+            UpdateOrAddResource(application, "SystemAccentColorLight3", Application.AccentColor);
 
-        // Update Windows title bar colors
-        UpdateWindowsTitleBar();
+            // Update Windows title bar colors
+            UpdateWindowsTitleBar();
 #endif
-
-        _logger.LogTrace("Platform-specific colors updated");
+            _logger.LogTrace("Platform-specific colors updated");
+        }
     }
 
 #if WINDOWS
@@ -149,29 +151,32 @@ public class ThemeService : IThemeService
 
             var primaryColor = Application.AccentColor;
 
-            // Convert MAUI Color to Windows.UI.Color (use global:: to avoid namespace conflict)
-            var winColor = global::Windows.UI.Color.FromArgb(
-                (byte)(primaryColor.Alpha * 255),
-                (byte)(primaryColor.Red * 255),
-                (byte)(primaryColor.Green * 255),
-                (byte)(primaryColor.Blue * 255)
-             );
+            if (primaryColor is not null)
+            {
+                // Convert MAUI Color to Windows.UI.Color (use global:: to avoid namespace conflict)
+                var winColor = global::Windows.UI.Color.FromArgb(
+                    (byte)(primaryColor.Alpha * 255),
+                    (byte)(primaryColor.Red * 255),
+                    (byte)(primaryColor.Green * 255),
+                    (byte)(primaryColor.Blue * 255)
+                 );
 
-            var titleBar = window.AppWindow.TitleBar;
+                var titleBar = window.AppWindow.TitleBar;
 
-            // Set background colors
-            titleBar.ButtonBackgroundColor = winColor;
-            titleBar.ButtonInactiveBackgroundColor = winColor;
-            titleBar.BackgroundColor = winColor;
+                // Set background colors
+                titleBar.ButtonBackgroundColor = winColor;
+                titleBar.ButtonInactiveBackgroundColor = winColor;
+                titleBar.BackgroundColor = winColor;
 
-            // Set text colors to white for contrast
-            var whiteColor = global::Windows.UI.Color.FromArgb(255, 255, 255, 255);
-            titleBar.ForegroundColor = whiteColor;
-            titleBar.ButtonForegroundColor = whiteColor;
-            titleBar.ButtonHoverForegroundColor = whiteColor;
-            titleBar.ButtonPressedForegroundColor = whiteColor;
+                // Set text colors to white for contrast
+                var whiteColor = global::Windows.UI.Color.FromArgb(255, 255, 255, 255);
+                titleBar.ForegroundColor = whiteColor;
+                titleBar.ButtonForegroundColor = whiteColor;
+                titleBar.ButtonHoverForegroundColor = whiteColor;
+                titleBar.ButtonPressedForegroundColor = whiteColor;
 
-            _logger.LogTrace("Windows title bar colors updated to accent color");
+                _logger.LogTrace("Windows title bar colors updated to accent color");
+            }
         }
         catch (Exception ex)
         {

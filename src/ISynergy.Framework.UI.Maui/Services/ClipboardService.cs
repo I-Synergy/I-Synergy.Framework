@@ -9,9 +9,9 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class ClipboardService : IClipboardService
 {
-    public Task<ImageResult> GetImageFromClipboardAsync()
+    public Task<ImageResult?> GetImageFromClipboardAsync()
     {
-        return Task.FromResult<ImageResult>(null);
+        return Task.FromResult<ImageResult?>(null);
     }
 }
 #endif

@@ -15,7 +15,7 @@ public static class AppWindowExtensions
         Argument.IsNotNull(page);
 
         var window = page.GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
-        var appWindow = window.GetAppWindow();
+        var appWindow = window!.GetAppWindow();
         return appWindow;
     }
 

@@ -9,9 +9,10 @@ public class FileService : IFileService<FileResult>
 {
     public async Task<List<FileResult>> BrowseFileAsync(string filefilter, bool multiple = false, long maxFileSize = 1048576)
     {
+        var result = new List<FileResult>();
+
         try
         {
-            var result = new List<FileResult>();
             var filter = filefilter.Split(';');
             var pickOptions = new PickOptions
             {
@@ -26,25 +27,40 @@ public class FileService : IFileService<FileResult>
             if (multiple)
             {
                 var files = await FilePicker.Default.PickMultipleAsync(pickOptions);
-                result.AddRange(files.EnsureNotNull().Select(file => file.ToFileResult()));
+
+                foreach (var file in files.EnsureNotNull())
+                {
+                    if (file is not null)
+                    {
+                        var fileResult = file.ToFileResult();
+
+                        if (fileResult is not null)
+                            result.Add(fileResult);
+                    }
+                }
             }
             else
             {
                 var file = await FilePicker.Default.PickAsync(pickOptions);
-                result.Add(file.ToFileResult());
-            }
 
-            return result;
+                if (file is not null)
+                {
+                    var fileResult = file.ToFileResult();
+
+                    if (fileResult is not null)
+                        result.Add(fileResult);
+                }
+            }
         }
         catch (Exception)
         {
             // The user canceled or something went wrong
         }
 
-        return null;
+        return result;
     }
 
-    public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
+    public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
             return result[0].File;

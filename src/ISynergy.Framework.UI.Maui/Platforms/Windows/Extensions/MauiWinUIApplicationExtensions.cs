@@ -49,7 +49,10 @@ public static partial class MauiWinUIApplicationExtensions
     {
         ServiceLocator.Default.GetRequiredService<ILifecycleEventService>().OnAppInstanceActivated(sender, e);
 
-        var window = (Microsoft.UI.Xaml.Window)Microsoft.Maui.Controls.Application.Current!.MainPage!.Window!.Handler!.PlatformView!;
+        if (Microsoft.Maui.Controls.Application.Current!.Windows.Count == 0)
+            return;
+
+        var window = (Microsoft.UI.Xaml.Window)Microsoft.Maui.Controls.Application.Current!.Windows[0].Page!.Window!.Handler!.PlatformView!;
 
         // handle the old app being loaded.
         if (window is not null)

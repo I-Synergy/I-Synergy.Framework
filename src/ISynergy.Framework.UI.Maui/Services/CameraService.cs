@@ -6,7 +6,7 @@ namespace ISynergy.Framework.UI.Services;
 
 public class CameraService : ICameraService
 {
-    public async Task<FileResult> TakePictureAsync(long maxFileSize = 1048576)
+    public async Task<FileResult?> TakePictureAsync(long maxFileSize = 1048576)
     {
         if (MediaPicker.Default.IsCaptureSupported)
         {
