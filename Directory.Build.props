@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<LangVersion>14</LangVersion>
+		<LangVersion>14.0</LangVersion>
 		<NeutralLanguage>en</NeutralLanguage>
 		<DefaultLanguage>en</DefaultLanguage>
 		<Authors>Ismail Hassani</Authors>
