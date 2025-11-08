@@ -3,35 +3,34 @@ using Windows.ApplicationModel;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 
-namespace ISynergy.Framework.UI.Markup
+namespace ISynergy.Framework.UI.Markup;
+
+/// <summary>
+/// Class LanguageResource.
+/// Implements the <see cref="MarkupExtension" />
+/// </summary>
+/// <seealso cref="MarkupExtension" />
+[Bindable]
+[MarkupExtensionReturnType(ReturnType = typeof(string))]
+public partial class LanguageResource : MarkupExtension
 {
     /// <summary>
-    /// Class LanguageResource.
-    /// Implements the <see cref="MarkupExtension" />
+    /// Gets or sets the key.
     /// </summary>
-    /// <seealso cref="MarkupExtension" />
-    [Bindable]
-    [MarkupExtensionReturnType(ReturnType = typeof(string))]
-    public partial class LanguageResource : MarkupExtension
+    /// <value>The key.</value>
+    public string Key { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Provides the value.
+    /// </summary>
+    /// <returns>System.Object.</returns>
+    protected override object ProvideValue()
     {
-        /// <summary>
-        /// Gets or sets the key.
-        /// </summary>
-        /// <value>The key.</value>
-        public string Key { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Provides the value.
-        /// </summary>
-        /// <returns>System.Object.</returns>
-        protected override object ProvideValue()
+        if (!string.IsNullOrEmpty(Key) && !DesignMode.DesignMode2Enabled)
         {
-            if (!string.IsNullOrEmpty(Key) && !DesignMode.DesignMode2Enabled)
-            {
-                return LanguageService.Default.GetString(Key);
-            }
-
-            return $"[{Key}]";
+            return LanguageService.Default.GetString(Key);
         }
+
+        return $"[{Key}]";
     }
 }
