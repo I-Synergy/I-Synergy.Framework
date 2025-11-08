@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
 namespace ISynergy.Framework.Core.Base;
+
 public abstract class ObservableClass : IObservableClass
 {
     protected PropertyChangedEventHandler? _propertyChanged;
@@ -133,7 +134,7 @@ public abstract class ObservableClass : IObservableClass
     /// <typeparam name="T"></typeparam>
     /// <param name="value">The value.</param>
     /// <param name="propertyName">Name of the property.</param>
-    protected void SetValue<T>(T? value, [CallerMemberName] string? propertyName = "")
+    protected void SetValue<T>(T value, [CallerMemberName] string? propertyName = "")
     {
         SetValueCore<T>(value, propertyName, !IsInCleanup);
     }
@@ -151,7 +152,7 @@ public abstract class ObservableClass : IObservableClass
         field = value;
     }
 
-    private void SetValueCore<T>(T? value, string? propertyName, bool shouldRaiseEvents)
+    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents)
     {
         if (propertyName is null)
             return;

@@ -4,6 +4,7 @@
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 		
 		<UseMaui>true</UseMaui>
+		<MauiXamlInflator>XamlC</MauiXamlInflator>
 		<SingleProject>true</SingleProject>
 
 		<PackageId>I-Synergy.Framework.UI.Maui</PackageId>
@@ -41,21 +42,6 @@
 		<PackageReference Include="Microsoft.Maui.Controls" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
 		<PackageReference Include="SkiaSharp" />
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Common.Java8" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Android" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState.Android" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel.Ktx" />
-		<PackageReference Include="Xamarin.AndroidX.SavedState.SavedState.Ktx" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx.Android" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx" />
 	</ItemGroup>
 	
 	<ItemGroup>

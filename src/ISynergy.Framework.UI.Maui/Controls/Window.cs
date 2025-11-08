@@ -7,15 +7,19 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Scoped)]
 public class Window : ContentPage, IWindow
 {
-    public static readonly BindableProperty ViewModelProperty = BindableProperty.Create(nameof(ViewModel), typeof(IViewModel), typeof(Window), null);
-
     public IViewModel ViewModel
     {
-        get => (IViewModel)GetValue(ViewModelProperty);
+        get
+        {
+            if (BindingContext is IViewModel viewModel)
+                return viewModel;
+
+            return default!;
+        }
         set
         {
-            SetValue(ViewModelProperty, value);
             BindingContext = value;
+            SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
         }
     }
 

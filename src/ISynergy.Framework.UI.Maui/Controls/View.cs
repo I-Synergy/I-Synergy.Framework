@@ -13,14 +13,14 @@ public abstract class View : ContentPage, IView
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public IViewModel ViewModel
     {
         get
         {
             if (BindingContext is IViewModel viewModel)
                 return viewModel;
 
-            return null;
+            return default!;
         }
         set
         {
@@ -44,7 +44,7 @@ public abstract class View : ContentPage, IView
     : this()
     {
         Argument.IsNotNull(viewModelType);
-        ViewModel = ServiceLocator.Default.GetRequiredService(viewModelType) as IViewModel;
+        ViewModel = (ServiceLocator.Default.GetRequiredService(viewModelType) as IViewModel)!;
     }
 
     /// <summary>
@@ -80,7 +80,6 @@ public abstract class View : ContentPage, IView
         {
             // free managed resources
             ViewModel?.Dispose();
-            ViewModel = null;
         }
 
         // free native resources if there are any.

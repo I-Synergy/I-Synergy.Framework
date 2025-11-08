@@ -153,7 +153,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         RaisePropertyChanged(nameof(Errors));
     }
 
-    private void SetValueCore<T>(T? value, string? propertyName, bool shouldRaiseEvents)
+    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents)
     {
         if (propertyName is null)
             return;

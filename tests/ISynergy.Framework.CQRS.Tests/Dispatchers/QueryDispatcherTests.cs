@@ -1,7 +1,6 @@
 using ISynergy.Framework.CQRS.Queries;
 using ISynergy.Framework.CQRS.TestImplementations.Tests;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.CQRS.Dispatchers.Tests;
 
@@ -51,7 +50,7 @@ public class QueryDispatcherTests
 
         // Act & Assert
         await Assert.ThrowsAsync<NullReferenceException>(async () =>
-            await dispatcher.DispatchAsync<string>(null));
+            await dispatcher.DispatchAsync<string>((IQuery<string>?)null!));
     }
 
     public class AnotherQuery : IQuery<int> { public int Value { get; set; } }

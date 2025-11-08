@@ -24,7 +24,7 @@ public class Account : BaseModel
 
     [Required]
     [StringLength(128)]
-    public string Description { get; set; }
+    public required string Description { get; set; }
 
     [Required]
     public List<Module> Modules { get; set; }
@@ -42,13 +42,13 @@ public class Account : BaseModel
     public bool IsActive { get; set; }
 
     [Required]
-    public string TimeZoneId { get; set; }
+    public required string TimeZoneId { get; set; }
 
     [Required]
-    public string CountryCode { get; set; }
+    public required string CountryCode { get; set; }
 
     [Required]
-    public string CultureCode { get; set; }
+    public required string CultureCode { get; set; }
 }
 
 /// <summary>

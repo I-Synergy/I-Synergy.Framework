@@ -270,9 +270,9 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         var currentTask = task;
 
         // Get or create a weak reference from the pool
-        WeakReference<BaseAsyncRelayCommand> weakThis;
+        WeakReference<BaseAsyncRelayCommand>? weakThis;
 
-        if (!_weakReferencePool.TryDequeue(out weakThis))
+        if (!_weakReferencePool.TryDequeue(out weakThis) || weakThis is null)
         {
             weakThis = new WeakReference<BaseAsyncRelayCommand>(this);
         }
@@ -282,9 +282,9 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         }
 
         // Get or create a cancellation token source from the pool
-        CancellationTokenSource continuationCts;
+        CancellationTokenSource? continuationCts;
 
-        if (!_continuationCtsPool.TryDequeue(out continuationCts))
+        if (!_continuationCtsPool.TryDequeue(out continuationCts) || continuationCts is null)
         {
             continuationCts = new CancellationTokenSource();
         }

@@ -1,8 +1,8 @@
 <Project>
 	<PropertyGroup>
 		<LangVersion>14.0</LangVersion>
-		<NeutralLanguage>en</NeutralLanguage>
-		<DefaultLanguage>en</DefaultLanguage>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<DefaultLanguage>en-US</DefaultLanguage>
 		<Authors>Ismail Hassani</Authors>
 		<Company>International Intelligence</Company>
 		<Product>I-Synergy Framework</Product>

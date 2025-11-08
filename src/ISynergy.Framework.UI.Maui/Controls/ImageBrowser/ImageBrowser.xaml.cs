@@ -61,10 +61,11 @@ public partial class ImageBrowser : ContentView
     private async void PasteButton_Clicked(object sender, EventArgs e)
     {
         if (ServiceLocator.Default.GetRequiredService<IClipboardService>() is { } clipboardService &&
-            await clipboardService.GetImageFromClipboardAsync() is { } imageResult)
+            await clipboardService.GetImageFromClipboardAsync() is { } imageResult &&
+            imageResult is not null)
         {
-            FileBytes = imageResult.FileBytes;
-            ContentType = imageResult.ContentType;
+            FileBytes = imageResult.FileBytes ?? Array.Empty<byte>();
+            ContentType = imageResult.ContentType ?? string.Empty;
             FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
             DateTime = System.DateTime.Now;
         }
@@ -72,7 +73,7 @@ public partial class ImageBrowser : ContentView
 
     private void ClearButton_Clicked(object sender, EventArgs e)
     {
-        FileBytes = null;
+        FileBytes = Array.Empty<byte>();
         ContentType = string.Empty;
     }
 
