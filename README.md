@@ -1,70 +1,190 @@
-# I-Synergy Framework
-I-Synergy Framework for backend and frontend applications
+# 🚀 I-Synergy Framework
 
-## Documentation
- [I-Synergy Framework Library Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Libraries)\
-  [I-Synergy Framework Samples Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Samples)\
- [Developers Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers)
-___
-## I-Synergy Framework Build Status
+> **Comprehensive .NET 10 framework for building enterprise-grade backend and frontend applications**
 
-| Build | Status |
-|:---|---|
-| [I-Synergy.Framework](https://github.com/I-Synergy/I-Synergy.Framework) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main)|
+<div align="center">
 
-## Nuget Active Deployment Status
-| Release | Status |
-|:---|---|
-| [I-Synergy.Framework.AspNetCore](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore) |
-| [I-Synergy.Framework.AspNetCore.Authentication](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Authentication/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Authentication) |
-| [I-Synergy.Framework.AspNetCore.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Blazor) |
-| [I-Synergy.Framework.AspNetCore.Globalization](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Globalization/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Globalization) |
-| [I-Synergy.Framework.AspNetCore.Monitoring](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Monitoring/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Monitoring) |
-| [I-Synergy.Framework.AspNetCore.MultiTenancy](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.MultiTenancy/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.MultiTenancy) |
-| [I-Synergy.Framework.Automations](https://www.nuget.org/packages/I-Synergy.Framework.Automations/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Automations) |
-| [I-Synergy.Framework.Core](https://www.nuget.org/packages/I-Synergy.Framework.Core/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Core) |
-| [I-Synergy.Framework.CQRS](https://www.nuget.org/packages/I-Synergy.Framework.CQRS/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.CQRS) |
-| [I-Synergy.Framework.Documents](https://www.nuget.org/packages/I-Synergy.Framework.Documents/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Documents) |
-| [I-Synergy.Framework.Documents.Syncfusion](https://www.nuget.org/packages/I-Synergy.Framework.Documents.Syncfusion/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Documents.Syncfusion) |
-| [I-Synergy.Framework.EntityFramework](https://www.nuget.org/packages/I-Synergy.Framework.EntityFramework/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EntityFramework) |
-| [I-Synergy.Framework.Financial](https://www.nuget.org/packages/I-Synergy.Framework.Financial/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Financial) |
-| [I-Synergy.Framework.Geography](https://www.nuget.org/packages/I-Synergy.Framework.Geography/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Geography) |
-| [I-Synergy.Framework.IO](https://www.nuget.org/packages/I-Synergy.Framework.IO/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.IO) |
-| [I-Synergy.Framework.Mail](https://www.nuget.org/packages/I-Synergy.Framework.Mail/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail) |
-| [I-Synergy.Framework.Mail.Microsoft365](https://www.nuget.org/packages/I-Synergy.Framework.Mail.Microsoft365/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.Microsoft365) |
-| [I-Synergy.Framework.Mail.SendGrid](https://www.nuget.org/packages/I-Synergy.Framework.Mail.SendGrid/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.SendGrid) |
-| [I-Synergy.Framework.Mathematics](https://www.nuget.org/packages/I-Synergy.Framework.Mathematics/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mathematics) |
-| [I-Synergy.Framework.MessageBus](https://www.nuget.org/packages/I-Synergy.Framework.MessageBus/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.MessageBus) |
-| [I-Synergy.Framework.MessageBus.Azure](https://www.nuget.org/packages/I-Synergy.Framework.MessageBus.Azure/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.MessageBus.Azure) |
-| [I-Synergy.Framework.Monitoring](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Monitoring) |
-| [I-Synergy.Framework.Monitoring.Client](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Client/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Monitoring.Client) |
-| [I-Synergy.Framework.Mvvm](https://www.nuget.org/packages/I-Synergy.Framework.Mvvm/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mvvm) |
-| [I-Synergy.Framework.OpenTelemetry](https://www.nuget.org/packages/I-Synergy.Framework.OpenTelemetry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry) |
-| [I-Synergy.Framework.OpenTelemetry.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.OpenTelemetry.ApplicationInsights/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry.ApplicationInsights) |
-| [I-Synergy.Framework.OpenTelemetry.Sentry](https://www.nuget.org/packages/I-Synergy.Framework.OpenTelemetry.Sentry/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry.Sentry) |
-| [I-Synergy.Framework.Physics](https://www.nuget.org/packages/I-Synergy.Framework.Physics/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Physics) |
-| [I-Synergy.Framework.Printer.Label](https://www.nuget.org/packages/I-Synergy.Framework.Printer.Label/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Printer.Label) |
-| [I-Synergy.Framework.Printer.Label.Dymo](https://www.nuget.org/packages/I-Synergy.Framework.Printer.Label.Dymo/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Printer.Label.Dymo) |
-| [I-Synergy.Framework.Storage](https://www.nuget.org/packages/I-Synergy.Framework.Storage/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage) |
-| [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage.Azure) |
-| [I-Synergy.Framework.Synchronization](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Synchronization) |
-| [I-Synergy.Framework.UI](https://www.nuget.org/packages/I-Synergy.Framework.UI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI) |
-| [I-Synergy.Framework.UI.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.UI.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Blazor) |
-| [I-Synergy.Framework.UI.Maui](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui) |
-| [I-Synergy.Framework.UI.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.UI.WinUI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WinUI) |
-| [I-Synergy.Framework.UI.WPF](https://www.nuget.org/packages/I-Synergy.Framework.UI.WPF/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WPF) |
-| [I-Synergy.Framework.UI.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.UI.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Blazor) |
+[![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=.net)
 
-## Nuget Deprecated Deployment Status
-| Release | Status |
-|:---|---|
-| [I-Synergy.Framework.Aspire.Proxy](https://www.nuget.org/packages/I-Synergy.Framework.Aspire.Proxy/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Aspire.Proxy) |
-| [I-Synergy.Framework.Logging.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Logging.ApplicationInsights/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.ApplicationInsights) |
-| [I-Synergy.Framework.Logging.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Logging.AppCenter/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.AppCenter) |
-| [I-Synergy.Framework.UI.Uno](https://www.nuget.org/packages/I-Synergy.Framework.UI.Uno/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Uno) |
-| [I-Synergy.Framework.UI.Maui.Blazor](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui.Blazor/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui.Blazor) |
-| [I-Synergy.Framework.Update](https://www.nuget.org/packages/I-Synergy.Framework.Update/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update) |
-| [I-Synergy.Framework.Update.Maui](https://www.nuget.org/packages/I-Synergy.Framework.Update.Maui/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Maui) |
-| [I-Synergy.Framework.Update.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.Update.WinUI/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WinUI) |
-| [I-Synergy.Framework.Update.Uno](https://www.nuget.org/packages/I-Synergy.Framework.Update.Uno/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Uno) |
-| [I-Synergy.Framework.Update.WPF](https://www.nuget.org/packages/I-Synergy.Framework.Update.WPF/) | ![Nuget Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WPF) |
+</div>
+
+---
+
+## 📖 Documentation & Resources
+
+| 📚 Libraries | 🎯 Samples | 👨‍💻 Developer Guide |
+|:---:|:---:|:---:|
+| [Framework Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Libraries) | [Sample Projects](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Samples) | [Developer Docs](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers) |
+
+---
+
+## ✨ Key Features
+
+- 🎯 **CQRS Pattern** - Command Query Responsibility Segregation for scalable applications
+- 📱 **Multi-Platform Support** - ASP.NET Core, Blazor, MAUI, WPF, WinUI, UWP
+- ☁️ **Cloud Ready** - Azure integration and multi-tenant support
+- 📊 **Monitoring & Observability** - OpenTelemetry with Application Insights & Sentry
+- 💾 **Data Access** - Entity Framework Core with advanced abstractions
+- ✉️ **Communication** - Mail, Message Bus, and SignalR capabilities
+- 🔐 **Authentication** - Enterprise security patterns and multi-tenancy
+- 🌍 **Globalization** - Multi-language and localization support
+- 📄 **Document Processing** - PDF, Excel with Syncfusion support
+- 🧮 **Scientific Computing** - Financial, Geography, Physics, Mathematics libraries
+
+---
+
+## 📦 Core Packages
+
+### 🌐 Web & API Development
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.AspNetCore** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore?label=) |
+| **I-Synergy.Framework.AspNetCore.Authentication** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Authentication?label=) |
+| **I-Synergy.Framework.AspNetCore.Blazor** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Blazor?label=) |
+
+### 🏛️ Enterprise Features
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.AspNetCore.Globalization** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Globalization?label=) |
+| **I-Synergy.Framework.AspNetCore.Monitoring** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Monitoring?label=) |
+| **I-Synergy.Framework.AspNetCore.MultiTenancy** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.MultiTenancy?label=) |
+
+### 🎯 Application Architecture
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.Core** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Core?label=) |
+| **I-Synergy.Framework.CQRS** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.CQRS?label=) |
+| **I-Synergy.Framework.Automations** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Automations?label=) |
+
+### 💾 Data & Persistence
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.EntityFramework** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EntityFramework?label=) |
+| **I-Synergy.Framework.Storage** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage?label=) |
+| **I-Synergy.Framework.Storage.Azure** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage.Azure?label=) |
+
+### 📧 Communication & Messaging
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.Mail** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail?label=) |
+| **I-Synergy.Framework.Mail.Microsoft365** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.Microsoft365?label=) |
+| **I-Synergy.Framework.Mail.SendGrid** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.SendGrid?label=) |
+| **I-Synergy.Framework.MessageBus** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.MessageBus?label=) |
+| **I-Synergy.Framework.MessageBus.Azure** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.MessageBus.Azure?label=) |
+
+### 🔍 Monitoring & Observability
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.Monitoring** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Monitoring?label=) |
+| **I-Synergy.Framework.Monitoring.Client** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Monitoring.Client?label=) |
+| **I-Synergy.Framework.OpenTelemetry** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry?label=) |
+| **I-Synergy.Framework.OpenTelemetry.ApplicationInsights** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry.ApplicationInsights?label=) |
+| **I-Synergy.Framework.OpenTelemetry.Sentry** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.OpenTelemetry.Sentry?label=) |
+
+### 🎨 UI & Client Frameworks
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.UI** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI?label=) |
+| **I-Synergy.Framework.UI.Blazor** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Blazor?label=) |
+| **I-Synergy.Framework.UI.Maui** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui?label=) |
+| **I-Synergy.Framework.UI.WinUI** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WinUI?label=) |
+| **I-Synergy.Framework.UI.WPF** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WPF?label=) |
+
+### 🧮 Specialized Libraries
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.Documents** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Documents?label=) |
+| **I-Synergy.Framework.Documents.Syncfusion** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Documents.Syncfusion?label=) |
+| **I-Synergy.Framework.Financial** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Financial?label=) |
+| **I-Synergy.Framework.Geography** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Geography?label=) |
+| **I-Synergy.Framework.IO** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.IO?label=) |
+| **I-Synergy.Framework.Mathematics** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mathematics?label=) |
+| **I-Synergy.Framework.Physics** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Physics?label=) |
+| **I-Synergy.Framework.Printer.Label** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Printer.Label?label=) |
+| **I-Synergy.Framework.Printer.Label.Dymo** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Printer.Label.Dymo?label=) |
+| **I-Synergy.Framework.Synchronization** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Synchronization?label=) |
+| **I-Synergy.Framework.Mvvm** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mvvm?label=) |
+
+---
+
+<details>
+<summary><b>⚠️ Deprecated Packages</b> (Click to expand)</summary>
+
+> These packages are no longer maintained and should not be used in new projects.
+
+| Package | Status |
+|:---|:---|
+| **I-Synergy.Framework.Aspire.Proxy** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Aspire.Proxy?label=Deprecated) |
+| **I-Synergy.Framework.Logging.ApplicationInsights** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.ApplicationInsights?label=Deprecated) |
+| **I-Synergy.Framework.Logging.AppCenter** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Logging.AppCenter?label=Deprecated) |
+| **I-Synergy.Framework.UI.Uno** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Uno?label=Deprecated) |
+| **I-Synergy.Framework.UI.Maui.Blazor** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.Maui.Blazor?label=Deprecated) |
+| **I-Synergy.Framework.Update** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update?label=Deprecated) |
+| **I-Synergy.Framework.Update.Maui** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Maui?label=Deprecated) |
+| **I-Synergy.Framework.Update.WinUI** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WinUI?label=Deprecated) |
+| **I-Synergy.Framework.Update.WPF** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WPF?label=Deprecated) |
+| **I-Synergy.Framework.Update.Uno** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Uno?label=Deprecated) |
+
+</details>
+
+---
+
+## 🏗️ Architecture Highlights
+
+- **Clean Architecture** - Clear separation of concerns across Domain, Application, Infrastructure, and Presentation layers
+- **CQRS Pattern** - Command Query Responsibility Segregation for scalable event-driven applications
+- **Dependency Injection** - Built-in DI throughout all layers
+- **Entity Framework Core** - Advanced data access with repository pattern
+- **Domain-Driven Design** - Rich domain models with aggregate roots
+- **Vertical Slice Architecture** - Feature-organized application structure
+
+---
+
+## 🌟 Supported Platforms
+
+- ✅ **ASP.NET Core 10** - Web APIs and backend services
+- ✅ **Blazor** - Interactive web components
+- ✅ **.NET MAUI** - Cross-platform mobile & desktop (iOS, Android, Windows, macOS)
+- ✅ **WPF** - Desktop applications
+- ✅ **WinUI** - Modern Windows applications
+- ✅ **UWP** - Universal Windows Platform
+
+---
+
+## 📊 Build Status
+
+| Component | Status |
+|:---|:---|
+| **I-Synergy.Framework** | [![Build](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main) |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please refer to the [Developer Guide](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers) for guidelines.
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+<div align="center">
+
+**Made with ❤️ by I-Synergy**
+
+[Azure DevOps](https://dev.azure.com/i-synergy/I-Synergy.Framework) • [NuGet](https://www.nuget.org/packages?q=i-synergy) • [GitHub](https://github.com/I-Synergy/I-Synergy.Framework)
+
+</div>
