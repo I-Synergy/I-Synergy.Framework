@@ -274,7 +274,7 @@ public class DateTimeOffsetConverterTests
     private class TestClass
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public required string Name { get; set; }
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset MinDate { get; set; }
     }

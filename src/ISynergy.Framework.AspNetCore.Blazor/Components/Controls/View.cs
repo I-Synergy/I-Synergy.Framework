@@ -18,7 +18,7 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    [Inject] public TViewModel? ViewModel { get; set; }
+    [Inject] public required TViewModel ViewModel { get; set; }
 
     /// <summary>
     /// Gets or sets the IsEnabled property value.
@@ -30,10 +30,10 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// </summary>
     private readonly List<ICommand> _subscribedCommands = new();
 
-    IViewModel? IView.ViewModel
+    IViewModel IView.ViewModel
     {
         get => ViewModel;
-        set => ViewModel = value is null ? null : (TViewModel)value;
+        set => ViewModel = (TViewModel)value;
     }
 
     protected override async Task OnInitializedAsync()

@@ -24,7 +24,8 @@ public class ViewModelExtensionTests
     // Test classes
     public class TestView : IView
     {
-        public IViewModel? ViewModel { get; set; }
+        public required IViewModel ViewModel { get; set; }
+
         public bool IsEnabled { get; set; }
 
         public void Dispose()
@@ -34,7 +35,7 @@ public class ViewModelExtensionTests
 
     public class TestWindow : IWindow
     {
-        public IViewModel? ViewModel { get; set; }
+        public required IViewModel ViewModel { get; set; }
         public bool IsEnabled { get; set; }
 
         public Task CloseAsync() =>
@@ -190,7 +191,14 @@ public class ViewModelExtensionTests
     public void GetRelatedViewModel_FromViewInstance_ReturnsViewModelName()
     {
         // Arrange
-        var view = new TestView();
+        var mockCommonServices = new Mock<ICommonServices>();
+        var mockScopedContextService = new Mock<IScopedContextService>();
+        mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(mockScopedContextService.Object);
+
+        var view = new TestView
+        {
+            ViewModel = new TestViewModel(mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object)
+        };
 
         // Act
         var result = view.GetRelatedViewModel();
@@ -203,7 +211,14 @@ public class ViewModelExtensionTests
     public void GetRelatedViewModel_FromWindowInstance_ReturnsViewModelName()
     {
         // Arrange
-        var window = new TestWindow();
+        var mockCommonServices = new Mock<ICommonServices>();
+        var mockScopedContextService = new Mock<IScopedContextService>();
+        mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(mockScopedContextService.Object);
+
+        var window = new TestWindow
+        {
+            ViewModel = new TestViewModel(mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object)
+        };
 
         // Act
         var result = window.GetRelatedViewModel();

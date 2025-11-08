@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Validation.Tests;
 
@@ -95,7 +94,7 @@ public class ArgumentTests
     [TestMethod]
     public void HasNoNullsTTest()
     {
-        List<Product> test = [new Product(), null];
+        List<Product> test = [new Product(), null!];
 
         Assert.Throws<ArgumentNullException>(() => Argument.HasNoNulls(test));
     }

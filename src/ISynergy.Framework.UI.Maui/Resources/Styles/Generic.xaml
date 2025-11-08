@@ -72,13 +72,13 @@
                 <Label
                     Margin="8,4"
                     FontSize="Subtitle"
-                    HorizontalOptions="StartAndExpand"
+                    HorizontalOptions="Start"
                     Text="{Binding Title}" />
 
                 <ContentPresenter Grid.Row="1" Margin="{DynamicResource DefaultMargin}" />
 
                 <Grid Grid.Row="2">
-                    <HorizontalStackLayout HorizontalOptions="EndAndExpand" Spacing="8">
+                    <HorizontalStackLayout HorizontalOptions="End" Spacing="8">
                         <Button
                             Command="{Binding SubmitCommand}"
                             CommandParameter="{Binding SelectedItem}"

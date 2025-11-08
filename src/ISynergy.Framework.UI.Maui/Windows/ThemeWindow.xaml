@@ -37,19 +37,19 @@
                         Grid.Column="1"
                         HorizontalOptions="Center"
                         GroupName="Theme"
-                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Default}, Mode=TwoWay}" />
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Default}, Mode=TwoWay, FallbackValue=true}" />
                     <RadioButton
                         Content="{m:GetString Light}"
                         Grid.Column="2"
                         HorizontalOptions="Center"
                         GroupName="Theme"
-                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Light}, Mode=TwoWay}" />
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Light}, Mode=TwoWay, FallbackValue=false}" />
                     <RadioButton
                         Content="{m:GetString Dark}"
                         Grid.Column="3"
                         HorizontalOptions="Center"
                         GroupName="Theme"
-                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Dark}, Mode=TwoWay}" />
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Dark}, Mode=TwoWay, FallbackValue=false}" />
                 </Grid>
 
                 <!-- Color Grid -->

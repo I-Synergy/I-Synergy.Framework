@@ -3,6 +3,10 @@
     "Sample.Maui (Packaged)": {
       "commandName": "MsixPackage",
       "commandLineArgs": "?environment=development&country=nl"
+    },
+    "Sample.Maui": {
+      "commandName": "Project",
+      "commandLineArgs": "?environment=development&country=nl"
     }
   }
 }

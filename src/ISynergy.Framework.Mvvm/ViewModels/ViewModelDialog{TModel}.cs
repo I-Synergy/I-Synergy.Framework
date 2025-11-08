@@ -109,14 +109,14 @@ public abstract class ViewModelDialog<TModel> : ViewModel, IViewModelDialog<TMod
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
     protected ViewModelDialog(
-    ICommonServices commonServices,
+        ICommonServices commonServices,
         ILogger<ViewModelDialog<TModel>> logger)
     : base(commonServices, logger)
     {
         // CanExecute checks both parameter and property to handle MAUI Button visual state correctly
         // Execute uses parameter if provided, falls back to SelectedItem
         SubmitCommand = new AsyncRelayCommand<TModel>(
-  execute: async e => await SubmitAsync(e ?? SelectedItem!), 
+            execute: async e => await SubmitAsync(e ?? SelectedItem!),
             canExecute: e => (e ?? SelectedItem) is not null);
     }
 
