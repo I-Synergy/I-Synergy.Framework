@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using Microsoft.UI.Xaml.Data;
 using System.Text;
 
@@ -25,15 +26,17 @@ public class TimeSpanToStringConverter : IValueConverter
         {
             var result = new StringBuilder();
 
+            var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
+
             if (timeSpan.Days > 0)
             {
-                result.Append($"{timeSpan.Days} {LanguageService.Default.GetString("Day_s")}, ");
+                result.Append($"{timeSpan.Days} {languageService.GetString("Day_s")}, ");
             }
 
             result.Append(
-                $"{timeSpan.Hours} {LanguageService.Default.GetString("Hour_s")} " +
-                $"{LanguageService.Default.GetString("And")} " +
-                $"{timeSpan.Minutes} {LanguageService.Default.GetString("Minute_s")}");
+                $"{timeSpan.Hours} {languageService.GetString("Hour_s")} " +
+                $"{languageService.GetString("And")} " +
+                $"{timeSpan.Minutes} {languageService.GetString("Minute_s")}");
 
             return result.ToString();
         }

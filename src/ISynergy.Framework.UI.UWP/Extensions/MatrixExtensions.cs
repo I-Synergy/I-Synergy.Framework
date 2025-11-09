@@ -4,10 +4,9 @@ using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.UI.Extensions;
 
-// TODO: Check if we can make these static extension methods of the MatrixHelper in C#8 or move to an operator extension.
-
 /// <summary>
 /// Static helper methods for <see cref="o:Windows.UI.Xaml.Media.Matrix" />.
+/// These extension methods provide WPF-compatible matrix operations for UWP/WinUI platforms.
 /// </summary>
 public static class MatrixExtensions
 {
@@ -67,14 +66,18 @@ public static class MatrixExtensions
 
     /// <summary>
     /// Implements WPF's Matrix.HasInverse.
+    /// Determines if the matrix has an inverse by checking if the determinant is non-zero.
     /// </summary>
     /// <param name="matrix">The matrix.</param>
-    /// <returns>True if matrix has an inverse.</returns>
+    /// <returns>True if matrix has an inverse; otherwise, false.</returns>
+    /// <remarks>
+    /// A matrix has an inverse if and only if its determinant is non-zero.
+    /// This is equivalent to WPF's <c>matrix.HasInverse</c> property.
+    /// </remarks>
     public static bool HasInverse(this Matrix matrix)
     {
-        // TODO: Check if we can make this an extension property in C#8.
-        // WPF equivalent of following code:
-        // return matrix.HasInverse;
+        // Calculate determinant: M11 * M22 - M12 * M21
+        // Matrix has an inverse if determinant != 0
         return ((matrix.M11 * matrix.M22) - (matrix.M12 * matrix.M21)) != 0;
     }
 

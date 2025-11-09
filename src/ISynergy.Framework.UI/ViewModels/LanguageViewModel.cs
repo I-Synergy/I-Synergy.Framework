@@ -18,7 +18,7 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title => LanguageService.Default.GetString("Language");
+    public override string Title => _commonServices.LanguageService.GetString("Language");
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.

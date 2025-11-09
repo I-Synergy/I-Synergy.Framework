@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using ISynergy.Framework.UI.Converters.Shared;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -141,12 +142,7 @@ public class IntegerToDoubleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is int intValue)
-        {
-            return System.Convert.ToDouble(intValue);
-        }
-
-        return 0d;
+        return IntegerToDoubleConverterBase.Convert(value);
     }
 
     /// <summary>
@@ -159,11 +155,6 @@ public class IntegerToDoubleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is double doubleValue)
-        {
-            return System.Convert.ToInt32(doubleValue);
-        }
-
-        return 0;
+        return IntegerToDoubleConverterBase.ConvertBack(value);
     }
 }

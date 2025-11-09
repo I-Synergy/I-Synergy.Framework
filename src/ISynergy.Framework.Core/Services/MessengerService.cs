@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Core.Services;
 
@@ -23,34 +24,18 @@ public sealed class MessengerService : IMessengerService
 {
     private readonly object _recipientsLock = new object();
     private readonly object _cleanupLock = new object();
+    private readonly ILogger<MessengerService>? _logger;
 
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsOfSubclassesAction;
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsStrictAction;
 
-    private static readonly object _creationLock = new object();
-    private static IMessengerService? _defaultInstance;
-
     /// <summary>
-    /// Gets the Messenger's default instance, allowing
-    /// to register and send messages in a static manner.
+    /// Initializes a new instance of the <see cref="MessengerService"/> class.
     /// </summary>
-    public static IMessengerService Default
+    /// <param name="logger">Optional logger for exception handling. If not provided, exceptions will be silently handled.</param>
+    public MessengerService(ILogger<MessengerService>? logger = null)
     {
-        get
-        {
-            if (_defaultInstance is null)
-            {
-                lock (_creationLock)
-                {
-                    if (_defaultInstance is null)
-                    {
-                        _defaultInstance = new MessengerService();
-                    }
-                }
-            }
-
-            return _defaultInstance;
-        }
+        _logger = logger;
     }
 
     /// <summary>
@@ -426,7 +411,7 @@ public sealed class MessengerService : IMessengerService
 
                     if (list is not null)
                     {
-                        SendToList(message, list, messageType, targetType, token);
+                        SendToList(message, list, messageType, targetType, token, _logger);
                     }
                 }
             }
@@ -448,7 +433,7 @@ public sealed class MessengerService : IMessengerService
 
             if (list is not null)
             {
-                SendToList(message, list, messageType, targetType, token);
+                SendToList(message, list, messageType, targetType, token, _logger);
             }
         }
 
@@ -478,7 +463,8 @@ public sealed class MessengerService : IMessengerService
         List<WeakActionAndToken> list,
         Type messageType,
         Type? targetType,
-        object? token)
+        object? token,
+        ILogger<MessengerService>? logger)
     {
         if (message is null)
             return;
@@ -499,11 +485,14 @@ public sealed class MessengerService : IMessengerService
                 {
                     executeAction.ExecuteWithObject(message);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Silently catch exceptions to prevent one failing recipient from affecting others
-                    // In a production environment, you might want to log these exceptions
-                    // or provide a configurable exception handling strategy
+                    // Log exceptions to prevent one failing recipient from affecting others
+                    // This allows debugging while maintaining message delivery to other recipients
+                    logger?.LogWarning(ex, 
+                        "Exception occurred while executing message handler. MessageType: {MessageType}, RecipientType: {RecipientType}",
+                        message?.GetType().Name ?? "Unknown",
+                        item.Action?.Target?.GetType().Name ?? "Unknown");
                 }
             }
         }
@@ -610,13 +599,4 @@ public sealed class MessengerService : IMessengerService
         public object? Token { get; set; }
     }
 
-    /// <summary>
-    /// Sets the Messenger's default (static) instance to null.
-    /// </summary>
-    public static void Reset()
-    {
-        var currentInstance = _defaultInstance as MessengerService;
-        _defaultInstance = null;
-        currentInstance?.Cleanup();
-    }
 }

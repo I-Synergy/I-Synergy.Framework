@@ -16,7 +16,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
 {
     private readonly INavigationService _navigationService;
 
-    public override string Title { get => LanguageService.Default.GetString("Settings"); }
+    public override string Title { get => _commonServices.LanguageService.GetString("Settings"); }
 
     private readonly ISettingsService _settingsService;
 

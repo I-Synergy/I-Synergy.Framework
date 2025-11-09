@@ -35,9 +35,9 @@ public class PropertyChangedMessageTest
 
         TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
 
-        MessengerService.Reset();
+        var messenger = new MessengerService();
 
-        MessengerService.Default.Register<BasePropertyChangedMessage>(
+        messenger.Register<BasePropertyChangedMessage>(
             this,
             true,
             m =>
@@ -134,9 +134,9 @@ public class PropertyChangedMessageTest
 
         TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
 
-        MessengerService.Reset();
+        var messenger = new MessengerService();
 
-        MessengerService.Default.Register<PropertyChangedMessage<DateTime>>(
+        messenger.Register<PropertyChangedMessage<DateTime>>(
             this,
             m =>
             {
@@ -152,7 +152,7 @@ public class PropertyChangedMessageTest
                 }
             });
 
-        MessengerService.Default.Register<PropertyChangedMessage<InvalidOperationException>>(
+        messenger.Register<PropertyChangedMessage<InvalidOperationException>>(
             this,
             m =>
             {
@@ -243,9 +243,9 @@ public class PropertyChangedMessageTest
         object? receivedSender = null;
         object? receivedTarget = null;
 
-        MessengerService.Reset();
+        var messenger = new MessengerService();
 
-        MessengerService.Default.Register<PropertyChangedMessage<string>>(this,
+        messenger.Register<PropertyChangedMessage<string>>(this,
                                                                    m =>
                                                                    {
                                                                        receivedSender = m.Sender;
@@ -307,7 +307,7 @@ public class PropertyChangedMessageTest
             }
         }
 
-        MessengerService.Default.Send(propertyMessage1);
+        messenger.Send(propertyMessage1);
 
         Assert.AreEqual(sender, receivedSender);
         Assert.AreEqual(target, receivedTarget);
@@ -319,7 +319,7 @@ public class PropertyChangedMessageTest
         receivedTarget = null;
         receivedSender = null;
 
-        MessengerService.Default.Send(propertyMessage2);
+        messenger.Send(propertyMessage2);
 
         Assert.AreEqual(sender, receivedSender);
         Assert.AreEqual(target, receivedTarget);
@@ -350,7 +350,7 @@ public class PropertyChangedMessageTest
                 DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
                 PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(AnotherDate));
-                MessengerService.Default.Send(message);
+                messenger.Send(message);
             }
         }
 
@@ -367,7 +367,7 @@ public class PropertyChangedMessageTest
                 DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
                 PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(MyDate));
-                MessengerService.Default.Send(message);
+                messenger.Send(message);
             }
         }
 
@@ -382,7 +382,7 @@ public class PropertyChangedMessageTest
                 InvalidOperationException oldValue = GetValue<InvalidOperationException>();
                 SetValue(value);
                 PropertyChangedMessage<InvalidOperationException> message = new PropertyChangedMessage<InvalidOperationException>(this, oldValue, value, nameof(MyException));
-                MessengerService.Default.Send(message);
+                messenger.Send(message);
             }
         }
     }

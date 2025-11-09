@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
@@ -57,18 +58,20 @@ public abstract class Application : System.Windows.Application, IDisposable
            .Build()
            .SetLocatorProvider();
 
-        _logger = host.Services.GetRequiredService<ILogger<Application>>();
+        var serviceProvider = host.Services;
+        _logger = serviceProvider.GetRequiredService<ILogger<Application>>();
 
         _logger.LogTrace("Setting up services and global exception handler.");
 
-        _commonServices = ServiceLocator.Default.GetRequiredService<ICommonServices>();
-        _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
-        _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
-        _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+        _commonServices = serviceProvider.GetRequiredService<ICommonServices>();
+        _dialogService = serviceProvider.GetRequiredService<IDialogService>();
+        _navigationService = serviceProvider.GetRequiredService<INavigationService>();
+        _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
         _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
         _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+        var messengerService = serviceProvider.GetRequiredService<IMessengerService>();
 
-        _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+        _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -86,17 +89,17 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
-        MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
+        messengerService.Register<ShowInformationMessage>(this, async m =>
         {
             var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
         });
 
-        MessengerService.Default.Register<ShowWarningMessage>(this, async m =>
+        messengerService.Register<ShowWarningMessage>(this, async m =>
         {
             var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
         });
 
-        MessengerService.Default.Register<ShowErrorMessage>(this, async m =>
+        messengerService.Register<ShowErrorMessage>(this, async m =>
         {
             var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
         });
@@ -352,9 +355,10 @@ public abstract class Application : System.Windows.Application, IDisposable
     {
         if (disposing)
         {
-            MessengerService.Default.Unregister<ShowInformationMessage>(this);
-            MessengerService.Default.Unregister<ShowWarningMessage>(this);
-            MessengerService.Default.Unregister<ShowErrorMessage>(this);
+            var messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
+            messengerService.Unregister<ShowInformationMessage>(this);
+            messengerService.Unregister<ShowWarningMessage>(this);
+            messengerService.Unregister<ShowErrorMessage>(this);
 
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;

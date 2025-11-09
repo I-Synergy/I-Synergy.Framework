@@ -52,14 +52,14 @@ public static class ServiceCollectionExtensions
         services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
-        var languageService = LanguageService.Default;
+        var languageService = new LanguageService();
         languageService.AddResourceManager(typeof(Framework.Mvvm.Properties.Resources));
         languageService.AddResourceManager(typeof(Framework.AspNetCore.Blazor.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
-        services.TryAddSingleton<IMessengerService>(s => MessengerService.Default);
+        services.TryAddSingleton<IMessengerService, MessengerService>();
         services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         services.TryAddSingleton<IBusyService, BusyService>();
 

@@ -21,7 +21,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Display"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Display"); } }
 
     /// <summary>
     /// Gets or sets the Items property value.

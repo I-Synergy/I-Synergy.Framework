@@ -26,21 +26,23 @@ public class ChangeTrackingConverters : IValueConverter
         if (value is IModel model)
         {
             var result = new StringBuilder();
+            // Cache service lookup for performance - converters are XAML-bound and cannot use constructor injection
+            var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
 
-            var userCreated = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("Unknown");
-            var userChanged = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("Unknown");
+            var userCreated = languageService.GetString("Unknown");
+            var userChanged = languageService.GetString("Unknown");
 
             if (!string.IsNullOrEmpty(model.CreatedBy)) userCreated = model.CreatedBy;
 
-            result.AppendLine($"{ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("InputFirst")} " +
-                $"{model.CreatedDate.ToLocalTime():f} {ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("By")} {userCreated}");
+            result.AppendLine($"{languageService.GetString("InputFirst")} " +
+                $"{model.CreatedDate.ToLocalTime():f} {languageService.GetString("By")} {userCreated}");
 
             if (model.ChangedDate.HasValue)
             {
                 if (!string.IsNullOrEmpty(model.ChangedBy)) userChanged = model.ChangedBy;
 
-                result.AppendLine($"{ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("InputLast")} " +
-                    $"{model.ChangedDate.Value.ToLocalTime():f} {ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("By")} {userChanged}");
+                result.AppendLine($"{languageService.GetString("InputLast")} " +
+                    $"{model.ChangedDate.Value.ToLocalTime():f} {languageService.GetString("By")} {userChanged}");
             }
 
             return result.ToString();

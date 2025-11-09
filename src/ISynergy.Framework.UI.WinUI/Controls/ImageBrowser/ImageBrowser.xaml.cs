@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -71,7 +71,8 @@ public sealed partial class ImageBrowser : UserControl
     {
         if (ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
         {
-            var result = await fileService.BrowseFileAsync($"{LanguageService.Default.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp");
+            var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
+            var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp");
 
             if (result is not null && result.Count > 0)
             {

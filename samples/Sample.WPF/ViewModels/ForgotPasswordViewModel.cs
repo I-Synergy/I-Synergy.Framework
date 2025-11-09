@@ -21,7 +21,7 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Password_Forgot"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Password_Forgot"); } }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ForgotPasswordViewModel" /> class.

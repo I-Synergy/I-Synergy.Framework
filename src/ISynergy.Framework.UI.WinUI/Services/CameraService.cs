@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Windows.Devices.Enumeration;
@@ -15,21 +15,25 @@ namespace ISynergy.Framework.UI.Services;
 public class CameraService : ICameraService
 {
     private readonly IDialogService _dialogService;
+    private readonly ILanguageService _languageService;
     private readonly ILogger _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CameraService"/> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
+    /// <param name="languageService">The language service.</param>
     /// <param name="logger"></param>
     public CameraService(
         IDialogService dialogService,
+        ILanguageService languageService,
         ILogger<CameraService> logger)
     {
         _logger = logger;
         _logger.LogTrace($"CameraService instance created with ID: {Guid.NewGuid()}");
 
         _dialogService = dialogService;
+        _languageService = languageService;
     }
 
     /// <summary>
@@ -65,7 +69,7 @@ public class CameraService : ICameraService
                         () => photo.Frame.AsStreamForRead());
                 }
 
-                await _dialogService.ShowErrorAsync(string.Format(LanguageService.Default.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
+                await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
             }
         }
 

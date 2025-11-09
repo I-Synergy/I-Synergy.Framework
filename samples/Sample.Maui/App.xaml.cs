@@ -207,9 +207,9 @@ public partial class App : Application
         if (disposing)
         {
             // Unregister message handlers
-            MessengerService.Default.Unregister<ShowInformationMessage>(this);
-            MessengerService.Default.Unregister<ShowWarningMessage>(this);
-            MessengerService.Default.Unregister<ShowErrorMessage>(this);
+            _commonServices.MessengerService.Unregister<ShowInformationMessage>(this);
+            _commonServices.MessengerService.Unregister<ShowWarningMessage>(this);
+            _commonServices.MessengerService.Unregister<ShowErrorMessage>(this);
         }
     }
 }

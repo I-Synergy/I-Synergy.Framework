@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Events;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
@@ -27,6 +28,7 @@ public abstract class Application : ComponentBase
     protected readonly ISettingsService _settingsService;
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly ILogger<Application> _logger;
+    protected readonly IMessengerService _messengerService;
 
     protected readonly ApplicationFeatures? _features;
 
@@ -52,12 +54,13 @@ public abstract class Application : ComponentBase
         {
             _logger.LogTrace("Setting up services and global exception handler.");
 
-            _commonServices = ServiceLocator.Default.GetRequiredService<ICommonServices>();
+            // Use injected commonServices instead of ServiceLocator
+            // Get remaining services from ServiceLocator as they're not available via constructor injection
             _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
             _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
             _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-            _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
             _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+            _messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
 
             _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
@@ -76,17 +79,17 @@ public abstract class Application : ComponentBase
 
             _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
-            MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
+            _messengerService.Register<ShowInformationMessage>(this, async m =>
             {
                 var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
             });
 
-            MessengerService.Default.Register<ShowWarningMessage>(this, async m =>
+            _messengerService.Register<ShowWarningMessage>(this, async m =>
             {
                 var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
             });
 
-            MessengerService.Default.Register<ShowErrorMessage>(this, async m =>
+            _messengerService.Register<ShowErrorMessage>(this, async m =>
             {
                 var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
             });
@@ -355,9 +358,9 @@ public abstract class Application : ComponentBase
         {
             try
             {
-                MessengerService.Default.Unregister<ShowInformationMessage>(this);
-                MessengerService.Default.Unregister<ShowWarningMessage>(this);
-                MessengerService.Default.Unregister<ShowErrorMessage>(this);
+                _messengerService.Unregister<ShowInformationMessage>(this);
+                _messengerService.Unregister<ShowWarningMessage>(this);
+                _messengerService.Unregister<ShowErrorMessage>(this);
 
                 AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;

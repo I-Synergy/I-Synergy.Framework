@@ -68,11 +68,10 @@ public partial class Window : System.Windows.Window, IWindow
     }
 
     /// <summary>
-    /// show as an asynchronous operation.
+    /// Shows the window as an asynchronous operation.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <returns><c>true</c> if the dialog was accepted or confirmed; otherwise, <c>false</c>.</returns>
     public Task<bool> ShowAsync<TEntity>()
     {
         var result = ShowDialog();

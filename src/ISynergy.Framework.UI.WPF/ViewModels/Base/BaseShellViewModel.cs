@@ -157,7 +157,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected Task ShowDialogRestartAfterUpdateAsync() =>
-        _dialogService.ShowInformationAsync(LanguageService.Default.GetString("UpdateRestart"));
+        _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("UpdateRestart"));
 
     /// <summary>
     /// Gets or sets the LastSelectedItem property value.
@@ -246,10 +246,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         e.Result.SetLocalizationLanguage();
 
         if (await _dialogService.ShowMessageAsync(
-                    LanguageService.Default.GetString("WarningLanguageChange") +
+                    _commonServices.LanguageService.GetString("WarningLanguageChange") +
                     Environment.NewLine +
-                    LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
-                    LanguageService.Default.GetString("TitleQuestion"),
+                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                    _commonServices.LanguageService.GetString("TitleQuestion"),
                     MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
         {
             _commonServices.RestartApplication();
@@ -283,10 +283,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
             if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
                 await _dialogService.ShowMessageAsync(
-                    LanguageService.Default.GetString("WarningColorChange") +
+                    _commonServices.LanguageService.GetString("WarningColorChange") +
                     Environment.NewLine +
-                    LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
-                    LanguageService.Default.GetString("TitleQuestion"),
+                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                    _commonServices.LanguageService.GetString("TitleQuestion"),
                     MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 _commonServices.RestartApplication();

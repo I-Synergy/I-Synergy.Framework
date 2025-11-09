@@ -19,19 +19,23 @@ namespace ISynergy.Framework.UI.Services;
 public class DialogService : IDialogService
 {
     private readonly IScopedContextService _scopedContextService;
+    private readonly ILanguageService _languageService;
     private readonly ILogger _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="scopedContextService"></param>
+    /// <param name="languageService"></param>
     /// <param name="logger"></param>
     public DialogService(
         IScopedContextService scopedContextService,
+        ILanguageService languageService,
         ILogger<DialogService> logger)
     {
         _logger = logger;
         _scopedContextService = scopedContextService;
+        _languageService = languageService;
     }
 
     /// <summary>
@@ -41,7 +45,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "") =>
-        ShowMessageAsync(error.Message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleError"), MessageBoxButtons.OK);
+        ShowMessageAsync(error.Message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
     /// Shows the error asynchronous.
@@ -50,7 +54,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleError"), MessageBoxButtons.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
     /// Shows the information asynchronous.
@@ -59,7 +63,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleInfo"), MessageBoxButtons.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButtons.OK);
 
     /// <summary>
     /// Shows the warning asynchronous.
@@ -68,7 +72,7 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
     public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleWarning"), MessageBoxButtons.OK);
+        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButtons.OK);
 
     /// <summary>
     /// Shows the greeting asynchronous.
@@ -79,22 +83,22 @@ public class DialogService : IDialogService
     {
         if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
         {
-            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Night"), name),
-                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButtons.OK);
+            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
+                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
         }
 
         if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
         {
-            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Morning"), name),
-                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButtons.OK);
+            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
+                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
         }
         if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
         {
-            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Afternoon"), name),
-                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButtons.OK);
+            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
+                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
         }
-        return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Evening"), name),
-            LanguageService.Default.GetString("TitleWelcome"), MessageBoxButtons.OK);
+        return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
+            _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
     }
 
     /// <summary>

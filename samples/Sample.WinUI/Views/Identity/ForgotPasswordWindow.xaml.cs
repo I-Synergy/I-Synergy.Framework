@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.Controls;
 
@@ -21,7 +22,8 @@ public sealed partial class ForgotPasswordWindow : Window, IForgotPasswordWindow
     public ForgotPasswordWindow()
     {
         InitializeComponent();
-        PrimaryButtonText = LanguageService.Default.GetString("Ok");
-        SecondaryButtonText = LanguageService.Default.GetString("Cancel");
+        var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
+        PrimaryButtonText = languageService.GetString("Ok");
+        SecondaryButtonText = languageService.GetString("Cancel");
     }
 }

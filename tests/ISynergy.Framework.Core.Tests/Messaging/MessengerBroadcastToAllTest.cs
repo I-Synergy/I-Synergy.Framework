@@ -25,20 +25,20 @@ public class MessengerBroadcastToAllTest
         const string TestContent = "abcd";
 
         Reset();
-        MessengerService.Reset();
+        var messenger = new MessengerService();
 
-        MessengerService.Default.Register<TestMessage>(this, m => StringContent1 = m.Content);
+        messenger.Register<TestMessage>(this, m => StringContent1 = m.Content);
 
-        MessengerService.Default.Register<TestMessage>(this, m => StringContent2 = m.Content);
+        messenger.Register<TestMessage>(this, m => StringContent2 = m.Content);
 
         TestRecipient externalRecipient = new();
-        externalRecipient.RegisterWith(MessengerService.Default);
+        externalRecipient.RegisterWith(messenger);
 
         Assert.AreEqual(null, StringContent1);
         Assert.AreEqual(null, StringContent2);
         Assert.AreEqual(null, externalRecipient.StringContent);
 
-        MessengerService.Default.Send(new TestMessage
+        messenger.Send(new TestMessage
         {
             Content = TestContent
         });

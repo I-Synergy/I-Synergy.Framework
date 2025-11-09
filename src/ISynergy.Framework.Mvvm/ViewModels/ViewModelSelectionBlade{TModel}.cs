@@ -23,7 +23,7 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Selection"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Selection"); } }
 
     /// <summary>
     /// Gets or sets the raw items.
@@ -110,10 +110,10 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
         Validator = new Action<IObservableValidatedClass>(arg =>
         {
             if (SelectionMode == SelectionModes.Single && SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), LanguageService.Default.GetString("WarningSelectItem"));
+                AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
 
             if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), LanguageService.Default.GetString("WarningSelectItem"));
+                AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));

@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
@@ -69,9 +68,9 @@ public partial class MainLayout
 
         _commonServices.BusyService.PropertyChanged += BusyService_PropertyChanged;
 
-        MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
+        _commonServices.MessengerService.Register<ShowInformationMessage>(this, async m =>
         {
-            var dialogResult = await _dialogService.ShowInfoAsync(m.Content.Message, m.Content.Title, LanguageService.Default.GetString("OK"));
+            var dialogResult = await _dialogService.ShowInfoAsync(m.Content.Message, m.Content.Title, _commonServices.LanguageService.GetString("OK"));
 
             if (dialogResult is not null)
             {
@@ -86,9 +85,9 @@ public partial class MainLayout
             //return MessageBoxResult.None;
         });
 
-        MessengerService.Default.Register<ShowWarningMessage>(this, async m =>
+        _commonServices.MessengerService.Register<ShowWarningMessage>(this, async m =>
         {
-            var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title, LanguageService.Default.GetString("OK"));
+            var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title, _commonServices.LanguageService.GetString("OK"));
 
             if (dialogResult is not null)
             {
@@ -103,9 +102,9 @@ public partial class MainLayout
             //return MessageBoxResult.None;
         });
 
-        MessengerService.Default.Register<ShowErrorMessage>(this, async m =>
+        _commonServices.MessengerService.Register<ShowErrorMessage>(this, async m =>
         {
-            var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title, LanguageService.Default.GetString("OK"));
+            var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title, _commonServices.LanguageService.GetString("OK"));
 
             if (dialogResult is not null)
             {

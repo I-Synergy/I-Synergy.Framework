@@ -132,7 +132,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
           new Year { Value = DateTime.Now.Date.Year - 7, Description = (DateTime.Now.Date.Year - 7).ToString() },
           new Year { Value = DateTime.Now.Date.Year - 8, Description = (DateTime.Now.Date.Year - 8).ToString() },
           new Year { Value = DateTime.Now.Date.Year - 9, Description = (DateTime.Now.Date.Year - 9).ToString() },
-          new Year { Value = 0, Description = LanguageService.Default.GetString("SearchAll") }
+          new Year { Value = 0, Description = _commonServices.LanguageService.GetString("SearchAll") }
         ];
 
         SelectedYear = Years.First(e => e.Value == DateTime.Now.Date.Year);

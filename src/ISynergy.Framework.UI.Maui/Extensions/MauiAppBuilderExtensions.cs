@@ -88,14 +88,14 @@ public static class MauiAppBuilderExtensions
             infoService.LoadAssembly(mainAssembly);
         }
 
-        var languageService = LanguageService.Default;
+        var languageService = new LanguageService();
         languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
         languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
 
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
-        appBuilder.Services.TryAddSingleton<ILanguageService>(s => LanguageService.Default);
-        appBuilder.Services.TryAddSingleton<IMessengerService>(s => MessengerService.Default);
+        appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
+        appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
         appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
         appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
 

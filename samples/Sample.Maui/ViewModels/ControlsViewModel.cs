@@ -23,7 +23,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     private readonly INavigationService _navigationService;
     private System.Timers.Timer? _timer;
 
-    public override string Title { get { return LanguageService.Default.GetString("Controls"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Controls"); } }
 
     public ObservableCollection<TestItem> Items { get; set; } = new();
     public ObservableCollection<TestItem> SelectedTestItems { get; set; } = new();

@@ -53,14 +53,14 @@ public static class WindowsAppBuilderExtensions
             services.Configure<ApplicationFeatures>(context.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
             services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
 
-            var languageService = LanguageService.Default;
+            var languageService = new LanguageService();
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
             languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
             languageService.AddResourceManager(typeof(TResource));
 
             services.TryAddSingleton<IInfoService>(s => infoService);
             services.TryAddSingleton<ILanguageService>(s => languageService);
-            services.TryAddSingleton<IMessengerService>(s => MessengerService.Default);
+            services.TryAddSingleton<IMessengerService, MessengerService>();
 
             services.TryAddScoped<TContext>();
             services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());

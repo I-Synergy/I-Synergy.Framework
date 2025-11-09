@@ -9,9 +9,10 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 public interface IObservableValidatedClass : IObservableClass, IAsyncDisposable, IDataErrorInfo, INotifyDataErrorInfo
 {
     /// <summary>
-    /// Validates this instance.
+    /// Validates this instance and optionally validates underlying properties.
     /// </summary>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <param name="validateUnderlayingProperties">if set to <c>true</c>, validates underlying properties that implement <see cref="IObservableValidatedClass"/>.</param>
+    /// <returns><c>true</c> if validation passed; otherwise, <c>false</c>.</returns>
     bool Validate(bool validateUnderlayingProperties = true);
     /// <summary>
     /// Gets the errors.

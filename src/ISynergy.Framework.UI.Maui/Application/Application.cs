@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Events;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
@@ -45,6 +46,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly IThemeService _themeService;
     protected readonly ILogger<Application> _logger;
+    protected readonly IMessengerService _messengerService;
 
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
@@ -86,6 +88,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
                 _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
                 _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+                _messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
 
                 _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
@@ -104,17 +107,17 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
-                MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
+                _messengerService.Register<ShowInformationMessage>(this, async m =>
                 {
                     var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
                 });
 
-                MessengerService.Default.Register<ShowWarningMessage>(this, async m =>
+                _messengerService.Register<ShowWarningMessage>(this, async m =>
                 {
                     var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
                 });
 
-                MessengerService.Default.Register<ShowErrorMessage>(this, async m =>
+                _messengerService.Register<ShowErrorMessage>(this, async m =>
                 {
                     var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
                 });
@@ -359,9 +362,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (disposing)
         {
-            MessengerService.Default.Unregister<ShowInformationMessage>(this);
-            MessengerService.Default.Unregister<ShowWarningMessage>(this);
-            MessengerService.Default.Unregister<ShowErrorMessage>(this);
+            _messengerService.Unregister<ShowInformationMessage>(this);
+            _messengerService.Unregister<ShowWarningMessage>(this);
+            _messengerService.Unregister<ShowErrorMessage>(this);
 
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             MauiExceptions.UnhandledException -= CurrentDomain_UnhandledException;

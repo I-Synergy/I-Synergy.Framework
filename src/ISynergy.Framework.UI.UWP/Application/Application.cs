@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
@@ -39,6 +40,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly IThemeService _themeService;
     protected readonly ILogger<Application> _logger;
+    protected readonly IMessengerService _messengerService;
 
     protected IThemeService _themeSelector;
 
@@ -107,15 +109,17 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
             {
                 _logger.LogTrace("Setting up services and global exception handler.");
 
-                _commonServices = ServiceLocator.Default.GetRequiredService<ICommonServices>();
-                _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
-                _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
-                _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+                var serviceProvider = host.Services;
+                _commonServices = serviceProvider.GetRequiredService<ICommonServices>();
+                _dialogService = serviceProvider.GetRequiredService<IDialogService>();
+                _navigationService = serviceProvider.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
                 _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
-                _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
+                _themeService = serviceProvider.GetRequiredService<IThemeService>();
                 _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+                _messengerService = serviceProvider.GetRequiredService<IMessengerService>();
 
-                _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+                _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
                 AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -132,17 +136,17 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
 
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
-                MessengerService.Default.Register<ShowInformationMessage>(this, async m =>
+                _messengerService.Register<ShowInformationMessage>(this, async m =>
                 {
                     var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
                 });
 
-                MessengerService.Default.Register<ShowWarningMessage>(this, async m =>
+                _messengerService.Register<ShowWarningMessage>(this, async m =>
                 {
                     var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
                 });
 
-                MessengerService.Default.Register<ShowErrorMessage>(this, async m =>
+                _messengerService.Register<ShowErrorMessage>(this, async m =>
                 {
                     var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
                 });
@@ -401,7 +405,11 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
 
             if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
-                //TODO: Load state from previously suspended application
+                // Restore application state if needed.
+                // Applications can override OnRestoreStateAsync() to implement custom state restoration logic.
+                // By default, the framework does not automatically restore state as state management
+                // is typically application-specific and should be handled by the application layer.
+                _ = OnRestoreStateAsync(args);
             }
 
             // Register a handler for BackRequested events and set the
@@ -554,6 +562,20 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
     protected virtual Task HandleApplicationInitializedAsync() =>
         Task.CompletedTask;
 
+    /// <summary>
+    /// Called when the application is being restored from a terminated state.
+    /// Override this method to restore application-specific state (e.g., navigation state, user preferences).
+    /// </summary>
+    /// <param name="args">The launch activation event arguments containing information about the previous execution state.</param>
+    /// <returns>A task representing the asynchronous state restoration operation.</returns>
+    /// <remarks>
+    /// This method is called when <see cref="Windows.ApplicationModel.Activation.LaunchActivatedEventArgs.PreviousExecutionState"/>
+    /// is <see cref="Windows.ApplicationModel.Activation.ApplicationExecutionState.Terminated"/>.
+    /// Applications should override this method to restore any state that was saved during suspension.
+    /// </remarks>
+    protected virtual Task OnRestoreStateAsync(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs args) =>
+        Task.CompletedTask;
+
 
     #region IDisposable
     // Dispose() calls Dispose(true)
@@ -608,9 +630,9 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
         {
             try
             {
-                MessengerService.Default.Unregister<ShowInformationMessage>(this);
-                MessengerService.Default.Unregister<ShowWarningMessage>(this);
-                MessengerService.Default.Unregister<ShowErrorMessage>(this);
+                _messengerService.Unregister<ShowInformationMessage>(this);
+                _messengerService.Unregister<ShowWarningMessage>(this);
+                _messengerService.Unregister<ShowErrorMessage>(this);
 
                 AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;

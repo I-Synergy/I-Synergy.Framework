@@ -100,6 +100,12 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     public ErrorHandlingStrategy ErrorHandlingStrategy { get; set; } = ErrorHandlingStrategy.ReThrow;
 
     /// <summary>
+    /// Optional exception handler service. If provided, will be used instead of ServiceLocator.
+    /// This allows commands to be created with dependency injection when possible.
+    /// </summary>
+    protected readonly IExceptionHandlerService? _exceptionHandlerService;
+
+    /// <summary>
     /// Occurs when changes occur that affect whether or not the command should execute.
     /// </summary>
     public event EventHandler? CanExecuteChanged
@@ -154,9 +160,11 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// Initializes a new instance of the <see cref="BaseAsyncRelayCommand"/> class.
     /// </summary>
     /// <param name="options">Command options.</param>
-    protected BaseAsyncRelayCommand(AsyncRelayCommandOptions options)
+    /// <param name="exceptionHandlerService">Optional exception handler service. If not provided, will use ServiceLocator when needed.</param>
+    protected BaseAsyncRelayCommand(AsyncRelayCommandOptions options, IExceptionHandlerService? exceptionHandlerService = null)
     {
         _options = options;
+        _exceptionHandlerService = exceptionHandlerService;
     }
 
     /// <summary>
@@ -574,7 +582,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         }
         catch (Exception ex)
         {
-            var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+            var exceptionHandlerService = _exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
 
             if (ex.InnerException is not null)
                 exceptionHandlerService.HandleException(ex.InnerException);

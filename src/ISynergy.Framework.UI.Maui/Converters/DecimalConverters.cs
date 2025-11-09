@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using ISynergy.Framework.UI.Converters.Shared;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -343,12 +344,7 @@ public class DecimalToDoubleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is decimal decimalValue)
-        {
-            return System.Convert.ToDouble(decimalValue);
-        }
-
-        return 0d;
+        return DecimalToDoubleConverterBase.Convert(value);
     }
 
     /// <summary>
@@ -361,11 +357,6 @@ public class DecimalToDoubleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is double doubleValue)
-        {
-            return System.Convert.ToDecimal(doubleValue);
-        }
-
-        return 0m;
+        return DecimalToDoubleConverterBase.ConvertBack(value);
     }
 }

@@ -240,7 +240,7 @@ public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
 
         if (attributes is not null && attributes.Length > 0)
         {
-            description = LanguageService.Default.GetString(attributes[0].Description!);
+            description = _commonServices.LanguageService.GetString(attributes[0].Description!);
         }
 
         return description;
