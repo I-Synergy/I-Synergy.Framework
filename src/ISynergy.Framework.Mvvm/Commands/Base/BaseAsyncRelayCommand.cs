@@ -829,16 +829,26 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                 DisposeCancellationTokens();
 
                 // Dispose the execution task if it's completed
+                // Note: We only dispose tasks in final states (RanToCompletion, Canceled, Faulted)
+                // because disposing a running task is unsafe and can cause exceptions.
+                // Tasks that are still running will be cleaned up by the GC when they complete,
+                // and the continuation in MonitorTask will clear the reference when the task finishes.
                 Task? taskToDispose = null;
 
                 lock (_syncLock)
                 {
-                    if (_executionTask?.Status == TaskStatus.RanToCompletion ||
-                        _executionTask?.Status == TaskStatus.Canceled ||
-                        _executionTask?.Status == TaskStatus.Faulted)
+                    // Check all possible final states for a Task
+                    if (_executionTask != null)
                     {
-                        taskToDispose = _executionTask;
-                        _executionTask = null;
+                        var status = _executionTask.Status;
+                        if (status == TaskStatus.RanToCompletion ||
+                            status == TaskStatus.Canceled ||
+                            status == TaskStatus.Faulted)
+                        {
+                            taskToDispose = _executionTask;
+                            _executionTask = null;
+                        }
+                        // If task is still running, the continuation in MonitorTask will handle cleanup
                     }
                 }
 

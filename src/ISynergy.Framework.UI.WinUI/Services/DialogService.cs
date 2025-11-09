@@ -454,7 +454,17 @@ public class DialogService : IDialogService
         Argument.IsNotNull(dialog);
 
         // Use semaphore to prevent multiple dialogs from being opened simultaneously
-        await _dialogSemaphore.WaitAsync();
+        var semaphoreAcquired = false;
+        try
+        {
+            await _dialogSemaphore.WaitAsync();
+            semaphoreAcquired = true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error acquiring dialog semaphore");
+            return ContentDialogResult.None;
+        }
 
         try
         {
@@ -471,14 +481,22 @@ public class DialogService : IDialogService
                     await _activeDialog.CloseAsync();
 
                     // Wait for dialog to close with timeout
-                    var timeoutTask = Task.Delay(500);
-                    var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
-
-                    if (completedTask == timeoutTask)
+                    using (var cts = new CancellationTokenSource())
                     {
-                        _logger.LogTrace("Dialog close operation timed out");
-                        // Force cleanup of previous dialog reference
-                        _activeDialog = null;
+                        var timeoutTask = Task.Delay(TimeSpan.FromMilliseconds(500), cts.Token);
+                        var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
+
+                        if (completedTask == timeoutTask)
+                        {
+                            _logger.LogTrace("Dialog close operation timed out");
+                            // Force cleanup of previous dialog reference
+                            _activeDialog = null;
+                        }
+                        else
+                        {
+                            // Cancel the timeout task since dialog closed successfully
+                            cts.Cancel();
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -494,17 +512,21 @@ public class DialogService : IDialogService
             {
                 // Add timeout to dialog show operation
                 var showTask = dialog.ShowAsync().AsTask();
-                var timeoutTask = Task.Delay(10000); // 10 second timeout for showing dialog
-
-                var completedTask = await Task.WhenAny(showTask, timeoutTask);
-
-                if (completedTask == timeoutTask)
+                using (var cts = new CancellationTokenSource())
                 {
-                    _logger.LogTrace("Dialog show operation timed out");
-                    return ContentDialogResult.None;
-                }
+                    var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10), cts.Token);
+                    var completedTask = await Task.WhenAny(showTask, timeoutTask);
 
-                return await showTask;
+                    if (completedTask == timeoutTask)
+                    {
+                        _logger.LogTrace("Dialog show operation timed out");
+                        return ContentDialogResult.None;
+                    }
+
+                    // Cancel the timeout task since dialog completed successfully
+                    cts.Cancel();
+                    return await showTask;
+                }
             }
             catch (Exception ex)
             {
@@ -514,7 +536,18 @@ public class DialogService : IDialogService
         }
         finally
         {
-            _dialogSemaphore.Release();
+            // Only release if we successfully acquired the semaphore
+            if (semaphoreAcquired)
+            {
+                try
+                {
+                    _dialogSemaphore.Release();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error releasing dialog semaphore");
+                }
+            }
         }
     }
 

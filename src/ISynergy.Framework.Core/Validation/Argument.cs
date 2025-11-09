@@ -15,6 +15,22 @@ namespace ISynergy.Framework.Core.Validation;
 public static class Argument
 {
     /// <summary>
+    /// Gets an error message from the language service, with fallback to default message.
+    /// </summary>
+    private static string GetErrorMessage(string key, string defaultMessage)
+    {
+        try
+        {
+            return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(key);
+        }
+        catch
+        {
+            // ServiceLocator may not be initialized (e.g., during early initialization or unit tests)
+            return defaultMessage;
+        }
+    }
+
+    /// <summary>
     /// Determines whether the specified argument is not <c>null</c>.
     /// </summary>
     /// <param name="value">Value of the parameter.</param>
@@ -25,7 +41,7 @@ public static class Argument
     {
         if (value is null)
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNull");
+            var error = GetErrorMessage("WarningNull", $"Parameter '{name}' cannot be null.");
             throw new ArgumentNullException(name, error);
         }
 
@@ -43,7 +59,7 @@ public static class Argument
     {
         if (string.IsNullOrEmpty(value))
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullOrEmpty");
+            var error = GetErrorMessage("WarningNullOrEmpty", $"Parameter '{name}' cannot be null or empty.");
             throw new ArgumentNullException(name, error);
         }
 
@@ -61,7 +77,7 @@ public static class Argument
     {
         if (value == Guid.Empty)
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningGuidEmpty");
+            var error = GetErrorMessage("WarningGuidEmpty", $"Parameter '{name}' cannot be an empty GUID.");
             throw new ArgumentException(error, name);
         }
 
@@ -80,7 +96,7 @@ public static class Argument
     {
         if (!value.HasValue || value.Value == Guid.Empty)
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullGuidEmpty");
+            var error = GetErrorMessage("WarningNullGuidEmpty", $"Parameter '{name}' cannot be null or an empty GUID.");
             throw new ArgumentNullException(name, error);
         }
 
@@ -99,7 +115,7 @@ public static class Argument
     {
         if (string.IsNullOrEmpty(value) || (string.CompareOrdinal(value.Trim(), string.Empty) == 0))
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullWhitespace");
+            var error = GetErrorMessage("WarningNullWhitespace", $"Parameter '{name}' cannot be null, empty, or whitespace.");
             throw new ArgumentNullException(name, error);
         }
 
@@ -118,7 +134,7 @@ public static class Argument
     {
         if ((value is null) || (value.Length == 0))
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullEmptyArray");
+            var error = GetErrorMessage("WarningNullEmptyArray", $"Parameter '{name}' cannot be null or an empty array.");
             throw new ArgumentNullException(name, error);
         }
 
@@ -138,7 +154,7 @@ public static class Argument
     {
         if ((value is null) || (value.Count == 0))
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullEmptyList");
+            var error = GetErrorMessage("WarningNullEmptyList", $"Parameter '{name}' cannot be null or an empty list.");
             throw new ArgumentNullException(name, error);
         }
 
@@ -157,7 +173,7 @@ public static class Argument
     {
         if (value is null || !value.GetType().IsEnum)
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningEnum");
+            var error = GetErrorMessage("WarningEnum", $"Parameter '{name}' must be a valid enum value.");
             throw new ArgumentException(error, name);
         }
 
@@ -168,7 +184,7 @@ public static class Argument
     {
         if (value is null || !value.IsEnum)
         {
-            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningEnum");
+            var error = GetErrorMessage("WarningEnum", $"Parameter '{name}' must be a valid enum type.");
             throw new ArgumentException(error, name);
         }
 
@@ -212,7 +228,8 @@ public static class Argument
 
         if (!validation(value, minimumValue, maximumValue))
         {
-            var error = string.Format(ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningBetween"), minimumValue, maximumValue);
+            var errorMessage = GetErrorMessage("WarningBetween", "Value must be between {0} and {1}.");
+            var error = string.Format(errorMessage, minimumValue, maximumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }
@@ -251,7 +268,8 @@ public static class Argument
 
         if (!validation(value, minimumValue))
         {
-            var error = string.Format(ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningMinimum"), minimumValue);
+            var errorMessage = GetErrorMessage("WarningMinimum", "Value must be at least {0}.");
+            var error = string.Format(errorMessage, minimumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }
@@ -287,7 +305,8 @@ public static class Argument
     {
         if (!validation(value, maximumValue))
         {
-            var error = string.Format(ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningMaximum"), maximumValue);
+            var errorMessage = GetErrorMessage("WarningMaximum", "Value must be at most {0}.");
+            var error = string.Format(errorMessage, maximumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }

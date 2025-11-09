@@ -82,8 +82,29 @@ public class SettingsService : ISettingsService
 
             return true;
         }
-        catch (Exception)
+        catch (UnauthorizedAccessException ex)
         {
+            _logger.LogError(ex, "Access denied when saving settings to {SettingsFile}. Check file permissions.", Path.Combine(_settingsFolder, _fileName));
+            return false;
+        }
+        catch (DirectoryNotFoundException ex)
+        {
+            _logger.LogError(ex, "Settings directory not found: {SettingsFolder}", _settingsFolder);
+            return false;
+        }
+        catch (IOException ex)
+        {
+            _logger.LogError(ex, "I/O error when saving settings to {SettingsFile}. The file may be in use by another process.", Path.Combine(_settingsFolder, _fileName));
+            return false;
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "JSON serialization error when saving settings. Settings data may be invalid.");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error when saving settings to {SettingsFile}", Path.Combine(_settingsFolder, _fileName));
             return false;
         }
     }

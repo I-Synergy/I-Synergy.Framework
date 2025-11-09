@@ -195,7 +195,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
 
             var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
 
-            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment));
+            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment), null);
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {
