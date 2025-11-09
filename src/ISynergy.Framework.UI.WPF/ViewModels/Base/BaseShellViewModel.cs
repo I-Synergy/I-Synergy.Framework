@@ -237,22 +237,34 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="e">The e.</param>
     private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
     {
-        if (sender is LanguageViewModel vm)
-            vm.Submitted -= LanguageVM_Submitted;
-
-        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-
-        e.Result.SetLocalizationLanguage();
-
-        if (await _dialogService.ShowMessageAsync(
-                    _commonServices.LanguageService.GetString("WarningLanguageChange") +
-                    Environment.NewLine +
-                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    _commonServices.LanguageService.GetString("TitleQuestion"),
-                    MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+        try
         {
-            _commonServices.RestartApplication();
+            if (sender is LanguageViewModel vm)
+                vm.Submitted -= LanguageVM_Submitted;
+
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+
+            e.Result.SetLocalizationLanguage();
+
+            if (await _dialogService.ShowMessageAsync(
+                        _commonServices.LanguageService.GetString("WarningLanguageChange") +
+                        Environment.NewLine +
+                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                        _commonServices.LanguageService.GetString("TitleQuestion"),
+                        MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+            {
+                _commonServices.RestartApplication();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log exception to prevent it from being swallowed in async void method
+            _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
+            var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
+            exceptionHandlerService?.HandleException(ex);
+            // Re-throw to crash the application if unhandled exception handler is configured
+            throw;
         }
     }
 
@@ -274,23 +286,35 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="e">The e.</param>
     private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)
     {
-        if (sender is ThemeViewModel vm)
+        try
         {
-            vm.Submitted -= ThemeVM_Submitted;
-
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = e.Result.Theme;
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
-
-            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
-                await _dialogService.ShowMessageAsync(
-                    _commonServices.LanguageService.GetString("WarningColorChange") +
-                    Environment.NewLine +
-                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    _commonServices.LanguageService.GetString("TitleQuestion"),
-                    MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+            if (sender is ThemeViewModel vm)
             {
-                _commonServices.RestartApplication();
+                vm.Submitted -= ThemeVM_Submitted;
+
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = e.Result.Theme;
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
+
+                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
+                    await _dialogService.ShowMessageAsync(
+                        _commonServices.LanguageService.GetString("WarningColorChange") +
+                        Environment.NewLine +
+                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                        _commonServices.LanguageService.GetString("TitleQuestion"),
+                        MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+                {
+                    _commonServices.RestartApplication();
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            // Log exception to prevent it from being swallowed in async void method
+            _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler");
+            var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
+            exceptionHandlerService?.HandleException(ex);
+            // Re-throw to crash the application if unhandled exception handler is configured
+            throw;
         }
     }
 
