@@ -244,10 +244,25 @@ public class NavigationService : INavigationService
 
         bladeVm.Closed += Viewmodel_Closed;
 
-        // Get the view
-        var view = await getViewFunc();
+        try
+        {
+            // Get the view
+            var view = await getViewFunc();
 
-        return view;
+            // If view creation failed (returned null), cleanup the handler
+            if (view == null)
+            {
+                bladeVm.Closed -= Viewmodel_Closed;
+            }
+
+            return view;
+        }
+        catch
+        {
+            // If view creation threw an exception, cleanup the handler
+            bladeVm.Closed -= Viewmodel_Closed;
+            throw;
+        }
     }
 
     /// <summary>
@@ -450,15 +465,23 @@ public class NavigationService : INavigationService
         // Initialize if needed and notify ViewModel it's being navigated to
         if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
         {
-            // Dispatch initialization to another thread to allow the UI to continue rendering
-            await Task.Delay(50); // Small delay to let the UI render
+            try
+            {
+                // Dispatch initialization to another thread to allow the UI to continue rendering
+                await Task.Delay(50); // Small delay to let the UI render
 
-            await page.ViewModel.InitializeAsync();
+                await page.ViewModel.InitializeAsync();
 
-            // Post another small delay to ensure data binding has a chance to update
-            await Task.Delay(50);
+                // Post another small delay to ensure data binding has a chance to update
+                await Task.Delay(50);
 
-            page.ViewModel.OnNavigatedTo();
+                page.ViewModel.OnNavigatedTo();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error initializing ViewModel for {ViewModelType}", page.ViewModel.GetType().Name);
+                throw;
+            }
         }
     }
 

@@ -120,18 +120,26 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
 
     private async void ScopedContextService_ScopedChanged(object? sender, Core.Events.ReturnEventArgs<bool> e)
     {
-        if (e.Value)
+        try
         {
-            IsInitialized = false;
-
-            // Clear existing data
-            Cleanup();
-
-            // Reinitialize with new scope if needed
-            if (!IsDisposed)
+            if (e.Value)
             {
-                await InitializeAsync();
+                IsInitialized = false;
+
+                // Clear existing data
+                Cleanup();
+
+                // Reinitialize with new scope if needed
+                if (!IsDisposed)
+                {
+                    await InitializeAsync();
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in ScopedContextService_ScopedChanged for {ViewModelType}", GetType().Name);
+            _commonServices.ExceptionHandlerService?.HandleException(ex);
         }
     }
 
@@ -253,6 +261,10 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
             _commonServices.ScopedContextService.ScopedChanged -= ScopedContextService_ScopedChanged;
 
             PropertyChanged -= OnPropertyChanged;
+
+            // Clear event handlers to prevent memory leaks
+            Cancelled = null;
+            Closed = null;
 
             // Clear commands
             CloseCommand?.Dispose();

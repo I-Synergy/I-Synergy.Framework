@@ -591,7 +591,16 @@ public class DialogService : IDialogService
 
             viewmodel.Closed += ViewModelClosedHandler;
 
-            await viewmodel.InitializeAsync();
+            try
+            {
+                await viewmodel.InitializeAsync();
+            }
+            catch (Exception initEx)
+            {
+                _logger?.LogError(initEx, "Error initializing viewmodel");
+                viewmodel.Closed -= ViewModelClosedHandler;
+                throw;
+            }
 
             if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
             {
@@ -599,6 +608,7 @@ public class DialogService : IDialogService
             }
             else
             {
+                viewmodel.Closed -= ViewModelClosedHandler;
                 throw new InvalidOperationException("Cannot show modal dialog - Navigation is not available");
             }
         }
@@ -611,6 +621,7 @@ public class DialogService : IDialogService
             {
                 if (viewModelRef != null)
                 {
+                    viewModelRef.Closed -= ViewModelClosedHandler;
                     viewModelRef.Dispose();
                 }
                 windowRef?.Dispose();
