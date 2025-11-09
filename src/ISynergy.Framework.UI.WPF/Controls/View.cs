@@ -2,6 +2,7 @@
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace ISynergy.Framework.UI.Controls;
 
@@ -19,18 +20,19 @@ public abstract partial class View : Page, IView
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public IViewModel ViewModel
     {
         get
         {
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            return null;
+            return default!;
         }
         set
         {
             DataContext = value;
+            SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
         }
     }
 

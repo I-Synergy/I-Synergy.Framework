@@ -15,7 +15,7 @@ public class EnumToBooleanConverter : IValueConverter
     /// Gets or sets the type of the enum.
     /// </summary>
     /// <value>The type of the enum.</value>
-    public Type EnumType { get; set; }
+    public required Type EnumType { get; set; }
 
     /// <summary>
     /// Converts the specified value.
@@ -31,7 +31,7 @@ public class EnumToBooleanConverter : IValueConverter
     {
         if (parameter is string enumString)
         {
-            if (!Enum.IsDefined(EnumType, value))
+            if (!Enum.IsDefined(EnumType, value!))
                 throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized());
 
             var enumValue = Enum.Parse(EnumType, enumString);
@@ -114,12 +114,16 @@ public class EnumToStringConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is { } type && type.IsEnum)
-            return (Enum.Parse(type, value.ToString()) as Enum).GetLocalizedDescription();
+        var paramString = parameter?.ToString();
+        if (!string.IsNullOrEmpty(paramString) && Type.GetType(paramString) is { } type && type.IsEnum && value is not null)
+            return (Enum.Parse(type, value.ToString()!) as Enum)?.GetLocalizedDescription();
 
-        return (Enum.Parse(value.GetType(), value.ToString()) as Enum).GetLocalizedDescription();
+        if (value is not null)
+            return (Enum.Parse(value.GetType(), value.ToString()!) as Enum)?.GetLocalizedDescription();
+
+        return null;
     }
 
     /// <summary>
@@ -152,7 +156,7 @@ public class EnumToDescriptionConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is Enum enumeration)
             return enumeration.GetLocalizedDescription();

@@ -29,6 +29,9 @@ public class DetailBViewModel : ViewModelBlade<TestItem>
 
     private async Task OpenNewBladeAsync()
     {
+        if (SelectedItem is null)
+            return;
+
         var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailCViewModel>();
         detailsVm.SetSelectedItem(SelectedItem);
         await _navigationService.OpenBladeAsync(Owner, detailsVm);

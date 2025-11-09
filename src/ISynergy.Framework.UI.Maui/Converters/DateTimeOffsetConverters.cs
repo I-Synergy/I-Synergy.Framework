@@ -276,12 +276,15 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
         {
             var context = ServiceLocator.Default.GetRequiredService<IContext>();
             var timeZone = context.TimeZone;
-            var dt = TimeZoneInfo.ConvertTimeFromUtc(datetime.DateTime, timeZone);
+            if (timeZone is not null)
+            {
+                var dt = TimeZoneInfo.ConvertTimeFromUtc(datetime.DateTime, timeZone);
 
-            if (parameter is not null)
-                return dt.ToString(parameter.ToString());
+                if (parameter is not null)
+                    return dt.ToString(parameter.ToString());
 
-            return dt.ToString("f");
+                return dt.ToString("f");
+            }
         }
 
         return DateTimeOffset.Now.DateTime.ToString("f");

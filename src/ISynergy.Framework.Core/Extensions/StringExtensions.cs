@@ -11,6 +11,10 @@ namespace ISynergy.Framework.Core.Extensions;
 /// </summary>
 public static class StringExtensions
 {
+    // Pre-compiled regex patterns for better performance
+    private static readonly Regex HexDigitRegex = new("[abcdefABCDEF\\d]+", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
+    private static readonly Regex AlphaNumericRegex = new("[^a-zA-Z0-9]", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
+
     /// <summary>
     /// Convert a hex string to a .NET Color object.
     /// </summary>
@@ -25,28 +29,18 @@ public static class StringExtensions
             return Color.Empty;
         }
 
-        var r = hc.Substring(0, 2);
-        var g = hc.Substring(2, 2);
-        var b = hc.Substring(4, 2);
-
-        Color color;
         try
         {
-            var ri
-               = int.Parse(r, NumberStyles.HexNumber);
-            var gi
-               = int.Parse(g, NumberStyles.HexNumber);
-            var bi
-               = int.Parse(b, NumberStyles.HexNumber);
+            var r = int.Parse(hc[..2], NumberStyles.HexNumber);
+            var g = int.Parse(hc.Substring(2, 2), NumberStyles.HexNumber);
+            var b = int.Parse(hc.Substring(4, 2), NumberStyles.HexNumber);
 
-            color = Color.FromArgb(ri, gi, bi);
+            return Color.FromArgb(r, g, b);
         }
-        catch
+        catch (FormatException)
         {
             return Color.Empty;
         }
-
-        return color;
     }
 
     /// <summary>
@@ -56,22 +50,17 @@ public static class StringExtensions
     /// <returns>System.Int32.</returns>
     public static int CovertString2Numeric(this string _self)
     {
-        var result = string.Empty;
+        var result = new StringBuilder();
 
         foreach (var character in _self.EnsureNotNull())
         {
             if (char.IsDigit(character))
             {
-                result += character;
+                result.Append(character);
             }
         }
 
-        if (int.TryParse(result, out var output))
-        {
-            return output;
-        }
-
-        return 0;
+        return int.TryParse(result.ToString(), out var output) ? output : 0;
     }
 
     /// <summary>
@@ -79,51 +68,24 @@ public static class StringExtensions
     /// </summary>
     /// <param name="self">The self.</param>
     /// <returns><c>true</c> if the specified self is float; otherwise, <c>false</c>.</returns>
-    public static bool IsFloat(this string self)
-    {
-        try
-        {
-            return float.TryParse(self, out var output);
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
+    public static bool IsFloat(this string self) =>
+        float.TryParse(self, out _);
 
     /// <summary>
     /// Determines whether the specified self is decimal.
     /// </summary>
     /// <param name="self">The self.</param>
     /// <returns><c>true</c> if the specified self is decimal; otherwise, <c>false</c>.</returns>
-    public static bool IsDecimal(this string self)
-    {
-        try
-        {
-            return decimal.TryParse(self, out var output);
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
+    public static bool IsDecimal(this string self) =>
+        decimal.TryParse(self, out _);
 
     /// <summary>
     /// Determines whether the specified self is integer.
     /// </summary>
     /// <param name="self">The self.</param>
     /// <returns><c>true</c> if the specified self is integer; otherwise, <c>false</c>.</returns>
-    public static bool IsInteger(this string self)
-    {
-        try
-        {
-            return int.TryParse(self, out var output);
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
+    public static bool IsInteger(this string self) =>
+        int.TryParse(self, out _);
 
     /// <summary>
     /// Increases the string2 long.
@@ -133,36 +95,26 @@ public static class StringExtensions
     /// <returns>System.String.</returns>
     public static string IncreaseString2Long(this string self, long summand)
     {
-        var numberString = string.Empty;
+        // Find the position where numeric characters start at the end
         var codePos = self.Length;
-
-        // Go back from end of id to the begin while a char is a number
         for (var i = self.Length - 1; i >= 0; i--)
         {
-            if (char.IsDigit(self.Substring(i, 1).First()))
+            if (!char.IsDigit(self[i]))
             {
-                // if found char isdigit set the position one element back
-                codePos--;
-            }
-            else
-            {
-                // if we found a char we can break up
+                codePos = i + 1;
                 break;
             }
         }
 
-        // the for-loop has found at least one numeric char at the end
-        if (codePos < self.Length)
-            numberString = self.Substring(codePos, self.Length - codePos);
-
-        // no number was found at the and so we simply add the summand as string
-        if (numberString.Length == 0)
+        // No numeric suffix found
+        if (codePos == self.Length)
             return self + summand;
 
+        var numberString = self[codePos..];
         var num = long.Parse(numberString) + summand;
 
         // Format the number with leading zeros to maintain the original format
-        return self.Substring(0, codePos) + num.ToString().PadLeft(numberString.Length, '0');
+        return self[..codePos] + num.ToString().PadLeft(numberString.Length, '0');
     }
 
     /// <summary>
@@ -175,34 +127,36 @@ public static class StringExtensions
     {
         if (self.Length <= width)
             return self;
-        // dont need to do anything
 
-        var sResult = self;
-        var iLineNO = width;
+        var result = new StringBuilder();
+        var currentPosition = 0;
 
-        while (sResult.Length >= iLineNO)
+        while (currentPosition < self.Length)
         {
-            // temp holder for current string char
-            int iEn;
-            // work backwards from the max len to 1 looking for a space
-            for (iEn = iLineNO; iEn >= 1; iEn += -1)
+            var lineEnd = Math.Min(currentPosition + width, self.Length);
+
+            if (lineEnd == self.Length)
             {
-                string sChar = sResult.Substring(iEn, 1);
-                // found a space
-                if (sChar == " ")
-                {
-                    sResult = sResult.Remove(iEn, 1);
-                    // Remove the space
-                    sResult = sResult.Insert(iEn, Environment.NewLine);
-                    // insert a line feed here,
-                    iLineNO += width;
-                    // increment
-                    break;
-                }
+                result.Append(self[currentPosition..]);
+                break;
+            }
+
+            // Find the last space before the line end
+            var lastSpace = self.LastIndexOf(' ', lineEnd - 1, Math.Min(width, lineEnd - currentPosition));
+
+            if (lastSpace > currentPosition)
+            {
+                result.AppendLine(self.Substring(currentPosition, lastSpace - currentPosition));
+                currentPosition = lastSpace + 1;
+            }
+            else
+            {
+                result.AppendLine(self.Substring(currentPosition, width));
+                currentPosition += width;
             }
         }
 
-        return sResult;
+        return result.ToString();
     }
 
     /// <summary>
@@ -212,35 +166,32 @@ public static class StringExtensions
     /// <returns>System.String.</returns>
     public static string ExtractHexDigits(this string self)
     {
-        // remove any characters that are not digits (like #)
-        var isHexDigit = new Regex("[abcdefABCDEF\\d]+", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
         var result = new StringBuilder();
 
         foreach (var character in self.EnsureNotNull())
-            if (isHexDigit.IsMatch(character.ToString()))
-                result.Append(character.ToString());
+        {
+            if (HexDigitRegex.IsMatch(character.ToString()))
+            {
+                result.Append(character);
+            }
+        }
 
         return result.ToString();
     }
 
-    //identical to Ruby's chop
     /// <summary>
-    /// Chops the specified self.
+    /// Chops the specified self (removes last character or CRLF).
     /// </summary>
     /// <param name="self">The self.</param>
     /// <returns>System.String.</returns>
-    public static string Chop(this string self)
-    {
-        if (self.Length == 0)
-            return self;
-
-        if (self.Length == 1)
-            return "";
-
-        if (self.LastCharAt(-1) == '\n' && self.LastCharAt(-2) == '\r')
-            return self.Substring(0, self.Length - 2);
-        return self.Substring(0, self.Length - 1);
-    }
+    public static string Chop(this string self) =>
+        self.Length switch
+        {
+            0 => self,
+            1 => "",
+            _ when self.EndsWith("\r\n") => self[..^2],
+            _ => self[..^1]
+        };
 
     /// <summary>
     /// Counts the lines.
@@ -249,15 +200,17 @@ public static class StringExtensions
     /// <returns>System.Int32.</returns>
     public static int CountLines(this string self)
     {
-        var pos = 0;
+        if (string.IsNullOrEmpty(self))
+            return 0;
+
         var count = 1;
-        do
+        var index = 0;
+
+        while ((index = self.IndexOf(Environment.NewLine, index)) != -1)
         {
-            pos = self.IndexOf(Environment.NewLine, pos);
-            if (pos >= 0)
-                ++count;
-            ++pos;
-        } while (pos > 0);
+            count++;
+            index += Environment.NewLine.Length;
+        }
 
         return count;
     }
@@ -270,10 +223,7 @@ public static class StringExtensions
     public static string FirstLine(this string self)
     {
         var pos = self.IndexOf(Environment.NewLine);
-        if (pos == -1)
-            return self;
-
-        return self.Substring(0, pos);
+        return pos == -1 ? self : self[..pos];
     }
 
     /// <summary>
@@ -281,10 +231,8 @@ public static class StringExtensions
     /// </summary>
     /// <param name="s">The s.</param>
     /// <returns><c>true</c> if [is alpha numeric] [the specified s]; otherwise, <c>false</c>.</returns>
-    public static bool IsAlphaNumeric(this string s)
-    {
-        return !new Regex("[^a-zA-Z0-9]", RegexOptions.None, TimeSpan.FromMilliseconds(100)).IsMatch(s);
-    }
+    public static bool IsAlphaNumeric(this string s) =>
+        !AlphaNumericRegex.IsMatch(s);
 
     /// <summary>
     /// Lasts the character at.
@@ -292,85 +240,53 @@ public static class StringExtensions
     /// <param name="self">The self.</param>
     /// <param name="pos">The position.</param>
     /// <returns>System.Char.</returns>
-    public static char LastCharAt(this string self, int pos)
-    {
-        return self[self.Length + pos];
-    }
+    public static char LastCharAt(this string self, int pos) =>
+        self[self.Length + pos];
 
     /// <summary>
-    /// Makes the proper.
+    /// Makes the proper (first character uppercase, rest lowercase).
     /// </summary>
     /// <param name="s">The s.</param>
     /// <returns>System.String.</returns>
-    public static string MakeProper(this string s)
-    {
-        return s[0].ToString().ToUpper() + s.Substring(1).ToLower();
-    }
+    public static string MakeProper(this string s) =>
+        s.Length == 0 ? s : char.ToUpper(s[0]) + s[1..].ToLower();
 
     /// <summary>
     /// Removes the last character.
     /// </summary>
     /// <param name="self">The self.</param>
     /// <returns>System.String.</returns>
-    public static string RemoveLastChar(this string self)
-    {
-        if (self.Length >= 1)
-            return self.Remove(self.Length - 1, 1);
-        return self;
-    }
+    public static string RemoveLastChar(this string self) =>
+        self.Length >= 1 ? self[..^1] : self;
 
     /// <summary>
-    /// Splits at.
+    /// Splits at specified positions.
     /// </summary>
     /// <param name="self">The self.</param>
     /// <param name="positions">The positions.</param>
     /// <returns>IEnumerable&lt;System.String&gt;.</returns>
     public static IEnumerable<string> SplitAt(this string self, params int[] positions)
     {
-        var ret = new List<string>();
-
-        if (positions is null) { ret.Add(self); return ret; }
-
-        var poses = positions.Distinct().OrderBy(n => n).ToList();
-
-        var indicesToRemove = new Queue<int>();
-        var total = poses.Count;
-        var i = 0;
-        while (i < total)
+        if (positions is null or [])
+            yield return self;
+        else
         {
-            if ((poses[i] <= 0) || (poses[i] >= self.Length))
-                indicesToRemove.Enqueue(poses[i]);
-            ++i;
-        }
+            var poses = positions.Where(p => p > 0 && p < self.Length).Distinct().OrderBy(n => n).ToList();
 
-        while (indicesToRemove.Count > 0)
-            poses.Remove(indicesToRemove.Dequeue());
-
-        switch (poses.Count)
-        {
-            case 0:
-                ret.Add(self); return ret;
-            case 1:
-                ret.Add(self.Substring(0, poses[0])); ret.Add(self.Substring(poses[0], self.Length - poses[0])); return ret;
-            default:
-                var pos1 = 0;
-                var len = poses[0];
-                ret.Add(self.Substring(pos1, len));
-
-                pos1 = poses[0];
-                for (var j = 1; j <= poses.Count; ++j)
+            if (poses.Count == 0)
+                yield return self;
+            else
+            {
+                var pos = 0;
+                foreach (var nextPos in poses)
                 {
-                    if (j == poses.Count)
-                        len = self.Length - poses[j - 1];
-                    else
-                        len = poses[j] - poses[j - 1];
-
-                    ret.Add(self.Substring(pos1, len));
-
-                    if (j < poses.Count)
-                        pos1 = poses[j];
+                    yield return self.Substring(pos, nextPos - pos);
+                    pos = nextPos;
                 }
-                return ret;
+
+                if (pos < self.Length)
+                    yield return self[pos..];
+            }
         }
     }
 
@@ -380,13 +296,11 @@ public static class StringExtensions
     /// <param name="self">The self.</param>
     /// <param name="len">The length.</param>
     /// <returns>System.String.</returns>
-    public static string TrimEnd(this string self, int len)
-    {
-        return self.Substring(0, self.Length - len);
-    }
+    public static string TrimEnd(this string self, int len) =>
+        self.Length > len ? self[..^len] : string.Empty;
 
     /// <summary>
-    /// Replaces the last of.
+    /// Replaces the last occurrence of fromStr with toStr.
     /// </summary>
     /// <param name="str">The string.</param>
     /// <param name="fromStr">From string.</param>
@@ -398,15 +312,11 @@ public static class StringExtensions
         if (lastIndexOf < 0)
             return str;
 
-        var leading = str.Substring(0, lastIndexOf);
-        var charsToEnd = str.Length - (lastIndexOf + fromStr.Length);
-        var trailing = str.Substring(lastIndexOf + fromStr.Length, charsToEnd);
-
-        return leading + toStr + trailing;
+        return str[..lastIndexOf] + toStr + str[(lastIndexOf + fromStr.Length)..];
     }
 
     /// <summary>
-    /// Converts to camelwithseparator.
+    /// Converts to camel case with separator.
     /// </summary>
     /// <param name="source">The source.</param>
     /// <param name="separator">The separator.</param>
@@ -414,20 +324,17 @@ public static class StringExtensions
     public static string ToCamelWithSeparator(this string source, char separator)
     {
         if (string.IsNullOrEmpty(source))
-        {
             return source;
-        }
 
-        var sourceArray = source.ToCharArray();
+        var sb = new StringBuilder();
+        sb.Append(source[0]);
 
-        var sb = new StringBuilder(sourceArray[0].ToString());
-
-        for (var i = 1; i <= sourceArray.Length - 1; i++) // Index 0 is skipped.
+        for (var i = 1; i < source.Length; i++)
         {
-            if (char.IsUpper(sourceArray[i]) && !char.IsUpper(sourceArray[i - 1]))
+            if (char.IsUpper(source[i]) && !char.IsUpper(source[i - 1]))
                 sb.Append(separator);
 
-            sb.Append(sourceArray[i]);
+            sb.Append(source[i]);
         }
 
         return sb.ToString();
@@ -440,70 +347,51 @@ public static class StringExtensions
     /// <param name="b">String to compare</param>
     /// <param name="comparisonType">StringComparison</param>
     /// <returns>True if the strings are null or empty or the strings are equal</returns>
-    public static bool IsNullOrEmptyOrEquals(this string a, string b, StringComparison comparisonType)
-    {
-        if (string.IsNullOrEmpty(a))
-            return string.IsNullOrEmpty(b);
-
-        return string.Equals(a, b, comparisonType);
-    }
+    public static bool IsNullOrEmptyOrEquals(this string? a, string? b, StringComparison comparisonType) =>
+        string.IsNullOrEmpty(a) ? string.IsNullOrEmpty(b) : string.Equals(a, b, comparisonType);
 
     /// <summary>
-    /// Wraps the specified width.
+    /// Wraps text to specified width.
     /// </summary>
-    /// <param name="a">a.</param>
+    /// <param name="text">The text to wrap.</param>
     /// <param name="width">The width.</param>
     /// <returns>System.String.</returns>
-    public static string Wrap(this string a, int width)
+    public static string Wrap(this string text, int width)
     {
-        int pos, next;
-        var sb = new StringBuilder();
-
-        // Lucidity check
         if (width < 1)
-            return a;
+            return text;
 
-        // Parse each line of text
-        for (pos = 0; pos < a.Length; pos = next)
+        var sb = new StringBuilder();
+        var lines = text.Split(Environment.NewLine);
+
+        foreach (var line in lines)
         {
-            // Find end of line
-            var eol = a.IndexOf(Environment.NewLine, pos);
-
-            if (eol == -1)
-                next = eol = a.Length;
-            else
-                next = eol + Environment.NewLine.Length;
-
-            // Copy this line of text, breaking into smaller lines as needed
-            if (eol > pos)
+            if (line.Length <= width)
             {
-                do
-                {
-                    var len = eol - pos;
-
-                    if (len > width)
-                        len = BreakLine(a, pos, width);
-
-                    sb.Append(a, pos, len);
-                    sb.Append(Environment.NewLine);
-
-                    // Trim whitespace following break
-                    pos += len;
-
-                    while (pos < eol && char.IsWhiteSpace(a[pos]))
-                        pos++;
-
-                } while (eol > pos);
+                sb.AppendLine(line);
+                continue;
             }
-            else sb.Append(Environment.NewLine); // Empty line
+
+            var pos = 0;
+            while (pos < line.Length)
+            {
+                var len = Math.Min(width, line.Length - pos);
+                len = BreakLine(line, pos, len);
+
+                sb.AppendLine(line.Substring(pos, len));
+                pos += len;
+
+                // Trim leading whitespace
+                while (pos < line.Length && char.IsWhiteSpace(line[pos]))
+                    pos++;
+            }
         }
 
         return sb.ToString();
     }
 
     /// <summary>
-    /// Locates position to break the given line so as to avoid
-    /// breaking words.
+    /// Locates position to break the given line so as to avoid breaking words.
     /// </summary>
     /// <param name="text">String that contains line of text</param>
     /// <param name="pos">Index where line of text starts</param>
@@ -516,11 +404,14 @@ public static class StringExtensions
 
         while (i >= 0 && !char.IsWhiteSpace(text[pos + i]))
             i--;
+
         if (i < 0)
             return max; // No whitespace found; break at maximum length
-                        // Find start of whitespace
+
+        // Find start of whitespace
         while (i >= 0 && char.IsWhiteSpace(text[pos + i]))
             i--;
+
         // Return length of text before whitespace
         return i + 1;
     }
@@ -533,29 +424,28 @@ public static class StringExtensions
     /// <returns>System.String.</returns>
     public static string Remove(this string s, IEnumerable<char> chars)
     {
-        return new string(s.Where(c => !chars.Contains(c)).ToArray());
+        var charsToRemove = new HashSet<char>(chars);
+        return new string(s.Where(c => !charsToRemove.Contains(c)).ToArray());
     }
 
     /// <summary>
-    /// Gets the bytes.
+    /// Gets the bytes from hex string.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="start">The start.</param>
-    /// <param name="NumBytes">The number bytes.</param>
+    /// <param name="numBytes">The number bytes.</param>
     /// <returns>System.Byte[].</returns>
-    public static byte[] GetBytes(this string value, int start, int NumBytes)
+    public static byte[] GetBytes(this string value, int start, int numBytes)
     {
-        var g = new StringBuilder(value);
-        var Bytes = new byte[NumBytes];
-        string temp;
-        var CharPos = start;
-        for (var i = 0; i < NumBytes; i++)
+        var bytes = new byte[numBytes];
+
+        for (var i = 0; i < numBytes; i++)
         {
-            temp = g[CharPos++].ToString();
-            temp += g[CharPos++].ToString();
-            Bytes[i] = byte.Parse(temp, NumberStyles.HexNumber);
+            var hexPair = value.Substring(start + (i * 2), 2);
+            bytes[i] = byte.Parse(hexPair, NumberStyles.HexNumber);
         }
-        return Bytes;
+
+        return bytes;
     }
 
     /// <summary>
@@ -565,13 +455,10 @@ public static class StringExtensions
     /// <param name="_self">The value.</param>
     /// <param name="defaultValue">The default value.</param>
     /// <returns>T.</returns>
-    public static T ToEnum<T>(this string _self, T defaultValue) where T : struct
-    {
-        if (string.IsNullOrEmpty(_self))
-            return defaultValue;
-
-        return Enum.TryParse<T>(_self, true, out var result) ? result : defaultValue;
-    }
+    public static T ToEnum<T>(this string? _self, T defaultValue) where T : struct, Enum =>
+        string.IsNullOrEmpty(_self) || !Enum.TryParse<T>(_self, true, out var result) 
+            ? defaultValue 
+            : result;
 
     /// <summary>
     /// Replaces the format item in a specified string with the string
@@ -581,8 +468,8 @@ public static class StringExtensions
     /// <param name="args">An object array that contains zero or more objects to format.</param>
     /// <returns>A copy of str in which the format items have been replaced by
     /// the string representation of the corresponding objects in args.</returns>
-    public static string Format(this string str, params object[] args) =>
-        String.Format(str, args);
+    public static string Format(this string str, params object?[] args) =>
+        string.Format(str, args);
 
     /// <summary>
     /// Checks whether a type implements a method with the given name.
@@ -590,18 +477,8 @@ public static class StringExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="methodName">Name of the method.</param>
     /// <returns><c>true</c> if the specified method name has method; otherwise, <c>false</c>.</returns>
-    public static bool HasMethod<T>(string methodName)
-    {
-        try
-        {
-            var type = typeof(T);
-            return type.GetMethod(methodName) is not null;
-        }
-        catch (AmbiguousMatchException)
-        {
-            return true;
-        }
-    }
+    public static bool HasMethod<T>(string methodName) =>
+        typeof(T).GetMethod(methodName) is not null;
 
     /// <summary>
     /// Convert string to snake casing.
@@ -609,11 +486,10 @@ public static class StringExtensions
     /// <param name="input">The input.</param>
     /// <returns>System.String.</returns>
     public static string ToSnakeCase(this string input) =>
-        string.Concat(input.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
-
+        string.Concat(input.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString())).ToLower();
 
     /// <summary>
-    /// Converts string to a capitalized one where delimiter starts an new capitalization.
+    /// Converts string to a capitalized one where delimiter starts a new capitalization.
     /// Default delimiter is a dot.
     /// </summary>
     /// <param name="_self">The self.</param>
@@ -621,18 +497,17 @@ public static class StringExtensions
     /// <returns>System.String.</returns>
     public static string ToCapitalized(this string _self, char delimiter = '.')
     {
-        _self = _self.ToLower();
-
+        var lower = _self.ToLower();
         var result = new StringBuilder();
-        var parts = _self.SplitAndKeep(delimiter);
+        var parts = lower.SplitAndKeep(delimiter);
 
-        foreach (var part in parts.EnsureNotNull())
+        foreach (var part in parts)
         {
             var characters = part.ToCharArray();
 
-            for (int i = 0; i < characters.Length; i++)
+            for (var i = 0; i < characters.Length; i++)
             {
-                if (!characters[i].Equals(' ') && !characters[i].ToString().IsInteger())
+                if (char.IsLetter(characters[i]))
                 {
                     characters[i] = char.ToUpper(characters[i]);
                     break;
@@ -646,8 +521,7 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Converts string to a capitalized one where delimiter starts an new capitalization.
-    /// Default delimiter is a space.
+    /// Converts string to a capitalized one where each space starts a new capitalization.
     /// </summary>
     /// <param name="_self">The self.</param>
     /// <returns>System.String.</returns>
@@ -664,66 +538,68 @@ public static class StringExtensions
     {
         var parts = new List<string>();
 
-        if (!string.IsNullOrEmpty(_self))
+        if (string.IsNullOrEmpty(_self))
+            return parts;
+
+        var firstChar = 0;
+
+        while (firstChar < _self.Length)
         {
-            var firstChar = 0;
-            do
+            var lastChar = _self.IndexOfAny(delimiters, firstChar);
+
+            if (lastChar < 0)
             {
-                var lastChar = _self.IndexOfAny(delimiters, firstChar);
-
-                if (lastChar >= 0)
-                {
-                    if (lastChar > firstChar)
-                        parts.Add(_self.Substring(firstChar, lastChar - firstChar)); //part before the delimiter
-
-                    parts.Add(new string(_self[lastChar], 1));//the delimiter
-
-                    firstChar = lastChar + 1;
-                    continue;
-                }
-
-                //No delimiters were found, but at least one character remains. Add the rest and stop.
-                parts.Add(_self.Substring(firstChar, _self.Length - firstChar));
+                // No more delimiters, add the rest
+                parts.Add(_self[firstChar..]);
                 break;
+            }
 
-            } while (firstChar < _self.Length);
+            if (lastChar > firstChar)
+                parts.Add(_self[firstChar..lastChar]); // Part before the delimiter
+
+            parts.Add(_self[lastChar].ToString()); // The delimiter
+            firstChar = lastChar + 1;
         }
 
         return parts;
     }
 
-    public static string ToEndingWithDirectorySeparator(this string path)
+    /// <summary>
+    /// Ensures path ends with directory separator.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>System.String.</returns>
+    public static string ToEndingWithDirectorySeparator(this string? path)
     {
-        if (!string.IsNullOrEmpty(path))
-        {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                return path += Path.DirectorySeparatorChar;
-        }
+        if (string.IsNullOrEmpty(path))
+            return path ?? string.Empty;
 
-        return path;
+        return path.EndsWith(Path.DirectorySeparatorChar.ToString())
+            ? path
+            : path + Path.DirectorySeparatorChar;
     }
 
     /// <summary>
     /// Extracts environment or country parameters from query string format (e.g., "?environment=development").
     /// </summary>
-    public static string? ExtractQueryParameter(this string queryString, string parameterName)
+    /// <param name="queryString">The query string.</param>
+    /// <param name="parameterName">The parameter name.</param>
+    /// <returns>The parameter value or null.</returns>
+    public static string? ExtractQueryParameter(this string? queryString, string parameterName)
     {
-        if (string.IsNullOrWhiteSpace(queryString))
+        if (string.IsNullOrWhiteSpace(queryString) || string.IsNullOrWhiteSpace(parameterName))
             return null;
 
         try
         {
-            // Remove leading '?' if present
             var cleanQuery = queryString.TrimStart('?');
-
             var parameters = cleanQuery.Split('&', StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var parameter in parameters)
             {
                 var keyValue = parameter.Split('=', StringSplitOptions.RemoveEmptyEntries);
 
-                if (keyValue.Length == 2
-                    && keyValue[0].Equals(parameterName, StringComparison.OrdinalIgnoreCase))
+                if (keyValue.Length == 2 && keyValue[0].Equals(parameterName, StringComparison.OrdinalIgnoreCase))
                 {
                     return Uri.UnescapeDataString(keyValue[1]);
                 }
@@ -731,7 +607,7 @@ public static class StringExtensions
 
             return null;
         }
-        catch
+        catch (Exception)
         {
             return null;
         }

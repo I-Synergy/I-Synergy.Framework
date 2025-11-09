@@ -82,8 +82,11 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
 
         var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
-        var infoService = InfoService.Default;
-        infoService.LoadAssembly(mainAssembly);
+        if (mainAssembly is not null)
+        {
+            var infoService = InfoService.Default;
+            infoService.LoadAssembly(mainAssembly);
+        }
 
         var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
@@ -164,7 +167,7 @@ public static class MauiAppBuilderExtensions
         services.RegisterRoute(viewmodel, abstraction, view);
     }
 
-    private static void RegisterRoute(this IServiceCollection services, Type type, Type abstraction, Type view)
+    private static void RegisterRoute(this IServiceCollection services, Type type, Type? abstraction, Type view)
     {
         if (abstraction is not null)
             Routing.RegisterRoute(abstraction.Name, view);

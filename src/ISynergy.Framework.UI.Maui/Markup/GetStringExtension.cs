@@ -17,7 +17,7 @@ public class GetStringExtension : IMarkupExtension<string>
     /// Gets or sets the key.
     /// </summary>
     /// <value>The key.</value>
-    public string Key { get; set; }
+    public required string Key { get; set; }
 
     public GetStringExtension()
         : base()

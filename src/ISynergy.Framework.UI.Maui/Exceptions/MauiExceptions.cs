@@ -3,11 +3,11 @@
 public static class MauiExceptions
 {
 #if WINDOWS
-    private static Exception _lastFirstChanceException;
+    private static Exception? _lastFirstChanceException;
 #endif
 
     // We'll route all unhandled exceptions through this one event.
-    public static event UnhandledExceptionEventHandler UnhandledException;
+    public static event UnhandledExceptionEventHandler? UnhandledException;
 
     static MauiExceptions()
     {
@@ -63,7 +63,7 @@ public static class MauiExceptions
 
             if (exception.StackTrace is null)
             {
-                exception = _lastFirstChanceException;
+                exception = _lastFirstChanceException ?? exception;
             }
 
             UnhandledException?.Invoke(sender, new UnhandledExceptionEventArgs(exception, true));

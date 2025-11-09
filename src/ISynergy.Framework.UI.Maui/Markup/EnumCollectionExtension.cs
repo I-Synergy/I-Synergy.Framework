@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Markup;
 [ContentProperty(nameof(EnumType))]
 public class EnumCollectionExtension : IMarkupExtension<List<Enum>>
 {
-    public Type EnumType { get; set; }
+    public required Type EnumType { get; set; }
 
     public EnumCollectionExtension()
         : base()

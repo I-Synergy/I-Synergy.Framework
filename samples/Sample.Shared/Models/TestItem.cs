@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
+using System.Windows.Input;
 
 namespace Sample.Models;
 
@@ -25,6 +26,33 @@ public class TestItem : BaseModel
     public string Description
     {
         get { return GetValue<string>(); }
+        set { SetValue(value); }
+    }
+
+    /// <summary>
+    /// Gets or sets the EditCommand property value.
+    /// </summary>
+    public ICommand? EditCommand
+    {
+        get { return GetValue<ICommand?>(); }
+        set { SetValue(value); }
+    }
+
+    /// <summary>
+    /// Gets or sets the DeleteCommand property value.
+    /// </summary>
+    public ICommand? DeleteCommand
+    {
+        get { return GetValue<ICommand?>(); }
+        set { SetValue(value); }
+    }
+
+    /// <summary>
+    /// Gets or sets the SubmitCommand property value.
+    /// </summary>
+    public ICommand? SubmitCommand
+    {
+        get { return GetValue<ICommand?>(); }
         set { SetValue(value); }
     }
 

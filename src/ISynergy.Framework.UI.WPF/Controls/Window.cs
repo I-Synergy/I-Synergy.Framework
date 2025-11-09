@@ -2,6 +2,7 @@
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace ISynergy.Framework.UI.Controls;
@@ -17,21 +18,22 @@ namespace ISynergy.Framework.UI.Controls;
 public partial class Window : System.Windows.Window, IWindow
 {
     /// <summary>
-    /// Gets or sets the viewmodel and data context for a window.
+    /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public IViewModel ViewModel
     {
         get
         {
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            return null;
+            return default!;
         }
         set
         {
             DataContext = value;
+            SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
         }
     }
 

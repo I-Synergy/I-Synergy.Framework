@@ -77,7 +77,7 @@ public abstract class ViewModelBlade<TModel> : ViewModel, IViewModelBlade<TModel
     /// </summary>
     /// <param name="e">The entity.</param>
     /// <param name="isUpdate"></param>
-    public virtual void SetSelectedItem(TModel e, bool isUpdate = true)
+    public virtual void SetSelectedItem(TModel? e, bool isUpdate = true)
     {
         SelectedItem = e;
 
@@ -136,7 +136,7 @@ public abstract class ViewModelBlade<TModel> : ViewModel, IViewModelBlade<TModel
     {
         // CanExecute checks both parameter and property to handle MAUI Button visual state correctly
         SubmitCommand = new AsyncRelayCommand<TModel>(
-     execute: async e => await SubmitAsync(e ?? SelectedItem!), 
+     execute: async e => await SubmitAsync(e ?? SelectedItem!),
  canExecute: e => (e ?? SelectedItem) is not null);
     }
 

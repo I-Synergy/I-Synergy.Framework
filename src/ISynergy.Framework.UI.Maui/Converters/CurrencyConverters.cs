@@ -19,7 +19,7 @@ public class CurrencyConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(value.ToString(), out var amount))
+        if (decimal.TryParse(value?.ToString(), out var amount))
             return amount.ToString("C2");
 
         return 0m.ToString("C2");
@@ -57,7 +57,7 @@ public class NegativeCurrencyConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(value.ToString(), out var amount))
+        if (decimal.TryParse(value?.ToString(), out var amount))
             return (amount * -1).ToString("C2");
 
         return 0m.ToString("C2");

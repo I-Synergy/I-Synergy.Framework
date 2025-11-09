@@ -37,7 +37,7 @@ public class DecimalNumberFormatter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (!string.IsNullOrEmpty(value.ToString()) && decimal.TryParse(value.ToString(), out decimal result))
+        if (!string.IsNullOrEmpty(value?.ToString()) && decimal.TryParse(value?.ToString(), out decimal result))
         {
             return result;
         }
@@ -81,7 +81,7 @@ public class IntegerNumberFormatter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (!string.IsNullOrEmpty(value.ToString()) && int.TryParse(value.ToString(), out int result))
+        if (!string.IsNullOrEmpty(value?.ToString()) && int.TryParse(value?.ToString(), out int result))
         {
             return result;
         }

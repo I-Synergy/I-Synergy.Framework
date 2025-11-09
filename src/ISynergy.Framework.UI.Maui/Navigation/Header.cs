@@ -13,5 +13,5 @@ public class Header : NavigationBase
     /// Gets or sets the name.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }
