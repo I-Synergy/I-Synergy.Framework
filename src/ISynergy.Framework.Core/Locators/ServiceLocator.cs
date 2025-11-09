@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Locators;

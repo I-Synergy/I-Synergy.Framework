@@ -128,6 +128,8 @@ namespace ISynergy.Framework.UI.ViewModels.Base
 
  private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
  {
+ try
+ {
  if (sender is LanguageViewModel vm)
  vm.Submitted -= LanguageVM_Submitted;
 
@@ -146,6 +148,16 @@ namespace ISynergy.Framework.UI.ViewModels.Base
  _commonServices.RestartApplication();
  }
  }
+ catch (Exception ex)
+ {
+ // Log exception to prevent it from being swallowed in async void method
+ _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
+ var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
+ exceptionHandlerService?.HandleException(ex);
+ // Re-throw to crash the application if unhandled exception handler is configured
+ throw;
+ }
+ }
 
  protected virtual Task OpenColorsAsync()
  {
@@ -155,6 +167,8 @@ namespace ISynergy.Framework.UI.ViewModels.Base
  }
 
  private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)
+ {
+ try
  {
  if (sender is ThemeViewModel vm)
  {
@@ -173,6 +187,16 @@ namespace ISynergy.Framework.UI.ViewModels.Base
  {
  _commonServices.RestartApplication();
  }
+ }
+ }
+ catch (Exception ex)
+ {
+ // Log exception to prevent it from being swallowed in async void method
+ _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler");
+ var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
+ exceptionHandlerService?.HandleException(ex);
+ // Re-throw to crash the application if unhandled exception handler is configured
+ throw;
  }
  }
 
