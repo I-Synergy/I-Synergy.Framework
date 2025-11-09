@@ -441,7 +441,16 @@ public class DialogService : IDialogService
                     return;
                 }
 
-                await OpenDialogAsync(window);
+                try
+                {
+                    await OpenDialogAsync(window);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error opening dialog");
+                    viewmodel.Closed -= viewModelClosedHandler;
+                    throw;
+                }
             }
             catch (Exception ex)
             {

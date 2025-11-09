@@ -229,7 +229,16 @@ public class DialogService : IDialogService
 
             viewmodel.Closed += ViewModelClosedHandler;
 
-            await viewmodel.InitializeAsync();
+            try
+            {
+                await viewmodel.InitializeAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error initializing viewmodel");
+                viewmodel.Closed -= ViewModelClosedHandler;
+                throw;
+            }
 
             await window.ShowAsync<TEntity>();
         }

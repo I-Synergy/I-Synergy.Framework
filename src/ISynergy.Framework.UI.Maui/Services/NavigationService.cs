@@ -76,7 +76,17 @@ public class NavigationService : INavigationService
             }
 
             if (view is not null && view.ViewModel is not null)
-                await view.ViewModel.InitializeAsync();
+            {
+                try
+                {
+                    await view.ViewModel.InitializeAsync();
+                }
+                catch (Exception ex)
+                {
+                    // Log error but don't throw - navigation should continue even if initialization fails
+                    System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
+                }
+            }
 
             OnBackStackChanged(EventArgs.Empty);
         }
@@ -109,7 +119,17 @@ public class NavigationService : INavigationService
                     Application.Current.Windows[0].Page = page;
 
                     if (view is not null && view.ViewModel is not null)
-                        await view.ViewModel.InitializeAsync();
+                    {
+                        try
+                        {
+                            await view.ViewModel.InitializeAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log error but don't throw - modal navigation should continue even if initialization fails
+                            System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
+                        }
+                    }
                 }
             }
             else

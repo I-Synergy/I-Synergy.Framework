@@ -265,14 +265,9 @@ public abstract class ObservableClass : IObservableClass
                 Properties.Clear();
             }
 
-            if (_propertyChanged is not null)
-            {
-                foreach (var @delegate in _propertyChanged.GetInvocationList())
-                {
-                    if (@delegate is not null)
-                        _propertyChanged -= (PropertyChangedEventHandler)@delegate;
-                }
-            }
+            // Clear event handlers to prevent memory leaks
+            // Since _propertyChanged is a field-backed event, we can simply set it to null
+            _propertyChanged = null;
         }
 
         // free native resources if there are any.
@@ -305,14 +300,9 @@ public abstract class ObservableClass : IObservableClass
             Properties.Clear();
         }
 
-        if (_propertyChanged is not null)
-        {
-            foreach (var @delegate in _propertyChanged.GetInvocationList())
-            {
-                if (@delegate is not null)
-                    _propertyChanged -= (PropertyChangedEventHandler)@delegate;
-            }
-        }
+        // Clear event handlers to prevent memory leaks
+        // Since _propertyChanged is a field-backed event, we can simply set it to null
+        _propertyChanged = null;
 
         _disposed = true;
     }
