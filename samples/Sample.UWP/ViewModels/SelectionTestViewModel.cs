@@ -26,7 +26,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Converters"); } }
 
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }

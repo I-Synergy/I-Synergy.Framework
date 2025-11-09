@@ -16,7 +16,7 @@ public class InfoViewModel : ViewModelNavigation<object>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Info"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Info"); } }
 
     /// <summary>
     /// Gets or sets the CompanyName property value.

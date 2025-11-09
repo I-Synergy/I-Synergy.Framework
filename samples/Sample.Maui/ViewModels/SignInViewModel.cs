@@ -19,7 +19,7 @@ public class SignInViewModel : ViewModel
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
 
-    public override string Title { get { return LanguageService.Default.GetString("Login"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Login"); } }
 
     /// <summary>
     /// Gets or sets the Username property value.
@@ -60,10 +60,10 @@ public class SignInViewModel : ViewModel
         Validator = new Action<IObservableValidatedClass>(_ =>
         {
             if (string.IsNullOrEmpty(Username) || (!string.IsNullOrEmpty(Username) && Username.Length <= 3))
-                AddValidationError(nameof(Username), LanguageService.Default.GetString("WarningUsernameSize"));
+                AddValidationError(nameof(Username), _commonServices.LanguageService.GetString("WarningUsernameSize"));
 
             if (string.IsNullOrEmpty(Password) || (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100))))
-                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
         });
     }
 
@@ -94,7 +94,7 @@ public class SignInViewModel : ViewModel
         if (e.Result)
         {
             await _dialogService
-                    .ShowInformationAsync(LanguageService.Default.GetString("Warning_Reset_Password"));
+                    .ShowInformationAsync(_commonServices.LanguageService.GetString("Warning_Reset_Password"));
 
             if (_navigationService.CanGoBack)
                 await _navigationService.GoBackAsync();

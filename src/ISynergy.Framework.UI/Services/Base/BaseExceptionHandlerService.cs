@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Events;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Messages;
@@ -11,6 +12,7 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
 {
     protected readonly IBusyService _busyService;
     protected readonly ILanguageService _languageService;
+    protected readonly IMessengerService _messengerService;
     protected readonly ILogger _logger;
 
     /// <summary>
@@ -18,14 +20,17 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
     /// </summary>
     /// <param name="busyService"></param>
     /// <param name="languageService"></param>
+    /// <param name="messengerService"></param>
     /// <param name="logger"></param>
     protected BaseExceptionHandlerService(
         IBusyService busyService,
         ILanguageService languageService,
+        IMessengerService messengerService,
         ILogger<BaseExceptionHandlerService> logger)
     {
         _busyService = busyService;
         _languageService = languageService;
+        _messengerService = messengerService;
         _logger = logger;
     }
 
@@ -50,34 +55,34 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
 
             if (exception is NotImplementedException)
             {
-                MessengerService.Default.Send(new ShowInformationMessage(new MessageBoxRequest(_languageService.GetString("WarningFutureModule"), "Features")));
+                _messengerService.Send(new ShowInformationMessage(new MessageBoxRequest(_languageService.GetString("WarningFutureModule"), "Features")));
             }
             else if (exception is UnauthorizedAccessException accessException)
             {
-                MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(accessException.Message)));
+                _messengerService.Send(new ShowErrorMessage(new MessageBoxRequest(accessException.Message)));
             }
             else if (exception is IOException iOException)
             {
                 if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
                 {
-                    MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(_languageService.GetString("ExceptionFileInUse"))));
+                    _messengerService.Send(new ShowErrorMessage(new MessageBoxRequest(_languageService.GetString("ExceptionFileInUse"))));
                 }
                 else
                 {
-                    MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(_languageService.GetString("ExceptionDefault"))));
+                    _messengerService.Send(new ShowErrorMessage(new MessageBoxRequest(_languageService.GetString("ExceptionDefault"))));
                 }
             }
             else if (exception is ArgumentException argumentException)
             {
-                MessengerService.Default.Send(new ShowWarningMessage(new MessageBoxRequest(argumentException.Message)));
+                _messengerService.Send(new ShowWarningMessage(new MessageBoxRequest(argumentException.Message)));
             }
             else if (exception is ArgumentNullException argumentNullException)
             {
-                MessengerService.Default.Send(new ShowWarningMessage(new MessageBoxRequest(argumentNullException.Message)));
+                _messengerService.Send(new ShowWarningMessage(new MessageBoxRequest(argumentNullException.Message)));
             }
             else
             {
-                MessengerService.Default.Send(new ShowErrorMessage(new MessageBoxRequest(_languageService.GetString("ExceptionDefault"))));
+                _messengerService.Send(new ShowErrorMessage(new MessageBoxRequest(_languageService.GetString("ExceptionDefault"))));
             }
         }
         catch (Exception ex)

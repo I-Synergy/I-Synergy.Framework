@@ -14,7 +14,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
 
-    public override string Title { get => LanguageService.Default.GetString("Settings"); }
+    public override string Title { get => _commonServices.LanguageService.GetString("Settings"); }
 
     /// <summary>
     /// Gets or sets the LocalSettings property value.

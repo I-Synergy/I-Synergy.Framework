@@ -166,7 +166,7 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
 
         if (attributes is not null && attributes.Length > 0 && attributes[0].Description is not null)
         {
-            description = LanguageService.Default.GetString(attributes[0].Description!);
+            description = _commonServices.LanguageService.GetString(attributes[0].Description!);
         }
 
         return description;

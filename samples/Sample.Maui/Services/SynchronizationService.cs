@@ -112,9 +112,10 @@ internal class SynchronizationService : ISynchronizationService
             if (!_synchronizationSettings.IsAnonymous)
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationTypes.Bearer, _context.Profile.Token.AccessToken);
 
-            // Check if we are trying to reach a IIS Express.
-            // IIS Express does not allow any request other than localhost
-            // So far,hacking the Host-Content header to mimic localhost call
+            // Android emulator networking workaround:
+            // The Android emulator uses 10.0.2.2 as an alias for the host machine's localhost.
+            // IIS Express only accepts requests with Host header set to "localhost".
+            // We override the Host header to match IIS Express requirements when running on Android emulator.
             if (DeviceInfo.Platform == DevicePlatform.Android && SynchronizationEndpoint.Host == "10.0.2.2")
                 httpClient.DefaultRequestHeaders.Host = $"localhost:{SynchronizationEndpoint.Port}";
 

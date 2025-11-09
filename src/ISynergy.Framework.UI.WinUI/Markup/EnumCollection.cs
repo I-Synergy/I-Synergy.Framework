@@ -1,5 +1,6 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
@@ -42,6 +43,6 @@ public class EnumCollection : MarkupExtension
     private static string GetDescription(Enum value)
     {
         Argument.IsNotNull(value);
-        return LanguageService.Default.GetString(value.ToString());
+        return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(value.ToString());
     }
 }

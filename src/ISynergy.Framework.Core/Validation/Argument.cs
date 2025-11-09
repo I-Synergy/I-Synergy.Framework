@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -24,7 +25,7 @@ public static class Argument
     {
         if (value is null)
         {
-            var error = LanguageService.Default.GetString("WarningNull");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNull");
             throw new ArgumentNullException(name, error);
         }
 
@@ -42,7 +43,7 @@ public static class Argument
     {
         if (string.IsNullOrEmpty(value))
         {
-            var error = LanguageService.Default.GetString("WarningNullOrEmpty");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullOrEmpty");
             throw new ArgumentNullException(name, error);
         }
 
@@ -60,7 +61,7 @@ public static class Argument
     {
         if (value == Guid.Empty)
         {
-            var error = LanguageService.Default.GetString("WarningGuidEmpty");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningGuidEmpty");
             throw new ArgumentException(error, name);
         }
 
@@ -79,7 +80,7 @@ public static class Argument
     {
         if (!value.HasValue || value.Value == Guid.Empty)
         {
-            var error = LanguageService.Default.GetString("WarningNullGuidEmpty");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullGuidEmpty");
             throw new ArgumentNullException(name, error);
         }
 
@@ -98,7 +99,7 @@ public static class Argument
     {
         if (string.IsNullOrEmpty(value) || (string.CompareOrdinal(value.Trim(), string.Empty) == 0))
         {
-            var error = LanguageService.Default.GetString("WarningNullWhitespace");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullWhitespace");
             throw new ArgumentNullException(name, error);
         }
 
@@ -117,7 +118,7 @@ public static class Argument
     {
         if ((value is null) || (value.Length == 0))
         {
-            var error = LanguageService.Default.GetString("WarningNullEmptyArray");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullEmptyArray");
             throw new ArgumentNullException(name, error);
         }
 
@@ -137,7 +138,7 @@ public static class Argument
     {
         if ((value is null) || (value.Count == 0))
         {
-            var error = LanguageService.Default.GetString("WarningNullEmptyList");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningNullEmptyList");
             throw new ArgumentNullException(name, error);
         }
 
@@ -156,7 +157,7 @@ public static class Argument
     {
         if (value is null || !value.GetType().IsEnum)
         {
-            var error = LanguageService.Default.GetString("WarningEnum");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningEnum");
             throw new ArgumentException(error, name);
         }
 
@@ -167,7 +168,7 @@ public static class Argument
     {
         if (value is null || !value.IsEnum)
         {
-            var error = LanguageService.Default.GetString("WarningEnum");
+            var error = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningEnum");
             throw new ArgumentException(error, name);
         }
 
@@ -211,7 +212,7 @@ public static class Argument
 
         if (!validation(value, minimumValue, maximumValue))
         {
-            var error = string.Format(LanguageService.Default.GetString("WarningBetween"), minimumValue, maximumValue);
+            var error = string.Format(ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningBetween"), minimumValue, maximumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }
@@ -250,7 +251,7 @@ public static class Argument
 
         if (!validation(value, minimumValue))
         {
-            var error = string.Format(LanguageService.Default.GetString("WarningMinimum"), minimumValue);
+            var error = string.Format(ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningMinimum"), minimumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }
@@ -286,7 +287,7 @@ public static class Argument
     {
         if (!validation(value, maximumValue))
         {
-            var error = string.Format(LanguageService.Default.GetString("WarningMaximum"), maximumValue);
+            var error = string.Format(ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("WarningMaximum"), maximumValue);
             throw new ArgumentOutOfRangeException(name, error);
         }
     }

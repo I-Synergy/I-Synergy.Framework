@@ -150,47 +150,47 @@ public class SignUpViewModel : ViewModel
         {
             if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
             {
-                AddValidationError(nameof(Name), LanguageService.Default.GetString("WarningLicenseNameSize"));
+                AddValidationError(nameof(Name), _commonServices.LanguageService.GetString("WarningLicenseNameSize"));
             }
 
             if (string.IsNullOrEmpty(Mail) || !NetworkUtility.IsValidEMail(Mail))
             {
-                AddValidationError(nameof(Mail), LanguageService.Default.GetString("WarningInvalidEmail"));
+                AddValidationError(nameof(Mail), _commonServices.LanguageService.GetString("WarningInvalidEmail"));
             }
 
             if (string.IsNullOrEmpty(SelectedTimeZone))
             {
-                AddValidationError(nameof(SelectedTimeZone), LanguageService.Default.GetString("WarningNoTimeZoneSelected"));
+                AddValidationError(nameof(SelectedTimeZone), _commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
             }
 
             if (string.IsNullOrEmpty(Password) || (Password.Length <= 6))
             {
-                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
             }
 
             if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             {
-                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
             }
 
             if (string.IsNullOrEmpty(PasswordCheck) || (PasswordCheck.Length <= 6))
             {
-                AddValidationError(nameof(PasswordCheck), LanguageService.Default.GetString("WarningPasswordSize"));
+                AddValidationError(nameof(PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordSize"));
             }
 
             if (!string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(PasswordCheck) && !Password.Equals(PasswordCheck))
             {
-                AddValidationError(nameof(Password), LanguageService.Default.GetString("WarningPasswordMatch"));
-                AddValidationError(nameof(PasswordCheck), LanguageService.Default.GetString("WarningPasswordMatch"));
+                AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
+                AddValidationError(nameof(PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
             }
 
             if (SelectedModules.Count < 1)
             {
-                AddValidationError(nameof(SelectedModules), LanguageService.Default.GetString("WarningNoModulesSelected"));
+                AddValidationError(nameof(SelectedModules), _commonServices.LanguageService.GetString("WarningNoModulesSelected"));
             }
 
             if (SelectedCountry is null)
-                AddValidationError(nameof(SelectedCountry), LanguageService.Default.GetString("WarningNoCountrySelected"));
+                AddValidationError(nameof(SelectedCountry), _commonServices.LanguageService.GetString("WarningNoCountrySelected"));
         });
 
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
@@ -301,7 +301,7 @@ public class SignUpViewModel : ViewModel
                     TimeZoneId = SelectedTimeZone
                 };
 
-                await _dialogService.ShowInformationAsync(LanguageService.Default.GetString("WarningRegistrationConfirmEmail"));
+                await _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("WarningRegistrationConfirmEmail"));
                 await SignInAsync();
             }
         }

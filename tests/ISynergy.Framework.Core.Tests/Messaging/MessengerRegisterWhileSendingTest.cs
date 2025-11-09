@@ -15,22 +15,22 @@ public class MessengerRegisterWhileSendingTest
     [TestMethod]
     public void TestMessengerRegisteringWhileSending()
     {
-        MessengerService.Reset();
+        var messenger = new MessengerService();
         TestRecipient.Reset();
 
         List<TestRecipient1> list = [];
 
         for (int index = 0; index < 10; index++)
         {
-            list.Add(new TestRecipient1(true));
+            list.Add(new TestRecipient1(messenger, true));
         }
 
-        MessengerService.Default.Send(new MessageFixture(TestContentString));
+        messenger.Send(new MessageFixture(TestContentString));
 
         Assert.AreEqual(null, TestRecipient.LastReceivedString);
         Assert.AreEqual(0, TestRecipient.ReceivedStringMessages);
 
-        MessengerService.Default.Send(new MessageFixture(TestContentStringNested));
+        messenger.Send(new MessageFixture(TestContentStringNested));
 
         Assert.AreEqual(TestContentStringNested, TestRecipient.LastReceivedString);
         Assert.AreEqual(10, TestRecipient.ReceivedStringMessages);
@@ -39,22 +39,22 @@ public class MessengerRegisterWhileSendingTest
     [TestMethod]
     public void TestMessengerRegisteringForMessageBaseWhileSending()
     {
-        MessengerService.Reset();
+        var messenger = new MessengerService();
         TestRecipient.Reset();
 
         List<TestRecipient2> list = [];
 
         for (int index = 0; index < 10; index++)
         {
-            list.Add(new TestRecipient2(true));
+            list.Add(new TestRecipient2(messenger, true));
         }
 
-        MessengerService.Default.Send(new MessageFixture(TestContentString));
+        messenger.Send(new MessageFixture(TestContentString));
 
         Assert.AreEqual(null, TestRecipient.LastReceivedString);
         Assert.AreEqual(0, TestRecipient.ReceivedStringMessages);
 
-        MessengerService.Default.Send(new MessageFixture(TestContentStringNested));
+        messenger.Send(new MessageFixture(TestContentStringNested));
 
         Assert.AreEqual(TestContentStringNested, TestRecipient.LastReceivedString);
         Assert.AreEqual(10, TestRecipient.ReceivedStringMessages);
@@ -63,76 +63,76 @@ public class MessengerRegisterWhileSendingTest
     [TestMethod]
     public void TestMessengerRegisteringInlineWhileReceiving()
     {
-        MessengerService.Default.Register<string>(
+        messenger.Register<string>(
             this,
-            m => MessengerService.Default.Register<PropertyChangedMessage<string>>(this, m2 =>
+            m => messenger.Register<PropertyChangedMessage<string>>(this, m2 =>
             {
             }));
 
         const string SentContent = "Hello world";
-        MessengerService.Default.Send(SentContent);
+        messenger.Send(SentContent);
     }
 
     [TestMethod]
     public void TestMessengerRegisteringMessageBaseInlineWhileReceiving()
     {
-        MessengerService.Default.Register<string>(
+        messenger.Register<string>(
             this,
-            m => MessengerService.Default.Register<PropertyChangedMessage<string>>(this, true, m2 =>
+            m => messenger.Register<PropertyChangedMessage<string>>(this, true, m2 =>
             {
             }));
 
         const string SentContent = "Hello world";
-        MessengerService.Default.Send(SentContent);
+        messenger.Send(SentContent);
     }
 
     [TestMethod]
     public void TestMessengerRegisteringInlineWhileReceivingMessageBase()
     {
-        MessengerService.Default.Register<string>(
+        messenger.Register<string>(
             this,
             true,
-            m => MessengerService.Default.Register<PropertyChangedMessage<string>>(this, m2 =>
+            m => messenger.Register<PropertyChangedMessage<string>>(this, m2 =>
             {
             }));
 
         const string SentContent = "Hello world";
-        MessengerService.Default.Send(SentContent);
+        messenger.Send(SentContent);
     }
 
     [TestMethod]
     public void TestMessengerRegisteringMessageBaseInlineWhileReceivingMessageBase()
     {
-        MessengerService.Default.Register<string>(
+        messenger.Register<string>(
             this,
             true,
-            m => MessengerService.Default.Register<PropertyChangedMessage<string>>(this, true, m2 =>
+            m => messenger.Register<PropertyChangedMessage<string>>(this, true, m2 =>
             {
             }));
 
         const string SentContent = "Hello world";
-        MessengerService.Default.Send(SentContent);
+        messenger.Send(SentContent);
     }
 
     [TestMethod]
     public void TestMessengerUnregisteringWhileReceiving()
     {
-        MessengerService.Default.Register<string>(
+        messenger.Register<string>(
             this,
-            m => MessengerService.Default.Unregister(this));
+            m => messenger.Unregister(this));
 
-        MessengerService.Default.Send("Hello world");
+        messenger.Send("Hello world");
     }
 
     [TestMethod]
     public void TestMessengerUnregisteringFromMessageBaseWhileReceiving()
     {
-        MessengerService.Default.Register<string>(
+        messenger.Register<string>(
             this,
             true,
-            m => MessengerService.Default.Unregister(this));
+            m => messenger.Unregister(this));
 
-        MessengerService.Default.Send("Hello world");
+        messenger.Send("Hello world");
     }
 
     public abstract class TestRecipient
@@ -158,17 +158,20 @@ public class MessengerRegisterWhileSendingTest
 
     public class TestRecipient1 : TestRecipient
     {
-        public TestRecipient1(bool register)
+        private readonly IMessengerService _messenger;
+
+        public TestRecipient1(IMessengerService messenger, bool register)
         {
+            _messenger = messenger;
             if (register)
             {
-                MessengerService.Default.Register<MessageFixture>(this, ReceiveString);
+                _messenger.Register<MessageFixture>(this, ReceiveString);
             }
         }
 
         protected virtual void ReceiveString(MessageFixture m)
         {
-            MessengerService.Default.Register<MessageFixture>(this, ReceiveStringNested);
+            _messenger.Register<MessageFixture>(this, ReceiveStringNested);
         }
 
         protected void ReceiveStringNested(MessageFixture m)
@@ -180,11 +183,14 @@ public class MessengerRegisterWhileSendingTest
 
     public class TestRecipient2 : TestRecipient
     {
-        public TestRecipient2(bool register)
+        private readonly IMessengerService _messenger;
+
+        public TestRecipient2(IMessengerService messenger, bool register)
         {
+            _messenger = messenger;
             if (register)
             {
-                MessengerService.Default.Register<BaseMessage>(this, true, ReceiveString);
+                _messenger.Register<BaseMessage>(this, true, ReceiveString);
             }
         }
 
@@ -193,7 +199,7 @@ public class MessengerRegisterWhileSendingTest
             var message = m as MessageFixture;
             if (message is not null)
             {
-                MessengerService.Default.Register<BaseMessage>(this, true, ReceiveStringNested);
+                _messenger.Register<BaseMessage>(this, true, ReceiveStringNested);
             }
         }
 

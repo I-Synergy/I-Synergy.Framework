@@ -17,7 +17,7 @@ public class SyncViewModel : ViewModelNavigation<object>
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
 
-    public override string Title { get { return LanguageService.Default.GetString("Sync"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Sync"); } }
 
     /// <summary>
     /// Gets or sets the SyncProgressionText property value.
@@ -72,9 +72,9 @@ public class SyncViewModel : ViewModelNavigation<object>
         DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync, () => _commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive);
         ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync, () => _commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive);
 
-        MessengerService.Default.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
-        MessengerService.Default.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
-        MessengerService.Default.Register<SyncSessionStateChangedMessage>(this, m => SyncCommandButtonEnabled = m.Content.State == SyncSessionState.Ready);
+        _commonServices.MessengerService.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
+        _commonServices.MessengerService.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
+        _commonServices.MessengerService.Register<SyncSessionStateChangedMessage>(this, m => SyncCommandButtonEnabled = m.Content.State == SyncSessionState.Ready);
     }
 
     private async Task CustomActionCommandExecuteAsync()
@@ -220,9 +220,9 @@ public class SyncViewModel : ViewModelNavigation<object>
             DeprovisionClientCommand?.Dispose();
             ProvisionClientCommand?.Dispose();
 
-            MessengerService.Default.Unregister<SyncMessage>(this);
-            MessengerService.Default.Unregister<SyncProgressMessage>(this);
-            MessengerService.Default.Unregister<SyncSessionStateChangedMessage>(this);
+            _commonServices.MessengerService.Unregister<SyncMessage>(this);
+            _commonServices.MessengerService.Unregister<SyncProgressMessage>(this);
+            _commonServices.MessengerService.Unregister<SyncSessionStateChangedMessage>(this);
         }
 
         base.Dispose(disposing);

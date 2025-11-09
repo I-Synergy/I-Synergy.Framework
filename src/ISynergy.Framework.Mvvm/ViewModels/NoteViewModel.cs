@@ -21,7 +21,7 @@ public class NoteViewModel : ViewModelDialog<string>
     {
         get
         {
-            return LanguageService.Default.GetString("Note");
+            return _commonServices.LanguageService.GetString("Note");
         }
     }
 

@@ -188,9 +188,9 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     }
 
     /// <summary>
-    /// Clears the errors.
+    /// Clears all validation errors.
     /// </summary>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <returns><c>true</c> if the instance is valid after clearing errors; otherwise, <c>false</c>.</returns>
     public bool ClearErrors()
     {
         Errors.Clear();
@@ -202,9 +202,10 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     }
 
     /// <summary>
-    /// Validates this instance.
+    /// Validates this instance and optionally validates underlying properties.
     /// </summary>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <param name="validateUnderlayingProperties">if set to <c>true</c>, validates underlying properties that implement <see cref="IObservableValidatedClass"/>.</param>
+    /// <returns><c>true</c> if validation passed; otherwise, <c>false</c>.</returns>
     public bool Validate(bool validateUnderlayingProperties = true)
     {
         ClearErrors();

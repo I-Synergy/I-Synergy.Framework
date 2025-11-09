@@ -229,7 +229,7 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                 // Only handle exceptions if not configured to flow them to the task scheduler
                 if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
                 {
-                    var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+                    var exceptionHandlerService = _exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
 
                     if (ex.InnerException is not null)
                         exceptionHandlerService.HandleException(ex.InnerException);
@@ -250,7 +250,7 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                 // Only handle exceptions if not configured to flow them to the task scheduler
                 if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
                 {
-                    var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+                    var exceptionHandlerService = _exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
 
                     if (ex.InnerException is not null)
                         exceptionHandlerService.HandleException(ex.InnerException);

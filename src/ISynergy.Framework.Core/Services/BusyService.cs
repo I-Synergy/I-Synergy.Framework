@@ -10,6 +10,7 @@ namespace ISynergy.Framework.Core.Services;
 /// <seealso cref="IBusyService" />
 public sealed class BusyService : ObservableClass, IBusyService
 {
+    private readonly ILanguageService _languageService;
     private static readonly object _creationLock = new object();
     private static IBusyService? _defaultInstance;
 
@@ -26,13 +27,22 @@ public sealed class BusyService : ObservableClass, IBusyService
                 {
                     if (_defaultInstance is null)
                     {
-                        _defaultInstance = new BusyService();
+                        _defaultInstance = new BusyService(new LanguageService());
                     }
                 }
             }
 
             return _defaultInstance;
         }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BusyService"/> class.
+    /// </summary>
+    /// <param name="languageService">The language service.</param>
+    public BusyService(ILanguageService languageService)
+    {
+        _languageService = languageService ?? throw new ArgumentNullException(nameof(languageService));
     }
 
     /// <summary>
@@ -78,7 +88,7 @@ public sealed class BusyService : ObservableClass, IBusyService
         if (!string.IsNullOrEmpty(message))
             BusyMessage = message;
         else
-            BusyMessage = LanguageService.Default.GetString("PleaseWait");
+            BusyMessage = _languageService.GetString("PleaseWait");
 
         IsBusy = true;
     }

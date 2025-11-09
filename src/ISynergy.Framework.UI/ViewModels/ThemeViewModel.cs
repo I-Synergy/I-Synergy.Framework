@@ -18,7 +18,7 @@ namespace ISynergy.Framework.UI.ViewModels;
 public class ThemeViewModel : ViewModelDialog<ThemeStyle>
 {
     /// <inheritdoc/>
-    public override string Title => LanguageService.Default.GetString("Theme");
+    public override string Title => _commonServices.LanguageService.GetString("Theme");
 
     /// <summary>
     /// Gets or sets the available theme colors.
