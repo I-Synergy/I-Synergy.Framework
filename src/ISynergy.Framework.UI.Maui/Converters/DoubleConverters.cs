@@ -59,12 +59,12 @@ public class DoubleToIsVisibleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if ((double)value == 0 || value is null)
+        if (value is double doubleValue && doubleValue != 0)
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /// <summary>
@@ -101,7 +101,7 @@ public class DoubleOfDoubleConverter : IValueConverter
     {
         double result = 0;
 
-        if (double.TryParse(value.ToString(), out var size) && double.TryParse(parameter.ToString(), out var margin))
+        if (double.TryParse(value?.ToString(), out var size) && double.TryParse(parameter?.ToString(), out var margin))
         {
             var calc = size - margin;
             if (calc >= 0) result = calc;
@@ -142,7 +142,7 @@ public class DoubleIsLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test < limit)
+        if (double.TryParse(parameter?.ToString(), out var limit) && double.TryParse(value?.ToString(), out var test) && test < limit)
             return true;
 
         return false;
@@ -180,7 +180,7 @@ public class DoubleIsLesserOrEqualThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test <= limit)
+        if (double.TryParse(parameter?.ToString(), out var limit) && double.TryParse(value?.ToString(), out var test) && test <= limit)
             return true;
 
         return false;
@@ -218,7 +218,7 @@ public class DoubleIsGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test > limit)
+        if (double.TryParse(parameter?.ToString(), out var limit) && double.TryParse(value?.ToString(), out var test) && test > limit)
             return true;
 
         return false;
@@ -256,7 +256,7 @@ public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (double.TryParse(parameter.ToString(), out var limit) && double.TryParse(value.ToString(), out var test) && test >= limit)
+        if (double.TryParse(parameter?.ToString(), out var limit) && double.TryParse(value?.ToString(), out var test) && test >= limit)
             return true;
 
         return false;

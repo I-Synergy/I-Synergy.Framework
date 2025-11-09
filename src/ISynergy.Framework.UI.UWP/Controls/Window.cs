@@ -33,17 +33,17 @@ public class Window : ContentDialog, IWindow
     }
 
     /// <summary>
-    /// Gets or sets the viewmodel and data context for a window.
+    /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public IViewModel ViewModel
     {
         get
         {
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            return null;
+            return default!;
         }
         set
         {

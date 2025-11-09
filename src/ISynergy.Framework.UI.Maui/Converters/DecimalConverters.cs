@@ -19,12 +19,12 @@ public class DecimalToIsVisibleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if ((decimal)value == 0 || value is null)
+        if (value is decimal decimalValue && decimalValue != 0)
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class ZeroDecimalToIsVisibleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if ((decimal)value == 0 || value is null)
+        if (value is decimal decimalValue && decimalValue == 0)
         {
             return true;
         }
@@ -99,7 +99,7 @@ public class DecimalEqualsConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test == limit)
+        if (decimal.TryParse(parameter?.ToString(), out var limit) && decimal.TryParse(value?.ToString(), out var test) && test == limit)
             return true;
 
         return false;
@@ -137,7 +137,7 @@ public class DecimalLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test < limit)
+        if (decimal.TryParse(parameter?.ToString(), out var limit) && decimal.TryParse(value?.ToString(), out var test) && test < limit)
             return true;
 
         return false;
@@ -175,7 +175,7 @@ public class DecimalGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test > limit)
+        if (decimal.TryParse(parameter?.ToString(), out var limit) && decimal.TryParse(value?.ToString(), out var test) && test > limit)
             return true;
 
         return false;
@@ -213,7 +213,7 @@ public class DecimalEqualsOrLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test <= limit)
+        if (decimal.TryParse(parameter?.ToString(), out var limit) && decimal.TryParse(value?.ToString(), out var test) && test <= limit)
             return true;
 
         return false;
@@ -251,7 +251,7 @@ public class DecimalEqualsOrGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(parameter.ToString(), out var limit) && decimal.TryParse(value.ToString(), out var test) && test >= limit)
+        if (decimal.TryParse(parameter?.ToString(), out var limit) && decimal.TryParse(value?.ToString(), out var test) && test >= limit)
             return true;
 
         return false;
@@ -317,7 +317,7 @@ public class DecimalToStringConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(value.ToString(), out var result))
+        if (decimal.TryParse(value?.ToString(), out var result))
         {
             return result;
         }

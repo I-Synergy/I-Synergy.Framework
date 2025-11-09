@@ -480,6 +480,9 @@ public sealed class MessengerService : IMessengerService
         Type? targetType,
         object? token)
     {
+        if (message is null)
+            return;
+
         foreach (var item in list)
         {
             // Enhanced null safety and exception handling

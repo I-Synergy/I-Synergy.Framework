@@ -85,23 +85,25 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
+        var primaryColor = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color ?? string.Empty;
+
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
         {
             PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("Info", FluentUI.info_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("Controls", FluentUI.control_button_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ControlsCommand));
-            PrimaryItems.Add(new NavigationItem("SlideShow", FluentUI.slide_layout_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SlideshowCommand));
-            PrimaryItems.Add(new NavigationItem("Sync", FluentUI.cloud_sync_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SyncCommand));
+
+            PrimaryItems.Add(new NavigationItem("Info", FluentUI.info_20_regular ?? string.Empty, primaryColor, InfoCommand));
+            PrimaryItems.Add(new NavigationItem("Controls", FluentUI.control_button_20_regular ?? string.Empty, primaryColor, ControlsCommand));
+            PrimaryItems.Add(new NavigationItem("SlideShow", FluentUI.slide_layout_20_regular ?? string.Empty, primaryColor, SlideshowCommand));
+            PrimaryItems.Add(new NavigationItem("Sync", FluentUI.cloud_sync_20_regular ?? string.Empty, primaryColor, SyncCommand));
 
             SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", FluentUI.chat_help_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, HelpCommand));
-            SecondaryItems.Add(new NavigationItem("Language", FluentUI.local_language_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, LanguageCommand));
-            SecondaryItems.Add(new NavigationItem("Theme", FluentUI.dark_theme_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ColorCommand));
-            SecondaryItems.Add(new NavigationItem("Settings", FluentUI.settings_20_regular, _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SettingsCommand));
+            SecondaryItems.Add(new NavigationItem("Help", FluentUI.chat_help_20_regular ?? string.Empty, primaryColor, HelpCommand));
+            SecondaryItems.Add(new NavigationItem("Language", FluentUI.local_language_20_regular ?? string.Empty, primaryColor, LanguageCommand));
+            SecondaryItems.Add(new NavigationItem("Theme", FluentUI.dark_theme_20_regular ?? string.Empty, primaryColor, ColorCommand));
+            SecondaryItems.Add(new NavigationItem("Settings", FluentUI.settings_20_regular ?? string.Empty, primaryColor, SettingsCommand));
         }
 
-        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("user2"), _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
-
+        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("user2") ?? string.Empty, primaryColor, SignInCommand));
     }
 
     protected override Task SignOutAsync() =>

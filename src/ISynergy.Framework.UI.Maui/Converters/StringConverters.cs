@@ -18,7 +18,7 @@ public class StringFormatConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is null)
             return null;
@@ -61,7 +61,7 @@ public class StringToBooleanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (parameter.ToString().Equals(value.ToString()))
+        if (parameter?.ToString().Equals(value?.ToString()) ?? false)
         {
             return true;
         }
@@ -77,11 +77,11 @@ public class StringToBooleanConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if ((bool)value)
+        if ((bool?)value ?? false)
         {
-            return parameter.ToString();
+            return parameter?.ToString();
         }
 
         return string.Empty;
@@ -145,7 +145,7 @@ public class StringToEnabledConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (string.IsNullOrEmpty((string)value))
+        if (string.IsNullOrEmpty(value as string))
         {
             return false;
         }
@@ -185,7 +185,7 @@ public class StringToInvertEnabledConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (string.IsNullOrEmpty((string)value))
+        if (string.IsNullOrEmpty(value as string))
         {
             return true;
         }
@@ -225,7 +225,7 @@ public class StringToDecimalConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(value.ToString(), out var result))
+        if (decimal.TryParse(value?.ToString(), out var result))
         {
             return result;
         }
@@ -243,7 +243,7 @@ public class StringToDecimalConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(value.ToString(), out var result))
+        if (decimal.TryParse(value?.ToString(), out var result))
             return result;
         return 0m;
     }
@@ -266,7 +266,7 @@ public class StringToDoubleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (double.TryParse(value.ToString(), out var result))
+        if (double.TryParse(value?.ToString(), out var result))
         {
             return result;
         }
@@ -284,7 +284,7 @@ public class StringToDoubleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (double.TryParse(value.ToString(), out var result))
+        if (double.TryParse(value?.ToString(), out var result))
             return result;
         return 0d;
     }
@@ -307,7 +307,7 @@ public class StringToIntegerConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (int.TryParse(value.ToString(), out var result))
+        if (int.TryParse(value?.ToString(), out var result))
         {
             return result;
         }
@@ -323,9 +323,9 @@ public class StringToIntegerConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value.ToString();
+        return value?.ToString();
     }
 }
 
@@ -342,7 +342,7 @@ public class StringToColorConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is string color && !string.IsNullOrEmpty(color))
             return Color.FromArgb(color);
@@ -368,9 +368,9 @@ public class StringToColorConverter : IValueConverter
 
 public class StringToUriConverter : IValueConverter
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (Uri.TryCreate(value.ToString(), UriKind.RelativeOrAbsolute, out Uri uri))
+        if (Uri.TryCreate(value?.ToString(), UriKind.RelativeOrAbsolute, out Uri? uri))
             return uri;
 
         return null;
@@ -397,12 +397,12 @@ public class UriToImageSourceConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (string.IsNullOrEmpty(value?.ToString()))
             return null;
 
-        return ImageSource.FromUri(new Uri(value as string));
+        return ImageSource.FromUri(new Uri(value as string ?? string.Empty));
     }
 
     /// <summary>
@@ -433,11 +433,11 @@ public class StringToColorBrushConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (!string.IsNullOrEmpty(value?.ToString()))
         {
-            var color = Color.FromArgb(value.ToString());
+            var color = Color.FromArgb(value.ToString()!);
             return new SolidColorBrush(color);
         }
 
@@ -474,7 +474,7 @@ public class StringToGeometryConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         value?.ToString().ToGeometry();
 
     /// <summary>

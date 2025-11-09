@@ -24,12 +24,13 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
-        var mainAssembly = Assembly.GetAssembly(typeof(App));
+        var mainAssembly = Assembly.GetAssembly(typeof(App)) ?? throw new InvalidOperationException("Unable to load main assembly");
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly);
 
         var configBuilder = new ConfigurationBuilder();
-        configBuilder.AddJsonStream(mainAssembly.GetManifestResourceStream("Sample.appsettings.json"));
+        var stream = mainAssembly.GetManifestResourceStream("Sample.appsettings.json") ?? throw new InvalidOperationException("Unable to load appsettings resource");
+        configBuilder.AddJsonStream(stream);
         var config = configBuilder.Build();
 
         builder

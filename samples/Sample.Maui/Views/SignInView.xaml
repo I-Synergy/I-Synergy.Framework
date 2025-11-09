@@ -69,16 +69,6 @@
                     Placeholder="{m:GetString Password}"
                     ReturnCommand="{Binding SignInCommand}"
                     Text="{Binding Password}" />
-                <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
-                    <CheckBox
-                        HorizontalOptions="Start"
-                        IsChecked="{Binding AutoLogin}"
-                        VerticalOptions="Center" />
-                    <Label
-                        HorizontalOptions="Start"
-                        Text="{m:GetString Remember}"
-                        VerticalOptions="Center" />
-                </StackLayout>
                 <Button
                     Command="{Binding SignInCommand}"
                     HorizontalOptions="Center"

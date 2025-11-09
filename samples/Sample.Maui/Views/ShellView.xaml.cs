@@ -7,9 +7,9 @@ namespace Sample.Views;
 
 public partial class ShellView : IShellView
 {
-    public IViewModel? ViewModel
+    public IViewModel ViewModel
     {
-        get => BindingContext is IViewModel viewModel ? viewModel : null;
+        get => BindingContext as IViewModel ?? throw new InvalidOperationException("ViewModel is not set");
         set => BindingContext = value;
     }
 

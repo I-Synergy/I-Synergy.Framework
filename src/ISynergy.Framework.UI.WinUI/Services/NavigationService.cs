@@ -562,11 +562,11 @@ public class NavigationService : INavigationService
                 return;
 
             // Set ViewModel before setting frame content
-            page.ViewModel = viewModel;
-            frame.Content = page;
-
             if (viewModel is not null)
             {
+                page.ViewModel = viewModel;
+                frame.Content = page;
+
                 // Initialize the ViewModel if needed
                 if (!viewModel.IsInitialized)
                     await viewModel.InitializeAsync();

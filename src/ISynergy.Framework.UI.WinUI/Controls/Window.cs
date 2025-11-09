@@ -22,14 +22,14 @@ public partial class Window : ContentDialog, IWindow
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public IViewModel ViewModel
     {
         get
         {
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            return null;
+            throw new InvalidOperationException("ViewModel is not set or is not of type IViewModel");
         }
         set
         {

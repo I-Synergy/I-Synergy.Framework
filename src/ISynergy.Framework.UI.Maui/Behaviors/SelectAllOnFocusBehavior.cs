@@ -11,20 +11,20 @@ public class SelectAllOnFocusBehavior : Behavior<Entry>
     public static void SetAttachBehavior(BindableObject view, bool value) =>
         view.SetValue(AttachBehaviorProperty, value);
 
-    static void OnAttachBehaviorChanged(BindableObject view, object oldValue, object newValue)
+    static void OnAttachBehaviorChanged(BindableObject view, object? oldValue, object? newValue)
     {
-        Entry entry = view as Entry;
+        var entry = view as Entry;
 
         if (entry == null)
             return;
 
-        bool attachBehavior = (bool)newValue;
+        bool attachBehavior = (bool)(newValue ?? false);
 
         if (attachBehavior)
             entry.Behaviors.Add(new SelectAllOnFocusBehavior());
         else
         {
-            Behavior toRemove = entry.Behaviors.FirstOrDefault(b => b is SelectAllOnFocusBehavior);
+            var toRemove = entry.Behaviors.FirstOrDefault(b => b is SelectAllOnFocusBehavior);
 
             if (toRemove != null)
                 entry.Behaviors.Remove(toRemove);
@@ -49,9 +49,12 @@ public class SelectAllOnFocusBehavior : Behavior<Entry>
 #endif
     }
 
-    private void Bindable_Focused(object sender, FocusEventArgs e)
+    private void Bindable_Focused(object? sender, FocusEventArgs e)
     {
-        Entry entry = (Entry)sender;
+        var entry = sender as Entry;
+
+        if (entry == null)
+            return;
 
         if (!string.IsNullOrEmpty(entry.Text) && entry.Text.Length > 0)
         {
@@ -61,7 +64,11 @@ public class SelectAllOnFocusBehavior : Behavior<Entry>
     }
 
 #if ANDROID
-    private void Bindable_Loaded(object sender, EventArgs e) =>
-        ((Android.Widget.EditText)((Entry)sender).Handler.PlatformView).SetSelectAllOnFocus(true);
+    private void Bindable_Loaded(object? sender, EventArgs e)
+    {
+        var entry = sender as Entry;
+        if (entry?.Handler?.PlatformView is Android.Widget.EditText editText)
+            editText.SetSelectAllOnFocus(true);
+    }
 #endif
 }

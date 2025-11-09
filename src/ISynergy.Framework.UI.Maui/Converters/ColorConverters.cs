@@ -18,10 +18,12 @@ public class SolidColorBrushToHexStringConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        Argument.IsNotNull(value);
-        return ((SolidColorBrush)value).Color.ToArgbHex(true);
+        if (value is SolidColorBrush brush)
+            return brush.Color.ToArgbHex(true);
+
+        return null;
     }
 
     /// <summary>
@@ -54,7 +56,7 @@ public class IntegerToBrushConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is int color && color != 0)
         {
@@ -94,10 +96,8 @@ public class IntegerToColorConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        Argument.IsNotNull(value);
-
         if (value is int color)
             return Color.FromInt(color);
 
@@ -112,10 +112,8 @@ public class IntegerToColorConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        Argument.IsNotNull(value);
-
         if (value is Color color)
             return color.ToInt();
 

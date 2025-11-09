@@ -51,7 +51,6 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected LoadingView? _loadingView;
 
     private Task? Initialize { get; set; }
-    private bool _isDisposing = false;
     private int lastErrorMessage = 0;
 
     /// <summary>
@@ -360,8 +359,6 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (disposing)
         {
-            _isDisposing = true;
-
             MessengerService.Default.Unregister<ShowInformationMessage>(this);
             MessengerService.Default.Unregister<ShowWarningMessage>(this);
             MessengerService.Default.Unregister<ShowErrorMessage>(this);

@@ -17,25 +17,17 @@ public class ListToStringConverter : IValueConverter
     /// <exception cref="ArgumentException"></exception>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var separator = string.Empty;
+        var separator = parameter?.ToString() ?? string.Empty;
 
-        if (!string.IsNullOrEmpty(parameter.ToString()))
-            separator = parameter.ToString();
+        if (value is ICollection collection)
+        {
+            var values = collection.OfType<object?>().Select(s => s?.ToString() ?? string.Empty);
+            return string.Join(separator, values);
+        }
 
         if (value != null)
         {
-            var collection = value as ICollection;
-
-            if (collection != null)
-            {
-                var values = collection.OfType<object>().Select(s => s.ToString());
-                return string.Join(separator, values);
-            }
-
-            DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(12, 1);
-            defaultInterpolatedStringHandler.AppendLiteral("Value is of ");
-            defaultInterpolatedStringHandler.AppendFormatted<Func<Type>>(value.GetType);
-            throw new ArgumentException(defaultInterpolatedStringHandler.ToStringAndClear());
+            throw new ArgumentException($"Value is of type {value.GetType}. Expected ICollection.");
         }
 
         return string.Empty;

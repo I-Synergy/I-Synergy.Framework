@@ -72,7 +72,7 @@ public sealed class BoolToStateConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return GenericConstants.ActivateStateKey.Equals(value.ToString(), StringComparison.CurrentCultureIgnoreCase);
+        return GenericConstants.ActivateStateKey.Equals(value?.ToString(), StringComparison.CurrentCultureIgnoreCase);
     }
 }
 
@@ -244,13 +244,13 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// Gets or sets the false.
     /// </summary>
     /// <value>The false.</value>
-    public T False { get; set; }
+    public required T False { get; set; }
 
     /// <summary>
     /// Gets or sets the true.
     /// </summary>
     /// <value>The true.</value>
-    public T True { get; set; }
+    public required T True { get; set; }
 
     /// <summary>
     /// Converts the specified value.
@@ -260,7 +260,7 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public virtual object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public virtual object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is null)
         {

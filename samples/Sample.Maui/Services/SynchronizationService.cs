@@ -33,6 +33,7 @@ internal class SynchronizationService : ISynchronizationService
     public string SnapshotsFolder { get; }
     public string BatchesFolder { get; }
     public string OfflineDatabase { get; }
+
     public ISynchronizationSettings SynchronizationOptions => _synchronizationSettings;
 
     public SynchronizationService(

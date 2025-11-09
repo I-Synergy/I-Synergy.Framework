@@ -61,7 +61,7 @@ public static class NavigationExtensions
     {
         var page = CreatePage<TViewModel>(viewModel, parameter);
 
-        if (!Application.Current.Windows[0].GetType().Name.Equals(page.GetType().Name))
+        if (Application.Current?.Windows[0] is not null && !Application.Current.Windows[0].GetType().Name.Equals(page.GetType().Name))
             await navigation.PushAsync((Page)page, true);
     }
 
@@ -77,11 +77,11 @@ public static class NavigationExtensions
     {
         var page = CreatePage<TViewModel>(viewModel, parameter);
 
-        if (!Application.Current.MainPage.GetType().Name.Equals(page.GetType().Name))
+        if (Application.Current?.Windows[0].Page is not null && !Application.Current.Windows[0].Page.GetType().Name.Equals(page.GetType().Name))
             await navigation.PushModalAsync((Page)page, true);
     }
 
-    public static (INavigation Navigation, NavigationPage NavigationPage) GetNavigation(this Page page)
+    public static (INavigation Navigation, NavigationPage?) GetNavigation(this Page page)
     {
         if (page is FlyoutPage flyoutPage)
         {
@@ -93,6 +93,6 @@ public static class NavigationExtensions
         else if (page is NavigationPage navigationPage)
             return (navigationPage.Navigation, navigationPage);
         else
-            return (Application.Current.MainPage.Navigation, null);
+            return (Application.Current?.MainPage?.Navigation ?? throw new InvalidNavigationException("No navigation context available"), null);
     }
 }

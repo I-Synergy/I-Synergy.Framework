@@ -19,12 +19,12 @@ public class IntegerToIsVisibleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if ((int)value == 0 || value is null)
+        if (value is int intValue && intValue != 0)
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public class IntegerToStringConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not null)
         {

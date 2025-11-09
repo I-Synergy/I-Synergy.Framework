@@ -5,64 +5,58 @@ using System.Text.Json;
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
-/// Object extensions.
+/// Object extensions providing utility methods for type conversion and reflection.
 /// </summary>
 public static class ObjectExtensions
 {
+    private static readonly JsonSerializerOptions DefaultJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     /// <summary>
-    /// Perform a deep Copy of the object.
+    /// Perform a deep copy of the object using JSON serialization.
     /// </summary>
     /// <typeparam name="T">The type of object being copied.</typeparam>
     /// <param name="source">The object instance to copy.</param>
     /// <returns>The copied object.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when source is null.</exception>
     public static T Clone<T>(this T source)
     {
-        if (source is not null && JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(source), new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        }) is T result)
-            return result;
+        if (source is null)
+            throw new InvalidOperationException("Source cannot be null");
 
-        throw new InvalidOperationException("Source cannot be null");
+        var serialized = JsonSerializer.Serialize(source);
+        return JsonSerializer.Deserialize<T>(serialized, DefaultJsonOptions)
+            ?? throw new InvalidOperationException("Failed to deserialize cloned object");
     }
 
     /// <summary>
-    /// Checks if object is of a nullable type.
+    /// Checks if type is a nullable type.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="self">The self.</param>
-    /// <returns><c>true</c> if [is nullable type] [the specified self]; otherwise, <c>false</c>.</returns>
+    /// <typeparam name="T">A type object.</typeparam>
+    /// <param name="self">The type to check.</param>
+    /// <returns><c>true</c> if the type is nullable; otherwise, <c>false</c>.</returns>
     public static bool IsNullableType<T>(this T self) where T : Type =>
         !self.IsValueType || Nullable.GetUnderlyingType(self) is not null;
 
     /// <summary>
-    ///   Converts an object into another type, irrespective of whether
-    ///   the conversion can be done at compile time or not. This can be
-    ///   used to convert generic types to numeric types during runtime.
+    /// Converts an object into another type, irrespective of whether
+    /// the conversion can be done at compile time or not.
     /// </summary>
-    /// 
     /// <typeparam name="T">The destination type.</typeparam>
-    /// 
     /// <param name="value">The value to be converted.</param>
-    /// 
-    /// <returns>The result of the conversion.</returns>
-    /// 
-    public static T? To<T>(this object? value)
-    {
-        return (T?)To(value, typeof(T));
-    }
+    /// <returns>The result of the conversion or null if conversion fails.</returns>
+    public static T? To<T>(this object? value) =>
+        (T?)To(value, typeof(T));
 
     /// <summary>
-    ///   Converts an object into another type, irrespective of whether
-    ///   the conversion can be done at compile time or not. This can be
-    ///   used to convert generic types to numeric types during runtime.
+    /// Converts an object into another type, irrespective of whether
+    /// the conversion can be done at compile time or not.
     /// </summary>
-    /// 
     /// <param name="value">The value to be converted.</param>
     /// <param name="type">The type that the value should be converted to.</param>
-    /// 
-    /// <returns>The result of the conversion.</returns>
-    /// 
+    /// <returns>The result of the conversion or null if conversion fails.</returns>
     public static object? To(this object? value, Type type)
     {
         if (value is null)
@@ -71,44 +65,38 @@ public static class ObjectExtensions
         if (type.IsInstanceOfType(value))
             return value;
 
+        // Handle enum conversion
         if (type.GetTypeInfo().IsEnum)
-            return Enum.ToObject(type, (int)System.Convert.ChangeType(value, typeof(int)));
+        {
+            var numericValue = System.Convert.ChangeType(value, typeof(int));
+            return Enum.ToObject(type, numericValue);
+        }
 
-        Type inputType = value.GetType();
+        var inputType = value.GetType();
 
+        // Handle Nullable<T>
         if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
-            MethodInfo? setter = type.GetMethod("op_Implicit", [inputType]);
-            return setter?.Invoke(null, [value]);
+            var implicitMethod = type.GetMethod("op_Implicit", [inputType]);
+            if (implicitMethod is not null)
+                return implicitMethod.Invoke(null, [value]);
         }
 
-        var methods = new List<MethodInfo>();
-        methods.AddRange(inputType.GetMethods(BindingFlags.Public | BindingFlags.Static));
-        methods.AddRange(type.GetMethods(BindingFlags.Public | BindingFlags.Static));
+        // Look for explicit/implicit conversion operators
+        var conversionMethod = FindConversionMethod(inputType, type, value);
+        if (conversionMethod is not null)
+            return conversionMethod.Invoke(null, [value]);
 
-        foreach (MethodInfo m in methods.EnsureNotNull())
-        {
-            if (m.IsPublic && m.IsStatic)
-            {
-                if ((m.Name == "op_Implicit" || m.Name == "op_Explicit") && m.ReturnType == type)
-                {
-                    ParameterInfo[] p = m.GetParameters();
-                    if (p.Length == 1 && p[0].ParameterType.IsInstanceOfType(value))
-                        return m.Invoke(null, [value]);
-                }
-            }
-        }
-
-        //if (value is IConvertible)
-        //    return System.Convert.ChangeType(value, type);
-
+        // Fall back to ChangeType
         return System.Convert.ChangeType(value, type);
     }
 
     /// <summary>
-    ///   Checks whether an object implements a method with the given name.
+    /// Checks whether an object implements a method with the given name.
     /// </summary>
-    /// 
+    /// <param name="obj">The object to check.</param>
+    /// <param name="methodName">The name of the method.</param>
+    /// <returns><c>true</c> if the method exists; otherwise, <c>false</c>.</returns>
     public static bool HasMethod(this object? obj, string methodName)
     {
         if (obj is null)
@@ -120,18 +108,17 @@ public static class ObjectExtensions
         }
         catch (AmbiguousMatchException)
         {
-            // ambiguous means there is more than one result,
-            // which means: a method with that name does exist
+            // Multiple methods with same name exist, which means method does exist
             return true;
         }
     }
 
     /// <summary>
-    /// Determines whether the specified property name has property.
+    /// Determines whether the object has a property with the specified name.
     /// </summary>
     /// <param name="obj">The object.</param>
     /// <param name="propertyName">Name of the property.</param>
-    /// <returns><c>true</c> if the specified property name has property; otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if the property exists; otherwise, <c>false</c>.</returns>
     public static bool HasProperty(this object? obj, string propertyName)
     {
         if (obj is null)
@@ -143,68 +130,96 @@ public static class ObjectExtensions
         }
         catch (AmbiguousMatchException)
         {
-            // ambiguous means there is more than one result,
-            // which means: a property with that name does exist
+            // Multiple properties with same name exist, which means property does exist
             return true;
         }
     }
 
     /// <summary>
-    ///   Determines whether <c>a > b</c>.
+    /// Determines whether <c>a > b</c>.
     /// </summary>
-    /// 
-    public static bool IsGreaterThan<T>(this T a, object? b)
-        where T : IComparable
-    {
-        return a.CompareTo(b) > 0;
-    }
+    /// <typeparam name="T">Type implementing IComparable.</typeparam>
+    /// <param name="a">The first value.</param>
+    /// <param name="b">The second value.</param>
+    /// <returns><c>true</c> if a is greater than b; otherwise, <c>false</c>.</returns>
+    public static bool IsGreaterThan<T>(this T a, object? b) where T : IComparable =>
+        a.CompareTo(b) > 0;
 
     /// <summary>
-    ///   Determines whether <c>a >= b</c>.
+    /// Determines whether <c>a >= b</c>.
     /// </summary>
-    /// 
-    public static bool IsGreaterThanOrEqual<T>(this T a, object? b)
-        where T : IComparable
-    {
-        return a.CompareTo(b) >= 0;
-    }
+    /// <typeparam name="T">Type implementing IComparable.</typeparam>
+    /// <param name="a">The first value.</param>
+    /// <param name="b">The second value.</param>
+    /// <returns><c>true</c> if a is greater than or equal to b; otherwise, <c>false</c>.</returns>
+    public static bool IsGreaterThanOrEqual<T>(this T a, object? b) where T : IComparable =>
+        a.CompareTo(b) >= 0;
 
     /// <summary>
-    ///   Determines whether <c>a &lt; b</c>.
+    /// Determines whether <c>a &lt; b</c>.
     /// </summary>
-    /// 
-    public static bool IsLessThan<T>(this T a, object? b)
-        where T : IComparable
-    {
-        return a.CompareTo(b) < 0;
-    }
+    /// <typeparam name="T">Type implementing IComparable.</typeparam>
+    /// <param name="a">The first value.</param>
+    /// <param name="b">The second value.</param>
+    /// <returns><c>true</c> if a is less than b; otherwise, <c>false</c>.</returns>
+    public static bool IsLessThan<T>(this T a, object? b) where T : IComparable =>
+        a.CompareTo(b) < 0;
 
     /// <summary>
-    ///   Determines whether <c>a &lt;= b</c>.
+    /// Determines whether <c>a &lt;= b</c>.
     /// </summary>
-    /// 
-    public static bool IsLessThanOrEqual<T>(this T a, object? b)
-        where T : IComparable
-    {
-        return a.CompareTo(b) <= 0;
-    }
+    /// <typeparam name="T">Type implementing IComparable.</typeparam>
+    /// <param name="a">The first value.</param>
+    /// <param name="b">The second value.</param>
+    /// <returns><c>true</c> if a is less than or equal to b; otherwise, <c>false</c>.</returns>
+    public static bool IsLessThanOrEqual<T>(this T a, object? b) where T : IComparable =>
+        a.CompareTo(b) <= 0;
 
     /// <summary>
-    ///  Serializes (converts) a structure to a byte array.
+    /// Serializes (converts) a structure to a byte array using marshaling.
     /// </summary>
-    /// 
+    /// <typeparam name="T">The structure type to serialize.</typeparam>
     /// <param name="value">The structure to be serialized.</param>
     /// <returns>The byte array containing the serialized structure.</returns>
-    /// 
-    public static byte[] ToByteArray<T>(this T value)
-        where T : struct
+    public static byte[] ToByteArray<T>(this T value) where T : struct
     {
-        int rawsize = Marshal.SizeOf(value);
-        byte[] rawdata = new byte[rawsize];
-        GCHandle handle = GCHandle.Alloc(rawdata, GCHandleType.Pinned);
-        IntPtr buffer = handle.AddrOfPinnedObject();
-        Marshal.StructureToPtr(value, buffer, false);
-        handle.Free();
-        return rawdata;
+        var size = Marshal.SizeOf(value);
+        var rawData = new byte[size];
+        var handle = GCHandle.Alloc(rawData, GCHandleType.Pinned);
+
+        try
+        {
+            Marshal.StructureToPtr(value, handle.AddrOfPinnedObject(), false);
+            return rawData;
+        }
+        finally
+        {
+            handle.Free();
+        }
+    }
+
+    /// <summary>
+    /// Finds an explicit or implicit conversion method between types.
+    /// </summary>
+    private static MethodInfo? FindConversionMethod(Type inputType, Type outputType, object value)
+    {
+        var methods = new List<MethodInfo>();
+        methods.AddRange(inputType.GetMethods(BindingFlags.Public | BindingFlags.Static));
+        methods.AddRange(outputType.GetMethods(BindingFlags.Public | BindingFlags.Static));
+
+        foreach (var method in methods)
+        {
+            if (!method.IsPublic || !method.IsStatic)
+                continue;
+
+            if ((method.Name != "op_Implicit" && method.Name != "op_Explicit") || method.ReturnType != outputType)
+                continue;
+
+            var parameters = method.GetParameters();
+            if (parameters.Length == 1 && parameters[0].ParameterType.IsInstanceOfType(value))
+                return method;
+        }
+
+        return null;
     }
 }
