@@ -36,7 +36,10 @@ public abstract class Application : ComponentBase
     private int _lastErrorMessage = 0;
     private bool _isDisposing = false;
 
-    private readonly Dictionary<string, Exception> _processedExceptions = new Dictionary<string, Exception>();
+    // Use ConcurrentDictionary for thread-safe access and limit size to prevent unbounded growth
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Exception> _processedExceptions = 
+        new System.Collections.Concurrent.ConcurrentDictionary<string, Exception>();
+    private const int MaxProcessedExceptions = 100;
 
     /// <summary>
     /// Default constructor.
@@ -136,7 +139,7 @@ public abstract class Application : ComponentBase
             // Fall back to ServiceLocator only if not provided via constructor
             var configuration = _configuration ?? ServiceLocator.Default.GetRequiredService<IConfiguration>();
 
-            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment));
+            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment), null);
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {
@@ -214,11 +217,17 @@ public abstract class Application : ComponentBase
         if (_processedExceptions.ContainsKey(exceptionKey))
             return;
 
-        // Add to processed exceptions with a limit
-        if (_processedExceptions.Count > 100)
+        // Limit dictionary size to prevent unbounded growth
+        // Use TryAdd to avoid race conditions, and only clear if we exceed the limit
+        if (_processedExceptions.Count >= MaxProcessedExceptions)
+        {
+            // Clear the dictionary if it's too large - this is thread-safe with ConcurrentDictionary
+            // but we do it infrequently to minimize performance impact
             _processedExceptions.Clear();
+        }
 
-        _processedExceptions[exceptionKey] = e.Exception;
+        // TryAdd is thread-safe and returns false if key already exists
+        _processedExceptions.TryAdd(exceptionKey, e.Exception);
 
         if (_exceptionHandlerService is not null)
         {

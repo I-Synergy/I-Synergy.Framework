@@ -85,9 +85,13 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
                 _messengerService.Send(new ShowErrorMessage(new MessageBoxRequest(_languageService.GetString("ExceptionDefault"))));
             }
         }
-        catch (Exception ex)
+        catch (Exception handlerException)
         {
-            _logger.LogCritical(ex, ex.ToMessage(Environment.StackTrace));
+            // Log both the handler exception and the original exception to preserve context
+            _logger.LogCritical(handlerException, 
+                "Exception handler failed while processing exception. Handler exception: {HandlerException}. Original exception: {OriginalException}", 
+                handlerException.ToMessage(Environment.StackTrace), 
+                exception.ToMessage(Environment.StackTrace));
         }
     }
 }
