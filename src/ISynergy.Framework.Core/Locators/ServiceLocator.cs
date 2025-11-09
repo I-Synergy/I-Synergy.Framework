@@ -22,7 +22,10 @@ public class ServiceLocator
     {
         _serviceProvider = serviceProvider;
 
-        _scopedContextService = new ScopedContextService(serviceProvider);
+        // Try to get IScopedContextService from DI container first (DIP compliance)
+        // If not registered, create a new instance as fallback
+        _scopedContextService = serviceProvider.GetService<IScopedContextService>() 
+            ?? new ScopedContextService(serviceProvider);
         _scopedContextService.ScopedChanged += (s, e) => ScopedChanged?.Invoke(s, e);
 
         _default = this;

@@ -176,23 +176,62 @@ namespace ISynergy.Framework.UI.ViewModels.Base
  }
  }
 
- protected virtual Task OpenHelpAsync() =>
- throw new NotImplementedException();
+ /// <summary>
+ /// Opens the help asynchronously.
+ /// </summary>
+ /// <returns>A task representing the asynchronous operation.</returns>
+ /// <remarks>
+ /// Default implementation does nothing. Override in derived classes to provide help functionality.
+ /// </remarks>
+ protected virtual Task OpenHelpAsync() => Task.CompletedTask;
 
- protected virtual Task OpenFeedbackAsync() =>
- throw new NotImplementedException();
+ /// <summary>
+ /// Opens the feedback dialog asynchronously.
+ /// </summary>
+ /// <returns>A task representing the asynchronous operation.</returns>
+ /// <remarks>
+ /// Default implementation does nothing. Override in derived classes to provide feedback functionality.
+ /// </remarks>
+ protected virtual Task OpenFeedbackAsync() => Task.CompletedTask;
 
- public override Task AddAsync() =>
- throw new NotImplementedException();
+ /// <summary>
+ /// Adds a new item asynchronously.
+ /// </summary>
+ /// <returns>A task representing the asynchronous operation.</returns>
+ /// <remarks>
+ /// Default implementation does nothing. Override in derived classes to provide add functionality.
+ /// </remarks>
+ public override Task AddAsync() => Task.CompletedTask;
 
- public override Task EditAsync(NavigationItem e) =>
- throw new NotImplementedException();
+ /// <summary>
+ /// Edits the specified item asynchronously.
+ /// </summary>
+ /// <param name="e">The item to edit.</param>
+ /// <returns>A task representing the asynchronous operation.</returns>
+ /// <remarks>
+ /// Default implementation does nothing. Override in derived classes to provide edit functionality.
+ /// </remarks>
+ public override Task EditAsync(NavigationItem e) => Task.CompletedTask;
 
- public override Task RemoveAsync(NavigationItem e) =>
- throw new NotImplementedException();
+ /// <summary>
+ /// Removes the specified item asynchronously.
+ /// </summary>
+ /// <param name="e">The item to remove.</param>
+ /// <returns>A task representing the asynchronous operation.</returns>
+ /// <remarks>
+ /// Default implementation does nothing. Override in derived classes to provide remove functionality.
+ /// </remarks>
+ public override Task RemoveAsync(NavigationItem e) => Task.CompletedTask;
 
- public override Task SearchAsync(object e) =>
- throw new NotImplementedException();
+ /// <summary>
+ /// Searches for items asynchronously.
+ /// </summary>
+ /// <param name="e">The search criteria.</param>
+ /// <returns>A task representing the asynchronous operation.</returns>
+ /// <remarks>
+ /// Default implementation does nothing. Override in derived classes to provide search functionality.
+ /// </remarks>
+ public override Task SearchAsync(object e) => Task.CompletedTask;
 
  protected override void Dispose(bool disposing)
  {

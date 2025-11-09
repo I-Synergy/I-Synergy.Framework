@@ -295,15 +295,22 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     }
 
     /// <summary>
-    /// Opens the help asynchronous.
+    /// Opens the help asynchronously.
     /// </summary>
-    /// <returns>Task.</returns>
-    protected virtual Task OpenHelpAsync() => throw new NotImplementedException();
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <remarks>
+    /// Default implementation does nothing. Override in derived classes to provide help functionality.
+    /// </remarks>
+    protected virtual Task OpenHelpAsync() => Task.CompletedTask;
 
     /// <summary>
-    /// open feedback as an asynchronous operation.
+    /// Opens the feedback dialog asynchronously.
     /// </summary>
-    protected virtual Task OpenFeedbackAsync() => throw new NotImplementedException();
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <remarks>
+    /// Default implementation does nothing. Override in derived classes to provide feedback functionality.
+    /// </remarks>
+    protected virtual Task OpenFeedbackAsync() => Task.CompletedTask;
 
     protected override void Dispose(bool disposing)
     {

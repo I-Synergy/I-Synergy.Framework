@@ -1,50 +1,45 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions;
-using ISynergy.Framework.Automations.Enumerations;
 using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Collections.Concurrent;
 
 namespace ISynergy.Framework.Automations.Services;
 
 /// <summary>
-/// The AutomationService class is responsible for managing and executing automations. Automations are a set of conditions and actions that get triggered based on certain events.
-/// This class takes in an IAutomationManager, IOptions of AutomationOptions, and an ILogger as dependencies injected via the constructor.
-/// It has a list of Automation objects to store any loaded automations.The RefreshAutomationsAsync method will populate this list by calling the automation manager to get the latest set of automations.
-/// The main logic is in ExecuteAsync.This takes in an Automation, a value, and a CancellationTokenSource.It will first validate if all the conditions for the automation are met based on the input value by calling ValidateConditionsAsync. If the conditions pass, it will start executing the tasks in the automation one by one until complete or cancelled via the cancellation token.
-/// The key steps are:
-/// 1. Validate conditions
-/// 2. Get a queue of tasks from the automation
-/// 3. Loop through each task
-///     1. Execute task
-///     2. Check if cancellation requested
-///     3. Handle errors
-/// 4. Return result
-/// This allows the service to take a defined automation with conditions and tasks, check if it should run based on input, and then process the workflow of tasks.The background logic handles the asynchronous execution, concurrency, error handling, and cancellation.
+/// The AutomationService class is responsible for orchestrating automation execution.
+/// This service delegates to specialized services for condition validation, queue building, and action execution.
 /// </summary>
 public class AutomationService : IAutomationService
 {
     private readonly ILogger _logger;
     private readonly AutomationOptions _options;
     private readonly IAutomationManager _manager;
+    private readonly IAutomationConditionValidator _conditionValidator;
+    private readonly IActionQueueBuilder _queueBuilder;
     private readonly List<Automation> _automations;
 
     /// <summary>
-    /// Default constructor.
+    /// Initializes a new instance of the <see cref="AutomationService"/> class.
     /// </summary>
-    /// <param name="manager"></param>
-    /// <param name="options"></param>
-    /// <param name="logger"></param>
+    /// <param name="manager">The automation manager for loading automations.</param>
+    /// <param name="options">The automation options.</param>
+    /// <param name="conditionValidator">The condition validator service.</param>
+    /// <param name="queueBuilder">The action queue builder service.</param>
+    /// <param name="logger">The logger.</param>
     public AutomationService(
         IAutomationManager manager,
         IOptions<AutomationOptions> options,
+        IAutomationConditionValidator conditionValidator,
+        IActionQueueBuilder queueBuilder,
         ILogger<AutomationService> logger)
     {
         _automations = new List<Automation>();
         _manager = manager;
         _options = options.Value;
+        _conditionValidator = conditionValidator;
+        _queueBuilder = queueBuilder;
         _logger = logger;
     }
 
@@ -56,41 +51,28 @@ public class AutomationService : IAutomationService
         _automations.AddNewRange(await _manager.GetItemsAsync());
 
     /// <summary>
-    /// Validates the conditions.
+    /// Validates the conditions of a given automation.
     /// </summary>
-    /// <param name="automation"></param>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    public Task<bool> ValidateConditionsAsync(Automation automation, object value)
-    {
-        var areAllConditionsValid = true;
-
-        // Check if all conditions met.
-        foreach (var condition in automation.Conditions.EnsureNotNull())
-        {
-            if (condition.Operator == OperatorTypes.And)
-                areAllConditionsValid = areAllConditionsValid && condition.ValidateCondition(value);
-            else
-                areAllConditionsValid = areAllConditionsValid || condition.ValidateCondition(value);
-        }
-
-        return Task.FromResult(areAllConditionsValid);
-    }
+    /// <param name="automation">The automation to validate conditions for.</param>
+    /// <param name="value">The value to validate against.</param>
+    /// <returns>True if all conditions are met; otherwise, false.</returns>
+    public Task<bool> ValidateConditionsAsync(Automation automation, object value) =>
+        _conditionValidator.ValidateConditionsAsync(automation, value);
 
     /// <summary>
-    /// Gets a queue of tasks and executes them 1 by 1 until finished or cancelled by timeout.
+    /// Executes an automation by validating conditions and executing actions.
     /// </summary>
-    /// <param name="automation"></param>
-    /// <param name="value"></param>
-    /// <param name="cancellationTokenSource"></param>
-    /// <returns></returns>
+    /// <param name="automation">The automation to execute.</param>
+    /// <param name="value">The value to pass to the automation.</param>
+    /// <param name="cancellationTokenSource">The cancellation token source.</param>
+    /// <returns>The result of the automation execution.</returns>
     public async Task<ActionResult> ExecuteAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource)
     {
         if (automation.IsActive && await ValidateConditionsAsync(automation, value))
         {
             cancellationTokenSource.CancelAfter(automation.ExecutionTimeout);
 
-            using (var queue = await GetTasksFromActionsAsync(automation, value, cancellationTokenSource))
+            using (var queue = await _queueBuilder.BuildQueueAsync(automation, value, cancellationTokenSource))
             {
                 while (queue.Count > 0)
                 {
@@ -109,85 +91,5 @@ public class AutomationService : IAutomationService
         }
 
         return new ActionResult(false, value);
-    }
-
-    /// <summary>
-    /// Gets a BlockingCollection queue containing all tasks for this automation.
-    /// </summary>
-    /// <param name="automation"></param>
-    /// <param name="value"></param>
-    /// <param name="cancellationTokenSource"></param>
-    /// <returns></returns>
-    private Task<BlockingCollection<Func<Task>>> GetTasksFromActionsAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource)
-    {
-        var queue = new BlockingCollection<Func<Task>>();
-        var repeatCount = 0;
-
-        // Adds all tasks to the queue.
-        for (int i = 0; i < automation.Actions.Count; i++)
-        {
-            if (automation.Actions[i] is CommandAction commandAction && commandAction.Command.CanExecute(commandAction.CommandParameter))
-            {
-                queue.Add(new Func<Task>(async () =>
-                {
-                    await Task.Run(() => commandAction.Command.Execute(commandAction.CommandParameter), cancellationTokenSource.Token).ConfigureAwait(false);
-                }));
-            }
-            else if (automation.Actions[i] is DelayAction delayAction)
-            {
-                queue.Add(new Func<Task>(async () =>
-                {
-                    await Task.Delay(delayAction.Delay, cancellationTokenSource.Token).ConfigureAwait(false);
-                    await Task.Yield();
-                }));
-            }
-            else if (automation.Actions[i] is AutomationAction automationAction)
-            {
-                queue.Add(new Func<Task>(async () =>
-                {
-                    await ExecuteAsync(automationAction.Automation, value, cancellationTokenSource).ConfigureAwait(false);
-                }));
-            }
-            else if (automation.Actions[i] is RepeatPreviousAction repeatAction && repeatAction.Count > 0)
-            {
-                if (repeatCount == repeatAction.Count)
-                {
-                    repeatCount = 0;
-                }
-                else
-                {
-                    i -= 2;
-                    repeatCount += 1;
-                }
-            }
-            else if (automation.Actions[i] is IRepeatAction untilRepeatAction && untilRepeatAction.RepeatType == RepeatTypes.Until)
-            {
-                if (repeatCount.Equals(untilRepeatAction.CountCircuitBreaker) || untilRepeatAction.ValidateAction(value))
-                {
-                    repeatCount = 0;
-                }
-                else
-                {
-                    i -= 2;
-                    repeatCount += 1;
-                }
-            }
-            else if (automation.Actions[i] is IRepeatAction whileRepeatAction && whileRepeatAction.RepeatType == RepeatTypes.While)
-            {
-                if (repeatCount.Equals(whileRepeatAction.CountCircuitBreaker) || !whileRepeatAction.ValidateAction(value))
-                {
-                    repeatCount = 0;
-                }
-                else
-                {
-                    i -= 2;
-                    repeatCount += 1;
-                }
-            }
-        }
-
-        queue.CompleteAdding();
-
-        return Task.FromResult(queue);
     }
 }

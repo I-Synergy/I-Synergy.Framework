@@ -29,6 +29,7 @@ public abstract class Application : ComponentBase
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly ILogger<Application> _logger;
     protected readonly IMessengerService _messengerService;
+    protected readonly IConfiguration? _configuration;
 
     protected readonly ApplicationFeatures? _features;
 
@@ -43,7 +44,14 @@ public abstract class Application : ComponentBase
     protected Application(
         ICommonServices commonServices,
         ISettingsService settingsService,
-        ILogger<Application> logger)
+        ILogger<Application> logger,
+        IDialogService? dialogService = null,
+        INavigationService? navigationService = null,
+        IExceptionHandlerService? exceptionHandlerService = null,
+        IApplicationLifecycleService? lifecycleService = null,
+        IMessengerService? messengerService = null,
+        IOptions<ApplicationFeatures>? features = null,
+        IConfiguration? configuration = null)
         : base()
     {
         _commonServices = commonServices;
@@ -54,15 +62,16 @@ public abstract class Application : ComponentBase
         {
             _logger.LogTrace("Setting up services and global exception handler.");
 
-            // Use injected commonServices instead of ServiceLocator
-            // Get remaining services from ServiceLocator as they're not available via constructor injection
-            _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
-            _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
-            _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-            _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
-            _messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
+            // Prefer constructor-injected services (DIP compliance)
+            // Fall back to ServiceLocator only if not provided via constructor
+            _dialogService = dialogService ?? ServiceLocator.Default.GetRequiredService<IDialogService>();
+            _navigationService = navigationService ?? ServiceLocator.Default.GetRequiredService<INavigationService>();
+            _exceptionHandlerService = exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+            _lifecycleService = lifecycleService ?? _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+            _messengerService = messengerService ?? ServiceLocator.Default.GetRequiredService<IMessengerService>();
 
-            _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+            _features = features?.Value ?? ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+            _configuration = configuration;
 
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -123,7 +132,9 @@ public abstract class Application : ComponentBase
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+            // Prefer constructor-injected configuration (DIP compliance)
+            // Fall back to ServiceLocator only if not provided via constructor
+            var configuration = _configuration ?? ServiceLocator.Default.GetRequiredService<IConfiguration>();
 
             var environmentFromConfig = configuration.GetValue<string>(nameof(Environment));
 
