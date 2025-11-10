@@ -4,9 +4,11 @@ using ISynergy.Framework.Automations.Conditions;
 using ISynergy.Framework.Automations.Enumerations;
 using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Automations.Services;
+using ISynergy.Framework.Automations.Services.Executors;
+using ISynergy.Framework.Automations.Services.Operators;
 using ISynergy.Framework.Automations.Tests.Fixtures;
-using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -46,11 +48,40 @@ public class AutomationWorkflowExecutionSteps
     {
         _logger.LogInformation("Initializing automation service");
 
-        var mockLogger = new Mock<ILogger<AutomationService>>();
+        // Setup dependency injection container for real implementations
+        var services = new ServiceCollection();
+
+        // Register action executors
+        services.AddScoped<IActionExecutor<DelayAction>, DelayActionExecutor>();
+        services.AddScoped<IActionExecutor<CommandAction>, CommandActionExecutor>();
+        services.AddScoped<IActionExecutor<AutomationAction>, AutomationActionExecutor>();
+
+        services.AddScoped<IActionExecutorFactory, ActionExecutorFactory>();
+
+        // Register operator strategies by concrete type
+        services.AddScoped<AndOperatorStrategy>();
+        services.AddScoped<OrOperatorStrategy>();
+
+        services.AddScoped<IOperatorStrategyFactory, OperatorStrategyFactory>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // Get the dependencies from the service provider
+        var executorFactory = serviceProvider.GetRequiredService<IActionExecutorFactory>();
+        var operatorStrategyFactory = serviceProvider.GetRequiredService<IOperatorStrategyFactory>();
+
+        // Create the queue builder with real executor factory
+        var queueBuilder = new ActionQueueBuilder(executorFactory, null!);
+
+        // Use real condition validator that actually checks conditions
+        var conditionValidator = new AutomationConditionValidator(operatorStrategyFactory);
+
         _automationService = new AutomationService(
-            new Mock<IAutomationManager>().Object,
-            new Mock<IOptions<AutomationOptions>>().Object,
-            mockLogger.Object);
+            Mock.Of<IAutomationManager>(),
+            Mock.Of<IOptions<AutomationOptions>>(),
+            conditionValidator,
+            queueBuilder,
+            Mock.Of<ILogger<AutomationService>>());
 
         // Share with other step classes
         _context.AutomationService = _automationService;

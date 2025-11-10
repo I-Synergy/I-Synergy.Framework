@@ -566,6 +566,7 @@ public class NavigationService : INavigationService
         {
             // Try to reuse the current ViewModel if it matches the requested type
             IViewModel? currentViewModel = null;
+
             if (frame.Content is View originalView)
                 currentViewModel = originalView.ViewModel as IViewModel;
 
@@ -585,7 +586,7 @@ public class NavigationService : INavigationService
                 return;
 
             // Set ViewModel before setting frame content
-            page.ViewModel = viewModel;
+            page.ViewModel = viewModel!;
             frame.Content = page;
 
             if (viewModel is not null)

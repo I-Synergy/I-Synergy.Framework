@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
 using System.Windows;
@@ -28,7 +28,7 @@ public partial class Window : System.Windows.Window, IWindow
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            return default!;
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
         }
         set
         {

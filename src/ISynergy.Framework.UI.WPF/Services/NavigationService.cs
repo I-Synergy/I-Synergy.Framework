@@ -419,7 +419,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common navigation logic for handling current ViewModel
     /// </summary>
-    private bool HandleCurrentViewModel(IViewModel? currentViewModel, bool backNavigation)
+    private bool HandleCurrentViewModel(IViewModel currentViewModel, bool backNavigation)
     {
         if (currentViewModel == null)
             return true;
@@ -533,7 +533,7 @@ public class NavigationService : INavigationService
                 viewModel.Parameter = parameter;
 
             // Handle current ViewModel
-            if (!HandleCurrentViewModel(currentViewModel, backNavigation))
+            if (!HandleCurrentViewModel(currentViewModel!, backNavigation))
                 return;
 
             if (viewModel is not null)
@@ -586,11 +586,11 @@ public class NavigationService : INavigationService
                 viewModel.Parameter = parameter;
 
             // Handle current ViewModel
-            if (!HandleCurrentViewModel(currentViewModel, backNavigation))
+            if (!HandleCurrentViewModel(currentViewModel!, backNavigation))
                 return;
 
             // Set ViewModel before setting frame content
-            page.ViewModel = viewModel;
+            page.ViewModel = viewModel!;
             frame.Content = page;
 
             if (viewModel is not null)

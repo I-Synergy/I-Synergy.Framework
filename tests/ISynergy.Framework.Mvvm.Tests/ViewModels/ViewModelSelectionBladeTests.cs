@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -16,9 +15,16 @@ public class ViewModelSelectionBladeTests
         var mockLogger = new Mock<ILogger<ViewModelSelectionBlade<TestEntity>>>();
 
         var mockScopedContextService = new Mock<IScopedContextService>();
+        var mockLanguageService = new Mock<ILanguageService>();
+
+        // Setup the language service to return the key wrapped in brackets
+        mockLanguageService
+            .Setup(x => x.GetString(It.IsAny<string>()))
+            .Returns<string>(key => $"[{key}]");
 
         var mockCommonServices = new Mock<ICommonServices>();
         mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(mockScopedContextService.Object);
+        mockCommonServices.SetupGet(s => s.LanguageService).Returns(mockLanguageService.Object);
 
         // Configure the mock to return a new instance when GetRequiredService is called
         mockScopedContextService

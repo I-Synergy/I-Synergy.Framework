@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -29,7 +29,7 @@ public partial class Window : ContentDialog, IWindow
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("ViewModel is not set or is not of type IViewModel");
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
         }
         set
         {

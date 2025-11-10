@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
 using System.Windows.Controls;
@@ -27,7 +27,7 @@ public abstract partial class View : Page, IView
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            return default!;
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
         }
         set
         {

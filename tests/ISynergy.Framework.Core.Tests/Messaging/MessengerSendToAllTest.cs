@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
 
@@ -19,26 +20,34 @@ public class MessengerSendToAllTest
         private set;
     }
 
+    private readonly IMessengerService _messenger;
+    private readonly ILogger<MessengerService> _logger;
+
+    public MessengerSendToAllTest()
+    {
+        _logger = Mock.Of<ILogger<MessengerService>>();
+        _messenger = new MessengerService(_logger);
+    }
+
     [TestMethod]
     public void TestSendingToAllRecipients()
     {
         const string TestContent = "abcd";
 
         Reset();
-        var messenger = new MessengerService();
 
-        messenger.Register<TestMessage>(this, m => StringContent1 = m.Content);
+        _messenger.Register<TestMessage>(this, m => StringContent1 = m.Content);
 
-        messenger.Register<TestMessage>(this, m => StringContent2 = m.Content);
+        _messenger.Register<TestMessage>(this, m => StringContent2 = m.Content);
 
         TestRecipient externalRecipient = new();
-        externalRecipient.RegisterWith(messenger);
+        externalRecipient.RegisterWith(_messenger);
 
         Assert.AreEqual(null, StringContent1);
         Assert.AreEqual(null, StringContent2);
         Assert.AreEqual(null, externalRecipient.StringContent);
 
-        messenger.Send(new TestMessage
+        _messenger.Send(new TestMessage
         {
             Content = TestContent
         });
@@ -51,8 +60,7 @@ public class MessengerSendToAllTest
     //[TestMethod]
     public void TestSendingNullMessage()
     {
-        var messenger = new MessengerService();
-        messenger.Send<TestMessageImpl>(null!);
+        _messenger.Send<TestMessageImpl>(null!);
     }
 
     //// Helpers
@@ -80,9 +88,9 @@ public class MessengerSendToAllTest
             private set;
         }
 
-        internal void RegisterWith(IMessengerService messenger)
+        internal void RegisterWith(IMessengerService _messenger)
         {
-            messenger.Register<TestMessage>(this, m => StringContent = m.Content);
+            _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
         }
     }
 }

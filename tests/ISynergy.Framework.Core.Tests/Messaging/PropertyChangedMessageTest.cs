@@ -1,14 +1,25 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Messages.Base;
 using ISynergy.Framework.Core.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
 
 [TestClass]
 public class PropertyChangedMessageTest
 {
+    private readonly IMessengerService _messenger;
+    private readonly ILogger<MessengerService> _logger;
+
+    public PropertyChangedMessageTest()
+    {
+        _logger = Mock.Of<ILogger<MessengerService>>();
+        _messenger = new MessengerService(_logger);
+    }
+
     [TestMethod]
     public void TestPropertyChangedMessage()
     {
@@ -33,11 +44,9 @@ public class PropertyChangedMessageTest
 
         bool messageWasReceived = false;
 
-        TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
+        TestViewModel testViewModel = new(_messenger, previousDateTime, (InvalidOperationException)PreviousException!);
 
-        var messenger = new MessengerService();
-
-        messenger.Register<BasePropertyChangedMessage>(
+        _messenger.Register<BasePropertyChangedMessage>(
             this,
             true,
             m =>
@@ -132,11 +141,9 @@ public class PropertyChangedMessageTest
 
         bool messageWasReceived = false;
 
-        TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
+        TestViewModel testViewModel = new(_messenger, previousDateTime, (InvalidOperationException)PreviousException!);
 
-        var messenger = new MessengerService();
-
-        messenger.Register<PropertyChangedMessage<DateTime>>(
+        _messenger.Register<PropertyChangedMessage<DateTime>>(
             this,
             m =>
             {
@@ -152,7 +159,7 @@ public class PropertyChangedMessageTest
                 }
             });
 
-        messenger.Register<PropertyChangedMessage<InvalidOperationException>>(
+        _messenger.Register<PropertyChangedMessage<InvalidOperationException>>(
             this,
             m =>
             {
@@ -243,9 +250,7 @@ public class PropertyChangedMessageTest
         object? receivedSender = null;
         object? receivedTarget = null;
 
-        var messenger = new MessengerService();
-
-        messenger.Register<PropertyChangedMessage<string>>(this,
+        _messenger.Register<PropertyChangedMessage<string>>(this,
                                                                    m =>
                                                                    {
                                                                        receivedSender = m.Sender;
@@ -307,7 +312,7 @@ public class PropertyChangedMessageTest
             }
         }
 
-        messenger.Send(propertyMessage1);
+        _messenger.Send(propertyMessage1);
 
         Assert.AreEqual(sender, receivedSender);
         Assert.AreEqual(target, receivedTarget);
@@ -319,7 +324,7 @@ public class PropertyChangedMessageTest
         receivedTarget = null;
         receivedSender = null;
 
-        messenger.Send(propertyMessage2);
+        _messenger.Send(propertyMessage2);
 
         Assert.AreEqual(sender, receivedSender);
         Assert.AreEqual(target, receivedTarget);
@@ -331,8 +336,14 @@ public class PropertyChangedMessageTest
 
     public class TestViewModel : ObservableValidatedClass
     {
-        public TestViewModel(DateTime initialValueDateTime, InvalidOperationException initialValueException)
+        private readonly IMessengerService _messenger;
+        private readonly ILogger<TestViewModel> _logger;
+
+        public TestViewModel(IMessengerService messengerService, DateTime initialValueDateTime, InvalidOperationException initialValueException)
         {
+            _logger = Mock.Of<ILogger<TestViewModel>>();
+            _messenger = messengerService;
+
             MyDate = initialValueDateTime;
             MyException = initialValueException;
         }
@@ -350,7 +361,7 @@ public class PropertyChangedMessageTest
                 DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
                 PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(AnotherDate));
-                messenger.Send(message);
+                _messenger.Send(message);
             }
         }
 
@@ -367,7 +378,7 @@ public class PropertyChangedMessageTest
                 DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
                 PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(MyDate));
-                messenger.Send(message);
+                _messenger.Send(message);
             }
         }
 
@@ -382,7 +393,7 @@ public class PropertyChangedMessageTest
                 InvalidOperationException oldValue = GetValue<InvalidOperationException>();
                 SetValue(value);
                 PropertyChangedMessage<InvalidOperationException> message = new PropertyChangedMessage<InvalidOperationException>(this, oldValue, value, nameof(MyException));
-                messenger.Send(message);
+                _messenger.Send(message);
             }
         }
     }

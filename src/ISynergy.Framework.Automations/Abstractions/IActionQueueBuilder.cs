@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+
 namespace ISynergy.Framework.Automations.Abstractions;
 
 /// <summary>

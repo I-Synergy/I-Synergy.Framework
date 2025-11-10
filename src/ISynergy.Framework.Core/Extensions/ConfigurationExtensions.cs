@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
@@ -48,7 +48,7 @@ public static class ConfigurationExtensions
     {
         try
         {
-            return ServiceLocator.Default.ServiceProvider.GetService<ILoggerFactory>()?
+            return ServiceLocator.Default.GetRequiredService<ILoggerFactory>()?
                 .CreateLogger(typeof(ConfigurationExtensions));
         }
         catch
@@ -77,7 +77,7 @@ public static class ConfigurationExtensions
             };
 
             configuration.Bind(instance, options => options.ErrorOnUnknownConfiguration = false);
-            
+
             // Register change callback and store the token for disposal
             var reloadToken = configuration.GetReloadToken().RegisterChangeCallback((_) =>
             {
@@ -109,7 +109,7 @@ public static class ConfigurationExtensions
     public static LogLevel GetLogLevel(this IConfiguration configuration, string category)
     {
         var logLevel = configuration.GetSection($"LogLevel:{category}").Get<LogLevel>();
-        
+
         // Return Information as default instead of None (which is default(LogLevel))
         if (logLevel == default(LogLevel))
         {

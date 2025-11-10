@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Events;
+using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
@@ -24,7 +24,8 @@ public sealed class MessengerService : IMessengerService
 {
     private readonly object _recipientsLock = new object();
     private readonly object _cleanupLock = new object();
-    private readonly ILogger<MessengerService>? _logger;
+
+    private readonly ILogger<MessengerService> _logger;
 
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsOfSubclassesAction;
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsStrictAction;
@@ -33,7 +34,7 @@ public sealed class MessengerService : IMessengerService
     /// Initializes a new instance of the <see cref="MessengerService"/> class.
     /// </summary>
     /// <param name="logger">Optional logger for exception handling. If not provided, exceptions will be silently handled.</param>
-    public MessengerService(ILogger<MessengerService>? logger = null)
+    public MessengerService(ILogger<MessengerService> logger)
     {
         _logger = logger;
     }
@@ -411,7 +412,7 @@ public sealed class MessengerService : IMessengerService
 
                     if (list is not null)
                     {
-                        SendToList(message, list, messageType, targetType, token, _logger);
+                        SendToList(message, list, messageType, targetType, token);
                     }
                 }
             }
@@ -433,7 +434,7 @@ public sealed class MessengerService : IMessengerService
 
             if (list is not null)
             {
-                SendToList(message, list, messageType, targetType, token, _logger);
+                SendToList(message, list, messageType, targetType, token);
             }
         }
 
@@ -458,13 +459,12 @@ public sealed class MessengerService : IMessengerService
     /// use a token when registering (or who used a different token) will not
     /// get the message. Similarly, messages sent without any token, or with a different
     /// token, will not be delivered to that recipient.</param>
-    private static void SendToList<TMessage>(
+    private void SendToList<TMessage>(
         TMessage message,
         List<WeakActionAndToken> list,
         Type messageType,
         Type? targetType,
-        object? token,
-        ILogger<MessengerService>? logger)
+        object? token)
     {
         if (message is null)
             return;
@@ -489,7 +489,7 @@ public sealed class MessengerService : IMessengerService
                 {
                     // Log exceptions to prevent one failing recipient from affecting others
                     // This allows debugging while maintaining message delivery to other recipients
-                    logger?.LogWarning(ex, 
+                    _logger?.LogWarning(ex,
                         "Exception occurred while executing message handler. MessageType: {MessageType}, RecipientType: {RecipientType}",
                         message?.GetType().Name ?? "Unknown",
                         item.Action?.Target?.GetType().Name ?? "Unknown");

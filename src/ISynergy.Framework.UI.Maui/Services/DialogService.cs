@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -554,40 +554,41 @@ public class DialogService : IDialogService
         Window? windowRef = null;
         IViewModelDialog<TEntity>? viewModelRef = null;
 
+        // Define the handler in the method scope so it is accessible for both += and -=
+        async void ViewModelClosedHandler(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (viewModelRef != null)
+                    viewModelRef.Closed -= ViewModelClosedHandler;
+
+                if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
+                {
+                    await navigation.PopModalAsync();
+                }
+                else
+                {
+                    _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
+                }
+
+                viewModelRef?.Dispose();
+                viewModelRef = null;
+
+                windowRef?.Dispose();
+                windowRef = null;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error in ViewModelClosedHandler");
+            }
+        }
+
         try
         {
             windowRef = window;
             viewModelRef = viewmodel;
 
             window.ViewModel = viewmodel;
-
-            async void ViewModelClosedHandler(object? sender, EventArgs e)
-            {
-                try
-                {
-                    if (viewModelRef != null)
-                        viewModelRef.Closed -= ViewModelClosedHandler;
-
-                    if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
-                    {
-                        await navigation.PopModalAsync();
-                    }
-                    else
-                    {
-                        _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
-                    }
-
-                    viewModelRef?.Dispose();
-                    viewModelRef = null;
-
-                    windowRef?.Dispose();
-                    windowRef = null;
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Error in ViewModelClosedHandler");
-                }
-            }
 
             viewmodel.Closed += ViewModelClosedHandler;
 

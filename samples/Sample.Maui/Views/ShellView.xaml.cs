@@ -7,10 +7,24 @@ namespace Sample.Views;
 
 public partial class ShellView : IShellView
 {
+    /// <summary>
+    /// Gets or sets the viewmodel and data context for a view.
+    /// </summary>
+    /// <value>The data context.</value>
     public IViewModel ViewModel
     {
-        get => BindingContext as IViewModel ?? throw new InvalidOperationException("ViewModel is not set");
-        set => BindingContext = value;
+        get
+        {
+            if (BindingContext is IViewModel viewModel)
+                return viewModel;
+
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+        }
+        set
+        {
+            BindingContext = value;
+            SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
+        }
     }
 
     public ShellView(ShellViewModel viewModel)
@@ -45,7 +59,6 @@ public partial class ShellView : IShellView
         {
             // free managed resources
             ViewModel?.Dispose();
-            ViewModel = null;
         }
 
         // free native resources if there are any.
