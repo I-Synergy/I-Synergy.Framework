@@ -35,7 +35,7 @@ public class DeferredNavigation
     /// Gets or sets the on navigating.
     /// </summary>
     /// <value>The on navigating.</value>
-    public Func<NavigatingCancelEventArgs, Task> OnNavigating { get; set; }
+    public Func<NavigatingCancelEventArgs, Task>? OnNavigating { get; set; }
 
     /// <summary>
     /// Handles the <see cref="E:FrameNavigating" /> event.

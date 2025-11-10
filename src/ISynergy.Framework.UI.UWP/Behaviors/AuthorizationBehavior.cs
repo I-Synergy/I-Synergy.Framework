@@ -18,7 +18,7 @@ public class Authorization : Behavior<Control>
     /// <summary>
     /// The authentication provider.
     /// </summary>
-    private readonly IAuthenticationProvider _authenticationProvider;
+    private readonly IAuthenticationProvider? _authenticationProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Authorization" /> class.
@@ -75,7 +75,7 @@ public class Authorization : Behavior<Control>
     {
         base.OnAttached();
 
-        if (!_authenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
+        if (_authenticationProvider is not null && !_authenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
         {
             switch (Action)
             {

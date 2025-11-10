@@ -26,6 +26,6 @@ public static class ByteArrayExtensions
             return bitmap;
         }
         
-        return null;
+        return null!;
     }
 }

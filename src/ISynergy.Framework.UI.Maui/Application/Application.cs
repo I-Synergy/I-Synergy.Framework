@@ -233,7 +233,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
             var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
 
-            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment), null);
+            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {

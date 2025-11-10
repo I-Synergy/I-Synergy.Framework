@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -74,7 +74,7 @@ public partial class ImageView : UserControl
     /// <param name="source">The source.</param>
     private void LoadImage(ImageSource source)
     {
-        void handler(object sender, object e)
+        void handler(object? sender, object e)
         {
             ImageFadeOut.Completed -= handler;
             ActualImage.Source = source;
@@ -101,7 +101,7 @@ public partial class ImageView : UserControl
             // If the image is not a local resource or it was not cached
             if (image.UriSource.Scheme != "ms-appx" && image.UriSource.Scheme != "ms-resource" && (image.PixelHeight * image.PixelWidth == 0))
             {
-                image.ImageOpened += (sender, args) => control.LoadImage(image);
+                image.ImageOpened += (sender, e) => control.LoadImage(image);
                 control.StagingImage.Source = image;
             }
             else

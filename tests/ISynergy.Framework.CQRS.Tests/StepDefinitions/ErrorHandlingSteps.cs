@@ -227,9 +227,11 @@ public void ThenNoExceptionShouldBeThrown()
     public void ThenAnErrorShouldBeLogged()
     {
    _logger.LogInformation("Verifying error was logged");
-        // In a real implementation, you would verify log entries
-   // For now, we verify the exception was caught which would trigger logging
- ArgumentNullException.ThrowIfNull(_caughtException, "Error should exist to be logged");
+        // Verify that the error was logged via the mock logger callback
+        if (!_errorLogged)
+        {
+            throw new InvalidOperationException("Expected error to be logged, but logging was not triggered");
+        }
     }
 
     [Then(@"the log should contain command details")]

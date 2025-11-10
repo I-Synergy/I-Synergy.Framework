@@ -29,12 +29,12 @@
 				var currentUri = NavigationManager.Uri;
 
 				if (!string.IsNullOrEmpty(NavigationMenuService.MenuItems[0]?.Href) &&
-					!currentUri.Equals($"{NavigationManager.BaseUri}{NavigationMenuService.MenuItems[0].Href}"))
+					!currentUri.Equals($"{NavigationManager.BaseUri}{NavigationMenuService.MenuItems[0]!.Href}"))
 				{
 					_hasNavigatedToFirstItem = true;
 
 					// Navigate to the first menu item (Dashboard)
-					NavigationManager.NavigateTo(NavigationMenuService.MenuItems[0].Href);
+					NavigationManager.NavigateTo(NavigationMenuService.MenuItems[0]!.Href);
 				}
 			}
 		}

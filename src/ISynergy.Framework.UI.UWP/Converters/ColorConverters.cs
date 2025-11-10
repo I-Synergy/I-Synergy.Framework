@@ -64,7 +64,7 @@ public class IntegerToBrushConverter : IValueConverter
             return new SolidColorBrush(color.ConvertInteger2Color());
         }
 
-        return null;
+        return null!;
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public class IntegerToColorConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         Argument.IsNotNull(value);
 
@@ -117,7 +117,7 @@ public class IntegerToColorConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    public object? ConvertBack(object value, Type targetType, object parameter, string language)
     {
         Argument.IsNotNull(value);
 

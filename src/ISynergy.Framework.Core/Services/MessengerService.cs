@@ -483,7 +483,7 @@ public sealed class MessengerService : IMessengerService
             {
                 try
                 {
-                    executeAction.ExecuteWithObject(message);
+                    executeAction.ExecuteWithObject(message!);
                 }
                 catch (Exception ex)
                 {

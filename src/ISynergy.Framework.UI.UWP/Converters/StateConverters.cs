@@ -24,15 +24,15 @@ public class StateToBrushConverter : IValueConverter
     {
         if (!(value is bool))
         {
-            return Application.Current.Resources["TertiaryDarkBrush"] as SolidColorBrush;
+            return Application.Current.Resources?["TertiaryDarkBrush"] as SolidColorBrush ?? new SolidColorBrush();
         }
 
         if ((bool)value)
         {
-            return Application.Current.Resources["PrimaryMediumBrush"] as SolidColorBrush;
+            return Application.Current.Resources?["PrimaryMediumBrush"] as SolidColorBrush ?? new SolidColorBrush();
         }
 
-        return Application.Current.Resources["TertiaryDarkBrush"] as SolidColorBrush;
+        return Application.Current.Resources?["TertiaryDarkBrush"] as SolidColorBrush ?? new SolidColorBrush();
     }
 
     /// <summary>

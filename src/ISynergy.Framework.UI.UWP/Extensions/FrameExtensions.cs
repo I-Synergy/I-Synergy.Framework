@@ -20,16 +20,16 @@ public static class FrameExtensions
     /// <param name="transitionInfo">The navigation transition.
     /// Example: <see cref="DrillInNavigationTransitionInfo" /> or <see cref="SlideNavigationTransitionInfo" /></param>
     /// <returns>IView.</returns>
-    public static IView NavigateToView(this Frame frame, Type sourcePageType, object parameter, NavigationTransitionInfo transitionInfo = null)
+    public static IView? NavigateToView(this Frame frame, Type sourcePageType, object? parameter, NavigationTransitionInfo? transitionInfo = null)
     {
-        IView navigationalView = default;
+        IView? navigationalView = null;
 
-        void OnNavigated(object s, NavigationEventArgs e)
+        void OnNavigated(object? s, NavigationEventArgs e)
         {
             frame.Navigated -= OnNavigated;
             navigationalView = e.Content as IView;
 
-            if (e.Parameter is IViewModel viewModel)
+            if (e.Parameter is IViewModel viewModel && navigationalView is not null)
                 navigationalView.ViewModel = viewModel;
         }
 

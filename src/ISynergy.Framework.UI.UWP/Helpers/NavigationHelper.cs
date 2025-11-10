@@ -14,14 +14,14 @@ public static class NavigationHelper
     /// <param name="parent">The parent.</param>
     /// <param name="name">The name.</param>
     /// <returns>DependencyObject.</returns>
-    public static DependencyObject FindChild(DependencyObject parent, string name)
+    public static DependencyObject? FindChild(DependencyObject parent, string name)
     {
         // confirm parent and name are valid.
         if (parent is null || string.IsNullOrEmpty(name)) return null;
 
         if (parent is FrameworkElement frameworkElement && frameworkElement.Name == name) return parent;
 
-        DependencyObject result = null;
+        DependencyObject? result = null;
 
         var childrenCount = VisualTreeHelper.GetChildrenCount(parent);
 
@@ -41,13 +41,13 @@ public static class NavigationHelper
     /// <typeparam name="T"></typeparam>
     /// <param name="parent">The parent.</param>
     /// <returns>T.</returns>
-    public static T FindChild<T>(DependencyObject parent) where T : DependencyObject
+    public static T? FindChild<T>(DependencyObject parent) where T : DependencyObject
     {
         // confirm parent is valid.
         if (parent is null) return default;
         if (parent is T) return (T)parent;
 
-        DependencyObject foundChild = null;
+        DependencyObject? foundChild = null;
 
         var childrenCount = VisualTreeHelper.GetChildrenCount(parent);
 
@@ -58,6 +58,6 @@ public static class NavigationHelper
             if (foundChild is not null) break;
         }
 
-        return (T)foundChild;
+        return foundChild as T;
     }
 }

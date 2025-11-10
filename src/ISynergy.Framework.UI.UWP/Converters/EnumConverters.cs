@@ -11,13 +11,13 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class EnumToBooleanConverter : IValueConverter
+public partial class EnumToBooleanConverter : IValueConverter
 {
     /// <summary>
     /// Gets or sets the type of the enum.
     /// </summary>
     /// <value>The type of the enum.</value>
-    public string EnumType { get; set; }
+    public string EnumType { get; set; } = string.Empty;
 
     /// <summary>
     /// Converts the specified value.
@@ -34,6 +34,10 @@ public class EnumToBooleanConverter : IValueConverter
         if (parameter is string enumString)
         {
             var type = Type.GetType(EnumType);
+            if (type is null)
+            {
+                throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized());
+            }
 
             if (!Enum.IsDefined(type, value))
             {
@@ -61,7 +65,12 @@ public class EnumToBooleanConverter : IValueConverter
     {
         if (parameter is string enumString)
         {
-            return Enum.Parse(Type.GetType(EnumType), enumString);
+            var type = Type.GetType(EnumType);
+            if (type is null)
+            {
+                throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
+            }
+            return Enum.Parse(type, enumString);
         }
 
         throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
@@ -73,7 +82,7 @@ public class EnumToBooleanConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class EnumToArrayConverter : IValueConverter
+public partial class EnumToArrayConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -134,7 +143,7 @@ public class EnumToArrayConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class EnumToStringConverter : IValueConverter
+public partial class EnumToStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -146,12 +155,20 @@ public class EnumToStringConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is Type type && type.IsEnum)
+        if (parameter is not null && !string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()!) is Type type && type.IsEnum)
         {
-            return GetDescription(Enum.Parse(type, value.ToString()) as Enum);
+            if (value is not null && value.ToString() is string valueString)
+            {
+                return GetDescription(Enum.Parse(type, valueString) as Enum ?? throw new ArgumentException("Invalid enum value"));
+            }
         }
 
-        return GetDescription(Enum.Parse(value.GetType(), value.ToString()) as Enum);
+        if (value is not null && value.ToString() is string valueStr)
+        {
+            return GetDescription(Enum.Parse(value.GetType(), valueStr) as Enum ?? throw new ArgumentException("Invalid enum value"));
+        }
+
+        return string.Empty;
     }
 
     /// <summary>
@@ -183,6 +200,10 @@ public class EnumToStringConverter : IValueConverter
 
         var description = value.ToString();
         var fieldInfo = value.GetType().GetField(description);
+        if (fieldInfo is null)
+        {
+            return description ?? string.Empty;
+        }
         var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
         if (attributes is not null && attributes.Length > 0)

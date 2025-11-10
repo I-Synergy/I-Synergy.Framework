@@ -24,7 +24,7 @@ public class StringFormatConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is null)
             return null;
@@ -67,7 +67,9 @@ public class StringToBooleanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (parameter.ToString().Equals(value.ToString()))
+        var paramStr = parameter?.ToString();
+        var valueStr = value?.ToString();
+        if (paramStr is not null && valueStr is not null && paramStr.Equals(valueStr))
         {
             return true;
         }
@@ -89,7 +91,7 @@ public class StringToBooleanConverter : IValueConverter
     {
         if ((bool)value)
         {
-            return parameter.ToString();
+            return parameter?.ToString() ?? string.Empty;
         }
         else
         {
@@ -239,13 +241,13 @@ public class StringToGeometryConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is not null && !string.IsNullOrWhiteSpace(value.ToString()) && value is string)
+        if (value is not null && !string.IsNullOrWhiteSpace(value.ToString()) && value is string strValue)
         {
             return (Geometry)XamlReader.Load(
                     "<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>"
-                    + value + "</Geometry>");
+                    + strValue + "</Geometry>");
         }
         else
         {
@@ -285,7 +287,7 @@ public class StringToDecimalConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (decimal.TryParse(value.ToString(), out var result))
+        if (value is not null && decimal.TryParse(value.ToString(), out var result))
         {
             return result;
         }
@@ -305,7 +307,7 @@ public class StringToDecimalConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        return value.ToString();
+        return value?.ToString() ?? string.Empty;
     }
 }
 
@@ -326,7 +328,7 @@ public class StringToIntegerConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (int.TryParse(value.ToString(), out var result))
+        if (value is not null && int.TryParse(value.ToString(), out var result))
         {
             return result;
         }
@@ -346,7 +348,7 @@ public class StringToIntegerConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        return value.ToString();
+        return value?.ToString() ?? string.Empty;
     }
 }
 
@@ -365,16 +367,21 @@ public class UriToImageSourceConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
         if (string.IsNullOrEmpty(value?.ToString()))
             return null;
 
-        return new BitmapImage
+        if (value is string uriString)
         {
-            CreateOptions = BitmapCreateOptions.IgnoreImageCache,
-            UriSource = new Uri(value as string)
-        };
+            return new BitmapImage
+            {
+                CreateOptions = BitmapCreateOptions.IgnoreImageCache,
+                UriSource = new Uri(uriString)
+            };
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -405,9 +412,9 @@ public class StringToColorConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="language"></param>
     /// <returns></returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is string color && string.IsNullOrEmpty(color))
+        if (value is string color && !string.IsNullOrEmpty(color))
             return ColorHelper.HexStringToColor(color);
 
         return null;
@@ -441,9 +448,9 @@ public class StringToColorBrushConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="language"></param>
     /// <returns></returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is string color && string.IsNullOrEmpty(color))
+        if (value is string color && !string.IsNullOrEmpty(color))
         {
             return new SolidColorBrush(ColorHelper.HexStringToColor(color));
         }

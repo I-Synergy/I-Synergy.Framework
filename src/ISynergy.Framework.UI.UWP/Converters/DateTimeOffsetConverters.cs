@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using System.Collections.ObjectModel;
@@ -115,10 +115,12 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
         if (value is not null && value.GetType() == typeof(ObservableCollection<DateTimeOffset>))
         {
             var collection = value as ObservableCollection<DateTimeOffset>;
-
-            foreach (var item in collection)
+            if (collection is not null)
             {
-                result.Add(item.ToLocalTime().DateTime);
+                foreach (var item in collection)
+                {
+                    result.Add(item.ToLocalTime().DateTime);
+                }
             }
         }
 
@@ -142,20 +144,24 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
             if (value.GetType() == typeof(ObservableCollection<DateTime>))
             {
                 var collection = value as ObservableCollection<DateTime>;
-
-                foreach (var item in collection)
+                if (collection is not null)
                 {
-                    result.Add(new DateTimeOffset(DateTime.SpecifyKind(item, DateTimeKind.Local)));
+                    foreach (var item in collection)
+                    {
+                        result.Add(new DateTimeOffset(DateTime.SpecifyKind(item, DateTimeKind.Local)));
+                    }
                 }
             }
 
             if (value.GetType() == typeof(ObservableCollection<string>))
             {
                 var collection = value as ObservableCollection<string>;
-
-                foreach (var item in collection)
+                if (collection is not null)
                 {
-                    result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item), DateTimeKind.Local)));
+                    foreach (var item in collection)
+                    {
+                        result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item), DateTimeKind.Local)));
+                    }
                 }
             }
         }
@@ -243,13 +249,13 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 
             var offset = TimeZoneInfo.Local.BaseUtcOffset;
 
-            if (ServiceLocator.Default.GetRequiredService<IContext>() is IContext context)
+            if (ServiceLocator.Default.GetRequiredService<IContext>() is IContext context && context.TimeZone is not null)
             {
                 offset = context.TimeZone.BaseUtcOffset;
             }
 
-            if (parameter is not null)
-                return datetime.ToLocalDateString(parameter.ToString(), offset, culture);
+            if (parameter is not null && parameter.ToString() is string format)
+                return datetime.ToLocalDateString(format, offset, culture);
 
             return datetime.ToLocalDateString("f", offset, culture);
         }

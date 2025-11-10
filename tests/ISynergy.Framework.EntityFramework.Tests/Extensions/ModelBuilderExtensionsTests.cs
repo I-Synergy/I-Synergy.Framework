@@ -310,7 +310,8 @@ public class ModelBuilderExtensionsTests
         var filter = filters.First();
         Assert.IsNotNull(filter);
 
-        var lambda = (LambdaExpression)filter.Expression;
+        var lambda = (LambdaExpression?)filter.Expression;
+        Assert.IsNotNull(lambda);
         Assert.IsTrue(lambda.Body.NodeType == ExpressionType.Equal); // Only tenant filter
     }
 

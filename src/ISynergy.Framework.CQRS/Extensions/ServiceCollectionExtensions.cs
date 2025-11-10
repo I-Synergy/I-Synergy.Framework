@@ -151,6 +151,9 @@ public static class ServiceCollectionExtensions
         if (descriptor.ImplementationFactory != null)
             return descriptor.ImplementationFactory(serviceProvider);
 
+        if (descriptor.ImplementationType == null)
+            throw new InvalidOperationException("ServiceDescriptor must have an ImplementationType, ImplementationFactory, or ImplementationInstance.");
+
         return ActivatorUtilities.GetServiceOrCreateInstance(serviceProvider, descriptor.ImplementationType);
     }
 

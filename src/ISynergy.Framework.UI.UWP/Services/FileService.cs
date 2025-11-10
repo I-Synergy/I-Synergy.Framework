@@ -45,13 +45,13 @@ public class FileService : IFileService<FileResult>
     /// Gets or sets the name of the file.
     /// </summary>
     /// <value>The name of the file.</value>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the filter to use when opening or saving the file.
     /// </summary>
     /// <value>The filter.</value>
-    public string Filter { get; set; }
+    public string Filter { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets a value indicating whether a file dialog automatically adds an extension to a file name if the user omits an extension.
@@ -81,24 +81,24 @@ public class FileService : IFileService<FileResult>
     /// Gets or sets the initial directory.
     /// </summary>
     /// <value>The initial directory.</value>
-    public string InitialDirectory { get; set; }
+    public string InitialDirectory { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the title which will be used for display.
     /// </summary>
     /// <value>The title.</value>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the file path.
     /// </summary>
     /// <value>The file path.</value>
-    public string FilePath { get; private set; }
+    public string FilePath { get; private set; } = string.Empty;
     /// <summary>
     /// Gets the type of the content.
     /// </summary>
     /// <value>The type of the content.</value>
-    public string ContentType { get; private set; }
+    public string ContentType { get; private set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets a value indicating whether the dialog accepts only valid Win32 file names.
@@ -188,7 +188,7 @@ public class FileService : IFileService<FileResult>
     /// <param name="filter"></param>
     /// <param name="maxFileSize"></param>
     /// <returns>System.Byte[].</returns>
-    public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
+    public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result && result.Count > 0)
         {
@@ -209,7 +209,7 @@ public class FileService : IFileService<FileResult>
     /// <returns>
     /// File data object, or null when user cancelled picking file
     /// </returns>
-    private static async Task<FileResult?> PickFileAsync(string[] allowedTypes = null)
+    private static async Task<FileResult?> PickFileAsync(string[]? allowedTypes = null)
     {
         var picker = new Windows.Storage.Pickers.FileOpenPicker
         {

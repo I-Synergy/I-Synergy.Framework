@@ -1,4 +1,3 @@
-﻿using System;
 using System.Globalization;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
@@ -19,12 +18,10 @@ internal static class TypeConverters
     /// <param name="destinationTypeFullName">The full name of the destination type.</param>
     /// <returns>Object representation of the string value.</returns>
     /// <exception cref="ArgumentNullException">destinationTypeFullName cannot be null.</exception>
-    public static Object Convert(string value, string destinationTypeFullName)
+    public static Object? Convert(string? value, string destinationTypeFullName)
     {
         if (string.IsNullOrEmpty(destinationTypeFullName))
-        {
             throw new ArgumentNullException(nameof(destinationTypeFullName));
-        }
 
         string scope = TypeConverters.GetScope(destinationTypeFullName);
 
@@ -37,28 +34,28 @@ internal static class TypeConverters
             }
             else if (string.Equals(destinationTypeFullName, typeof(bool).FullName, StringComparison.Ordinal))
             {
-                return bool.Parse(value);
+                return value is not null ? bool.Parse(value) : false;
             }
             else if (string.Equals(destinationTypeFullName, typeof(int).FullName, StringComparison.Ordinal))
             {
-                return int.Parse(value, CultureInfo.InvariantCulture);
+                return value is not null ? int.Parse(value, CultureInfo.InvariantCulture) : 0;
             }
             else if (string.Equals(destinationTypeFullName, typeof(double).FullName, StringComparison.Ordinal))
             {
-                return double.Parse(value, CultureInfo.InvariantCulture);
+                return value is not null ? double.Parse(value, CultureInfo.InvariantCulture) : 0.0;
             }
         }
 
         string type = TypeConverters.GetType(destinationTypeFullName);
-        string contentControlXaml = string.Format(CultureInfo.InvariantCulture, TypeConverters.ContentControlFormatString, scope, type, value);
+        string contentControlXaml = string.Format(CultureInfo.InvariantCulture, TypeConverters.ContentControlFormatString, scope, type, value ?? string.Empty);
 
-        ContentControl contentControl = XamlReader.Load(contentControlXaml) as ContentControl;
+        ContentControl? contentControl = XamlReader.Load(contentControlXaml) as ContentControl;
         if (contentControl is not null)
         {
             return contentControl.Content;
         }
 
-        return null;
+        return null!;
     }
 
     private static String GetScope(string name)

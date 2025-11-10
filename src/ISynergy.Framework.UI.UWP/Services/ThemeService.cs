@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Windows.ApplicationModel.Core;
@@ -92,17 +92,17 @@ public class ThemeService : IThemeService
         {
             if (themeDictionary.Key.ToString() == theme)
             {
-                if (themeDictionary.Value is ColorPaletteResources)
-                    return themeDictionary.Value as ColorPaletteResources;
+                if (themeDictionary.Value is ColorPaletteResources colorResource)
+                    return colorResource;
                 else if (themeDictionary.Value is ResourceDictionary targetDictionary)
                     foreach (var mergedDictionary in targetDictionary.MergedDictionaries)
                     {
-                        if (mergedDictionary is ColorPaletteResources)
-                            return mergedDictionary as ColorPaletteResources;
+                        if (mergedDictionary is ColorPaletteResources mergedResource)
+                            return mergedResource;
                     }
             }
         }
-        return null;
+        return null!;
     }
 
     /// <summary>

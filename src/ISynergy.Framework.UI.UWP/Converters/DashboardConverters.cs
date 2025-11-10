@@ -1,4 +1,3 @@
-﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -21,7 +20,10 @@ public class TilenameToVisibilityConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (parameter.ToString().Equals(value.ToString()))
+        var paramString = parameter?.ToString();
+        var valueString = value?.ToString();
+
+        if (!string.IsNullOrEmpty(paramString) && paramString.Equals(valueString))
         {
             return Visibility.Visible;
         }

@@ -45,7 +45,7 @@ public class DialogService : IDialogService
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "")
+    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "")
     {
         Argument.IsNotNull(error);
 
@@ -61,7 +61,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "")
+    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "")
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -77,7 +77,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "")
+    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "")
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -93,7 +93,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "")
+    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "")
     {
         Argument.IsNotNullOrEmpty(message);
 

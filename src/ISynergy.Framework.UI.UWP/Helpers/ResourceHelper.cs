@@ -1,5 +1,3 @@
-﻿using System;
-using System.IO;
 using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Markup;
@@ -17,12 +15,18 @@ internal static class ResourceHelper
     /// <param name="type">The type.</param>
     /// <param name="resourcePath">The resource path.</param>
     /// <returns>ResourceDictionary.</returns>
-    public static ResourceDictionary GetResourceDictionaryByPath(Type type, string resourcePath)
+    public static ResourceDictionary? GetResourceDictionaryByPath(Type type, string resourcePath)
     {
         var assembly = type.GetTypeInfo().Assembly;
+
         using var stream = assembly.GetManifestResourceStream(resourcePath);
+
+        if (stream is null)
+            return null;
+
         var reader = new StreamReader(stream);
         var dictionary = XamlReader.Load(reader.ReadToEnd()) as ResourceDictionary;
+
         return dictionary;
     }
 
@@ -35,7 +39,10 @@ internal static class ResourceHelper
     /// <returns>System.Object.</returns>
     public static object LoadEmbeddedResource(Type type, string resourcePath, object key)
     {
-        return GetResourceDictionaryByPath(type, resourcePath)[key];
+        if (GetResourceDictionaryByPath(type, resourcePath) is ResourceDictionary resources)
+            return resources[key];
+
+        return null!;
     }
 
     /// <summary>
@@ -47,7 +54,12 @@ internal static class ResourceHelper
     public static byte[] LoadManifestStreamBytes(Type type, string resourcePath)
     {
         var assembly = type.GetTypeInfo().Assembly;
+
         using var stream = assembly.GetManifestResourceStream(resourcePath);
+
+        if (stream is null)
+            return Array.Empty<byte>();
+
         var bytes = new byte[stream.Length];
         stream.Read(bytes, 0, bytes.Length);
 

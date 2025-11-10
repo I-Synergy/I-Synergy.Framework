@@ -53,18 +53,18 @@ public partial class MainLayout
     [Parameter]
     public RenderFragment? Body { get; set; }
 
-    private string ContentClass => _localSettings.ShowConsole && _navigationManager.Uri != _navigationManager.BaseUri
+    private string ContentClass => _localSettings.ShowConsole && _navigationManager!.Uri != _navigationManager!.BaseUri
        ? "content with-console"
        : "content full-width";
 
-    private string ArticleClass => _localSettings.ShowConsole && _navigationManager.Uri != _navigationManager.BaseUri
+    private string ArticleClass => _localSettings.ShowConsole && _navigationManager!.Uri != _navigationManager!.BaseUri
         ? "with-console"
         : "full-width";
 
     protected override void OnInitialized()
     {
         _version = _commonServices.InfoService.ProductVersion.ToString();
-        _prevUri = _navigationManager.Uri;
+        _prevUri = _navigationManager!.Uri;
 
         _commonServices.BusyService.PropertyChanged += BusyService_PropertyChanged;
 

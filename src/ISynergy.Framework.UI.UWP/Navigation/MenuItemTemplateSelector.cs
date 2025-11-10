@@ -17,14 +17,14 @@ public class MenuItemTemplateSelector : DataTemplateSelector
     /// Gets or sets the item template.
     /// </summary>
     /// <value>The item template.</value>
-    public DataTemplate ItemTemplate { get; set; }
+    public DataTemplate? ItemTemplate { get; set; }
 
     /// <summary>
     /// Selects the template core.
     /// </summary>
     /// <param name="item">The item.</param>
     /// <returns>DataTemplate.</returns>
-    protected override DataTemplate SelectTemplateCore(object item)
+    protected override DataTemplate? SelectTemplateCore(object item)
     {
         if (item is NavigationItem)
         {
