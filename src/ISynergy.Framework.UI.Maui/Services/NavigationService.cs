@@ -1,14 +1,37 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.UI.Services;
 
 public class NavigationService : INavigationService
 {
+    private readonly IScopedContextService _scopedContextService;
+    private readonly IExceptionHandlerService _exceptionHandlerService;
+    private readonly ILogger _logger;
     private readonly bool _animated = true;
 
     public event EventHandler? BackStackChanged;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NavigationService"/> class.
+    /// </summary>
+    /// <param name="scopedContextService"></param>
+    /// <param name="exceptionHandlerService"></param>
+    /// <param name="logger"></param>
+    public NavigationService(
+        IScopedContextService scopedContextService,
+        IExceptionHandlerService exceptionHandlerService,
+        ILogger<NavigationService> logger)
+    {
+        _logger = logger;
+        _logger.LogTrace($"NavigationService instance created with ID: {Guid.NewGuid()}");
+
+        _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
+        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
+    }
 
     /// <summary>
     /// Handles the <see cref="E:BackStackChanged" /> event.
@@ -83,8 +106,16 @@ public class NavigationService : INavigationService
                 }
                 catch (Exception ex)
                 {
-                    // Log error but don't throw - navigation should continue even if initialization fails
-                    System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
+                    // Use exception handler service instead of just logging
+                    try
+                    {
+                        _exceptionHandlerService?.HandleException(ex);
+                    }
+                    catch
+                    {
+                        // If we can't get the exception handler service, log to debug
+                        System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
+                    }
                 }
             }
 
@@ -126,8 +157,16 @@ public class NavigationService : INavigationService
                         }
                         catch (Exception ex)
                         {
-                            // Log error but don't throw - modal navigation should continue even if initialization fails
-                            System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
+                            // Use exception handler service instead of just logging
+                            try
+                            {
+                                _exceptionHandlerService?.HandleException(ex);
+                            }
+                            catch
+                            {
+                                // If we can't get the exception handler service, log to debug
+                                System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
+                            }
                         }
                     }
                 }

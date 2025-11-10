@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
@@ -30,7 +30,34 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     /// Called when [submitted].
     /// </summary>
     /// <param name="e">The e.</param>
-    protected virtual void OnSubmitted(SubmitEventArgs<TModel> e) => Submitted?.Invoke(this, e);
+    protected virtual void OnSubmitted(SubmitEventArgs<TModel> e)
+    {
+        if (Submitted != null)
+        {
+            // Invoke each handler individually to prevent one exception from stopping others
+            var handlers = Submitted.GetInvocationList();
+            foreach (EventHandler<SubmitEventArgs<TModel>> handler in handlers)
+            {
+                try
+                {
+                    handler.Invoke(this, e);
+                }
+                catch (Exception ex)
+                {
+                    // Try to use exception handler service if available
+                    try
+                    {
+                        _commonServices.ExceptionHandlerService?.HandleException(ex);
+                    }
+                    catch
+                    {
+                        // If exception handler service is not available, log to debug
+                        System.Diagnostics.Debug.WriteLine($"Exception in Submitted handler: {ex.Message}");
+                    }
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Gets or sets the Blades property value.
@@ -189,7 +216,7 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
         SearchCommand = new AsyncRelayCommand<object>(SearchAsync);
         // CanExecute checks both parameter and property to handle MAUI Button visual state correctly
         SubmitCommand = new AsyncRelayCommand<TModel>(
-            execute: e => SubmitAsync(e ?? SelectedItem!), 
+            execute: e => SubmitAsync(e ?? SelectedItem!),
             canExecute: e => (e ?? SelectedItem) is not null);
     }
 

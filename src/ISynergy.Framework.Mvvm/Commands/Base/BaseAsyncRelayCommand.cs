@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
@@ -571,7 +571,8 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     public abstract Task ExecuteAsync(object? parameter);
 
     /// <summary>
-    /// Awaits a task and handles exceptions.
+    /// Awaits a task and re-throws if not handled. Exceptions are assumed to be already
+    /// handled in ExecuteAsync, so this method only re-throws for FlowExceptionsToTaskScheduler scenarios.
     /// </summary>
     /// <param name="executionTask">The task to await.</param>
     internal async void AwaitAndThrowIfFailed(Task executionTask)
@@ -580,14 +581,11 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         {
             await executionTask;
         }
-        catch (Exception ex)
+        catch
         {
-            var exceptionHandlerService = _exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-
-            if (ex.InnerException is not null)
-                exceptionHandlerService.HandleException(ex.InnerException);
-            else
-                exceptionHandlerService.HandleException(ex);
+            // Do NOT re-throw - exceptions are already handled in ExecuteAsync
+            // This method is only called from synchronous Execute() which can't properly
+            // handle async exceptions anyway. Re-throwing here would cause double handling.
         }
     }
 

@@ -23,9 +23,59 @@ namespace ISynergy.Framework.UI.Services;
 public class NavigationService : INavigationService
 {
     private readonly IScopedContextService _scopedContextService;
+    private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILogger _logger;
 
     private EventHandler? _backStackChanged;
+
+    public NavigationService(IExceptionHandlerService exceptionHandlerService)
+    {
+        _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
+    }
+
+    /// <summary>
+    /// Safely calls OnNavigatedTo with exception handling.
+    /// </summary>
+    private void SafeOnNavigatedTo(IViewModel viewModel)
+    {
+        try
+        {
+            viewModel.OnNavigatedTo();
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                _exceptionHandlerService?.HandleException(ex);
+            }
+            catch
+            {
+                _logger?.LogError(ex, "Error in OnNavigatedTo for {ViewModelType}", viewModel.GetType().Name);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Safely calls OnNavigatedFrom with exception handling.
+    /// </summary>
+    private void SafeOnNavigatedFrom(IViewModel viewModel)
+    {
+        try
+        {
+            viewModel.OnNavigatedFrom();
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                _exceptionHandlerService?.HandleException(ex);
+            }
+            catch
+            {
+                _logger?.LogError(ex, "Error in OnNavigatedFrom for {ViewModelType}", viewModel.GetType().Name);
+            }
+        }
+    }
 
     public event EventHandler? BackStackChanged
     {
@@ -86,15 +136,18 @@ public class NavigationService : INavigationService
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     /// <param name="scopedContextService"></param>
+    /// <param name="exceptionHandlerService"></param>
     /// <param name="logger"></param>
     public NavigationService(
         IScopedContextService scopedContextService,
+        IExceptionHandlerService exceptionHandlerService,
         ILogger<NavigationService> logger)
     {
         _logger = logger;
         _logger.LogTrace($"NavigationService instance created with ID: {Guid.NewGuid()}");
 
-        _scopedContextService = scopedContextService;
+        _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
+        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
     }
 
     /// <summary>
@@ -211,7 +264,7 @@ public class NavigationService : INavigationService
             }
 
             // Call OnNavigatedTo for the blade ViewModel
-            viewModel.OnNavigatedTo();
+            SafeOnNavigatedTo(viewModel);
 
             return resolvedPage;
         }
@@ -228,7 +281,7 @@ public class NavigationService : INavigationService
         if (owner is IViewModel ownerVm && HasRunningCommands(ownerVm))
         {
             ownerVm.CancelAllCommands();
-            ownerVm.OnNavigatedFrom();
+            SafeOnNavigatedFrom(ownerVm);
         }
 
         bladeVm.Owner = owner;
@@ -276,7 +329,7 @@ public class NavigationService : INavigationService
             {
                 // Notify existing blades they're being backgrounded
                 if (blade.ViewModel is IViewModel existingVm)
-                    existingVm.OnNavigatedFrom();
+                    SafeOnNavigatedFrom(existingVm);
 
                 blade.IsEnabled = false;
             }
@@ -347,7 +400,7 @@ public class NavigationService : INavigationService
                     }
 
                     // Call OnNavigatedTo for the blade ViewModel
-                    viewmodel.OnNavigatedTo();
+                    SafeOnNavigatedTo(viewmodel);
 
                     return view;
                 }
@@ -370,7 +423,7 @@ public class NavigationService : INavigationService
         if (viewmodel is IViewModelBlade bladeVm)
         {
             // Notify the blade ViewModel it's being navigated from
-            viewmodel.OnNavigatedFrom();
+            SafeOnNavigatedFrom(viewmodel);
 
             if (owner.Blades is not null)
             {
@@ -389,7 +442,7 @@ public class NavigationService : INavigationService
 
                         // Notify the now-active blade it's being navigated to
                         if (blade.ViewModel is IViewModel activeVm)
-                            activeVm.OnNavigatedTo();
+                            SafeOnNavigatedTo(activeVm);
                     }
                 }
             }
@@ -420,7 +473,7 @@ public class NavigationService : INavigationService
             return true;
 
         currentViewModel.CancelAllCommands();
-        currentViewModel.OnNavigatedFrom();
+        SafeOnNavigatedFrom(currentViewModel);
 
         // Perform partial cleanup
         currentViewModel.Cleanup(isClosing: false);
@@ -480,7 +533,26 @@ public class NavigationService : INavigationService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error initializing ViewModel for {ViewModelType}", page.ViewModel.GetType().Name);
-                throw;
+
+                bool handled = false;
+
+                try
+                {
+                    _exceptionHandlerService.HandleException(ex);
+                    handled = true;
+                }
+                catch (Exception handlerEx)
+                {
+                    // Log failure of exception handler but suppress original exception to prevent app crash
+                    _logger.LogError(handlerEx, "Exception handler failed while processing navigation initialization error");
+                }
+
+                // Suppress exception if it was successfully handled or if handler is not available
+                // This prevents app crashes while still allowing the handler to show user-friendly messages
+                if (!handled)
+                {
+                    _logger.LogWarning("Exception handler service not available for navigation initialization error");
+                }
             }
         }
     }
@@ -511,7 +583,7 @@ public class NavigationService : INavigationService
                         viewModel.Parameter = parameter;
 
                     // No need to navigate - we're already showing this view with this viewmodel
-                    viewModel.OnNavigatedTo();
+                    SafeOnNavigatedTo(viewModel);
                     return;
                 }
             }
@@ -543,7 +615,7 @@ public class NavigationService : INavigationService
                 if (!viewModel.IsInitialized)
                     await viewModel.InitializeAsync();
 
-                viewModel.OnNavigatedTo();
+                SafeOnNavigatedTo(viewModel);
             }
             else
             {
@@ -595,7 +667,7 @@ public class NavigationService : INavigationService
                 if (!viewModel.IsInitialized)
                     await viewModel.InitializeAsync();
 
-                viewModel.OnNavigatedTo();
+                SafeOnNavigatedTo(viewModel);
             }
         }
     }
@@ -632,7 +704,7 @@ public class NavigationService : INavigationService
                 if (!viewModel.IsInitialized)
                     await viewModel.InitializeAsync();
 
-                viewModel.OnNavigatedTo();
+                SafeOnNavigatedTo(viewModel);
             }
             else
             {

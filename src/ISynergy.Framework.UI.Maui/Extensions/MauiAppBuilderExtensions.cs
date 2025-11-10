@@ -2,7 +2,6 @@ using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -16,6 +15,10 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System.Reflection;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
 
@@ -24,7 +27,97 @@ namespace ISynergy.Framework.UI.Extensions;
 public static class MauiAppBuilderExtensions
 {
     /// <summary>
-    /// Returns an instance of the <see cref="MauiAppBuilder"/> and adds logging.
+    /// Returns an instance of the <see cref="MauiAppBuilder"/> and adds logging with OpenTelemetry support.
+    /// </summary>
+    /// <param name="appBuilder"></param>
+    /// <param name="infoService"></param>
+    /// <param name="tracerProviderBuilderAction"></param>
+    /// <param name="meterProviderBuilderAction"></param>
+    /// <param name="loggerProviderBuilderAction"></param>
+    /// <returns></returns>
+    public static MauiAppBuilder ConfigureLogging(
+        this MauiAppBuilder appBuilder,
+        IInfoService infoService,
+        Action<TracerProviderBuilder>? tracerProviderBuilderAction = null,
+        Action<MeterProviderBuilder>? meterProviderBuilderAction = null,
+        Action<LoggerProviderBuilder>? loggerProviderBuilderAction = null)
+    {
+        appBuilder.Services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+
+#if DEBUG
+            loggingBuilder.AddDebug();
+#endif
+
+            // Configure OpenTelemetry
+            loggingBuilder.AddOpenTelemetry(options =>
+            {
+                options.SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(
+                            serviceName: infoService.ProductName,
+                            serviceVersion: infoService.ProductVersion.ToString())
+                        .AddTelemetrySdk()
+                        .AddEnvironmentVariableDetector());
+
+#if DEBUG
+                options.AddConsoleExporter();
+#endif
+            });
+        });
+
+        // Configure tracing
+        appBuilder.Services.AddOpenTelemetry()
+            .WithTracing(tracerProviderBuilder =>
+            {
+                tracerProviderBuilder
+                    .SetResourceBuilder(
+                        ResourceBuilder.CreateDefault()
+                            .AddService(
+                                serviceName: infoService.ProductName,
+                                serviceVersion: infoService.ProductVersion.ToString())
+                            .AddTelemetrySdk()
+                            .AddEnvironmentVariableDetector());
+
+                // Add HTTP client instrumentation
+                tracerProviderBuilder.AddHttpClientInstrumentation();
+
+#if DEBUG
+                tracerProviderBuilder.AddConsoleExporter();
+#endif
+
+                tracerProviderBuilderAction?.Invoke(tracerProviderBuilder);
+            })
+            .WithMetrics(meterProviderBuilder =>
+            {
+                meterProviderBuilder
+                    .SetResourceBuilder(
+                        ResourceBuilder.CreateDefault()
+                            .AddService(
+                                serviceName: infoService.ProductName,
+                                serviceVersion: infoService.ProductVersion.ToString())
+                            .AddTelemetrySdk()
+                            .AddEnvironmentVariableDetector());
+
+                // Add HTTP client instrumentation
+                meterProviderBuilder.AddHttpClientInstrumentation();
+
+                // Add runtime instrumentation
+                meterProviderBuilder.AddRuntimeInstrumentation();
+
+#if DEBUG
+                meterProviderBuilder.AddConsoleExporter();
+#endif
+
+                meterProviderBuilderAction?.Invoke(meterProviderBuilder);
+            });
+
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Returns an instance of the <see cref="MauiAppBuilder"/> and adds logging with a custom configuration action.
     /// </summary>
     /// <param name="appBuilder"></param>
     /// <param name="logging"></param>
@@ -143,7 +236,8 @@ public static class MauiAppBuilderExtensions
                 fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
             });
 
-        ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
+        // Is not needed. Is resolved via MauiInitializeService
+        // ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
 
         return appBuilder;
     }
@@ -181,6 +275,6 @@ public static class MauiAppBuilderExtensions
     /// <param name="services"></param>
     public static void AddPageResolver(this IServiceCollection services)
     {
-        services.TryAddEnumerable(ServiceDescriptor.Transient<IMauiInitializeService, ResolverService>());
+        services.TryAddEnumerable(ServiceDescriptor.Transient<IMauiInitializeService, MauiInitializerService>());
     }
 }

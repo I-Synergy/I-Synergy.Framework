@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -162,6 +163,54 @@ public class AsyncRelayCommandTests
 
         tcs.SetResult(true);
         await Task.WhenAll(task1, task2);
+    }
+
+    [TestMethod]
+    public async Task ExecuteAsync_WithSynchronousException_CallsExceptionHandlerService()
+    {
+        // Arrange
+        var expectedException = new InvalidOperationException("Test exception");
+     var mockExceptionHandler = new Mock<IExceptionHandlerService>();
+        
+        _mockServiceProvider
+            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
+       .Returns(mockExceptionHandler.Object);
+
+        // Lambda throws synchronously (not async)
+      var command = new AsyncRelayCommand(() => throw expectedException);
+
+        // Act
+    await Assert.ThrowsAsync<InvalidOperationException>(() => command.ExecuteAsync(null));
+
+        // Assert - exception handler should be called via AwaitAndThrowIfFailed
+        // Note: The exception is handled in AwaitAndThrowIfFailed which is called from Execute
+      await Task.Delay(50); // Give time for async exception handling
+ mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException || e.InnerException == expectedException)), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task ExecuteAsync_WithAsynchronousException_CallsExceptionHandlerService()
+    {
+        // Arrange
+        var expectedException = new InvalidOperationException("Test exception");
+        var mockExceptionHandler = new Mock<IExceptionHandlerService>();
+        
+        _mockServiceProvider
+    .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
+     .Returns(mockExceptionHandler.Object);
+
+        var command = new AsyncRelayCommand(async () =>
+        {
+   await Task.Delay(10);
+    throw expectedException;
+    });
+
+        // Act
+        await Assert.ThrowsAsync<InvalidOperationException>(() => command.ExecuteAsync(null));
+
+        // Assert - exception handler should be called via AwaitAndThrowIfFailed
+        await Task.Delay(50); // Give time for async exception handling
+      mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException || e.InnerException == expectedException)), Times.Once);
     }
 
     [TestMethod]

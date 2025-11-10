@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -111,14 +112,48 @@ public class RelayCommandGenericTests
     }
 
     [TestMethod]
-    public void Execute_WithException_HandlesExceptionCorrectly()
+    public void Execute_WithException_CallsExceptionHandlerService()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
+        var mockExceptionHandler = new Mock<IExceptionHandlerService>();
+        
+        _mockServiceProvider
+            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
+            .Returns(mockExceptionHandler.Object);
+
         var command = new RelayCommand<string>(_ => throw expectedException);
 
         // Act
-        Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
+        try
+        {
+            command.Execute("test");
+            Assert.Fail("Expected exception was not thrown");
+        }
+        catch (InvalidOperationException)
+        {
+            // Expected
+        }
+
+        // Assert
+        mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
+    }
+
+    [TestMethod]
+    public void Execute_WithException_WhenExceptionHandlerServiceNotAvailable_RethrowsException()
+    {
+        // Arrange
+        var expectedException = new InvalidOperationException("Test exception");
+        
+        _mockServiceProvider
+            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
+            .Returns((IExceptionHandlerService?)null);
+
+        var command = new RelayCommand<string>(_ => throw expectedException);
+
+        // Act & Assert
+        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
+        Assert.AreEqual(expectedException, thrownException);
     }
 
     [TestMethod]
