@@ -2,7 +2,8 @@ using ISynergy.Framework.CQRS.Abstractions.Commands;
 using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.TestImplementations.Tests;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ISynergy.Framework.CQRS.Dispatchers.Tests;
 
@@ -18,7 +19,7 @@ public class CommandDispatcherTests
         services.AddScoped<ICommandHandler<TestCommand>>(_ => handler);
         var provider = services.BuildServiceProvider();
 
-        var dispatcher = new CommandDispatcher(provider);
+        var dispatcher = new CommandDispatcher(provider, Mock.Of<ILogger<CommandDispatcher>>());
         var command = new TestCommand();
 
         // Act
@@ -37,7 +38,7 @@ public class CommandDispatcherTests
             new TestCommandWithResultHandler());
         var provider = services.BuildServiceProvider();
 
-        var dispatcher = new CommandDispatcher(provider);
+        var dispatcher = new CommandDispatcher(provider, Mock.Of<ILogger<CommandDispatcher>>());
         var command = new TestCommandWithResult { Input = "Test Input" };
 
         // Act
@@ -53,7 +54,7 @@ public class CommandDispatcherTests
         // Arrange
         var services = new ServiceCollection();
         var provider = services.BuildServiceProvider();
-        var dispatcher = new CommandDispatcher(provider);
+        var dispatcher = new CommandDispatcher(provider, Mock.Of<ILogger<CommandDispatcher>>());
         var command = new TestCommand();
 
         // Act & Assert

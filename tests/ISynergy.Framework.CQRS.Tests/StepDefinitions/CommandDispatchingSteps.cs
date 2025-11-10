@@ -5,6 +5,7 @@ using ISynergy.Framework.CQRS.Dispatchers;
 using ISynergy.Framework.CQRS.TestImplementations.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Reqnroll;
 
 namespace ISynergy.Framework.CQRS.Tests.StepDefinitions;
@@ -47,7 +48,7 @@ public class CommandDispatchingSteps
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
 
         _serviceProvider = services.BuildServiceProvider();
-        _commandDispatcher = new CommandDispatcher(_serviceProvider);
+        _commandDispatcher = new CommandDispatcher(_serviceProvider, Mock.Of<ILogger<CommandDispatcher>>());
 
         ArgumentNullException.ThrowIfNull(_commandDispatcher);
     }
@@ -76,7 +77,7 @@ public class CommandDispatchingSteps
         var services = new ServiceCollection();
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Warning));
         _serviceProvider = services.BuildServiceProvider();
-        _commandDispatcher = new CommandDispatcher(_serviceProvider);
+        _commandDispatcher = new CommandDispatcher(_serviceProvider, Mock.Of<ILogger<CommandDispatcher>>());
         _command = new TestCommand { Data = "Unhandled" };
     }
 
@@ -149,7 +150,7 @@ public class CommandDispatchingSteps
             var scopedServices = new ServiceCollection();
             scopedServices.AddScoped<ICommandHandler<TestCommand>>(_ => handler);
             var scopedProvider = scopedServices.BuildServiceProvider();
-            var dispatcher = new CommandDispatcher(scopedProvider);
+            var dispatcher = new CommandDispatcher(scopedProvider, Mock.Of<ILogger<CommandDispatcher>>());
 
             await dispatcher.DispatchAsync(cmd);
         }

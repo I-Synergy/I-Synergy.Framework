@@ -1,4 +1,4 @@
-﻿using Dotmim.Sync;
+using Dotmim.Sync;
 using Dotmim.Sync.Enumerations;
 using Dotmim.Sync.Sqlite;
 using Dotmim.Sync.Web.Client;
@@ -24,17 +24,17 @@ internal class SynchronizationService : ISynchronizationService
     private readonly IContext _context;
     private readonly IMessengerService _messengerService;
     private readonly ISettingsService _settingsService;
-    private readonly ISynchronizationSettings _synchronizationSettings;
+    private readonly ISynchronizationSettings? _synchronizationSettings;
 
     public bool IsActive { get; }
-    public SyncAgent SynchronizationAgent { get; }
-    public Uri SynchronizationEndpoint { get; }
-    public string SynchronizationFolder { get; }
-    public string SnapshotsFolder { get; }
-    public string BatchesFolder { get; }
-    public string OfflineDatabase { get; }
+    public SyncAgent? SynchronizationAgent { get; }
+    public Uri? SynchronizationEndpoint { get; }
+    public string SynchronizationFolder { get; } = string.Empty;
+    public string SnapshotsFolder { get; } = string.Empty;
+    public string BatchesFolder { get; } = string.Empty;
+    public string OfflineDatabase { get; } = string.Empty;
 
-    public ISynchronizationSettings SynchronizationOptions => _synchronizationSettings;
+    public ISynchronizationSettings? SynchronizationOptions => _synchronizationSettings;
 
     public SynchronizationService(
         IContext context,
@@ -48,6 +48,9 @@ internal class SynchronizationService : ISynchronizationService
 
         if (!_context.IsAuthenticated)
             throw new InvalidOperationException("User is not authenticated");
+
+        if (_context.Profile is null)
+            throw new InvalidOperationException("User profile is not available");
 
         var options = configurationOptions.Value;
         var tenantId = _context.Profile.AccountId.ToString("N");
@@ -84,15 +87,19 @@ internal class SynchronizationService : ISynchronizationService
             if (!Directory.Exists(BatchesFolder))
                 Directory.CreateDirectory(BatchesFolder);
 
-            SynchronizationEndpoint = new Uri(Path.Combine(options.Endpoint, "sync"));
+            if (string.IsNullOrEmpty(options.Endpoint))
+                throw new InvalidOperationException("Synchronization endpoint is not configured");
+
+            var synchronizationEndpoint = new Uri(Path.Combine(options.Endpoint, "sync"));
+            SynchronizationEndpoint = synchronizationEndpoint;
 
             var handler = new HttpClientHandler();
 #if DEBUG
-            if (DeviceInfo.Platform == DevicePlatform.Android && SynchronizationEndpoint.Host == "10.0.2.2")
+            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2")
             {
                 handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
                 {
-                    if (cert.Issuer.Equals("CN=localhost"))
+                    if (cert is not null && cert.Issuer is not null && cert.Issuer.Equals("CN=localhost"))
                         return true;
                     return errors == System.Net.Security.SslPolicyErrors.None;
                 };
@@ -116,12 +123,12 @@ internal class SynchronizationService : ISynchronizationService
             // The Android emulator uses 10.0.2.2 as an alias for the host machine's localhost.
             // IIS Express only accepts requests with Host header set to "localhost".
             // We override the Host header to match IIS Express requirements when running on Android emulator.
-            if (DeviceInfo.Platform == DevicePlatform.Android && SynchronizationEndpoint.Host == "10.0.2.2")
-                httpClient.DefaultRequestHeaders.Host = $"localhost:{SynchronizationEndpoint.Port}";
+            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2")
+                httpClient.DefaultRequestHeaders.Host = $"localhost:{synchronizationEndpoint.Port}";
 
             httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
 
-            var webRemoteOrchestrator = new WebRemoteOrchestrator(SynchronizationEndpoint.AbsoluteUri, client: httpClient, maxDownladingDegreeOfParallelism: 1)
+            var webRemoteOrchestrator = new WebRemoteOrchestrator(synchronizationEndpoint.AbsoluteUri, client: httpClient, maxDownladingDegreeOfParallelism: 1)
             {
                 //Converter = new SqliteConverter()
                 SerializerFactory = new MessagePackSerializerFactory()
@@ -158,7 +165,10 @@ internal class SynchronizationService : ISynchronizationService
         if (!_context.IsAuthenticated)
             throw new InvalidOperationException("User is not authenticated");
 
-        if (_synchronizationSettings is not null && IsActive)
+        if (_context.Profile is null)
+            throw new InvalidOperationException("User profile is not available");
+
+        if (_synchronizationSettings is not null && IsActive && SynchronizationAgent is not null)
         {
             var result = string.Empty;
 

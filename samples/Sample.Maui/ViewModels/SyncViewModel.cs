@@ -1,6 +1,6 @@
-﻿using Dotmim.Sync.Enumerations;
+using Dotmim.Sync;
+using Dotmim.Sync.Enumerations;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -195,9 +195,11 @@ public class SyncViewModel : ViewModelNavigation<object>
     {
         if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive)
         {
-            var agent = _commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent;
-            var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
-            await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
+            if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
+            {
+                var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
+                await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
+            }
         }
     }
 
@@ -205,8 +207,8 @@ public class SyncViewModel : ViewModelNavigation<object>
     {
         if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive)
         {
-            var agent = _commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent;
-            await agent.LocalOrchestrator.DeprovisionAsync();
+            if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
+                await agent.LocalOrchestrator.DeprovisionAsync();
         }
     }
 

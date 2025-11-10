@@ -2,7 +2,7 @@ using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.Dispatchers;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace ISynergy.Framework.CQRS.Handlers.Tests;
@@ -29,7 +29,7 @@ public class CancellationTokenTests
         services.AddScoped(_ => handlerMock.Object);
         var provider = services.BuildServiceProvider();
 
-        var dispatcher = new CommandDispatcher(provider);
+        var dispatcher = new CommandDispatcher(provider, Mock.Of<ILogger<CommandDispatcher>>());
         var command = new TestCancellableCommand();
         using var cts = new CancellationTokenSource();
 
@@ -69,7 +69,7 @@ public class CancellationTokenTests
         services.AddScoped(_ => handlerMock.Object);
         var provider = services.BuildServiceProvider();
 
-        var dispatcher = new QueryDispatcher(provider);
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
         var query = new TestCancellableQuery();
         using var cts = new CancellationTokenSource();
 

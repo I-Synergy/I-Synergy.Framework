@@ -87,13 +87,11 @@
                 <Picker
                     Title="{m:GetString Modules}"
                     IsEnabled="{Binding ArePickersAvailable}"
-                    ItemDisplayBinding="{Binding Description}"
                     ItemsSource="{Binding Modules}"
                     SelectedItem="{Binding SelectedModules}" />
                 <Picker
                     Title="{m:GetString Country}"
                     IsEnabled="{Binding ArePickersAvailable}"
-                    ItemDisplayBinding="{Binding CountryISO}"
                     ItemsSource="{Binding Countries}"
                     SelectedItem="{Binding SelectedCountry}" />
                 <Picker

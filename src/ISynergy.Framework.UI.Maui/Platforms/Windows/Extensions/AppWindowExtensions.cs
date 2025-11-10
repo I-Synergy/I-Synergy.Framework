@@ -75,11 +75,13 @@ public static class AppWindowExtensions
                 {
                     if (e.Kind == ExtendedActivationKind.Launch)
                     {
-                        launchAction.Invoke(e.Data as LaunchActivatedEventArgs);
+                        if (e.Data is LaunchActivatedEventArgs launchArgs)
+                            launchAction.Invoke(launchArgs);
                     }
                     else if (e.Kind == ExtendedActivationKind.Protocol)
                     {
-                        protocolAction.Invoke(e.Data as ProtocolActivatedEventArgs);
+                        if (e.Data is ProtocolActivatedEventArgs protocolArgs)
+                            protocolAction.Invoke(protocolArgs);
                     }
                     else if (Environment.GetCommandLineArgs().Length > 1)
                     {

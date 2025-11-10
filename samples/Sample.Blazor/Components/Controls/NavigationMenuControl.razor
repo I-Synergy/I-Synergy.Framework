@@ -27,14 +27,15 @@
 			{
 				// Check if we're not already on a budgets page to avoid infinite navigation
 				var currentUri = NavigationManager.Uri;
+				var firstMenuItemHref = NavigationMenuService.MenuItems[0]?.Href;
 
-				if (!string.IsNullOrEmpty(NavigationMenuService.MenuItems[0]?.Href) &&
-					!currentUri.Equals($"{NavigationManager.BaseUri}{NavigationMenuService.MenuItems[0]!.Href}"))
+				if (!string.IsNullOrEmpty(firstMenuItemHref) &&
+					!currentUri.Equals($"{NavigationManager.BaseUri}{firstMenuItemHref}"))
 				{
 					_hasNavigatedToFirstItem = true;
 
 					// Navigate to the first menu item (Dashboard)
-					NavigationManager.NavigateTo(NavigationMenuService.MenuItems[0]!.Href);
+					NavigationManager.NavigateTo(firstMenuItemHref);
 				}
 			}
 		}

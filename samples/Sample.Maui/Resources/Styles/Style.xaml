@@ -802,7 +802,7 @@
                         CharacterSpacing="10"
                         FontFamily="fontawesome"
                         FontSize="{DynamicResource DefaultFontSize}"
-                        Text="{Binding Symbol}" />
+                        Text="{Binding Icon}" />
                             <Span FontSize="{DynamicResource DefaultFontSize}" Text="{Binding Name}" />
                         </FormattedString>
                     </Label.FormattedText>

@@ -5,7 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
-    x:Name="ImageBrowserControl">
+    x:Name="ImageBrowserControl"
+    x:DataType="controls:ImageBrowser"
+    xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls">
 
     <ContentView.Resources>
         <converters:BytesToImageSourceConverter x:Key="BytesToImageSourceConverter" />
