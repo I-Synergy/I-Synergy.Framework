@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -106,15 +106,18 @@ public static class StringExtensions
             }
         }
 
-        // No numeric suffix found
+        // If codePos is still at self.Length, all characters are digits
         if (codePos == self.Length)
-            return self + summand;
+        {
+            var num = long.Parse(self) + summand;
+            return num.ToString();
+        }
 
         var numberString = self[codePos..];
-        var num = long.Parse(numberString) + summand;
+        var num_value = long.Parse(numberString) + summand;
 
         // Format the number with leading zeros to maintain the original format
-        return self[..codePos] + num.ToString().PadLeft(numberString.Length, '0');
+        return self[..codePos] + num_value.ToString().PadLeft(numberString.Length, '0');
     }
 
     /// <summary>

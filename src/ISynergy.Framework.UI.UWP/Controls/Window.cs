@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
 using Windows.UI.Xaml;
@@ -43,7 +43,7 @@ public class Window : ContentDialog, IWindow
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            return default!;
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
         }
         set
         {

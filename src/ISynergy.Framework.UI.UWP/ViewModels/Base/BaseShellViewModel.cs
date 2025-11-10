@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -254,9 +253,10 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             if (sender is ThemeViewModel vm)
             {
                 vm.Submitted -= ThemeVM_Submitted;
+            }
 
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = e.Result.Theme;
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = e.Result.Theme;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
 
             if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
                 await _dialogService.ShowMessageAsync(

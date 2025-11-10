@@ -1,6 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -120,26 +119,18 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
 
     private async void ScopedContextService_ScopedChanged(object? sender, Core.Events.ReturnEventArgs<bool> e)
     {
-        try
+        if (e.Value)
         {
-            if (e.Value)
+            IsInitialized = false;
+
+            // Clear existing data
+            Cleanup();
+
+            // Reinitialize with new scope if needed
+            if (!IsDisposed)
             {
-                IsInitialized = false;
-
-                // Clear existing data
-                Cleanup();
-
-                // Reinitialize with new scope if needed
-                if (!IsDisposed)
-                {
-                    await InitializeAsync();
-                }
+                await InitializeAsync();
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in ScopedContextService_ScopedChanged for {ViewModelType}", GetType().Name);
-            _commonServices.ExceptionHandlerService?.HandleException(ex);
         }
     }
 

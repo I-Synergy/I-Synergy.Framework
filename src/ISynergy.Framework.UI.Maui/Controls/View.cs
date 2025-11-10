@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
@@ -20,7 +20,7 @@ public abstract class View : ContentPage, IView
             if (BindingContext is IViewModel viewModel)
                 return viewModel;
 
-            return default!;
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
         }
         set
         {

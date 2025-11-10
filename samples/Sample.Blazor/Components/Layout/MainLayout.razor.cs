@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
