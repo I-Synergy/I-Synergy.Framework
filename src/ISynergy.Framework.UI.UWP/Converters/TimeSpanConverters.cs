@@ -41,7 +41,7 @@ public class TimeSpanToStringConverter : IValueConverter
         }
         else
         {
-            return null;
+            return null!;
         }
     }
 

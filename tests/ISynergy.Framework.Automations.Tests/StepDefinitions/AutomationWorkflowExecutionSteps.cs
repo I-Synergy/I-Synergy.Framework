@@ -228,7 +228,7 @@ public class AutomationWorkflowExecutionSteps
         {
             var cancellationTokenSource = new CancellationTokenSource();
             _stopwatch.Restart();
-            _result = await _automationService.ExecuteAsync(_automation, _customer, cancellationTokenSource);
+            _result = await _automationService.ExecuteAsync(_automation, _customer!, cancellationTokenSource);
             _stopwatch.Stop();
             cancellationTokenSource.Dispose();
         }

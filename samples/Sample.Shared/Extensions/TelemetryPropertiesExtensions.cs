@@ -31,7 +31,9 @@ public static class TelemetryPropertiesExtensions
         properties.Add(nameof(infoService.ProductVersion), infoService.ProductVersion.ToString());
 
         properties.Add("host.name", System.Net.Dns.GetHostName() ?? "localhost");
+#pragma warning disable CS0618 // Type or member is obsolete
         properties.Add("host.ip", NetworkUtility.GetInternetIPAddress() ?? string.Empty);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         properties.Add("os.version", Environment.OSVersion.Version);
         properties.Add("os.architecture", Environment.Is64BitOperatingSystem ? "x64" : "x86");

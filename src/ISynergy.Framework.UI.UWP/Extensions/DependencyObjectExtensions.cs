@@ -38,7 +38,7 @@ public static class DependencyObjectExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="startNode">The start node.</param>
     /// <returns>T.</returns>
-    public static T FindParent<T>(this DependencyObject startNode) where T : DependencyObject
+    public static T? FindParent<T>(this DependencyObject startNode) where T : DependencyObject
     {
         var parentObject = VisualTreeHelper.GetParent(startNode);
         if (parentObject is null) return default;
@@ -60,23 +60,24 @@ public static class DependencyObjectExtensions
     /// <param name="root"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static T GetVisualChildByName<T>(this FrameworkElement root, string name)
+    public static T? GetVisualChildByName<T>(this FrameworkElement? root, string name)
         where T : FrameworkElement
     {
-        var chil = VisualTreeHelper.GetChild(root, 0);
-        FrameworkElement child = null;
+        if (root is null) return null;
+        
+        FrameworkElement? child = null;
 
         var count = VisualTreeHelper.GetChildrenCount(root);
 
         for (var i = 0; i < count && child is null; i++)
         {
-            var current = (FrameworkElement)VisualTreeHelper.GetChild(root, i);
+            var current = VisualTreeHelper.GetChild(root, i) as FrameworkElement;
             if (current is not null && current.Name is not null && current.Name == name)
             {
                 child = current;
                 break;
             }
-            else
+            else if (current is not null)
             {
                 child = current.GetVisualChildByName<FrameworkElement>(name);
             }
@@ -91,7 +92,7 @@ public static class DependencyObjectExtensions
     /// <param name="element">Parent element.</param>
     /// <param name="name">Name of the control to find</param>
     /// <returns>Descendant control or null if not found.</returns>
-    public static FrameworkElement FindDescendantByName(this DependencyObject element, string name)
+    public static FrameworkElement? FindDescendantByName(this DependencyObject? element, string name)
     {
         if (element is null || string.IsNullOrWhiteSpace(name))
         {
@@ -106,10 +107,14 @@ public static class DependencyObjectExtensions
         var childCount = VisualTreeHelper.GetChildrenCount(element);
         for (var i = 0; i < childCount; i++)
         {
-            var result = VisualTreeHelper.GetChild(element, i).FindDescendantByName(name);
-            if (result is not null)
+            var child = VisualTreeHelper.GetChild(element, i);
+            if (child is not null)
             {
-                return result;
+                var result = child.FindDescendantByName(name);
+                if (result is not null)
+                {
+                    return result;
+                }
             }
         }
 
@@ -122,10 +127,10 @@ public static class DependencyObjectExtensions
     /// <typeparam name="T">Type to search for.</typeparam>
     /// <param name="element">Parent element.</param>
     /// <returns>Descendant control or null if not found.</returns>
-    public static T FindDescendant<T>(this DependencyObject element)
+    public static T? FindDescendant<T>(this DependencyObject element)
         where T : DependencyObject
     {
-        T retValue = default;
+        T? retValue = default;
         var childrenCount = VisualTreeHelper.GetChildrenCount(element);
 
         for (var i = 0; i < childrenCount; i++)
@@ -154,25 +159,28 @@ public static class DependencyObjectExtensions
     /// <param name="element">Parent element.</param>
     /// <param name="type">Type of descendant.</param>
     /// <returns>Descendant control or null if not found.</returns>
-    public static object FindDescendant(this DependencyObject element, Type type)
+    public static object? FindDescendant(this DependencyObject element, Type type)
     {
-        object retValue = null;
+        object? retValue = null;
         var childrenCount = VisualTreeHelper.GetChildrenCount(element);
 
         for (var i = 0; i < childrenCount; i++)
         {
             var child = VisualTreeHelper.GetChild(element, i);
-            if (child.GetType() == type)
+            if (child is not null && child.GetType() == type)
             {
                 retValue = child;
                 break;
             }
 
-            retValue = FindDescendant(child, type);
-
-            if (retValue is not null)
+            if (child is not null)
             {
-                break;
+                retValue = FindDescendant(child, type);
+
+                if (retValue is not null)
+                {
+                    break;
+                }
             }
         }
 
@@ -211,7 +219,7 @@ public static class DependencyObjectExtensions
     /// <param name="element">Parent element.</param>
     /// <param name="name">Name of the control to find</param>
     /// <returns>Descendant control or null if not found.</returns>
-    public static FrameworkElement FindAscendantByName(this DependencyObject element, string name)
+    public static FrameworkElement? FindAscendantByName(this DependencyObject element, string name)
     {
         if (element is null || string.IsNullOrWhiteSpace(name))
         {
@@ -239,7 +247,7 @@ public static class DependencyObjectExtensions
     /// <typeparam name="T">Type to search for.</typeparam>
     /// <param name="element">Child element.</param>
     /// <returns>Ascendant control or null if not found.</returns>
-    public static T FindAscendant<T>(this DependencyObject element)
+    public static T? FindAscendant<T>(this DependencyObject element)
         where T : DependencyObject
     {
         var parent = VisualTreeHelper.GetParent(element);
@@ -263,7 +271,7 @@ public static class DependencyObjectExtensions
     /// <param name="element">Child element.</param>
     /// <param name="type">Type of ascendant to look for.</param>
     /// <returns>Ascendant control or null if not found.</returns>
-    public static object FindAscendant(this DependencyObject element, Type type)
+    public static object? FindAscendant(this DependencyObject element, Type type)
     {
         var parent = VisualTreeHelper.GetParent(element);
 

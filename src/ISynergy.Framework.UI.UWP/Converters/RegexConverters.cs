@@ -17,10 +17,10 @@ public class MaskToRegexConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="language"></param>
     /// <returns></returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object? Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is not null && !string.IsNullOrEmpty(value.ToString()))
-            return RegexUtility.MaskToRegexConverter(value.ToString());
+        if (value is not null && !string.IsNullOrEmpty(value.ToString()) && value.ToString() is string mask)
+            return RegexUtility.MaskToRegexConverter(mask);
 
         return null;
     }

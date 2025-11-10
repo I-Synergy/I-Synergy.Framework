@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.UI.Converters.Shared;
-using System;
+using ISynergy.Framework.UI.Converters.Shared;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -107,13 +106,9 @@ public class IntegerToStringConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is not null)
-        {
-            return value.ToString();
-        }
-        else
-        {
-            return "0";
-        }
+            return value.ToString() ?? "0";
+
+        return "0";
     }
 
     /// <summary>

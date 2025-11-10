@@ -1,8 +1,6 @@
-using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -42,7 +40,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
     protected readonly ILogger<Application> _logger;
     protected readonly IMessengerService _messengerService;
 
-    protected IThemeService _themeSelector;
+    protected IThemeService? _themeSelector;
 
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
@@ -195,7 +193,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
 
             var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
 
-            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment), null);
+            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {
@@ -391,7 +389,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
     {
         _mainWindow = Windows.UI.Xaml.Window.Current;
 
-        var rootFrame = MainWindow.Content as Frame;
+        var rootFrame = MainWindow?.Content as Frame;
 
         // Do not repeat app initialization when the Window already has content,
         // just ensure that the window is active
@@ -424,7 +422,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
             // Add custom resourcedictionaries from code.
             var dictionary = Application.Current.Resources?.MergedDictionaries;
 
-            if (dictionary is not null)
+            if (dictionary is not null && Application.Current.Resources is not null)
             {
                 foreach (var item in GetAdditionalResourceDictionaries())
                 {
@@ -434,7 +432,8 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
             }
 
             // Place the frame in the current Window
-            MainWindow.Content = rootFrame;
+            if (MainWindow is not null)
+                MainWindow.Content = rootFrame;
         }
 
         if (!args.PrelaunchActivated)
@@ -452,7 +451,8 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
 
         _themeSelector = ServiceLocator.Default.GetRequiredService<IThemeService>();
 
-        MainWindow.Activate();
+        if (MainWindow is not null)
+            MainWindow.Activate();
     }
 
     /// <summary>
@@ -484,7 +484,7 @@ public abstract class Application : Windows.UI.Xaml.Application, IDisposable
             rootFrame = _frame;
         }
 
-        if (rootFrame.CanGoBack)
+        if (rootFrame is not null && rootFrame.CanGoBack)
         {
             e.Handled = true;
             rootFrame.GoBack();

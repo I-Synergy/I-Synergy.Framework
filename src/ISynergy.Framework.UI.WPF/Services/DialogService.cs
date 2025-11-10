@@ -44,7 +44,7 @@ public class DialogService : IDialogService
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "") =>
+    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "") =>
         ShowMessageAsync(error.Message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -53,7 +53,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "") =>
+    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -62,7 +62,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "") =>
+    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -71,7 +71,7 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "") =>
+    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButtons.OK);
 
     /// <summary>

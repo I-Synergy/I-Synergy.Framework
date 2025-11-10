@@ -139,7 +139,7 @@ public abstract class Application : ComponentBase
             // Fall back to ServiceLocator only if not provided via constructor
             var configuration = _configuration ?? ServiceLocator.Default.GetRequiredService<IConfiguration>();
 
-            var environmentFromConfig = configuration.GetValue<string>(nameof(Environment), null);
+            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {

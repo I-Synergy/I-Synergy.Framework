@@ -35,7 +35,7 @@ public class CameraService : ICameraService
     /// take picture as an asynchronous operation.
     /// </summary>
     /// <returns>FileResult.</returns>
-    public async Task<FileResult> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024)
+    public async Task<FileResult?> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024)
     {
         CameraCaptureUI captureUI = new CameraCaptureUI();
         captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Png;

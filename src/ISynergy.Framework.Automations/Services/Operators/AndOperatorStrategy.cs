@@ -12,7 +12,7 @@ public class AndOperatorStrategy : IOperatorStrategy
     /// </summary>
     /// <param name="left">The left operand.</param>
     /// <param name="right">The right operand.</param>
-    /// <returns>The result of applying the AND operator (left && right).</returns>
+    /// <returns>The result of applying the AND operator (left &amp;&amp; right).</returns>
     public bool Apply(bool left, bool right) => left && right;
 }
 

@@ -73,7 +73,7 @@ public sealed partial class Console : UserControl
     /// <param name="fileName">Name of the file.</param>
     /// <param name="arguments">The arguments.</param>
     /// <param name="workingDirectory">The working directory.</param>
-    public async Task StartProcessAsync(string fileName, string arguments, string workingDirectory = null)
+    public async Task StartProcessAsync(string fileName, string arguments, string? workingDirectory = null)
     {
 
         //  Are we showing diagnostics?
