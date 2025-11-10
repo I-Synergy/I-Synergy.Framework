@@ -13,26 +13,65 @@ public static class CursorExtensions
 {
     public static void SetCustomCursor(this VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext)
     {
-        ArgumentNullException.ThrowIfNull(mauiContext);
+        if (mauiContext is null)
+        {
+            System.Diagnostics.Debug.WriteLine("MauiContext is null, cannot set custom cursor");
+            return;
+        }
 
         // Wait for handler to be fully initialized before accessing the platform view
         void SetupCursor()
         {
             try
             {
-                var view = visualElement.ToPlatform(mauiContext);
-                view.PointerEntered += ViewOnPointerEntered;
-                view.PointerExited += ViewOnPointerExited;
+                // Use the element's own handler's MauiContext if available (most reliable)
+                var contextToUse = visualElement.Handler?.MauiContext ?? mauiContext;
+                
+                if (contextToUse is null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No valid MauiContext available for cursor setup");
+                    return;
+                }
+
+                var view = visualElement.ToPlatform(contextToUse);
+                
+                if (view is null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Failed to get platform view for cursor setup");
+                    return;
+                }
+
+                // Remove existing event handlers to prevent duplicates
+                view.PointerEntered -= ViewOnPointerEntered;
+                view.PointerExited -= ViewOnPointerExited;
 
                 void ViewOnPointerExited(object? sender, PointerRoutedEventArgs e)
                 {
-                    view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(GetCursor(CursorIcons.Arrow), 1)));
+                    try
+                    {
+                        view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(GetCursor(CursorIcons.Arrow), 1)));
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to change cursor on pointer exit: {ex.Message}");
+                    }
                 }
 
                 void ViewOnPointerEntered(object? sender, PointerRoutedEventArgs e)
                 {
-                    view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(GetCursor(cursor), 1)));
+                    try
+                    {
+                        view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(GetCursor(cursor), 1)));
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to change cursor on pointer enter: {ex.Message}");
+                    }
                 }
+
+                // Attach event handlers
+                view.PointerEntered += ViewOnPointerEntered;
+                view.PointerExited += ViewOnPointerExited;
             }
             catch (Exception ex)
             {
@@ -40,7 +79,7 @@ public static class CursorExtensions
             }
         }
 
-        if (visualElement.Handler is not null && visualElement.Handler.MauiContext is not null)
+        if (visualElement.Handler is not null)
         {
             // Handler is ready, setup cursor immediately
             SetupCursor();
@@ -48,13 +87,18 @@ public static class CursorExtensions
         else
         {
             // Handler is not ready yet, defer until HandlerChanged event
-            visualElement.HandlerChanged += HandleHandlerChanged;
-
             void HandleHandlerChanged(object? sender, EventArgs e)
             {
                 visualElement.HandlerChanged -= HandleHandlerChanged;
-                SetupCursor();
+                
+                // Only setup if handler is now available
+                if (visualElement.Handler is not null)
+                {
+                    SetupCursor();
+                }
             }
+            
+            visualElement.HandlerChanged += HandleHandlerChanged;
         }
     }
 
