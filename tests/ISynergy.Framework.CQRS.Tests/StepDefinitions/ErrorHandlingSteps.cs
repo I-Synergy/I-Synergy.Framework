@@ -1,4 +1,3 @@
-using ISynergy.Framework.CQRS.Abstractions.Commands;
 using ISynergy.Framework.CQRS.Abstractions.Dispatchers;
 using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.Dispatchers;
@@ -28,7 +27,7 @@ public class ErrorHandlingSteps
     public ErrorHandlingSteps()
     {
         _mockLogger = new Mock<ILogger<ErrorHandlingSteps>>();
-  var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
+        var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
         _logger = loggerFactory.CreateLogger<ErrorHandlingSteps>();
     }
 
@@ -40,11 +39,11 @@ public class ErrorHandlingSteps
         var services = new ServiceCollection();
         var failingHandler = new FailingCommandHandler();
         services.AddScoped<ICommandHandler<TestCommand>>(_ => failingHandler);
-      services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Warning));
+        services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Warning));
 
         _serviceProvider = services.BuildServiceProvider();
-  _commandDispatcher = new CommandDispatcher(_serviceProvider);
-_command = new TestCommand { Data = "Will Fail" };
+        _commandDispatcher = new CommandDispatcher(_serviceProvider, Mock.Of<ILogger<CommandDispatcher>>());
+        _command = new TestCommand { Data = "Will Fail" };
     }
 
     [Given(@"I have a query that returns null")]
@@ -57,8 +56,8 @@ _command = new TestCommand { Data = "Will Fail" };
     [Given(@"I have an invalid command")]
     public void GivenIHaveAnInvalidCommand()
     {
-_logger.LogInformation("Creating invalid command");
-  _command = new TestCommand { Data = null! }; // Invalid data
+        _logger.LogInformation("Creating invalid command");
+        _command = new TestCommand { Data = null! }; // Invalid data
     }
 
     [Given(@"logging is configured for the CQRS system")]
@@ -66,7 +65,7 @@ _logger.LogInformation("Creating invalid command");
     {
         _logger.LogInformation("Configuring logging for CQRS system");
 
- var services = new ServiceCollection();
+        var services = new ServiceCollection();
 
         // Configure mock logger to track log calls
         _mockLogger.Setup(x => x.Log(
@@ -80,23 +79,23 @@ _logger.LogInformation("Creating invalid command");
         services.AddSingleton(_mockLogger.Object);
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
 
-     _serviceProvider = services.BuildServiceProvider();
+        _serviceProvider = services.BuildServiceProvider();
     }
 
- [Given(@"I have a command that will fail")]
+    [Given(@"I have a command that will fail")]
     public void GivenIHaveACommandThatWillFail()
     {
-      _logger.LogInformation("Creating command that will fail");
+        _logger.LogInformation("Creating command that will fail");
         ArgumentNullException.ThrowIfNull(_serviceProvider, "Service provider must be initialized");
 
         var failingHandler = new FailingCommandHandler();
         var services = new ServiceCollection();
         services.AddScoped<ICommandHandler<TestCommand>>(_ => failingHandler);
- services.AddSingleton(_mockLogger.Object);
+        services.AddSingleton(_mockLogger.Object);
 
- _serviceProvider = services.BuildServiceProvider();
-   _commandDispatcher = new CommandDispatcher(_serviceProvider);
-  _command = new TestCommand { Data = "Failing Command" };
+        _serviceProvider = services.BuildServiceProvider();
+        _commandDispatcher = new CommandDispatcher(_serviceProvider, Mock.Of<ILogger<CommandDispatcher>>());
+        _command = new TestCommand { Data = "Failing Command" };
     }
 
     [When(@"I dispatch the failing command")]
@@ -104,18 +103,18 @@ _logger.LogInformation("Creating invalid command");
     {
         _logger.LogInformation("Dispatching failing command");
 
-     try
- {
-    ArgumentNullException.ThrowIfNull(_commandDispatcher);
-    ArgumentNullException.ThrowIfNull(_command);
-       await _commandDispatcher.DispatchAsync(_command);
+        try
+        {
+            ArgumentNullException.ThrowIfNull(_commandDispatcher);
+            ArgumentNullException.ThrowIfNull(_command);
+            await _commandDispatcher.DispatchAsync(_command);
         }
-    catch (Exception ex)
-  {
-   _logger.LogWarning(ex, "Caught expected exception from failing command");
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Caught expected exception from failing command");
             _caughtException = ex;
         }
- }
+    }
 
     [When(@"I dispatch the null-returning query")]
     public void WhenIDispatchTheNullReturningQuery()
@@ -131,71 +130,71 @@ _logger.LogInformation("Creating invalid command");
 
         try
         {
-     var services = new ServiceCollection();
-      services.AddScoped<ICommandHandler<TestCommand>>(_ => new TestCommandHandler());
+            var services = new ServiceCollection();
+            services.AddScoped<ICommandHandler<TestCommand>>(_ => new TestCommandHandler());
             var provider = services.BuildServiceProvider();
-       var dispatcher = new CommandDispatcher(provider);
+            var dispatcher = new CommandDispatcher(provider, Mock.Of<ILogger<CommandDispatcher>>());
 
-       // Simulate validation
-   if (_command?.Data == null)
+            // Simulate validation
+            if (_command?.Data == null)
             {
-          throw new ArgumentNullException(nameof(_command.Data), "Command data cannot be null");
+                throw new ArgumentNullException(nameof(_command.Data), "Command data cannot be null");
             }
 
-     await dispatcher.DispatchAsync(_command);
-    }
+            await dispatcher.DispatchAsync(_command);
+        }
         catch (Exception ex)
-     {
+        {
             _logger.LogWarning(ex, "Caught validation exception");
-    _caughtException = ex;
+            _caughtException = ex;
         }
     }
 
     [When(@"I dispatch the command and it fails")]
-  public async Task WhenIDispatchTheCommandAndItFails()
+    public async Task WhenIDispatchTheCommandAndItFails()
     {
-   await WhenIDispatchTheFailingCommand();
+        await WhenIDispatchTheFailingCommand();
     }
 
     [Then(@"the exception should propagate to the caller")]
     public void ThenTheExceptionShouldPropagateToTheCaller()
- {
-      _logger.LogInformation("Verifying exception propagation");
+    {
+        _logger.LogInformation("Verifying exception propagation");
         ArgumentNullException.ThrowIfNull(_caughtException, "Exception should be propagated");
     }
 
-[Then(@"the exception details should be preserved")]
+    [Then(@"the exception details should be preserved")]
     public void ThenTheExceptionDetailsShouldBePreserved()
     {
         _logger.LogInformation("Verifying exception details preservation");
         ArgumentNullException.ThrowIfNull(_caughtException, "Exception must exist");
- 
+
         if (string.IsNullOrEmpty(_caughtException.Message))
         {
-       throw new InvalidOperationException("Exception message should be preserved");
+            throw new InvalidOperationException("Exception message should be preserved");
         }
 
-   if (string.IsNullOrEmpty(_caughtException.StackTrace))
-  {
-   throw new InvalidOperationException("Stack trace should be preserved");
-     }
+        if (string.IsNullOrEmpty(_caughtException.StackTrace))
+        {
+            throw new InvalidOperationException("Stack trace should be preserved");
+        }
     }
 
-[Then(@"the result should be null")]
+    [Then(@"the result should be null")]
     public void ThenTheResultShouldBeNull()
     {
         _logger.LogInformation("Verifying null result handling");
-  // Placeholder assertion for null result scenario
-}
+        // Placeholder assertion for null result scenario
+    }
 
-  [Then(@"no exception should be thrown")]
-public void ThenNoExceptionShouldBeThrown()
+    [Then(@"no exception should be thrown")]
+    public void ThenNoExceptionShouldBeThrown()
     {
         _logger.LogInformation("Verifying no exception was thrown");
- 
-      if (_caughtException != null)
+
+        if (_caughtException != null)
         {
-       throw new InvalidOperationException($"No exception should be thrown for null result, but got: {_caughtException.Message}");
+            throw new InvalidOperationException($"No exception should be thrown for null result, but got: {_caughtException.Message}");
         }
     }
 
@@ -203,11 +202,11 @@ public void ThenNoExceptionShouldBeThrown()
     public void ThenAValidationExceptionShouldBeThrown()
     {
         _logger.LogInformation("Verifying validation exception");
-   ArgumentNullException.ThrowIfNull(_caughtException, "Validation exception should be thrown");
+        ArgumentNullException.ThrowIfNull(_caughtException, "Validation exception should be thrown");
 
         if (_caughtException is not ArgumentNullException and not ArgumentException)
         {
- throw new InvalidOperationException($"Expected validation exception but got {_caughtException.GetType().Name}");
+            throw new InvalidOperationException($"Expected validation exception but got {_caughtException.GetType().Name}");
         }
     }
 
@@ -217,16 +216,16 @@ public void ThenNoExceptionShouldBeThrown()
         _logger.LogInformation("Verifying validation errors accessibility");
         ArgumentNullException.ThrowIfNull(_caughtException, "Exception must exist");
 
-   if (string.IsNullOrEmpty(_caughtException.Message))
-  {
-   throw new InvalidOperationException("Validation error message should be accessible");
+        if (string.IsNullOrEmpty(_caughtException.Message))
+        {
+            throw new InvalidOperationException("Validation error message should be accessible");
         }
     }
 
     [Then(@"an error should be logged")]
     public void ThenAnErrorShouldBeLogged()
     {
-   _logger.LogInformation("Verifying error was logged");
+        _logger.LogInformation("Verifying error was logged");
         // Verify that the error was logged via the mock logger callback
         if (!_errorLogged)
         {
@@ -237,27 +236,27 @@ public void ThenNoExceptionShouldBeThrown()
     [Then(@"the log should contain command details")]
     public void ThenTheLogShouldContainCommandDetails()
     {
-   _logger.LogInformation("Verifying log contains command details");
+        _logger.LogInformation("Verifying log contains command details");
         ArgumentNullException.ThrowIfNull(_command, "Command should exist in context");
     }
 
     [Then(@"the log should contain the exception information")]
     public void ThenTheLogShouldContainTheExceptionInformation()
     {
-   _logger.LogInformation("Verifying log contains exception information");
-     ArgumentNullException.ThrowIfNull(_caughtException, "Exception information should be available for logging");
+        _logger.LogInformation("Verifying log contains exception information");
+        ArgumentNullException.ThrowIfNull(_caughtException, "Exception information should be available for logging");
 
-   if (string.IsNullOrEmpty(_caughtException.Message))
+        if (string.IsNullOrEmpty(_caughtException.Message))
         {
-     throw new InvalidOperationException("Exception message should be loggable");
+            throw new InvalidOperationException("Exception message should be loggable");
         }
     }
 
     /// <summary>
     /// Test implementation of a failing command handler for error scenarios.
- /// </summary>
+    /// </summary>
     private class FailingCommandHandler : ICommandHandler<TestCommand>
-  {
+    {
         public Task HandleAsync(TestCommand command, CancellationToken cancellationToken = default)
         {
             throw new InvalidOperationException("Simulated command handler failure");

@@ -3,7 +3,7 @@ using ISynergy.Framework.CQRS.Dispatchers;
 using ISynergy.Framework.CQRS.Queries;
 using ISynergy.Framework.CQRS.TestImplementations.Tests;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace ISynergy.Framework.CQRS.Handlers.Tests;
@@ -25,7 +25,7 @@ public class ErrorHandlingTests
         services.AddScoped(_ => handlerMock.Object);
         var provider = services.BuildServiceProvider();
 
-        var dispatcher = new CommandDispatcher(provider);
+        var dispatcher = new CommandDispatcher(provider, Mock.Of<ILogger<CommandDispatcher>>());
         var command = new TestCommand();
 
         // Act & Assert
@@ -49,7 +49,7 @@ public class ErrorHandlingTests
         services.AddScoped(_ => handlerMock.Object);
         var provider = services.BuildServiceProvider();
 
-        var dispatcher = new QueryDispatcher(provider);
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
         var query = new TestQuery();
 
         // Act & Assert

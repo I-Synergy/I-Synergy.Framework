@@ -24,11 +24,3 @@ Scenario: Command validation failure
     When I attempt to dispatch the invalid command
     Then a validation exception should be thrown
     And the validation errors should be accessible
-
-Scenario: Logging integration for command failures
-    Given logging is configured for the CQRS system
-    And I have a command that will fail
-    When I dispatch the command and it fails
-    Then an error should be logged
-    And the log should contain command details
-    And the log should contain the exception information

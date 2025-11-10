@@ -4,6 +4,7 @@ using ISynergy.Framework.CQRS.Queries;
 using ISynergy.Framework.CQRS.TestImplementations.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Reqnroll;
 
 namespace ISynergy.Framework.CQRS.Tests.StepDefinitions;
@@ -32,24 +33,24 @@ public class QueryDispatchingSteps
     [Given(@"the CQRS query system is initialized")]
     public void GivenTheCqrsQuerySystemIsInitialized()
     {
-  _logger.LogInformation("Initializing CQRS query system");
+        _logger.LogInformation("Initializing CQRS query system");
 
         var services = new ServiceCollection();
- services.AddScoped<IQueryHandler<TestQuery, string>>(_ => new TestQueryHandler());
+        services.AddScoped<IQueryHandler<TestQuery, string>>(_ => new TestQueryHandler());
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
 
         _serviceProvider = services.BuildServiceProvider();
-      _queryDispatcher = new QueryDispatcher(_serviceProvider);
+        _queryDispatcher = new QueryDispatcher(_serviceProvider, Mock.Of<ILogger<QueryDispatcher>>());
 
         ArgumentNullException.ThrowIfNull(_queryDispatcher);
- }
+    }
 
     [Given(@"I have a query with parameter ""(.*)""")]
     public void GivenIHaveAQueryWithParameter(string parameter)
     {
-   _logger.LogInformation("Creating query with parameter: {Parameter}", parameter);
+        _logger.LogInformation("Creating query with parameter: {Parameter}", parameter);
         _query = new TestQuery { Parameter = parameter };
-      ArgumentNullException.ThrowIfNull(_query);
+        ArgumentNullException.ThrowIfNull(_query);
     }
 
     [Given(@"I have a query without a registered handler")]
@@ -59,10 +60,10 @@ public class QueryDispatchingSteps
 
         var services = new ServiceCollection();
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Warning));
-     _serviceProvider = services.BuildServiceProvider();
-   _queryDispatcher = new QueryDispatcher(_serviceProvider);
-    _query = new TestQuery { Parameter = "Unhandled" };
-}
+        _serviceProvider = services.BuildServiceProvider();
+        _queryDispatcher = new QueryDispatcher(_serviceProvider, Mock.Of<ILogger<QueryDispatcher>>());
+        _query = new TestQuery { Parameter = "Unhandled" };
+    }
 
     [Given(@"I have a query with cancellation token")]
     public void GivenIHaveAQueryWithCancellationToken()
@@ -74,7 +75,7 @@ public class QueryDispatchingSteps
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
 
         _serviceProvider = services.BuildServiceProvider();
-        _queryDispatcher = new QueryDispatcher(_serviceProvider);
+        _queryDispatcher = new QueryDispatcher(_serviceProvider, Mock.Of<ILogger<QueryDispatcher>>());
         _query = new TestQuery { Parameter = "Cancellable Query" };
         _cancellationTokenSource = new CancellationTokenSource();
     }
@@ -92,14 +93,14 @@ public class QueryDispatchingSteps
     {
         _logger.LogInformation("Creating query that returns string data");
         GivenTheCqrsQuerySystemIsInitialized();
- _query = new TestQuery { Parameter = "String Data Query" };
+        _query = new TestQuery { Parameter = "String Data Query" };
     }
 
     [When(@"I dispatch the query")]
     public async Task WhenIDispatchTheQuery()
     {
         _logger.LogInformation("Dispatching query");
-     ArgumentNullException.ThrowIfNull(_queryDispatcher);
+        ArgumentNullException.ThrowIfNull(_queryDispatcher);
         ArgumentNullException.ThrowIfNull(_query);
 
         _result = await _queryDispatcher.DispatchAsync(_query);
@@ -112,8 +113,8 @@ public class QueryDispatchingSteps
 
         try
         {
-         ArgumentNullException.ThrowIfNull(_queryDispatcher);
-    ArgumentNullException.ThrowIfNull(_query);
+            ArgumentNullException.ThrowIfNull(_queryDispatcher);
+            ArgumentNullException.ThrowIfNull(_query);
             await _queryDispatcher.DispatchAsync(_query);
         }
         catch (Exception ex)
@@ -125,23 +126,23 @@ public class QueryDispatchingSteps
 
     [When(@"I attempt to dispatch the query with cancellation")]
     public async Task WhenIAttemptToDispatchTheQueryWithCancellation()
- {
+    {
         _logger.LogInformation("Attempting to dispatch query with cancelled token");
 
-  try
+        try
         {
-  ArgumentNullException.ThrowIfNull(_queryDispatcher);
-     ArgumentNullException.ThrowIfNull(_query);
-    ArgumentNullException.ThrowIfNull(_cancellationTokenSource);
+            ArgumentNullException.ThrowIfNull(_queryDispatcher);
+            ArgumentNullException.ThrowIfNull(_query);
+            ArgumentNullException.ThrowIfNull(_cancellationTokenSource);
 
-      // Simulate delay to allow cancellation to take effect
- await Task.Delay(100, _cancellationTokenSource.Token);
+            // Simulate delay to allow cancellation to take effect
+            await Task.Delay(100, _cancellationTokenSource.Token);
             await _queryDispatcher.DispatchAsync(_query, _cancellationTokenSource.Token);
         }
-   catch (Exception ex)
+        catch (Exception ex)
         {
-      _logger.LogWarning(ex, "Caught cancellation exception");
-    _caughtException = ex;
+            _logger.LogWarning(ex, "Caught cancellation exception");
+            _caughtException = ex;
         }
     }
 
@@ -152,20 +153,20 @@ public class QueryDispatchingSteps
         ArgumentNullException.ThrowIfNull(_result, "Result should not be null");
 
         if (_result != expectedResult)
-    {
-        throw new InvalidOperationException($"Expected result '{expectedResult}' but got '{_result}'");
-  }
+        {
+            throw new InvalidOperationException($"Expected result '{expectedResult}' but got '{_result}'");
+        }
     }
 
     [Then(@"an InvalidOperationException should be thrown for query")]
-  public void ThenAnInvalidOperationExceptionShouldBeThrownForQuery()
+    public void ThenAnInvalidOperationExceptionShouldBeThrownForQuery()
     {
         _logger.LogInformation("Verifying InvalidOperationException was thrown");
         ArgumentNullException.ThrowIfNull(_caughtException, "Exception should be thrown");
 
-     if (_caughtException is not InvalidOperationException)
+        if (_caughtException is not InvalidOperationException)
         {
-        throw new InvalidOperationException($"Expected InvalidOperationException but got {_caughtException.GetType().Name}");
+            throw new InvalidOperationException($"Expected InvalidOperationException but got {_caughtException.GetType().Name}");
         }
     }
 
@@ -176,17 +177,17 @@ public class QueryDispatchingSteps
         ArgumentNullException.ThrowIfNull(_caughtException, "Cancellation exception should be thrown");
     }
 
-[Then(@"a cancellation exception should be raised")]
+    [Then(@"a cancellation exception should be raised")]
     public void ThenACancellationExceptionShouldBeRaised()
     {
         _logger.LogInformation("Verifying cancellation exception type");
         ArgumentNullException.ThrowIfNull(_caughtException, "Exception should exist");
 
-if (_caughtException is not OperationCanceledException and not TaskCanceledException)
-      {
-    throw new InvalidOperationException($"Expected cancellation exception but got {_caughtException.GetType().Name}");
+        if (_caughtException is not OperationCanceledException and not TaskCanceledException)
+        {
+            throw new InvalidOperationException($"Expected cancellation exception but got {_caughtException.GetType().Name}");
         }
-  }
+    }
 
     [Then(@"the result should be of type string")]
     public void ThenTheResultShouldBeOfTypeString()
@@ -194,10 +195,10 @@ if (_caughtException is not OperationCanceledException and not TaskCanceledExcep
         _logger.LogInformation("Verifying result type");
         ArgumentNullException.ThrowIfNull(_result, "Result should not be null");
 
-      if (_result is not string)
+        if (_result is not string)
         {
             throw new InvalidOperationException($"Expected string type but got {_result.GetType().Name}");
-   }
+        }
     }
 
     [Then(@"the result should not be null or empty")]
@@ -207,7 +208,7 @@ if (_caughtException is not OperationCanceledException and not TaskCanceledExcep
 
         if (string.IsNullOrEmpty(_result))
         {
-  throw new InvalidOperationException("Result should not be null or empty");
+            throw new InvalidOperationException("Result should not be null or empty");
         }
- }
+    }
 }

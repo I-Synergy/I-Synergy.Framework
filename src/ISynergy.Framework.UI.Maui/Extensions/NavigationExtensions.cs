@@ -31,7 +31,11 @@ public static class NavigationExtensions
         var view = typeof(TViewModel).GetRelatedView();
         var viewType = view.GetRelatedViewType();
 
-        if (ServiceLocator.Default.GetRequiredService(viewType) is IView resolvedPage)
+        if (viewType is null)
+            throw new InvalidNavigationException($"Cannot determine view type for ViewModel: {typeof(TViewModel).Name}.");
+
+        var resolvedService = ServiceLocator.Default.GetRequiredService(viewType);
+        if (resolvedService is IView resolvedPage)
         {
             if (viewModel is not null)
                 resolvedPage.ViewModel = viewModel;
@@ -76,9 +80,14 @@ public static class NavigationExtensions
     public static async Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
     {
         var page = CreatePage<TViewModel>(viewModel, parameter);
+        var currentApp = Application.Current;
 
-        if (Application.Current?.Windows[0].Page is not null && !Application.Current.Windows[0].Page.GetType().Name.Equals(page.GetType().Name))
-            await navigation.PushModalAsync((Page)page, true);
+        if (currentApp is not null && currentApp.Windows.Count > 0)
+        {
+            var currentPage = currentApp.Windows[0].Page;
+            if (currentPage is not null && page is not null && !currentPage.GetType().Name.Equals(page.GetType().Name))
+                await navigation.PushModalAsync((Page)page, true);
+        }
     }
 
     public static (INavigation Navigation, NavigationPage?) GetNavigation(this Page page)
@@ -93,6 +102,10 @@ public static class NavigationExtensions
         else if (page is NavigationPage navigationPage)
             return (navigationPage.Navigation, navigationPage);
         else
-            return (Application.Current?.MainPage?.Navigation ?? throw new InvalidNavigationException("No navigation context available"), null);
+        {
+            var currentApp = Application.Current;
+            var mainPage = currentApp?.Windows.Count > 0 ? currentApp.Windows[0].Page : null;
+            return (mainPage?.Navigation ?? throw new InvalidNavigationException("No navigation context available"), null);
+        }
     }
 }

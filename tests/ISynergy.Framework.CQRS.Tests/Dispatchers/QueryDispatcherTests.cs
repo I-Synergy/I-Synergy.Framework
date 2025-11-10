@@ -1,6 +1,8 @@
 using ISynergy.Framework.CQRS.Queries;
 using ISynergy.Framework.CQRS.TestImplementations.Tests;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ISynergy.Framework.CQRS.Dispatchers.Tests;
 
@@ -16,7 +18,7 @@ public class QueryDispatcherTests
             new TestQueryHandler());
         var provider = services.BuildServiceProvider();
 
-        var dispatcher = new QueryDispatcher(provider);
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
         var query = new TestQuery { Parameter = "Test Parameter" };
 
         // Act
@@ -32,7 +34,7 @@ public class QueryDispatcherTests
         // Arrange
         var services = new ServiceCollection();
         var provider = services.BuildServiceProvider();
-        var dispatcher = new QueryDispatcher(provider);
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
         var query = new TestQuery();
 
         // Act & Assert
@@ -46,7 +48,7 @@ public class QueryDispatcherTests
         // Arrange
         var services = new ServiceCollection();
         var provider = services.BuildServiceProvider();
-        var dispatcher = new QueryDispatcher(provider);
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
 
         // Act & Assert
         await Assert.ThrowsAsync<NullReferenceException>(async () =>
@@ -68,7 +70,7 @@ public class QueryDispatcherTests
         services.AddScoped<IQueryHandler<TestQuery, string>>(_ => new TestQueryHandler());
         services.AddScoped<IQueryHandler<AnotherQuery, int>>(_ => new AnotherQueryHandler());
         var provider = services.BuildServiceProvider();
-        var dispatcher = new QueryDispatcher(provider);
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
 
         // Act
         var stringResult = await dispatcher.DispatchAsync<string>(new TestQuery { Parameter = "Multi" });
@@ -96,7 +98,7 @@ public class QueryDispatcherTests
         var services = new ServiceCollection();
         services.AddScoped<IQueryHandler<CancellableQuery, string>>(_ => new CancellableQueryHandler());
         var provider = services.BuildServiceProvider();
-        var dispatcher = new QueryDispatcher(provider);
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
         var query = new CancellableQuery();
         using var cts = new CancellationTokenSource();
         cts.Cancel();

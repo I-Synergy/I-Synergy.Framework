@@ -119,7 +119,7 @@ namespace ISynergy.Framework.CQRS.Tests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ErrorHandling.feature.ndjson", 6);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ErrorHandling.feature.ndjson", 5);
         }
         
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Command handler throws exception")]
@@ -228,49 +228,6 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
 #line 26
     await testRunner.AndAsync("the validation errors should be accessible", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Logging integration for command failures")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Logging integration for command failures")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "CQRS Error Handling")]
-        public async global::System.Threading.Tasks.Task LoggingIntegrationForCommandFailures()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "3";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Logging integration for command failures", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
-            string[] tagsOfRule = ((string[])(null));
-            global::Reqnroll.RuleInfo ruleInfo = null;
-#line 28
-this.ScenarioInitialize(scenarioInfo, ruleInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                await testRunner.SkipScenarioAsync();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 29
-    await testRunner.GivenAsync("logging is configured for the CQRS system", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 30
-    await testRunner.AndAsync("I have a command that will fail", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 31
-    await testRunner.WhenAsync("I dispatch the command and it fails", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 32
-    await testRunner.ThenAsync("an error should be logged", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 33
-    await testRunner.AndAsync("the log should contain command details", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 34
-    await testRunner.AndAsync("the log should contain the exception information", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

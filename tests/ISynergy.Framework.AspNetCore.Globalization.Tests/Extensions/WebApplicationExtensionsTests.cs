@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
@@ -20,118 +21,131 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
         public async Task UseGlobalization_WithRouteProvider_SetsCorrectCulture()
         {
             // Arrange
-            using var server = new TestServer(new WebHostBuilder()
-                .ConfigureServices(services =>
+            var hostBuilder = new HostBuilder()
+                .ConfigureWebHost(webHost =>
                 {
-                    services.Configure<GlobalizationOptions>(options =>
+                    webHost.UseTestServer();
+                    webHost.ConfigureServices(services =>
                     {
-                        options.DefaultCulture = "en-US";
-                        options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
-                        options.ProviderType = RequestCultureProviderTypes.Route;
+                        services.Configure<GlobalizationOptions>(options =>
+                        {
+                            options.DefaultCulture = "en-US";
+                            options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
+                            options.ProviderType = RequestCultureProviderTypes.Route;
+                        });
+
+                        services.AddSingleton<RouteDataRequestCultureProvider>();
                     });
-
-                    services.AddSingleton<RouteDataRequestCultureProvider>();
-                })
-                .Configure(appBuilder =>
-                {
-                    // Use the RequestLocalizationMiddleware directly
-                    appBuilder.UseRequestLocalization(options =>
+                    webHost.Configure(app =>
                     {
-                        var globalization = appBuilder.ApplicationServices
-                            .GetRequiredService<IOptions<GlobalizationOptions>>().Value;
+                        // Use the RequestLocalizationMiddleware directly
+                        app.UseRequestLocalization(options =>
+                        {
+                            var globalization = app.ApplicationServices
+                                .GetRequiredService<IOptions<GlobalizationOptions>>().Value;
 
-                        // Set supported cultures
-                        var supportedCultures = globalization.SupportedCultures
-                            .Select(c => new CultureInfo(c))
-                            .ToArray();
+                            // Set supported cultures
+                            var supportedCultures = globalization.SupportedCultures
+                                .Select(c => new CultureInfo(c))
+                                .ToArray();
 
-                        options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
-                        options.SupportedCultures = supportedCultures;
-                        options.SupportedUICultures = supportedCultures;
+                            options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
+                            options.SupportedCultures = supportedCultures;
+                            options.SupportedUICultures = supportedCultures;
 
-                        // Clear existing providers and add our custom provider first
-                        options.RequestCultureProviders.Clear();
-                        options.RequestCultureProviders.Add(
-                            appBuilder.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
-                        options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
-                        options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
-                        options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
-                    });
+                            // Clear existing providers and add our custom provider first
+                            options.RequestCultureProviders.Clear();
+                            options.RequestCultureProviders.Add(
+                                app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                            options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                            options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                            options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                        });
 
-                    // Map a test endpoint
-                    appBuilder.Map("/nl-NL/test", app =>
-                    {
+                        // Map a test endpoint
+                        app.Map("/nl-NL/test", route =>
+                        {
+                            route.Run(async context =>
+                            {
+                                await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name);
+                            });
+                        });
+
+                        // Fallback for other routes
                         app.Run(async context =>
                         {
                             await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name);
                         });
                     });
+                });
 
-                    // Fallback for other routes
-                    appBuilder.Run(async context =>
-                    {
-                        await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name);
-                    });
-                }));
-
-            var client = server.CreateClient();
+            var host = await hostBuilder.StartAsync();
+            var client = host.GetTestClient();
 
             // Act
             var response = await client.GetStringAsync("/nl-NL/test");
 
             // Assert
             Assert.AreEqual("nl-NL", response);
+
+            await host.StopAsync();
+            host.Dispose();
         }
 
         [TestMethod]
         public async Task UseGlobalization_WithAcceptLanguageHeaderProvider_SetsCorrectCulture()
         {
             // Arrange
-            using var server = new TestServer(new WebHostBuilder()
-                .ConfigureServices(services =>
+            var hostBuilder = new HostBuilder()
+                .ConfigureWebHost(webHost =>
                 {
-                    services.Configure<GlobalizationOptions>(options =>
+                    webHost.UseTestServer();
+                    webHost.ConfigureServices(services =>
                     {
-                        options.DefaultCulture = "en-US";
-                        options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
-                        options.ProviderType = RequestCultureProviderTypes.AcceptLanguageHeader;
-                    });
+                        services.Configure<GlobalizationOptions>(options =>
+                        {
+                            options.DefaultCulture = "en-US";
+                            options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
+                            options.ProviderType = RequestCultureProviderTypes.AcceptLanguageHeader;
+                        });
 
-                    services.AddSingleton<RouteDataRequestCultureProvider>();
-                })
-                .Configure(appBuilder =>
-                {
-                    // Use the RequestLocalizationMiddleware directly
-                    appBuilder.UseRequestLocalization(options =>
+                        services.AddSingleton<RouteDataRequestCultureProvider>();
+                    });
+                    webHost.Configure(app =>
                     {
-                        var globalization = appBuilder.ApplicationServices
-                            .GetRequiredService<IOptions<GlobalizationOptions>>().Value;
+                        // Use the RequestLocalizationMiddleware directly
+                        app.UseRequestLocalization(options =>
+                        {
+                            var globalization = app.ApplicationServices
+                                .GetRequiredService<IOptions<GlobalizationOptions>>().Value;
 
-                        // Set supported cultures
-                        var supportedCultures = globalization.SupportedCultures
-                            .Select(c => new CultureInfo(c))
-                            .ToArray();
+                            // Set supported cultures
+                            var supportedCultures = globalization.SupportedCultures
+                                .Select(c => new CultureInfo(c))
+                                .ToArray();
 
-                        options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
-                        options.SupportedCultures = supportedCultures;
-                        options.SupportedUICultures = supportedCultures;
+                            options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
+                            options.SupportedCultures = supportedCultures;
+                            options.SupportedUICultures = supportedCultures;
 
-                        // Clear existing providers and add AcceptLanguageHeaderRequestCultureProvider first
-                        options.RequestCultureProviders.Clear();
-                        options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
-                        options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
-                        options.RequestCultureProviders.Add(
-                            appBuilder.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
-                        options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                            // Clear existing providers and add AcceptLanguageHeaderRequestCultureProvider first
+                            options.RequestCultureProviders.Clear();
+                            options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                            options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                            options.RequestCultureProviders.Add(
+                                app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                            options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                        });
+
+                        app.Run(async context =>
+                        {
+                            await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name);
+                        });
                     });
+                });
 
-                    appBuilder.Run(async context =>
-                    {
-                        await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name);
-                    });
-                }));
-
-            var client = server.CreateClient();
+            var host = await hostBuilder.StartAsync();
+            var client = host.GetTestClient();
 
             // Set Accept-Language header
             client.DefaultRequestHeaders.Add("Accept-Language", "fr-FR");
@@ -141,6 +155,9 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
 
             // Assert
             Assert.AreEqual("fr-FR", response);
+
+            await host.StopAsync();
+            host.Dispose();
         }
 
         [TestMethod]
@@ -150,57 +167,63 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
             var optionsConfigured = false;
             RequestLocalizationOptions? capturedOptions = null;
 
-            using var server = new TestServer(new WebHostBuilder()
-                .ConfigureServices(services =>
+            var hostBuilder = new HostBuilder()
+                .ConfigureWebHost(webHost =>
                 {
-                    services.Configure<GlobalizationOptions>(options =>
+                    webHost.UseTestServer();
+                    webHost.ConfigureServices(services =>
                     {
-                        options.DefaultCulture = "en-US";
-                        options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
-                        options.ProviderType = RequestCultureProviderTypes.Route;
-                    });
+                        services.Configure<GlobalizationOptions>(options =>
+                        {
+                            options.DefaultCulture = "en-US";
+                            options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
+                            options.ProviderType = RequestCultureProviderTypes.Route;
+                        });
 
-                    services.AddSingleton<RouteDataRequestCultureProvider>();
-                })
-                .Configure(appBuilder =>
-                {
-                    // Use the RequestLocalizationMiddleware and capture the options
-                    appBuilder.UseRequestLocalization(options =>
+                        services.AddSingleton<RouteDataRequestCultureProvider>();
+                    });
+                    webHost.Configure(app =>
                     {
-                        var globalization = appBuilder.ApplicationServices
-                            .GetRequiredService<IOptions<GlobalizationOptions>>().Value;
+                        // Use the RequestLocalizationMiddleware and capture the options
+                        app.UseRequestLocalization(options =>
+                        {
+                            var globalization = app.ApplicationServices
+                                .GetRequiredService<IOptions<GlobalizationOptions>>().Value;
 
-                        // Set supported cultures
-                        var supportedCultures = globalization.SupportedCultures
-                            .Select(c => new CultureInfo(c))
-                            .ToArray();
+                            // Set supported cultures
+                            var supportedCultures = globalization.SupportedCultures
+                                .Select(c => new CultureInfo(c))
+                                .ToArray();
 
-                        options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
-                        options.SupportedCultures = supportedCultures;
-                        options.SupportedUICultures = supportedCultures;
+                            options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
+                            options.SupportedCultures = supportedCultures;
+                            options.SupportedUICultures = supportedCultures;
 
-                        // Clear existing providers and add our custom provider first
-                        options.RequestCultureProviders.Clear();
-                        options.RequestCultureProviders.Add(
-                            appBuilder.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
-                        options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
-                        options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
-                        options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                            // Clear existing providers and add our custom provider first
+                            options.RequestCultureProviders.Clear();
+                            options.RequestCultureProviders.Add(
+                                app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                            options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                            options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                            options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
 
-                        // Capture the configured options
-                        capturedOptions = options;
-                        optionsConfigured = true;
+                            // Capture the configured options
+                            capturedOptions = options;
+                            optionsConfigured = true;
+                        });
+
+                        // Add a simple endpoint to verify the server starts
+                        app.Run(async context =>
+                        {
+                            await context.Response.WriteAsync("OK");
+                        });
                     });
+                });
 
-                    // Add a simple endpoint to verify the server starts
-                    appBuilder.Run(async context =>
-                    {
-                        await context.Response.WriteAsync("OK");
-                    });
-                }));
+            var host = await hostBuilder.StartAsync();
 
             // Act - Make a request to ensure the middleware pipeline is initialized
-            var client = server.CreateClient();
+            var client = host.GetTestClient();
             var response = await client.GetStringAsync("/");
 
             // Assert
@@ -218,6 +241,9 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
             // Check that providers are configured correctly
             Assert.IsTrue(capturedOptions.RequestCultureProviders.Count > 0);
             Assert.IsInstanceOfType(capturedOptions.RequestCultureProviders[0], typeof(RouteDataRequestCultureProvider));
+
+            await host.StopAsync();
+            host.Dispose();
         }
 
         [TestMethod]
@@ -227,56 +253,62 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
             var optionsConfigured = false;
             RequestLocalizationOptions? capturedOptions = null;
 
-            using var server = new TestServer(new WebHostBuilder()
-                .ConfigureServices(services =>
+            var hostBuilder = new HostBuilder()
+                .ConfigureWebHost(webHost =>
                 {
-                    services.Configure<GlobalizationOptions>(options =>
+                    webHost.UseTestServer();
+                    webHost.ConfigureServices(services =>
                     {
-                        options.DefaultCulture = "en-US";
-                        options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
-                        options.ProviderType = RequestCultureProviderTypes.Route; // This would normally prioritize route
-                    });
+                        services.Configure<GlobalizationOptions>(options =>
+                        {
+                            options.DefaultCulture = "en-US";
+                            options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
+                            options.ProviderType = RequestCultureProviderTypes.Route; // This would normally prioritize route
+                        });
 
-                    services.AddSingleton<RouteDataRequestCultureProvider>();
-                })
-                .Configure(appBuilder =>
-                {
-                    // Use the RequestLocalizationMiddleware with API configuration
-                    appBuilder.UseRequestLocalization(options =>
+                        services.AddSingleton<RouteDataRequestCultureProvider>();
+                    });
+                    webHost.Configure(app =>
                     {
-                        var globalization = appBuilder.ApplicationServices
-                            .GetRequiredService<IOptions<GlobalizationOptions>>().Value;
+                        // Use the RequestLocalizationMiddleware with API configuration
+                        app.UseRequestLocalization(options =>
+                        {
+                            var globalization = app.ApplicationServices
+                                .GetRequiredService<IOptions<GlobalizationOptions>>().Value;
 
-                        // Set supported cultures
-                        var supportedCultures = globalization.SupportedCultures
-                            .Select(c => new CultureInfo(c))
-                            .ToArray();
+                            // Set supported cultures
+                            var supportedCultures = globalization.SupportedCultures
+                                .Select(c => new CultureInfo(c))
+                                .ToArray();
 
-                        options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
-                        options.SupportedCultures = supportedCultures;
-                        options.SupportedUICultures = supportedCultures;
+                            options.DefaultRequestCulture = new RequestCulture(globalization.DefaultCulture);
+                            options.SupportedCultures = supportedCultures;
+                            options.SupportedUICultures = supportedCultures;
 
-                        // Clear existing providers and configure for API
-                        options.RequestCultureProviders.Clear();
-                        options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
-                        options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
-                        options.RequestCultureProviders.Add(
-                            appBuilder.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                            // Clear existing providers and configure for API
+                            options.RequestCultureProviders.Clear();
+                            options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                            options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                            options.RequestCultureProviders.Add(
+                                app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
 
-                        // Capture the configured options
-                        capturedOptions = options;
-                        optionsConfigured = true;
+                            // Capture the configured options
+                            capturedOptions = options;
+                            optionsConfigured = true;
+                        });
+
+                        // Add a simple endpoint to verify the server starts
+                        app.Run(async context =>
+                        {
+                            await context.Response.WriteAsync("OK");
+                        });
                     });
+                });
 
-                    // Add a simple endpoint to verify the server starts
-                    appBuilder.Run(async context =>
-                    {
-                        await context.Response.WriteAsync("OK");
-                    });
-                }));
+            var host = await hostBuilder.StartAsync();
 
             // Act - Make a request to ensure the middleware pipeline is initialized
-            var client = server.CreateClient();
+            var client = host.GetTestClient();
             var response = await client.GetStringAsync("/");
 
             // Assert
@@ -286,6 +318,9 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
             // Check that providers are configured correctly for API
             Assert.IsTrue(capturedOptions.RequestCultureProviders.Count > 0);
             Assert.IsInstanceOfType(capturedOptions.RequestCultureProviders[0], typeof(AcceptLanguageHeaderRequestCultureProvider));
+
+            await host.StopAsync();
+            host.Dispose();
         }
     }
 }

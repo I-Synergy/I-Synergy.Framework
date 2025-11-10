@@ -61,7 +61,10 @@ public class StringToBooleanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (parameter?.ToString().Equals(value?.ToString()) ?? false)
+        var parameterString = parameter?.ToString();
+        var valueString = value?.ToString();
+        
+        if (parameterString is not null && valueString is not null && parameterString.Equals(valueString))
         {
             return true;
         }

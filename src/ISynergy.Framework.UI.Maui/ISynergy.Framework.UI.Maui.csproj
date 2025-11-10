@@ -5,6 +5,7 @@
 		
 		<UseMaui>true</UseMaui>
 		<MauiXamlInflator>XamlC</MauiXamlInflator>
+		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
 		<SingleProject>true</SingleProject>
 
 		<PackageId>I-Synergy.Framework.UI.Maui</PackageId>

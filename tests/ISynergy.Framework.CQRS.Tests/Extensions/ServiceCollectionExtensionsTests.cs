@@ -4,7 +4,6 @@ using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.Queries;
 using ISynergy.Framework.CQRS.TestImplementations.Tests;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.CQRS.Extensions.Tests;
 
@@ -16,6 +15,7 @@ public class ServiceCollectionExtensionsTests
     {
         // Arrange
         var services = new ServiceCollection();
+        services.AddLogging();
 
         // Act
         services.AddCQRS();
@@ -34,6 +34,7 @@ public class ServiceCollectionExtensionsTests
     {
         // Arrange
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddCQRS();
 
         // Act
@@ -55,6 +56,7 @@ public class ServiceCollectionExtensionsTests
     {
         // Arrange
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddCQRS();
         services.AddHandlers(typeof(TestCommandHandler).Assembly);
         var provider = services.BuildServiceProvider();
@@ -74,6 +76,7 @@ public class ServiceCollectionExtensionsTests
     {
         // Arrange
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddCQRS();
         services.AddHandlers(typeof(TestQueryHandler).Assembly);
         var provider = services.BuildServiceProvider();
