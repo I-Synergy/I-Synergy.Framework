@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Events;
+using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
@@ -50,8 +50,13 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
             if (exception.Message.Equals(@"A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. ()"))
                 return;
 
-            // Set busyIndicator to false if it's true.
-            _busyService.StopBusy();
+            // Note: Busy state will be cleared in the Application's message handler right before showing the dialog
+            // This ensures the UI has time to update and prevents the dialog from appearing disabled
+            // We still clear it here as a fallback, but the Application handler will ensure it's cleared at the right time
+            if (_busyService.IsBusy)
+            {
+                _busyService.StopBusy();
+            }
 
             if (exception is NotImplementedException)
             {

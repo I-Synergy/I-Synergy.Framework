@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Services;
+namespace ISynergy.Framework.Core.Abstractions.Services;
 
 /// <summary>
 /// Interface IBaseCommonServices
@@ -22,6 +22,10 @@ public interface ICommonServices
     /// Gets the messenger service.
     /// </summary>
     IMessengerService MessengerService { get; }
+    /// <summary>
+    /// Gets the exception handler service.
+    /// </summary>
+    IExceptionHandlerService ExceptionHandlerService { get; }
     /// <summary>
     /// Gets the scoped context service.
     /// </summary>

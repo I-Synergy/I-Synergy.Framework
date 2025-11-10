@@ -8,8 +8,6 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
 using Sample.Abstractions.Services;
 using Sample.Extensions;
 using Sample.Services;
@@ -38,21 +36,19 @@ public static class MauiProgram
             .AddConfiguration(config);
 
         builder
-            .Logging
-            .AddTelemetry(
-                builder,
+            .ConfigureLogging(
                 infoService,
                 tracerProviderBuilderAction: (tracing) =>
                 {
-                    tracing.AddHttpClientInstrumentation();
+                    // Additional custom tracer provider configuration can be added here
                 },
                 meterProviderBuilderAction: (metrics) =>
                 {
-                    metrics.AddHttpClientInstrumentation()
-                        .AddRuntimeInstrumentation();
+                    // Additional custom meter provider configuration can be added here
                 },
                 loggerProviderBuilderAction: (logger) =>
                 {
+                    // Additional custom logger provider configuration can be added here
                 });
         //.AddOtlpExporter();
         //.AddApplicationInsightsExporter()

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -27,7 +27,34 @@ public abstract class ViewModelNavigation<TModel> : ViewModel, IViewModelNavigat
     /// Called when [submitted].
     /// </summary>
     /// <param name="e">The e.</param>
-    protected virtual void OnSubmitted(SubmitEventArgs<TModel> e) => Submitted?.Invoke(this, e);
+    protected virtual void OnSubmitted(SubmitEventArgs<TModel> e)
+    {
+        if (Submitted != null)
+        {
+            // Invoke each handler individually to prevent one exception from stopping others
+            var handlers = Submitted.GetInvocationList();
+            foreach (EventHandler<SubmitEventArgs<TModel>> handler in handlers)
+            {
+                try
+                {
+                    handler.Invoke(this, e);
+                }
+                catch (Exception ex)
+                {
+                    // Try to use exception handler service if available
+                    try
+                    {
+                        _commonServices.ExceptionHandlerService?.HandleException(ex);
+                    }
+                    catch
+                    {
+                        // If exception handler service is not available, log to debug
+                        System.Diagnostics.Debug.WriteLine($"Exception in Submitted handler: {ex.Message}");
+                    }
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Gets or sets the SelectedItem property value.

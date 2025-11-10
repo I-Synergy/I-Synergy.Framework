@@ -1,4 +1,3 @@
-﻿using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
@@ -81,6 +80,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             {
                 _logger.LogTrace("Setting up services and global exception handler.");
 
+                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+                MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
+                TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
                 _commonServices = ServiceLocator.Default.GetRequiredService<ICommonServices>();
                 _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
                 _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
@@ -91,10 +94,6 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
 
                 _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
-
-                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-                MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
-                TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
                 // Pass a timeout to limit the execution time.
                 // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
