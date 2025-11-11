@@ -1,10 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
-using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -20,7 +15,7 @@ public interface IViewModelSummary<TModel> : IViewModelSelectedItem<TModel>
     /// Occurs when [submitted].
     /// </summary>
     event EventHandler<SubmitEventArgs<TModel>>? Submitted;
-    
+
     /// <summary>
     /// Gets or sets the Items property value.
     /// </summary>
@@ -82,7 +77,7 @@ public interface IViewModelSummary<TModel> : IViewModelSelectedItem<TModel>
     /// <param name="e">The e.</param>
     /// <returns>Task.</returns>
     Task RemoveAsync(TModel e);
-    
+
     /// <summary>
     /// Searches the asynchronous.
     /// </summary>

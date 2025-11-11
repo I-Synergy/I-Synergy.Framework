@@ -12,7 +12,7 @@
         <converters:SelectionModeConverter x:Key="SelectionModeConverter" />
     </c:Window.Resources>
 
-    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}" WidthRequest="{OnPlatform WinUI=600, Default=400}">
+    <ContentView ControlTemplate="{StaticResource DefaultSelectionDialogTemplate}" WidthRequest="{OnPlatform WinUI=600, Default=400}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

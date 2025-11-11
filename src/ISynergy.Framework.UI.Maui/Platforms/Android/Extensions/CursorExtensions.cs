@@ -14,7 +14,10 @@ public static class CursorExtensions
         {
             ArgumentNullException.ThrowIfNull(mauiContext);
             var view = visualElement.ToPlatform(mauiContext);
-            view.PointerIcon = PointerIcon.GetSystemIcon(Android.App.Application.Context, GetCursor(cursor));
+            
+            // Only apply custom cursor if the element is enabled, otherwise use default
+            var cursorToApply = visualElement.IsEnabled ? cursor : CursorIcons.Arrow;
+            view.PointerIcon = PointerIcon.GetSystemIcon(Android.App.Application.Context, GetCursor(cursorToApply));
 
             static PointerIconType GetCursor(CursorIcons cursor)
             {

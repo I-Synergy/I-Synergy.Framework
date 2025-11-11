@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;

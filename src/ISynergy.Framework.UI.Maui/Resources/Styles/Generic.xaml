@@ -96,6 +96,57 @@
         </Border>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="DefaultSelectionDialogTemplate">
+        <Border
+            Background="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
+            Stroke="{AppThemeBinding Light={DynamicResource TintedGray300}, Dark={DynamicResource TintedGray600}}"
+            StrokeThickness="1"
+            BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
+            HeightRequest="{TemplateBinding HeightRequest}"
+            HorizontalOptions="Center"
+            MaximumHeightRequest="{TemplateBinding MaximumHeightRequest}"
+            MaximumWidthRequest="{TemplateBinding MaximumWidthRequest}"
+            MinimumHeightRequest="{TemplateBinding MinimumHeightRequest}"
+            MinimumWidthRequest="{TemplateBinding MinimumWidthRequest}"
+            VerticalOptions="Center"
+            WidthRequest="{TemplateBinding WidthRequest}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="{DynamicResource DefaultCornerRadius}" />
+            </Border.StrokeShape>
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Label
+                    Margin="8,4"
+                    FontSize="Subtitle"
+                    HorizontalOptions="Start"
+                    Text="{Binding Title}" />
+
+                <ContentPresenter Grid.Row="1" Margin="{DynamicResource DefaultMargin}" />
+
+                <Grid Grid.Row="2">
+                    <HorizontalStackLayout HorizontalOptions="End" Spacing="8">
+                        <Button
+                            Command="{Binding SelectCommand}"
+                            CommandParameter="{Binding SelectedItems}"
+                            HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"
+                            Text="{m:GetString Select}"
+                            WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" Style="{DynamicResource }" />
+                        <Button
+                            Command="{Binding CancelCommand}"
+                            HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"
+                            Text="{m:GetString Cancel}"
+                            WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Grid>
+        </Border>
+    </ControlTemplate>
+
     <ControlTemplate x:Key="DefaultCleanDialogTemplate">
         <Border
             Background="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"

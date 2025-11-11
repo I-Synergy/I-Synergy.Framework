@@ -1,6 +1,7 @@
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Maui.Controls;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Behaviors;
 public class CursorBehavior
@@ -11,73 +12,101 @@ public class CursorBehavior
     {
         if (bindable is VisualElement visualElement)
         {
-            // Defer cursor setup until the element is loaded and has a handler
-            // This ensures we have the correct MauiContext, especially for dialog windows
-            void SetupCursorWhenReady()
+            // Setup cursor and IsEnabled monitoring
+            SetupCursorBehavior(visualElement, (CursorIcons)newvalue);
+        }
+    }
+
+    private static void SetupCursorBehavior(VisualElement visualElement, CursorIcons cursor)
+    {
+        // Listen to IsEnabled property changes
+        visualElement.PropertyChanged -= OnVisualElementPropertyChanged;
+        visualElement.PropertyChanged += OnVisualElementPropertyChanged;
+
+        // Apply cursor based on current enabled state
+        ApplyCursorBasedOnState(visualElement, cursor);
+    }
+
+    private static void OnVisualElementPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is VisualElement visualElement && e.PropertyName == nameof(VisualElement.IsEnabled))
+        {
+            var cursor = GetCursor(visualElement);
+            ApplyCursorBasedOnState(visualElement, cursor);
+        }
+    }
+
+    private static void ApplyCursorBasedOnState(VisualElement visualElement, CursorIcons cursor)
+    {
+        // Use Arrow cursor if element is disabled, otherwise use the specified cursor
+        var cursorToApply = visualElement.IsEnabled ? cursor : CursorIcons.Arrow;
+
+        // Defer cursor setup until the element is loaded and has a handler
+        // This ensures we have the correct MauiContext, especially for dialog windows
+        void SetupCursorWhenReady()
+        {
+            // Try to get MauiContext from the element's handler first (most reliable)
+            var mauiContext = visualElement.Handler?.MauiContext;
+            
+            // If not available, try to find it from the element's parent hierarchy
+            if (mauiContext is null)
             {
-                // Try to get MauiContext from the element's handler first (most reliable)
-                var mauiContext = visualElement.Handler?.MauiContext;
-                
-                // If not available, try to find it from the element's parent hierarchy
-                if (mauiContext is null)
+                mauiContext = FindMauiContextFromParent(visualElement);
+            }
+            
+            // If still not available, try to get it from the parent page
+            if (mauiContext is null)
+            {
+                var parentPage = FindParentPage(visualElement);
+                if (parentPage is not null)
                 {
-                    mauiContext = FindMauiContextFromParent(visualElement);
+                    mauiContext = parentPage.Handler?.MauiContext;
                 }
-                
-                // If still not available, try to get it from the parent page
-                if (mauiContext is null)
+            }
+            
+            // Fallback: try to get it from any available window
+            if (mauiContext is null && Application.Current is not null)
+            {
+                // Try all windows, starting with the last one (most likely to be the active dialog)
+                foreach (var window in Application.Current.Windows.Reverse())
                 {
-                    var parentPage = FindParentPage(visualElement);
-                    if (parentPage is not null)
+                    if (window.Page?.Handler?.MauiContext is not null)
                     {
-                        mauiContext = parentPage.Handler?.MauiContext;
-                    }
-                }
-                
-                // Fallback: try to get it from any available window
-                if (mauiContext is null && Application.Current is not null)
-                {
-                    // Try all windows, starting with the last one (most likely to be the active dialog)
-                    foreach (var window in Application.Current.Windows.Reverse())
-                    {
-                        if (window.Page?.Handler?.MauiContext is not null)
-                        {
-                            mauiContext = window.Page.Handler.MauiContext;
-                            break;
-                        }
-                    }
-                }
-                
-                // Only set cursor if we have a valid MauiContext
-                if (mauiContext is not null)
-                {
-                    try
-                    {
-                        visualElement.SetCustomCursor((CursorIcons)newvalue, mauiContext);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log but don't throw - cursor setup failure shouldn't break the app
-                        System.Diagnostics.Debug.WriteLine($"Failed to set cursor: {ex.Message}");
+                        mauiContext = window.Page.Handler.MauiContext;
+                        break;
                     }
                 }
             }
-
-            // If handler is ready, setup immediately
-            if (visualElement.Handler is not null)
+            
+            // Only set cursor if we have a valid MauiContext
+            if (mauiContext is not null)
             {
+                try
+                {
+                    visualElement.SetCustomCursor(cursorToApply, mauiContext);
+                }
+                catch (Exception ex)
+                {
+                    // Log but don't throw - cursor setup failure shouldn't break the app
+                    System.Diagnostics.Debug.WriteLine($"Failed to set cursor: {ex.Message}");
+                }
+            }
+        }
+
+        // If handler is ready, setup immediately
+        if (visualElement.Handler is not null)
+        {
+            SetupCursorWhenReady();
+        }
+        else
+        {
+            // Wait for handler to be ready
+            void OnHandlerChanged(object? sender, EventArgs e)
+            {
+                visualElement.HandlerChanged -= OnHandlerChanged;
                 SetupCursorWhenReady();
             }
-            else
-            {
-                // Wait for handler to be ready
-                void OnHandlerChanged(object? sender, EventArgs e)
-                {
-                    visualElement.HandlerChanged -= OnHandlerChanged;
-                    SetupCursorWhenReady();
-                }
-                visualElement.HandlerChanged += OnHandlerChanged;
-            }
+            visualElement.HandlerChanged += OnHandlerChanged;
         }
     }
 

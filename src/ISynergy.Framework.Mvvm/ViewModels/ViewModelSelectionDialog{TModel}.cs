@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -40,6 +39,16 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
     {
         get { return GetValue<SelectionModes>(); }
         set { SetValue(value); }
+    }
+
+
+    /// <summary>
+    /// Gets or sets the CanSubmit property value.
+    /// </summary>
+    public bool CanSubmit
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
     }
 
     public virtual void SetSelectionMode(SelectionModes selectionMode)
@@ -186,6 +195,28 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
 
             OnSubmitted(new SubmitEventArgs<List<TModel>>(result));
             await CloseAsync();
+        }
+    }
+
+    public override void Cleanup(bool isClosing = true)
+    {
+        try
+        {
+            // Set flag to prevent property change notifications during cleanup
+            IsInCleanup = true;
+
+            // Clear collections
+            Items?.Clear();
+            SelectedItems?.Clear();
+
+            // Reset selection state
+            SelectionMode = SelectionModes.Single;
+
+            base.Cleanup(isClosing);
+        }
+        finally
+        {
+            IsInCleanup = false;
         }
     }
 
