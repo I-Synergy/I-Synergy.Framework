@@ -5,8 +5,6 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
@@ -240,33 +238,6 @@ public static class MauiAppBuilderExtensions
         // ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
 
         return appBuilder;
-    }
-
-    private static void RegisterViewModelRoutes(this IServiceCollection services, IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)
-    {
-        foreach (var view in viewTypes.Distinct().EnsureNotNull())
-        {
-            if (viewModelTypes.FirstOrDefault(q => q.Name.Equals(view.GetRelatedViewModel())) is { } viewmodel)
-                services.RegisterViewModelRoute(viewmodel, view);
-        }
-    }
-
-    private static void RegisterViewModelRoute(this IServiceCollection services, Type viewmodel, Type view)
-    {
-        var abstraction = Array.Find(viewmodel
-            .GetInterfaces(), q =>
-                q.GetInterfaces().Contains(typeof(IViewModel))
-                && !q.Name.StartsWith(nameof(IViewModel)));
-
-        services.RegisterRoute(viewmodel, abstraction, view);
-    }
-
-    private static void RegisterRoute(this IServiceCollection services, Type type, Type? abstraction, Type view)
-    {
-        if (abstraction is not null)
-            Routing.RegisterRoute(abstraction.Name, view);
-
-        Routing.RegisterRoute(type.Name, view);
     }
 
     /// <summary>

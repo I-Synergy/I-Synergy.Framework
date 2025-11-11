@@ -49,7 +49,7 @@ public static class CursorExtensions
                 {
                     try
                     {
-                        view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(GetCursor(CursorIcons.Arrow), 1)));
+                        view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(CoreCursorType.Arrow, 1)));
                     }
                     catch (Exception ex)
                     {
@@ -61,7 +61,9 @@ public static class CursorExtensions
                 {
                     try
                     {
-                        view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(GetCursor(cursor), 1)));
+                        // Only apply custom cursor if the element is enabled
+                        var cursorType = visualElement.IsEnabled ? GetCursor(cursor) : CoreCursorType.Arrow;
+                        view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(cursorType, 1)));
                     }
                     catch (Exception ex)
                     {

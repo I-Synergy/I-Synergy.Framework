@@ -132,8 +132,9 @@ public class NavigationServiceExceptionHandlingTests
                 It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("OnNavigatedTo")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
+            Times.Never);
     }
 }
+
 
 

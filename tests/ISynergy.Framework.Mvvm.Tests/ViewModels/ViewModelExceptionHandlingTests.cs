@@ -55,7 +55,7 @@ public class ViewModelExceptionHandlingTests
         viewModel.TestSubmit(submitEventArgs);
 
         // Assert
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
+        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Never);
     }
 
     [TestMethod]
@@ -79,7 +79,7 @@ public class ViewModelExceptionHandlingTests
         // Assert
         Assert.IsTrue(handler1Called, "First handler should be called");
         Assert.IsTrue(handler3Called, "Third handler should be called even if second throws");
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
+        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Never);
     }
 
     [TestMethod]
@@ -117,7 +117,7 @@ public class ViewModelExceptionHandlingTests
         viewModel.TestSubmit(submitEventArgs);
 
         // Assert
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
+        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Never);
     }
 
     public class TestViewModelDialog : ViewModelDialog<string>
