@@ -456,6 +456,21 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
+        await _dialogSemaphore.WaitAsync();
+        try
+        {
+            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>();
+        }
+        finally
+        {
+            _dialogSemaphore.Release();
+        }
+    }
+
+    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>()
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
         try
         {
             if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
@@ -497,6 +512,21 @@ public class DialogService : IDialogService
     /// <param name="e">The selected item.</param>
     /// <returns>Task{TEntity}.</returns>
     public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(TEntity e)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        await _dialogSemaphore.WaitAsync();
+        try
+        {
+            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(e);
+        }
+        finally
+        {
+            _dialogSemaphore.Release();
+        }
+    }
+
+    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(TEntity e)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
@@ -545,6 +575,19 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
+        await _dialogSemaphore.WaitAsync();
+        try
+        {
+            await ShowDialogAsyncInternal<TEntity>(window, viewmodel);
+        }
+        finally
+        {
+            _dialogSemaphore.Release();
+        }
+    }
+
+    private async Task ShowDialogAsyncInternal<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
+    {
         try
         {
             if (_scopedContextService.GetRequiredService(window.GetType()) is Window dialog)
@@ -584,6 +627,19 @@ public class DialogService : IDialogService
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+    {
+        await _dialogSemaphore.WaitAsync();
+        try
+        {
+            await ShowDialogAsyncInternal<TEntity>(type, viewmodel);
+        }
+        finally
+        {
+            _dialogSemaphore.Release();
+        }
+    }
+
+    private async Task ShowDialogAsyncInternal<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
         try
         {
@@ -625,6 +681,8 @@ public class DialogService : IDialogService
     /// <returns></returns>
     public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
     {
+        // Note: CreateDialogAsync is protected by semaphore in calling methods (ShowDialogAsync variants)
+        // No additional semaphore lock needed here to avoid deadlock
         if (dialog is not Window window)
         {
             _logger?.LogError("Dialog is not of type Window: {DialogType}", dialog?.GetType().Name ?? "null");
