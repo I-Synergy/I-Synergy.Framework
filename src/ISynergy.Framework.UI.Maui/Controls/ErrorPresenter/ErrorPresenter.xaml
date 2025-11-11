@@ -27,9 +27,10 @@
                                 <Span Text=" " TextColor="White" />
                                 <Span
                                     FontAttributes="Bold"
-                                    FontSize="Caption"
+                                    FontSize="{DynamicResource CaptionFontSize}"
                                     Text="{Binding Value}"
                                     TextColor="White" />
+
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>

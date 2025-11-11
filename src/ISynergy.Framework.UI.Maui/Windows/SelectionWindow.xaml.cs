@@ -1,5 +1,3 @@
-using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -67,7 +65,7 @@ public partial class SelectionWindow : ISelectionWindow, IDisposable
             // Force UI refresh by triggering NotifyCanExecuteChanged
             // This updates the visual state of the button
             viewModel.SelectCommand?.NotifyCanExecuteChanged();
-            
+
             // Additional UI thread flush to ensure visual states update immediately
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -76,13 +74,7 @@ public partial class SelectionWindow : ISelectionWindow, IDisposable
         }
     }
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
+    protected override void Dispose(bool disposing)
     {
         if (_isDisposed)
             return;
