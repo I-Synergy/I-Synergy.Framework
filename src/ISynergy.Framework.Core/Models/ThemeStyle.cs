@@ -22,7 +22,7 @@ public class ThemeStyle : ObservableClass
     /// </summary>
     public string Color
     {
-        get => GetValue<string>();
+        get => GetValue<string>() ?? string.Empty;
         set => SetValue(value);
     }
 

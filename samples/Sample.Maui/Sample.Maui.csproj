@@ -12,7 +12,6 @@
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Sample</RootNamespace>
-		<MauiXamlInflator>XamlC</MauiXamlInflator>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>

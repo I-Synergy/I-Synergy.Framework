@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
 
@@ -185,6 +185,14 @@ public sealed class InverseBooleanConverter : IValueConverter
 /// <seealso cref="BooleanToStringConverter" />
 public sealed class BooleanToStringConverter : BooleanConverter<string>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BooleanToStringConverter"/> class.
+    /// </summary>
+    public BooleanToStringConverter()
+    {
+        True = string.Empty;
+        False = string.Empty;
+    }
 }
 
 /// <summary>
@@ -222,6 +230,9 @@ public sealed class BooleanToBooleanConverter : BooleanConverter<bool>
 /// <seealso cref="IValueConverter" />
 public abstract class BooleanConverter<T> : IValueConverter
 {
+    private T? _true;
+    private T? _false;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BooleanConverter{T}"/> class.
     /// </summary>
@@ -241,16 +252,24 @@ public abstract class BooleanConverter<T> : IValueConverter
     }
 
     /// <summary>
-    /// Gets or sets the false.
+    /// Gets or sets the false value.
     /// </summary>
     /// <value>The false.</value>
-    public required T False { get; set; }
+    public T? False 
+    { 
+        get => _false;
+        set => _false = value;
+    }
 
     /// <summary>
-    /// Gets or sets the true.
+    /// Gets or sets the true value.
     /// </summary>
     /// <value>The true.</value>
-    public required T True { get; set; }
+    public T? True
+    { 
+        get => _true;
+        set => _true = value;
+    }
 
     /// <summary>
     /// Converts the specified value.

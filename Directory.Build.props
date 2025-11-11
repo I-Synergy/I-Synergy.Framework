@@ -25,7 +25,7 @@
 		<Version>0.0.0</Version>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<NoWarn>1701;1702;CS1591;CS8002;NETSDK1023;UXAML0002;NU5104;NETSDK1057;XC0103</NoWarn>
+		<NoWarn>1701;1702;CS1591;CS8002;NETSDK1023;UXAML0002;NU5104;NETSDK1057;XC0103;NU1608</NoWarn>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 		<AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\..\..\..\I-Synergy.Framework.snk')">..\..\..\..\..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>

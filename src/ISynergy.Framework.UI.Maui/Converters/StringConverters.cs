@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
@@ -424,7 +424,7 @@ public class UriToImageSourceConverter : IValueConverter
 }
 
 /// <summary>
-/// Converts hex string to color.
+/// Converts hex string to color brush.
 /// </summary>
 public class StringToColorBrushConverter : IValueConverter
 {
@@ -436,15 +436,24 @@ public class StringToColorBrushConverter : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (!string.IsNullOrEmpty(value?.ToString()))
         {
-            var color = Color.FromArgb(value.ToString()!);
-            return new SolidColorBrush(color);
+            try
+            {
+                var color = Color.FromArgb(value.ToString()!);
+                return new SolidColorBrush(color);
+            }
+            catch
+            {
+                // Fallback to default blue color (#FF0078D7) if color parsing fails
+                return new SolidColorBrush(Color.FromArgb("#FF0078D7"));
+            }
         }
 
-        return null;
+        // Return default blue color as a fallback instead of transparent
+        return new SolidColorBrush(Color.FromArgb("#FF0078D7"));
     }
 
     /// <summary>

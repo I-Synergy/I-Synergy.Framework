@@ -11,10 +11,10 @@
     <Grid>
         <VerticalStackLayout Margin="12" Spacing="12">
             <Label Text="Id" />
-            <Label Text="{Binding SelectedItem.Id}"/>
+            <!--<Label Text="{Binding SelectedItem.Id}"/>-->
 
             <Label Text="Description" />
-            <Label Text="{Binding SelectedItem.Description}"/>
+            <!--<Label Text="{Binding SelectedItem.Description}"/>-->
         </VerticalStackLayout>
     </Grid>
 </c:View>

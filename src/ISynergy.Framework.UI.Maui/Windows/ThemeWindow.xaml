@@ -23,6 +23,7 @@
 
             <VerticalStackLayout Spacing="12">
                 <!-- Theme Selection (System, Light, Dark) -->
+                <!-- Disable compiled/typed bindings here to avoid CS8820 from generated static lambdas: x:DataType="{x:Null}"-->
                 <Grid HorizontalOptions="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

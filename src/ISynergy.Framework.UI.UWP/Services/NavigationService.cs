@@ -28,11 +28,6 @@ public class NavigationService : INavigationService
 
     private EventHandler? _backStackChanged;
 
-    public NavigationService(IExceptionHandlerService exceptionHandlerService)
-    {
-        _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
-    }
-
     /// <summary>
     /// Safely calls OnNavigatedTo with exception handling.
     /// </summary>
