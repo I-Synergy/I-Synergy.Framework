@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -184,26 +184,31 @@ public static class ReflectionExtensions
 
     private static void Register(this IServiceCollection services, Type type, Type? abstraction)
     {
-        if (type.IsSingleton())
-        {
-            if (abstraction is not null)
-                services.TryAddSingleton(abstraction, type);
+        //if (type.IsSingleton())
+        //{
+        //    if (abstraction is not null)
+        //        services.TryAddSingleton(abstraction, type);
 
-            services.TryAddSingleton(type);
-        }
-        else if (type.IsScoped())
-        {
-            if (abstraction is not null)
-                services.TryAddScoped(abstraction, type);
+        //    services.TryAddSingleton(type);
+        //}
+        //else if (type.IsScoped())
+        //{
+        //    if (abstraction is not null)
+        //        services.TryAddScoped(abstraction, type);
 
-            services.TryAddScoped(type);
-        }
-        else
-        {
-            if (abstraction is not null)
-                services.TryAddTransient(abstraction, type);
+        //    services.TryAddScoped(type);
+        //}
+        //else
+        //{
+        //    if (abstraction is not null)
+        //        services.TryAddTransient(abstraction, type);
 
-            services.TryAddTransient(type);
-        }
+        //    services.TryAddTransient(type);
+        //}
+
+        if (abstraction is not null)
+            services.TryAddTransient(abstraction, type);
+
+        services.TryAddTransient(type);
     }
 }

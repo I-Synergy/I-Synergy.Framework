@@ -135,7 +135,7 @@
                             CommandParameter="{Binding SelectedItems}"
                             HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"
                             Text="{m:GetString Select}"
-                            WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" Style="{DynamicResource }" />
+                            WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" />
                         <Button
                             Command="{Binding CancelCommand}"
                             HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"
