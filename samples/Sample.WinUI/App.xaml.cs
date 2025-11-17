@@ -250,7 +250,7 @@ public sealed partial class App : Application
             {
                 try
                 {
-                    culture.NumberFormat.CurrencySymbol = "€";
+                    culture.NumberFormat.CurrencySymbol = "â‚¬";
 
                     culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
                     culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
