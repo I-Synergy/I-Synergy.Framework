@@ -1,7 +1,7 @@
 ---
 mode: 'agent'
 description: 'Create a new implementation plan file for new features, refactoring existing code or upgrading packages, design, architecture or infrastructure.'
-tools: ['changes', 'codebase', 'editFiles', 'extensions', 'fetch', 'githubRepo', 'openSimpleBrowser', 'problems', 'runTasks', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI']
+tools: ['changes', 'codebase', 'edit', 'extensions', 'read', 'githubRepo', 'openSimpleBrowser', 'problems', 'runTasks', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI']
 ---
 # Create Implementation Plan
 
@@ -154,4 +154,3 @@ tags: [Optional: List of relevant tags or categories, e.g., `feature`, `upgrade`
 
 [Link to related spec 1]
 [Link to relevant external documentation]
-```
