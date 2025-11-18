@@ -1,6 +1,6 @@
 ---
 mode: 'agent'
-tools: ['codebase', 'editFiles', 'search']
+tools: ['codebase', 'edit', 'search']
 description: 'Guide users through creating high-quality GitHub Copilot prompts with proper structure, tools, and best practices.'
 ---
 
@@ -60,9 +60,9 @@ I will ask you targeted questions to gather all necessary information. After col
 
 ### 7. **Tool & Capability Requirements**
 Which tools does this prompt need? Common options include:
-- **File Operations**: `codebase`, `editFiles`, `search`, `problems`
+- **File Operations**: `codebase`, `edit`, `search`, `problems`
 - **Execution**: `runCommands`, `runTasks`, `runTests`, `terminalLastCommand`
-- **External**: `fetch`, `githubRepo`, `openSimpleBrowser`
+- **External**: `read`, `githubRepo`, `openSimpleBrowser`
 - **Specialized**: `playwright`, `usages`, `vscodeAPI`, `extensions`
 - **Analysis**: `changes`, `findTestFiles`, `testFailure`, `searchResults`
 

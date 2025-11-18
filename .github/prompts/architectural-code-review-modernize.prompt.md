@@ -1,6 +1,6 @@
 ---
 mode: "agent"
-tools: ["codebase", "search", "editFiles", "problems", "changes", "findTestFiles", "testFailure", "searchResults"]
+tools: ["codebase", "search", "edit", "problems", "changes", "findTestFiles", "testFailure", "searchResults"]
 description: "Automated code review and modernization assistant for C#, TypeScript, LINQ, and Aurora SQL that proposes compilable, full replacements aligned with SOLID, Clean Architecture, DDD, TDD/BDD, resilience, structured logging, and async best practices. Supports solution-wide reviews with an aggregate report and targeted, compilable fixes."
 model: "gpt-4.1"
 ---
