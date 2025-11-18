@@ -79,9 +79,9 @@ stages:
             AddBuildTag: 'v$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
-          displayName: 'Install NuGet 6.12.2'
+          displayName: 'Install NuGet 7.0.0'
           inputs:
-            versionSpec: 6.12.2
+            versionSpec: 7.0.0
 
         - task: UseDotNet@2
           displayName: 'Install .Net Sdk'
