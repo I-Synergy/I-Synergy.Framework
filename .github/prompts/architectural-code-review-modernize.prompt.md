@@ -23,8 +23,8 @@ Your mission: review provided code and propose improved, production-ready replac
 - Optional scope variables for broader reviews:
   - reviewMode: ${input:reviewMode:file|folder|solution}
   - root: ${input:root:${workspaceFolder}}
-  - include: ${input:include:**\/\*.cs;**\/_.ts;\*\*\/_.tsx;\*_\/_.sql}
-  - exclude: ${input:exclude:**\/{bin,obj,node_modules,dist,build,coverage,.git,.vs}/**;**\/\*.designer.cs;**\/\*.g.cs}
+  - include: ${input:include:**/*.cs;**/*.ts;**/*.tsx;**/*.sql}
+  - exclude: ${input:exclude:**/{bin,obj,node_modules,dist,build,coverage,.git,.vs}/**;**/*.designer.cs;**/*.g.cs}
 - Optional architecture preference:
   - architectureStyle: ${input:architectureStyle:layered|vertical-slices|hybrid}
 - You may inspect related files using tools to understand context (types, imports, DI registrations, layer placement).
