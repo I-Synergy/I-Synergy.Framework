@@ -1,7 +1,22 @@
 name: $(Date:yyyy).1$(Date:MMdd).1$(Date:HHmm)
 
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+    - docs/*
+    - '*.md'
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+    - docs/*
+    - '*.md'
 
 variables:
   - name: VersionNumber
@@ -129,7 +144,6 @@ stages:
             command: 'custom'
             arguments: 'sign $(Build.ArtifactStagingDirectory)\*.snupkg -CertificatePath "$(Agent.WorkFolder)\_temp\intelligence-online.pfx" -CertificatePassword "$(CertPassword)" -Timestamper "$(TimestampUrl)"'
 
-
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Artifacts'
           inputs:
@@ -144,11 +158,6 @@ stages:
           displayName: 'Publish SonarCloud analysis'
           inputs:
             pollingTimeoutSec: '300'
-
-        - bash: |
-            git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
-                +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
-          displayName: 'Copy source to Github'
 
   # - stage: DocStage
   #   displayName: 'Documentation'
