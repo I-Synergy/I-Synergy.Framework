@@ -92,7 +92,7 @@
     <PackageVersion Include="Syncfusion.SfInput.WPF" Version="31.2.12" />
     <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="31.2.12" />
     <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="31.2.12" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
     <PackageVersion Include="System.Text.Encodings.Web" Version="10.0.0-rc.2.25502.107" />
   </ItemGroup>
 </Project>
