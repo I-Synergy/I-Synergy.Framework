@@ -226,14 +226,16 @@ authService.AuthenticationFailed += (s, e) => OnAuthenticationFailed();
 ## Performance Impact
 
 **Positive**:
-- ? **No Message Infrastructure Overhead**: Direct event delegation
-- ? **Reduced Memory Allocations**: No message objects created
-- ? **Faster Execution**: Direct method calls vs. message routing
+- ✅ **No Message Infrastructure Overhead**: Direct event delegation
+- ✅ **Reduced Memory Allocations**: No message objects created
+- ✅ **Faster Execution**: Direct method calls vs. message routing
 
-**Measurement**:
-- Event invocation: ~microseconds
-- Message routing: ~milliseconds
-- **Performance gain**: 1000x+ faster
+**Expected Benefits**:
+- Event invocation operates with minimal overhead (direct delegate calls)
+- Message routing requires object allocation, serialization, and dispatch infrastructure
+- **Performance gain**: Significantly faster due to elimination of messaging infrastructure
+
+> **Note**: The actual performance improvement depends on application-specific factors such as the number of subscribers, event frequency, and overall system architecture. For applications with high-frequency authentication events or many subscribers, the elimination of message allocation and routing overhead provides measurable benefits.
 
 ## Build Status
 
@@ -286,10 +288,9 @@ refactor: remove legacy authentication messages, use events only
 - Update App.xaml.cs to use only event-based authentication
 - Update Sample.Blazor to remove message handling
 - Update ILoadingView interface to remove message parameter
-- Performance improvement: 1000x+ faster event delivery vs messaging
+- Performance improvement: reduced overhead with direct event delivery vs messaging infrastructure
 - Breaking change: Applications must migrate to event-based authentication
 
 BREAKING CHANGE: AuthenticationChangedMessage is no longer sent.
 Use AuthenticationService.AuthenticationSucceeded and 
 AuthenticationService.AuthenticationFailed events instead.
-```
