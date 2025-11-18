@@ -34,7 +34,7 @@ This repository implements a modern .NET8 backend application following **Clean 
 - Don't do inconsistent or simulated implementations, refactor for consistency! 
 - Apply Conservative refactoring,so preserve all functionality. 
 - Conduct comprehensive search for existing implementations, If none exist, create professional production-ready implementations(not simulations), Integrate into existing service registration patterns. But first analyze the whole solution.
-- if there are uncertieties just ask for your suggestions to implement or not.
+- if there are uncertainties just ask for your suggestions to implement or not.
 
 ### Code Quality Requirements
 - **SOLID Principles**: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
