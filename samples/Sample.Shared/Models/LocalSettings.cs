@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace Sample.Models;
 
-public class LocalSettings : ObservableClass, ILocalSettings
+public class LocalSettings : ObservableValidatedClass, ILocalSettings
 {
     public Languages Language { get; set; } = Languages.English;
     public bool IsFullscreen { get; set; }
@@ -18,6 +18,7 @@ public class LocalSettings : ObservableClass, ILocalSettings
     public bool IsAutoLogin { get; set; }
     public bool IsAdvanced { get; set; }
     public int MigrationVersion { get; set; }
+    public bool ShowConsole { get; set; }
 
     public LocalSettings()
     {

@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
-		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+		<TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>Sample</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;arm64</Platforms>
-		<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-		<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 		<UseWinUI>true</UseWinUI>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
 		<StartupObject>Sample.Program</StartupObject>
@@ -17,16 +16,18 @@
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		<DefaultLanguage>en</DefaultLanguage>
 		<EnableMsixTooling>true</EnableMsixTooling>
-		<WindowsSdkPackageVersion>10.0.26100.57</WindowsSdkPackageVersion>
 		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
+	
+	<ItemGroup>
+	  <Content Remove="Assets\Fonts\fontawesome6free-regular-400.otf" />
+	  <Content Remove="Assets\gta.mp4" />
+	  <Content Remove="Assets\sample.mp4" />
+	</ItemGroup>
 
 	<ItemGroup>
-		<AppxManifest Include="Package.appxmanifest">
-			<SubType>Designer</SubType>
-		</AppxManifest>
 		<Content Include="icon.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
@@ -34,15 +35,22 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />
+		<EmbeddedResource Include="Assets\Fonts\fontawesome6free-regular-400.otf" />
+		<EmbeddedResource Include="Assets\gta.mp4" />
+		<EmbeddedResource Include="Assets\sample.mp4" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Manifest Include="$(ApplicationManifest)" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" />
+		<PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
+		<PackageReference Include="Sentry" />
+		<PackageReference Include="Sentry.OpenTelemetry" />
 		<PackageReference Include="Syncfusion.Chart.WinUI" />
 		<PackageReference Include="Syncfusion.Editors.WinUI" />
 		<PackageReference Include="Syncfusion.Gauge.WinUI" />
@@ -50,25 +58,40 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry.Sentry\ISynergy.Framework.Logging.OpenTelemetry.Sentry.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.ApplicationInsights\ISynergy.Framework.OpenTelemetry.ApplicationInsights.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.Sentry\ISynergy.Framework.OpenTelemetry.Sentry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
 
-	<!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-	   Tools extension to be activated for this project even if the Windows App SDK Nuget
-	   package has not yet been restored -->
+	<!--
+    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored.
+	-->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
 
-	<Import Project="..\Sample.UI.Shared\Sample.UI.Shared.projitems" Label="Shared" />
+	<!--
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if
+    the Windows App SDK Nuget package has not yet been restored.
+	-->
+	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+	</PropertyGroup>
 
-	<ItemGroup>
-		<PRIResource Remove="Controls\**" />
-	</ItemGroup>
+	<!-- Publish Properties -->
+	<PropertyGroup>
+		<PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
+		<PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+		<PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
+		<PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<Using Include="ISynergy.Framework.UI.Application">

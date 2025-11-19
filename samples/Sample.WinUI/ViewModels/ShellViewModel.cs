@@ -1,8 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -12,8 +11,10 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
+using Sample.Abstractions.Services;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -24,27 +25,37 @@ namespace Sample.ViewModels;
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
+    private readonly IFileService<FileResult> _fileService;
 
-    public AsyncRelayCommand? DisplayCommand { get; private set; }
-    public AsyncRelayCommand? InfoCommand { get; private set; }
-    public AsyncRelayCommand? BrowseCommand { get; private set; }
-    public AsyncRelayCommand? ConverterCommand { get; private set; }
-    public AsyncRelayCommand? SelectionTestCommand { get; private set; }
-    public AsyncRelayCommand? ListViewTestCommand { get; private set; }
-    public AsyncRelayCommand? ValidationTestCommand { get; private set; }
-    public AsyncRelayCommand? TreeNodeTestCommand { get; private set; }
-    public AsyncRelayCommand? ChartCommand { get; private set; }
+    public AsyncRelayCommand DisplayCommand { get; private set; }
+    public AsyncRelayCommand InfoCommand { get; private set; }
+    public AsyncRelayCommand BrowseCommand { get; private set; }
+    public AsyncRelayCommand ConverterCommand { get; private set; }
+    public AsyncRelayCommand SelectionTestCommand { get; private set; }
+    public AsyncRelayCommand ListViewTestCommand { get; private set; }
+    public AsyncRelayCommand ValidationTestCommand { get; private set; }
+    public AsyncRelayCommand TreeNodeTestCommand { get; private set; }
+    public AsyncRelayCommand ChartCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public ShellViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
+    /// <param name="fileService"></param>
+    /// <param name="logger"></param>
+    public ShellViewModel(
+        ICommonServices commonServices,
+        IDialogService dialogService,
+        INavigationService navigationService,
+        IFileService<FileResult> fileService,
+        ILogger<ShellViewModel> logger)
+        : base(commonServices, dialogService, navigationService, logger)
     {
-        _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
-
         SetClock();
+
+        _fileService = fileService;
 
         _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
         _clockTimer.Tick += ClockTimerCallBack;
@@ -69,16 +80,14 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
         {
-            if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
-                PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
+            if (PrimaryItems[0].Command!.CanExecute(PrimaryItems[0].CommandParameter))
+                PrimaryItems[0].Command!.Execute(PrimaryItems[0].CommandParameter);
 
-            SelectedItem = PrimaryItems[0];
+            SetSelectedItem(PrimaryItems[0]);
         }
 
         await InitializeFirstRunAsync();
     }
-
-    private void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e) => SetClock();
 
     private void PopulateNavigationMenuItems()
     {
@@ -107,35 +116,19 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
-    protected override void SignOut()
-    {
-        try
-        {
-            // Clear profile before base sign out
-            base.SignOut();
-
-            if (!string.IsNullOrEmpty(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser))
-            {
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = false;
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-            }
-        }
-        catch (ObjectDisposedException)
-        {
-            // Context already disposed, nothing to sign out
-        }
-    }
+    protected override Task SignOutAsync() =>
+        _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {
         if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings!.IsFirstRun)
         {
-            if (await _commonServices.DialogService.ShowMessageAsync(
-                LanguageService.Default.GetString("ChangeLanguage"),
-                LanguageService.Default.GetString("Language"),
-                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (await _dialogService.ShowMessageAsync(
+                _commonServices.LanguageService.GetString("ChangeLanguage"),
+                _commonServices.LanguageService.GetString("Language"),
+                MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
-                var languageVM = new LanguageViewModel(_commonServices);
+                var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
                 languageVM.Submitted += (s, e) =>
                 {
                     _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
@@ -143,10 +136,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };
-                await _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+                await _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
-            var wizardVM = new SettingsViewModel(_commonServices);
+            var wizardVM = _commonServices.ScopedContextService.GetRequiredService<SettingsViewModel>();
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();
@@ -156,40 +149,44 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _commonServices.RestartApplication();
             };
 
-            await _commonServices.NavigationService.OpenBladeAsync(this, wizardVM);
+            await _navigationService.OpenBladeAsync(this, wizardVM);
         }
     }
 
     private void ClockTimerCallBack(object? sender, object e) => SetClock();
 
-    private void SetClock() => base.Title = $"{_commonServices.InfoService.Title} - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+    private void SetClock()
+    {
+        if (_commonServices.ScopedContextService.GetRequiredService<IContext>() is Context context)
+            base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+    }
 
     private Task OpenChartTestAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<ChartsViewModel>();
+        _navigationService.NavigateAsync<ChartsViewModel>();
 
     private Task OpenTreenNodeTestAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
+        _navigationService.NavigateAsync<TreeNodeViewModel, ITreeNodeView>();
 
     /// <summary>
     /// Opens the validation test asynchronous.
     /// </summary>
     /// <returns></returns>
     private Task OpenValidationTestAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<ValidationViewModel>();
+        _navigationService.NavigateAsync<ValidationViewModel>();
 
     /// <summary>
     /// Opens the ListView test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenListViewTestAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
+        _navigationService.NavigateAsync<TestItemsListViewModel>();
 
     /// <summary>
     /// Opens the converters asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenConvertersAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
+        _navigationService.NavigateAsync<ConvertersViewModel>();
 
     /// <summary>
     /// browse file as an asynchronous operation.
@@ -199,8 +196,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
-        if (await _commonServices.FileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
-            await _commonServices.DialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
+        if (await _fileService.BrowseFileAsync(imageFilter) is { } files && files.Count > 0)
+            await _dialogService.ShowInformationAsync($"File '{files[0].FileName}' is selected.");
     }
 
     /// <summary>
@@ -208,28 +205,28 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenInfoAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<InfoViewModel>();
+        _navigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
     /// Opens the display asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenDisplayAsync() =>
-        base._commonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
+        _navigationService.NavigateAsync<SlideShowViewModel>();
 
     /// <summary>
     /// Opens the selection test asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     private Task OpenSelectionTestAsync() =>
-       base._commonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
+       _navigationService.NavigateAsync<SelectionTestViewModel>();
 
     /// <summary>
     /// Opens the settings asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        base._commonServices.NavigationService.NavigateModalAsync<SettingsViewModel>();
+        _navigationService.NavigateModalAsync<SettingsViewModel>();
 
     protected override Task OpenBackgroundAsync() => throw new NotImplementedException();
 
@@ -243,27 +240,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _clockTimer.Tick -= ClockTimerCallBack;
             }
 
-            if (_commonServices.AuthenticationService is not null)
-                _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
-
             DisplayCommand?.Dispose();
-            DisplayCommand = null;
             InfoCommand?.Dispose();
-            InfoCommand = null;
             BrowseCommand?.Dispose();
-            BrowseCommand = null;
             ConverterCommand?.Dispose();
-            ConverterCommand = null;
             SelectionTestCommand?.Dispose();
-            SelectionTestCommand = null;
             ListViewTestCommand?.Dispose();
-            ListViewTestCommand = null;
             ValidationTestCommand?.Dispose();
-            ValidationTestCommand = null;
             TreeNodeTestCommand?.Dispose();
-            TreeNodeTestCommand = null;
             ChartCommand?.Dispose();
-            ChartCommand = null;
 
             base.Dispose(disposing);
         }

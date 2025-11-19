@@ -4,7 +4,7 @@ namespace Sample.Views;
 /// <summary>
 /// Interaction logic for AuthenticationView.xaml
 /// </summary>
-public partial class AuthenticationView : IView
+public partial class AuthenticationView
 {
     public AuthenticationView()
     {

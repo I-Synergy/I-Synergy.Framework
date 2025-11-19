@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
         <PackageId>I-Synergy.Framework.AspNetCore.Monitoring</PackageId>
         <Description>I-Synergy Framework AspNetCore SignalR Monitoring</Description>
         <PackageTags>I-Synergy, Framework, Monitoring, SignalR, AspNetCore</PackageTags>

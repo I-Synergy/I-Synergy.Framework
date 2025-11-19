@@ -9,10 +9,10 @@ namespace ISynergy.Framework.UI.Controls;
 public static class TextBoxAttached
 {
     /// <summary>
-    /// Gets the automatic selectable.
+    /// Gets the automatic selectable property value.
     /// </summary>
-    /// <param name="obj">The object.</param>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <param name="obj">The dependency object.</param>
+    /// <returns><c>true</c> if the object is auto-selectable; otherwise, <c>false</c>.</returns>
     public static bool GetAutoSelectable(DependencyObject obj)
     {
         return (bool)obj.GetValue(AutoSelectableProperty);

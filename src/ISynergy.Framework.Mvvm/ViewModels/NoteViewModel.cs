@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -21,42 +21,36 @@ public class NoteViewModel : ViewModelDialog<string>
     {
         get
         {
-            return LanguageService.Default.GetString("Note");
+            return _commonServices.LanguageService.GetString("Note");
         }
     }
 
     /// <summary>
-    /// The target property
+    /// Gets or sets the TargetProperty property value.
     /// </summary>
-    private readonly string? _targetProperty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
-    /// </summary>
-    /// <param name="commonServices">The common services.</param>
-    /// <param name="note">The note.</param>
-    [PreferredConstructor]
-    public NoteViewModel(
-        ICommonServices commonServices,
-        string note)
-        : base(commonServices)
+    public string? TargetProperty
     {
-        SelectedItem = note;
+        get => GetValue<string?>();
+        set => SetValue(value);
     }
 
+
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="note">The note.</param>
-    /// <param name="targetProperty">The target property.</param>
+    /// <param name="logger"></param>
     public NoteViewModel(
         ICommonServices commonServices,
-        string note,
-        string targetProperty)
-        : this(commonServices, note)
+        ILogger<NoteViewModel> logger)
+        : base(commonServices, logger)
     {
-        _targetProperty = targetProperty;
+    }
+
+    public virtual void SetNote(string note, string? targetProperty)
+    {
+        SetSelectedItem(note);
+        TargetProperty = targetProperty;
     }
 
     /// <summary>
@@ -67,9 +61,9 @@ public class NoteViewModel : ViewModelDialog<string>
     {
         Argument.IsNotNull(e);
 
-        if (!string.IsNullOrEmpty(_targetProperty))
+        if (!string.IsNullOrEmpty(TargetProperty))
         {
-            base.OnSubmitted(new SubmitEventArgs<string>(e.Owner!, e.Result, _targetProperty));
+            base.OnSubmitted(new SubmitEventArgs<string>(e.Owner!, e.Result, TargetProperty));
         }
         else
         {

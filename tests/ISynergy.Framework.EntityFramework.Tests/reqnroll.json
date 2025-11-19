@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.reqnroll.net/reqnroll-config-latest.json",
+  "language": {
+    "feature": "en"
+  },
+  "bindingCulture": {
+    "name": "en-US"
+  },
+  "trace": {
+    "traceSuccessfulSteps": true,
+    "traceTimings": true,
+    "minTracedDuration": "0:0:0.1"
+  },
+  "generator": {
+    "addNonParallelizableMarkerForTags": []
+  },
+  "stepAssemblies": [
+    {
+   "assembly": "ISynergy.Framework.EntityFramework.Tests"
+    }
+  ]
+}

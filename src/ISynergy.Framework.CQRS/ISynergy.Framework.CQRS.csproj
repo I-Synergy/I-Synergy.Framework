@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<PackageId>I-Synergy.Framework.CQRS</PackageId>
+		<Description>I-Synergy Framework CQRS (Command Query Responsibility Segregation)</Description>
+		<PackageTags>I-Synergy, Framework, CQRS</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+	</PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+
+		<InternalsVisibleTo Include="ISynergy.Framework.CQRS.Tests,PublicKey=0024000004800000940000000602000000240000525341310004000001000100cde9fe52858a240ba0b45cac12be881d9e0caad44d58892039421ee11a094d8c16442167f1bc4bcece5f84eb211b70b1acac1011938c5620faf805182ebb236c93a8cb039daff57ba5ad184dc423267d417b4af00ef4f8dbe533e629149908150282af20c91616aab3d32d8357f3c21e0cd3050e797976603e08ba787f42ffa5" />
+	</ItemGroup>
+</Project>

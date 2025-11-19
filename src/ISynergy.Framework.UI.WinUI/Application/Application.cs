@@ -1,24 +1,26 @@
+using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Options;
-using ISynergy.Framework.UI.ViewModels;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
-using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Globalization;
+
+#pragma warning disable IDE0130, S1200
 
 namespace ISynergy.Framework.UI;
 
@@ -27,17 +29,23 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 {
-    protected readonly ILogger _logger;
-    protected readonly ICommonServices _commonServices;
-    protected readonly ISettingsService _settingsService;
     protected readonly IExceptionHandlerService _exceptionHandlerService;
+    protected readonly ICommonServices _commonServices;
+    protected readonly IDialogService _dialogService;
+    protected readonly INavigationService _navigationService;
+    protected readonly ISettingsService _settingsService;
+    protected readonly IApplicationLifecycleService _lifecycleService;
+    protected readonly ILogger<Application> _logger;
+    protected readonly IMessengerService _messengerService;
 
-    protected readonly Features _features;
+    protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
 
     protected Microsoft.UI.Xaml.Window? _mainWindow;
 
     private int _lastErrorMessage = 0;
+    private bool _isDisposing = false;
+    private readonly Dictionary<string, Exception> _processedExceptions = new Dictionary<string, Exception>();
 
     /// <summary>
     /// Gets the current main window from the running application instance
@@ -59,48 +67,98 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     protected Application(SplashScreenOptions? splashScreenOptions = null)
         : base()
     {
-        var host = CreateHostBuilder()
-            .ConfigureLogging(config =>
+        try
+        {
+            _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
+
+            // Create host and set up dependency injection
+            IHost? host = null;
+
+            try
             {
-#if DEBUG
-                config.AddDebug();
-#endif
-            })
-            .Build();
+                host = CreateHostBuilder()
+                    .Build()
+                    .SetLocatorProvider();
+            }
+            catch (Exception ex)
+            {
+                // Log startup error and rethrow to prevent partial initialization
+                Debug.WriteLine($"Critical error during host creation: {ex}");
+                throw;
+            }
 
-        _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
+            // Get logger first for proper error tracking
+            try
+            {
+                _logger = host.Services.GetRequiredService<ILogger<Application>>();
+                _logger.LogTrace("Application constructor started");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to get logger: {ex}");
+                throw;
+            }
 
-        _logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger<Application>();
-        _logger.LogTrace("Setting up global exception handler.");
+            try
+            {
+                _logger.LogTrace("Setting up services and global exception handler.");
 
-        _logger.LogTrace("Getting common services.");
-        _commonServices = host.Services.GetRequiredService<ICommonServices>();
-        _features = host.Services.GetRequiredService<IOptions<Features>>().Value;
-        _exceptionHandlerService = host.Services.GetRequiredService<IExceptionHandlerService>();
-        _settingsService = host.Services.GetRequiredService<ISettingsService>(); _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+                var serviceProvider = host.Services;
+                _commonServices = serviceProvider.GetRequiredService<ICommonServices>();
+                _dialogService = serviceProvider.GetRequiredService<IDialogService>();
+                _navigationService = serviceProvider.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
+                _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+                _messengerService = serviceProvider.GetRequiredService<IMessengerService>();
 
-        AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+                _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
-        _logger.LogTrace("Starting application");
+                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-        // Pass a timeout to limit the execution time.
-        // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
-        AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
+                // Pass a timeout to limit the execution time.
+                // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
+                AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-        _logger.LogTrace("Starting initialization of application");
+                _commonServices.BusyService.StartBusy();
 
-        _logger.LogTrace("Setting up main page.");
-        _commonServices.BusyService.StartBusy();
+                if (_settingsService.LocalSettings is not null)
+                    _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
-        _logger.LogTrace("Setting up authentication service.");
-        _commonServices.AuthenticationService.AuthenticationChanged += OnAuthenticationChanged;
-        _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
+                _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
-        _logger.LogTrace("Setting up localization service.");
-        if (_settingsService.LocalSettings is not null)
-            _settingsService.LocalSettings.Language.SetLocalizationLanguage();
+                _messengerService.Register<ShowInformationMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+                });
+
+                _messengerService.Register<ShowWarningMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+                });
+
+                _messengerService.Register<ShowErrorMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+                });
+
+                // Initialize environment variables from configuration and command-line parameters
+                InitializeEnvironmentVariables();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogCritical(ex, "Critical error during application initialization");
+                throw;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Last resort exception handling if logger isn't available
+            Debug.WriteLine($"Fatal error in Application constructor: {ex}");
+            throw;
+        }
     }
 
     /// <summary>
@@ -109,9 +167,86 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <returns></returns>
     protected abstract IHostBuilder CreateHostBuilder();
 
-    protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
+    /// <summary>
+    /// Called when the application is fully loaded (UI ready + initialization complete).
+    /// Override or subscribe to this event to handle post-load operations.
+    /// </summary>
+    protected virtual void OnApplicationLoaded(object? sender, EventArgs e)
+    {
+        _logger?.LogTrace("Application lifecycle event: ApplicationLoaded raised");
+    }
 
-    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e) => _commonServices.InfoService.SetTitle(e.Value);
+    /// <summary>
+    /// Initializes environment variables from appsettings.json with command-line parameter override.
+    /// </summary>
+    protected virtual void InitializeEnvironmentVariables()
+    {
+        try
+        {
+            _logger?.LogTrace("Initializing environment variables");
+
+            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+
+            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
+
+            if (!string.IsNullOrEmpty(environmentFromConfig))
+            {
+                var normalizedEnvironment = NormalizeEnvironmentValue(environmentFromConfig);
+                Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                _logger?.LogTrace("Environment variable set from configuration: {Environment}", normalizedEnvironment);
+            }
+
+            // Handle command-line parameters which override configuration
+            HandleCommandArguments();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error during environment variable initialization");
+        }
+    }
+
+    /// <summary>
+    /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
+    /// </summary>
+    private string NormalizeEnvironmentValue(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return value;
+
+        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Handles environment and country parameters from command line arguments.
+    /// Command-line parameters override configuration values.
+    /// </summary>
+    protected virtual void HandleCommandArguments()
+    {
+        var commandLineArgs = Environment.GetCommandLineArgs();
+
+        foreach (var arg in commandLineArgs.EnsureNotNull())
+        {
+            if (string.IsNullOrEmpty(arg))
+                continue;
+
+            // Look for query string format arguments (e.g., "?environment=development&country=nl")
+            if (arg.Contains("?"))
+            {
+                var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
+
+                if (!string.IsNullOrEmpty(environmentValue))
+                {
+                    var normalizedEnvironment = NormalizeEnvironmentValue(environmentValue);
+                    Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                    _logger?.LogTrace("Environment variable overridden from command-line: {Environment}", normalizedEnvironment);
+                }
+            }
+            else
+            {
+                _logger?.LogTrace("Command line argument: {Argument}", arg);
+            }
+        }
+    }
 
     /// <summary>
     /// Handles the first chance exception event.
@@ -120,29 +255,41 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <param name="e"></param>
     protected virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
-        if (e?.Exception == null)
+        if (_isDisposing)
             return;
 
-        // Ignore the exception if it is a TaskCanceledException and the cancellation token is requested
-        if (e.Exception is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested)
+        // Create a unique key for this exception to prevent duplicates
+        string exceptionKey = $"{e.Exception.GetType().FullName}:{e.Exception.Message}:{e.Exception.StackTrace?.GetHashCode()}";
+
+        // Check if we've already processed this exact exception
+        if (_processedExceptions.ContainsKey(exceptionKey))
             return;
 
-        // Ignore the exception if it is an OperationCanceledException or a TaskCanceledException
-        if (e.Exception is OperationCanceledException)
-            return;
+        // Add to processed exceptions with a limit
+        if (_processedExceptions.Count > 100)
+            _processedExceptions.Clear();
 
-        // Ignore the exception if it is a TaskCanceledException inside an aggregated exception and the cancellation token is requested
-        if (e.Exception is AggregateException ae && ae.InnerExceptions?.Any(ex => ex is TaskCanceledException tce && tce.CancellationToken.IsCancellationRequested) == true)
-            return;
+        _processedExceptions[exceptionKey] = e.Exception;
 
-        // Ignore the exception if it is a COMException and the message contains "Cannot find credential in Vault"
-        if (e.Exception is COMException ce && ce.Message.Contains("Cannot find credential in Vault"))
-            return;
-
-        if (e.Exception.HResult != _lastErrorMessage)
+        if (_exceptionHandlerService is not null)
         {
-            _lastErrorMessage = e.Exception.HResult;
-            _logger?.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            try
+            {
+                _exceptionHandlerService.HandleException(e.Exception);
+            }
+            catch (Exception handlerEx)
+            {
+                // If exception handler fails, log directly
+                _logger?.LogError(handlerEx, "Error in exception handler");
+            }
+        }
+        else
+        {
+            if (e.Exception.HResult != _lastErrorMessage)
+            {
+                _lastErrorMessage = e.Exception.HResult;
+                _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            }
         }
     }
 
@@ -151,12 +298,28 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    protected virtual void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
+        if (_isDisposing)
+        {
+            e.SetObserved();
+            return;
+        }
+
         if (_exceptionHandlerService is not null)
-            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+        {
+            try
+            {
+                _exceptionHandlerService.HandleException(e.Exception);
+            }
+            catch (Exception handlerEx)
+            {
+                // If exception handler fails, log directly
+                _logger?.LogError(handlerEx, "Error in exception handler");
+            }
+        }
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -166,13 +329,28 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected virtual async void CurrentDomain_UnhandledException(object? sender, System.UnhandledExceptionEventArgs e)
+    protected virtual void CurrentDomain_UnhandledException(object? sender, System.UnhandledExceptionEventArgs e)
     {
+        if (_isDisposing)
+            return;
+
         if (e.ExceptionObject is Exception exception)
+        {
             if (_exceptionHandlerService is not null)
-                await _exceptionHandlerService.HandleExceptionAsync(exception);
+            {
+                try
+                {
+                    _exceptionHandlerService.HandleException(exception);
+                }
+                catch (Exception handlerEx)
+                {
+                    // If exception handler fails, log directly
+                    _logger?.LogError(handlerEx, "Error in exception handler");
+                }
+            }
             else
-                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+                _logger?.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+        }
     }
 
     /// <summary>
@@ -202,95 +380,81 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <param name="args">Event data for the event.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
-
-        _logger.LogTrace("Loading custom resource dictionaries");
-
-        if (Application.Current.Resources?.MergedDictionaries is not null)
+        try
         {
-            foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
+            if (_settingsService?.LocalSettings is not null)
             {
-                if (!Application.Current.Resources.MergedDictionaries.Contains(item))
-                    Application.Current.Resources.MergedDictionaries.Add(item);
+                try
+                {
+                    _mainWindow = WindowHelper.CreateWindow(_settingsService.LocalSettings.Theme);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error setting application theme");
+                }
+            }
+
+            _logger?.LogTrace("Loading custom resource dictionaries");
+
+            if (Application.Current.Resources?.MergedDictionaries is not null)
+            {
+                var additionalDictionaries = GetAdditionalResourceDictionaries().EnsureNotNull();
+
+                foreach (var item in additionalDictionaries)
+                {
+                    try
+                    {
+                        if (!Application.Current.Resources.MergedDictionaries.Contains(item))
+                            Application.Current.Resources.MergedDictionaries.Add(item);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogWarning(ex, "Error adding resource dictionary");
+                    }
+                }
+            }
+
+            _logger?.LogTrace("Setting up theming.");
+
+            if (_settingsService?.LocalSettings is not null)
+            {
+                try
+                {
+                    this.SetApplicationColor(_settingsService.LocalSettings.Color);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error setting application color");
+                }
             }
         }
-
-        _logger.LogTrace("Setting up theming.");
-
-        if (_settingsService.LocalSettings is not null)
-            this.SetApplicationColor(_settingsService.LocalSettings.Color);
-
-        _logger.LogTrace("Settings initial view");
-
-        var splashScreen = new SplashScreen();
-        var viewModel = _commonServices.ScopedContextService.GetService<SplashScreenViewModel>();
-        viewModel.Initialize(
-            dispatcherQueue: _mainWindow.DispatcherQueue,
-            onLoadingComplete: async () => await HandleApplicationInitializedAsync(),
-            splashScreenOptions: _splashScreenOptions,
-            async (dispatcher) =>
-            {
-                await HandleLaunchArgumentsAsync(args);
-            },
-            async (dispatcher) =>
-            {
-                if (_features.CheckForUpdatesInMicrosoftStore)
-                    await dispatcher.EnqueueAsync(async () =>
-                    {
-                        try
-                        {
-                            _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateCheckForUpdates");
-
-                            var updateService = _commonServices.ScopedContextService.GetService<IUpdateService>();
-
-                            if (await updateService.CheckForUpdateAsync() &&
-                                await _commonServices.DialogService.ShowMessageAsync(
-                                LanguageService.Default.GetString("UpdateFoundNewUpdate") + Environment.NewLine + LanguageService.Default.GetString("UpdateExecuteNow"),
-                                "Update",
-                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                            {
-                                _commonServices.BusyService.BusyMessage = LanguageService.Default.GetString("UpdateDownloadAndInstall");
-                                await updateService.DownloadAndInstallUpdateAsync();
-                                Environment.Exit(Environment.ExitCode);
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            await _commonServices.DialogService.ShowErrorAsync("Failed to check for updates");
-                        }
-                    });
-            },
-            async (dispatcher) =>
-            {
-                _logger.LogTrace("Starting initialization of application");
-                await InitializeApplicationAsync();
-                _logger.LogTrace("Finishing initialization of application");
-            });
-
-        splashScreen.ViewModel = viewModel;
-
-        splashScreen.Loaded += SplashScreen_Loaded;
-        splashScreen.Unloaded += SplashScreen_Unloaded;
-
-        _mainWindow.Content = splashScreen;
-
-        _logger.LogTrace("Activate main window");
-        _mainWindow.Activate();
-    }
-
-
-    protected virtual async void SplashScreen_Loaded(object? sender, RoutedEventArgs e)
-    {
-        if (sender is SplashScreen splashScreen && splashScreen.ViewModel is SplashScreenViewModel viewModel)
-            await viewModel.StartInitializationAsync();
-    }
-
-    protected virtual void SplashScreen_Unloaded(object? sender, RoutedEventArgs e)
-    {
-        if (sender is SplashScreen splashScreen)
+        catch (Exception ex)
         {
-            splashScreen.Loaded -= SplashScreen_Loaded;
-            splashScreen.Unloaded -= SplashScreen_Unloaded;
+            _logger?.LogCritical(ex, "Critical error in OnLaunched");
+
+            // Create a basic error window as a last resort
+            try
+            {
+                var errorWindow = new Microsoft.UI.Xaml.Window();
+                var textBlock = new Microsoft.UI.Xaml.Controls.TextBlock
+                {
+                    Text = $"Critical application error: {ex.Message}",
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap
+                };
+
+                var grid = new Microsoft.UI.Xaml.Controls.Grid();
+                grid.Children.Add(textBlock);
+
+                errorWindow.Content = grid;
+                errorWindow.Activate();
+            }
+            catch
+            {
+                // Last resort - can't even show an error window
+                Environment.Exit(1);
+            }
         }
     }
 
@@ -300,30 +464,57 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>
     /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
-    protected virtual void OnNavigationFailed(object? sender, NavigationFailedEventArgs e) =>
-        throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
+    protected virtual void OnNavigationFailed(object? sender, NavigationFailedEventArgs e)
+    {
+        var exception = new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
+        _logger?.LogError(exception, "Navigation failed");
+
+        if (_exceptionHandlerService != null)
+        {
+            try
+            {
+                _exceptionHandlerService.HandleException(exception);
+            }
+            catch
+            {
+                // If exception handler fails, throw the original exception
+                throw exception;
+            }
+        }
+        else
+        {
+            throw exception;
+        }
+    }
 
     protected virtual async Task HandleLaunchArgumentsAsync(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        _logger.LogTrace("Handling launch event arguments");
-
-        if (args.UWPLaunchActivatedEventArgs is not null)
+        try
         {
-            switch (args.UWPLaunchActivatedEventArgs.Kind)
+            _logger?.LogTrace("Handling launch event arguments");
+
+            if (args.UWPLaunchActivatedEventArgs is not null)
             {
-                case Windows.ApplicationModel.Activation.ActivationKind.Launch:
-                    await HandleLaunchActivationAsync(args.UWPLaunchActivatedEventArgs.Arguments);
-                    break;
-                case Windows.ApplicationModel.Activation.ActivationKind.Protocol:
-                    await HandleProtocolActivationAsync(args.UWPLaunchActivatedEventArgs.Arguments);
-                    break;
+                switch (args.UWPLaunchActivatedEventArgs.Kind)
+                {
+                    case Windows.ApplicationModel.Activation.ActivationKind.Launch:
+                        await HandleLaunchActivationAsync(args.UWPLaunchActivatedEventArgs.Arguments);
+                        break;
+                    case Windows.ApplicationModel.Activation.ActivationKind.Protocol:
+                        await HandleProtocolActivationAsync(args.UWPLaunchActivatedEventArgs.Arguments);
+                        break;
+                }
             }
+
+            _logger?.LogTrace("Handle command line arguments");
+
+            if (Environment.GetCommandLineArgs().Length > 1)
+                await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
         }
-
-        _logger.LogTrace("Handle command line arguments");
-
-        if (Environment.GetCommandLineArgs().Length > 1)
-            await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error handling launch arguments");
+        }
     }
 
     protected virtual Task HandleProtocolActivationAsync(string e) =>
@@ -386,18 +577,24 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
+        _isDisposing = true;
+
         if (disposing)
         {
-            // free managed resources
-            if (_commonServices.AuthenticationService is not null)
+            try
             {
-                _commonServices.AuthenticationService.AuthenticationChanged -= OnAuthenticationChanged;
-                _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
-            }
+                _messengerService.Unregister<ShowInformationMessage>(this);
+                _messengerService.Unregister<ShowWarningMessage>(this);
+                _messengerService.Unregister<ShowErrorMessage>(this);
 
-            AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
-            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+                AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
+                AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+                TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error during disposal");
+            }
         }
 
         // free native resources if there are any.
@@ -410,3 +607,4 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     }
     #endregion
 }
+

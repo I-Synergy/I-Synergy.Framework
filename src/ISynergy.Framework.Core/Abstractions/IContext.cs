@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
-
-namespace ISynergy.Framework.Core.Abstractions;
+﻿namespace ISynergy.Framework.Core.Abstractions;
 
 /// <summary>
 /// Interface IContext
@@ -9,7 +7,6 @@ public interface IContext
 {
     IProfile? Profile { get; set; }
     TimeZoneInfo? TimeZone { get; }
-    SoftwareEnvironments Environment { get; set; }
     bool IsAuthenticated { get; }
     Dictionary<string, object> Properties { get; }
 }

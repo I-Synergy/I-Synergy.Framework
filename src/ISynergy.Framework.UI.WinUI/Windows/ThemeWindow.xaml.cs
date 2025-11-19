@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Windows;
 
@@ -18,7 +16,8 @@ public sealed partial class ThemeWindow : ISynergy.Framework.UI.Controls.Window,
     {
         InitializeComponent();
 
-        PrimaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Save");
-        SecondaryButtonText = ServiceLocator.Default.GetService<ILanguageService>().GetString("Cancel");
+        var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
+        PrimaryButtonText = languageService.GetString("Save");
+        SecondaryButtonText = languageService.GetString("Cancel");
     }
 }

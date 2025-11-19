@@ -18,7 +18,7 @@ public class BooleanStateTrigger : BaseTrigger<bool>
     /// <param name="callbackAsync"></param>
     public BooleanStateTrigger(
         Guid automationId,
-        Func<(IObservableClass Entity, IProperty<bool> Property)> function,
+        Func<(IObservableValidatedClass Entity, IProperty<bool> Property)> function,
         bool from,
         bool to,
         Func<bool, Task> callbackAsync)
@@ -42,7 +42,7 @@ public class StringStateTrigger : BaseTrigger<string>
     /// <param name="callbackAsync"></param>
     public StringStateTrigger(
         Guid automationId,
-        Func<(IObservableClass Entity, IProperty<string> Property)> function,
+        Func<(IObservableValidatedClass Entity, IProperty<string> Property)> function,
         string from,
         string to,
         Func<string, Task> callbackAsync)

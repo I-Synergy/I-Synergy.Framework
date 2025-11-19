@@ -1,7 +1,9 @@
-﻿using ISynergy.Framework.Core.Locators.Tests;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators.Tests;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
 using Moq;
+using System.Reflection;
 using static ISynergy.Framework.Core.Locators.Tests.ServiceLocatorTests;
 
 namespace ISynergy.Framework.Core.Services.Tests;
@@ -14,11 +16,17 @@ public class ScopedContextServiceTests
 
     public ScopedContextServiceTests()
     {
+        var mainAssembly = Assembly.GetExecutingAssembly();
+        var infoService = new InfoService();
+        infoService.LoadAssembly(mainAssembly);
+
         var services = new ServiceCollection();
         services.AddScoped<ITestService, TestService>();
         services.AddScoped<ITestScopedService, TestScopedService>();
         services.AddScoped<INestedScopeTestService, ServiceLocatorTests.NestedScopeTestService>();
+
         _serviceProvider = services.BuildServiceProvider();
+
         _scopedContextService = new ScopedContextService(_serviceProvider);
     }
 
@@ -93,6 +101,7 @@ public class ScopedContextServiceTests
             tasks.Add(Task.Run(() =>
             {
                 var scopedService = new ScopedContextService(_serviceProvider);
+
                 var service = scopedService.GetService<ITestScopedService>();
                 return (scopedService, service.InstanceId);
             }));
@@ -120,10 +129,18 @@ public class ScopedContextServiceTests
     [TestMethod]
     public void ScopedContextService_CreateNewScope_DisposesOldScope()
     {
+        var mainAssembly = Assembly.GetExecutingAssembly();
+        var infoService = new InfoService();
+        infoService.LoadAssembly(mainAssembly);
+
         // Arrange
         var disposableService = new Mock<IDisposableTestService>();
+
         var services = new ServiceCollection();
+        services.AddSingleton<IInfoService>(s => infoService);
+        services.AddScoped<ILoggerFactory, LoggerFactory>();
         services.AddScoped<IDisposableTestService>(s => disposableService.Object);
+
         var provider = services.BuildServiceProvider();
         var scopedService = new ScopedContextService(provider);
         var oldService = scopedService.GetService<IDisposableTestService>();
@@ -141,11 +158,18 @@ public class ScopedContextServiceTests
     [TestMethod]
     public void ScopedContextService_Dispose_CleansUpServicesAndEvents()
     {
+        var mainAssembly = Assembly.GetExecutingAssembly();
+        var infoService = new InfoService();
+        infoService.LoadAssembly(mainAssembly);
+
         // Arrange
         bool eventRaised = false;
 
         var disposableService = new Mock<IDisposableTestService>();
+
         var services = new ServiceCollection();
+        services.AddSingleton<IInfoService>(s => infoService);
+        services.AddScoped<ILoggerFactory, LoggerFactory>();
         services.AddScoped<IDisposableTestService>(_ => disposableService.Object);
         var provider = services.BuildServiceProvider();
 
@@ -166,14 +190,13 @@ public class ScopedContextServiceTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ObjectDisposedException))]
     public void ScopedContextService_GetServiceAfterDispose_ThrowsException()
     {
         // Arrange
         _scopedContextService.Dispose();
 
         // Act
-        _scopedContextService.GetService<ITestService>();
+        Assert.Throws<ObjectDisposedException>(() => _scopedContextService.GetService<ITestService>());
     }
 
     [TestMethod]

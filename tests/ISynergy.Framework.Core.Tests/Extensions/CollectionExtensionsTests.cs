@@ -27,7 +27,7 @@ public class CollectionExtensionsTests
     [TestMethod]
     public void NullObservableCollectionFailableTest()
     {
-        Assert.ThrowsException<NullReferenceException>(() =>
+        Assert.Throws<NullReferenceException>(() =>
         {
             ObservableCollection<object>? list = null;
             foreach (object item in list!)

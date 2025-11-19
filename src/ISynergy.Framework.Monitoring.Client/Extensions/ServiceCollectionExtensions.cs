@@ -20,11 +20,13 @@ public static class ServiceCollectionExtensions
     /// <param name="configuration"></param>
     /// <param name="prefix"></param>
     /// <returns></returns>
-    public static IServiceCollection AddMonitorSignalRIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
+    public static IServiceCollection AddMonitorSignalRIntegration<TClientMonitorService>(this IServiceCollection services, IConfiguration configuration, string prefix = "")
+        where TClientMonitorService : BaseClientMonitorService, IClientMonitorService
     {
         services.AddOptions();
         services.Configure<ClientMonitorOptions>(configuration.GetSection($"{prefix}{nameof(ClientMonitorOptions)}").BindWithReload);
-        services.TryAddSingleton<IClientMonitorService, ClientMonitorService>();
+        services.TryAddSingleton<TClientMonitorService>();
+        services.TryAddSingleton<IClientMonitorService>(s => s.GetRequiredService<TClientMonitorService>());
         return services;
     }
 }

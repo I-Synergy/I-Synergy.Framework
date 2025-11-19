@@ -2,6 +2,7 @@
 using ISynergy.Framework.Automations.BackgroundServices;
 using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Automations.Services;
+using ISynergy.Framework.Automations.Services.Executors;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +25,23 @@ public static class ServiceCollectionExtensions
     {
         services.Configure<AutomationOptions>(configuration.GetSection($"{prefix}{nameof(AutomationOptions)}").BindWithReload);
 
+        // Core services
         services.TryAddSingleton<IActionService, ActionService>();
+        services.TryAddSingleton<IStateTypeResolver, StateTypeResolver>();
+        services.TryAddSingleton<IOperatorStrategyFactory, OperatorStrategyFactory>();
+        services.TryAddSingleton<IAutomationConditionValidator, AutomationConditionValidator>();
+        services.TryAddSingleton<IActionExecutorFactory, ActionExecutorFactory>();
+        services.TryAddSingleton<IActionQueueBuilder, ActionQueueBuilder>();
         services.TryAddSingleton<IAutomationService, AutomationService>();
+
+        // Operator strategies
+        services.TryAddSingleton<Services.Operators.AndOperatorStrategy>();
+        services.TryAddSingleton<Services.Operators.OrOperatorStrategy>();
+
+        // Action executors - register each executor for its specific action type
+        services.TryAddScoped<IActionExecutor<Actions.CommandAction>, CommandActionExecutor>();
+        services.TryAddScoped<IActionExecutor<Actions.DelayAction>, DelayActionExecutor>();
+        services.TryAddScoped<IActionExecutor<Actions.AutomationAction>, AutomationActionExecutor>();
 
         services.AddHostedService<ActionQueuingBackgroundService>();
         services.AddHostedService<AutomationBackgroundService>();

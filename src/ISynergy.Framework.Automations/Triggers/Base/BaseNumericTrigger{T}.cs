@@ -58,7 +58,7 @@ public abstract class BaseNumericTrigger<T> : BaseTrigger, ITrigger
     /// <param name="callbackAsync"></param>
     protected BaseNumericTrigger(
         Guid automationId,
-        Func<(IObservableClass Entity, IProperty<T> Property)> function,
+        Func<(IObservableValidatedClass Entity, IProperty<T> Property)> function,
         T below,
         T above,
         Func<T, Task> callbackAsync)

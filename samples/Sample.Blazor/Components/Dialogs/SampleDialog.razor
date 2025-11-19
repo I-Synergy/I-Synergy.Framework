@@ -1,0 +1,15 @@
+﻿@using ISynergy.Framework.AspNetCore.Blazor.Constants
+@using Sample.Models
+@using Sample.ViewModels
+@using Sample.Components.Dialogs.Base
+
+@inherits BaseModelDialog<Budget, SampleDialogViewModel>
+
+<BaseModelDialog TModel="Budget" TViewModel="SampleDialogViewModel" Content="Content" DialogSubtitle="@($"{Content.SelectedItem?.StartingDate}")">
+	<DialogContent>
+		@if (Content.SelectedItem is not null)
+		{
+			<FluentTextField @bind-Value="Content.SelectedItem.Description" Label="Description" />
+		}
+	</DialogContent>
+</BaseModelDialog>

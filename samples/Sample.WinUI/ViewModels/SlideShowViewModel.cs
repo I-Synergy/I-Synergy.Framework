@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Sample.Models;
 using System.Collections.ObjectModel;
@@ -20,7 +21,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Display"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Display"); } }
 
     /// <summary>
     /// Gets or sets the Items property value.
@@ -56,8 +57,9 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// Initializes a new instance of the <see cref="SlideShowViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public SlideShowViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public SlideShowViewModel(ICommonServices commonServices, ILogger<SlideShowViewModel> logger)
+        : base(commonServices, logger)
     {
         UpdateSourceTimer = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
         UpdateSourceTimer.Elapsed += UpdateSourceTimer_Tick;
@@ -97,11 +99,11 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
             {
                 if ((SelectedItem is null && Items is not null) || (SelectedItem is not null && Items is not null && SelectedItem.Index == Items.Count - 1))
                 {
-                    SelectedItem = Items[0];
+                    SetSelectedItem(Items[0]);
                 }
                 else if (SelectedItem is not null && Items is not null && SelectedItem.Index < (Items.Count - 1))
                 {
-                    SelectedItem = Items.Single(q => q.Index == SelectedItem.Index + 1);
+                    SetSelectedItem(Items.Single(q => q.Index == SelectedItem.Index + 1));
                 }
             });
         });

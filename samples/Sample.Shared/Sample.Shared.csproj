@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<RootNamespace>Sample</RootNamespace>
 		<IsPackable>false</IsPackable>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -14,8 +14,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization\ISynergy.Framework.Synchronization.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization\ISynergy.Framework.Synchronization.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

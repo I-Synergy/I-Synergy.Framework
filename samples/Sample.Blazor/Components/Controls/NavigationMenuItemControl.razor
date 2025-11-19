@@ -1,0 +1,26 @@
+﻿@using ISynergy.Framework.AspNetCore.Blazor.Models
+@using Microsoft.FluentUI.AspNetCore.Components
+
+@switch (Value)
+{
+    case NavigationGroup group:
+        <FluentNavGroup @bind-Expanded="@group.Expanded" Gap="@group.Gap" Icon="@((Icon?)group.Icon)" Title="@group.Name" >
+            <ChildContent>
+                @foreach(var item in group.Children)
+                {
+                    <NavigationMenuItemControl Value="item" />
+                }
+            </ChildContent>
+        </FluentNavGroup>
+        break;
+    case NavigationLink:
+        <FluentNavLink Icon="@((Icon?)Value.Icon)" Href="@Value.Href" Match="@Value.Match">
+            @(new MarkupString(Value.Name))
+        </FluentNavLink>
+        break;
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public required NavigationItem Value { get; set; }
+}

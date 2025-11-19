@@ -1,0 +1,45 @@
+﻿@using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Services
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using Microsoft.FluentUI.AspNetCore.Components
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+@inject INavigationMenuService NavigationMenuService;
+
+<FluentNavMenu id="main_menu" Width="250" Title="Main menu" CustomToggle="true" Collapsible="true" CollapsedChildNavigation="true">
+	@foreach (var item in NavigationMenuService.MenuItems)
+	{
+		<NavigationMenuItemControl Value="item" />
+	}
+</FluentNavMenu>
+
+@code {
+	private bool _hasNavigatedToFirstItem = false;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !_hasNavigatedToFirstItem)
+		{
+			var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+			// Check if user is authenticated
+			if (authState.User?.Identity?.IsAuthenticated == true && NavigationMenuService.MenuItems.Count > 0)
+			{
+				// Check if we're not already on a budgets page to avoid infinite navigation
+				var currentUri = NavigationManager.Uri;
+				var firstMenuItemHref = NavigationMenuService.MenuItems[0]?.Href;
+
+				if (!string.IsNullOrEmpty(firstMenuItemHref) &&
+					!currentUri.Equals($"{NavigationManager.BaseUri}{firstMenuItemHref}"))
+				{
+					_hasNavigatedToFirstItem = true;
+
+					// Navigate to the first menu item (Dashboard)
+					NavigationManager.NavigateTo(firstMenuItemHref);
+				}
+			}
+		}
+
+		await base.OnAfterRenderAsync(firstRender);
+	}
+}

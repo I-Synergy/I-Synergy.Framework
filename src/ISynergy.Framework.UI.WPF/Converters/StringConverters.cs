@@ -20,9 +20,9 @@ public sealed class IsNullOrEmptyToBooleanConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (string.IsNullOrEmpty(value.ToString()))
+        if (string.IsNullOrEmpty(value?.ToString()))
             return false;
 
         return true;
@@ -37,7 +37,7 @@ public sealed class IsNullOrEmptyToBooleanConverter : IValueConverter
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -58,7 +58,7 @@ public class StringToGeometryConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is null)
             return null!;
@@ -78,7 +78,7 @@ public class StringToGeometryConverter : IValueConverter
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

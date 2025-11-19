@@ -8,14 +8,14 @@ namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>
 /// Class TreeNode.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// Implements the <see cref="IDisposable" />
 /// </summary>
 /// <typeparam name="TKey">The type of the t identifier.</typeparam>
 /// <typeparam name="TModel">The type of the t model.</typeparam>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IDisposable" />
-public class TreeNode<TKey, TModel> : ObservableClass
+public class TreeNode<TKey, TModel> : ObservableValidatedClass
     where TKey : struct
     where TModel : class
 {

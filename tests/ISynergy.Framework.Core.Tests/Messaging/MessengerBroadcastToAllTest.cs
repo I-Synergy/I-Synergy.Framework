@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
 
@@ -19,26 +20,33 @@ public class MessengerBroadcastToAllTest
         private set;
     }
 
+    private readonly IMessengerService _messenger;
+    private readonly ILogger<MessengerService> _logger;
+
+    public MessengerBroadcastToAllTest()
+    {
+        _logger = Mock.Of<ILogger<MessengerService>>();
+        _messenger = new MessengerService(_logger);
+    }
+
     [TestMethod]
     public void TestSendingToAllRecipients()
     {
         const string TestContent = "abcd";
 
         Reset();
-        MessageService.Reset();
 
-        MessageService.Default.Register<TestMessage>(this, m => StringContent1 = m.Content);
-
-        MessageService.Default.Register<TestMessage>(this, m => StringContent2 = m.Content);
+        _messenger.Register<TestMessage>(this, m => StringContent1 = m.Content);
+        _messenger.Register<TestMessage>(this, m => StringContent2 = m.Content);
 
         TestRecipient externalRecipient = new();
-        externalRecipient.RegisterWith(MessageService.Default);
+        externalRecipient.RegisterWith(_messenger);
 
         Assert.AreEqual(null, StringContent1);
         Assert.AreEqual(null, StringContent2);
         Assert.AreEqual(null, externalRecipient.StringContent);
 
-        MessageService.Default.Send(new TestMessage
+        _messenger.Send(new TestMessage
         {
             Content = TestContent
         });
@@ -73,9 +81,9 @@ public class MessengerBroadcastToAllTest
             private set;
         }
 
-        internal void RegisterWith(IMessageService messenger)
+        internal void RegisterWith(IMessengerService _messenger)
         {
-            messenger.Register<TestMessage>(this, m => StringContent = m.Content);
+            _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
         }
     }
 }

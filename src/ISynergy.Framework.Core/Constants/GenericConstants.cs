@@ -114,7 +114,7 @@ public static class GenericConstants
     /// <summary>
     /// The viewmodel with generic parameter
     /// </summary>
-    public const string ViewModelTRegex = ".*ViewModel`.*";
+    public const string ViewModelTRegex = @".*ViewModel.*`\d+$";
     /// <summary>
     /// The shell view model
     /// </summary>
@@ -141,16 +141,6 @@ public static class GenericConstants
     /// The relations
     /// </summary>
     public const string Relations = "relations";
-
-    /// <summary>
-    /// The username prefix test
-    /// </summary>
-    public const string UsernamePrefixTest = "test?";
-
-    /// <summary>
-    /// The username prefix local
-    /// </summary>
-    public const string UsernamePrefixLocal = "local?";
 
     /// <summary>
     /// The temporary URL
@@ -185,4 +175,7 @@ public static class GenericConstants
     /// The number of payments to list
     /// </summary>
     public const int NumberOfPaymentsToList = 50;
+
+
+    public const string DockerEnvironment = "Docker";
 }

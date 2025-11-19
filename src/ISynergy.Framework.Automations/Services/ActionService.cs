@@ -23,16 +23,16 @@ public class ActionService : IActionService
     /// </summary>
     /// <param name="manager"></param>
     /// <param name="options"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public ActionService(
         IActionManager manager,
         IOptions<AutomationOptions> options,
-        ILoggerFactory loggerFactory)
+        ILogger<ActionService> logger)
     {
         _tasks = new List<IAction>();
         _manager = manager;
         _options = options.Value;
-        _logger = loggerFactory.CreateLogger<ActionService>();
+        _logger = logger;
     }
 
     /// <summary>

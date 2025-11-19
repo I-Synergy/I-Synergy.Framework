@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Commands.Base;
 using System.Runtime.CompilerServices;
-
-#nullable enable
 
 namespace ISynergy.Framework.Mvvm.Commands;
 
@@ -19,35 +19,62 @@ public sealed class RelayCommand : BaseRelayCommand
 
     public RelayCommand(Action execute)
     {
-        Argument.IsNotNull(execute);
-        _execute = execute;
+        _execute = Argument.IsNotNull(execute);
     }
 
     public RelayCommand(Action execute, Func<bool> canExecute)
         : this(execute)
     {
-        Argument.IsNotNull(canExecute);
-        _canExecute = canExecute;
+        _canExecute = Argument.IsNotNull(canExecute);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool CanExecute(object? parameter)
     {
         ThrowIfDisposed();
-        return _canExecute?.Invoke() != false;
+
+        lock (_syncLock)
+        {
+            return _canExecute?.Invoke() != false;
+        }
     }
 
     public override void Execute(object? parameter)
     {
         ThrowIfDisposed();
 
-        try
+        lock (_syncLock)
         {
-            _execute();
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex);
+            try
+            {
+                _execute?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                // Try to handle exception via service
+                bool handled = false;
+                try
+                {
+                    var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
+                    if (exceptionHandlerService is not null)
+                    {
+                        exceptionHandlerService.HandleException(ex);
+                        handled = true;
+                    }
+                }
+                catch
+                {
+                    // If exception handler fails, re-throw the original exception
+                    throw;
+                }
+
+                // If exception was successfully handled, suppress it to prevent app crash
+                // Otherwise, re-throw to maintain original behavior when no handler is available
+                if (!handled)
+                {
+                    throw;
+                }
+            }
         }
     }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FlyoutPage
+    x:Class="Sample.Views.ShellView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    xmlns:views="clr-namespace:Sample.Views"
+    x:DataType="viewmodels:ShellViewModel"
+    FlyoutLayoutBehavior="Popover"
+    BackgroundColor="{DynamicResource Primary}">
+
+    <FlyoutPage.Flyout>
+        <c:NavigationMenu x:Name="MenuFlyout">
+            <c:NavigationMenu.IconImageSource>
+                <FontImageSource Glyph="&#xe700;" FontFamily="SegoeMdl2" Size="18" Color="{AppThemeBinding Dark=White, Light=Black}"/>
+            </c:NavigationMenu.IconImageSource>
+        </c:NavigationMenu>
+    </FlyoutPage.Flyout>
+</FlyoutPage>

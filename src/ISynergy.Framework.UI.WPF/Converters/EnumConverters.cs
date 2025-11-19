@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using System.Globalization;
 using System.Windows.Data;
@@ -20,7 +21,7 @@ public class EnumToArrayConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var list = new List<KeyValuePair<int, string>>();
 
@@ -41,7 +42,7 @@ public class EnumToArrayConverter : IValueConverter
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
@@ -55,6 +56,6 @@ public class EnumToArrayConverter : IValueConverter
     public static string GetDescription(Enum value)
     {
         Argument.IsNotNull(nameof(value));
-        return LanguageService.Default.GetString(value.ToString());
+        return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(value.ToString());
     }
 }

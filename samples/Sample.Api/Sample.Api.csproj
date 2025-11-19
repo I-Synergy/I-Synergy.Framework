@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
@@ -15,7 +15,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
-		<ProjectReference Include="..\..\src\ISynergy.Framework.Logging.OpenTelemetry\ISynergy.Framework.Logging.OpenTelemetry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.ApplicationInsights\ISynergy.Framework.OpenTelemetry.ApplicationInsights.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.Sentry\ISynergy.Framework.OpenTelemetry.Sentry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
 	</ItemGroup>
 
 

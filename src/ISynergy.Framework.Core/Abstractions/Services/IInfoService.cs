@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ISynergy.Framework.Core.Abstractions.Services;
 
@@ -34,27 +33,8 @@ public interface IInfoService
     /// <value>The product version.</value>
     Version ProductVersion { get; }
     /// <summary>
-    /// Hostname of the machine.
-    /// </summary>
-    string HostName { get; }
-    /// <summary>
-    /// IP Address of the machine.
-    /// </summary>
-    string IPAddress { get; }
-    /// <summary>
-    /// Gets the application title.
-    /// </summary>
-    string Title { get; }
-
-    /// <summary>
     /// Loads the assembly into the Version service.
     /// </summary>
     /// <param name="assembly"></param>
     void LoadAssembly(Assembly assembly);
-
-    /// <summary>
-    /// Sets the title.
-    /// </summary>
-    /// <param name="environment"></param>
-    void SetTitle(SoftwareEnvironments environment);
 }

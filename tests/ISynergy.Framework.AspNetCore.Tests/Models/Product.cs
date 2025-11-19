@@ -7,9 +7,9 @@ namespace ISynergy.Framework.AspNetCore.Tests.Models;
 
 /// <summary>
 /// Class Product.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 public class Product : BaseModel
 {
     /// <summary>
@@ -17,7 +17,7 @@ public class Product : BaseModel
     /// </summary>
     public Product()
     {
-        Validator = new Action<IObservableClass>(_ =>
+        Validator = new Action<IObservableValidatedClass>(_ =>
         {
             if (Quantity == 0)
             {

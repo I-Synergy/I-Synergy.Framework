@@ -1,10 +1,12 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using Sample.Models;
 using Sample.Views;
 using System.Collections.ObjectModel;
@@ -17,20 +19,23 @@ namespace Sample.ViewModels;
 /// </summary>
 public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 {
+    private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
+
     /// <summary>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Converters"); } }
 
-    public AsyncRelayCommand? SelectSingleCommand { get; private set; }
-    public AsyncRelayCommand? SelectMultipleCommand { get; private set; }
-    public AsyncRelayCommand? ShowDialogYesNo { get; set; }
-    public AsyncRelayCommand? ShowDialogYesNoCancel { get; set; }
-    public AsyncRelayCommand? ShowDialogOk { get; set; }
-    public AsyncRelayCommand? ShowDialogOkCancel { get; set; }
-    public AsyncRelayCommand? ShowUnitsCommand { get; private set; }
-    public AsyncRelayCommand? ShowTestCommand { get; private set; }
+    public AsyncRelayCommand SelectSingleCommand { get; private set; }
+    public AsyncRelayCommand SelectMultipleCommand { get; private set; }
+    public AsyncRelayCommand ShowDialogYesNo { get; set; }
+    public AsyncRelayCommand ShowDialogYesNoCancel { get; set; }
+    public AsyncRelayCommand ShowDialogOk { get; set; }
+    public AsyncRelayCommand ShowDialogOkCancel { get; set; }
+    public AsyncRelayCommand ShowUnitsCommand { get; private set; }
+    public AsyncRelayCommand ShowTestCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the selected test items.
@@ -42,15 +47,21 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public SelectionTestViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
+    /// <param name="logger"></param>
+    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<SelectionTestViewModel> logger)
+        : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
-        ShowDialogYesNo = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNo));
-        ShowDialogYesNoCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
-        ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
-        ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
+        ShowDialogYesNo = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButtons.YesNo));
+        ShowDialogYesNoCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButtons.YesNoCancel));
+        ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButtons.OK));
+        ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButtons.OKCancel));
         ShowUnitsCommand = new AsyncRelayCommand(ShowUnitsAsync);
         ShowTestCommand = new AsyncRelayCommand(ShowUnitsAsync, canExecute: () => CanExecuteTest);
     }
@@ -67,9 +78,9 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 
     private async Task ShowUnitsAsync()
     {
-        TestViewModel vm = new TestViewModel(_commonServices);
+        TestViewModel vm = _commonServices.ScopedContextService.GetRequiredService<TestViewModel>();
         vm.Submitted += Vm_Submitted;
-        await _commonServices.DialogService.ShowDialogAsync(typeof(TestWindow), vm);
+        await _dialogService.ShowDialogAsync(typeof(TestWindow), vm);
     }
 
     private async void Vm_Submitted(object? sender, SubmitEventArgs<object> e)
@@ -79,25 +90,25 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 
         CanExecuteTest = !CanExecuteTest;
 
-        await _commonServices.DialogService.ShowInformationAsync($"{e.Result} selected.");
+        await _dialogService.ShowInformationAsync($"{e.Result} selected.");
     }
 
     public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName!.Equals(nameof(CanExecuteTest)))
         {
-            ShowTestCommand.NotifyCanExecuteChanged();
+            ShowTestCommand?.NotifyCanExecuteChanged();
         }
     }
 
-    private async Task ShowDialogAsync(MessageBoxButton buttons)
+    private async Task ShowDialogAsync(MessageBoxButtons buttons)
     {
-        MessageBoxResult result = await _commonServices.DialogService.ShowMessageAsync(
+        MessageBoxResult result = await _dialogService.ShowMessageAsync(
                             $"Testing {buttons} Dialog",
                             "Test",
                             buttons);
 
-        await _commonServices.DialogService.ShowInformationAsync($"{result} selected.", "Result...");
+        await _dialogService.ShowInformationAsync($"{result} selected.", "Result...");
     }
 
     /// <summary>
@@ -106,9 +117,13 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectMultipleAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVm = new ViewModelSelectionBlade<TestItem>(_commonServices, Items, SelectedTestItems, SelectionModes.Multiple);
+        ViewModelSelectionBlade<TestItem> selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
+        selectionVm.SetSelectionMode(SelectionModes.Multiple);
+        selectionVm.SetItems(Items);
+        selectionVm.SetSelectedItems(SelectedTestItems);
+
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-        return _commonServices.NavigationService.OpenBladeAsync(this, selectionVm);
+        return _navigationService.OpenBladeAsync(this, selectionVm);
     }
 
     /// <summary>
@@ -117,9 +132,12 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectSingleAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVm = new ViewModelSelectionBlade<TestItem>(_commonServices, Items, SelectedTestItems, SelectionModes.Single);
+        ViewModelSelectionBlade<TestItem> selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
+        selectionVm.SetSelectionMode(SelectionModes.Single);
+        selectionVm.SetItems(Items);
+        selectionVm.SetSelectedItems(SelectedTestItems);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
-        return _commonServices.NavigationService.OpenBladeAsync(this, selectionVm);
+        return _navigationService.OpenBladeAsync(this, selectionVm);
     }
 
     /// <summary>
@@ -135,7 +153,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         SelectedTestItems = new ObservableCollection<TestItem>();
         SelectedTestItems.AddRange(e.Result);
 
-        await _commonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
+        await _dialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
     }
 
     /// <summary>
@@ -148,7 +166,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         if (sender is ViewModelSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
 
-        await _commonServices.DialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
+        await _dialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
     }
 
     /// <summary>
@@ -212,11 +230,10 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         throw new NotImplementedException();
     }
 
-    public override void Cleanup()
+    public override void Cleanup(bool isClosing = true)
     {
-        base.Cleanup();
-
         SelectedTestItems?.Clear();
+        base.Cleanup(isClosing);
     }
 
     protected override void Dispose(bool disposing)

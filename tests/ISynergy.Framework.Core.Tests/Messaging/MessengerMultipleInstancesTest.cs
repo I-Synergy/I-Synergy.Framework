@@ -1,26 +1,36 @@
-﻿using ISynergy.Framework.Core.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
 
 [TestClass]
 public class MessengerMultipleInstancesTest
 {
+    private readonly IMessengerService _messenger1;
+    private readonly IMessengerService _messenger2;
+    private readonly ILogger<MessengerService> _logger;
+
+    public MessengerMultipleInstancesTest()
+    {
+        _logger = Mock.Of<ILogger<MessengerService>>();
+        _messenger1 = new MessengerService(_logger);
+        _messenger2 = new MessengerService(_logger);
+    }
+
     [TestMethod]
     public void TestMultipleMessengerInstances()
     {
-        MessageService messenger1 = new();
-        MessageService messenger2 = new();
-
         TestRecipient1 recipient11 = new();
         TestRecipient1 recipient12 = new();
         TestRecipient2 recipient21 = new();
         TestRecipient2 recipient22 = new();
 
-        messenger1.Register<string>(recipient11, recipient11.ReceiveMessage);
-        messenger2.Register<string>(recipient12, recipient12.ReceiveMessage);
-        messenger1.Register<string>(recipient21, recipient21.ReceiveMessage);
-        messenger2.Register<string>(recipient22, recipient22.ReceiveMessage);
+        _messenger1.Register<string>(recipient11, recipient11.ReceiveMessage);
+        _messenger2.Register<string>(recipient12, recipient12.ReceiveMessage);
+        _messenger1.Register<string>(recipient21, recipient21.ReceiveMessage);
+        _messenger2.Register<string>(recipient22, recipient22.ReceiveMessage);
 
         const string TestContent1 = "abcd";
         const string TestContent2 = "efgh";
@@ -30,14 +40,14 @@ public class MessengerMultipleInstancesTest
         Assert.AreEqual(null, recipient21.ReceivedContentString);
         Assert.AreEqual(null, recipient22.ReceivedContentString);
 
-        messenger1.Send(TestContent1);
+        _messenger1.Send(TestContent1);
 
         Assert.AreEqual(TestContent1, recipient11.ReceivedContentString);
         Assert.AreEqual(null, recipient12.ReceivedContentString);
         Assert.AreEqual(TestContent1, recipient21.ReceivedContentString);
         Assert.AreEqual(null, recipient22.ReceivedContentString);
 
-        messenger2.Send(TestContent2);
+        _messenger2.Send(TestContent2);
 
         Assert.AreEqual(TestContent1, recipient11.ReceivedContentString);
         Assert.AreEqual(TestContent2, recipient12.ReceivedContentString);

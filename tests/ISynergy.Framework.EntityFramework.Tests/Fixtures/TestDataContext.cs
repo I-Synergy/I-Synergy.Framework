@@ -1,12 +1,14 @@
-﻿using ISynergy.Framework.EntityFramework.Tests.Entities;
+using ISynergy.Framework.EntityFramework.Tests.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ISynergy.Framework.EntityFramework.Tests.Fixtures;
 
-internal class TestDataContext : DbContext
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
+public class TestDataContext : DbContext
 {
     public TestDataContext(DbContextOptions<TestDataContext> options)
-        : base(options)
+       : base(options)
     {
     }
 

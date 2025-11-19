@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace ISynergy.Framework.UI.Controls;
@@ -16,19 +17,23 @@ namespace ISynergy.Framework.UI.Controls;
 [Bindable(true)]
 public partial class Window : System.Windows.Window, IWindow
 {
-    private IViewModel? _viewModel;
-
     /// <summary>
-    /// Gets or sets the viewmodel and data context for a window.
+    /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public IViewModel ViewModel
     {
-        get => _viewModel;
+        get
+        {
+            if (DataContext is IViewModel viewModel)
+                return viewModel;
+
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+        }
         set
         {
-            _viewModel = value;
-            DataContext = _viewModel;
+            DataContext = value;
+            SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
         }
     }
 
@@ -63,11 +68,10 @@ public partial class Window : System.Windows.Window, IWindow
     }
 
     /// <summary>
-    /// show as an asynchronous operation.
+    /// Shows the window as an asynchronous operation.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <returns><c>true</c> if the dialog was accepted or confirmed; otherwise, <c>false</c>.</returns>
     public Task<bool> ShowAsync<TEntity>()
     {
         var result = ShowDialog();
@@ -78,6 +82,12 @@ public partial class Window : System.Windows.Window, IWindow
         }
 
         return Task.FromResult(false);
+    }
+
+    public Task CloseAsync()
+    {
+        Close();
+        return Task.CompletedTask;
     }
 
     #region IDisposable

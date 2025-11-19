@@ -15,7 +15,7 @@ public class UnitTests
     [TestMethod()]
     public void UnitEmptyContructorTest()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Unit(Enumerations.Units.second, Array.Empty<UnitTypes>(), null!, null!));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Unit(Enumerations.Units.second, Array.Empty<UnitTypes>(), null!, null!));
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class UnitTests
     [TestMethod()]
     public void UnitNulledConstructorTest()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Unit(Enumerations.Units.second, Array.Empty<UnitTypes>(), null!, null!));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Unit(Enumerations.Units.second, Array.Empty<UnitTypes>(), null!, null!));
     }
 
     /// <summary>

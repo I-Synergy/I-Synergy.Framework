@@ -1,28 +1,20 @@
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-using System.Collections;
-using System.Collections.ObjectModel;
+using ISynergy.Framework.Core.Locators;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
 namespace ISynergy.Framework.Core.Base;
 
-/// <summary>
-/// Class ObservableClass.
-/// Implements the <see cref="IObservableClass" />
-/// </summary>
-/// <seealso cref="IObservableClass" />
 public abstract class ObservableClass : IObservableClass
 {
-    private PropertyChangedEventHandler? _propertyChanged;
-    private EventHandler<DataErrorsChangedEventArgs>? _errorsChanged;
-    private bool _disposed;
-
+    protected PropertyChangedEventHandler? _propertyChanged;
+    protected bool _disposed;
 
     /// <summary>
     /// Gets or sets the IsDisposed property value.
@@ -37,19 +29,6 @@ public abstract class ObservableClass : IObservableClass
     }
 
     /// <summary>
-    /// Automatic validation trigger.
-    /// </summary>
-    [JsonIgnore]
-    [DataTableIgnore]
-    [XmlIgnore]
-    [Display(AutoGenerateField = false)]
-    public bool AutomaticValidationTrigger
-    {
-        get => GetValue<bool>();
-        set => SetValue(value);
-    }
-
-    /// <summary>
     /// Gets the properties.
     /// </summary>
     /// <value>The properties.</value>
@@ -58,16 +37,6 @@ public abstract class ObservableClass : IObservableClass
     [XmlIgnore]
     [Display(AutoGenerateField = false)]
     public Dictionary<string, IProperty> Properties { get; } = new Dictionary<string, IProperty>();
-
-    /// <summary>
-    /// Gets or sets the validator.
-    /// </summary>
-    /// <value>The validator.</value>
-    [JsonIgnore]
-    [DataTableIgnore]
-    [XmlIgnore]
-    [Display(AutoGenerateField = false)]
-    public Action<IObservableClass>? Validator { set; get; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is dirty.
@@ -83,16 +52,6 @@ public abstract class ObservableClass : IObservableClass
     }
 
     /// <summary>
-    /// Returns true if ... is valid.
-    /// </summary>
-    /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
-    [JsonIgnore]
-    [DataTableIgnore]
-    [XmlIgnore]
-    [Display(AutoGenerateField = false)]
-    public bool IsValid => !HasErrors;
-
-    /// <summary>
     /// Checks if both objects are the same based on common identity property.
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
@@ -100,25 +59,14 @@ public abstract class ObservableClass : IObservableClass
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
-        {
             return true;
-        }
-
-        if (obj is IObservableClass observable && observable.HasIdentityProperty())
-            return observable.GetIdentityValue()!.Equals(this.GetIdentityValue());
 
         var currentPropertiesToCheck = this.GetType()
             .GetProperties()
             .Where(q =>
-                !q.Name.Equals(nameof(IObservableClass.AutomaticValidationTrigger)) &&
-                !q.Name.Equals(nameof(IObservableClass.Error)) &&
-                !q.Name.Equals(nameof(IObservableClass.Errors)) &&
-                !q.Name.Equals(nameof(IObservableClass.HasErrors)) &&
                 !q.Name.Equals("Item") &&
                 !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableClass.IsValid)) &&
-                !q.Name.Equals(nameof(IObservableClass.Properties)) &&
-                !q.Name.Equals(nameof(IObservableClass.Validator)));
+                !q.Name.Equals(nameof(IObservableClass.Properties)));
 
         if (obj is null)
             return false;
@@ -126,22 +74,14 @@ public abstract class ObservableClass : IObservableClass
         var propertiesToCheck = obj.GetType()
             .GetProperties()
             .Where(q =>
-                !q.Name.Equals(nameof(IObservableClass.AutomaticValidationTrigger)) &&
-                !q.Name.Equals(nameof(IObservableClass.Error)) &&
-                !q.Name.Equals(nameof(IObservableClass.Errors)) &&
-                !q.Name.Equals(nameof(IObservableClass.HasErrors)) &&
                 !q.Name.Equals("Item") &&
                 !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableClass.IsValid)) &&
-                !q.Name.Equals(nameof(IObservableClass.Properties)) &&
-                !q.Name.Equals(nameof(IObservableClass.Validator)));
+                !q.Name.Equals(nameof(IObservableClass.Properties)));
 
         foreach (var property in currentPropertiesToCheck.EnsureNotNull())
         {
             if (!propertiesToCheck.Any(a => a.Name.Equals(property.Name)))
-            {
                 return false;
-            }
 
             if (propertiesToCheck.SingleOrDefault(q => q.Name.Equals(property.Name)) is { } propertyInfo)
             {
@@ -152,44 +92,20 @@ public abstract class ObservableClass : IObservableClass
                 }
 
                 if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this)!.Equals(propertyInfo.GetValue(obj)))
-                {
                     return false;
-                }
             }
         }
 
         return true;
     }
 
+
     /// <summary>
     /// Returns a hash code for this instance.
     /// </summary>
     /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-    public override int GetHashCode()
-    {
-        var identityValue = this.GetIdentityValue();
-
-        if (identityValue is not null)
-            return identityValue.GetHashCode();
-
-        return new HashCode().ToHashCode();
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ObservableClass" /> class.
-    /// </summary>
-    /// <param name="automaticValidationTrigger">The validation.</param>
-    protected ObservableClass(bool automaticValidationTrigger = false)
-    {
-        AutomaticValidationTrigger = automaticValidationTrigger;
-        ErrorsChanged += ObservableClass_ErrorsChanged;
-    }
-
-    private void ObservableClass_ErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
-    {
-        RaisePropertyChanged(nameof(HasErrors));
-        RaisePropertyChanged(nameof(Errors));
-    }
+    public override int GetHashCode() =>
+        new HashCode().ToHashCode();
 
     /// <summary>
     /// Gets the value.
@@ -220,7 +136,7 @@ public abstract class ObservableClass : IObservableClass
     /// <typeparam name="T"></typeparam>
     /// <param name="value">The value.</param>
     /// <param name="propertyName">Name of the property.</param>
-    protected void SetValue<T>(T? value, [CallerMemberName] string? propertyName = "")
+    protected void SetValue<T>(T value, [CallerMemberName] string? propertyName = "")
     {
         SetValueCore<T>(value, propertyName, !IsInCleanup);
     }
@@ -238,7 +154,7 @@ public abstract class ObservableClass : IObservableClass
         field = value;
     }
 
-    private void SetValueCore<T>(T? value, string? propertyName, bool shouldRaiseEvents)
+    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents)
     {
         if (propertyName is null)
             return;
@@ -266,172 +182,26 @@ public abstract class ObservableClass : IObservableClass
         {
             property.Value = value;
             RaisePropertyChanged(propertyName);
-
-            if (AutomaticValidationTrigger)
-                Validate();
         }
-    }
-
-    /// <summary>
-    /// Clears the errors.
-    /// </summary>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-    public bool ClearErrors()
-    {
-        Errors.Clear();
-
-        RaisePropertyChanged(nameof(IsValid));
-        OnErrorsChanged(nameof(Errors));
-
-        return IsValid;
-    }
-
-    /// <summary>
-    /// Validates this instance.
-    /// </summary>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-    public bool Validate(bool validateUnderlayingProperties = true)
-    {
-        ClearErrors();
-
-        if (validateUnderlayingProperties)
-        {
-            foreach (var property in this.GetType().GetProperties().Where(q => q.PropertyType.GetInterfaces().Contains(typeof(IObservableClass)) && !q.IsDefined(typeof(IgnoreValidationAttribute))).EnsureNotNull())
-            {
-                if (property.GetValue(this, null) is ObservableClass observable &&
-                    !observable.Validate(validateUnderlayingProperties))
-                {
-                    Errors.AddRange(observable.Errors);
-                    observable.Errors.Clear();
-                }
-            }
-        }
-
-        Validator?.Invoke(this);
-
-        RaisePropertyChanged(nameof(IsValid));
-        OnErrorsChanged(nameof(Errors));
-
-        return IsValid;
     }
 
     /// <summary>
     /// Reverts this instance.
     /// </summary>
-    public void Revert()
+    public virtual void Revert()
     {
         foreach (var property in Properties.EnsureNotNull())
             property.Value.ResetChanges();
-
-        if (AutomaticValidationTrigger)
-            Validate();
     }
 
     /// <summary>
     /// Marks as clean.
     /// </summary>
-    public void MarkAsClean()
+    public virtual void MarkAsClean()
     {
         foreach (var property in Properties.EnsureNotNull())
             property.Value.MarkAsClean();
-
-        if (AutomaticValidationTrigger)
-            Validate();
     }
-
-    #region IDataErrorInfo
-    public void AddValidationError(string propertyName, string errorMessage)
-    {
-        Errors.Add(new KeyValuePair<string, string>(propertyName, errorMessage));
-
-        OnErrorsChanged(nameof(Errors));
-        RaisePropertyChanged(nameof(IsValid));
-    }
-
-
-    [JsonIgnore]
-    [DataTableIgnore]
-    [XmlIgnore]
-    [Display(AutoGenerateField = false)]
-    public ObservableCollection<KeyValuePair<string, string>> Errors { get; } = [];
-
-    [JsonIgnore]
-    [DataTableIgnore]
-    [XmlIgnore]
-    [Display(AutoGenerateField = false)]
-    public string Error
-    {
-        get
-        {
-            return string.Empty;
-        }
-    }
-
-    [JsonIgnore]
-    [DataTableIgnore]
-    [XmlIgnore]
-    [Display(AutoGenerateField = false)]
-    public string this[string propertyName]
-    {
-        get
-        {
-            if (!string.IsNullOrEmpty(propertyName) && Errors.Any(a => a.Key.Equals(propertyName)))
-                return Errors
-                    .FirstOrDefault(q => q.Key.Equals(propertyName))
-                    .Value ?? propertyName;
-            return string.Empty;
-        }
-    }
-    #endregion
-
-    #region INotifyDataErrorInfo Members
-
-    public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged
-    {
-        add
-        {
-            ThrowIfDisposed();
-            _errorsChanged += value;
-        }
-        remove
-        {
-            _errorsChanged -= value;
-        }
-    }
-
-    protected virtual void OnErrorsChanged([CallerMemberName] string? propertyName = "")
-    {
-        ThrowIfDisposed();
-        _errorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-    }
-
-    public IEnumerable GetErrors(string? propertyName)
-    {
-        if (!string.IsNullOrEmpty(propertyName))
-        {
-            if (Errors.Any(a => a.Key.Equals(propertyName)))
-            {
-                return Errors
-                    .Where(q => q.Key.Equals(propertyName))
-                    .Select(s => s.Value)
-                    .ToList();
-            }
-
-            return Enumerable.Empty<string>();
-        }
-
-        return Errors.SelectMany(m => m.Value.ToList()).ToList();
-    }
-
-    [JsonIgnore]
-    [DataTableIgnore]
-    [XmlIgnore]
-    [Display(AutoGenerateField = false)]
-    public bool HasErrors
-    {
-        get => Errors.Any(a => a.Value.Any());
-    }
-    #endregion
 
     #region INotifyPropertyChanged
     /// <summary>
@@ -458,7 +228,33 @@ public abstract class ObservableClass : IObservableClass
     public virtual void RaisePropertyChanged([CallerMemberName] string? propertyName = "")
     {
         ThrowIfDisposed();
-        _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        
+        if (_propertyChanged != null)
+        {
+            // Invoke each handler individually to prevent one exception from stopping others
+            var handlers = _propertyChanged.GetInvocationList();
+            foreach (PropertyChangedEventHandler handler in handlers)
+            {
+                try
+                {
+                    handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                }
+                catch (Exception ex)
+                {
+                    // Try to use exception handler service if available
+                    try
+                    {
+                        var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
+                        exceptionHandlerService?.HandleException(ex);
+                    }
+                    catch
+                    {
+                        // If exception handler service is not available, log to debug
+                        System.Diagnostics.Debug.WriteLine($"Exception in PropertyChanged handler for {propertyName}: {ex.Message}");
+                    }
+                }
+            }
+        }
     }
     #endregion
 
@@ -486,8 +282,6 @@ public abstract class ObservableClass : IObservableClass
         if (disposing)
         {
             // free managed resources
-            Validator = null;
-
             if (Properties is not null)
             {
                 //Dispose of all properties that implement IDisposable
@@ -499,25 +293,9 @@ public abstract class ObservableClass : IObservableClass
                 Properties.Clear();
             }
 
-            Errors?.Clear();
-
-            if (_errorsChanged is not null)
-            {
-                foreach (var @delegate in _errorsChanged.GetInvocationList())
-                {
-                    if (@delegate is not null)
-                        _errorsChanged -= (EventHandler<DataErrorsChangedEventArgs>)@delegate;
-                }
-            }
-
-            if (_propertyChanged is not null)
-            {
-                foreach (var @delegate in _propertyChanged.GetInvocationList())
-                {
-                    if (@delegate is not null)
-                        _propertyChanged -= (PropertyChangedEventHandler)@delegate;
-                }
-            }
+            // Clear event handlers to prevent memory leaks
+            // Since _propertyChanged is a field-backed event, we can simply set it to null
+            _propertyChanged = null;
         }
 
         // free native resources if there are any.
@@ -538,8 +316,6 @@ public abstract class ObservableClass : IObservableClass
             return;
 
         //Async dispose of managed resources
-        Validator = null;
-
         if (Properties is not null)
         {
             //Dispose of all properties that implement IAsyncDisposable
@@ -552,25 +328,9 @@ public abstract class ObservableClass : IObservableClass
             Properties.Clear();
         }
 
-        Errors?.Clear();
-
-        if (_errorsChanged is not null)
-        {
-            foreach (var @delegate in _errorsChanged.GetInvocationList())
-            {
-                if (@delegate is not null)
-                    _errorsChanged -= (EventHandler<DataErrorsChangedEventArgs>)@delegate;
-            }
-        }
-
-        if (_propertyChanged is not null)
-        {
-            foreach (var @delegate in _propertyChanged.GetInvocationList())
-            {
-                if (@delegate is not null)
-                    _propertyChanged -= (PropertyChangedEventHandler)@delegate;
-            }
-        }
+        // Clear event handlers to prevent memory leaks
+        // Since _propertyChanged is a field-backed event, we can simply set it to null
+        _propertyChanged = null;
 
         _disposed = true;
     }

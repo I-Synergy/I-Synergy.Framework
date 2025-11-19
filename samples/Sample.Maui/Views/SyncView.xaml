@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View 
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    x:DataType="viewmodels:SyncViewModel"
+    x:Class="Sample.Views.SyncView"
+    Title="InfoView">
+
+    <Grid>
+        <VerticalStackLayout 
+            Spacing="25" 
+            VerticalOptions="Center">
+
+            <Label 
+                Text="Synchronize"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="Title"
+                Margin="10"
+                HorizontalOptions="Center" />
+
+            <Label 
+                Text="Sync your local SQLite database from your SQL Server through Web Api."
+                FontSize="Subtitle"
+                Margin="10,10,10,10"
+                HorizontalOptions="Center" />
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Button 
+                    x:Name="BntSync"
+                    Text="Sync"
+                    IsEnabled="{Binding SyncCommandButtonEnabled}"
+                    Command="{Binding SyncCommand}"
+                    HorizontalOptions="Center" />
+
+                <Button 
+                    x:Name="BntReinit"
+                    Text="Reinit"
+                    IsEnabled="{Binding SyncCommandButtonEnabled}"
+                    Command="{Binding SyncReinitializeCommand}"
+                    HorizontalOptions="Center" />
+
+                <Button 
+                    x:Name="BntAddProductCategories"
+                    VerticalOptions="Center" Text="Add Cat" 
+                    IsEnabled="{Binding SyncCommandButtonEnabled}"
+                    Command="{Binding CustomActionCommand}"/>
+
+                <Button 
+                    VerticalOptions="Center" Text="Deprovision Client" 
+                    IsEnabled="{Binding SyncCommandButtonEnabled}"
+                    Command="{Binding DeprovisionClientCommand}"/>
+
+                <Button 
+                    VerticalOptions="Center" Text="Provision Client" 
+                    IsEnabled="{Binding SyncCommandButtonEnabled}"
+                    Command="{Binding ProvisionClientCommand}"/>
+
+            </HorizontalStackLayout>
+
+            <ProgressBar Progress="{Binding SyncProgress}" />
+
+            <Label Text="{Binding SyncProgressionText}" FontSize="12" HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </Grid>
+</c:View>

@@ -14,9 +14,9 @@ public static class HttpContextExtensions
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="responseMessage">The response message.</param>
-    /// <param name="loggerFactory">The logger.</param>
+    /// <param name="logger">The logger.</param>
     /// <returns>Task.</returns>
-    public static Task SendProxiedHttpRequestAsync(this HttpContext context, HttpResponseMessage responseMessage, ILoggerFactory? loggerFactory = null)
+    public static Task SendProxiedHttpRequestAsync(this HttpContext context, HttpResponseMessage responseMessage, ILogger? logger = null)
     {
         var response = context.Response;
 

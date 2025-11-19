@@ -1,8 +1,10 @@
 ﻿using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.Reflection;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.Mvvm.Extensions;
 
@@ -87,8 +89,23 @@ public static class ViewModelExtensions
         return result;
     }
 
+    public static string GetRelatedWindow(this Type viewModelType)
+    {
+        var result = viewModelType.Name;
+
+        if (viewModelType.IsInterface && result.StartsWith("I"))
+            result = result.Substring(1, result.Length - 1);
+
+        result = result.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.Window);
+
+        return result;
+    }
+
     public static string GetRelatedView(this IViewModel viewModel) =>
         viewModel.GetType().GetRelatedView();
+
+    public static string GetRelatedWindow(this IViewModel viewModel) =>
+        viewModel.GetType().GetRelatedWindow();
 
     public static string GetRelatedViewModel(this Type type)
     {
@@ -97,7 +114,10 @@ public static class ViewModelExtensions
         if (type.IsInterface && result.StartsWith("I"))
             result = result.Substring(1, result.Length - 1);
 
-        result = result.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
+        if (type.GetInterfaces().Contains(typeof(IWindow)))
+            result = result.ReplaceLastOf(GenericConstants.Window, GenericConstants.ViewModel);
+        else if (type.GetInterfaces().Contains(typeof(IView)))
+            result = result.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
 
         return result;
     }
@@ -105,6 +125,8 @@ public static class ViewModelExtensions
     public static string GetRelatedViewModel(this IView view) =>
         view.GetType().GetRelatedViewModel();
 
+    public static string GetRelatedViewModel(this IWindow window) =>
+        window.GetType().GetRelatedViewModel();
 
     public static Type? GetRelatedViewType(this string name)
     {
@@ -118,7 +140,50 @@ public static class ViewModelExtensions
                 AppDomain.CurrentDomain.GetAssemblies()
                     .Where(assemblyFilter)
                     .Reverse()
-                    .SelectMany(assembly => assembly.GetTypes())
+                    .SelectMany(assembly => assembly.GetExportedTypes())
                     .FirstOrDefault(t => t.Name.Equals(name));
+    }
+
+    /// <summary>
+    /// Finds and cancels all cancelable commands in the ViewModel.
+    /// </summary>
+    /// <param name="viewModel">The ViewModel.</param>
+    public static void CancelAllCommands(this IViewModel viewModel)
+    {
+        if (viewModel == null) return;
+
+        // Get all properties that are ICancellationAwareCommand
+        var commandProperties = viewModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => typeof(ICancellationAwareCommand).IsAssignableFrom(p.PropertyType));
+
+        foreach (var property in commandProperties)
+        {
+            if (property.GetValue(viewModel) is ICancellationAwareCommand command &&
+                command.IsCancellationSupported)
+            {
+                command.Cancel();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Resets the state of all commands in the ViewModel.
+    /// </summary>
+    /// <param name="viewModel">The ViewModel.</param>
+    public static void ResetAllCommandStates(this IViewModel viewModel)
+    {
+        if (viewModel == null) return;
+
+        // Get all properties that are ICommand
+        var commandProperties = viewModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => typeof(ICommand).IsAssignableFrom(p.PropertyType));
+
+        foreach (var property in commandProperties)
+        {
+            if (property.GetValue(viewModel) is IAsyncRelayCommand command)
+            {
+                command.NotifyCanExecuteChanged();
+            }
+        }
     }
 }

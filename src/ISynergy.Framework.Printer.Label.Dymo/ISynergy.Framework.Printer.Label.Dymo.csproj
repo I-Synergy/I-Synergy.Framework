@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Printer.Label.Dymo</PackageId>
 		<Description>I-Synergy Framework Dymo Label printer library</Description>
 		<PackageTags>I-Synergy, Framework, Printer, Label, Dymo</PackageTags>

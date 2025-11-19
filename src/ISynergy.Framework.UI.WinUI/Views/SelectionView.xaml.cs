@@ -35,7 +35,7 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {
-            viewModel.SelectedItems = new List<object>();
+            viewModel.SetSelectedItems(new List<object>());
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {

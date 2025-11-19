@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace ISynergy.Framework.UI.Controls;
 
@@ -15,19 +16,23 @@ namespace ISynergy.Framework.UI.Controls;
 [Bindable(true)]
 public abstract partial class View : Page, IView
 {
-    private IViewModel? _viewModel;
-
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
     /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public IViewModel ViewModel
     {
-        get => _viewModel;
+        get
+        {
+            if (DataContext is IViewModel viewModel)
+                return viewModel;
+
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+        }
         set
         {
-            _viewModel = value;
-            DataContext = _viewModel;
+            DataContext = value;
+            SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
         }
     }
 

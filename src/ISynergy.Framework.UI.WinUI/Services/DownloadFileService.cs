@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
+﻿using ISynergy.Framework.Core.Models.Results;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Windows.Storage;
 using Windows.System;
@@ -18,12 +18,12 @@ public class DownloadFileService : IDownloadFileService
     /// Initializes a new instance of the <see cref="DownloadFileService"/> class.
     /// </summary>
     /// <param name="fileservice">The fileservice.</param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public DownloadFileService(
         IFileService<FileResult> fileservice,
-        ILoggerFactory loggerFactory)
+        ILogger<DownloadFileService> logger)
     {
-        _logger = loggerFactory.CreateLogger<DownloadFileService>();
+        _logger = logger;
         _logger.LogTrace($"DownloadFileService instance created with ID: {Guid.NewGuid()}");
 
         _fileService = fileservice;

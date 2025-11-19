@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Automations.Base;
 /// <summary>
 /// Abstract class for automation objects.
 /// </summary>
-public abstract class AutomationModel : ObservableClass
+public abstract class AutomationModel : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the AutomationId property value.

@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,6 +18,7 @@ internal class UpdateService : IUpdateService
     private readonly ILogger _logger;
     private readonly IInfoService _infoService;
     private readonly IDialogService _dialogService;
+    private readonly ILanguageService _languageService;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly UpdateOptions _updateOptions;
 
@@ -29,22 +28,25 @@ internal class UpdateService : IUpdateService
     /// <param name="httpClientFactory"></param>
     /// <param name="infoService"></param>
     /// <param name="dialogService">The dialog service.</param>
+    /// <param name="languageService">The language service.</param>
     /// <param name="options"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public UpdateService(
         IHttpClientFactory httpClientFactory,
         IInfoService infoService,
         IDialogService dialogService,
+        ILanguageService languageService,
         IOptions<UpdateOptions> options,
-        ILoggerFactory loggerFactory)
+        ILogger<UpdateService> logger)
     {
         Argument.IsNotNull(options);
 
         _httpClientFactory = httpClientFactory;
         _infoService = infoService;
         _dialogService = dialogService;
+        _languageService = languageService;
         _updateOptions = options.Value;
-        _logger = loggerFactory.CreateLogger<UpdateService>();
+        _logger = logger;
     }
 
     /// <summary>
@@ -76,7 +78,7 @@ internal class UpdateService : IUpdateService
             }
             else
             {
-                await _dialogService.ShowInformationAsync(LanguageService.Default.GetString("CannotFindUpdateFile"));
+                await _dialogService.ShowInformationAsync(_languageService.GetString("CannotFindUpdateFile"));
             }
         }
     }
@@ -118,7 +120,7 @@ internal class UpdateService : IUpdateService
             return false;
         }
 
-        throw new Exception(LanguageService.Default.GetString("CouldNotRetrieveVersionInformation"));
+        throw new Exception(_languageService.GetString("CouldNotRetrieveVersionInformation"));
     }
 
     protected async Task GetUpdateAsync(int applicationId)
@@ -147,8 +149,8 @@ internal class UpdateService : IUpdateService
             else
             {
                 throw new Exception(string.Format("{0}" + System.Environment.NewLine + "{1}",
-                    LanguageService.Default.GetString("NoInternetConnectionAvailable"),
-                    LanguageService.Default.GetString("CannotInstallUpdate")));
+                    _languageService.GetString("NoInternetConnectionAvailable"),
+                    _languageService.GetString("CannotInstallUpdate")));
             }
         }
         catch (Exception)
@@ -166,6 +168,6 @@ internal class UpdateService : IUpdateService
     private Task HandleMandatoryPackageErrorAsync()
     {
         return _dialogService.ShowErrorAsync(
-                    LanguageService.Default.GetString("WarningMandatoryUpdateFailed"));
+                    _languageService.GetString("WarningMandatoryUpdateFailed"));
     }
 }

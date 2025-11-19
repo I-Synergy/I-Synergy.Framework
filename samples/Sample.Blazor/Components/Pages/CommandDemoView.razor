@@ -1,0 +1,34 @@
+﻿@page "/commanddemoview"
+@using ISynergy.Framework.AspNetCore.Blazor.Components.Controls
+@rendermode InteractiveServer
+
+@inherits View<CommandDemoViewModel>
+
+<h3>Command Binding Demo</h3>
+
+<p>Current count: @ViewModel.Counter</p>
+
+<button @attributes="@this.CommandBinding(ViewModel.DecrementCommand)">
+    Decrement
+</button>
+
+<button @attributes="@this.CommandBinding(ViewModel.ResetCommand)">
+    Reset
+</button>
+
+<button @attributes="@this.CommandBinding(ViewModel.OpenSampleDialogCommand)">
+	Open Sample Dialog
+</button>
+
+<hr />
+
+<!-- Manual approach for comparison -->
+<button @onclick="@(() => 
+    { 
+        ViewModel.IncrementCommand.Execute(null); 
+        StateHasChanged(); 
+    })"
+    disabled="@(!ViewModel.IncrementCommand.CanExecute(null))"
+    class="btn btn-outline-primary">
+    Increment
+</button>

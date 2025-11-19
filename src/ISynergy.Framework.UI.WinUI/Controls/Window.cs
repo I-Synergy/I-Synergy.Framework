@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -18,7 +18,24 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Scoped)]
 public partial class Window : ContentDialog, IWindow
 {
-    private IViewModel? _viewModel;
+    /// <summary>
+    /// Gets or sets the viewmodel and data context for a view.
+    /// </summary>
+    /// <value>The data context.</value>
+    public IViewModel ViewModel
+    {
+        get
+        {
+            if (DataContext is IViewModel viewModel)
+                return viewModel;
+
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+        }
+        set
+        {
+            DataContext = value;
+        }
+    }
 
     /// <summary>
     /// Default constructor.
@@ -31,20 +48,10 @@ public partial class Window : ContentDialog, IWindow
     /// <summary>
     /// Closes this instance.
     /// </summary>
-    public void Close() => Hide();
-
-    /// <summary>
-    /// Gets or sets the viewmodel and data context for a window.
-    /// </summary>
-    /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public Task CloseAsync()
     {
-        get => _viewModel;
-        set
-        {
-            _viewModel = value;
-            DataContext = _viewModel;
-        }
+        Hide();
+        return Task.CompletedTask;
     }
 
     private void Window_Unloaded(object? sender, RoutedEventArgs e)
@@ -81,10 +88,10 @@ public partial class Window : ContentDialog, IWindow
     }
 
     /// <summary>
-    /// show as an asynchronous operation.
+    /// Shows the window as an asynchronous operation.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <returns><c>true</c> if the dialog was accepted or confirmed; otherwise, <c>false</c>.</returns>
     public async Task<bool> ShowAsync<TEntity>()
     {
         switch (await ShowAsync())

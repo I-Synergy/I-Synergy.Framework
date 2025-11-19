@@ -38,7 +38,7 @@ public partial class SelectionWindow : ISelectionWindow
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {
-            viewModel.SelectedItems = new List<object>();
+            viewModel.SetSelectedItems(new List<object>());
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {

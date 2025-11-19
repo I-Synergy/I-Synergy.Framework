@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,7 +9,6 @@ namespace ISynergy.Framework.Mvvm.Commands.Tests;
 [TestClass]
 public class AsyncRelayCommandGenericsTests
 {
-    private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
@@ -18,7 +16,6 @@ public class AsyncRelayCommandGenericsTests
     public AsyncRelayCommandGenericsTests()
     {
         // Setup mocks
-        _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockServiceScope = new Mock<IServiceScope>();
         _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
@@ -36,11 +33,6 @@ public class AsyncRelayCommandGenericsTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Setup exception handler service
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
 
         // Initialize ServiceLocator with mock service provider
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
@@ -62,7 +54,7 @@ public class AsyncRelayCommandGenericsTests
         {
             try
             {
-                await Task.Delay(1000, token);
+                await Task.Delay(5000, token);
                 executedParameters.Add(param);
             }
             catch (OperationCanceledException)
@@ -73,6 +65,10 @@ public class AsyncRelayCommandGenericsTests
 
         // Act
         var task = command.ExecuteAsync(42);
+
+        // Give a small delay to ensure the task has started
+        await Task.Delay(100);
+
         command.Cancel();
 
         try
@@ -87,11 +83,6 @@ public class AsyncRelayCommandGenericsTests
         // Assert
         CollectionAssert.AreEqual(new int[0], executedParameters);
         Assert.IsTrue(command.IsCancellationRequested);
-
-        // Verify exception was handled
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(It.IsAny<OperationCanceledException>()),
-            Times.Once);
     }
 
     [TestMethod]
@@ -217,7 +208,7 @@ public class AsyncRelayCommandGenericsTests
         );
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => command.CanExecute("invalid type"));
+        Assert.Throws<ArgumentException>(() => command.CanExecute("invalid type"));
         Assert.IsFalse(command.CanExecute(null));  // null for value type
         Assert.IsTrue(command.CanExecute(1));      // valid value
     }
@@ -371,19 +362,16 @@ public class AsyncRelayCommandGenericsTests
 
         // Assert
         Assert.AreEqual(0, completedCount);
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(It.IsAny<OperationCanceledException>()),
-            Times.Exactly(2));
     }
 
     [TestMethod]
     public void Constructor_WithNullParameter_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new AsyncRelayCommand<string>((Func<string?, Task>)null!));
 
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new AsyncRelayCommand<string>((Func<string?, CancellationToken, Task>)null!));
     }
 
@@ -427,15 +415,10 @@ public class AsyncRelayCommandGenericsTests
         var task = command.ExecuteAsync("test");
 
         // The exception should flow to the task rather than being handled internally
-        var actualException = await Assert.ThrowsExceptionAsync<InvalidOperationException>(
+        var actualException = await Assert.ThrowsAsync<InvalidOperationException>(
             async () => await task);
 
         Assert.AreEqual(expectedException, actualException);
-
-        // Verify exception was NOT handled by the service
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(It.IsAny<Exception>()),
-            Times.Never);
     }
 
     [TestMethod]

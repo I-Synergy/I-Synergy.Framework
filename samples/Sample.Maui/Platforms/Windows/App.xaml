@@ -1,0 +1,16 @@
+﻿<maui:MauiWinUIApplication
+    x:Class="Sample.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:maui="using:Microsoft.Maui"
+    xmlns:local="using:Sample.WinUI">
+
+    <maui:MauiWinUIApplication.Resources>
+        <!--<StaticResource x:Key="SystemAccentColorDark1" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorDark2" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorDark3" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorLight1" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorLight2" ResourceKey="Primary"/>
+        <StaticResource x:Key="SystemAccentColorLight3" ResourceKey="Primary"/>-->
+    </maui:MauiWinUIApplication.Resources>
+</maui:MauiWinUIApplication>
