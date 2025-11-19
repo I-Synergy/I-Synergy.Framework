@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Automations;
 /// The ExecuteAsync method takes an automation, a value, and a cancellation token. It will execute the series of actions defined in the automation one by one until complete or cancelled.The actions transform the provided value in some way to accomplish the purpose of the automation.
 /// Overall, this class handles getting the defined automations, evaluating if an automation should execute based on conditions, and then executing the actions of an automation if triggered.It provides the core logic to enable automations in an application.
 /// </summary>
-public class Automation : ObservableClass
+public class Automation : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the AutomationId property value.

@@ -1,14 +1,25 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Messages.Base;
 using ISynergy.Framework.Core.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
 
 [TestClass]
 public class PropertyChangedMessageTest
 {
+    private readonly IMessengerService _messenger;
+    private readonly ILogger<MessengerService> _logger;
+
+    public PropertyChangedMessageTest()
+    {
+        _logger = Mock.Of<ILogger<MessengerService>>();
+        _messenger = new MessengerService(_logger);
+    }
+
     [TestMethod]
     public void TestPropertyChangedMessage()
     {
@@ -33,11 +44,9 @@ public class PropertyChangedMessageTest
 
         bool messageWasReceived = false;
 
-        TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
+        TestViewModel testViewModel = new(_messenger, previousDateTime, (InvalidOperationException)PreviousException!);
 
-        MessageService.Reset();
-
-        MessageService.Default.Register<BasePropertyChangedMessage>(
+        _messenger.Register<BasePropertyChangedMessage>(
             this,
             true,
             m =>
@@ -132,39 +141,39 @@ public class PropertyChangedMessageTest
 
         bool messageWasReceived = false;
 
-        TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException!);
+        TestViewModel testViewModel = new(_messenger, previousDateTime, (InvalidOperationException)PreviousException!);
 
-        MessageService.Reset();
+        _messenger.Register<PropertyChangedMessage<DateTime>>(
+            this,
+            m =>
+            {
+                receivedSender = m.Sender;
+                receivedTarget = m.Target;
+                messageWasReceived = true;
 
-        MessageService.Default.Register<PropertyChangedMessage<DateTime>>(this,
-                                                                     m =>
-                                                                     {
-                                                                         receivedSender = m.Sender;
-                                                                         receivedTarget = m.Target;
-                                                                         messageWasReceived = true;
+                if (m.PropertyName == nameof(TestViewModel.MyDate))
+                {
+                    receivedPreviousDateTime = m.OldValue;
+                    receivedCurrentDateTime = m.NewValue;
+                    return;
+                }
+            });
 
-                                                                         if (m.PropertyName == nameof(TestViewModel.MyDate))
-                                                                         {
-                                                                             receivedPreviousDateTime = m.OldValue;
-                                                                             receivedCurrentDateTime = m.NewValue;
-                                                                             return;
-                                                                         }
-                                                                     });
+        _messenger.Register<PropertyChangedMessage<InvalidOperationException>>(
+            this,
+            m =>
+            {
+                receivedSender = m.Sender;
+                receivedTarget = m.Target;
+                messageWasReceived = true;
 
-        MessageService.Default.Register<PropertyChangedMessage<InvalidOperationException>>(this,
-                                                                                      m =>
-                                                                                      {
-                                                                                          receivedSender = m.Sender;
-                                                                                          receivedTarget = m.Target;
-                                                                                          messageWasReceived = true;
-
-                                                                                          if (m.PropertyName == nameof(TestViewModel.MyException))
-                                                                                          {
-                                                                                              receivedPreviousException = m.OldValue;
-                                                                                              receivedCurrentException = m.NewValue;
-                                                                                              return;
-                                                                                          }
-                                                                                      });
+                if (m.PropertyName == nameof(TestViewModel.MyException))
+                {
+                    receivedPreviousException = m.OldValue;
+                    receivedCurrentException = m.NewValue;
+                    return;
+                }
+            });
 
         Assert.AreEqual(DateTime.MinValue, receivedPreviousDateTime);
         Assert.AreEqual(DateTime.MinValue, receivedCurrentDateTime);
@@ -241,9 +250,7 @@ public class PropertyChangedMessageTest
         object? receivedSender = null;
         object? receivedTarget = null;
 
-        MessageService.Reset();
-
-        MessageService.Default.Register<PropertyChangedMessage<string>>(this,
+        _messenger.Register<PropertyChangedMessage<string>>(this,
                                                                    m =>
                                                                    {
                                                                        receivedSender = m.Sender;
@@ -305,7 +312,7 @@ public class PropertyChangedMessageTest
             }
         }
 
-        MessageService.Default.Send(propertyMessage1);
+        _messenger.Send(propertyMessage1);
 
         Assert.AreEqual(sender, receivedSender);
         Assert.AreEqual(target, receivedTarget);
@@ -317,7 +324,7 @@ public class PropertyChangedMessageTest
         receivedTarget = null;
         receivedSender = null;
 
-        MessageService.Default.Send(propertyMessage2);
+        _messenger.Send(propertyMessage2);
 
         Assert.AreEqual(sender, receivedSender);
         Assert.AreEqual(target, receivedTarget);
@@ -327,10 +334,16 @@ public class PropertyChangedMessageTest
         Assert.AreEqual(TestNewContent2, receivedNewContent2);
     }
 
-    public class TestViewModel : ObservableClass
+    public class TestViewModel : ObservableValidatedClass
     {
-        public TestViewModel(DateTime initialValueDateTime, InvalidOperationException initialValueException)
+        private readonly IMessengerService _messenger;
+        private readonly ILogger<TestViewModel> _logger;
+
+        public TestViewModel(IMessengerService messengerService, DateTime initialValueDateTime, InvalidOperationException initialValueException)
         {
+            _logger = Mock.Of<ILogger<TestViewModel>>();
+            _messenger = messengerService;
+
             MyDate = initialValueDateTime;
             MyException = initialValueException;
         }
@@ -348,7 +361,7 @@ public class PropertyChangedMessageTest
                 DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
                 PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(AnotherDate));
-                MessageService.Default.Send(message);
+                _messenger.Send(message);
             }
         }
 
@@ -365,7 +378,7 @@ public class PropertyChangedMessageTest
                 DateTime oldValue = GetValue<DateTime>();
                 SetValue(value);
                 PropertyChangedMessage<DateTime> message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(MyDate));
-                MessageService.Default.Send(message);
+                _messenger.Send(message);
             }
         }
 
@@ -380,7 +393,7 @@ public class PropertyChangedMessageTest
                 InvalidOperationException oldValue = GetValue<InvalidOperationException>();
                 SetValue(value);
                 PropertyChangedMessage<InvalidOperationException> message = new PropertyChangedMessage<InvalidOperationException>(this, oldValue, value, nameof(MyException));
-                MessageService.Default.Send(message);
+                _messenger.Send(message);
             }
         }
     }

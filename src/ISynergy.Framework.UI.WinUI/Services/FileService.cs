@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
 using Microsoft.Extensions.Logging;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -19,20 +19,24 @@ public class FileService : IFileService<FileResult>
 {
     private readonly ILogger _logger;
     private readonly IDialogService _dialogService;
+    private readonly ILanguageService _languageService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FileService" /> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="languageService">The language service.</param>
+    /// <param name="logger"></param>
     public FileService(
         IDialogService dialogService,
-        ILoggerFactory loggerFactory)
+        ILanguageService languageService,
+        ILogger<FileService> logger)
     {
-        _logger = loggerFactory.CreateLogger<FileService>();
+        _logger = logger;
         _logger.LogTrace($"FileService instance created with ID: {Guid.NewGuid()}");
 
         _dialogService = dialogService;
+        _languageService = languageService;
     }
 
     /// <summary>
@@ -53,7 +57,6 @@ public class FileService : IFileService<FileResult>
 
         return new FileResult(
                 createdFile.Path,
-                createdFile.Name,
                 () => createdFile.OpenStreamForReadAsync().GetAwaiter().GetResult());
     }
 
@@ -77,7 +80,7 @@ public class FileService : IFileService<FileResult>
             }
             else
             {
-                await _dialogService.ShowErrorAsync(string.Format(LanguageService.Default.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
+                await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
             }
         }
 
@@ -192,7 +195,6 @@ public class FileService : IFileService<FileResult>
 
                     result.Add(new FileResult(
                         file.Path,
-                        file.Name,
                         () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
                 }
             }
@@ -207,7 +209,6 @@ public class FileService : IFileService<FileResult>
 
                 result.Add(new FileResult(
                     file.Path,
-                    file.Name,
                     () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
             }
         }

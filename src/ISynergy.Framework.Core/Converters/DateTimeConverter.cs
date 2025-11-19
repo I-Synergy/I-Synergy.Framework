@@ -7,6 +7,9 @@ namespace ISynergy.Framework.Core.Converters;
 
 public class DateTimeConverter : JsonConverter<DateTime>
 {
+    private static readonly CultureInfo InvariantCulture = CultureInfo.InvariantCulture;
+    private static readonly DateTimeStyles DefaultStyles = DateTimeStyles.None;
+
     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         string? dateString = reader.GetString();
@@ -15,7 +18,7 @@ public class DateTimeConverter : JsonConverter<DateTime>
             throw new FormatException("Expected date string value.");
 
         if (DateTime.TryParseExact(dateString, StringFormats.IsoDateTimeFormat,
-            CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
+            InvariantCulture, DefaultStyles, out DateTime result))
             return result;
 
         throw new FormatException($"Unable to parse \"{dateString}\" as a DateTime using format \"{StringFormats.IsoDateTimeFormat}\".");
@@ -23,6 +26,9 @@ public class DateTimeConverter : JsonConverter<DateTime>
 
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
     {
+        if (writer is null)
+            throw new ArgumentNullException(nameof(writer));
+
         writer.WriteStringValue(value.ToString(StringFormats.IsoDateTimeFormat));
     }
 }

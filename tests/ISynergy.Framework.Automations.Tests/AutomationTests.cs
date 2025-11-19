@@ -1,18 +1,21 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions;
 using ISynergy.Framework.Automations.Conditions;
 using ISynergy.Framework.Automations.Enumerations;
 using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Automations.Services;
+using ISynergy.Framework.Automations.Services.Executors;
+using ISynergy.Framework.Automations.Services.Operators;
 using ISynergy.Framework.Automations.Tests.Fixtures;
 using ISynergy.Framework.Automations.Triggers;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Automations.Tests;
@@ -24,7 +27,6 @@ public class AutomationTests
     private Automation _defaultAutomation;
     private IAutomationService? _automationService;
     private Stopwatch _stopwatch = new Stopwatch();
-    private readonly Mock<ILoggerFactory> _mockLoggerFactory = new Mock<ILoggerFactory>();
 
     // Configuration for environment-aware testing
     private static readonly bool IsRunningInCI = Environment.GetEnvironmentVariable("CI") is not null;
@@ -44,20 +46,46 @@ public class AutomationTests
     {
         _defaultCustomer = new Customer()
         {
-            Name = "Test1",
-            Email = "admin@demo.com",
-            Age = 18,
-            Active = false
-        };
+  Name = "Test1",
+    Email = "admin@demo.com",
+    Age = 18,
+     Active = false
+ };
 
-        _mockLoggerFactory
-           .Setup(x => x.CreateLogger(It.IsAny<string>()))
-           .Returns(new Mock<ILogger>().Object);
+        // Setup dependency injection container for real implementations
+        var services = new ServiceCollection();
+
+        // Register action executors
+        services.AddScoped<IActionExecutor<DelayAction>, DelayActionExecutor>();
+        services.AddScoped<IActionExecutor<CommandAction>, CommandActionExecutor>();
+        services.AddScoped<IActionExecutor<AutomationAction>, AutomationActionExecutor>();
+
+        services.AddScoped<IActionExecutorFactory, ActionExecutorFactory>();
+
+        // Register operator strategies by concrete type (required by OperatorStrategyFactory)
+    services.AddScoped<AndOperatorStrategy>();
+   services.AddScoped<OrOperatorStrategy>();
+        
+  services.AddScoped<IOperatorStrategyFactory, OperatorStrategyFactory>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+    // Get the dependencies from the service provider
+        var executorFactory = serviceProvider.GetRequiredService<IActionExecutorFactory>();
+        var operatorStrategyFactory = serviceProvider.GetRequiredService<IOperatorStrategyFactory>();
+
+        // Create the queue builder with real executor factory
+        var queueBuilder = new ActionQueueBuilder(executorFactory, null!);
+
+        // Use real condition validator that actually checks conditions
+        var conditionValidator = new AutomationConditionValidator(operatorStrategyFactory);
 
         _automationService = new AutomationService(
-            new Mock<IAutomationManager>().Object,
-            new Mock<IOptions<AutomationOptions>>().Object,
-            _mockLoggerFactory.Object);
+        Mock.Of<IAutomationManager>(),
+      Mock.Of<IOptions<AutomationOptions>>(),
+   conditionValidator,
+    queueBuilder,
+          Mock.Of<ILogger<AutomationService>>());
 
         _defaultAutomation = new Automation { IsActive = true };
     }
@@ -188,10 +216,10 @@ public class AutomationTests
 
         IntegerTrigger trigger = new(
             _defaultAutomation.AutomationId,
-            () => new(_defaultCustomer, (IProperty<int>)_defaultCustomer.Properties[nameof(Customer.Age)]),
+         () => new(_defaultCustomer, (IProperty<int>)_defaultCustomer.Properties[nameof(Customer.Age)]),
             65,
-            18,
-            async (age) =>
+       18,
+        async (age) =>
             {
                 ActionResult result = await _automationService!.ExecuteAsync(_defaultAutomation, _defaultCustomer, cancellationTokenSource);
                 Assert.IsTrue(result.Succeeded);
@@ -222,8 +250,8 @@ public class AutomationTests
         automation.Actions.Add(new DelayAction(automation.AutomationId, actionDelay));
 
         _stopwatch.Start();
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() =>
-            _automationService!.ExecuteAsync(automation, default!, cancellationTokenSource));
+        await Assert.ThrowsAsync<TaskCanceledException>(() =>
+          _automationService!.ExecuteAsync(automation, default!, cancellationTokenSource));
         _stopwatch.Stop();
 
         Assert.IsTrue(IsWithinTolerance(executionTimeout, _stopwatch.Elapsed));
@@ -271,16 +299,16 @@ public class AutomationTests
         };
 
         BooleanStateTrigger stateTrigger = new(
-            automation.AutomationId,
-            () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)!),
-            false,
-            true,
-            async (active) =>
-            {
-                ActionResult result = await _automationService!.ExecuteAsync(automation, _defaultCustomer, cancellationTokenSource);
-                Assert.IsTrue(result.Succeeded);
-                Assert.IsTrue(active);
-            });
+      automation.AutomationId,
+           () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)!),
+                  false,
+               true,
+      async (active) =>
+               {
+                   ActionResult result = await _automationService!.ExecuteAsync(automation, _defaultCustomer, cancellationTokenSource);
+                   Assert.IsTrue(result.Succeeded);
+                   Assert.IsTrue(active);
+               });
 
         automation.Triggers.Add(stateTrigger);
         automation.Actions.Add(new DelayAction(automation.AutomationId, expectedDelay));
@@ -306,16 +334,16 @@ public class AutomationTests
         string name = "Test";
 
         StringStateTrigger stateTrigger = new(
-            automation.AutomationId,
-            () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Name)!),
-            _defaultCustomer.Name,
-            name,
-            async (newName) =>
-            {
-                ActionResult result = await _automationService!.ExecuteAsync(automation, _defaultCustomer, cancellationTokenSource);
-                Assert.IsTrue(result.Succeeded);
-                Assert.AreEqual(name, newName);
-            });
+         automation.AutomationId,
+                () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Name)!),
+             _defaultCustomer.Name,
+               name,
+                  async (newName) =>
+           {
+               ActionResult result = await _automationService!.ExecuteAsync(automation, _defaultCustomer, cancellationTokenSource);
+               Assert.IsTrue(result.Succeeded);
+               Assert.AreEqual(name, newName);
+           });
 
         automation.Triggers.Add(stateTrigger);
         automation.Actions.Add(new DelayAction(automation.AutomationId, expectedDelay));
@@ -329,14 +357,14 @@ public class AutomationTests
     [TestMethod]
     public void AutomationScenario9Test()
     {
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             BooleanStateTrigger stateTrigger = new(
-                new Automation().AutomationId,
-                () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)!),
-                false,
-                false,
-                default!);
+              new Automation().AutomationId,
+              () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)!),
+           false,
+            false,
+             default!);
         });
     }
 
@@ -353,13 +381,13 @@ public class AutomationTests
 
         EventTrigger<Customer> stateTrigger = new(
             automation.AutomationId,
-            _defaultCustomer,
+          _defaultCustomer,
             (s) => _defaultCustomer.Registered += s,
-            async (e) =>
-            {
-                ActionResult result = await _automationService!.ExecuteAsync(automation, e, cancellationTokenSource);
-                Assert.IsTrue(result.Succeeded);
-            });
+ async (e) =>
+     {
+         ActionResult result = await _automationService!.ExecuteAsync(automation, e, cancellationTokenSource);
+         Assert.IsTrue(result.Succeeded);
+     });
 
         automation.Triggers.Add(stateTrigger);
         automation.Actions.Add(new DelayAction(automation.AutomationId, GetDelay(10)));

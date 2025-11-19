@@ -93,7 +93,7 @@ public class DateTimeConverterTests
     {
         const string json = "{\"dt\":null}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
-        Assert.ThrowsException<FormatException>(act);
+        Assert.Throws<FormatException>(act);
     }
 
     [TestMethod]
@@ -101,6 +101,6 @@ public class DateTimeConverterTests
     {
         const string json = "{\"dt\":\"not-date\"}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
-        Assert.ThrowsException<FormatException>(act);
+        Assert.Throws<FormatException>(act);
     }
 }

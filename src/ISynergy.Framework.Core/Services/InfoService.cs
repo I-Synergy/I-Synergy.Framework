@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Utilities;
+using ISynergy.Framework.Core.Base;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -10,52 +9,91 @@ namespace ISynergy.Framework.Core.Services;
 /// Class BaseInfoService.
 /// </summary>
 [Bindable(BindableSupport.Yes)]
-public sealed class InfoService : IInfoService
+public sealed class InfoService : ObservableClass, IInfoService
 {
+    private static readonly object _creationLock = new object();
+    private static IInfoService? _defaultInstance;
+
+    /// <summary>
+    /// Gets the LanguageService's default instance.
+    /// </summary>
+    public static IInfoService Default
+    {
+        get
+        {
+            if (_defaultInstance is null)
+            {
+                lock (_creationLock)
+                {
+                    if (_defaultInstance is null)
+                    {
+                        _defaultInstance = new InfoService();
+                    }
+                }
+            }
+
+            return _defaultInstance;
+        }
+    }
+
+    public InfoService()
+    {
+        ProductVersion = new Version("0.0.0");
+        ApplicationPath = string.Empty;
+        CompanyName = string.Empty;
+        ProductName = string.Empty;
+        Copyrights = string.Empty;
+    }
+
     /// <summary>
     /// Gets the product version.
     /// </summary>
     /// <value>The product version.</value>
-    public Version ProductVersion { get; private set; } = new Version("0.0.0");
+    public Version ProductVersion
+    {
+        get { return GetValue<Version>(); }
+        private set { SetValue(value); }
+    }
 
     /// <summary>
     /// Gets the application path.
     /// </summary>
     /// <value>The application path.</value>
-    public string ApplicationPath { get; private set; } = string.Empty;
+    public string ApplicationPath
+    {
+        get { return GetValue<string>(); }
+        private set { SetValue(value); }
+    }
 
     /// <summary>
     /// Gets the name of the company.
     /// </summary>
     /// <value>The name of the company.</value>
-    public string CompanyName { get; private set; } = string.Empty;
+    public string CompanyName
+    {
+        get { return GetValue<string>(); }
+        private set { SetValue(value); }
+    }
 
     /// <summary>
     /// Gets the name of the product.
     /// </summary>
     /// <value>The name of the product.</value>
-    public string ProductName { get; private set; } = string.Empty;
+    public string ProductName
+    {
+        get { return GetValue<string>(); }
+        private set { SetValue(value); }
+    }
 
     /// <summary>
     /// Gets the copy rights detail.
     /// </summary>
     /// <value>The copy rights detail.</value>
-    public string Copyrights { get; private set; } = string.Empty;
-
-    /// <summary>
-    /// Hostname of the machine.
-    /// </summary>
-    public string HostName { get; private set; } = "localhost";
-
-    /// <summary>
-    /// IP Address of the machine.
-    /// </summary>
-    public string IPAddress { get; private set; } = string.Empty;
-
-    /// <summary>
-    /// Gets the application title.
-    /// </summary>
-    public string Title { get; private set; } = string.Empty;
+    public string Copyrights
+    {
+        get { return GetValue<string>(); }
+        private set { SetValue(value); }
+    }
 
     /// <summary>
     /// Loads the assembly into the Version service.
@@ -87,16 +125,5 @@ public sealed class InfoService : IInfoService
         {
             ProductVersion = new Version("0.0.0");
         }
-
-        IPAddress = NetworkUtility.GetInternetIPAddress() ?? string.Empty;
-        HostName = System.Net.Dns.GetHostName() ?? "localhost";
-
-        Title = $"{ProductName} v{ProductVersion}";
     }
-
-    /// <summary>
-    /// Sets the title.
-    /// </summary>
-    /// <param name="environment"></param>
-    public void SetTitle(SoftwareEnvironments environment) => Title = $"{ProductName} v{ProductVersion} ({environment})";
 }

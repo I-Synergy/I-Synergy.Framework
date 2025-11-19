@@ -298,6 +298,9 @@ Save your work and restart the application.</value>
 	<data name="Dark" xml:space="preserve">
     <value>Dark</value>
   </data>
+	<data name="System" xml:space="preserve">
+  <value>System</value>
+  </data>
 	<data name="NoItems" xml:space="preserve">
     <value>No items available</value>
   </data>
@@ -467,5 +470,9 @@ Try again or update the application through the Microsoft Store.</value>
   </data>
 	<data name="WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
     <value>Replacing IHostApplicationLifetime is not supported.</value>
+  </data>
+	<data name="DefaultException" xml:space="preserve">
+    <value>Something went wrong.
+Contact support.</value>
   </data>
 </root>

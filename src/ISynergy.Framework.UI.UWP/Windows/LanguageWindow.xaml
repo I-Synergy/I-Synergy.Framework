@@ -1,0 +1,23 @@
+﻿<c:Window xmlns:c="using:ISynergy.Framework.UI.Controls"
+    x:Class="ISynergy.Framework.UI.LanguageWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Converters="using:ISynergy.Framework.UI.Converters"
+    mc:Ignorable="d"
+    Title="{Binding Title}"
+    PrimaryButtonCommand="{Binding SubmitCommand}"
+    PrimaryButtonCommandParameter="{Binding SelectedItem}"
+    SecondaryButtonCommand="{Binding CloseCommand}"
+    PrimaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
+    SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
+
+    <StackPanel Orientation="Vertical">
+        <RadioButton x:Name="Button_Language_nl" Content="{m:LanguageResource Key=Language_Dutch}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="nl" />
+        <RadioButton x:Name="Button_Language_en" Content="{m:LanguageResource Key=Language_English}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="en" />
+        <RadioButton x:Name="Button_Language_de" Content="{m:LanguageResource Key=Language_German}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="de" IsEnabled="False" />
+        <RadioButton x:Name="Button_Language_fr" Content="{m:LanguageResource Key=Language_French}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="fr" IsEnabled="False" />
+    </StackPanel>
+</c:Window>

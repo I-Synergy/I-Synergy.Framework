@@ -39,7 +39,7 @@ public abstract class BaseTrigger<T> : BaseTrigger, ITrigger<T>
     /// <param name="for"></param>
     protected BaseTrigger(
         Guid automationId,
-        Func<(IObservableClass Entity, IProperty<T> Property)> function,
+        Func<(IObservableValidatedClass Entity, IProperty<T> Property)> function,
         T from,
         T to,
         Func<T, Task> callbackAsync,

@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Extensions;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -12,13 +12,13 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 
 /// <summary>
 /// Class ViewModel.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// Implements the <see cref="IViewModel" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IViewModel" />
 [Bindable(true)]
-public abstract class ViewModel : ObservableClass, IViewModel
+public abstract class ViewModel : ObservableValidatedClass, IViewModel
 {
     protected readonly ICommonServices _commonServices;
     protected readonly ILogger _logger;
@@ -98,16 +98,15 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Initializes a new instance of the <see cref="ViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="automaticValidation">The validation.</param>
+    /// <param name="logger"></param>
     protected ViewModel(
         ICommonServices commonServices,
-        bool automaticValidation = false)
-        : base(automaticValidation)
+        ILogger<ViewModel> logger)
     {
         _commonServices = commonServices;
         _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;
 
-        _logger = _commonServices.LoggerFactory.CreateLogger(GetType());
+        _logger = logger;
 
         PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
@@ -142,7 +141,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            _logger.LogTrace("{0} initialized.", GetType().Name);
+            _logger.LogTrace($"{GetType().Name} initialized.");
 
         return Task.CompletedTask;
     }
@@ -166,7 +165,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
         if (attributes is not null && attributes.Length > 0 && attributes[0].Description is not null)
         {
-            description = LanguageService.Default.GetString(attributes[0].Description!);
+            description = _commonServices.LanguageService.GetString(attributes[0].Description!);
         }
 
         return description;
@@ -196,8 +195,31 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Cleans up the instance, for example by saving its state,
     /// removing resources, etc...
     /// </summary>
-    public virtual void Cleanup()
+    public virtual void Cleanup(bool isClosing = true)
     {
+        if (isClosing)
+        {
+            // Full cleanup for closing
+            // Release all resources
+        }
+        else
+        {
+            // Partial cleanup for navigation
+            ReleaseBackgroundResources();
+        }
+    }
+
+    /// <summary>
+    /// Releases heavy resources that aren't needed when the ViewModel is in the background.
+    /// Called when the ViewModel is pushed to the backstack.
+    /// </summary>
+    protected virtual void ReleaseBackgroundResources()
+    {
+        // Base implementation is empty - derived classes should override
+        // Examples of resources to release:
+        // - Large collections that can be reloaded
+        // - Image caches
+        // - Background workers
     }
 
     /// <summary>
@@ -231,6 +253,10 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
             PropertyChanged -= OnPropertyChanged;
 
+            // Clear event handlers to prevent memory leaks
+            Cancelled = null;
+            Closed = null;
+
             // Clear commands
             CloseCommand?.Dispose();
             CancelCommand?.Dispose();
@@ -238,4 +264,26 @@ public abstract class ViewModel : ObservableClass, IViewModel
             base.Dispose(disposing);
         }
     }
+
+    /// <summary>
+    /// Called when navigating away from this ViewModel.
+    /// Cancel any running commands if needed.
+    /// </summary>
+    public virtual void OnNavigatedFrom() => CancelRunningCommands();
+
+    /// <summary>
+    /// Called when navigating to this ViewModel.
+    /// Reset command states.
+    /// </summary>
+    public virtual void OnNavigatedTo() => ResetCommandStates();
+
+    /// <summary>
+    /// Cancels all running commands in this ViewModel.
+    /// </summary>
+    protected virtual void CancelRunningCommands() => this.CancelAllCommands();
+
+    /// <summary>
+    /// Resets the state of commands when returning to this ViewModel.
+    /// </summary>
+    protected virtual void ResetCommandStates() => this.ResetAllCommandStates();
 }

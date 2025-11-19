@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Sample.ViewModels;
 
@@ -14,7 +14,7 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Converters"); } }
 
 
     /// <summary>
@@ -48,30 +48,9 @@ public class ConvertersViewModel : ViewModelNavigation<object>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public ConvertersViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public ConvertersViewModel(ICommonServices commonServices, ILogger<ConvertersViewModel> logger)
+        : base(commonServices, logger)
     {
-        SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
     }
-
-    /// <summary>
-    /// Gets or sets the SoftwareEnvironments property value.
-    /// </summary>
-    /// <value>The software environments.</value>
-    public SoftwareEnvironments SoftwareEnvironments
-    {
-        get { return GetValue<SoftwareEnvironments>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the SelectedSoftwareEnvironment property value.
-    /// </summary>
-    /// <value>The selected software environment.</value>
-    public int SelectedSoftwareEnvironment
-    {
-        get { return GetValue<int>(); }
-        set { SetValue(value); }
-    }
-
 }

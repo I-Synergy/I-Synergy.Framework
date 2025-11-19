@@ -11,6 +11,9 @@ public class TestEntity : BaseEntity
     public int Id { get; set; }
     public decimal TestDecimal { get; set; }
     public string? Name { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public bool IsActive { get; set; }
+    public DateTime ModifiedDate { get; set; }
 }
 
 public class TestEntityConfiguration : IEntityTypeConfiguration<TestEntity>

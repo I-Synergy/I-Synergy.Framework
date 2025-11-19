@@ -1,11 +1,12 @@
-﻿using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ISynergy.Framework.UI.ViewModels;
 
 [Lifetime(Lifetimes.Singleton)]
-public class SplashScreenViewModel : ObservableClass, IViewModel
+public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
 {
     private readonly ICommonServices _commonServices;
     private readonly ILogger _logger;
@@ -28,7 +29,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
     private Func<DispatcherQueue, Task>[]? _tasks;
 
     public ICommonServices CommonServices => _commonServices;
-    public SplashScreenOptions Configuration => _splashScreenOptions ?? new SplashScreenOptions() { SplashScreenType = SplashScreenTypes.None };
+    public SplashScreenOptions Configuration => _splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
 
     /// <summary>
     /// Occurs when [cancelled].
@@ -108,11 +109,11 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
 
     public SplashScreenViewModel(
         ICommonServices commonServices,
-        bool automaticValidation = false)
-        : base(automaticValidation)
+        ILogger<SplashScreenViewModel> logger)
+        : base(false)
     {
         _commonServices = commonServices;
-        _logger = _commonServices.LoggerFactory.CreateLogger<SplashScreenViewModel>();
+        _logger = logger;
 
         _taskCompletion = new TaskCompletionSource<bool>();
 
@@ -239,7 +240,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
 
         if (attributes is not null && attributes.Length > 0)
         {
-            description = LanguageService.Default.GetString(attributes[0].Description!);
+            description = _commonServices.LanguageService.GetString(attributes[0].Description!);
         }
 
         return description;
@@ -269,7 +270,7 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
     /// Cleans up the instance, for example by saving its state,
     /// removing resources, etc...
     /// </summary>
-    public virtual void Cleanup()
+    public virtual void Cleanup(bool isClosing = true)
     {
     }
 
@@ -316,4 +317,22 @@ public class SplashScreenViewModel : ObservableClass, IViewModel
             CancelCommand?.Dispose();
         }
     }
+
+    /// <summary>
+    /// Called when navigating away from this ViewModel.
+    /// Cancel any running commands if needed.
+    /// </summary>
+    public virtual void OnNavigatedFrom() => this.CancelAllCommands();
+
+    /// <summary>
+    /// Called when navigating to this ViewModel.
+    /// Reset command states.
+    /// </summary>
+    public virtual void OnNavigatedTo() => this.ResetAllCommandStates();
+
+    /// <summary>
+    /// Determines if navigation away from this ViewModel is allowed.
+    /// By default, allow navigation
+    /// </summary>
+    public virtual bool CanNavigateAway() => true;
 }

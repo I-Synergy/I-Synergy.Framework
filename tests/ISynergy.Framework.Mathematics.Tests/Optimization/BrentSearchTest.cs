@@ -162,7 +162,7 @@ public class BrentSearchTest
         double a = -1;
         double b = +1;
 
-        Assert.ThrowsException<ConvergenceException>(() =>
+        Assert.Throws<ConvergenceException>(() =>
         {
             double actual = BrentSearch.FindRoot(f, a, b);
         });
@@ -191,7 +191,7 @@ public class BrentSearchTest
         double a = -3;
         double b = +3;
 
-        Assert.ThrowsException<ConvergenceException>(() =>
+        Assert.Throws<ConvergenceException>(() =>
         {
             double actual = BrentSearch.FindRoot(f, a, b);
         });
@@ -220,7 +220,7 @@ public class BrentSearchTest
         double a = -1;
         double b = +3000;
 
-        Assert.ThrowsException<ConvergenceException>(() =>
+        Assert.Throws<ConvergenceException>(() =>
         {
             double actual = BrentSearch.FindRoot(f, a, b, maxIterations: 5);
         });
@@ -251,7 +251,7 @@ public class BrentSearchTest
         double a = -200;
         double b = +200;
 
-        Assert.ThrowsException<ConvergenceException>(() =>
+        Assert.Throws<ConvergenceException>(() =>
         {
             double actual = BrentSearch.Maximize(f, a, b, maxIterations: 10);
         });

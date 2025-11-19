@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
+﻿using ISynergy.Framework.Core.Models.Results;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.UI.Services;

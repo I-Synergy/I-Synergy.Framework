@@ -18,7 +18,7 @@ public class IntegerTrigger : BaseNumericTrigger<int>
     /// <param name="callbackAsync"></param>
     public IntegerTrigger(
         Guid automationId,
-        Func<(IObservableClass Entity, IProperty<int> Property)> function,
+        Func<(IObservableValidatedClass Entity, IProperty<int> Property)> function,
         int below,
         int above,
         Func<int, Task> callbackAsync)
@@ -42,7 +42,7 @@ public class DecimalTrigger : BaseNumericTrigger<decimal>
     /// <param name="callbackAsync"></param>
     public DecimalTrigger(
         Guid automationId,
-        Func<(IObservableClass Entity, IProperty<decimal> Property)> function,
+        Func<(IObservableValidatedClass Entity, IProperty<decimal> Property)> function,
         decimal below,
         decimal above,
         Func<decimal, Task> callbackAsync)
@@ -66,7 +66,7 @@ public class DoubleTrigger : BaseNumericTrigger<double>
     /// <param name="callbackAsync"></param>
     public DoubleTrigger(
         Guid automationId,
-        Func<(IObservableClass Entity, IProperty<double> Property)> function,
+        Func<(IObservableValidatedClass Entity, IProperty<double> Property)> function,
         double below,
         double above,
         Func<double, Task> callbackAsync)

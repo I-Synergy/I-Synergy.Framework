@@ -1,11 +1,11 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 
@@ -14,23 +14,28 @@ namespace ISynergy.Framework.UI.Services;
 public class DialogService : IDialogService
 {
     private readonly IScopedContextService _scopedContextService;
-    private readonly ILogger _logger;
+    private readonly ILanguageService _languageService;
+    private readonly ILogger<DialogService> _logger;
 
     private Window? _activeDialog = null;
+    private readonly SemaphoreSlim _dialogSemaphore = new SemaphoreSlim(1, 1);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="scopedContextService"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="languageService"></param>
+    /// <param name="logger"></param>
     public DialogService(
         IScopedContextService scopedContextService,
-        ILoggerFactory loggerFactory)
+        ILanguageService languageService,
+        ILogger<DialogService> logger)
     {
-        _logger = loggerFactory.CreateLogger<DialogService>();
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _logger.LogTrace($"DialogService instance created with ID: {Guid.NewGuid()}");
 
-        _scopedContextService = scopedContextService;
+        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
+        _languageService = languageService ?? throw new ArgumentNullException(nameof(languageService));
     }
 
     /// <summary>
@@ -39,8 +44,15 @@ public class DialogService : IDialogService
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "") =>
-        ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleError"), MessageBoxButton.OK);
+    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "")
+    {
+        Argument.IsNotNull(error);
+
+        return ShowMessageAsync(
+            error.ToMessage(Environment.StackTrace),
+            !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"),
+            MessageBoxButtons.OK);
+    }
 
     /// <summary>
     /// Shows the error asynchronous.
@@ -48,8 +60,15 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleError"), MessageBoxButton.OK);
+    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "")
+    {
+        Argument.IsNotNullOrEmpty(message);
+
+        return ShowMessageAsync(
+            message,
+            !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"),
+            MessageBoxButtons.OK);
+    }
 
     /// <summary>
     /// Shows the information asynchronous.
@@ -57,8 +76,15 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleInfo"), MessageBoxButton.OK);
+    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "")
+    {
+        Argument.IsNotNullOrEmpty(message);
+
+        return ShowMessageAsync(
+            message,
+            !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"),
+            MessageBoxButtons.OK);
+    }
 
     /// <summary>
     /// Shows the warning asynchronous.
@@ -66,8 +92,15 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "") =>
-        ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.Default.GetString("TitleWarning"), MessageBoxButton.OK);
+    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "")
+    {
+        Argument.IsNotNullOrEmpty(message);
+
+        return ShowMessageAsync(
+            message,
+            !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"),
+            MessageBoxButtons.OK);
+    }
 
     /// <summary>
     /// Shows the greeting asynchronous.
@@ -76,24 +109,30 @@ public class DialogService : IDialogService
     /// <returns>Task.</returns>
     public Task ShowGreetingAsync(string name)
     {
+        Argument.IsNotNullOrEmpty(name);
+
         if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
-        {
-            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Night"), name),
-                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButton.OK);
-        }
+            return ShowMessageAsync(
+                string.Format(_languageService.GetString("Greeting_Night"), name),
+                _languageService.GetString("TitleWelcome"),
+                MessageBoxButtons.OK);
 
         if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
-        {
-            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Morning"), name),
-                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButton.OK);
-        }
+            return ShowMessageAsync(
+                string.Format(_languageService.GetString("Greeting_Morning"), name),
+                _languageService.GetString("TitleWelcome"),
+                MessageBoxButtons.OK);
+
         if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
-        {
-            return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Afternoon"), name),
-                LanguageService.Default.GetString("TitleWelcome"), MessageBoxButton.OK);
-        }
-        return ShowMessageAsync(string.Format(LanguageService.Default.GetString("Greeting_Evening"), name),
-            LanguageService.Default.GetString("TitleWelcome"), MessageBoxButton.OK);
+            return ShowMessageAsync(
+                string.Format(_languageService.GetString("Greeting_Afternoon"), name),
+                _languageService.GetString("TitleWelcome"),
+                MessageBoxButtons.OK);
+
+        return ShowMessageAsync(
+            string.Format(_languageService.GetString("Greeting_Evening"), name),
+            _languageService.GetString("TitleWelcome"),
+            MessageBoxButtons.OK);
     }
 
     /// <summary>
@@ -102,78 +141,131 @@ public class DialogService : IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
+    /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
+    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
     {
-        var dialog = new Window()
-        {
-            Title = title,
-            Content = message
-        };
+        Argument.IsNotNullOrEmpty(message);
 
-        if (Application.MainWindow is not null)
-            dialog.XamlRoot = Application.MainWindow.Content.XamlRoot;
-
-        switch (buttons)
+        try
         {
-            case MessageBoxButton.OKCancel:
-                dialog.PrimaryButtonText = LanguageService.Default.GetString("Ok");
-                dialog.CloseButtonText = LanguageService.Default.GetString("Cancel");
-                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                break;
-            case MessageBoxButton.YesNoCancel:
-                dialog.PrimaryButtonText = LanguageService.Default.GetString("Yes");
-                dialog.SecondaryButtonText = LanguageService.Default.GetString("No");
-                dialog.CloseButtonText = LanguageService.Default.GetString("Cancel");
-                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                break;
-            case MessageBoxButton.YesNo:
-                dialog.PrimaryButtonText = LanguageService.Default.GetString("Yes");
-                dialog.CloseButtonText = LanguageService.Default.GetString("No");
-                dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                break;
-            default:
-                dialog.CloseButtonText = LanguageService.Default.GetString("Ok");
-                dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                break;
+            var dialog = new Window()
+            {
+                Title = title,
+                Content = message
+            };
+
+            // Safely set XamlRoot
+            if (Application.MainWindow is not null && Application.MainWindow.Content is not null)
+            {
+                try
+                {
+                    dialog.XamlRoot = Application.MainWindow.Content.XamlRoot;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to set XamlRoot for dialog");
+                }
+            }
+
+            switch (buttons)
+            {
+                case MessageBoxButtons.OKCancel:
+                    dialog.PrimaryButtonText = _languageService.GetString("Ok");
+                    dialog.CloseButtonText = _languageService.GetString("Cancel");
+
+                    try
+                    {
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to set button styles");
+                    }
+                    break;
+                case MessageBoxButtons.YesNoCancel:
+                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                    dialog.SecondaryButtonText = _languageService.GetString("No");
+                    dialog.CloseButtonText = _languageService.GetString("Cancel");
+
+                    try
+                    {
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to set button styles");
+                    }
+                    break;
+                case MessageBoxButtons.YesNo:
+                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                    dialog.CloseButtonText = _languageService.GetString("No");
+
+                    try
+                    {
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to set button styles");
+                    }
+                    break;
+                default:
+                    dialog.CloseButtonText = _languageService.GetString("Ok");
+
+                    try
+                    {
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to set button styles");
+                    }
+                    break;
+            }
+
+            var result = await OpenDialogAsync(dialog);
+
+            switch (buttons)
+            {
+                case MessageBoxButtons.OKCancel:
+                    switch (result)
+                    {
+                        case ContentDialogResult.Primary:
+                            return MessageBoxResult.OK;
+                        default:
+                            return MessageBoxResult.Cancel;
+                    }
+                case MessageBoxButtons.YesNoCancel:
+                    switch (result)
+                    {
+                        case ContentDialogResult.Primary:
+                            return MessageBoxResult.Yes;
+                        case ContentDialogResult.Secondary:
+                            return MessageBoxResult.No;
+                        default:
+                            return MessageBoxResult.Cancel;
+                    }
+                case MessageBoxButtons.YesNo:
+                    switch (result)
+                    {
+                        case ContentDialogResult.Primary:
+                            return MessageBoxResult.Yes;
+                        default:
+                            return MessageBoxResult.No;
+                    }
+                default:
+                    return MessageBoxResult.OK;
+            }
         }
-
-        var result = await OpenDialogAsync(dialog);
-
-        switch (buttons)
+        catch (Exception ex)
         {
-            case MessageBoxButton.OKCancel:
-                switch (result)
-                {
-                    case ContentDialogResult.Primary:
-                        return MessageBoxResult.OK;
-                    default:
-                        return MessageBoxResult.Cancel;
-                }
-            case MessageBoxButton.YesNoCancel:
-                switch (result)
-                {
-                    case ContentDialogResult.Primary:
-                        return MessageBoxResult.Yes;
-                    case ContentDialogResult.Secondary:
-                        return MessageBoxResult.No;
-                    default:
-                        return MessageBoxResult.Cancel;
-                }
-            case MessageBoxButton.YesNo:
-                switch (result)
-                {
-                    case ContentDialogResult.Primary:
-                        return MessageBoxResult.Yes;
-                    default:
-                        return MessageBoxResult.No;
-                }
-            default:
-                return MessageBoxResult.OK;
+            _logger.LogError(ex, "Error showing message dialog");
+            return MessageBoxResult.None;
         }
     }
 
@@ -188,9 +280,16 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        if (_scopedContextService.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            _scopedContextService.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-            await CreateDialogAsync(dialog, viewmodel);
+        try
+        {
+            if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+                _scopedContextService.GetRequiredService(typeof(TWindow)) is Window dialog)
+                await CreateDialogAsync(dialog, viewmodel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error showing dialog for {typeof(TWindow).Name} and {typeof(TViewModel).Name}");
+        }
     }
 
     /// <summary>
@@ -205,11 +304,18 @@ public class DialogService : IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        if (_scopedContextService.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            _scopedContextService.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+        try
         {
-            viewmodel.SetSelectedItem(e);
-            await CreateDialogAsync(dialog, viewmodel);
+            if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+                _scopedContextService.GetRequiredService(typeof(TWindow)) is Window dialog)
+            {
+                viewmodel.SetSelectedItem(e);
+                await CreateDialogAsync(dialog, viewmodel);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error showing dialog for {typeof(TWindow).Name} and {typeof(TViewModel).Name} with entity");
         }
     }
 
@@ -222,8 +328,18 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
-        if (_scopedContextService.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
-            await CreateDialogAsync(dialog, viewmodel);
+        Argument.IsNotNull(window);
+        Argument.IsNotNull(viewmodel);
+
+        try
+        {
+            if (_scopedContextService.GetRequiredService(window.GetType()) is Window dialog)
+                await CreateDialogAsync(dialog, viewmodel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error showing dialog for {window.GetType().Name}");
+        }
     }
 
     /// <summary>
@@ -235,8 +351,18 @@ public class DialogService : IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
-        if (_scopedContextService.ServiceProvider.GetRequiredService(type) is Window dialog)
-            await CreateDialogAsync(dialog, viewmodel);
+        Argument.IsNotNull(type);
+        Argument.IsNotNull(viewmodel);
+
+        try
+        {
+            if (_scopedContextService.GetRequiredService(type) is Window dialog)
+                await CreateDialogAsync(dialog, viewmodel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error showing dialog for {type.Name}");
+        }
     }
 
     /// <summary>
@@ -247,48 +373,234 @@ public class DialogService : IDialogService
     /// <param name="viewmodel">The viewmodel.</param>
     public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
     {
+        Argument.IsNotNull(dialog);
+        Argument.IsNotNull(viewmodel);
+
         if (dialog is Window window)
         {
-            if (Application.MainWindow is not null)
-                window.XamlRoot = Application.MainWindow.Content.XamlRoot;
-
-            window.ViewModel = viewmodel;
-
-            window.PrimaryButtonCommand = viewmodel.SubmitCommand;
-            window.SecondaryButtonCommand = viewmodel.CancelCommand;
-            window.CloseButtonCommand = viewmodel.CancelCommand;
-
-            window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-            window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-            window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-
-            void ViewModelClosedHandler(object? sender, EventArgs e)
+            try
             {
-                if (sender is IViewModelDialog<TEntity> vm)
-                    vm.Closed -= ViewModelClosedHandler;
+                // Safely set XamlRoot
+                if (Application.MainWindow is not null && Application.MainWindow.Content is not null)
+                {
+                    try
+                    {
+                        window.XamlRoot = Application.MainWindow.Content.XamlRoot;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to set XamlRoot for dialog");
+                    }
+                }
 
-                window.ViewModel?.Dispose();
-                window.Close();
+                window.ViewModel = viewmodel;
+
+                window.PrimaryButtonCommand = viewmodel.SubmitCommand;
+                window.SecondaryButtonCommand = viewmodel.CancelCommand;
+                window.CloseButtonCommand = viewmodel.CancelCommand;
+
+                try
+                {
+                    window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                    window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                    window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to set button styles");
+                }
+
+                EventHandler? viewModelClosedHandler = null;
+                viewModelClosedHandler = async (sender, e) =>
+                {
+                    try
+                    {
+                        if (sender is IViewModelDialog<TEntity> vm)
+                            vm.Closed -= viewModelClosedHandler;
+
+                        window.ViewModel?.Dispose();
+                        await window.CloseAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error in viewmodel closed handler");
+                    }
+                };
+
+                viewmodel.Closed += viewModelClosedHandler;
+
+                try
+                {
+                    await viewmodel.InitializeAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error initializing viewmodel");
+                    viewmodel.Closed -= viewModelClosedHandler;
+                    return;
+                }
+
+                try
+                {
+                    await OpenDialogAsync(window);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error opening dialog");
+                    viewmodel.Closed -= viewModelClosedHandler;
+                    throw;
+                }
             }
-            ;
-
-            viewmodel.Closed += ViewModelClosedHandler;
-
-            await viewmodel.InitializeAsync();
-
-            await OpenDialogAsync(window);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating dialog");
+            }
         }
     }
 
     private async Task<ContentDialogResult> OpenDialogAsync(Window dialog)
     {
-        if (_activeDialog is not null)
+        Argument.IsNotNull(dialog);
+
+        // Use semaphore to prevent multiple dialogs from being opened simultaneously
+        var semaphoreAcquired = false;
+        try
         {
-            _activeDialog.Close();
+            await _dialogSemaphore.WaitAsync();
+            semaphoreAcquired = true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error acquiring dialog semaphore");
+            return ContentDialogResult.None;
         }
 
-        _activeDialog = dialog;
+        try
+        {
+            if (_activeDialog is not null)
+            {
+                try
+                {
+                    var tcs = new TaskCompletionSource<bool>();
 
-        return await _activeDialog.ShowAsync().AsTask();
+                    // Add event handler to know when dialog is closed
+                    _activeDialog.Closed += (s, e) => tcs.TrySetResult(true);
+
+                    // Close the active dialog
+                    await _activeDialog.CloseAsync();
+
+                    // Wait for dialog to close with timeout
+                    using (var cts = new CancellationTokenSource())
+                    {
+                        var timeoutTask = Task.Delay(TimeSpan.FromMilliseconds(500), cts.Token);
+                        var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
+
+                        if (completedTask == timeoutTask)
+                        {
+                            _logger.LogTrace("Dialog close operation timed out");
+                            // Force cleanup of previous dialog reference
+                            _activeDialog = null;
+                        }
+                        else
+                        {
+                            // Cancel the timeout task since dialog closed successfully
+                            cts.Cancel();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error closing active dialog");
+                    _activeDialog = null;
+                }
+            }
+
+            _activeDialog = dialog;
+
+            try
+            {
+                // Add timeout to dialog show operation
+                var showTask = dialog.ShowAsync().AsTask();
+                using (var cts = new CancellationTokenSource())
+                {
+                    var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10), cts.Token);
+                    var completedTask = await Task.WhenAny(showTask, timeoutTask);
+
+                    if (completedTask == timeoutTask)
+                    {
+                        _logger.LogTrace("Dialog show operation timed out");
+                        return ContentDialogResult.None;
+                    }
+
+                    // Cancel the timeout task since dialog completed successfully
+                    cts.Cancel();
+                    return await showTask;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error showing dialog");
+                return ContentDialogResult.None;
+            }
+        }
+        finally
+        {
+            // Only release if we successfully acquired the semaphore
+            if (semaphoreAcquired)
+            {
+                try
+                {
+                    _dialogSemaphore.Release();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error releasing dialog semaphore");
+                }
+            }
+        }
+    }
+
+    // Implement IDisposable to clean up resources
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Dispose managed resources
+                _dialogSemaphore.Dispose();
+
+                // Close any active dialog
+                if (_activeDialog != null)
+                {
+                    try
+                    {
+                        _activeDialog.CloseAsync().GetAwaiter().GetResult();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error closing dialog during disposal");
+                    }
+                    _activeDialog = null;
+                }
+            }
+
+            _disposed = true;
+        }
+    }
+
+    ~DialogService()
+    {
+        Dispose(false);
     }
 }
+
+

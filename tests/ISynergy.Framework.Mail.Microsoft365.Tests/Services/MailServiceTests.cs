@@ -11,11 +11,11 @@ public class MailServiceTests
 {
     private readonly MailOptions _mailOptions;
 
-    private Mock<ILoggerFactory> _mockLogger;
+    private Mock<ILogger<MailService>> _mockLogger;
 
     public MailServiceTests()
     {
-        _mockLogger = new Mock<ILoggerFactory>();
+        _mockLogger = new Mock<ILogger<MailService>>();
 
         Mock<MailOptions> configMock = new();
         _mailOptions = configMock.Object;

@@ -112,7 +112,7 @@ public partial class BladeView : UserControl, IDisposable
     #endregion
 
     private readonly Dictionary<IView, BladeState> _bladeStates = new();
-    private readonly ILogger _logger = ServiceLocator.Default.GetService<ILogger<BladeView>>();
+    private readonly ILogger _logger = ServiceLocator.Default.GetRequiredService<ILogger<BladeView>>();
     private bool _isInternalUpdate;
     private bool _isDisposed;
 

@@ -5,7 +5,7 @@ using ISynergy.Framework.EntityFramework.Base;
 namespace ISynergy.Framework.EntityFramework.Tests.Entities;
 
 [IgnoreSoftDelete]
-internal class TestTenantEntityWithIgnoreSoftDelete : BaseTenantEntity
+public class TestTenantEntityWithIgnoreSoftDelete : BaseTenantEntity
 {
     [Identity]
     public Guid Id { get; set; }

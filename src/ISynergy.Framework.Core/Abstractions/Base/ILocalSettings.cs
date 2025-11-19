@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Abstractions.Base;
 
@@ -7,6 +8,8 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 /// </summary>
 public interface ILocalSettings
 {
+    event PropertyChangedEventHandler? PropertyChanged;
+
     /// <summary>
     /// Setting for maintaining the default culture used.
     /// </summary>
@@ -15,18 +18,6 @@ public interface ILocalSettings
     /// Setting for maintaining if application is in fullscreen mode or not.
     /// </summary>
     bool IsFullscreen { get; set; }
-    /// <summary>
-    /// Setting for maintaining a list of users used.
-    /// </summary>
-    List<string> Users { get; set; }
-    /// <summary>
-    /// Setting for maintaining last succesfull username logged in.
-    /// </summary>
-    string DefaultUser { get; set; }
-    /// <summary>
-    /// Setting for storing the refresh token received on authentication.
-    /// </summary>
-    string? RefreshToken { get; set; }
     /// <summary>
     /// Setting for storing the theme color.
     /// </summary>
@@ -41,13 +32,13 @@ public interface ILocalSettings
     /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
     bool IsLightThemeEnabled { get; }
     /// <summary>
-    /// If RefreshToken is available or user is available in Windows Credentials locker and setting is true, the application can login automatically. 
-    /// </summary>
-    bool IsAutoLogin { get; set; }
-    /// <summary>
     /// Setting for maintaining the advanced mode of the application.
     /// </summary>
     bool IsAdvanced { get; set; }
+    /// <summary>
+    /// Setting for maintaining if the console window should be shown.
+    /// </summary>
+    bool ShowConsole { get; set; }
     /// <summary>
     /// Setting for maintaining the last used migration version of the application.
     /// </summary>

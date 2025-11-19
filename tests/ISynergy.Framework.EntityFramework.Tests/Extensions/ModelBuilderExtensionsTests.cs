@@ -2,7 +2,6 @@
 using ISynergy.Framework.EntityFramework.Tests.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -73,13 +72,18 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntity));
-        var filter = entity!.GetQueryFilter();
+        var filters = entity!.GetDeclaredQueryFilters();
 
+        Assert.IsNotNull(filters);
+        Assert.IsTrue(filters.Any());
+
+        // Get the first (and only) filter
+        var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
+        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
 
         // Validate filter structure
-        var lambda = (LambdaExpression)filter;
+        var lambda = (LambdaExpression)filter.Expression;
         Assert.IsTrue(lambda.Parameters.Count == 1);
         Assert.IsTrue(lambda.Body.NodeType == ExpressionType.Equal);
     }
@@ -95,8 +99,8 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestEntity));
-        var filter = entity!.GetQueryFilter();
-        Assert.IsNull(filter);
+        var filters = entity!.GetDeclaredQueryFilters();
+        Assert.IsTrue(filters is null || !filters.Any());
     }
 
     [TestMethod]
@@ -110,13 +114,18 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestEntity));
-        var filter = entity!.GetQueryFilter();
+        var filters = entity!.GetDeclaredQueryFilters();
 
+        Assert.IsNotNull(filters);
+        Assert.IsTrue(filters.Any());
+
+        // Get the first (and only) filter
+        var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
+        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
 
         // Validate filter structure
-        var lambda = (LambdaExpression)filter;
+        var lambda = (LambdaExpression)filter.Expression;
         Assert.IsTrue(lambda.Parameters.Count == 1);
         Assert.IsTrue(lambda.Body.NodeType == ExpressionType.Not);
     }
@@ -150,13 +159,18 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntity));
-        var filter = entity!.GetQueryFilter();
+        var filters = entity!.GetDeclaredQueryFilters();
 
+        Assert.IsNotNull(filters);
+        Assert.IsTrue(filters.Any());
+
+        // Get the first (and only) filter
+        var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
+        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
 
         // Validate combined filter structure
-        var lambda = (LambdaExpression)filter;
+        var lambda = (LambdaExpression)filter.Expression;
         Assert.IsTrue(lambda.Parameters.Count == 1);
         Assert.IsTrue(lambda.Body.NodeType == ExpressionType.AndAlso);
     }
@@ -206,13 +220,18 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntity));
-        var filter = entity!.GetQueryFilter();
+        var filters = entity!.GetDeclaredQueryFilters();
 
+        Assert.IsNotNull(filters);
+        Assert.IsTrue(filters.Any());
+
+        // Get the first (and only) filter
+        var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
+        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
 
         // Validate combined filter structure
-        var lambda = (LambdaExpression)filter;
+        var lambda = (LambdaExpression)filter.Expression;
         Assert.IsTrue(lambda.Parameters.Count == 1);
         Assert.IsTrue(lambda.Body.NodeType == ExpressionType.AndAlso);
 
@@ -234,13 +253,18 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntity));
-        var filter = entity!.GetQueryFilter();
+        var filters = entity!.GetDeclaredQueryFilters();
 
+        Assert.IsNotNull(filters);
+        Assert.IsTrue(filters.Any());
+
+        // Get the first (and only) filter
+        var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter, typeof(LambdaExpression));
+        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
 
         // Validate combined filter structure
-        var lambda = (LambdaExpression)filter;
+        var lambda = (LambdaExpression)filter.Expression;
         Assert.IsTrue(lambda.Parameters.Count == 1);
         Assert.IsTrue(lambda.Body.NodeType == ExpressionType.AndAlso);
 
@@ -261,10 +285,9 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntityWithIgnoreSoftDelete));
-        var filter = entity!.GetQueryFilter();
-        Assert.IsNull(filter);
+        var filters = entity!.GetDeclaredQueryFilters();
+        Assert.IsTrue(filters is null || !filters.Any());
     }
-
 
     [TestMethod]
     public void ApplyBothFilters_WhenEntityHasIgnoreSoftDelete_ShouldOnlySetTenantFilter()
@@ -278,10 +301,17 @@ public class ModelBuilderExtensionsTests
 
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntityWithIgnoreSoftDelete));
-        var filter = entity!.GetQueryFilter();
+        var filters = entity!.GetDeclaredQueryFilters();
 
+        Assert.IsNotNull(filters);
+        Assert.IsTrue(filters.Any());
+
+        // Get the first (and only) filter
+        var filter = filters.First();
         Assert.IsNotNull(filter);
-        var lambda = (LambdaExpression)filter;
+
+        var lambda = (LambdaExpression?)filter.Expression;
+        Assert.IsNotNull(lambda);
         Assert.IsTrue(lambda.Body.NodeType == ExpressionType.Equal); // Only tenant filter
     }
 
@@ -306,7 +336,7 @@ public class ModelBuilderExtensionsTests
         Assembly[]? nullAssemblies = null;
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             _modelBuilder.ApplyModelBuilderConfigurations(nullAssemblies!));
     }
 

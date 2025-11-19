@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Core.Models;
 /// <summary>
 /// Class NavigationItem.
 /// </summary>
-public partial class NavigationItem : IDisposable
+public record NavigationItem : IDisposable
 {
     private bool _disposed = false;
 
@@ -43,7 +43,7 @@ public partial class NavigationItem : IDisposable
     /// Gets or sets the symbol.
     /// </summary>
     /// <value>The symbol.</value>
-    public object Symbol { get; set; }
+    public object Icon { get; set; }
 
     /// <summary>
     /// Gets or sets the color.
@@ -63,7 +63,7 @@ public partial class NavigationItem : IDisposable
     {
         Name = name;
         ToolTipMenu = name;
-        Symbol = symbol;
+        Icon = symbol;
         Color = color;
         Command = command;
         CommandParameter = commandParameter;

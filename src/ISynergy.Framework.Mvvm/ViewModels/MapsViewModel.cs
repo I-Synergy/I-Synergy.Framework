@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
@@ -84,15 +85,17 @@ public class MapsViewModel : ViewModelDialog<object>
     /// Initializes a new instance of the <see cref="MapsViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="address">The address.</param>
+    /// <param name="logger"></param>
     public MapsViewModel(
         ICommonServices commonServices,
-        string name,
-        string address)
-        : base(commonServices)
+        ILogger<MapsViewModel> logger)
+        : base(commonServices, logger)
     {
         Locations = new ObservableCollection<object>();
+    }
+
+    public virtual void SetAddress(string name, string address)
+    {
         Title = address;
         Address = address;
         Name = name;

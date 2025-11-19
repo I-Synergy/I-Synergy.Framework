@@ -1,0 +1,103 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:ISynergy.Framework.UI.Converters"
+    xmlns:formatters="using:ISynergy.Framework.UI.Formatters"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
+    xmlns:ui="using:Windows.UI">
+
+    <ui:Color x:Key="SystemAccentColorGreen">#ff45e63d</ui:Color>
+    <ui:Color x:Key="SystemAccentColorRed">#ffe63d3d</ui:Color>
+
+    <SolidColorBrush x:Key="SystemAccentBrush" Color="{ThemeResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="SystemAccentBrushGreen" Color="{ThemeResource SystemAccentColorGreen}" />
+    <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{ThemeResource SystemAccentColorRed}" />
+
+    <converters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
+    <converters:StringToGeometryConverter x:Key="StringToGeometryConverter" />
+    <converters:CurrencyConverter x:Key="CurrencyConverter" />
+    <converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter" />
+    <converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
+    <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
+    <converters:StringFormatConverter x:Key="StringFormatConverter" />
+    <converters:StringToDecimalConverter x:Key="StringToDecimalConverter" />
+    <converters:StringToIntegerConverter x:Key="StringToIntegerConverter" />
+    <converters:DecimalToStringConverter x:Key="DecimalToStringConverter" />
+    <converters:IntegerToStringConverter x:Key="IntegerToStringConverter" />
+    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+    <converters:StringToEnabledConverter x:Key="StringToEnabledConverter" />
+    <converters:DateTimeOffsetToLocalDateTimeOffsetConverter x:Key="DateTimeOffsetToLocalDateTimeOffsetConverter" />
+    <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter" />
+    <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <converters:BooleanToVisibilityConverter
+        x:Key="BooleanToVisibilityConverter"
+        False="Collapsed"
+        True="Visible" />
+    <converters:BooleanToVisibilityConverter
+        x:Key="InverseBooleanToVisibilityConverter"
+        False="Visible"
+        True="Collapsed" />
+    <converters:BooleanToVisibilityConverter
+        x:Key="IsEditableToVisibilityConverter"
+        False="Collapsed"
+        True="Visible" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters" />
+    <converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter" />
+    <converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter" />
+    <converters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter" />
+    <converters:IntegerToDoubleConverter x:Key="IntegerToDoubleConverter" />
+
+    <formatters:DecimalFormatter x:Key="2DecimalFormatter" Decimals="2" />
+    <formatters:DecimalFormatter x:Key="1DecimalFormatter" Decimals="1" />
+    <formatters:DecimalFormatter x:Key="0DecimalFormatter" Decimals="0" />
+
+    <FontFamily x:Key="ContentControlThemeFontFamily">XamlAutoFontFamily</FontFamily>
+    <FontFamily x:Key="FontAwesomeLight">ms-appx:///Assets/Fonts/fontawesome6free-regular-400#Font Awesome 6 Free Regular</FontFamily>
+
+    <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextTrimming" Value="None" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="LineStackingStrategy" Value="MaxHeight" />
+        <Setter Property="TextLineBounds" Value="Full" />
+    </Style>
+
+    <Style
+        x:Key="TitleTextBlockStyle"
+        BasedOn="{StaticResource BaseTextBlockStyle}"
+        TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiLight" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="Margin" Value="4,0" />
+        <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
+    </Style>
+
+    <Style
+        x:Key="DefaultNoteTextBoxStyle"
+        BasedOn="{StaticResource DefaultTextBoxStyle}"
+        TargetType="TextBox">
+        <Setter Property="AllowDrop" Value="true" />
+        <Setter Property="Height" Value="110" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style
+        x:Key="DefaultDialogButtonStyle"
+        BasedOn="{StaticResource ButtonRevealStyle}"
+        TargetType="Button">
+        <Setter Property="IsDoubleTapEnabled" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+        <Setter Property="MinHeight" Value="{ThemeResource ContentDialogButtonMinHeight}" />
+        <Setter Property="MinWidth" Value="{ThemeResource ContentDialogButtonMinWidth}" />
+    </Style>
+</ResourceDictionary>

@@ -42,7 +42,7 @@ public class TryCatchUtilityTest
             throw new ArgumentException("Test Exception");
         }
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             bool result = TryCatchUtility.IgnoreErrors<NotImplementedException>(Operation);
         });
@@ -83,7 +83,7 @@ public class TryCatchUtilityTest
         int defaultValue = 0;
         Func<int> operation = () => throw new InvalidOperationException();
 
-        Assert.ThrowsException<InvalidOperationException>(() =>
+        Assert.Throws<InvalidOperationException>(() =>
         {
             int result = TryCatchUtility.IgnoreErrors<int, NotImplementedException>(operation, defaultValue);
         });

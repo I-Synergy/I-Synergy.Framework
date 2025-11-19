@@ -1,8 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
@@ -12,11 +14,13 @@ namespace Sample.ViewModels;
 /// </summary>
 public class ValidationViewModel : ViewModelNavigation<object>
 {
+    private readonly IDialogService _dialogService;
+
     /// <summary>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Validation"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Validation"); } }
 
     /// <summary>
     /// Gets or sets the Test property value.
@@ -72,14 +76,18 @@ public class ValidationViewModel : ViewModelNavigation<object>
     /// Default constructor.
     /// </summary>
     /// <param name="commonServices"></param>
-    public ValidationViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="dialogService"></param>
+    /// <param name="logger"></param>
+    public ValidationViewModel(ICommonServices commonServices, IDialogService dialogService, ILogger<ValidationViewModel> logger)
+        : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";
-        Description = LanguageService.Default.GetString("ValidationDescription");
+        Description = _commonServices.LanguageService.GetString("ValidationDescription");
 
-        Validator = new Action<IObservableClass>(_ =>
+        Validator = new Action<IObservableValidatedClass>(_ =>
         {
             if (string.IsNullOrEmpty(Test))
             {
@@ -112,7 +120,7 @@ public class ValidationViewModel : ViewModelNavigation<object>
 
         if (Validate())
         {
-            await _commonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
+            await _dialogService.ShowInformationAsync($"Validation succeeded.");
         }
     }
 }

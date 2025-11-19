@@ -1,0 +1,8 @@
+﻿{
+  "profiles": {
+    "Sample.UWP (Packaged)": {
+      "commandName": "MsixPackage",
+      "commandLineArgs": "?environment=local&country=nl"
+    }
+  }
+}

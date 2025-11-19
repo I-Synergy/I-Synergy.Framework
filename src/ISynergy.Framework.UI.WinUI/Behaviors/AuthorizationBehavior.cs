@@ -25,7 +25,7 @@ public class Authorization : Behavior<Control>
     {
         if (!DesignMode.DesignModeEnabled)
         {
-            var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
+            var scopedContextService = ServiceLocator.Default.GetRequiredService<IScopedContextService>();
 
             if (_authenticationProvider is null)
                 _authenticationProvider = scopedContextService.GetRequiredService<IAuthenticationProvider>();

@@ -1,7 +1,22 @@
 name: $(Date:yyyy).1$(Date:MMdd).1$(Date:HHmm)
 
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+    - docs/*
+    - '*.md'
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+    - docs/*
+    - '*.md'
 
 variables:
   - name: VersionNumber
@@ -64,9 +79,9 @@ stages:
             AddBuildTag: 'v$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
-          displayName: 'Install NuGet 6.12.2'
+          displayName: 'Install NuGet 7.0.0'
           inputs:
-            versionSpec: 6.12.2
+            versionSpec: 7.0.0
 
         - task: UseDotNet@2
           displayName: 'Install .Net Sdk'
@@ -74,12 +89,12 @@ stages:
             packageType: 'sdk'
             useGlobalJson: true
 
-        # - task: DotNetCoreCLI@2
-        #   displayName: 'Install MAUI workloads'
-        #   inputs:
-        #     command: custom
-        #     custom: 'workload '
-        #     arguments: 'install maui --source https://api.nuget.org/v3/index.json'
+        - task: DotNetCoreCLI@2
+          displayName: 'Install MAUI workloads'
+          inputs:
+            command: custom
+            custom: 'workload '
+            arguments: 'install maui --source https://api.nuget.org/v3/index.json'
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
@@ -99,7 +114,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Build I-Synergy Framework'
           inputs:
-            solution: 'I-Synergy.Framework.sln'
+            solution: 'I-Synergy.Framework.slnx'
             msbuildArchitecture: 'x64'
             configuration: $(BuildConfiguration)
             msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true /nr:false' #this flag is important to avoid DLL lock for the 2nd build/analysis
@@ -108,7 +123,7 @@ stages:
           displayName: 'Test I-Synergy Framework'
           inputs:
             command: test
-            projects: 'I-Synergy.Framework.sln'
+            projects: 'I-Synergy.Framework.slnx'
             arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
        
         - task: CopyFiles@2
@@ -129,7 +144,6 @@ stages:
             command: 'custom'
             arguments: 'sign $(Build.ArtifactStagingDirectory)\*.snupkg -CertificatePath "$(Agent.WorkFolder)\_temp\intelligence-online.pfx" -CertificatePassword "$(CertPassword)" -Timestamper "$(TimestampUrl)"'
 
-
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Artifacts'
           inputs:
@@ -144,12 +158,6 @@ stages:
           displayName: 'Publish SonarCloud analysis'
           inputs:
             pollingTimeoutSec: '300'
-
-        - bash: |
-            git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
-                +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
-          displayName: 'Copy source to Github'
-          # condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
 
   # - stage: DocStage
   #   displayName: 'Documentation'

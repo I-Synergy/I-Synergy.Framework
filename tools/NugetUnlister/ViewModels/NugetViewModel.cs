@@ -1,8 +1,9 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using NugetUnlister.Abstractions;
 using NugetUnlister.Models;
 using System.Collections.ObjectModel;
@@ -50,8 +51,9 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
 
     public NugetViewModel(
         ICommonServices commonServices,
+        ILogger<NugetViewModel> logger,
         INugetService nugetService)
-        : base(commonServices)
+        : base(commonServices, logger)
     {
         Items = [];
         Logs = [];
@@ -90,7 +92,7 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
         {
             i++;
             await _nugetService.UnlistPackageAsync(item.PackageId, item.Version);
-            _commonServices.BusyService.BusyMessage = $"Processed package ({item.Version}) {i} from {count}...";
+            _commonServices.BusyService.UpdateMessage($"Processed package ({item.Version}) {i} from {count}...");
         }
 
         _commonServices.BusyService.StopBusy();

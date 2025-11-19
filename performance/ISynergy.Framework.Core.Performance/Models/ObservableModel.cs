@@ -2,7 +2,7 @@
 
 namespace ISynergy.Framework.Core.Performance.Models;
 
-public class ObservableModel : ObservableClass
+public class ObservableModel : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the Id property value.

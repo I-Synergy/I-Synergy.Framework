@@ -18,7 +18,7 @@ public class TimeSpanToStringConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is TimeSpan timeSpan)
             return timeSpan.ToString();
@@ -34,9 +34,10 @@ public class TimeSpanToStringConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (!string.IsNullOrEmpty(value.ToString()) && TimeSpan.TryParse(value.ToString(), out var result))
+        var valueString = value?.ToString();
+        if (!string.IsNullOrEmpty(valueString) && TimeSpan.TryParse(valueString, out var result))
             return result;
 
         return TimeSpan.FromMinutes(5);

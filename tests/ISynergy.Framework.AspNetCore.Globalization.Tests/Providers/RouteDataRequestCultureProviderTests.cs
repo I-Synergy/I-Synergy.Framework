@@ -1,7 +1,10 @@
 ﻿using ISynergy.Framework.AspNetCore.Globalization.Options;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.AspNetCore.Globalization.Providers.Tests;
@@ -14,6 +17,12 @@ public class RouteDataRequestCultureProviderTests
 
     public RouteDataRequestCultureProviderTests()
     {
+        // Set up ServiceLocator with ILanguageService for Argument validation
+        var services = new ServiceCollection();
+        services.AddSingleton<ILanguageService, LanguageService>();
+        var serviceProvider = services.BuildServiceProvider();
+        ServiceLocator.SetLocatorProvider(serviceProvider);
+
         _mockOptions = new Mock<IOptions<GlobalizationOptions>>();
         _mockOptions.Setup(o => o.Value).Returns(new GlobalizationOptions
         {
@@ -22,6 +31,12 @@ public class RouteDataRequestCultureProviderTests
         });
 
         _provider = new RouteDataRequestCultureProvider(_mockOptions.Object);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        ServiceLocator.Default?.Dispose();
     }
 
     [TestMethod]
@@ -145,12 +160,9 @@ public class RouteDataRequestCultureProviderTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public async Task DetermineProviderCultureResult_WithNullHttpContext_ThrowsArgumentNullException()
+    public Task DetermineProviderCultureResult_WithNullHttpContext_ThrowsArgumentNullException()
     {
-        // Act
-        await _provider.DetermineProviderCultureResult(null!);
-
         // Assert is handled by ExpectedException attribute
+        return Assert.ThrowsAsync<ArgumentNullException>(() => _provider.DetermineProviderCultureResult(null!));
     }
 }

@@ -1,13 +1,25 @@
+using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Messages;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+
+#pragma warning disable IDE0130, S1200
 
 namespace ISynergy.Framework.UI;
 
@@ -16,8 +28,15 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : System.Windows.Application, IDisposable
 {
-    protected readonly ILogger _logger;
+    protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
+    protected readonly IDialogService _dialogService;
+    protected readonly INavigationService _navigationService;
+    protected readonly ISettingsService _settingsService;
+    protected readonly IApplicationLifecycleService _lifecycleService;
+    protected readonly ILogger<Application> _logger;
+
+    protected readonly ApplicationFeatures? _features;
 
     protected bool _isShuttingDown = false;
 
@@ -32,86 +51,158 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected Application(ICommonServices commonServices)
+    protected Application()
         : base()
     {
-        _commonServices = commonServices;
+        var host = CreateHostBuilder()
+           .Build()
+           .SetLocatorProvider();
 
-        _logger = _commonServices.ScopedContextService.GetService<ILoggerFactory>().CreateLogger<Application>();
-        _logger.LogTrace("Starting application");
+        var serviceProvider = host.Services;
+        _logger = serviceProvider.GetRequiredService<ILogger<Application>>();
 
-        this.ApplicationLoaded += OnApplicationLoaded;
+        _logger.LogTrace("Setting up services and global exception handler.");
+
+        _commonServices = serviceProvider.GetRequiredService<ICommonServices>();
+        _dialogService = serviceProvider.GetRequiredService<IDialogService>();
+        _navigationService = serviceProvider.GetRequiredService<INavigationService>();
+        _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
+        _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+        _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+        var messengerService = serviceProvider.GetRequiredService<IMessengerService>();
+
+        _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+
+        AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+        DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
 
         // Pass a timeout to limit the execution time.
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
         AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-        _logger.LogTrace("Setting up global exception handler.");
-        SetGlobalExceptionHandler();
-
-        _logger.LogTrace("Starting initialization of application");
-
-        _logger.LogTrace("Setting up main page.");
-
-        _logger.LogTrace("Getting common services.");
         _commonServices.BusyService.StartBusy();
 
-        _logger.LogInformation("Setting up authentication service.");
-        _commonServices.AuthenticationService.AuthenticationChanged += OnAuthenticationChanged;
-        _commonServices.AuthenticationService.SoftwareEnvironmentChanged += OnSoftwareEnvironmentChanged;
+        if (_settingsService.LocalSettings is not null)
+            _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
-        _logger.LogTrace("Setting up localization service.");
+        _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
-        if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is not null)
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language.SetLocalizationLanguage();
+        messengerService.Register<ShowInformationMessage>(this, async m =>
+        {
+            var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+        });
 
-        //_logger.LogTrace("Setting up theming.");
+        messengerService.Register<ShowWarningMessage>(this, async m =>
+        {
+            var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+        });
 
-        //if (_settingsService.LocalSettings is not null)
-        //{
-        //    Application.Primary = Color.FromArgb(_settingsService.LocalSettings.Color);
+        messengerService.Register<ShowErrorMessage>(this, async m =>
+        {
+            var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+        });
 
-        //    if (_settingsService.LocalSettings.IsLightThemeEnabled)
-        //        Application.Current.Resources.ApplyLightTheme();
-        //    else
-        //        Application.Current.Resources.ApplyDarkTheme();
-        //}
-
-        _logger.LogTrace("Starting initialization of application");
-
-        InitializeApplication();
-
-        _logger.LogTrace("Finishing initialization of application");
+        // Initialize environment variables from configuration and command-line parameters
+        InitializeEnvironmentVariables();
     }
 
-    protected abstract void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e);
-    protected abstract void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e);
+    protected abstract IHostBuilder CreateHostBuilder();
 
-    protected virtual void OnSoftwareEnvironmentChanged(object? sender, ReturnEventArgs<SoftwareEnvironments> e)
+    /// <summary>
+    /// Called when the application is fully loaded (UI ready + initialization complete).
+    /// Override or subscribe to this event to handle post-load operations.
+    /// </summary>
+    protected virtual void OnApplicationLoaded(object? sender, EventArgs e)
     {
-        _commonServices.InfoService.SetTitle(e.Value);
+        _logger?.LogTrace("Application lifecycle event: ApplicationLoaded raised");
     }
 
     /// <summary>
-    /// Sets the global exception handler.
+    /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void SetGlobalExceptionHandler()
+    protected virtual void InitializeEnvironmentVariables()
     {
-        AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-        DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
+        try
+        {
+            _logger?.LogTrace("Initializing environment variables");
+
+            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+
+            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
+
+            if (!string.IsNullOrEmpty(environmentFromConfig))
+            {
+                var normalizedEnvironment = NormalizeEnvironmentValue(environmentFromConfig);
+                Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                _logger?.LogTrace("Environment variable set from configuration: {Environment}", normalizedEnvironment);
+            }
+
+            // Handle command-line parameters which override configuration
+            HandleCommandArguments();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error during environment variable initialization");
+        }
     }
+
+    /// <summary>
+    /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
+    /// </summary>
+    private string NormalizeEnvironmentValue(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return value;
+
+        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Handles environment and country parameters from command line arguments.
+    /// Command-line parameters override configuration values.
+    /// </summary>
+    protected virtual void HandleCommandArguments()
+    {
+        var commandLineArgs = Environment.GetCommandLineArgs();
+
+        foreach (var arg in commandLineArgs.EnsureNotNull())
+        {
+            if (string.IsNullOrEmpty(arg))
+                continue;
+
+            // Look for query string format arguments (e.g., "?environment=development&country=nl")
+            if (arg.Contains("?"))
+            {
+                var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
+
+                if (!string.IsNullOrEmpty(environmentValue))
+                {
+                    var normalizedEnvironment = NormalizeEnvironmentValue(environmentValue);
+                    Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                    _logger?.LogTrace("Environment variable overridden from command-line: {Environment}", normalizedEnvironment);
+                }
+            }
+            else
+            {
+                _logger?.LogTrace("Command line argument: {Argument}", arg);
+            }
+        }
+    }
+
+
+    protected abstract void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e);
 
     /// <summary>
     /// Handles the dispatcher unhandled exception.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    public virtual void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
-        if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
-            await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.HandleException(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -143,10 +234,10 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    public virtual void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
-        if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
-            await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(e.Exception);
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.HandleException(e.Exception);
         else
             _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
 
@@ -158,11 +249,11 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public virtual async void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
+    public virtual void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
-            if (_commonServices.ScopedContextService.GetService<IExceptionHandlerService>() is not null)
-                await _commonServices.ScopedContextService.GetService<IExceptionHandlerService>().HandleExceptionAsync(exception);
+            if (_exceptionHandlerService is not null)
+                _exceptionHandlerService.HandleException(exception);
             else
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
@@ -216,12 +307,12 @@ public abstract class Application : System.Windows.Application, IDisposable
             rootFrame.NavigationFailed += OnNavigationFailed;
 
             // Add custom resourcedictionaries from code.
-            if (Application.Current.Resources?.MergedDictionaries is not null)
+            if (Current.Resources?.MergedDictionaries is not null)
             {
                 foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
                 {
-                    if (!Application.Current.Resources.MergedDictionaries.Contains(item))
-                        Application.Current.Resources.MergedDictionaries.Add(item);
+                    if (!Current.Resources.MergedDictionaries.Contains(item))
+                        Current.Resources.MergedDictionaries.Add(item);
                 }
             }
 
@@ -244,9 +335,6 @@ public abstract class Application : System.Windows.Application, IDisposable
     private void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e) =>
         throw new Exception($"Failed to load {e.Uri}: {e.Exception}");
 
-    public virtual Task HandleCommandLineArgumentsAsync(string[] e) =>
-        Task.CompletedTask;
-
     #region IDisposable
     // Dispose() calls Dispose(true)
     /// <summary>
@@ -267,19 +355,17 @@ public abstract class Application : System.Windows.Application, IDisposable
     {
         if (disposing)
         {
-            // free managed resources
-            if (_commonServices.AuthenticationService is not null)
-            {
-                _commonServices.AuthenticationService.AuthenticationChanged -= OnAuthenticationChanged;
-                _commonServices.AuthenticationService.SoftwareEnvironmentChanged -= OnSoftwareEnvironmentChanged;
-            }
+            var messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
+            messengerService.Unregister<ShowInformationMessage>(this);
+            messengerService.Unregister<ShowWarningMessage>(this);
+            messengerService.Unregister<ShowErrorMessage>(this);
 
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
             DispatcherUnhandledException -= BaseApplication_DispatcherUnhandledException;
 
-            this.ApplicationLoaded -= OnApplicationLoaded;
+            ApplicationLoaded -= OnApplicationLoaded;
         }
 
         // free native resources if there are any.

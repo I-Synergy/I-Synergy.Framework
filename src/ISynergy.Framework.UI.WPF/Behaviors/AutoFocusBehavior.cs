@@ -52,7 +52,7 @@ public class AutoFocusBehavior
         if (d is TextBox control)
             textBox = control;
         else
-            textBox = d.FindChild<TextBox>();
+            textBox = d.FindDescendant<TextBox>();
 
         if (e.NewValue != e.OldValue && textBox is not null)
         {
@@ -79,7 +79,7 @@ public class AutoFocusBehavior
         if (sender is TextBox control)
             textBox = control;
         else
-            textBox = (sender as DependencyObject)?.FindChild<TextBox>();
+            textBox = (sender as DependencyObject)?.FindDescendant<TextBox>();
 
         if (textBox is not null && textBox.IsLoaded && textBox.Visibility == Visibility.Visible)
         {

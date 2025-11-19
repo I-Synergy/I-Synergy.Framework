@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -11,7 +12,7 @@ public class ChartsViewModel : ViewModelNavigation<TestItem>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Converters"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Converters"); } }
 
     /// <summary>
     /// Gets or sets the categories with least demand property value.
@@ -35,8 +36,9 @@ public class ChartsViewModel : ViewModelNavigation<TestItem>
     /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public ChartsViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public ChartsViewModel(ICommonServices commonServices, ILogger<ChartsViewModel> logger)
+        : base(commonServices, logger)
     {
         CategoriesWithLeastDemand =
         [

@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Core.Collections;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;
 using System.Collections.ObjectModel;
@@ -14,7 +15,7 @@ public class TreeNodeViewModel : ViewModelNavigation<TreeNode<Guid, PublicationI
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("TreeNode"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("TreeNode"); } }
 
     /// <summary>
     /// Gets or sets the Publication property value.
@@ -29,8 +30,9 @@ public class TreeNodeViewModel : ViewModelNavigation<TreeNode<Guid, PublicationI
     /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public TreeNodeViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public TreeNodeViewModel(ICommonServices commonServices, ILogger<TreeNodeViewModel> logger)
+        : base(commonServices, logger)
     {
         Publication = [];
 

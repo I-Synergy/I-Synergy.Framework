@@ -1,19 +1,17 @@
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Sample.Models;
+using OpenTelemetry;
+using Sample.Abstractions.Services;
+using Sample.Extensions;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Globalization;
@@ -27,8 +25,6 @@ namespace Sample;
 /// </summary>
 public sealed partial class App : Application
 {
-    private readonly ICredentialLockerService _credentialLockerService;
-
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -43,78 +39,141 @@ public sealed partial class App : Application
     //    SplashScreenType = SplashScreenTypes.Video
     //})
     {
-        InitializeComponent();
+        try
+        {
+            InitializeComponent();
 
-        _credentialLockerService = _commonServices.ScopedContextService.GetService<ICredentialLockerService>();
+            // Subscribe to authentication events after component initialization
+            var authenticationService = _commonServices?.ScopedContextService.GetRequiredService<IAuthenticationService>();
+            if (authenticationService != null)
+            {
+                authenticationService.AuthenticationSucceeded += async (s, args) => await OnAuthenticationSucceededAsync(args);
+                authenticationService.AuthenticationFailed += async (s, args) => await OnAuthenticationFailedAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogCritical(ex, "Error in App constructor");
+        }
     }
 
     protected override IHostBuilder CreateHostBuilder()
     {
-        var mainAssembly = Argument.IsNotNull(Assembly.GetAssembly(typeof(App)));
-        var infoService = new InfoService();
-        infoService.LoadAssembly(mainAssembly);
+        try
+        {
+            var mainAssembly = Assembly.GetExecutingAssembly();
+            var infoService = new InfoService();
+            infoService.LoadAssembly(mainAssembly);
 
-        return new HostBuilder()
-            .ConfigureHostConfiguration(builder =>
-            {
-                builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json")!);
-            })
-            .ConfigureLogging((logging, configuration) =>
-            {
-                //logging.AddOpenTelemetryLogging(infoService, configuration);
-                logging.AddOpenTelemetryLogging(infoService, configuration, profiling: true, contextFactory: sp => sp.GetRequiredService<IContext>());
-            })
-            .ConfigureServices<App, Context, CommonServices, AuthenticationService, SettingsService<LocalSettings, RoamingSettings, GlobalSettings>, Properties.Resources>((services, configuration) =>
-            {
-                services.TryAddSingleton<ICameraService, CameraService>();
-            }, f => f.Name!.StartsWith(typeof(App).Namespace!))
-            .ConfigureOpenTelemetryLogging(
-                infoService,
-                tracing =>
+            var hostBuilder = new HostBuilder();
+
+            hostBuilder
+                .ConfigureHostConfiguration(builder =>
                 {
-                    // Add any custom tracing instrumentation here
+                    try
+                    {
+                        var resourceStream = mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json");
+                        if (resourceStream != null)
+                        {
+                            builder.AddJsonStream(resourceStream);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Could not find appsettings.json resource");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error configuring host: {ex}");
+                        throw;
+                    }
+                })
+                .ConfigureLogging((context, loggingBuilder) =>
+                {
+                    try
+                    {
+                        loggingBuilder
+                            .AddTelemetry(context, infoService)
+                            .AddOtlpExporter()
+                            .AddApplicationInsightsExporter()
+                            .AddSentryExporter(
+                                options =>
+                                {
+                                    options.Environment = context.HostingEnvironment.EnvironmentName;
+                                    options.Debug = context.HostingEnvironment.IsDevelopment();
+                                });
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error configuring logging: {ex}");
+                        throw;
+                    }
+                })
+                .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
+                {
+                    services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                    services.TryAddSingleton<IFileService<FileResult>, FileService>();
+                    services.TryAddSingleton<ICameraService, CameraService>();
                 },
-                metrics =>
-                {
-                    // Add any custom metrics instrumentation here
-                },
-                logging =>
-                {
-                    // Add any custom logging configuration here
-                });
+                mainAssembly,
+                f => f.Name!.StartsWith(typeof(App).Namespace!));
+
+            return hostBuilder;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Critical error creating host builder: {ex}");
+            throw;
+        }
     }
 
     protected override async Task HandleApplicationInitializedAsync()
     {
         try
         {
-            _commonServices.BusyService.StartBusy();
+            _commonServices?.BusyService.StartBusy();
 
             bool navigateToAuthentication = true;
 
-            _logger.LogTrace("Retrieve default user and check for auto login");
-
-            if (!string.IsNullOrEmpty(_settingsService.LocalSettings.DefaultUser) && _settingsService.LocalSettings.IsAutoLogin)
+            if (navigateToAuthentication && _navigationService != null)
             {
-                string username = _settingsService.LocalSettings.DefaultUser;
-                string password = await _credentialLockerService.GetPasswordFromCredentialLockerAsync(username);
-
-                if (!string.IsNullOrEmpty(password))
+                _logger?.LogTrace("Navigate to SignIn page");
+                try
                 {
-                    await _commonServices.AuthenticationService.AuthenticateWithUsernamePasswordAsync(username, password, _settingsService.LocalSettings.IsAutoLogin);
-                    navigateToAuthentication = false;
+                    await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Error navigating to authentication");
+
+                    // Show error dialog as last resort
+                    if (_dialogService != null)
+                    {
+                        await _dialogService.ShowErrorAsync("Failed to navigate to login screen. The application may need to be restarted.");
+                    }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error in HandleApplicationInitializedAsync");
 
-            if (navigateToAuthentication)
+            // Show error dialog if possible
+            if (_dialogService != null)
             {
-                _logger.LogTrace("Navigate to SignIn page");
-                await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Application initialization failed. Please restart the application.");
+                }
+                catch
+                {
+                    // Last resort - can't even show an error dialog
+                }
             }
         }
         finally
         {
-            _commonServices.BusyService.StopBusy();
+            _commonServices?.BusyService.StopBusy();
         }
     }
 
@@ -122,51 +181,76 @@ public sealed partial class App : Application
     {
         try
         {
-            _commonServices.BusyService.BusyMessage = "Start doing important stuff";
-            await Task.Delay(2000);
-            _commonServices.BusyService.BusyMessage = "Done doing important stuff";
-            await Task.Delay(2000);
+            if (_commonServices?.BusyService != null)
+            {
+                _commonServices.BusyService.UpdateMessage("Start doing important stuff");
+                await Task.Delay(2000);
+                _commonServices.BusyService.UpdateMessage("Done doing important stuff");
+                await Task.Delay(2000);
+            }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            await _commonServices.DialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
+            _logger?.LogError(ex, "Error in first part of InitializeApplicationAsync");
+
+            if (_dialogService != null)
+            {
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
+                }
+                catch (Exception dialogEx)
+                {
+                    _logger?.LogError(dialogEx, "Error showing dialog");
+                }
+            }
         }
 
         try
         {
-            _commonServices.BusyService.BusyMessage = "Applying migrations";
-            //await _migrationService.ApplyMigrationAsync<_001>();
-            await Task.Delay(2000);
-            _commonServices.BusyService.BusyMessage = "Done applying migrations";
-            await Task.Delay(2000);
+            if (_commonServices?.BusyService != null)
+            {
+                _commonServices.BusyService.UpdateMessage("Applying migrations");
+                //await _migrationService.ApplyMigrationAsync<_001>();
+                await Task.Delay(2000);
+                _commonServices.BusyService.UpdateMessage("Done applying migrations");
+                await Task.Delay(2000);
+            }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            await _commonServices.DialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
+            _logger?.LogError(ex, "Error in second part of InitializeApplicationAsync");
+
+            if (_dialogService != null)
+            {
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
+                }
+                catch (Exception dialogEx)
+                {
+                    _logger?.LogError(dialogEx, "Error showing dialog");
+                }
+            }
         }
     }
 
-    protected override async void OnAuthenticationChanged(object? sender, ReturnEventArgs<bool> e)
+    /// <summary>
+    /// Called when authentication succeeds (user has logged in).
+    /// </summary>
+    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e)
     {
-        // Suppress backstack change event during sign out
-        await _commonServices.NavigationService.CleanBackStackAsync(suppressEvent: !e.Value);
-
         try
         {
-            _commonServices.BusyService.StartBusy();
-
-            if (e.Value)
+            _logger?.LogTrace("Authentication succeeded event received");
+            _logger?.LogTrace("Setting culture");
+            if (_settingsService?.GlobalSettings is not null &&
+                CultureInfo.DefaultThreadCurrentCulture != null &&
+                CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
             {
-                _logger.LogTrace("Saving refresh token");
-
-                _settingsService.LocalSettings.RefreshToken = _commonServices.ScopedContextService.GetRequiredService<IContext>().ToEnvironmentalRefreshToken();
-                _settingsService.SaveLocalSettings();
-
-                _logger.LogTrace("Setting culture");
-                if (_settingsService.GlobalSettings is not null &&
-                    CultureInfo.DefaultThreadCurrentCulture!.Clone() is CultureInfo culture)
+                try
                 {
-                    culture.NumberFormat.CurrencySymbol = "€";
+                    culture.NumberFormat.CurrencySymbol = "â‚¬";
 
                     culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
                     culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
@@ -178,28 +262,74 @@ public sealed partial class App : Application
                     CultureInfo.DefaultThreadCurrentCulture = culture;
                     CultureInfo.DefaultThreadCurrentUICulture = culture;
                 }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Error setting culture");
+                }
+            }
 
-                _logger.LogTrace("Navigate to Shell");
-                await _commonServices.NavigationService.NavigateModalAsync<IShellViewModel>();
-            }
-            else
+            _logger?.LogTrace("Navigate to Shell");
+            if (_navigationService != null)
             {
-                _logger.LogTrace("Navigate to SignIn page");
-                await _commonServices.NavigationService.NavigateModalAsync<AuthenticationViewModel>();
+                await _navigationService.NavigateModalAsync<IShellViewModel>();
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Do nothing!
+            _logger?.LogError(ex, "Error in OnAuthenticationSucceededAsync");
+
+            if (_dialogService != null)
+            {
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Error occurred after login. The application may need to be restarted.");
+                }
+                catch
+                {
+                    // Can't show dialog
+                }
+            }
         }
-        finally
+    }
+
+    /// <summary>
+    /// Called when authentication fails or user logs out.
+    /// </summary>
+    private async Task OnAuthenticationFailedAsync()
+    {
+        try
         {
-            _commonServices.BusyService.StopBusy();
+            _logger?.LogTrace("Authentication failed event received");
+            Baggage.ClearBaggage();
+
+            _logger?.LogTrace("Navigate to SignIn page");
+            if (_navigationService != null)
+            {
+                await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error in OnAuthenticationFailedAsync");
+
+            if (_dialogService != null)
+            {
+                try
+                {
+                    await _dialogService.ShowErrorAsync("Error occurred during logout. The application may need to be restarted.");
+                }
+                catch
+                {
+                    // Can't show dialog
+                }
+            }
         }
     }
 
     protected override void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
     {
+        // Add specific handling for App-level exceptions if needed
         base.CurrentDomain_FirstChanceException(sender, e);
     }
 }
+

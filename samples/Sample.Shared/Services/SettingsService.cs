@@ -3,36 +3,34 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.Logging;
+using Sample.Models;
 using System.Text.Json;
 
 namespace Sample.Services;
 
-public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> : ISettingsService
-    where TLocalSettings : class, ILocalSettings, new()
-    where TRoamingSettings : class, IRoamingSettings, new()
-    where TGlobalSettings : class, IGlobalSettings, new()
+public class SettingsService : ISettingsService
 {
     private const string _fileName = "settings.json";
     private readonly string _settingsFolder;
     private readonly ILogger _logger;
 
-    private TLocalSettings? _localSettings;
-    private TRoamingSettings? _roamingSettings;
-    private TGlobalSettings? _globalSettings;
+    private LocalSettings? _localSettings;
+    private RoamingSettings? _roamingSettings;
+    private GlobalSettings? _globalSettings;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SettingsService{TLocalSettings, TRoamingSettings, TGlobalSettings}"/> class.
+    /// Initializes a new instance of the <see cref="SettingsService"/> class.
     /// </summary>
-    public SettingsService(ILogger<SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings>> logger)
+    public SettingsService(ILogger<SettingsService> logger)
     {
         _logger = logger;
         _logger.LogTrace($"SettingsService instance created with ID: {Guid.NewGuid()}");
 
-        _localSettings = new TLocalSettings();
-        _roamingSettings = new TRoamingSettings();
-        _globalSettings = new TGlobalSettings();
+        _localSettings = new LocalSettings();
+        _roamingSettings = new RoamingSettings();
+        _globalSettings = new GlobalSettings();
 
-        _settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Settings");
+        _settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "I-Synergy Framework Sample", "Settings");
 
         if (!Directory.Exists(_settingsFolder))
             Directory.CreateDirectory(_settingsFolder);
@@ -59,7 +57,7 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
                 SaveLocalSettings();
 
             string json = File.ReadAllText(file);
-            _localSettings = JsonSerializer.Deserialize<TLocalSettings>(json);
+            _localSettings = JsonSerializer.Deserialize<LocalSettings>(json);
         }
         catch (JsonException)
         {
@@ -67,7 +65,7 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
         }
         catch (FileNotFoundException)
         {
-            _localSettings = new TLocalSettings();
+            _localSettings = new LocalSettings();
         }
     }
 
@@ -84,8 +82,29 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
 
             return true;
         }
-        catch (Exception)
+        catch (UnauthorizedAccessException ex)
         {
+            _logger.LogError(ex, "Access denied when saving settings to {SettingsFile}. Check file permissions.", Path.Combine(_settingsFolder, _fileName));
+            return false;
+        }
+        catch (DirectoryNotFoundException ex)
+        {
+            _logger.LogError(ex, "Settings directory not found: {SettingsFolder}", _settingsFolder);
+            return false;
+        }
+        catch (IOException ex)
+        {
+            _logger.LogError(ex, "I/O error when saving settings to {SettingsFile}. The file may be in use by another process.", Path.Combine(_settingsFolder, _fileName));
+            return false;
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "JSON serialization error when saving settings. Settings data may be invalid.");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error when saving settings to {SettingsFile}", Path.Combine(_settingsFolder, _fileName));
             return false;
         }
     }
@@ -122,9 +141,9 @@ public class SettingsService<TLocalSettings, TRoamingSettings, TGlobalSettings> 
         _roamingSettings = null;
     }
 
-    public TLocalSettings LocalSettings => Argument.IsNotNull(_localSettings);
-    public TRoamingSettings RoamingSettings => Argument.IsNotNull(_roamingSettings);
-    public TGlobalSettings GlobalSettings => Argument.IsNotNull(_globalSettings);
+    public LocalSettings LocalSettings => Argument.IsNotNull(_localSettings);
+    public RoamingSettings RoamingSettings => Argument.IsNotNull(_roamingSettings);
+    public GlobalSettings GlobalSettings => Argument.IsNotNull(_globalSettings);
 
     ILocalSettings ISettingsService.LocalSettings => Argument.IsNotNull(_localSettings);
     IRoamingSettings ISettingsService.RoamingSettings => Argument.IsNotNull(_roamingSettings);

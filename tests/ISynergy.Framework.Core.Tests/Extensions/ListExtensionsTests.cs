@@ -32,7 +32,7 @@ public class ListExtensionsTests
     [TestMethod]
     public void NullListFailableTest()
     {
-        Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
+        Assert.ThrowsAsync<NullReferenceException>(() =>
         {
             List<object>? list = null;
 

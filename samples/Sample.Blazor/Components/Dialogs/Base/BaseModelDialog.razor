@@ -1,0 +1,198 @@
+﻿@using ISynergy.Framework.Core.Abstractions.Services
+@using ISynergy.Framework.Core.Services
+@using ISynergy.Framework.Mvvm.Abstractions
+@using ISynergy.Framework.Mvvm.Abstractions.ViewModels
+@using Microsoft.FluentUI.AspNetCore.Components
+@using ISynergy.Framework.AspNetCore.Blazor.Extensions
+@using System.ComponentModel
+@using System.Windows.Input
+@using System.Reflection
+
+@typeparam TModel where TModel : class, new()
+@typeparam TViewModel where TViewModel : class, IViewModelDialog<TModel>
+
+@implements IDialogContentComponent<TViewModel>
+
+<FluentDialogHeader>
+	<FluentStack Orientation="Orientation.Vertical" VerticalGap="4">
+		@if (!string.IsNullOrEmpty(DialogSubtitle))
+		{
+			<FluentLabel Typo="Typography.Body">
+				@DialogSubtitle
+			</FluentLabel>
+		}
+	</FluentStack>
+</FluentDialogHeader>
+
+<FluentDialogBody>
+	@DialogContent
+</FluentDialogBody>
+
+<FluentDialogFooter>
+	<FluentStack Orientation="Orientation.Horizontal"
+				 HorizontalAlignment="HorizontalAlignment.Right"
+				 Style="gap: 0.5rem; margin-top: 1rem;">
+		@if (Content?.CancelCommand is not null)
+		{
+			<FluentButton Appearance="Appearance.Neutral"
+						  @attributes="@this.CommandBinding(Content.CancelCommand)">
+				@CancelButtonText
+			</FluentButton>
+		}
+		@if (Content?.SubmitCommand is not null)
+		{
+			<FluentButton Appearance="Appearance.Accent"
+						  @attributes="@this.CommandBinding(Content.SubmitCommand, parameter: Content?.SelectedItem)">
+				@SaveButtonText
+			</FluentButton>
+		}
+	</FluentStack>
+</FluentDialogFooter>
+
+	@code {
+	private TViewModel _viewModel = default!;
+
+	/// <summary>
+	/// Collection of commands that have been subscribed to for CanExecuteChanged events.
+	/// </summary>
+	private readonly List<ICommand> _subscribedCommands = new();
+
+	[CascadingParameter] public FluentDialog? Dialog { get; set; }
+
+	[Parameter] public RenderFragment? DialogContent { get; set; } = default!;
+	[Parameter] public string? DialogSubtitle { get; set; }
+
+	[Parameter]
+	public TViewModel Content
+	{
+		get => _viewModel;
+		set
+		{
+			if (_viewModel != value)
+			{
+				// Unsubscribe from old ViewModel if it exists
+				if (_viewModel != null)
+				{
+					_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+					_viewModel.Closed -= OnViewModelClosed;
+				}
+
+				_viewModel = value;
+
+				// Subscribe to new ViewModel if it exists
+				if (_viewModel != null)
+				{
+					_viewModel.PropertyChanged += OnViewModelPropertyChanged;
+					_viewModel.Closed += OnViewModelClosed;
+				}
+			}
+		}
+	}
+
+	protected virtual string SaveButtonText => Content.IsUpdate ? "Update" : "Add";
+	protected virtual string CancelButtonText => "Cancel";
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		if (_viewModel is not null)
+		{
+			if (!_viewModel.IsInitialized)
+				await _viewModel.InitializeAsync();
+
+			_viewModel.PropertyChanged += OnViewModelPropertyChanged;
+
+			SubscribeToViewModelCommands();
+		}
+	}
+
+	/// <summary>
+	/// Automatically subscribes to CanExecuteChanged events for all ICommand properties in the ViewModel.
+	/// </summary>
+	private void SubscribeToViewModelCommands()
+	{
+		if (_viewModel is null)
+			return;
+
+		var commandProperties = _viewModel.GetType()
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			.Where(p => typeof(ICommand).IsAssignableFrom(p.PropertyType))
+			.ToList();
+
+		foreach (var property in commandProperties)
+		{
+			if (property.GetValue(_viewModel) is ICommand command)
+			{
+				command.CanExecuteChanged += OnCommandCanExecuteChanged;
+				_subscribedCommands.Add(command);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Unsubscribes from CanExecuteChanged events for all subscribed commands.
+	/// </summary>
+	private void UnsubscribeFromViewModelCommands()
+	{
+		foreach (var command in _subscribedCommands)
+		{
+			command.CanExecuteChanged -= OnCommandCanExecuteChanged;
+		}
+
+		_subscribedCommands.Clear();
+	}
+
+	/// <summary>
+	/// Handles CanExecuteChanged events from commands and triggers a UI refresh.
+	/// </summary>
+	private void OnCommandCanExecuteChanged(object? sender, EventArgs e)
+	{
+		StateHasChanged();
+	}
+
+	private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		StateHasChanged();
+	}
+
+	private async void OnViewModelClosed(object? sender, EventArgs e)
+	{
+		if (Dialog is not null)
+			await Dialog.CloseAsync();
+		
+		StateHasChanged();
+	}
+
+	#region IDisposable
+	/// <summary>
+	/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+	/// </summary>
+	public void Dispose()
+	{
+		Dispose(true);
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	/// Releases unmanaged and - optionally - managed resources.
+	/// </summary>
+	/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+	protected virtual void Dispose(bool disposing)
+	{
+		if (disposing)
+		{
+			if (_viewModel is not null)
+			{
+				_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+				_viewModel.Closed -= OnViewModelClosed;
+				UnsubscribeFromViewModelCommands();
+				_viewModel.Dispose();
+			}
+		}
+
+		// free native resources if there are any.
+	}
+	#endregion
+
+}

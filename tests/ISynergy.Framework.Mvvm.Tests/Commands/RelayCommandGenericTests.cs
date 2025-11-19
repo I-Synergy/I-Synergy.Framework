@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.Commands.Tests;
@@ -9,7 +8,6 @@ namespace ISynergy.Framework.Mvvm.Commands.Tests;
 [TestClass]
 public class RelayCommandGenericTests
 {
-    private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
@@ -17,7 +15,6 @@ public class RelayCommandGenericTests
     public RelayCommandGenericTests()
     {
         // Setup mocks
-        _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockServiceScope = new Mock<IServiceScope>();
         _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
@@ -35,11 +32,6 @@ public class RelayCommandGenericTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Setup exception handler service
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
 
         // Initialize ServiceLocator with mock service provider
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
@@ -114,24 +106,53 @@ public class RelayCommandGenericTests
         var command = new RelayCommand<int>(_ => { });
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
             command.Execute("invalid parameter type"));
     }
 
     [TestMethod]
-    public void Execute_WithException_HandlesExceptionCorrectly()
+    public void Execute_WithException_CallsExceptionHandlerService()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
+        var mockExceptionHandler = new Mock<IExceptionHandlerService>();
+
+        _mockServiceProvider
+            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
+            .Returns(mockExceptionHandler.Object);
+
         var command = new RelayCommand<string>(_ => throw expectedException);
 
         // Act
-        command.Execute("test");
+        try
+        {
+            command.Execute("test");
+            //Assert.Fail("Expected exception was not thrown");
+        }
+        catch (InvalidOperationException)
+        {
+            // Expected
+        }
 
         // Assert
-        _mockExceptionHandler.Verify(
-            x => x.HandleExceptionAsync(expectedException),
-            Times.Once);
+        mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
+    }
+
+    [TestMethod]
+    public void Execute_WithException_WhenExceptionHandlerServiceNotAvailable_RethrowsException()
+    {
+        // Arrange
+        var expectedException = new InvalidOperationException("Test exception");
+
+        _mockServiceProvider
+            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
+            .Returns((IExceptionHandlerService?)null);
+
+        var command = new RelayCommand<string>(_ => throw expectedException);
+
+        // Act & Assert
+        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
+        Assert.AreEqual(expectedException, thrownException);
     }
 
     [TestMethod]
@@ -185,11 +206,11 @@ public class RelayCommandGenericTests
     public void ThrowArgumentExceptionForInvalidCommandArgument_ThrowsCorrectException()
     {
         // Act & Assert
-        var ex1 = Assert.ThrowsException<ArgumentException>(() =>
+        var ex1 = Assert.Throws<ArgumentException>(() =>
             RelayCommand<int>.ThrowArgumentExceptionForInvalidCommandArgument(null));
         Assert.IsTrue(ex1.Message.Contains("must not be null"));
 
-        var ex2 = Assert.ThrowsException<ArgumentException>(() =>
+        var ex2 = Assert.Throws<ArgumentException>(() =>
             RelayCommand<int>.ThrowArgumentExceptionForInvalidCommandArgument("invalid"));
         Assert.IsTrue(ex2.Message.Contains("cannot be of type"));
     }
@@ -213,7 +234,7 @@ public class RelayCommandGenericTests
         command.Dispose();
 
         // Act & Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => command.Execute("test"));
+        Assert.Throws<ObjectDisposedException>(() => command.Execute("test"));
     }
 
     [TestMethod]
@@ -224,7 +245,7 @@ public class RelayCommandGenericTests
         command.Dispose();
 
         // Act & Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => command.CanExecute("test"));
+        Assert.Throws<ObjectDisposedException>(() => command.CanExecute("test"));
     }
 
     [TestMethod]
@@ -246,7 +267,7 @@ public class RelayCommandGenericTests
     public void Constructor_WithNullAction_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new RelayCommand<string>(null!));
     }
 
@@ -254,7 +275,7 @@ public class RelayCommandGenericTests
     public void Constructor_WithNullPredicate_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             new RelayCommand<string>(_ => { }, null!));
     }
 

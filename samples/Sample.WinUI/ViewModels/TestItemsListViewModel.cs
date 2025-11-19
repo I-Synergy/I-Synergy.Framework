@@ -1,12 +1,15 @@
-﻿using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
+using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;
 using System.Collections.ObjectModel;
@@ -18,6 +21,9 @@ namespace Sample.ViewModels;
 /// </summary>
 public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBladeView
 {
+    private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
+
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -94,18 +100,25 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}" /> class.
     /// </summary>
     /// <param name="commonServices">The common service.</param>
-    public TestItemsListViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
+    /// <param name="logger"></param>
+    public TestItemsListViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<TestItemsListViewModel> logger)
+        : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+
         ClearCommand = new RelayCommand(ClearItems);
     }
 
     public override async Task InitializeAsync()
     {
+        _logger.LogInformation("TestItemsListViewModel.InitializeAsync - Start");
+
         await base.InitializeAsync();
 
         Query = string.Empty;
-        Items = [];
 
         Years =
         [
@@ -119,10 +132,12 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
           new Year { Value = DateTime.Now.Date.Year - 7, Description = (DateTime.Now.Date.Year - 7).ToString() },
           new Year { Value = DateTime.Now.Date.Year - 8, Description = (DateTime.Now.Date.Year - 8).ToString() },
           new Year { Value = DateTime.Now.Date.Year - 9, Description = (DateTime.Now.Date.Year - 9).ToString() },
-          new Year { Value = 0, Description = LanguageService.Default.GetString("SearchAll") }
+          new Year { Value = 0, Description = _commonServices.LanguageService.GetString("SearchAll") }
         ];
 
         SelectedYear = Years.First(e => e.Value == DateTime.Now.Date.Year);
+
+        _logger.LogInformation("TestItemsListViewModel.InitializeAsync - End");
     }
 
     /// <summary>
@@ -154,6 +169,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
             new TestItem { Id = 4, Description = "Test 4"},
             new TestItem { Id = 5, Description = "Test 5"}
         });
+
         return Task.CompletedTask;
     }
 
@@ -187,9 +203,12 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVM = new ViewModelSelectionBlade<TestItem>(_commonServices, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+        var selectionVM = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
+        selectionVM.SetItems(Items);
+        selectionVM.SetSelectedItems(SelectedItems);
+        selectionVM.SetSelectionMode(SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;
-        return CommonServices.NavigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
+        return _navigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
     }
 
     /// <summary>

@@ -124,6 +124,6 @@ public class RelativeConvergenceTest
     [TestMethod]
     public void RelativeConvergenceConstructorTest5()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new RelativeConvergence(iterations: -10, tolerance: 1e-10, startValue: 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new RelativeConvergence(iterations: -10, tolerance: 1e-10, startValue: 1));
     }
 }

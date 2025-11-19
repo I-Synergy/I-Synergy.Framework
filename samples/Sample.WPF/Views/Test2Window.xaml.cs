@@ -5,7 +5,7 @@ namespace Sample.Views;
 /// <summary>
 /// Interaction logic for TestWindow.xaml
 /// </summary>
-public partial class Test2Window : IWindow
+public partial class Test2Window
 {
     public Test2Window()
     {

@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Base;
 
 namespace Sample.Models;
 
-public class RoamingSettings : ObservableClass, IRoamingSettings
+public class RoamingSettings : ObservableValidatedClass, IRoamingSettings
 {
     /// <summary>
     /// Gets or sets the SynchronizationSetting property value.

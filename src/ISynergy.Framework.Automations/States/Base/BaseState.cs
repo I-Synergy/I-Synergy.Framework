@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Automations.States.Base;
 /// <summary>
 /// Base State
 /// </summary>
-public abstract class BaseState : ObservableClass
+public abstract class BaseState : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the StateId property value.

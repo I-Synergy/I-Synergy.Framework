@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Commands.Base;
 using System.Runtime.CompilerServices;
-
-#nullable enable
 
 namespace ISynergy.Framework.Mvvm.Commands;
 
@@ -27,22 +27,24 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
 
     public RelayCommand(Action<T?> execute)
     {
-        Argument.IsNotNull(execute);
-        _execute = execute;
+        _execute = Argument.IsNotNull(execute);
     }
 
     public RelayCommand(Action<T?> execute, Predicate<T?> canExecute)
         : this(execute)
     {
-        Argument.IsNotNull(canExecute);
-        _canExecute = canExecute;
+        _canExecute = Argument.IsNotNull(canExecute);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool CanExecute(T? parameter)
     {
         ThrowIfDisposed();
-        return _canExecute?.Invoke(parameter) != false;
+
+        lock (_syncLock)
+        {
+            return _canExecute?.Invoke(parameter) != false;
+        }
     }
 
     public override bool CanExecute(object? parameter)
@@ -62,13 +64,38 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     {
         ThrowIfDisposed();
 
-        try
+        lock (_syncLock)
         {
-            _execute(parameter);
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex);
+            try
+            {
+                _execute(parameter);
+            }
+            catch (Exception ex)
+            {
+                // Try to handle exception via service
+                bool handled = false;
+                try
+                {
+                    var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
+                    if (exceptionHandlerService is not null)
+                    {
+                        exceptionHandlerService.HandleException(ex);
+                        handled = true;
+                    }
+                }
+                catch
+                {
+                    // If exception handler fails, re-throw the original exception
+                    throw;
+                }
+
+                // If exception was successfully handled, suppress it to prevent app crash
+                // Otherwise, re-throw to maintain original behavior when no handler is available
+                if (!handled)
+                {
+                    throw;
+                }
+            }
         }
     }
 
@@ -85,16 +112,32 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool TryGetCommandArgument(object? parameter, out T? result)
     {
+        // Fast path for null parameter and nullable T
         if (parameter is null && default(T) is null)
         {
             result = default;
             return true;
         }
 
-        if (parameter is T argument)
+        // Fast path for exact type match
+        if (parameter is T exactMatch)
         {
-            result = argument;
+            result = exactMatch;
             return true;
+        }
+
+        // Slower path for type conversion (only executed if the above checks fail)
+        try
+        {
+            if (parameter != null && typeof(T).IsAssignableFrom(parameter.GetType()))
+            {
+                result = (T)parameter;
+                return true;
+            }
+        }
+        catch
+        {
+            // Conversion failed, fall through to default return
         }
 
         result = default;

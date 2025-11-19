@@ -45,7 +45,7 @@
                 <Button
                     Width="150"
                     Margin="0,10"
-                    Command="{Binding SubmitCommand}"
+                    Command="{Binding ValidateCommand}"
                     Content="Test" />
             </StackPanel>
         </Grid>

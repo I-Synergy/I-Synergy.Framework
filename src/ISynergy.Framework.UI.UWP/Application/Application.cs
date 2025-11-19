@@ -1,0 +1,657 @@
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Messages;
+using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Diagnostics;
+using System.Globalization;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+
+#pragma warning disable IDE0130, S1200
+
+namespace ISynergy.Framework.UI;
+
+/// <summary>
+/// Class BaseApplication.
+/// </summary>
+public abstract class Application : Windows.UI.Xaml.Application, IDisposable
+{
+    protected readonly IExceptionHandlerService _exceptionHandlerService;
+    protected readonly ICommonServices _commonServices;
+    protected readonly IDialogService _dialogService;
+    protected readonly INavigationService _navigationService;
+    protected readonly ISettingsService _settingsService;
+    protected readonly IApplicationLifecycleService _lifecycleService;
+    protected readonly IThemeService _themeService;
+    protected readonly ILogger<Application> _logger;
+    protected readonly IMessengerService _messengerService;
+
+    protected IThemeService? _themeSelector;
+
+    protected readonly ApplicationFeatures? _features;
+    protected readonly SplashScreenOptions _splashScreenOptions;
+
+    protected Windows.UI.Xaml.Window? _mainWindow;
+
+    private int _lastErrorMessage = 0;
+    private bool _isDisposing = false;
+    private readonly Dictionary<string, Exception> _processedExceptions = new Dictionary<string, Exception>();
+
+    /// <summary>
+    /// Gets the current main window from the running application instance
+    /// </summary>
+    public static Windows.UI.Xaml.Window? MainWindow
+    {
+        get
+        {
+            if (Application.Current is Application app)
+                return app._mainWindow;
+
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    protected Application(SplashScreenOptions? splashScreenOptions = null)
+        : base()
+    {
+        try
+        {
+            _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
+
+            // Create host and set up dependency injection
+            IHost? host = null;
+
+            try
+            {
+                host = CreateHostBuilder()
+                    .Build()
+                    .SetLocatorProvider();
+            }
+            catch (Exception ex)
+            {
+                // Log startup error and rethrow to prevent partial initialization
+                Debug.WriteLine($"Critical error during host creation: {ex}");
+                throw;
+            }
+
+            // Get logger first for proper error tracking
+            try
+            {
+                _logger = host.Services.GetRequiredService<ILogger<Application>>();
+                _logger.LogTrace("Application constructor started");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to get logger: {ex}");
+                throw;
+            }
+
+            try
+            {
+                _logger.LogTrace("Setting up services and global exception handler.");
+
+                var serviceProvider = host.Services;
+                _commonServices = serviceProvider.GetRequiredService<ICommonServices>();
+                _dialogService = serviceProvider.GetRequiredService<IDialogService>();
+                _navigationService = serviceProvider.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
+                _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+                _themeService = serviceProvider.GetRequiredService<IThemeService>();
+                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+                _messengerService = serviceProvider.GetRequiredService<IMessengerService>();
+
+                _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+
+                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
+                // Pass a timeout to limit the execution time.
+                // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
+                AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
+
+                _commonServices.BusyService.StartBusy();
+
+                if (_settingsService.LocalSettings is not null)
+                    _settingsService.LocalSettings.Language.SetLocalizationLanguage();
+
+                _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
+
+                _messengerService.Register<ShowInformationMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+                });
+
+                _messengerService.Register<ShowWarningMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+                });
+
+                _messengerService.Register<ShowErrorMessage>(this, async m =>
+                {
+                    var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+                });
+
+                // Initialize environment variables from configuration and command-line parameters
+                InitializeEnvironmentVariables();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogCritical(ex, "Critical error during application initialization");
+                throw;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Last resort exception handling if logger isn't available
+            Debug.WriteLine($"Fatal error in Application constructor: {ex}");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Creates the host builder.
+    /// </summary>
+    /// <returns></returns>
+    protected abstract IHostBuilder CreateHostBuilder();
+
+
+    /// <summary>
+    /// Called when the application is fully loaded (UI ready + initialization complete).
+    /// Override or subscribe to this event to handle post-load operations.
+    /// </summary>
+    protected virtual void OnApplicationLoaded(object? sender, EventArgs e)
+    {
+        _logger?.LogTrace("Application lifecycle event: ApplicationLoaded raised");
+    }
+
+    /// <summary>
+    /// Initializes environment variables from appsettings.json with command-line parameter override.
+    /// </summary>
+    protected virtual void InitializeEnvironmentVariables()
+    {
+        try
+        {
+            _logger?.LogTrace("Initializing environment variables");
+
+            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+
+            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
+
+            if (!string.IsNullOrEmpty(environmentFromConfig))
+            {
+                var normalizedEnvironment = NormalizeEnvironmentValue(environmentFromConfig);
+                Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                _logger?.LogTrace("Environment variable set from configuration: {Environment}", normalizedEnvironment);
+            }
+
+            // Handle command-line parameters which override configuration
+            HandleCommandArguments();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error during environment variable initialization");
+        }
+    }
+
+    /// <summary>
+    /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
+    /// </summary>
+    private string NormalizeEnvironmentValue(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return value;
+
+        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Handles environment and country parameters from command line arguments.
+    /// Command-line parameters override configuration values.
+    /// </summary>
+    protected virtual void HandleCommandArguments()
+    {
+        var commandLineArgs = Environment.GetCommandLineArgs();
+
+        foreach (var arg in commandLineArgs.EnsureNotNull())
+        {
+            if (string.IsNullOrEmpty(arg))
+                continue;
+
+            // Look for query string format arguments (e.g., "?environment=development&country=nl")
+            if (arg.Contains("?"))
+            {
+                var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
+
+                if (!string.IsNullOrEmpty(environmentValue))
+                {
+                    var normalizedEnvironment = NormalizeEnvironmentValue(environmentValue);
+                    Environment.SetEnvironmentVariable(nameof(Environment), normalizedEnvironment);
+                    _logger?.LogTrace("Environment variable overridden from command-line: {Environment}", normalizedEnvironment);
+                }
+            }
+            else
+            {
+                _logger?.LogTrace("Command line argument: {Argument}", arg);
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Handles the first chance exception event.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+    {
+        if (_isDisposing)
+            return;
+
+        // Create a unique key for this exception to prevent duplicates
+        string exceptionKey = $"{e.Exception.GetType().FullName}:{e.Exception.Message}:{e.Exception.StackTrace?.GetHashCode()}";
+
+        // Check if we've already processed this exact exception
+        if (_processedExceptions.ContainsKey(exceptionKey))
+            return;
+
+        // Add to processed exceptions with a limit
+        if (_processedExceptions.Count > 100)
+            _processedExceptions.Clear();
+
+        _processedExceptions[exceptionKey] = e.Exception;
+
+        if (_exceptionHandlerService is not null)
+        {
+            try
+            {
+                _exceptionHandlerService.HandleException(e.Exception);
+            }
+            catch (Exception handlerEx)
+            {
+                // If exception handler fails, log directly
+                _logger?.LogError(handlerEx, "Error in exception handler");
+            }
+        }
+        else
+        {
+            if (e.Exception.HResult != _lastErrorMessage)
+            {
+                _lastErrorMessage = e.Exception.HResult;
+                _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles the unobserved task exception event.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        if (_isDisposing)
+        {
+            e.SetObserved();
+            return;
+        }
+
+        if (_exceptionHandlerService is not null)
+        {
+            try
+            {
+                _exceptionHandlerService.HandleException(e.Exception);
+            }
+            catch (Exception handlerEx)
+            {
+                // If exception handler fails, log directly
+                _logger?.LogError(handlerEx, "Error in exception handler");
+            }
+        }
+        else
+            _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+
+        e.SetObserved();
+    }
+
+    /// <summary>
+    /// Handles the unhandled exception event.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void CurrentDomain_UnhandledException(object? sender, System.UnhandledExceptionEventArgs e)
+    {
+        if (_isDisposing)
+            return;
+
+        if (e.ExceptionObject is Exception exception)
+        {
+            if (_exceptionHandlerService is not null)
+            {
+                try
+                {
+                    _exceptionHandlerService.HandleException(exception);
+                }
+                catch (Exception handlerEx)
+                {
+                    // If exception handler fails, log directly
+                    _logger?.LogError(handlerEx, "Error in exception handler");
+                }
+            }
+            else
+                _logger?.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+        }
+    }
+
+    /// <summary>
+    /// Initializing the application.
+    /// </summary>
+    /// <example>
+    /// <code>
+    ///     await base.InitializeApplicationAsync();
+    ///     // wait 5 seconds before showing the main window...
+    ///     await Task.Delay(5000);
+    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
+    /// </code>
+    /// </example>
+    /// <returns></returns>
+    protected abstract Task InitializeApplicationAsync();
+
+    /// <summary>
+    /// Get a new list of additional resource dictionaries which can be merged.
+    /// </summary>
+    /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
+    protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+        new List<ResourceDictionary>();
+
+    /// <summary>
+    /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
+    /// </summary>
+    /// <param name="args">Event data for the event.</param>
+    protected override void OnLaunched(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs args)
+    {
+        _mainWindow = Windows.UI.Xaml.Window.Current;
+
+        var rootFrame = MainWindow?.Content as Frame;
+
+        // Do not repeat app initialization when the Window already has content,
+        // just ensure that the window is active
+        if (rootFrame is null)
+        {
+            // Create a Frame to act as the navigation context and navigate to the first page
+            rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+
+            rootFrame.Navigated += OnNavigated;
+
+            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+            {
+                // Restore application state if needed.
+                // Applications can override OnRestoreStateAsync() to implement custom state restoration logic.
+                // By default, the framework does not automatically restore state as state management
+                // is typically application-specific and should be handled by the application layer.
+                _ = OnRestoreStateAsync(args);
+            }
+
+            // Register a handler for BackRequested events and set the
+            // visibility of the Back button
+            SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                rootFrame.CanGoBack ?
+                AppViewBackButtonVisibility.Visible :
+                AppViewBackButtonVisibility.Collapsed;
+
+            // Add custom resourcedictionaries from code.
+            var dictionary = Application.Current.Resources?.MergedDictionaries;
+
+            if (dictionary is not null && Application.Current.Resources is not null)
+            {
+                foreach (var item in GetAdditionalResourceDictionaries())
+                {
+                    if (!dictionary.Any(t => t.Source == item.Source))
+                        Application.Current.Resources.MergedDictionaries.Add(item);
+                }
+            }
+
+            // Place the frame in the current Window
+            if (MainWindow is not null)
+                MainWindow.Content = rootFrame;
+        }
+
+        if (!args.PrelaunchActivated)
+        {
+            if (rootFrame.Content is null)
+            {
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
+
+                var view = ServiceLocator.Default.GetRequiredService<IShellView>();
+                rootFrame.Navigate(view.GetType(), args.Arguments);
+            }
+        }
+
+        _themeSelector = ServiceLocator.Default.GetRequiredService<IThemeService>();
+
+        if (MainWindow is not null)
+            MainWindow.Activate();
+    }
+
+    /// <summary>
+    /// Handles the <see cref="E:Navigated" /> event.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
+    private static void OnNavigated(object sender, NavigationEventArgs e)
+    {
+
+        // Each time a navigation event occurs, update the Back button's visibility
+        SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+            ((Frame)sender).CanGoBack ?
+            AppViewBackButtonVisibility.Visible :
+            AppViewBackButtonVisibility.Collapsed;
+    }
+
+    /// <summary>
+    /// Handles the <see cref="E:BackRequested" /> event.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="BackRequestedEventArgs" /> instance containing the event data.</param>
+    private static void OnBackRequested(object? sender, BackRequestedEventArgs e)
+    {
+        var rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
+
+        if (Windows.UI.Xaml.Window.Current.Content.FindDescendantByName("ContentRootFrame") is Frame _frame)
+        {
+            rootFrame = _frame;
+        }
+
+        if (rootFrame is not null && rootFrame.CanGoBack)
+        {
+            e.Handled = true;
+            rootFrame.GoBack();
+        }
+    }
+
+    /// <summary>
+    /// Invoked when Navigation to a certain page fails
+    /// </summary>
+    /// <param name="sender">The Frame which failed navigation</param>
+    /// <param name="e">Details about the navigation failure</param>
+    /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
+    protected virtual void OnNavigationFailed(object? sender, NavigationFailedEventArgs e)
+    {
+        var exception = new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
+        _logger?.LogError(exception, "Navigation failed");
+
+        if (_exceptionHandlerService != null)
+        {
+            try
+            {
+                _exceptionHandlerService.HandleException(exception);
+            }
+            catch
+            {
+                // If exception handler fails, throw the original exception
+                throw exception;
+            }
+        }
+        else
+        {
+            throw exception;
+        }
+    }
+
+    protected virtual async Task HandleLaunchArgumentsAsync(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs args)
+    {
+        try
+        {
+            _logger?.LogTrace("Handling launch event arguments");
+
+            if (args is not null)
+            {
+                switch (args.Kind)
+                {
+                    case Windows.ApplicationModel.Activation.ActivationKind.Launch:
+                        await HandleLaunchActivationAsync(args.Arguments);
+                        break;
+                    case Windows.ApplicationModel.Activation.ActivationKind.Protocol:
+                        await HandleProtocolActivationAsync(args.Arguments);
+                        break;
+                }
+            }
+
+            _logger?.LogTrace("Handle command line arguments");
+
+            if (Environment.GetCommandLineArgs().Length > 1)
+                await HandleCommandLineArgumentsAsync(Environment.GetCommandLineArgs());
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error handling launch arguments");
+        }
+    }
+
+    protected virtual Task HandleProtocolActivationAsync(string e) =>
+        Task.CompletedTask;
+
+    protected virtual Task HandleLaunchActivationAsync(string e) =>
+        Task.CompletedTask;
+
+    protected virtual Task HandleCommandLineArgumentsAsync(string[] e) =>
+        Task.CompletedTask;
+
+    protected virtual Task HandleApplicationInitializedAsync() =>
+        Task.CompletedTask;
+
+    /// <summary>
+    /// Called when the application is being restored from a terminated state.
+    /// Override this method to restore application-specific state (e.g., navigation state, user preferences).
+    /// </summary>
+    /// <param name="args">The launch activation event arguments containing information about the previous execution state.</param>
+    /// <returns>A task representing the asynchronous state restoration operation.</returns>
+    /// <remarks>
+    /// This method is called when <see cref="Windows.ApplicationModel.Activation.LaunchActivatedEventArgs.PreviousExecutionState"/>
+    /// is <see cref="Windows.ApplicationModel.Activation.ApplicationExecutionState.Terminated"/>.
+    /// Applications should override this method to restore any state that was saved during suspension.
+    /// </remarks>
+    protected virtual Task OnRestoreStateAsync(Windows.ApplicationModel.Activation.LaunchActivatedEventArgs args) =>
+        Task.CompletedTask;
+
+
+    #region IDisposable
+    // Dispose() calls Dispose(true)
+
+#if IOS || MACCATALYST
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public new void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+#else
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+#endif
+
+    // The bulk of the clean-up code is implemented in Dispose(bool)
+#if IOS || MACCATALYST
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected new virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // free managed resources
+            MessageService.Default.Unregister<StyleChangedMessage>(this);
+        }
+
+        // free native resources if there are any.
+        base.Dispose(disposing);
+    }
+#else
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        _isDisposing = true;
+
+        if (disposing)
+        {
+            try
+            {
+                _messengerService.Unregister<ShowInformationMessage>(this);
+                _messengerService.Unregister<ShowWarningMessage>(this);
+                _messengerService.Unregister<ShowErrorMessage>(this);
+
+                AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
+                AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+                TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error during disposal");
+            }
+        }
+
+        // free native resources if there are any.
+    }
+#endif
+
+    ~Application()
+    {
+        Dispose(false);
+    }
+    #endregion
+}
+

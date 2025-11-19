@@ -85,13 +85,13 @@ public class Matrix3x3Test
         Assert.AreEqual(row1, matrix.GetRow(1));
         Assert.AreEqual(row2, matrix.GetRow(2));
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetRow(-1);
         }
         );
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetRow(3);
         }
@@ -117,13 +117,13 @@ public class Matrix3x3Test
         Assert.AreEqual(column1, matrix.GetColumn(1));
         Assert.AreEqual(column2, matrix.GetColumn(2));
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetColumn(-1);
         }
         );
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetColumn(3);
         }
@@ -340,7 +340,7 @@ public class Matrix3x3Test
         matrix.V21 = v21;
         matrix.V22 = v22;
 
-        Assert.ThrowsException<ArgumentException>(() => matrix.Inverse(), "");
+        Assert.Throws<ArgumentException>(() => matrix.Inverse(), "");
     }
 
     [TestMethod]

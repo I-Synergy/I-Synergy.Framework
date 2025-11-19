@@ -150,8 +150,28 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// to be casted to the appropriate type.</param>
     public void ExecuteWithObject(object parameter)
     {
-        var parameterCasted = parameter is T typedParameter ? typedParameter : default!;
-        Execute(parameterCasted);
+        if (parameter is T typedParameter)
+        {
+            Execute(typedParameter);
+        }
+        else if (typeof(T).IsValueType && parameter != null)
+        {
+            // For value types, try to convert parameter to the expected type
+            try
+            {
+                var convertedParameter = (T)Convert.ChangeType(parameter, typeof(T));
+                Execute(convertedParameter);
+            }
+            catch
+            {
+                // If conversion fails, use default value
+                Execute(default!);
+            }
+        }
+        else
+        {
+            Execute(default!);
+        }
     }
 
     /// <summary>

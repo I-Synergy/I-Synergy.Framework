@@ -51,7 +51,7 @@ public static class AutoSelectBehavior
         if (d is TextBox control)
             textBox = control;
         else
-            textBox = d.FindChild<TextBox>();
+            textBox = d.FindDescendant<TextBox>();
 
         if (e.NewValue != e.OldValue && textBox is not null)
         {
@@ -78,7 +78,7 @@ public static class AutoSelectBehavior
         if (sender is TextBox control)
             textBox = control;
         else
-            textBox = (sender as DependencyObject)?.FindChild<TextBox>();
+            textBox = (sender as DependencyObject)?.FindDescendant<TextBox>();
 
         textBox?.SelectAll();
     }

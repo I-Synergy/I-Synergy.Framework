@@ -11,6 +11,7 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
@@ -24,12 +25,16 @@ namespace ISynergy.Framework.UI.ViewModels.Base;
 /// <seealso cref="IShellViewModel" />
 public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 {
+    protected readonly IDialogService _dialogService;
+    protected readonly INavigationService _navigationService;
+
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
     /// </summary>
     public bool IsBackEnabled
     {
-        get => _commonServices.NavigationService.CanGoBack;
+        get => GetValue<bool>();
+        private set => SetValue(value);
     }
 
     /// <summary>
@@ -42,7 +47,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the login command.
     /// </summary>
     /// <value>The login command.</value>
-    public RelayCommand SignInCommand { get; private set; }
+    public AsyncRelayCommand SignInCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the language command.
@@ -87,7 +92,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     public ObservableCollection<NavigationItem> PrimaryItems
     {
         get => GetValue<ObservableCollection<NavigationItem>>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -97,23 +102,32 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     public ObservableCollection<NavigationItem> SecondaryItems
     {
         get => GetValue<ObservableCollection<NavigationItem>>();
-        private set => SetValue(value);
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    protected BaseShellViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="dialogService"></param>
+    /// <param name="navigationService"></param>
+    /// <param name="logger"></param>
+    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<BaseShellViewModel> logger)
+        : base(commonServices, logger)
     {
-        _commonServices.NavigationService.BackStackChanged += (s, e) => RaisePropertyChanged(nameof(IsBackEnabled));
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+
+        _navigationService.BackStackChanged += NavigationService_BackStackChanged;
+
+        // Initialize IsBackEnabled with the current state
+        IsBackEnabled = _navigationService.CanGoBack;
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
-        SignInCommand = new RelayCommand(SignOut);
+        SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
         ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
@@ -136,14 +150,14 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Sign out.
     /// </summary>
     /// <returns></returns>
-    protected virtual void SignOut() => _commonServices.AuthenticationService.SignOut();
+    protected abstract Task SignOutAsync();
 
     /// <summary>
     /// Shows the dialog restart after update asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     protected Task ShowDialogRestartAfterUpdateAsync() =>
-        _commonServices.DialogService.ShowInformationAsync(LanguageService.Default.GetString("UpdateRestart"));
+        _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("UpdateRestart"));
 
     /// <summary>
     /// Gets or sets the LastSelectedItem property value.
@@ -211,9 +225,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = new LanguageViewModel(_commonServices);
+        var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
         languageVM.Submitted += LanguageVM_Submitted;
-        return _commonServices.DialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+        return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
 
     /// <summary>
@@ -223,22 +237,34 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="e">The e.</param>
     private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
     {
-        if (sender is LanguageViewModel vm)
-            vm.Submitted -= LanguageVM_Submitted;
-
-        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-        _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-
-        e.Result.SetLocalizationLanguage();
-
-        if (await _commonServices.DialogService.ShowMessageAsync(
-                    LanguageService.Default.GetString("WarningLanguageChange") +
-                    Environment.NewLine +
-                    LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
-                    LanguageService.Default.GetString("TitleQuestion"),
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+        try
         {
-            _commonServices.RestartApplication();
+            if (sender is LanguageViewModel vm)
+                vm.Submitted -= LanguageVM_Submitted;
+
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
+            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+
+            e.Result.SetLocalizationLanguage();
+
+            if (await _dialogService.ShowMessageAsync(
+                        _commonServices.LanguageService.GetString("WarningLanguageChange") +
+                        Environment.NewLine +
+                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                        _commonServices.LanguageService.GetString("TitleQuestion"),
+                        MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+            {
+                _commonServices.RestartApplication();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log exception to prevent it from being swallowed in async void method
+            _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
+            var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
+            exceptionHandlerService?.HandleException(ex);
+            // Re-throw to crash the application if unhandled exception handler is configured
+            throw;
         }
     }
 
@@ -248,9 +274,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = new ThemeViewModel(_commonServices);
+        var themeVM = _commonServices.ScopedContextService.GetRequiredService<ThemeViewModel>();
         themeVM.Submitted += ThemeVM_Submitted;
-        return _commonServices.DialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
+        return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
 
     /// <summary>
@@ -258,43 +284,66 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<Style> e)
+    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)
     {
-        if (sender is ThemeViewModel vm)
-            vm.Submitted -= ThemeVM_Submitted;
-
-        if (e.Result is { } style)
+        try
         {
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = style.Theme;
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = style.Color;
-
-            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() && await _commonServices.DialogService.ShowMessageAsync(
-                    LanguageService.Default.GetString("WarningColorChange") +
-                    Environment.NewLine +
-                    LanguageService.Default.GetString("WarningDoYouWantToDoItNow"),
-                    LanguageService.Default.GetString("TitleQuestion"),
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (sender is ThemeViewModel vm)
             {
-                _commonServices.RestartApplication();
+                vm.Submitted -= ThemeVM_Submitted;
+
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = e.Result.Theme;
+                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
+
+                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
+                    await _dialogService.ShowMessageAsync(
+                        _commonServices.LanguageService.GetString("WarningColorChange") +
+                        Environment.NewLine +
+                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                        _commonServices.LanguageService.GetString("TitleQuestion"),
+                        MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+                {
+                    _commonServices.RestartApplication();
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            // Log exception to prevent it from being swallowed in async void method
+            _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler");
+            var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
+            exceptionHandlerService?.HandleException(ex);
+            // Re-throw to crash the application if unhandled exception handler is configured
+            throw;
         }
     }
 
     /// <summary>
-    /// Opens the help asynchronous.
+    /// Opens the help asynchronously.
     /// </summary>
-    /// <returns>Task.</returns>
-    protected virtual Task OpenHelpAsync() => throw new NotImplementedException();
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <remarks>
+    /// Default implementation does nothing. Override in derived classes to provide help functionality.
+    /// </remarks>
+    protected virtual Task OpenHelpAsync() => Task.CompletedTask;
 
     /// <summary>
-    /// open feedback as an asynchronous operation.
+    /// Opens the feedback dialog asynchronously.
     /// </summary>
-    protected virtual Task OpenFeedbackAsync() => throw new NotImplementedException();
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <remarks>
+    /// Default implementation does nothing. Override in derived classes to provide feedback functionality.
+    /// </remarks>
+    protected virtual Task OpenFeedbackAsync() => Task.CompletedTask;
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            // Remove navigation service event handlers first
+            if (_navigationService is not null)
+                _navigationService.BackStackChanged -= NavigationService_BackStackChanged;
+
             Validator = null;
 
             PrimaryItems?.Clear();
@@ -312,4 +361,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             base.Dispose(disposing);
         }
     }
+
+    private void NavigationService_BackStackChanged(object? sender, EventArgs e) =>
+        IsBackEnabled = _navigationService.CanGoBack;
 }

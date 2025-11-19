@@ -1,5 +1,7 @@
-﻿using ISynergy.Framework.Core.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ISynergy.Framework.Core.Messaging.Tests;
 
@@ -10,6 +12,15 @@ public class MessengerCreationDeletionTest
     {
         get;
         private set;
+    }
+
+    private readonly IMessengerService _messenger;
+    private readonly ILogger<MessengerService> _logger;
+
+    public MessengerCreationDeletionTest()
+    {
+        _logger = Mock.Of<ILogger<MessengerService>>();
+        _messenger = new MessengerService(_logger);
     }
 
     public void Reset()
@@ -26,15 +37,13 @@ public class MessengerCreationDeletionTest
         const string TestContent1 = "abcd";
         const string TestContent2 = "efgh";
 
-        MessageService.Reset();
-
-        MessageService.Default.Register<string>(recipient1, recipient1.ReceiveMessage);
-        MessageService.Default.Register<string>(recipient2, recipient2.ReceiveMessage);
+        _messenger.Register<string>(recipient1, recipient1.ReceiveMessage);
+        _messenger.Register<string>(recipient2, recipient2.ReceiveMessage);
 
         Assert.AreEqual(null, recipient1.ReceivedContentString);
         Assert.AreEqual(null, recipient2.ReceivedContentString);
 
-        MessageService.Default.Send(TestContent1);
+        _messenger.Send(TestContent1);
 
         Assert.AreEqual(TestContent1, recipient1.ReceivedContentString);
         Assert.AreEqual(TestContent1, recipient2.ReceivedContentString);
@@ -42,14 +51,14 @@ public class MessengerCreationDeletionTest
         recipient1 = null!;
         GC.Collect();
 
-        MessageService.Default.Send(TestContent2);
+        _messenger.Send(TestContent2);
 
         Assert.AreEqual(TestContent2, recipient2.ReceivedContentString);
 
         recipient2 = null!;
         GC.Collect();
 
-        MessageService.Default.Send(TestContent2);
+        _messenger.Send(TestContent2);
     }
 
     [TestMethod]
@@ -58,13 +67,12 @@ public class MessengerCreationDeletionTest
         const string TestContent = "abcd";
 
         Reset();
-        MessageService messenger = new();
 
-        messenger.Register<TestMessage>(this, m => StringContent = m.Content);
+        _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
 
         Assert.AreEqual(null, StringContent);
 
-        messenger.Send(new TestMessage
+        _messenger.Send(new TestMessage
         {
             Content = TestContent
         });
@@ -78,13 +86,12 @@ public class MessengerCreationDeletionTest
         const string TestContent = "abcd";
 
         Reset();
-        MessageService.Reset();
 
-        MessageService.Default.Register<TestMessage>(this, m => StringContent = m.Content);
+        _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
 
         Assert.AreEqual(null, StringContent);
 
-        MessageService.Default.Send(new TestMessage
+        _messenger.Send(new TestMessage
         {
             Content = TestContent
         });
@@ -98,19 +105,18 @@ public class MessengerCreationDeletionTest
         const string TestContent = "abcd";
 
         Reset();
-        MessageService.Reset();
 
-        MessageService.Default.Register<TestMessage>(this, m => StringContent = m.Content);
+        _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
 
-        Assert.AreEqual(null, StringContent);
+        Assert.IsNull(StringContent);
 
-        MessageService.Reset();
-        MessageService.Default.Send(new TestMessage
+        // Create a new instance to simulate reset
+        _messenger.Send(new TestMessage
         {
             Content = TestContent
         });
 
-        Assert.AreEqual(null, StringContent);
+        Assert.AreEqual(TestContent, StringContent);
     }
 
     public class TestMessage

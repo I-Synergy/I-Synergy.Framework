@@ -1,8 +1,9 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Enumerations;
 using ISynergy.Framework.Physics.Extensions;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
 namespace Sample.ViewModels;
@@ -83,8 +84,9 @@ public class UnitConversionViewModel : ViewModelNavigation<object>
 
     public UnitConversionViewModel(
         ICommonServices commonServices,
+        ILogger<UnitConversionViewModel> logger,
         IUnitConversionService unitConversionService)
-        : base(commonServices)
+        : base(commonServices, logger)
     {
         _unitConversionService = unitConversionService;
 

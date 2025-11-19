@@ -1,76 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
 	<!-- 
-		Microsoft ResX Schema
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
 	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
 		<xsd:element name="root" msdata:IsDataSet="true">
 			<xsd:complexType>
 				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
 					<xsd:element name="data">
 						<xsd:complexType>
 							<xsd:sequence>
 								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
 								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
 							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
 							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
 							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
 						</xsd:complexType>
 					</xsd:element>
 					<xsd:element name="resheader">
@@ -89,351 +109,370 @@
 		<value>text/microsoft-resx</value>
 	</resheader>
 	<resheader name="version">
-		<value>1.3</value>
+		<value>2.0</value>
 	</resheader>
 	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="Add" xml:space="preserve">
-		<value>Toevoegen</value>
-	</data>
+    <value>Toevoegen</value>
+  </data>
 	<data name="By" xml:space="preserve">
-		<value>door</value>
-	</data>
+    <value>door</value>
+  </data>
 	<data name="Cancel" xml:space="preserve">
-		<value>Annuleren</value>
-	</data>
+    <value>Annuleren</value>
+  </data>
 	<data name="Close" xml:space="preserve">
-		<value>Sluiten</value>
-	</data>
+    <value>Sluiten</value>
+  </data>
 	<data name="Collapsed" xml:space="preserve">
-		<value>Samengevouwen</value>
-	</data>
+    <value>Samengevouwen</value>
+  </data>
 	<data name="Theme" xml:space="preserve">
-		<value>Thema</value>
-	</data>
+    <value>Thema</value>
+  </data>
 	<data name="Day_s" xml:space="preserve">
-		<value>Dag(en)</value>
-	</data>
+    <value>Dag(en)</value>
+  </data>
 	<data name="WarningDoYouWantToDoItNow" xml:space="preserve">
-		<value>Wil je het nu doen?</value>
-	</data>
+    <value>Wil je het nu doen?</value>
+  </data>
 	<data name="Edit" xml:space="preserve">
-		<value>Bewerken</value>
-	</data>
+    <value>Bewerken</value>
+  </data>
 	<data name="Expanded" xml:space="preserve">
-		<value>Uitgebreid</value>
-	</data>
+    <value>Uitgebreid</value>
+  </data>
 	<data name="Greeting_Afternoon" xml:space="preserve">
-		<value>Goedemiddag {0}</value>
-	</data>
+    <value>Goedemiddag {0}</value>
+  </data>
 	<data name="Greeting_Evening" xml:space="preserve">
-		<value>Goedenavond {0}</value>
-	</data>
+    <value>Goedenavond {0}</value>
+  </data>
 	<data name="Greeting_Morning" xml:space="preserve">
-		<value>Goedemorgen {0}</value>
-	</data>
+    <value>Goedemorgen {0}</value>
+  </data>
 	<data name="Greeting_Night" xml:space="preserve">
-		<value>Welterusten {0}</value>
-	</data>
+    <value>Welterusten {0}</value>
+  </data>
 	<data name="Hour_s" xml:space="preserve">
-		<value>Uur(en)</value>
-	</data>
+    <value>Uur(en)</value>
+  </data>
 	<data name="InputFirst" xml:space="preserve">
-		<value>Aangemaakt</value>
-	</data>
+    <value>Aangemaakt</value>
+  </data>
 	<data name="InputLast" xml:space="preserve">
-		<value>Laatste wijziging</value>
-	</data>
+    <value>Laatste wijziging</value>
+  </data>
 	<data name="Language" xml:space="preserve">
-		<value>Taal</value>
-	</data>
+    <value>Taal</value>
+  </data>
 	<data name="Language_Dutch" xml:space="preserve">
-		<value>Nederlands</value>
-	</data>
+    <value>Nederlands</value>
+  </data>
 	<data name="Language_English" xml:space="preserve">
-		<value>Engels</value>
-	</data>
+    <value>Engels</value>
+  </data>
 	<data name="Language_French" xml:space="preserve">
-		<value>Frans</value>
-	</data>
+    <value>Frans</value>
+  </data>
 	<data name="Language_German" xml:space="preserve">
-		<value>Duits</value>
-	</data>
+    <value>Duits</value>
+  </data>
 	<data name="Minute_s" xml:space="preserve">
-		<value>Minuut(en)</value>
-	</data>
+    <value>Minuut(en)</value>
+  </data>
 	<data name="No" xml:space="preserve">
-		<value>Nee</value>
-	</data>
+    <value>Nee</value>
+  </data>
 	<data name="Ok" xml:space="preserve">
-		<value>OK</value>
-	</data>
+    <value>OK</value>
+  </data>
 	<data name="Pin" xml:space="preserve">
-		<value>PIN</value>
-	</data>
+    <value>PIN</value>
+  </data>
 	<data name="PleaseWait" xml:space="preserve">
-		<value>Een moment alstublieft.</value>
-	</data>
+    <value>Een moment alstublieft.</value>
+  </data>
 	<data name="Refresh" xml:space="preserve">
-		<value>Verversen</value>
-	</data>
+    <value>Verversen</value>
+  </data>
 	<data name="Save" xml:space="preserve">
-		<value>Opslaan</value>
-	</data>
+    <value>Opslaan</value>
+  </data>
 	<data name="Search" xml:space="preserve">
-		<value>Zoeken</value>
-	</data>
+    <value>Zoeken</value>
+  </data>
 	<data name="TitleCriticalError" xml:space="preserve">
-		<value>Kritieke fout</value>
-	</data>
+    <value>Kritieke fout</value>
+  </data>
 	<data name="TitleError" xml:space="preserve">
-		<value>Fout</value>
-	</data>
+    <value>Fout</value>
+  </data>
 	<data name="TitleInfo" xml:space="preserve">
-		<value>Informatie</value>
-	</data>
+    <value>Informatie</value>
+  </data>
 	<data name="TitleQuestion" xml:space="preserve">
-		<value>Vraag</value>
-	</data>
+    <value>Vraag</value>
+  </data>
 	<data name="TitleWarning" xml:space="preserve">
-		<value>Waarschuwing</value>
-	</data>
+    <value>Waarschuwing</value>
+  </data>
 	<data name="TitleWelcome" xml:space="preserve">
-		<value>Welkom</value>
-	</data>
+    <value>Welkom</value>
+  </data>
 	<data name="Unknown" xml:space="preserve">
-		<value>Onbekend</value>
-	</data>
+    <value>Onbekend</value>
+  </data>
 	<data name="UpdateRestart" xml:space="preserve">
-		<value>Er is een update beschikbaar.
+    <value>Er is een update beschikbaar.
 Sla uw werk op en start de toepassing opnieuw.</value>
-	</data>
+  </data>
 	<data name="WarningColorChange" xml:space="preserve">
-		<value>U moet de toepassing opnieuw starten om de kleurwijzigingen toe te passen.</value>
-	</data>
+    <value>U moet de toepassing opnieuw starten om de kleurwijzigingen toe te passen.</value>
+  </data>
 	<data name="WarningDocumentSizeTooBig" xml:space="preserve">
-		<value>De documentgrootte mag niet groter zijn dan {0}.</value>
-	</data>
+    <value>De documentgrootte mag niet groter zijn dan {0}.</value>
+  </data>
 	<data name="WarningLanguageChange" xml:space="preserve">
-		<value>U moet de toepassing opnieuw starten om de taalwijzigingen toe te passen.</value>
-	</data>
+    <value>U moet de toepassing opnieuw starten om de taalwijzigingen toe te passen.</value>
+  </data>
 	<data name="Yes" xml:space="preserve">
-		<value>Ja</value>
-	</data>
+    <value>Ja</value>
+  </data>
 	<data name="ThisItem" xml:space="preserve">
-		<value>dit object</value>
-	</data>
+    <value>dit object</value>
+  </data>
 	<data name="UpdateCheckForUpdates" xml:space="preserve">
-		<value>Controleren op updates...</value>
-	</data>
+    <value>Controleren op updates...</value>
+  </data>
 	<data name="UpdateDownloadAndInstall" xml:space="preserve">
-		<value>Update downloaden en installeren...</value>
-	</data>
+    <value>Update downloaden en installeren...</value>
+  </data>
 	<data name="UpdateExecuteNow" xml:space="preserve">
-		<value>Wil je de update nu echt installeren?</value>
-	</data>
+    <value>Wil je de update nu echt installeren?</value>
+  </data>
 	<data name="UpdateFoundNewUpdate" xml:space="preserve">
-		<value>Er is een nieuwe update.</value>
-	</data>
+    <value>Er is een nieuwe update.</value>
+  </data>
 	<data name="CannotAttachBehaviorMultipleTimesExceptionMessage" xml:space="preserve">
-		<value>Een instantie van een gedrag kan niet aan meer dan één object tegelijk worden gekoppeld.</value>
-	</data>
+    <value>Een instantie van een gedrag kan niet aan meer dan één object tegelijk worden gekoppeld.</value>
+  </data>
 	<data name="DuplicateBehaviorInCollectionExceptionMessage" xml:space="preserve">
-		<value>Kan een exemplaar van een gedrag niet meer dan één keer toevoegen aan een BehaviorCollection.</value>
-	</data>
+    <value>Kan een exemplaar van een gedrag niet meer dan één keer toevoegen aan een BehaviorCollection.</value>
+  </data>
 	<data name="InvalidAssociatedObjectExceptionMessage" xml:space="preserve">
-		<value>AssociatedObject heeft het type {0}, maar moet van het type {1} zijn.</value>
-	</data>
+    <value>AssociatedObject heeft het type {0}, maar moet van het type {1} zijn.</value>
+  </data>
 	<data name="NonActionAddedToActionCollectionExceptionMessage" xml:space="preserve">
-		<value>Alleen IAction-typen worden ondersteund in een ActionCollection.</value>
-	</data>
+    <value>Alleen IAction-typen worden ondersteund in een ActionCollection.</value>
+  </data>
 	<data name="NonBehaviorAddedToBehaviorCollectionExceptionMessage" xml:space="preserve">
-		<value>Alleen IBehavior-typen worden ondersteund in een BehaviorCollection.</value>
-	</data>
+    <value>Alleen IBehavior-typen worden ondersteund in een BehaviorCollection.</value>
+  </data>
 	<data name="Select" xml:space="preserve">
-		<value>Selecteren</value>
-	</data>
+    <value>Selecteren</value>
+  </data>
 	<data name="SignOut" xml:space="preserve">
-		<value>Afmelden</value>
-	</data>
+    <value>Afmelden</value>
+  </data>
 	<data name="SignIn" xml:space="preserve">
-		<value>Aanmelden</value>
-	</data>
+    <value>Aanmelden</value>
+  </data>
 	<data name="Register" xml:space="preserve">
-		<value>Registreren</value>
-	</data>
+    <value>Registreren</value>
+  </data>
 	<data name="Settings" xml:space="preserve">
-		<value>Instellingen</value>
-	</data>
+    <value>Instellingen</value>
+  </data>
 	<data name="Default" xml:space="preserve">
-		<value>Standaard</value>
-	</data>
+    <value>Standaard</value>
+  </data>
 	<data name="Light" xml:space="preserve">
-		<value>Licht</value>
-	</data>
+    <value>Licht</value>
+  </data>
 	<data name="Dark" xml:space="preserve">
-		<value>Donker</value>
-	</data>
+    <value>Donker</value>
+  </data>
 	<data name="NoItems" xml:space="preserve">
-		<value>Geen items beschikbaar</value>
-	</data>
+    <value>Geen items beschikbaar</value>
+  </data>
 	<data name="Username" xml:space="preserve">
-		<value>Gebruikersnaam</value>
-	</data>
+    <value>Gebruikersnaam</value>
+  </data>
 	<data name="Password" xml:space="preserve">
-		<value>Wachtwoord</value>
-	</data>
+    <value>Wachtwoord</value>
+  </data>
 	<data name="LoginAccount" xml:space="preserve">
-		<value>Heb je al een account?</value>
-	</data>
+    <value>Heb je al een account?</value>
+  </data>
 	<data name="LoginNoAccount" xml:space="preserve">
-		<value>Heb je nog geen account?</value>
-	</data>
+    <value>Heb je nog geen account?</value>
+  </data>
 	<data name="LoginText" xml:space="preserve">
-		<value>Als u al een account hebt, kunt u uw e-mailadres en wachtwoord gebruiken om in te loggen.</value>
-	</data>
+    <value>Als u al een account hebt, kunt u uw e-mailadres en wachtwoord gebruiken om in te loggen.</value>
+  </data>
 	<data name="LoginTitle" xml:space="preserve">
-		<value>Heb je een account?</value>
-	</data>
+    <value>Heb je een account?</value>
+  </data>
 	<data name="SignInHere" xml:space="preserve">
-		<value>Meld u hier aan</value>
-	</data>
+    <value>Meld u hier aan</value>
+  </data>
 	<data name="SignupHere" xml:space="preserve">
-		<value>Schrijf je hier in</value>
-	</data>
+    <value>Schrijf je hier in</value>
+  </data>
 	<data name="SignupText" xml:space="preserve">
-		<value>Als u geen account hebt, vult u de verplichte velden in en registreert u zich. 
+    <value>Als u geen account hebt, vult u de verplichte velden in en registreert u zich. 
 Na bevestiging van uw registratie kunt u uw e-mailadres en wachtwoord gebruiken om in te loggen.</value>
-	</data>
+  </data>
 	<data name="SignupTitle" xml:space="preserve">
-		<value>Heb je nog geen account?</value>
-	</data>
+    <value>Heb je nog geen account?</value>
+  </data>
 	<data name="WarningNoModulesSelected" xml:space="preserve">
-		<value>Er zijn geen modules geselecteerd. Selecteer er ten minste één.</value>
-	</data>
+    <value>Er zijn geen modules geselecteerd. Selecteer er ten minste één.</value>
+  </data>
 	<data name="WarningPasswordMatch" xml:space="preserve">
-		<value>Wachtwoorden komen niet overeen!</value>
-	</data>
+    <value>Wachtwoorden komen niet overeen!</value>
+  </data>
 	<data name="WarningPasswordSize" xml:space="preserve">
-		<value>Het wachtwoord moet ten minste 6 tekens en ten minste 1 kleine letter, 1 hoofdletter en 1 cijfer bevatten.</value>
-	</data>
+    <value>Het wachtwoord moet ten minste 6 tekens en ten minste 1 kleine letter, 1 hoofdletter en 1 cijfer bevatten.</value>
+  </data>
 	<data name="WarningResetPassword" xml:space="preserve">
-		<value>U ontvangt een e-mail met een link om uw wachtwoord opnieuw in te stellen.</value>
-	</data>
+    <value>U ontvangt een e-mail met een link om uw wachtwoord opnieuw in te stellen.</value>
+  </data>
 	<data name="PasswordForgot" xml:space="preserve">
-		<value>Wachtwoord vergeten?</value>
-	</data>
+    <value>Wachtwoord vergeten?</value>
+  </data>
 	<data name="PasswordRetype" xml:space="preserve">
-		<value>Typ het wachtwoord opnieuw</value>
-	</data>
+    <value>Typ het wachtwoord opnieuw</value>
+  </data>
 	<data name="EmailAddress" xml:space="preserve">
-		<value>E-mailadres</value>
-	</data>
+    <value>E-mailadres</value>
+  </data>
 	<data name="Country" xml:space="preserve">
-		<value>Land</value>
-	</data>
+    <value>Land</value>
+  </data>
 	<data name="Modules" xml:space="preserve">
-		<value>Modules</value>
-	</data>
+    <value>Modules</value>
+  </data>
 	<data name="TimeZone" xml:space="preserve">
-		<value>Tijdzone</value>
-	</data>
+    <value>Tijdzone</value>
+  </data>
 	<data name="WarningNoCountrySelected" xml:space="preserve">
-		<value>Er is geen land geselecteerd.</value>
-	</data>
+    <value>Er is geen land geselecteerd.</value>
+  </data>
 	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
-		<value>Er is geen tijdzone geselecteerd.</value>
-	</data>
+    <value>Er is geen tijdzone geselecteerd.</value>
+  </data>
 	<data name="WarningInvalidEmail" xml:space="preserve">
-		<value>Ingevoerd e-mailadres is ongeldig.</value>
-	</data>
+    <value>Ingevoerd e-mailadres is ongeldig.</value>
+  </data>
 	<data name="WarningLicenseNameSize" xml:space="preserve">
-		<value>U moet een (bedrijfs)naam invoeren die bestaat uit minimaal 3 tekens.</value>
-	</data>
+    <value>U moet een (bedrijfs)naam invoeren die bestaat uit minimaal 3 tekens.</value>
+  </data>
 	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
-		<value>U ontvangt een e-mail die u eerst moet bevestigen voordat u kunt inloggen.</value>
-	</data>
+    <value>U ontvangt een e-mail die u eerst moet bevestigen voordat u kunt inloggen.</value>
+  </data>
 	<data name="Fullname" xml:space="preserve">
-		<value>Volledige naam</value>
-	</data>
+    <value>Volledige naam</value>
+  </data>
 	<data name="WarningBuildCalled" xml:space="preserve">
-		<value>Build kan maar één keer worden aangeroepen.</value>
-	</data>
+    <value>Build kan maar één keer worden aangeroepen.</value>
+  </data>
 	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
-		<value>CreateBuilder moet vóór CreateServiceProvider worden aangeroepen.</value>
-	</data>
+    <value>CreateBuilder moet vóór CreateServiceProvider worden aangeroepen.</value>
+  </data>
 	<data name="WarningNullIServiceProvider" xml:space="preserve">
-		<value>De IServiceProviderFactory retourneerde een null IServiceProvider.</value>
-	</data>
+    <value>De IServiceProviderFactory retourneerde een null IServiceProvider.</value>
+  </data>
 	<data name="WarningResolverReturnedNull" xml:space="preserve">
-		<value>De resolver retourneerde een null IServiceProviderFactory.</value>
-	</data>
+    <value>De resolver retourneerde een null IServiceProviderFactory.</value>
+  </data>
 	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
-		<value>IHostApplicationLifetime vervangen wordt niet ondersteund.</value>
-	</data>
+    <value>IHostApplicationLifetime vervangen wordt niet ondersteund.</value>
+  </data>
 	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
-		<value>Bestandsnaam is null of leeg. Geef een geldige bestandsnaam op.</value>
-	</data>
+    <value>Bestandsnaam is null of leeg. Geef een geldige bestandsnaam op.</value>
+  </data>
 	<data name="CannotFindUpdateFile" xml:space="preserve">
-		<value>Kan het updatebestand niet vinden.</value>
-	</data>
+    <value>Kan het updatebestand niet vinden.</value>
+  </data>
 	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
-		<value>Kan geen versiegegevens ophalen.</value>
-	</data>
+    <value>Kan geen versiegegevens ophalen.</value>
+  </data>
 	<data name="NoInternetConnectionAvailable" xml:space="preserve">
-		<value>Er is geen internetverbinding beschikbaar.</value>
-	</data>
+    <value>Er is geen internetverbinding beschikbaar.</value>
+  </data>
 	<data name="CannotInstallUpdate" xml:space="preserve">
-		<value>Kan update niet installeren.</value>
-	</data>
+    <value>Kan update niet installeren.</value>
+  </data>
 	<data name="MandatoryUpdateFailed" xml:space="preserve">
-		<value>Verplichte update is mislukt!</value>
-	</data>
+    <value>Verplichte update is mislukt!</value>
+  </data>
 	<data name="WarningUsernameSize" xml:space="preserve">
-		<value>Gebruikersnaam moet ten minste 3 tekens bevatten.</value>
-	</data>
+    <value>Gebruikersnaam moet ten minste 3 tekens bevatten.</value>
+  </data>
 	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
-		<value>De verplichte pakketupdate is mislukt.
+    <value>De verplichte pakketupdate is mislukt.
 Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
-	</data>
+  </data>
 	<data name="Remember" xml:space="preserve">
-		<value>Onthouden</value>
-	</data>
+    <value>Onthouden</value>
+  </data>
 	<data name="WarningEmailExists" xml:space="preserve">
-		<value>Ingevuld e-mailadres bestaat al. Geef een nieuwe op en probeer het opnieuw.</value>
-	</data>
+    <value>Ingevuld e-mailadres bestaat al. Geef een nieuwe op en probeer het opnieuw.</value>
+  </data>
 	<data name="WarningNameExists" xml:space="preserve">
-		<value>De ingevoerde naam bestaat al. Geef een nieuwe op en probeer het opnieuw.</value>
-	</data>
+    <value>De ingevoerde naam bestaat al. Geef een nieuwe op en probeer het opnieuw.</value>
+  </data>
 	<data name="WarningRegistrationExists" xml:space="preserve">
-		<value>De combinatie van naam en e-mailadres bestaat al. Geef een nieuwe naam en/of e-mailadres op en probeer het opnieuw.</value>
-	</data>
+    <value>De combinatie van naam en e-mailadres bestaat al. Geef een nieuwe naam en/of e-mailadres op en probeer het opnieuw.</value>
+  </data>
 	<data name="EnterNote" xml:space="preserve">
-		<value>Vul hier een notitie in...</value>
-	</data>
+    <value>Vul hier een notitie in...</value>
+  </data>
 	<data name="Skip" xml:space="preserve">
-		<value>Overslaan</value>
-	</data>
+    <value>Overslaan</value>
+  </data>
 	<data name="WarningSynchronizationRestart" xml:space="preserve">
-		<value>Om te kunnen synchroniseren, moet u de applicatie opnieuw opstarten om de synchronisatie-instellingen toe te passen</value>
-	</data>
+    <value>Om te kunnen synchroniseren, moet u de applicatie opnieuw opstarten om de synchronisatie-instellingen toe te passen</value>
+  </data>
 	<data name="TakePhoto" xml:space="preserve">
-		<value>Maak een foto</value>
-	</data>
+    <value>Maak een foto</value>
+  </data>
 	<data name="Browse" xml:space="preserve">
-		<value>Bladeren</value>
-	</data>
+    <value>Bladeren</value>
+  </data>
 	<data name="Paste" xml:space="preserve">
-		<value>Plakken</value>
-	</data>
+    <value>Plakken</value>
+  </data>
 	<data name="SelectCountry" xml:space="preserve">
-		<value>Selecteer land</value>
-	</data>
+    <value>Selecteer land</value>
+  </data>
 	<data name="SelectTimeZone" xml:space="preserve">
-		<value>Selecteer tijdzone</value>
+    <value>Selecteer tijdzone</value>
+  </data>
+	<data name="CreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+    <value>CreateBuilder moet worden aangeroepen vóór CreateServiceProvider</value>
+  </data>
+	<data name="NullIServiceProvider" xml:space="preserve">
+    <value>De IServiceProviderFactory heeft een null IServiceProvider geretourneerd</value>
+  </data>
+	<data name="ResolverReturnedNull" xml:space="preserve">
+    <value>De resolver retourneerde een null IServiceProviderFactory</value>
+  </data>
+	<data name="WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+    <value>Het vervangen van IHostApplicationLifetime wordt niet ondersteund.</value>
+  </data>
+	<data name="DefaultException" xml:space="preserve">
+    <value>Er ging iets mis.
+Neem contact op met ondersteuning.</value>
+  </data>
+	<data name="System" xml:space="preserve">
+		<value>Systeem</value>
 	</data>
 </root>
