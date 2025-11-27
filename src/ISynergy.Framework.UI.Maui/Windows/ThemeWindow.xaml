@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
-    xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
     xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
     Title="{Binding Title}"
@@ -38,26 +37,26 @@
                         Grid.Column="1"
                         HorizontalOptions="Center"
                         GroupName="Theme"
-                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Default}, Mode=TwoWay, FallbackValue=true}" />
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Default}}" />
                     <RadioButton
                         Content="{m:GetString Light}"
                         Grid.Column="2"
                         HorizontalOptions="Center"
                         GroupName="Theme"
-                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Light}, Mode=TwoWay, FallbackValue=false}" />
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Light}}" />
                     <RadioButton
                         Content="{m:GetString Dark}"
                         Grid.Column="3"
                         HorizontalOptions="Center"
                         GroupName="Theme"
-                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Dark}, Mode=TwoWay, FallbackValue=false}" />
+                        IsChecked="{Binding SelectedItem.Theme, Converter={converters:RadioButtonToThemeConverter Theme=Dark}}" />
                 </Grid>
 
                 <!-- Color Grid -->
                 <CollectionView
                     HorizontalOptions="Center"
                     ItemsSource="{Binding ThemeColors.Colors}"
-                    SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay}"
+                    SelectedItem="{Binding SelectedItem.Color}"
                     SelectionMode="Single">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical" Span="8" />
