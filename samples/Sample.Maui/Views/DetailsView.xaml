@@ -187,9 +187,9 @@
 
         <Grid Grid.RowSpan="2" IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
             <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.8" />
-            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                 <Label
-                    FontSize="Default"
+                    FontSize="Caption"
                     IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
                     Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}"
                     TextColor="{DynamicResource Primary}" />
@@ -197,7 +197,7 @@
                     x:Name="IsBusyProgressRing"
                     IsRunning="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
                     Color="{DynamicResource Primary}" />
-            </StackLayout>
+            </VerticalStackLayout>
         </Grid>
     </Grid>
 </c:View>

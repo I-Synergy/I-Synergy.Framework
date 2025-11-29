@@ -53,10 +53,12 @@ public class EnumToBooleanConverter : IValueConverter
     /// <exception cref="ArgumentException">ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized()</exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (parameter is string enumString)
+        // Only update the bound value when this RadioButton is checked
+        if (value is bool isChecked && isChecked && parameter is string enumString)
             return Enum.Parse(EnumType, enumString);
 
-        throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
+        // Return DoNothing to prevent unchecked RadioButtons from updating the binding
+        return Binding.DoNothing;
     }
 }
 

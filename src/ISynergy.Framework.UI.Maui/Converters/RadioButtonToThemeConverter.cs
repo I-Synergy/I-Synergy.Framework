@@ -10,13 +10,18 @@ public class RadioButtonToThemeConverter : IMarkupExtension<RadioButtonToThemeCo
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is Themes theme)
-            return (theme == Theme);
+            return theme == Theme;
 
-        return false;
+        return Theme == Themes.Default;
     }
 
-    public object ConvertBack(object? isChecked, Type targetType, object? parameter, CultureInfo culture)
-        => throw new NotImplementedException();
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is bool isChecked && isChecked)
+            return Theme;
+
+        return Binding.DoNothing;
+    }
 
     public RadioButtonToThemeConverter ProvideValue(IServiceProvider serviceProvider) => this;
 
