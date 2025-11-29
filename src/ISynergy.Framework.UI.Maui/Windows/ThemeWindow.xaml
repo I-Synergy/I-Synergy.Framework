@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
-    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
     xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
     Title="{Binding Title}"
@@ -22,8 +22,9 @@
 
             <VerticalStackLayout Spacing="12">
                 <!-- Theme Selection (System, Light, Dark) -->
-                <!-- Disable compiled/typed bindings here to avoid CS8820 from generated static lambdas: x:DataType="{x:Null}"-->
-                <Grid HorizontalOptions="Center">
+                <!-- Disable compiled bindings to work around .NET 10 MAUI source generator bug (CS8820) -->
+                <!-- The bug occurs when binding to nullable paths like SelectedItem.Theme -->
+                <Grid HorizontalOptions="Center" x:DataType="{x:Null}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition />
@@ -53,10 +54,12 @@
                 </Grid>
 
                 <!-- Color Grid -->
+                <!-- Disable compiled bindings for CollectionView with nullable SelectedItem.Color binding -->
                 <CollectionView
+                    x:DataType="{x:Null}"
                     HorizontalOptions="Center"
                     ItemsSource="{Binding ThemeColors.Colors}"
-                    SelectedItem="{Binding SelectedItem.Color}"
+                    SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay}"
                     SelectionMode="Single">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical" Span="8" />

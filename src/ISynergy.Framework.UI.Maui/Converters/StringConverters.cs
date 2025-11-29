@@ -80,14 +80,14 @@ public class StringToBooleanConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if ((bool?)value ?? false)
-        {
-            return parameter?.ToString();
-        }
+        // Only update the bound value when this is checked/true
+        if (value is bool isChecked && isChecked)
+            return parameter?.ToString() ?? string.Empty;
 
-        return string.Empty;
+        // Return DoNothing to prevent unchecked controls from updating the binding
+        return Binding.DoNothing;
     }
 }
 

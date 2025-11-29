@@ -453,6 +453,8 @@
         </Setter>
     </Style>
 
+    <!-- Note: Frame is obsolete as of .NET 9. Use Border instead.
+         This style is kept for backward compatibility but should be migrated to Border. -->
     <Style TargetType="Frame">
         <Setter Property="HasShadow" Value="False" />
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray600}}" />
@@ -496,9 +498,15 @@
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
+    <!-- Note: ListView is deprecated as of .NET 9. Use CollectionView instead.
+         This style is kept for backward compatibility but should be migrated to CollectionView. -->
     <Style TargetType="ListView">
         <Setter Property="SeparatorColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray500}}" />
         <Setter Property="RefreshControlColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
+    </Style>
+
+    <Style TargetType="CollectionView">
+        <Setter Property="BackgroundColor" Value="Transparent" />
     </Style>
 
     <Style TargetType="Picker">
@@ -788,30 +796,30 @@
         </Grid>
     </DataTemplate>
 
+    <!-- Note: ViewCell is deprecated along with ListView/TableView as of .NET 9.
+         Use CollectionView with regular DataTemplates instead. -->
     <DataTemplate x:Key="ShellMenuItemTemplate" x:DataType="models:NavigationItem">
-        <ViewCell>
-            <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand">
-                <Label
-                    TextColor="{AppThemeBinding Light={DynamicResource Primary},
-                                                Dark={DynamicResource White}}"
-                    VerticalOptions="FillAndExpand"
-                    VerticalTextAlignment="Center">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span
-                        CharacterSpacing="10"
-                        FontFamily="fontawesome"
-                        FontSize="{DynamicResource DefaultFontSize}"
-                        Text="{Binding Icon}" />
-                            <Span FontSize="{DynamicResource DefaultFontSize}" Text="{Binding Name}" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </StackLayout>
-        </ViewCell>
+        <Grid Padding="15,10" HorizontalOptions="Fill">
+            <Label
+                TextColor="{AppThemeBinding Light={DynamicResource Primary},
+                                            Dark={DynamicResource White}}"
+                VerticalOptions="Fill"
+                VerticalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span
+                            CharacterSpacing="10"
+                            FontFamily="fontawesome"
+                            FontSize="{DynamicResource DefaultFontSize}"
+                            Text="{Binding Icon}" />
+                        <Span FontSize="{DynamicResource DefaultFontSize}" Text="{Binding Name}" />
+                    </FormattedString>
+                </Label.FormattedText>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" />
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
     </DataTemplate>
 
     <Style x:Key="DefaultLineStyle" TargetType="Line">
