@@ -41,11 +41,6 @@
 		<MtouchDebug>true</MtouchDebug>
 	</PropertyGroup>
 
-	<!--<PropertyGroup 
-		Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" >
-		<WindowsSdkPackageVersion>10.0.26100.46</WindowsSdkPackageVersion>
-	</PropertyGroup>-->
-
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" />
@@ -126,6 +121,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\DetailView.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SlideShowView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\SyncView.xaml">
 			<Generator>MSBuild:Compile</Generator>
