@@ -244,3 +244,62 @@ stages:
                   packagesToPush: '$(Pipeline.Workspace)/Output/*.nupkg'
                   nuGetFeedType: 'external'
                   publishFeedCredentials: 'Nuget.org'
+
+    - job: GitHubReleaseJob
+      displayName: 'Create GitHub Tag and Release'
+      dependsOn: DeployNuget
+      condition: succeeded()
+      steps:
+        - checkout: self
+          fetchDepth: 0
+          persistCredentials: true
+
+        - task: PowerShell@2
+          displayName: 'Generate Release Notes'
+          inputs:
+            targetType: 'inline'
+            script: |
+              # Get the previous tag
+              $previousTag = git describe --tags --abbrev=0 2>$null
+              
+              if ($LASTEXITCODE -ne 0) {
+                # No previous tag, get all commits
+                $commitLog = git log --oneline --pretty=format:"- %h %s"
+              } else {
+                # Get commits since previous tag
+                $commitLog = git log "$previousTag..HEAD" --oneline --pretty=format:"- %h %s"
+              }
+              
+              # Create release notes file
+              $releaseNotes = @"
+              # Release v$(VersionPackage)
+              
+              ## Changes
+              $commitLog
+              "@
+              
+              $releaseNotes | Out-File -FilePath "$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md" -Encoding UTF8
+              Write-Host "Release notes generated:"
+              Write-Host $releaseNotes
+
+        - task: PowerShell@2
+          displayName: 'Create Git Tag'
+          inputs:
+            targetType: 'inline'
+            script: |
+              git config user.email "azure-pipeline@i-synergy.com"
+              git config user.name "Azure Pipeline"
+              git tag -a "v$(VersionPackage)" -m "Release v$(VersionPackage)" $(Build.SourceVersion)
+              git push origin "v$(VersionPackage)"
+
+        - task: GitHubRelease@1
+          displayName: 'Create GitHub Release'
+          inputs:
+            gitHubConnection: 'GitHub'
+            repositoryName: '$(Build.Repository.Name)'
+            action: 'create'
+            target: '$(Build.SourceVersion)'
+            tagSource: 'gitTag'
+            tag: 'v$(VersionPackage)'
+            releaseNotesFilePath: '$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md'
+            changeLogCompareToRelease: 'lastRelease'
