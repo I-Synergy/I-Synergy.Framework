@@ -24,7 +24,6 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('windows10.0'))">
-		<SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 

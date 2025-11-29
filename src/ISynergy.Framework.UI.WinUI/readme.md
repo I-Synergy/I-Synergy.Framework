@@ -9,7 +9,7 @@ Modern Windows UI framework for building next-generation Windows applications wi
 
 ## Features
 
-- **WinUI 3 support** for Windows 10 (19041+) and Windows 11
+- **WinUI 3 support** for Windows 10 (26100+) and Windows 11
 - **Modern Fluent Design** with Mica, Acrylic, and Material effects
 - **Dialog service** with ContentDialog and MessageDialog support
 - **Navigation service** with Frame-based navigation
@@ -453,7 +453,7 @@ Using CommunityToolkit.WinUI.Behaviors:
 ## Platform Requirements
 
 - **Target Framework**: net10.0-windows10.0.26100.0
-- **Minimum Version**: Windows 10.0.19041.0 (Version 2004)
+- **Minimum Version**: Windows 10.0.26100.0 (Version 2004)
 - **Recommended**: Windows 11 for best experience
 - **Architecture**: x86, x64, ARM64
 
