@@ -631,7 +631,7 @@ The framework automatically configures multiple fonts:
 - **Android**: API 21 (Lollipop) or higher
 - **iOS**: iOS 11.0 or higher
 - **macOS**: macOS 10.15 (Catalina) or higher
-- **Windows**: Windows 10.0.19041.0 or higher
+- **Windows**: Windows 10.0.26100.0 or higher
 
 ## Documentation
 

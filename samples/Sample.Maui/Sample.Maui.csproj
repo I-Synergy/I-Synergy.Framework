@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
-			$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
+			$(TargetFrameworks);net10.0-windows10.0.26100.0</TargetFrameworks>
 
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is
@@ -14,8 +14,6 @@
 		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
-		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Sample</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -32,33 +30,25 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<SupportedOSPlatformVersion
-			Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
-			15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion
-			Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-			15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion
-			Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-			21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion
-			Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-			10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion
-			Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-			10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">16.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">35.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<!-- This allows breakpoints to be hit when debugging!-->
-	<PropertyGroup
-		Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' And '$(Configuration)' == 'Debug'">
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' And '$(Configuration)' == 'Debug'">
 		<MtouchDebug>true</MtouchDebug>
 	</PropertyGroup>
 
+	<!--<PropertyGroup 
+		Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" >
+		<WindowsSdkPackageVersion>10.0.26100.46</WindowsSdkPackageVersion>
+	</PropertyGroup>-->
+
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg"
-			ForegroundFile="Resources\AppIcon\appiconfg.svg" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" />
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="800,106" />
 		<!-- Images -->
@@ -89,14 +79,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-		<ProjectReference
-			Include="..\..\src\ISynergy.Framework.OpenTelemetry.ApplicationInsights\ISynergy.Framework.OpenTelemetry.ApplicationInsights.csproj" />
-		<ProjectReference
-			Include="..\..\src\ISynergy.Framework.OpenTelemetry.Sentry\ISynergy.Framework.OpenTelemetry.Sentry.csproj" />
-		<ProjectReference
-			Include="..\..\src\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
-		<ProjectReference
-			Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.ApplicationInsights\ISynergy.Framework.OpenTelemetry.ApplicationInsights.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry.Sentry\ISynergy.Framework.OpenTelemetry.Sentry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
+		<ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 		<ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	</ItemGroup>
