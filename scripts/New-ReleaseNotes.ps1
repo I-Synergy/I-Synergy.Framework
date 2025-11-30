@@ -48,9 +48,11 @@ if ($commitLog -is [string]) {
 $releaseNotes = "# Release v$BuildNumber`n`n## Changes`n`n$commitLogText"
 
 $outputDir = Split-Path -Parent $OutputPath
-if (-not (Test-Path $outputDir)) {
-    New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
-    Write-Host "Created directory: $outputDir"
+if (-not [string]::IsNullOrWhiteSpace($outputDir)) {
+    if (-not (Test-Path $outputDir)) {
+        New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
+        Write-Host "Created directory: $outputDir"
+    }
 }
 
 $releaseNotes | Out-File -FilePath $OutputPath -Encoding UTF8
