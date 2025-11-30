@@ -45,7 +45,7 @@
                 TextColor="{DynamicResource Primary}" />
 
             <Label
-                FontSize="Default"
+                FontSize="Body"
                 HorizontalOptions="Center"
                 LineBreakMode="WordWrap"
                 SemanticProperties.HeadingLevel="Level2"

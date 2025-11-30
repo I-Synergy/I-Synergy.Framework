@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
 
@@ -49,14 +49,15 @@ public class EnumToBooleanConverter : IValueConverter
     /// <param name="targetType">Type of the target.</param>
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
-    /// <exception cref="ArgumentException">ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized()</exception>
+    /// <returns>The parsed enum value when checked, or <see cref="Binding.DoNothing"/> when unchecked.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (parameter is string enumString)
+        // Only update the bound value when this RadioButton is checked
+        if (value is bool isChecked && isChecked && parameter is string enumString)
             return Enum.Parse(EnumType, enumString);
 
-        throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
+        // Return DoNothing to prevent unchecked RadioButtons from updating the binding
+        return Binding.DoNothing;
     }
 }
 

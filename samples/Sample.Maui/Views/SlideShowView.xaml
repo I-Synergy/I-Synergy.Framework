@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View 
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Sample.Views.SlideShowView"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    x:DataType="viewmodels:SlideShowViewModel"
+    Title="SlideShowView">
+
+    <c:View.Resources>
+        <converters:UriToImageSourceConverter x:Key="UriToImageSourceConverter"/>
+    </c:View.Resources>
+
+    <Grid
+        BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}">
+        <!-- Main image with fallback to placeholder when null/empty -->
+        <Image 
+            Source="{Binding SelectedItem.ImageUri, Mode=OneWay, Converter={StaticResource UriToImageSourceConverter}}"
+            Aspect="AspectFill" />
+        
+        <!-- Placeholder overlay shown when no image is available -->
+        <StackLayout
+            Padding="20"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            IsVisible="{Binding SelectedItem, Converter={StaticResource NullToIsVisibleConverter}}">
+            <Label
+                Text="No Image Available"
+                FontSize="Large"
+                FontAttributes="Bold"
+                HorizontalTextAlignment="Center"
+                TextColor="{AppThemeBinding Light={DynamicResource Gray600}, Dark={DynamicResource Gray400}}" />
+            <Label
+                Text="The selected item does not have an image"
+                FontSize="Body"
+                HorizontalTextAlignment="Center"
+                Margin="0,8,0,0"
+                TextColor="{AppThemeBinding Light={DynamicResource Gray500}, Dark={DynamicResource Gray500}}" />
+        </StackLayout>
+    </Grid>
+</c:View>

@@ -45,23 +45,9 @@ stages:
         - task: PowerShell@2
           displayName: Set Version Variables
           inputs:
-            targetType: 'inline'
-            script: |
-              $buildNumber = $Env:BUILD_BUILDNUMBER
-              $parts = $buildNumber.Split('.')
-              
-              $versionMajor = $parts[0]    # yyyy
-              $versionMinor = $parts[1]    # 1DDD
-              $versionRevision = $parts[2]  # HHmm
-              $versionBuild = if ($env:BUILD_REASON -eq 'PullRequest') { (Get-Date).Second } else { 0 }
-              
-              $versionNumber = "$versionMajor.$versionMinor.$versionRevision.$versionBuild"
-              $versionInformational = "$versionMajor.$versionMinor.$versionRevision"
-              $versionPackage = if ($env:BUILD_REASON -eq 'PullRequest') { "$versionNumber-preview" } else { $versionNumber }
-              
-              Write-Host "##vso[task.setvariable variable=VersionNumber]$versionNumber"
-              Write-Host "##vso[task.setvariable variable=VersionInformational]$versionInformational"
-              Write-Host "##vso[task.setvariable variable=VersionPackage]$versionPackage"
+            targetType: 'filePath'
+            filePath: '$(Build.SourcesDirectory)/scripts/Set-VersionVariables.ps1'
+            arguments: '-BuildNumber "$(Build.BuildNumber)" -BuildReason "$(Build.Reason)"'
 
         - task: Assembly-Info-NetCore@3
           displayName: 'Set Release versions'
@@ -93,7 +79,7 @@ stages:
           displayName: 'Install MAUI workloads'
           inputs:
             command: custom
-            custom: 'workload '
+            custom: 'workload'
             arguments: 'install maui --source https://api.nuget.org/v3/index.json'
 
         - task: DownloadSecureFile@1
@@ -117,7 +103,7 @@ stages:
             solution: 'I-Synergy.Framework.slnx'
             msbuildArchitecture: 'x64'
             configuration: $(BuildConfiguration)
-            msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true /nr:false' #this flag is important to avoid DLL lock for the 2nd build/analysis
+            msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true /nr:false'
 
         - task: DotNetCoreCLI@2
           displayName: 'Test I-Synergy Framework'
@@ -125,8 +111,9 @@ stages:
             command: test
             projects: 'I-Synergy.Framework.slnx'
             arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-       
+
         - task: CopyFiles@2
+          displayName: 'Copy NuGet packages'
           inputs:
             SourceFolder: '$(Build.SourcesDirectory)\packages'
             Contents: '*'
@@ -159,65 +146,6 @@ stages:
           inputs:
             pollingTimeoutSec: '300'
 
-  # - stage: DocStage
-  #   displayName: 'Documentation'
-  #   dependsOn: TestStage
-  #   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-  #   jobs:
-  #   - job: DocJob
-  #     displayName: 'Create API Documentation'
-  #     steps:
-  #       - task: UseDotNet@2
-  #         inputs:
-  #           packageType: 'sdk'
-  #           version: 8.0.x
-  #           useGlobalJson: false
-  #           includePreviewVersions: true
-
-  #       - task: ChocolateyToolInstaller@0
-  #         inputs:
-  #           force: true
-
-  #       - task: ChocolateyCommand@0
-  #         inputs:
-  #           command: 'install'
-  #           installPackageId: 'wkhtmltopdf'
-
-  #       - task: DotNetCoreCLI@2
-  #         displayName: 'Build Framework Documentation'
-  #         inputs:
-  #           command: build
-  #           projects: 'docs\ISynergy.Framework\ISynergy.Framework.csproj'
-  #           arguments: '-c $(BuildConfiguration)'
-
-  #       - task: AzureCLI@2
-  #         displayName: 'Delete Existing Files'
-  #         inputs:
-  #           azureSubscription: 'Azure'
-  #           scriptType: 'pscore'
-  #           scriptLocation: 'inlineScript'
-  #           inlineScript: az storage blob delete-batch --source '$web' --account-name '$(AzureStorageAccountName)' --account-key '$(AzureStorageAccountKey)'
-            
-  #       - task: AzureCLI@2
-  #         displayName: 'Upload new files'
-  #         inputs:
-  #           azureSubscription: 'Azure'
-  #           scriptType: 'ps'
-  #           scriptLocation: 'inlineScript'
-  #           inlineScript: |
-  #             $sourcePath = "docs\ISynergy.Framework\_site"
-  #             az storage blob upload-batch --destination '$web' --source $sourcePath --account-name '$(AzureStorageAccountName)' --account-key '$(AzureStorageAccountKey)'
-
-        #- task: AzureCLI@2
-        #  displayName: 'Purge CDN'
-        #  inputs:
-        #    azureSubscription: 'Azure'
-        #    scriptType: 'ps'
-        #    scriptLocation: 'inlineScript'
-        #    inlineScript: |
-        #      az cdn endpoint purge -g 'i-synergy' -n '$(AzureCdnEndpoint)' --profile-name '$(AzureCdnProfile)' --content-paths '/*' --no-wait
-        #  continueOnError: true
-
   - stage: Release
     displayName: 'Release'
     dependsOn: BuildStage
@@ -231,8 +159,9 @@ stages:
             artifact: 'Output'
 
     - deployment: DeployNuget
-      displayName: 'Deploy to Artifacts'
+      displayName: 'Deploy to NuGet'
       environment: $(Environment)
+      dependsOn: ArtifactsJob
       strategy:
         runOnce:
           deploy:
@@ -244,3 +173,39 @@ stages:
                   packagesToPush: '$(Pipeline.Workspace)/Output/*.nupkg'
                   nuGetFeedType: 'external'
                   publishFeedCredentials: 'Nuget.org'
+
+    - job: GitHubReleaseJob
+      displayName: 'Create GitHub Tag and Release'
+      dependsOn: DeployNuget
+      condition: and(succeeded('DeployNuget'), ne(variables['Build.Reason'], 'PullRequest'))
+      steps:
+        - checkout: self
+          fetchDepth: 0
+          persistCredentials: true
+
+        - task: PowerShell@2
+          displayName: 'Generate Release Notes'
+          inputs:
+            targetType: 'filePath'
+            filePath: '$(Build.SourcesDirectory)/scripts/New-ReleaseNotes.ps1'
+            arguments: '-BuildNumber "$(Build.BuildNumber)" -OutputPath "$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md"'
+
+        - task: PowerShell@2
+          displayName: 'Create Git Tag'
+          inputs:
+            targetType: 'filePath'
+            filePath: '$(Build.SourcesDirectory)/scripts/New-GitTag.ps1'
+            arguments: '-BuildNumber "$(Build.BuildNumber)" -SourceVersion "$(Build.SourceVersion)"'
+
+        - task: GitHubRelease@1
+          displayName: 'Create GitHub Release'
+          inputs:
+            gitHubConnection: 'GitHub'
+            repositoryName: '$(Build.Repository.Name)'
+            action: 'create'
+            target: '$(Build.SourceVersion)'
+            tagSource: 'gitTag'
+            tag: 'v$(Build.BuildNumber)'
+            releaseNotesFilePath: '$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md'
+            changeLogCompareToRelease: 'lastFullRelease'
+            isPreRelease: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
