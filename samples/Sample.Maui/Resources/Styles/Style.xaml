@@ -507,6 +507,11 @@
 
     <Style TargetType="CollectionView">
         <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="ItemsLayout">
+            <Setter.Value>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="4" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="Picker">
@@ -807,7 +812,7 @@
                 HorizontalOptions="Start"
                 TextColor="{AppThemeBinding Light={DynamicResource Primary},
                                             Dark={DynamicResource White}}"
-                VerticalOptions="Fill"
+                VerticalOptions="Center"
                 VerticalTextAlignment="Center">
                 <Label.FormattedText>
                     <FormattedString>

@@ -1,12 +1,21 @@
 param(
     [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
     [string]$BuildNumber,
     
     [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
     [string]$OutputPath
 )
 
 $ErrorActionPreference = 'Continue'
+
+# Validate we're in a git repository
+$null = git rev-parse --is-inside-work-tree 2>$null
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "##vso[task.logissue type=error]Not inside a git repository or git is not available"
+    exit 1
+}
 
 Write-Host "Attempting to fetch previous release tag..."
 
@@ -27,16 +36,23 @@ if ([string]::IsNullOrWhiteSpace($previousTag)) {
 }
 
 $commitLog = @()
+$gitLogFailed = $false
+
 if ([string]::IsNullOrWhiteSpace($previousTag)) {
     Write-Host "Collecting recent commits for release notes..."
     $commitLog = git log -50 --pretty=format:"- %h %s" 2>$null
+    $gitLogFailed = $LASTEXITCODE -ne 0
 } else {
     Write-Host "Collecting commits since tag '$previousTag'..."
     $commitLog = git log "$previousTag..HEAD" --pretty=format:"- %h %s" 2>$null
+    $gitLogFailed = $LASTEXITCODE -ne 0
 }
 
-if ($LASTEXITCODE -ne 0 -or $null -eq $commitLog -or ($commitLog -is [array] -and $commitLog.Count -eq 0) -or ($commitLog -is [string] -and [string]::IsNullOrWhiteSpace($commitLog))) {
-    $commitLog = @("- No commits found or unable to retrieve commit history.")
+if ($gitLogFailed) {
+    Write-Host "##vso[task.logissue type=warning]Git log command failed. Release notes may be incomplete."
+    $commitLog = @("- Unable to retrieve commit history (git command failed).")
+} elseif ($null -eq $commitLog -or ($commitLog -is [array] -and $commitLog.Count -eq 0) -or ($commitLog -is [string] -and [string]::IsNullOrWhiteSpace($commitLog))) {
+    $commitLog = @("- No commits found since last release.")
 }
 
 if ($commitLog -is [string]) {
@@ -45,7 +61,9 @@ if ($commitLog -is [string]) {
     $commitLogText = $commitLog -join [Environment]::NewLine
 }
 
-$releaseNotes = "# Release v$BuildNumber`n`n## Changes`n`n$commitLogText"
+# Strip leading 'v' from BuildNumber if present to avoid 'vv' prefix
+$cleanBuildNumber = $BuildNumber.TrimStart('v')
+$releaseNotes = "# Release v$cleanBuildNumber`n`n## Changes`n`n$commitLogText"
 
 $outputDir = Split-Path -Parent $OutputPath
 if (-not [string]::IsNullOrWhiteSpace($outputDir)) {

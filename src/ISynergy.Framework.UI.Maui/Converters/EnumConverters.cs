@@ -49,7 +49,7 @@ public class EnumToBooleanConverter : IValueConverter
     /// <param name="targetType">Type of the target.</param>
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
-    /// <returns>System.Object. Returns the parsed enum value if the RadioButton is checked, or Binding.DoNothing to prevent unchecked controls from updating the binding.</returns>
+    /// <returns>The parsed enum value when checked, or <see cref="Binding.DoNothing"/> when unchecked.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         // Only update the bound value when this RadioButton is checked
