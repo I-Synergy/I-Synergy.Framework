@@ -959,7 +959,13 @@
         TargetType="Button">
         <Setter Property="MinimumWidthRequest" Value="64" />
         <Setter Property="ToolTipProperties.Text" Value="{m:GetString Refresh}" />
-        <Setter Property="Text" Value="{OnPlatform WinUI={m:GetString Refresh}}" />
+        <Setter Property="Text">
+            <Setter.Value>
+                <OnPlatform x:TypeArguments="x:String">
+                    <On Platform="WinUI" Value="{m:GetString Refresh}" />
+                </OnPlatform>
+            </Setter.Value>
+        </Setter>
         <Setter Property="ImageSource">
             <FontImageSource
                 FontFamily="FontAwesomeRegular"
