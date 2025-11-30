@@ -62,7 +62,6 @@ stages:
             InformationalVersion: '$(VersionInformational)'
             PackageVersion: '$(VersionPackage)'
             UpdateBuildNumber: '$(VersionPackage)'
-            AddBuildTag: 'v$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
           displayName: 'Install NuGet 7.0.0'
@@ -205,7 +204,7 @@ stages:
             action: 'create'
             target: '$(Build.SourceVersion)'
             tagSource: 'gitTag'
-            tag: 'v$(Build.BuildNumber)'
+            tag: '$(Build.BuildNumber)'
             releaseNotesFilePath: '$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md'
             changeLogCompareToRelease: 'lastFullRelease'
             isPreRelease: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
