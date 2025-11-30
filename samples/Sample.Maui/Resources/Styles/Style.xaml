@@ -807,7 +807,7 @@
                 HorizontalOptions="Start"
                 TextColor="{AppThemeBinding Light={DynamicResource Primary},
                                             Dark={DynamicResource White}}"
-                VerticalOptions="Fill"
+                VerticalOptions="Center"
                 VerticalTextAlignment="Center">
                 <Label.FormattedText>
                     <FormattedString>
