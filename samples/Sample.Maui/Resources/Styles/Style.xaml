@@ -800,7 +800,11 @@
          Use CollectionView with regular DataTemplates instead. -->
     <DataTemplate x:Key="ShellMenuItemTemplate" x:DataType="models:NavigationItem">
         <Grid Padding="15,10" HorizontalOptions="Fill">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" />
+            </Grid.GestureRecognizers>
             <Label
+                HorizontalOptions="Start"
                 TextColor="{AppThemeBinding Light={DynamicResource Primary},
                                             Dark={DynamicResource White}}"
                 VerticalOptions="Fill"
@@ -815,9 +819,6 @@
                         <Span FontSize="{DynamicResource DefaultFontSize}" Text="{Binding Name}" />
                     </FormattedString>
                 </Label.FormattedText>
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" />
-                </Label.GestureRecognizers>
             </Label>
         </Grid>
     </DataTemplate>

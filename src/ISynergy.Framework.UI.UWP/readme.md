@@ -7,9 +7,13 @@ Universal Windows Platform (UWP) UI framework for building Windows 10 applicatio
 [![.NET](https://img.shields.io/badge/.NET-10.0-blue.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010-blue.svg)](https://docs.microsoft.com/windows/uwp/)
 
+> [!WARNING]
+> **Breaking Change (v2.0.0+)**: Minimum Windows version raised to 10.0.19041.0 (Version 2004).  
+> See [Platform Requirements](#platform-requirements) and [Migration Guide](#migration-guide) below.
+
 ## Features
 
-- **UWP support** for Windows 10 (17763+) devices
+- **UWP support** for Windows 10 (19041+) devices
 - **Dialog service** with ContentDialog and MessageDialog support
 - **Navigation service** with Frame-based navigation
 - **Theme service** with dynamic accent colors
@@ -224,8 +228,23 @@ public class ProductViewModel : ViewModel
 ## Platform Requirements
 
 - **Target Framework**: net10.0-windows10.0.26100.0
-- **Minimum Version**: Windows 10.0.17763.0 (Version 1809)
+- **Minimum Version**: Windows 10.0.19041.0 (Version 2004)
+  - Previous minimum: Windows 10.0.17763.0 (Version 1809)
+  - Changed in: v2.0.0+ ([`ISynergy.Framework.UI.UWP.csproj` line 4](ISynergy.Framework.UI.UWP.csproj#L4))
 - **Architecture**: x86, x64, ARM64
+
+### Migration Guide
+
+If your application targets Windows 10 Version 1809 (10.0.17763.0), you have the following options:
+
+1. **Update Target OS**: Update your `Package.appxmanifest` `TargetDeviceFamily` to minimum version `10.0.19041.0`
+   ```xml
+   <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+   ```
+
+2. **Use Previous Version**: Continue using v1.x of this package if you need to support Windows 10 Version 1809
+
+3. **Justification for Change**: The minimum version was raised to leverage modern Windows SDK APIs and tooling features that improve compatibility with .NET 10 and provide access to enhanced UWP platform capabilities
 
 ## Documentation
 

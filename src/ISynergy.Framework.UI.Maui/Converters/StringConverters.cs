@@ -10,14 +10,6 @@ namespace ISynergy.Framework.UI.Converters;
 /// <seealso cref="IValueConverter" />
 public class StringFormatConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts the specified value.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is null)
@@ -30,17 +22,11 @@ public class StringFormatConverter : IValueConverter
     }
 
     /// <summary>
-    /// Converts the back.
+    /// Converts the back. This converter is read-only and does not support backwards conversion.
     /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
 
@@ -63,7 +49,7 @@ public class StringToBooleanConverter : IValueConverter
     {
         var parameterString = parameter?.ToString();
         var valueString = value?.ToString();
-        
+
         if (parameterString is not null && valueString is not null && parameterString.Equals(valueString))
         {
             return true;
@@ -87,6 +73,7 @@ public class StringToBooleanConverter : IValueConverter
             return parameter?.ToString() ?? string.Empty;
 
         // Return DoNothing to prevent unchecked controls from updating the binding
+        // Note: Binding.DoNothing is of type object and is a valid return value
         return Binding.DoNothing;
     }
 }
@@ -98,14 +85,6 @@ public class StringToBooleanConverter : IValueConverter
 /// <seealso cref="IValueConverter" />
 public class StringToIsVisibleConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts the specified value.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is string stringValue && !string.IsNullOrEmpty(stringValue))
@@ -117,17 +96,11 @@ public class StringToIsVisibleConverter : IValueConverter
     }
 
     /// <summary>
-    /// Converts the back.
+    /// Converts the back. This converter is read-only and does not support backwards conversion.
     /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
 
@@ -138,14 +111,6 @@ public class StringToIsVisibleConverter : IValueConverter
 /// <seealso cref="IValueConverter" />
 public class StringToEnabledConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts the specified value.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (string.IsNullOrEmpty(value as string))
@@ -157,17 +122,11 @@ public class StringToEnabledConverter : IValueConverter
     }
 
     /// <summary>
-    /// Converts the back.
+    /// Converts the back. This converter is read-only and does not support backwards conversion.
     /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
 
@@ -178,14 +137,6 @@ public class StringToEnabledConverter : IValueConverter
 /// <seealso cref="IValueConverter" />
 public class StringToInvertEnabledConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts the specified value.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (string.IsNullOrEmpty(value as string))
@@ -197,17 +148,11 @@ public class StringToInvertEnabledConverter : IValueConverter
     }
 
     /// <summary>
-    /// Converts the back.
+    /// Converts the back. This converter is read-only and does not support backwards conversion.
     /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
 
@@ -337,14 +282,6 @@ public class StringToIntegerConverter : IValueConverter
 /// </summary>
 public class StringToColorConverter : IValueConverter
 {
-    /// <summary>
-    /// Convert
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="targetType"></param>
-    /// <param name="parameter"></param>
-    /// <param name="culture"></param>
-    /// <returns></returns>
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is string color && !string.IsNullOrEmpty(color))
@@ -354,20 +291,13 @@ public class StringToColorConverter : IValueConverter
     }
 
     /// <summary>
-    /// Convert back
+    /// Convert back. This converter is read-only and does not support backwards conversion.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="targetType"></param>
-    /// <param name="parameter"></param>
-    /// <param name="culture"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
-
 
 public class StringToUriConverter : IValueConverter
 {
@@ -379,9 +309,12 @@ public class StringToUriConverter : IValueConverter
         return null;
     }
 
+    /// <summary>
+    /// Convert back. This converter is read-only and does not support backwards conversion.
+    /// </summary>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
 
@@ -392,14 +325,6 @@ public class StringToUriConverter : IValueConverter
 /// <seealso cref="IValueConverter" />
 public class UriToImageSourceConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts the specified value.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (string.IsNullOrEmpty(value?.ToString()))
@@ -409,17 +334,11 @@ public class UriToImageSourceConverter : IValueConverter
     }
 
     /// <summary>
-    /// Converts the back.
+    /// Converts the back. This converter is read-only and does not support backwards conversion.
     /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
 
@@ -428,14 +347,6 @@ public class UriToImageSourceConverter : IValueConverter
 /// </summary>
 public class StringToColorBrushConverter : IValueConverter
 {
-    /// <summary>
-    /// Convert
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="targetType"></param>
-    /// <param name="parameter"></param>
-    /// <param name="culture"></param>
-    /// <returns></returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (!string.IsNullOrEmpty(value?.ToString()))
@@ -447,27 +358,19 @@ public class StringToColorBrushConverter : IValueConverter
             }
             catch
             {
-                // Fallback to default blue color (#FF0078D7) if color parsing fails
                 return new SolidColorBrush(Color.FromArgb("#FF0078D7"));
             }
         }
 
-        // Return default blue color as a fallback instead of transparent
         return new SolidColorBrush(Color.FromArgb("#FF0078D7"));
     }
 
     /// <summary>
-    /// Convert back
+    /// Convert back. This converter is read-only and does not support backwards conversion.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="targetType"></param>
-    /// <param name="parameter"></param>
-    /// <param name="culture"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
 
@@ -478,28 +381,14 @@ public class StringToColorBrushConverter : IValueConverter
 /// <seealso cref="IValueConverter" />
 public class StringToGeometryConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts the specified value.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The language.</param>
-    /// <returns>System.Object.</returns>
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         value?.ToString().ToGeometry();
 
     /// <summary>
-    /// Converts the back.
+    /// Converts the back. This converter is read-only and does not support backwards conversion.
     /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <param name="culture">The language.</param>
-    /// <returns>System.Object.</returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
