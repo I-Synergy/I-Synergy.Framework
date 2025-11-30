@@ -44,7 +44,7 @@
                 Text="{m:GetString LoginTitle}"
                 TextColor="{DynamicResource Primary}" />
             <Label
-                FontSize="Default"
+                FontSize="Body"
                 HorizontalOptions="Center"
                 LineBreakMode="WordWrap"
                 SemanticProperties.HeadingLevel="Level2"
@@ -97,9 +97,9 @@
             Grid.ColumnSpan="3"
             IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
             <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}" Opacity="0.8"/>
-            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                 <Label
-                    FontSize="14"
+                    FontSize="Caption"
                     IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
                     Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}"
                     TextColor="{DynamicResource Primary}" />
@@ -107,7 +107,7 @@
                     x:Name="IsBusyProgressRing"
                     IsRunning="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
                     Color="{DynamicResource Primary}" />
-            </StackLayout>
+            </VerticalStackLayout>
         </Grid>
         
         <c:ErrorPresenter

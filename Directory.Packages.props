@@ -8,7 +8,7 @@
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.5.0" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.26.0" />
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.7" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="CommunityToolkit.Maui.MediaElement" Version="7.0.0" />
     <PackageVersion Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
     <PackageVersion Include="CompareNETObjects" Version="4.84.0" />
@@ -45,13 +45,13 @@
     <PackageVersion Include="Microsoft.Extensions.ObjectPool" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.13.1" />
-    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="4.13.1" />
-    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.13.1" />
+    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.13.2" />
+    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="4.13.2" />
+    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.13.2" />
     <PackageVersion Include="Microsoft.Graph" Version="5.97.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.79.2" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.11" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175" />
@@ -62,8 +62,8 @@
     <PackageVersion Include="MSTest.TestAdapter" Version="4.0.2" />
     <PackageVersion Include="MSTest.TestFramework" Version="4.0.2" />
     <PackageVersion Include="NodaTime" Version="3.2.2" />
-    <PackageVersion Include="NSwag.AspNetCore" Version="14.6.2" />
-    <PackageVersion Include="NuGet.Commands" Version="7.0.0" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.6.3" />
+    <PackageVersion Include="NuGet.Commands" Version="7.0.1" />
     <PackageVersion Include="OpenIddict.Abstractions" Version="7.2.0" />
     <PackageVersion Include="OpenTelemetry" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.14.0" />
@@ -81,16 +81,16 @@
     <PackageVersion Include="Sentry" Version="5.16.2" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="5.16.2" />
     <PackageVersion Include="SkiaSharp" Version="3.119.1" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="31.2.12" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="31.2.12" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="31.2.15" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="31.2.15" />
   </ItemGroup>
 </Project>
