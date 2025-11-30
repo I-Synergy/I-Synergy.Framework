@@ -177,7 +177,7 @@ stages:
     - job: GitHubReleaseJob
       displayName: 'Create GitHub Tag and Release'
       dependsOn: DeployNuget
-      condition: succeeded('DeployNuget')
+      condition: and(succeeded('DeployNuget'), ne(variables['Build.Reason'], 'PullRequest'))
       steps:
         - checkout: self
           fetchDepth: 0
