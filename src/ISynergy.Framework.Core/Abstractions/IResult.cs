@@ -1,7 +1,10 @@
-﻿namespace ISynergy.Framework.Core.Abstractions;
+using System.Net;
+
+namespace ISynergy.Framework.Core.Abstractions;
 
 public interface IResult
 {
     List<string> Messages { get; set; }
     bool Succeeded { get; set; }
+    HttpStatusCode? StatusCode { get; set; }
 }
