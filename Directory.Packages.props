@@ -48,7 +48,7 @@
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.13.2" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="4.13.2" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.13.2" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.97.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.98.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.79.2" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.11" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.11" />
