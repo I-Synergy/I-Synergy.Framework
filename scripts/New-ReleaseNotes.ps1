@@ -61,9 +61,7 @@ if ($commitLog -is [string]) {
     $commitLogText = $commitLog -join [Environment]::NewLine
 }
 
-# Strip leading 'v' from BuildNumber if present to avoid 'vv' prefix
-$cleanBuildNumber = $BuildNumber.TrimStart('v')
-$releaseNotes = "# Release v$cleanBuildNumber`n`n## Changes`n`n$commitLogText"
+$releaseNotes = "# Release $BuildNumber`n`n## Changes`n`n$commitLogText"
 
 $outputDir = Split-Path -Parent $OutputPath
 if (-not [string]::IsNullOrWhiteSpace($outputDir)) {
