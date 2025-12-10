@@ -108,7 +108,6 @@
   <Folder Name="/Scripts/">
     <File Path="scripts/New-GitTag.ps1" />
     <File Path="scripts/New-ReleaseNotes.ps1" />
-    <File Path="scripts/Remove-UnusedPackages.ps1" />
     <File Path="scripts/Set-VersionVariables.ps1" />
   </Folder>
   <Folder Name="/Solution Items/">
