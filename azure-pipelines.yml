@@ -181,85 +181,25 @@ stages:
     - job: GitHubReleaseJob
       displayName: 'Create GitHub Tag and Release'
       dependsOn: DeployNuget
-      condition: succeeded('DeployNuget')
+      condition: and(succeeded('DeployNuget'), ne(variables['Build.Reason'], 'PullRequest'))
       steps:
         - checkout: self
           fetchDepth: 0
           persistCredentials: true
 
         - task: PowerShell@2
+          displayName: 'Generate Release Notes'
+          inputs:
+            targetType: 'filePath'
+            filePath: '$(Build.SourcesDirectory)/scripts/New-ReleaseNotes.ps1'
+            arguments: '-BuildNumber "$(Build.BuildNumber)" -OutputPath "$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md"'
+
+        - task: PowerShell@2
           displayName: 'Create Git Tag'
           inputs:
-            targetType: 'inline'
-            script: |
-              $tag = "v$(VersionPackage)"
-              $errorOccurred = $false
-              $errorMessage = ""
-              
-              try {
-                Write-Host "Checking if tag '$tag' already exists locally..."
-                $localTagExists = & git rev-parse "$tag" 2>$null
-                if ($LASTEXITCODE -eq 0) {
-                  $errorMessage = "ERROR: Tag '$tag' already exists locally at commit: $localTagExists"
-                  Write-Host "##vso[task.logissue type=error]$errorMessage"
-                  $errorOccurred = $true
-                }
-                
-                if (-not $errorOccurred) {
-                  Write-Host "Checking if tag '$tag' exists on remote origin..."
-                  $remoteTagExists = & git ls-remote --tags origin "$tag" 2>&1
-                  if ($LASTEXITCODE -eq 0 -and $remoteTagExists) {
-                    $errorMessage = "ERROR: Tag '$tag' already exists on remote. Remote refs: $remoteTagExists"
-                    Write-Host "##vso[task.logissue type=error]$errorMessage"
-                    $errorOccurred = $true
-                  }
-                }
-                
-                if (-not $errorOccurred) {
-                  Write-Host "Configuring Git user for tag creation..."
-                  $configEmailCmd = & git config user.email "azure-pipeline@i-synergy.com" 2>&1
-                  if ($LASTEXITCODE -ne 0) { throw "Failed to configure git user.email: $configEmailCmd" }
-                  $configNameCmd = & git config user.name "Azure Pipeline" 2>&1
-                  if ($LASTEXITCODE -ne 0) { throw "Failed to configure git user.name: $configNameCmd" }
-                  
-                  Write-Host "Creating annotated tag '$tag'..."
-                  $tagCreateOutput = & git tag -a "$tag" -m "Release $tag" $(Build.SourceVersion) 2>&1
-                  if ($LASTEXITCODE -ne 0) { throw "Failed to create tag: $tagCreateOutput" }
-                  
-                  Write-Host "Tag created successfully. Pushing to origin..."
-                  $pushOutput = & git push origin "$tag" 2>&1
-                  if ($LASTEXITCODE -ne 0) {
-                    $pushError = $pushOutput -join "`n"
-                    if ($pushError -match "403|Permission|Forbidden|Unauthorized") {
-                      $errorMessage = "AUTHENTICATION ERROR: Permission denied pushing to origin. Details: $pushError"
-                    } elseif ($pushError -match "already exists|reject|update") {
-                      $errorMessage = "COLLISION ERROR: Remote tag collision or update rejected. Details: $pushError"
-                    } elseif ($pushError -match "Connection|timeout|unreachable|No route") {
-                      $errorMessage = "NETWORK ERROR: Unable to connect to remote. Details: $pushError"
-                    } else {
-                      $errorMessage = "PUSH ERROR: Failed to push tag to origin. Details: $pushError"
-                    }
-                    Write-Host "##vso[task.logissue type=error]$errorMessage"
-                    $errorOccurred = $true
-                    Write-Host "Cleaning up local tag due to push failure..."
-                    & git tag -d "$tag" 2>&1 | Out-Null
-                  } else {
-                    Write-Host "Tag '$tag' pushed to origin successfully."
-                  }
-                }
-              } catch {
-                $errorMessage = "EXCEPTION: $_"
-                Write-Host "##vso[task.logissue type=error]$errorMessage"
-                $errorOccurred = $true
-              }
-              
-              if ($errorOccurred) {
-                Write-Host "##vso[task.complete result=Failed;]"
-                exit 1
-              }
-              
-              Write-Host "Git tag operation completed successfully."
-              exit 0
+            targetType: 'filePath'
+            filePath: '$(Build.SourcesDirectory)/scripts/New-GitTag.ps1'
+            arguments: '-BuildNumber "$(Build.BuildNumber)" -SourceVersion "$(Build.SourceVersion)"'
 
         - task: GitHubRelease@1
           displayName: 'Create GitHub Release'
@@ -269,5 +209,6 @@ stages:
             action: 'create'
             target: '$(Build.SourceVersion)'
             tagSource: 'gitTag'
-            tag: 'v$(VersionPackage)'
-            changeLogCompareToRelease: 'lastRelease'
+            tag: '$(Build.BuildNumber)'
+            releaseNotesFilePath: '$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md'
+            isPreRelease: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
