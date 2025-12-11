@@ -108,7 +108,6 @@
   <Folder Name="/Scripts/">
     <File Path="scripts/New-GitTag.ps1" />
     <File Path="scripts/New-ReleaseNotes.ps1" />
-    <File Path="scripts/Remove-UnusedPackages.ps1" />
     <File Path="scripts/Set-VersionVariables.ps1" />
   </Folder>
   <Folder Name="/Solution Items/">
@@ -125,6 +124,7 @@
     <File Path="license.md" />
     <File Path="nuget.config" />
     <File Path="README.md" />
+    <File Path="Remove-UnusedPackages.ps1" />
     <File Path="toc.yml" />
   </Folder>
   <Folder Name="/Tests/">
