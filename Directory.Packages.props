@@ -61,7 +61,7 @@
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="MSTest.TestAdapter" Version="4.0.2" />
     <PackageVersion Include="MSTest.TestFramework" Version="4.0.2" />
-    <PackageVersion Include="NodaTime" Version="3.2.2" />
+    <PackageVersion Include="NodaTime" Version="3.2.3" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.6.3" />
     <PackageVersion Include="NuGet.Commands" Version="7.0.1" />
     <PackageVersion Include="OpenIddict.Abstractions" Version="7.2.0" />
@@ -78,8 +78,8 @@
     <PackageVersion Include="Reqnroll.MSTest" Version="3.2.1" />
     <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.2.1" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry" Version="5.16.2" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="5.16.2" />
+    <PackageVersion Include="Sentry" Version="6.0.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.0.0" />
     <PackageVersion Include="SkiaSharp" Version="3.119.1" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="31.2.18" />
     <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="31.2.18" />
