@@ -50,8 +50,8 @@
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.13.2" />
     <PackageVersion Include="Microsoft.Graph" Version="5.98.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.79.2" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.20" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.20" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175" />
@@ -74,23 +74,23 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.14.0-beta.1" />
-    <PackageVersion Include="Reqnroll" Version="3.2.1" />
-    <PackageVersion Include="Reqnroll.MSTest" Version="3.2.1" />
-    <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.2.1" />
+    <PackageVersion Include="Reqnroll" Version="3.3.0" />
+    <PackageVersion Include="Reqnroll.MSTest" Version="3.3.0" />
+    <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.0" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry" Version="6.0.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.0.0" />
     <PackageVersion Include="SkiaSharp" Version="3.119.1" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="31.2.18" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="31.2.18" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="32.1.19" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="32.1.19" />
   </ItemGroup>
 </Project>
