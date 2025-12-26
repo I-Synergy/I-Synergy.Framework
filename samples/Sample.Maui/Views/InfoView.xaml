@@ -6,7 +6,7 @@
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:DataType="viewmodels:InfoViewModel"
     x:Class="Sample.Views.InfoView"
-    Title="InfoView">
+    NavigationPage.HasNavigationBar="False">
 
     <Grid>
         <VerticalStackLayout Margin="12" Spacing="12">

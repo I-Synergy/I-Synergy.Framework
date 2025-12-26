@@ -22,7 +22,7 @@ public class LoadingView : ContentPage
     private MediaElement? _backgroundMediaElement;
     private Image? _backgroundImage;
     private Button? _signInButton;
-    private Label? _messageLabel;
+    private BusyIndicator? _indicatorControl;
 
     /// <summary>
     /// Initializes a new instance of the LoadingView class.
@@ -148,19 +148,6 @@ public class LoadingView : ContentPage
     /// </summary>
     private void InitializeContent(ICommonServices commonServices, SplashScreenOptions splashScreenOptions)
     {
-        // Create label for busy message
-        _messageLabel = new Label();
-        _messageLabel.BindingContext = commonServices.BusyService;
-        _messageLabel.SetBinding(Label.TextProperty, new Binding(nameof(commonServices.BusyService.BusyMessage), BindingMode.OneWay));
-        _messageLabel.SetBinding(Label.IsVisibleProperty, new Binding(nameof(commonServices.BusyService.IsBusy), BindingMode.OneWay));
-        _messageLabel.SetDynamicResource(Label.TextColorProperty, "Primary");
-
-        // Create activity indicator
-        var indicator = new ActivityIndicator();
-        indicator.BindingContext = commonServices.BusyService;
-        indicator.SetBinding(ActivityIndicator.IsRunningProperty, new Binding(nameof(commonServices.BusyService.IsBusy), BindingMode.OneWay));
-        indicator.SetDynamicResource(ActivityIndicator.ColorProperty, "Primary");
-
         // Create background element based on splash screen type
         if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
         {
@@ -199,14 +186,6 @@ public class LoadingView : ContentPage
         };
         _signInButton.SetDynamicResource(Button.BackgroundColorProperty, "Primary");
 
-        // Create stack layout for content
-        var stackLayout = new StackLayout
-        {
-            VerticalOptions = LayoutOptions.Center,
-            HorizontalOptions = LayoutOptions.Center,
-            Children = { _messageLabel, indicator }
-        };
-
         // Create main grid
         var mainGrid = new Grid();
 
@@ -221,7 +200,7 @@ public class LoadingView : ContentPage
         }
 
         mainGrid.Add(overlay);
-        mainGrid.Add(stackLayout);
+        mainGrid.Add(new BusyIndicator());
         mainGrid.Add(_signInButton);
 
         this.Content = mainGrid;

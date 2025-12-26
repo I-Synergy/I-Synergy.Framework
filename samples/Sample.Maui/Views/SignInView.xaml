@@ -92,23 +92,9 @@
             </Label>
         </StackLayout>
 
-        <Grid
+        <c:BusyIndicator 
             Grid.RowSpan="4"
-            Grid.ColumnSpan="3"
-            IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-            <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}" Opacity="0.8"/>
-            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                <Label
-                    FontSize="Caption"
-                    IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
-                    Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}"
-                    TextColor="{DynamicResource Primary}" />
-                <ActivityIndicator
-                    x:Name="IsBusyProgressRing"
-                    IsRunning="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
-                    Color="{DynamicResource Primary}" />
-            </VerticalStackLayout>
-        </Grid>
+            Grid.ColumnSpan="3" />
         
         <c:ErrorPresenter
             Grid.Row="0"

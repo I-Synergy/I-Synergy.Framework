@@ -6,49 +6,39 @@
     x:Class="Sample.Views.ControlsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:DataType="viewmodels:ControlsViewModel"
-    Title="ControlsView">
+    NavigationPage.HasNavigationBar="False">
 
-    <Grid>
-        <ScrollView >
-            <VerticalStackLayout Margin="12" Spacing="12">
-                <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
+    <ScrollView>
+        <VerticalStackLayout Margin="12" Spacing="12">
+            <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
 
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Exceptions"/>
-                    <Button Text="Throw Not Implemented error" Command="{Binding NotImplementedErrorCommand}"/>
-                    <Button Text="Throw Not Implemented error (Asynchronous)" Command="{Binding AsyncNotImplementedErrorCommand}"/>
-                    <Button Text="Show dialog (with error)" Command="{Binding ShowErrorWindowCommand}"/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Memo"/>
-                    <Button Text="Show Memo window" Command="{Binding ShowMemoCommand}"/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Selection"/>
-                    <Button Text="Select single item" Command="{Binding SelectSingleCommand}"/>
-                    <Button Text="Select multiple items" Command="{Binding SelectMultipleCommand}"/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Master-Detail"/>
-                    <Button Text="Navigate to details" Command="{Binding NavigateToDetailCommand}"/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Image browser"/>
-                    <c:ImageBrowser WidthRequest="600" HeightRequest="400" FileBytes="{Binding File}" />
-                </VerticalStackLayout>
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Exceptions"/>
+                <Button Text="Throw Not Implemented error" Command="{Binding NotImplementedErrorCommand}"/>
+                <Button Text="Throw Not Implemented error (Asynchronous)" Command="{Binding AsyncNotImplementedErrorCommand}"/>
+                <Button Text="Show dialog (with error)" Command="{Binding ShowErrorWindowCommand}"/>
             </VerticalStackLayout>
-        </ScrollView>
 
-        <Grid IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-            <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}" Opacity="0.8"/>
-            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                <Label FontSize="Caption" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" TextColor="{DynamicResource Primary}" IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
-                <ActivityIndicator IsRunning="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Color="{DynamicResource Primary}" />
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Memo"/>
+                <Button Text="Show Memo window" Command="{Binding ShowMemoCommand}"/>
             </VerticalStackLayout>
-        </Grid>
-    </Grid>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Selection"/>
+                <Button Text="Select single item" Command="{Binding SelectSingleCommand}"/>
+                <Button Text="Select multiple items" Command="{Binding SelectMultipleCommand}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Master-Detail"/>
+                <Button Text="Navigate to details" Command="{Binding NavigateToDetailCommand}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Image browser"/>
+                <c:ImageBrowser WidthRequest="600" HeightRequest="400" FileBytes="{Binding File}" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </c:View>

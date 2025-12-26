@@ -184,20 +184,5 @@
             HorizontalOptions="End"
             Style="{DynamicResource AddButtonStyle}"
             VerticalOptions="End" />
-
-        <Grid Grid.RowSpan="2" IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-            <Grid BackgroundColor="{DynamicResource Gray900}" Opacity="0.8" />
-            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                <Label
-                    FontSize="Caption"
-                    IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
-                    Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}"
-                    TextColor="{DynamicResource Primary}" />
-                <ActivityIndicator
-                    x:Name="IsBusyProgressRing"
-                    IsRunning="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
-                    Color="{DynamicResource Primary}" />
-            </VerticalStackLayout>
-        </Grid>
     </Grid>
 </c:View>

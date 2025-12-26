@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -41,7 +40,7 @@ public class SignUpViewModel : ViewModel
     /// <value>The registration mail.</value>
     public string Mail
     {
-        get { return GetValue<string>().ToLowerInvariant(); }
+        get { return GetValue<string>()?.ToLowerInvariant(); }
         set { SetValue(value?.ToLowerInvariant()); }
     }
 
