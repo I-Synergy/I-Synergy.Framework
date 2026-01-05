@@ -100,7 +100,6 @@
     <Style x:Key="DefaultButtonStyle" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource TintedGray600}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}" />
