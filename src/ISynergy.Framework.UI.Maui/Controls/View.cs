@@ -9,9 +9,21 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Singleton)]
 public abstract class View : ContentPage, IView
 {
+    private const string WrapperMarkerValue = "__ISynergy_View_Wrapper__";
+    
     private Label? _titleLabel;
     private Microsoft.Maui.Controls.View? _originalContent;
     private bool _isWrapping = false;
+
+    /// <summary>
+    /// Attached property used internally to mark the wrapper Grid created by this View control.
+    /// </summary>
+    private static readonly BindableProperty WrapperMarkerProperty =
+        BindableProperty.CreateAttached(
+            "WrapperMarker",
+            typeof(string),
+            typeof(View),
+            defaultValue: null);
 
     /// <summary>
     /// Gets or sets whether the title should be displayed.
@@ -92,8 +104,12 @@ public abstract class View : ContentPage, IView
         // Store the original content
         Microsoft.Maui.Controls.View? content = Content;
 
-        // Don't wrap if already wrapped or content is null
-        if (content is null || content is Grid grid && grid.Children.Count > 1)
+        // Don't wrap if content is null
+        if (content is null)
+            return;
+
+        // Check if already wrapped by looking for our specific marker
+        if (content is Grid grid && grid.GetValue(WrapperMarkerProperty) as string == WrapperMarkerValue)
             return;
 
         _originalContent = content;
@@ -141,6 +157,10 @@ public abstract class View : ContentPage, IView
 
             // Create main grid to hold content and overlay
             Grid mainGrid = new Grid();
+            
+            // Mark this Grid as our wrapper using the attached property
+            mainGrid.SetValue(WrapperMarkerProperty, WrapperMarkerValue);
+            
             mainGrid.Children.Add(contentStackLayout);
             mainGrid.Children.Add(indicatorControl);
 

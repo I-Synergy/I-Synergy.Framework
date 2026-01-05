@@ -6,7 +6,7 @@
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
-    Title="{Binding Title}"
+    ShowTitle="False"
     x:DataType="viewmodels:SignInViewModel">
 
     <Grid>
@@ -91,10 +91,6 @@
                 </Label.GestureRecognizers>
             </Label>
         </StackLayout>
-
-        <c:BusyIndicator 
-            Grid.RowSpan="4"
-            Grid.ColumnSpan="3" />
         
         <c:ErrorPresenter
             Grid.Row="0"

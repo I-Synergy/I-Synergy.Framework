@@ -8,25 +8,23 @@
     x:Class="Sample.Views.InfoView"
     NavigationPage.HasNavigationBar="False">
 
-    <Grid>
-        <VerticalStackLayout Margin="12" Spacing="12">
-            <Label Text="Company name" />
-            <Entry Text="{Binding CompanyName}" IsReadOnly="True"/>
+    <VerticalStackLayout Margin="12" Spacing="12">
+        <Label Text="Company name" />
+        <Entry Text="{Binding CompanyName}" IsReadOnly="True"/>
 
-            <Label Text="Product name" />
-            <Entry Text="{Binding ProductName}" IsReadOnly="True"/>
+        <Label Text="Product name" />
+        <Entry Text="{Binding ProductName}" IsReadOnly="True"/>
 
-            <!--<Label Text="Version"/>
-            <Entry Text="{Binding Version}" IsReadOnly="True"/>-->
+        <!--<Label Text="Version"/>
+        <Entry Text="{Binding Version}" IsReadOnly="True"/>-->
 
-            <Label Text="Copyrights"/>
-            <Entry Text="{Binding Copyrights}" IsReadOnly="True"/>
+        <Label Text="Copyrights"/>
+        <Entry Text="{Binding Copyrights}" IsReadOnly="True"/>
 
-            <Label Text="Activation"/>
-            <Entry Text="{Binding Startup}" IsReadOnly="True"/>
+        <Label Text="Activation"/>
+        <Entry Text="{Binding Startup}" IsReadOnly="True"/>
 
-            <Label Text="Memo"/>
-            <Editor />
-        </VerticalStackLayout>
-    </Grid>
+        <Label Text="Memo"/>
+        <Editor />
+    </VerticalStackLayout>
 </c:View>
