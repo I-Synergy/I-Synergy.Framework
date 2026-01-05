@@ -5,12 +5,48 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Sample.Views.ControlsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Maui"
     x:DataType="viewmodels:ControlsViewModel"
     NavigationPage.HasNavigationBar="False">
 
     <ScrollView>
         <VerticalStackLayout Margin="12" Spacing="12">
             <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
+
+            <VerticalStackLayout Spacing="4">
+                <!-- Integer Entry -->
+                <Label Text="Quantity (Integer):" />
+                <Entry Placeholder="Enter quantity">
+                    <Entry.Behaviors>
+                        <behaviors:IntegerEntryBehavior 
+                            Value="{Binding Quantity}"
+                            MaximumValue="1000"
+                            SelectAllOnFocus="True" />
+                    </Entry.Behaviors>
+                </Entry>
+
+                <!-- Decimal Entry -->
+                <Label Text="Weight (Decimal, 3 places):" />
+                <Entry Placeholder="Enter weight">
+                    <Entry.Behaviors>
+                        <behaviors:DecimalEntryBehavior 
+                            Value="{Binding Weight}"
+                            DecimalPlaces="3"
+                            AllowNegative="False" />
+                    </Entry.Behaviors>
+                </Entry>
+
+                <!-- Currency Entry (Dutch culture) -->
+                <Label Text="Price (Currency, EUR):" />
+                <Entry Placeholder="Enter price">
+                    <Entry.Behaviors>
+                        <behaviors:CurrencyEntryBehavior 
+                            Value="{Binding Price}"
+                            DecimalPlaces="2"
+                            MinimumValue="0" />
+                    </Entry.Behaviors>
+                </Entry>
+            </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="4">
                 <Label Text="Exceptions"/>
