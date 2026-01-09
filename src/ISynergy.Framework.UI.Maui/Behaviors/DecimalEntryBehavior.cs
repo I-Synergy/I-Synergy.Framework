@@ -59,6 +59,17 @@ public sealed class DecimalEntryBehavior : NumericEntryBehaviorBase
         return _formatter.FormatValue(rounded);
     }
 
+    protected override string CleanInput(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        _formatter ??= new DecimalFormatter(Culture, DecimalPlaces);
+
+        // Use the formatter's CleanInput which preserves the fractional part
+        return _formatter.CleanInput(input);
+    }
+
     private void UpdateFormatter()
     {
         _formatter = new DecimalFormatter(Culture, DecimalPlaces);
