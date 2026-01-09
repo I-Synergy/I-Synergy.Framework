@@ -5,25 +5,24 @@ namespace ISynergy.Framework.UI.Behaviors.Base;
 /// <summary>
 /// Base behavior for numeric entry input with locale-aware validation and formatting.
 /// Provides common functionality for derived numeric behaviors.
+/// Works with Entry.Text binding through value converters.
 /// </summary>
 public abstract class NumericEntryBehaviorBase : Behavior<Entry>
 {
     private bool _isUpdating;
     private string _lastValidText = string.Empty;
-    private Entry? _attachedEntry;
-    private bool _isFocused;
 
     public static readonly BindableProperty MinimumValueProperty = BindableProperty.Create(
         nameof(MinimumValue),
         typeof(decimal?),
         typeof(NumericEntryBehaviorBase),
-        defaultValue: decimal.MinValue);
+        defaultValue: null);
 
     public static readonly BindableProperty MaximumValueProperty = BindableProperty.Create(
         nameof(MaximumValue),
         typeof(decimal?),
         typeof(NumericEntryBehaviorBase),
-        defaultValue: decimal.MaxValue);
+        defaultValue: null);
 
     public static readonly BindableProperty AllowNegativeProperty = BindableProperty.Create(
         nameof(AllowNegative),
@@ -35,22 +34,13 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         nameof(Culture),
         typeof(CultureInfo),
         typeof(NumericEntryBehaviorBase),
-        defaultValue: CultureInfo.CurrentCulture,
-        propertyChanged: OnCultureChanged);
+        defaultValue: CultureInfo.CurrentCulture);
 
     public static readonly BindableProperty SelectAllOnFocusProperty = BindableProperty.Create(
         nameof(SelectAllOnFocus),
         typeof(bool),
         typeof(NumericEntryBehaviorBase),
         defaultValue: true);
-
-    public static readonly BindableProperty ValueProperty = BindableProperty.Create(
-        nameof(Value),
-        typeof(decimal),
-        typeof(NumericEntryBehaviorBase),
-        defaultValue: 0m,
-        defaultBindingMode: BindingMode.TwoWay,
-        propertyChanged: OnValueChanged);
 
     /// <summary>
     /// Gets or sets the minimum allowed value. Null for no minimum.
@@ -98,15 +88,6 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
     }
 
     /// <summary>
-    /// Gets or sets the numeric value. Use this for two-way binding in MVVM scenarios.
-    /// </summary>
-    public decimal Value
-    {
-        get => (decimal)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
-    }
-
-    /// <summary>
     /// Gets the decimal separator for the current culture.
     /// </summary>
     protected string DecimalSeparator => Culture.NumberFormat.NumberDecimalSeparator;
@@ -115,14 +96,33 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
     {
         base.OnAttachedTo(entry);
 
-        _attachedEntry = entry;
-
         entry.Keyboard = Keyboard.Numeric;
         entry.TextChanged += OnTextChanged;
         entry.Focused += OnFocused;
         entry.Unfocused += OnUnfocused;
 
-        UpdateEntryText(entry, Value);
+        // Format the initial text if present
+        // This handles the case where the binding sets the initial value
+        entry.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(10), () =>
+        {
+            if (!string.IsNullOrWhiteSpace(entry.Text))
+            {
+                if (TryParseInput(entry.Text, out var initialValue) && IsValueValid(initialValue))
+                {
+                    _isUpdating = true;
+                    try
+                    {
+                        var formatted = FormatValue(initialValue);
+                        entry.Text = formatted;
+                        _lastValidText = formatted;
+                    }
+                    finally
+                    {
+                        _isUpdating = false;
+                    }
+                }
+            }
+        });
     }
 
     protected override void OnDetachingFrom(Entry entry)
@@ -131,8 +131,6 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         entry.Focused -= OnFocused;
         entry.Unfocused -= OnUnfocused;
 
-        _attachedEntry = null;
-
         base.OnDetachingFrom(entry);
     }
 
@@ -140,8 +138,6 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
     {
         if (sender is not Entry entry)
             return;
-
-        _isFocused = true;
 
         if (!SelectAllOnFocus)
             return;
@@ -161,77 +157,64 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         if (sender is not Entry entry)
             return;
 
-        _isFocused = false;
+        // Format the current text when losing focus
+        var currentText = entry.Text?.Trim() ?? string.Empty;
 
-        // If only a minus sign remains, reset to zero
-        var trimmedText = entry.Text?.Trim() ?? string.Empty;
-        if (trimmedText == "-" || trimmedText == Culture.NumberFormat.NegativeSign)
+        if (string.IsNullOrWhiteSpace(currentText) ||
+            currentText == "-" ||
+            currentText == Culture.NumberFormat.NegativeSign)
         {
-            UpdateValue(0m);
-        }
-
-        UpdateEntryText(entry, Value);
-    }
-
-    private void OnTextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_isUpdating || sender is not Entry entry)
-            return;
-
-        var newText = e.NewTextValue ?? string.Empty;
-
-        if (string.IsNullOrWhiteSpace(newText))
-        {
-            _lastValidText = string.Empty;
-            UpdateValue(0m);
-            return;
-        }
-
-        // Allow intermediate input for negative sign or partial decimal
-        if (IsIntermediateInput(newText))
-        {
-            _lastValidText = newText;
-            return; // Don't update value yet, wait for more input
-        }
-
-        if (TryParseInput(newText, out var parsedValue))
-        {
-            if (IsValueValid(parsedValue))
+            // Clear invalid input
+            _isUpdating = true;
+            try
             {
-                _lastValidText = newText;
-                UpdateValue(parsedValue);
+                entry.Text = string.Empty;
+                _lastValidText = string.Empty;
             }
-            else
+            finally
             {
-                RevertToLastValidText(entry);
+                _isUpdating = false;
+            }
+            return;
+        }
+
+        // Parse and reformat the value
+        if (TryParseInput(currentText, out var value) && IsValueValid(value))
+        {
+            _isUpdating = true;
+            try
+            {
+                // Format will handle rounding
+                var formatted = FormatValue(value);
+                entry.Text = formatted;
+                _lastValidText = formatted;
+            }
+            finally
+            {
+                _isUpdating = false;
             }
         }
         else
         {
-            RevertToLastValidText(entry);
+            // Invalid input - clear or revert to last valid
+            _isUpdating = true;
+            try
+            {
+                entry.Text = string.IsNullOrEmpty(_lastValidText) ? string.Empty : _lastValidText;
+            }
+            finally
+            {
+                _isUpdating = false;
+            }
         }
     }
 
-    /// <summary>
-    /// Checks if the input is in an intermediate state (not yet complete but valid so far).
-    /// </summary>
-    private bool IsIntermediateInput(string input)
+    private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(input))
-            return false;
-
-        // Try cleaning the input first to handle currency symbols and group separators
-        var cleaned = CleanInput(input);
-
-        // Allow negative sign as intermediate input (while typing "-1")
-        if (AllowNegative && (cleaned == "-" || cleaned == Culture.NumberFormat.NegativeSign))
-            return true;
-
-        // Ends with decimal separator (e.g., "5." or "-5." or "€ 5.")
-        if (cleaned.EndsWith(Culture.NumberFormat.NumberDecimalSeparator))
-            return true;
-
-        return false;
+        // Do nothing during typing - let the user type freely
+        // The binding will update the ViewModel property automatically
+        // Formatting and validation will happen on blur (OnUnfocused)
+        return;
     }
 
     /// <summary>
@@ -310,96 +293,4 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
     /// Derived classes must implement this to provide type-specific formatting.
     /// </summary>
     protected abstract string FormatValue(decimal value);
-
-    private void RevertToLastValidText(Entry entry)
-    {
-        _isUpdating = true;
-        try
-        {
-            var currentCursorPosition = entry.CursorPosition;
-            entry.Text = _lastValidText;
-            entry.CursorPosition = Math.Min(currentCursorPosition, _lastValidText.Length);
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
-    }
-
-    private void UpdateValue(decimal value)
-    {
-        if (Value == value)
-            return;
-
-        _isUpdating = true;
-        try
-        {
-            Value = value;
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
-    }
-
-    private void UpdateEntryText(Entry entry, decimal value)
-    {
-        _isUpdating = true;
-        try
-        {
-            var formatted = FormatValue(value);
-            entry.Text = formatted;
-            _lastValidText = formatted;
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
-    }
-
-    private static void OnValueChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        if (bindable is not NumericEntryBehaviorBase behavior || behavior._isUpdating)
-            return;
-
-        if (behavior._attachedEntry is null)
-            return;
-
-        // Don't reformat while user is actively typing
-        if (behavior._isFocused)
-            return;
-
-        if (newValue is decimal value)
-        {
-            behavior.UpdateEntryText(behavior._attachedEntry, value);
-        }
-        else
-        {
-            behavior._isUpdating = true;
-            try
-            {
-                behavior._attachedEntry.Text = string.Empty;
-                behavior._lastValidText = string.Empty;
-            }
-            finally
-            {
-                behavior._isUpdating = false;
-            }
-        }
-    }
-
-    private static void OnCultureChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        if (bindable is not NumericEntryBehaviorBase behavior)
-            return;
-
-        if (behavior._attachedEntry is null)
-            return;
-
-        // Don't reformat while user is actively typing
-        if (behavior._isFocused)
-            return;
-
-        behavior.UpdateEntryText(behavior._attachedEntry, behavior.Value);
-    }
 }

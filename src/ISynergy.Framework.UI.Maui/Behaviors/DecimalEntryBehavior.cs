@@ -44,33 +44,24 @@ public sealed class DecimalEntryBehavior : NumericEntryBehaviorBase
 
     protected override bool IsValueValid(decimal value)
     {
-        if (!base.IsValueValid(value))
-            return false;
-
-        _formatter ??= new DecimalFormatter(Culture, DecimalPlaces);
-        return _formatter.HasValidDecimalPlaces(value);
+        // Don't validate decimal places here - we'll round during formatting
+        // Just validate the base constraints (min/max/negative)
+        return base.IsValueValid(value);
     }
 
     protected override string FormatValue(decimal value)
     {
         _formatter ??= new DecimalFormatter(Culture, DecimalPlaces);
-        return _formatter.FormatValue(value);
+
+        // Round the value to the specified decimal places before formatting
+        var rounded = Math.Round(value, DecimalPlaces, MidpointRounding.AwayFromZero);
+
+        return _formatter.FormatValue(rounded);
     }
 
     private void UpdateFormatter()
     {
         _formatter = new DecimalFormatter(Culture, DecimalPlaces);
-    }
-
-    protected override string CleanInput(string input)
-    {
-        _formatter ??= new DecimalFormatter(Culture, DecimalPlaces);
-
-        // First normalize using base class
-        var cleaned = base.CleanInput(input);
-
-        // Then remove decimal part
-        return _formatter.CleanInput(cleaned);
     }
 
     private static void OnDecimalPlacesChanged(BindableObject bindable, object oldValue, object newValue)
@@ -83,7 +74,12 @@ public sealed class DecimalEntryBehavior : NumericEntryBehaviorBase
         if (behavior._attachedEntry is null)
             return;
 
-        var formatted = behavior.FormatValue(behavior.Value);
-        behavior._attachedEntry.Text = formatted;
+        // Reformat the current text with the new decimal places
+        var currentText = behavior._attachedEntry.Text ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(currentText) && behavior.TryParseInput(currentText, out var value))
+        {
+            var formatted = behavior.FormatValue(value);
+            behavior._attachedEntry.Text = formatted;
+        }
     }
 }
