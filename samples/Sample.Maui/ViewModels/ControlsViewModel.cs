@@ -69,7 +69,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public AsyncRelayCommand ShowMemoCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
-    public AsyncRelayCommand<TestItem> NavigateToDetailCommand { get; private set; }
+    public AsyncRelayCommand NavigateToDetailCommand { get; private set; }
     public AsyncRelayCommand ShowErrorWindowCommand { get; private set; }
 
     public ControlsViewModel(
@@ -86,7 +86,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
         ShowMemoCommand = new AsyncRelayCommand(ShowMemoAsync);
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
-        NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
+        NavigateToDetailCommand = new AsyncRelayCommand(NavigateToDetailAsync);
         NotImplementedErrorCommand = new RelayCommand(() => throw new NotImplementedException());
         AsyncNotImplementedErrorCommand = new AsyncRelayCommand(() => throw new NotImplementedException());
         ShowErrorWindowCommand = new AsyncRelayCommand(ShowErrorWindowAsync);
@@ -116,7 +116,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     {
     }
 
-    private async Task NavigateToDetailAsync(TestItem item)
+    private async Task NavigateToDetailAsync()
     {
         var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailsViewModel>();
         await _navigationService.NavigateAsync(detailsVm);
