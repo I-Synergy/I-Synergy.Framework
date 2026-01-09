@@ -43,8 +43,8 @@
                     </Entry.Behaviors>
                 </Entry>
 
-                <!-- Currency Entry (Dutch culture) -->
-                <Label Text="Price (Currency, EUR):" />
+                <!-- Currency Entry (uses current culture for formatting) -->
+                <Label Text="Price (Currency):" />
                 <Entry Text="{Binding Price, Mode=TwoWay, Converter={StaticResource CurrencyToStringConverter}}" 
                        Placeholder="Enter price">
                     <Entry.Behaviors>
