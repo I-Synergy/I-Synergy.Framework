@@ -125,10 +125,11 @@ public class IntegerToStringConverter : IValueConverter
     {
         if (value is string stringValue && !string.IsNullOrWhiteSpace(stringValue))
         {
-            // Parse without formatting - accept any valid integer input
-            var cleaned = new string(stringValue.Where(c => char.IsDigit(c) || c == '-').ToArray());
-            
-            if (int.TryParse(cleaned, NumberStyles.Integer, culture, out var result))
+            // Use culture-aware parsing with number group separators support
+            // NumberStyles.Integer includes AllowLeadingSign, AllowLeadingWhite, and AllowTrailingWhite
+            // NumberStyles.AllowThousands enables parsing of group separators like "1,000" or "1.000"
+            if (int.TryParse(stringValue, NumberStyles.Integer | NumberStyles.AllowThousands, culture, 
+                out var result))
             {
                 return result;
             }
