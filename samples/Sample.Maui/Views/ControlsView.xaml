@@ -6,8 +6,15 @@
     x:Class="Sample.Views.ControlsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     x:DataType="viewmodels:ControlsViewModel"
     NavigationPage.HasNavigationBar="False">
+
+    <c:View.Resources>
+        <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
+        <converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
+        <converters:CurrencyToStringConverter x:Key="CurrencyToStringConverter"/>
+    </c:View.Resources>
 
     <ScrollView>
         <VerticalStackLayout Margin="12" Spacing="12">
@@ -16,10 +23,10 @@
             <VerticalStackLayout Spacing="4">
                 <!-- Integer Entry -->
                 <Label Text="Quantity (Integer):" />
-                <Entry Placeholder="Enter quantity">
+                <Entry Text="{Binding Quantity, Mode=TwoWay, Converter={StaticResource IntegerToStringConverter}}" 
+                       Placeholder="Enter quantity">
                     <Entry.Behaviors>
                         <behaviors:IntegerEntryBehavior 
-                            Value="{Binding Quantity}"
                             MaximumValue="1000"
                             SelectAllOnFocus="True" />
                     </Entry.Behaviors>
@@ -27,10 +34,10 @@
 
                 <!-- Decimal Entry -->
                 <Label Text="Weight (Decimal, 3 places):" />
-                <Entry Placeholder="Enter weight">
+                <Entry Text="{Binding Weight, Mode=TwoWay, Converter={StaticResource DecimalToStringConverter}}" 
+                       Placeholder="Enter weight">
                     <Entry.Behaviors>
                         <behaviors:DecimalEntryBehavior 
-                            Value="{Binding Weight}"
                             DecimalPlaces="3"
                             AllowNegative="False" />
                     </Entry.Behaviors>
@@ -38,10 +45,10 @@
 
                 <!-- Currency Entry (Dutch culture) -->
                 <Label Text="Price (Currency, EUR):" />
-                <Entry Placeholder="Enter price">
+                <Entry Text="{Binding Price, Mode=TwoWay, Converter={StaticResource CurrencyToStringConverter}}" 
+                       Placeholder="Enter price">
                     <Entry.Behaviors>
                         <behaviors:CurrencyEntryBehavior 
-                            Value="{Binding Price}"
                             DecimalPlaces="2"
                             MinimumValue="0" />
                     </Entry.Behaviors>
