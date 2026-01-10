@@ -12,6 +12,18 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
     private bool _isUpdating;
     private string _lastValidText = string.Empty;
 
+    /// <summary>
+    /// Attached property to indicate the entry is being formatted by the behavior.
+    /// </summary>
+    public static readonly BindableProperty IsFormattingProperty = BindableProperty.CreateAttached(
+        "IsFormatting",
+        typeof(bool),
+        typeof(NumericEntryBehaviorBase),
+        defaultValue: false);
+
+    public static bool GetIsFormatting(BindableObject view) => (bool)view.GetValue(IsFormattingProperty);
+    public static void SetIsFormatting(BindableObject view, bool value) => view.SetValue(IsFormattingProperty, value);
+
     public static readonly BindableProperty MinimumValueProperty = BindableProperty.Create(
         nameof(MinimumValue),
         typeof(decimal?),
@@ -200,17 +212,27 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         if (TryParseInput(currentText, out var value) && IsValueValid(value))
         {
             _isUpdating = true;
-            try
+            SetIsFormatting(entry, true);
+            
+            // Format will handle rounding
+            var formatted = FormatValue(value);
+            _lastValidText = formatted;
+            
+            // Set the formatted text immediately
+            entry.Text = formatted;
+            
+            // Use dispatcher to clear the formatting flag after the binding cycle completes
+            entry.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(50), () =>
             {
-                // Format will handle rounding
-                var formatted = FormatValue(value);
-                entry.Text = formatted;
-                _lastValidText = formatted;
-            }
-            finally
-            {
+                SetIsFormatting(entry, false);
                 _isUpdating = false;
-            }
+                
+                // Reapply formatted text if it was overwritten
+                if (entry.Text != formatted && !entry.IsFocused)
+                {
+                    entry.Text = formatted;
+                }
+            });
         }
         else
         {

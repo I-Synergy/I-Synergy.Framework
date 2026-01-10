@@ -49,13 +49,13 @@ public class CurrencyConverter : IValueConverter
 public class CurrencyToStringConverter : IValueConverter
 {
     /// <summary>
-    /// Converts decimal to string without formatting (raw value).
+    /// Converts decimal to string for display.
     /// </summary>
     /// <param name="value">The decimal value.</param>
     /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">Optional: Not used - behavior handles formatting.</param>
+    /// <param name="parameter">Optional: Pass "formatted" to return currency-formatted value.</param>
     /// <param name="culture">The culture.</param>
-    /// <returns>Raw string representation or empty string for zero values.</returns>
+    /// <returns>String representation for entry binding.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is decimal decimalValue)
@@ -63,7 +63,8 @@ public class CurrencyToStringConverter : IValueConverter
             if (decimalValue == 0m)
                 return string.Empty;
 
-            // Return raw value without formatting - behavior will format on blur
+            // Return raw value for editing - the behavior will format with currency symbol on blur
+            // The behavior handles the formatting lifecycle (raw during edit, formatted on blur)
             return decimalValue.ToString(culture);
         }
         return string.Empty;
@@ -81,7 +82,13 @@ public class CurrencyToStringConverter : IValueConverter
     {
         if (value is string stringValue && !string.IsNullOrWhiteSpace(stringValue))
         {
-            // Remove currency symbols and other formatting - accept any valid input
+            // Try to parse as currency first (handles formatted values with currency symbols)
+            if (decimal.TryParse(stringValue, NumberStyles.Currency, culture, out var currencyResult))
+            {
+                return currencyResult;
+            }
+            
+            // Fallback: Remove currency symbols and other formatting - accept any valid input
             var cleaned = new string(stringValue.Where(c => 
                 char.IsDigit(c) || 
                 c.ToString() == culture.NumberFormat.NumberDecimalSeparator || 

@@ -22,7 +22,7 @@ public sealed class DecimalFormatter : NumericFormatter
     }
 
     /// <summary>
-    /// Cleans and normalizes decimal input, preserving the fractional part up to DecimalPlaces.
+    /// Cleans and normalizes decimal input, preserving the fractional part.
     /// </summary>
     public override string CleanInput(string input)
     {
@@ -56,16 +56,10 @@ public sealed class DecimalFormatter : NumericFormatter
                 parts = new[] { parts[0], parts[1] };
             }
 
-            // Preserve integer part and fractional part (up to DecimalPlaces)
+            // Preserve integer part and fractional part (do NOT truncate here)
             var integerPart = parts[0];
             var fractionalPart = parts.Length > 1 ? parts[1] : string.Empty;
             
-            // Limit fractional part to DecimalPlaces
-            if (fractionalPart.Length > _decimalPlaces)
-            {
-                fractionalPart = fractionalPart.Substring(0, _decimalPlaces);
-            }
-
             // Rejoin with culture-specific decimal separator
             if (!string.IsNullOrEmpty(fractionalPart))
             {
