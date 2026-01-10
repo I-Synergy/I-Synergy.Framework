@@ -1,8 +1,8 @@
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.ViewModels;
+using System.Globalization;
 using Application = ISynergy.Framework.UI.Application;
 
 namespace Sample;
@@ -144,6 +144,22 @@ public partial class App : Application
     {
         try
         {
+            if (CultureInfo.DefaultThreadCurrentCulture != null &&
+                    CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
+            {
+                culture.NumberFormat.CurrencySymbol = "€";
+
+                culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
+                culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
+
+                culture.NumberFormat.CurrencyNegativePattern = 1;
+                culture.NumberFormat.NumberNegativePattern = 1;
+                culture.NumberFormat.PercentNegativePattern = 1;
+
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+            }
+
             _logger?.LogTrace("Authentication succeeded event received");
 
             // Profile should already be set in context by AuthenticationService

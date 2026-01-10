@@ -6,7 +6,7 @@
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
-    Title="{Binding Title}"
+    ShowTitle="False"
     x:DataType="viewmodels:SignInViewModel">
 
     <Grid>
@@ -91,24 +91,6 @@
                 </Label.GestureRecognizers>
             </Label>
         </StackLayout>
-
-        <Grid
-            Grid.RowSpan="4"
-            Grid.ColumnSpan="3"
-            IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-            <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}" Opacity="0.8"/>
-            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                <Label
-                    FontSize="Caption"
-                    IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
-                    Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}"
-                    TextColor="{DynamicResource Primary}" />
-                <ActivityIndicator
-                    x:Name="IsBusyProgressRing"
-                    IsRunning="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"
-                    Color="{DynamicResource Primary}" />
-            </VerticalStackLayout>
-        </Grid>
         
         <c:ErrorPresenter
             Grid.Row="0"

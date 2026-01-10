@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -57,10 +57,7 @@ public class NullToInversedIsVisibleConverter : IValueConverter
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not null)
-        {
             return false;
-        }
-
         return true;
     }
 

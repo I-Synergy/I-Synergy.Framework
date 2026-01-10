@@ -7,14 +7,14 @@
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:DataType="viewmodels:SlideShowViewModel"
-    Title="SlideShowView">
+    NavigationPage.HasNavigationBar="False"
+    ShowTitle="False">
 
     <c:View.Resources>
         <converters:UriToImageSourceConverter x:Key="UriToImageSourceConverter"/>
     </c:View.Resources>
 
-    <Grid
-        BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}">
+    <Grid>
         <!-- Main image with fallback to placeholder when null/empty -->
         <Image 
             Source="{Binding SelectedItem.ImageUri, Mode=OneWay, Converter={StaticResource UriToImageSourceConverter}}"
@@ -25,7 +25,7 @@
             Padding="20"
             VerticalOptions="Center"
             HorizontalOptions="Center"
-            IsVisible="{Binding SelectedItem, Converter={StaticResource NullToIsVisibleConverter}}">
+            IsVisible="{Binding SelectedItem, Converter={StaticResource NullToInversedIsVisibleConverter}}">
             <Label
                 Text="No Image Available"
                 FontSize="Large"

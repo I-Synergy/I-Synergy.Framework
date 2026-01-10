@@ -5,50 +5,83 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Sample.Views.ControlsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     x:DataType="viewmodels:ControlsViewModel"
-    Title="ControlsView">
+    NavigationPage.HasNavigationBar="False">
 
-    <Grid>
-        <ScrollView >
-            <VerticalStackLayout Margin="12" Spacing="12">
-                <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
+    <c:View.Resources>
+        <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
+        <converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
+        <converters:CurrencyToStringConverter x:Key="CurrencyToStringConverter"/>
+    </c:View.Resources>
 
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Exceptions"/>
-                    <Button Text="Throw Not Implemented error" Command="{Binding NotImplementedErrorCommand}"/>
-                    <Button Text="Throw Not Implemented error (Asynchronous)" Command="{Binding AsyncNotImplementedErrorCommand}"/>
-                    <Button Text="Show dialog (with error)" Command="{Binding ShowErrorWindowCommand}"/>
-                </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Margin="12" Spacing="12">
+            <Button Text="Set Busy On" Command="{Binding BusyOnCommand}"/>
 
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Memo"/>
-                    <Button Text="Show Memo window" Command="{Binding ShowMemoCommand}"/>
-                </VerticalStackLayout>
+            <VerticalStackLayout Spacing="4">
+                <!-- Integer Entry -->
+                <Label Text="Quantity (Integer):" />
+                <Entry Text="{Binding Quantity, Mode=TwoWay, Converter={StaticResource IntegerToStringConverter}}" 
+                       Placeholder="Enter quantity">
+                    <Entry.Behaviors>
+                        <behaviors:IntegerEntryBehavior 
+                            MaximumValue="1000"
+                            SelectAllOnFocus="True" />
+                    </Entry.Behaviors>
+                </Entry>
 
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Selection"/>
-                    <Button Text="Select single item" Command="{Binding SelectSingleCommand}"/>
-                    <Button Text="Select multiple items" Command="{Binding SelectMultipleCommand}"/>
-                </VerticalStackLayout>
+                <!-- Decimal Entry -->
+                <Label Text="Weight (Decimal, 3 places):" />
+                <Entry Text="{Binding Weight, Mode=TwoWay, Converter={StaticResource DecimalToStringConverter}}" 
+                       Placeholder="Enter weight">
+                    <Entry.Behaviors>
+                        <behaviors:DecimalEntryBehavior 
+                            DecimalPlaces="3"
+                            AllowNegative="False" />
+                    </Entry.Behaviors>
+                </Entry>
 
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Master-Detail"/>
-                    <Button Text="Navigate to details" Command="{Binding NavigateToDetailCommand}"/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Image browser"/>
-                    <c:ImageBrowser WidthRequest="600" HeightRequest="400" FileBytes="{Binding File}" />
-                </VerticalStackLayout>
+                <!-- Currency Entry (uses current culture for formatting) -->
+                <Label Text="Price (Currency):" />
+                <Entry Text="{Binding Price, Mode=TwoWay, Converter={StaticResource CurrencyToStringConverter}}" 
+                       Placeholder="Enter price">
+                    <Entry.Behaviors>
+                        <behaviors:CurrencyEntryBehavior 
+                            DecimalPlaces="2"
+                            MinimumValue="0" />
+                    </Entry.Behaviors>
+                </Entry>
             </VerticalStackLayout>
-        </ScrollView>
 
-        <Grid IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-            <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource Gray100}, Dark={DynamicResource Gray900}}" Opacity="0.8"/>
-            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                <Label FontSize="Caption" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" TextColor="{DynamicResource Primary}" IsVisible="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
-                <ActivityIndicator IsRunning="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Color="{DynamicResource Primary}" />
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Exceptions"/>
+                <Button Text="Throw Not Implemented error" Command="{Binding NotImplementedErrorCommand}"/>
+                <Button Text="Throw Not Implemented error (Asynchronous)" Command="{Binding AsyncNotImplementedErrorCommand}"/>
+                <Button Text="Show dialog (with error)" Command="{Binding ShowErrorWindowCommand}"/>
             </VerticalStackLayout>
-        </Grid>
-    </Grid>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Memo"/>
+                <Button Text="Show Memo window" Command="{Binding ShowMemoCommand}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Selection"/>
+                <Button Text="Select single item" Command="{Binding SelectSingleCommand}"/>
+                <Button Text="Select multiple items" Command="{Binding SelectMultipleCommand}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Master-Detail"/>
+                <Button Text="Navigate to details" Command="{Binding NavigateToDetailCommand}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Image browser"/>
+                <c:ImageBrowser WidthRequest="600" HeightRequest="400" FileBytes="{Binding File}" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </c:View>
