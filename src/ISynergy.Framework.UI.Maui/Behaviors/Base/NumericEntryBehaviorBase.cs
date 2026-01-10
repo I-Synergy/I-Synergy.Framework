@@ -34,7 +34,8 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         nameof(Culture),
         typeof(CultureInfo),
         typeof(NumericEntryBehaviorBase),
-        defaultValue: CultureInfo.CurrentCulture);
+        defaultValue: CultureInfo.CurrentCulture,
+        propertyChanged: OnCultureChanged);
 
     public static readonly BindableProperty SelectAllOnFocusProperty = BindableProperty.Create(
         nameof(SelectAllOnFocus),
@@ -91,6 +92,23 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
     /// Gets the decimal separator for the current culture.
     /// </summary>
     protected string DecimalSeparator => Culture.NumberFormat.NumberDecimalSeparator;
+
+    /// <summary>
+    /// Called when the Culture property changes. Derived classes can override to update formatters.
+    /// </summary>
+    protected virtual void OnCulturePropertyChanged()
+    {
+        // Derived classes can override this to update their formatters
+    }
+
+    private static void OnCultureChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not NumericEntryBehaviorBase behavior)
+            return;
+
+        // Notify derived classes
+        behavior.OnCulturePropertyChanged();
+    }
 
     protected override void OnAttachedTo(Entry entry)
     {
