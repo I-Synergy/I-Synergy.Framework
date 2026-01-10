@@ -70,6 +70,23 @@ public sealed class CurrencyEntryBehavior : NumericEntryBehaviorBase
         return _formatter.CleanInput(input);
     }
 
+    protected override void OnCulturePropertyChanged()
+    {
+        base.OnCulturePropertyChanged();
+        
+        // Recreate the formatter with the new culture
+        UpdateFormatter();
+        
+        // Reformat the current text if we have an attached entry
+        if (_attachedEntry is not null && !string.IsNullOrWhiteSpace(_attachedEntry.Text))
+        {
+            if (TryParseInput(_attachedEntry.Text, out var value) && IsValueValid(value))
+            {
+                var formatted = FormatValue(value);
+                _attachedEntry.Text = formatted;
+            }
+        }
+    }
 
     private void UpdateFormatter()
     {
