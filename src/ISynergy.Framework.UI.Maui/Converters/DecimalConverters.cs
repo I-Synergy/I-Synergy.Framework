@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.UI.Converters.Shared;
+using ISynergy.Framework.UI.Converters.Shared;
+using ISynergy.Framework.Core.Formatters;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
@@ -274,38 +275,32 @@ public class DecimalEqualsOrGreaterThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalToStringConverter.
+/// Class DecimalToStringConverter - Two-way converter for decimal values with Entry.Text binding.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
 public class DecimalToStringConverter : IValueConverter
 {
     /// <summary>
-    /// Converts the specified value.
+    /// Converts decimal to string without formatting (raw value).
     /// </summary>
-    /// <param name="value">The value.</param>
+    /// <param name="value">The decimal value.</param>
     /// <param name="targetType">Type of the target.</param>
-    /// <param name="parameter">The parameter.</param>
+    /// <param name="parameter">Optional: Not used - behavior handles formatting.</param>
     /// <param name="culture">The culture.</param>
-    /// <returns>System.Object.</returns>
+    /// <returns>Raw string representation or empty string for zero values.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is decimal @decimal)
+        if (value is decimal decimalValue)
         {
-            if (parameter is not null)
-            {
-                return string.Format((string)parameter, value);
-            }
+            if (decimalValue == 0m)
+                return string.Empty;
 
-            return @decimal.ToString();
+            // Return raw value without formatting - behavior will format on blur
+            return decimalValue.ToString(culture);
         }
 
-        if (parameter is not null)
-        {
-            return string.Format((string)parameter, (decimal)0);
-        }
-
-        return "0";
+        return string.Empty;
     }
 
     /// <summary>
@@ -318,12 +313,27 @@ public class DecimalToStringConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (decimal.TryParse(value?.ToString(), out var result))
+        if (value is string stringValue && !string.IsNullOrWhiteSpace(stringValue))
         {
-            return result;
+            // Parse without strict formatting - accept any valid decimal input
+            var cleaned = new string(stringValue.Where(c => 
+                char.IsDigit(c) || 
+                c.ToString() == culture.NumberFormat.NumberDecimalSeparator || 
+                c == '-' ||
+                c == '.' ||
+                c == ',').ToArray());
+            
+            // Normalize decimal separator
+            cleaned = cleaned.Replace(",", culture.NumberFormat.NumberDecimalSeparator);
+            cleaned = cleaned.Replace(".", culture.NumberFormat.NumberDecimalSeparator);
+            
+            if (decimal.TryParse(cleaned, NumberStyles.Number, culture, out var result))
+            {
+                return result;
+            }
         }
 
-        return 0;
+        return 0m;
     }
 }
 

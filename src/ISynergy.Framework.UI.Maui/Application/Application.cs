@@ -50,6 +50,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
     protected LoadingView? _loadingView;
+    protected Microsoft.Maui.Controls.Window? _mainWindow;
 
     private Task? Initialize { get; set; }
     private int lastErrorMessage = 0;
@@ -150,10 +151,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <summary>
     /// Creates a loading view page and stores a reference for completion tracking.
     /// </summary>
-    private NavigationPage CreateLoadingViewPage()
+    private LoadingView CreateLoadingView()
     {
         _loadingView = new LoadingView(_commonServices, _splashScreenOptions);
-        return new NavigationPage(_loadingView);
+        return _loadingView;
     }
 
     /// <summary>
@@ -206,19 +207,25 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
     protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState? activationState)
     {
-        var mainPage = _splashScreenOptions.SplashScreenType switch
-        {
-            SplashScreenTypes.Video => CreateLoadingViewPage(),
-            SplashScreenTypes.Image => CreateLoadingViewPage(),
-            _ => new NavigationPage(new EmptyView(_commonServices))
-        };
+        Microsoft.Maui.Controls.Page mainPage;
 
-        var window = new Microsoft.Maui.Controls.Window(mainPage);
-        window.Title = InfoService.Default.ProductName ?? string.Empty;
+        switch (_splashScreenOptions.SplashScreenType)
+        {
+            case SplashScreenTypes.Video:
+            case SplashScreenTypes.Image:
+                mainPage = CreateLoadingView();
+                break;
+            default:
+                mainPage = new EmptyView(_commonServices);
+                break;
+        }
+
+        _mainWindow = new Microsoft.Maui.Controls.Window(mainPage);
+        _mainWindow.Title = InfoService.Default.ProductName ?? string.Empty;
 
         _themeService.ApplyTheme();
 
-        return window;
+        return _mainWindow;
     }
 
     /// <summary>

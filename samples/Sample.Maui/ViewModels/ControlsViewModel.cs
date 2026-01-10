@@ -24,6 +24,33 @@ public class ControlsViewModel : ViewModelNavigation<object>
 
     public override string Title { get { return _commonServices.LanguageService.GetString("Controls"); } }
 
+    /// <summary>
+    /// Gets or sets the Price property value.
+    /// </summary>
+    public decimal Price
+    {
+        get => GetValue<decimal>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the Weight property value.
+    /// </summary>
+    public decimal Weight
+    {
+        get => GetValue<decimal>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the Quantity property value.
+    /// </summary>
+    public int Quantity
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
     public ObservableCollection<TestItem> Items { get; set; } = new();
     public ObservableCollection<TestItem> SelectedTestItems { get; set; } = new();
 
@@ -42,7 +69,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public AsyncRelayCommand ShowMemoCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
-    public AsyncRelayCommand<TestItem> NavigateToDetailCommand { get; private set; }
+    public AsyncRelayCommand NavigateToDetailCommand { get; private set; }
     public AsyncRelayCommand ShowErrorWindowCommand { get; private set; }
 
     public ControlsViewModel(
@@ -59,10 +86,14 @@ public class ControlsViewModel : ViewModelNavigation<object>
         ShowMemoCommand = new AsyncRelayCommand(ShowMemoAsync);
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
-        NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);
+        NavigateToDetailCommand = new AsyncRelayCommand(NavigateToDetailAsync);
         NotImplementedErrorCommand = new RelayCommand(() => throw new NotImplementedException());
         AsyncNotImplementedErrorCommand = new AsyncRelayCommand(() => throw new NotImplementedException());
         ShowErrorWindowCommand = new AsyncRelayCommand(ShowErrorWindowAsync);
+
+        Quantity = 19;
+        Weight = 91.19m;
+        Price = 19.19m;
 
         Items =
         [
@@ -85,7 +116,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     {
     }
 
-    private async Task NavigateToDetailAsync(TestItem item)
+    private async Task NavigateToDetailAsync()
     {
         var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailsViewModel>();
         await _navigationService.NavigateAsync(detailsVm);

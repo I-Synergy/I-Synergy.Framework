@@ -101,6 +101,9 @@
 		</Compile>
 	</ItemGroup>
 	<ItemGroup>
+		<MauiXaml Update="Views\ControlsView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\DetailsView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -114,9 +117,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Resources\Styles\Style.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\ControlsView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\DetailView.xaml">

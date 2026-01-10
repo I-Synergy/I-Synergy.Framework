@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -103,7 +102,7 @@ public class SignInViewModel : ViewModel
 
     private async Task SignInAsync()
     {
-        _commonServices.BusyService.StartBusy();
+        _commonServices.BusyService.StartBusy("Trying to authenticate...");
 
         await Task.Delay(5000);
 
