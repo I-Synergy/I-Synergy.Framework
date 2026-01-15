@@ -130,7 +130,7 @@ namespace ISynergy.Framework.AspNetCore.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ResultPatternResponses.feature.ndjson", 7);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Returning successful result with data")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 9, DisplayName="Returning successful result with data")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Returning successful result with data")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Result Pattern API Responses")]
         public async global::System.Threading.Tasks.Task ReturningSuccessfulResultWithData()
@@ -170,7 +170,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Returning successful result without data")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 15, DisplayName="Returning successful result without data")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Returning successful result without data")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Result Pattern API Responses")]
         public async global::System.Threading.Tasks.Task ReturningSuccessfulResultWithoutData()
@@ -207,7 +207,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Returning failed result")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 20, DisplayName="Returning failed result")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Returning failed result")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Result Pattern API Responses")]
         public async global::System.Threading.Tasks.Task ReturningFailedResult()
@@ -244,7 +244,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Result pattern with custom error handling")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 25, DisplayName="Result pattern with custom error handling")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Result pattern with custom error handling")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Result Pattern API Responses")]
         public async global::System.Threading.Tasks.Task ResultPatternWithCustomErrorHandling()
@@ -284,7 +284,7 @@ await testRunner.WhenAsync("I match the result with error handling", ((string)(n
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Chaining result operations")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 31, DisplayName="Chaining result operations")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Chaining result operations")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Result Pattern API Responses")]
         public async global::System.Threading.Tasks.Task ChainingResultOperations()

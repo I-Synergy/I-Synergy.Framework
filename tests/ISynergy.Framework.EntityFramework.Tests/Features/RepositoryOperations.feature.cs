@@ -133,7 +133,7 @@ namespace ISynergy.Framework.EntityFramework.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/RepositoryOperations.feature.ndjson", 8);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Creating a new entity")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 10, DisplayName="Creating a new entity")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Creating a new entity")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Repository Operations")]
         public async global::System.Threading.Tasks.Task CreatingANewEntity()
@@ -173,7 +173,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Reading an entity by ID")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 16, DisplayName="Reading an entity by ID")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Reading an entity by ID")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Repository Operations")]
         public async global::System.Threading.Tasks.Task ReadingAnEntityByID()
@@ -213,7 +213,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Updating an existing entity")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 22, DisplayName="Updating an existing entity")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Updating an existing entity")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Repository Operations")]
         public async global::System.Threading.Tasks.Task UpdatingAnExistingEntity()
@@ -256,7 +256,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Deleting an entity")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 29, DisplayName="Deleting an entity")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Deleting an entity")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Repository Operations")]
         public async global::System.Threading.Tasks.Task DeletingAnEntity()
@@ -296,7 +296,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Finding entities by predicate")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 35, DisplayName="Finding entities by predicate")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Finding entities by predicate")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Repository Operations")]
         public async global::System.Threading.Tasks.Task FindingEntitiesByPredicate()
@@ -336,7 +336,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Checking entity existence")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 41, DisplayName="Checking entity existence")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Checking entity existence")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Repository Operations")]
         public async global::System.Threading.Tasks.Task CheckingEntityExistence()
