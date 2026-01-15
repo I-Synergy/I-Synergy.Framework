@@ -133,7 +133,7 @@ namespace ISynergy.Framework.Automations.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/AutomationWorkflowExecution.feature.ndjson", 8);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Execute automation with conditions met")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 10, DisplayName="Execute automation with conditions met")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Execute automation with conditions met")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Workflow Execution")]
         public async global::System.Threading.Tasks.Task ExecuteAutomationWithConditionsMet()
@@ -176,7 +176,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Execute automation with conditions not met")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 17, DisplayName="Execute automation with conditions not met")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Execute automation with conditions not met")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Workflow Execution")]
         public async global::System.Threading.Tasks.Task ExecuteAutomationWithConditionsNotMet()
@@ -219,7 +219,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Execute automation with delay action")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 24, DisplayName="Execute automation with delay action")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Execute automation with delay action")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Workflow Execution")]
         public async global::System.Threading.Tasks.Task ExecuteAutomationWithDelayAction()
@@ -259,7 +259,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Execute automation with command actions")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 30, DisplayName="Execute automation with command actions")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Execute automation with command actions")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Workflow Execution")]
         public async global::System.Threading.Tasks.Task ExecuteAutomationWithCommandActions()
@@ -302,7 +302,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Execute automation with repeat actions")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 37, DisplayName="Execute automation with repeat actions")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Execute automation with repeat actions")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Workflow Execution")]
         public async global::System.Threading.Tasks.Task ExecuteAutomationWithRepeatActions()
@@ -345,7 +345,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Execute automation with timeout")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 44, DisplayName="Execute automation with timeout")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Execute automation with timeout")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Workflow Execution")]
         public async global::System.Threading.Tasks.Task ExecuteAutomationWithTimeout()

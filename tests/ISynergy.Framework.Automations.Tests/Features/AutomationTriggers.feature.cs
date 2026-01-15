@@ -134,7 +134,7 @@ namespace ISynergy.Framework.Automations.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/AutomationTriggers.feature.ndjson", 7);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Boolean state trigger activates automation")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 11, DisplayName="Boolean state trigger activates automation")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Boolean state trigger activates automation")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Triggers")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -182,7 +182,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Integer trigger activates on value change")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 20, DisplayName="Integer trigger activates on value change")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Integer trigger activates on value change")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Triggers")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -230,7 +230,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="String state trigger activates on change")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 29, DisplayName="String state trigger activates on change")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("String state trigger activates on change")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Triggers")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -275,7 +275,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Event trigger activates on custom event")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 37, DisplayName="Event trigger activates on custom event")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Event trigger activates on custom event")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Triggers")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -320,7 +320,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Trigger with invalid configuration throws exception")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 44, DisplayName="Trigger with invalid configuration throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Trigger with invalid configuration throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Automation Triggers")]
         public async global::System.Threading.Tasks.Task TriggerWithInvalidConfigurationThrowsException()

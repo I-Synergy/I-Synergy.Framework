@@ -130,7 +130,7 @@ namespace ISynergy.Framework.Mvvm.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CommandExecution.feature.ndjson", 8);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Executing a synchronous RelayCommand")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 9, DisplayName="Executing a synchronous RelayCommand")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Executing a synchronous RelayCommand")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Execution")]
         public async global::System.Threading.Tasks.Task ExecutingASynchronousRelayCommand()
@@ -170,7 +170,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="AsyncRelayCommand execution")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 15, DisplayName="AsyncRelayCommand execution")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("AsyncRelayCommand execution")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Execution")]
         public async global::System.Threading.Tasks.Task AsyncRelayCommandExecution()
@@ -210,7 +210,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Command CanExecute validation prevents execution")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 21, DisplayName="Command CanExecute validation prevents execution")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Command CanExecute validation prevents execution")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Execution")]
         public async global::System.Threading.Tasks.Task CommandCanExecuteValidationPreventsExecution()
@@ -253,7 +253,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Command with parameter execution")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 28, DisplayName="Command with parameter execution")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Command with parameter execution")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Execution")]
         public async global::System.Threading.Tasks.Task CommandWithParameterExecution()
@@ -293,7 +293,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="AsyncRelayCommand with cancellation")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 35, DisplayName="AsyncRelayCommand with cancellation")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("AsyncRelayCommand with cancellation")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Execution")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -338,7 +338,7 @@ await testRunner.WhenAsync("I start executing the async command", ((string)(null
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Command execution updates CanExecute")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 42, DisplayName="Command execution updates CanExecute")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Command execution updates CanExecute")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Execution")]
         public async global::System.Threading.Tasks.Task CommandExecutionUpdatesCanExecute()

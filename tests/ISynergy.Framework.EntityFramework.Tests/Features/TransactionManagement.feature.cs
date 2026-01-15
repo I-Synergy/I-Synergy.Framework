@@ -133,7 +133,7 @@ namespace ISynergy.Framework.EntityFramework.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/TransactionManagement.feature.ndjson", 7);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Committing a successful transaction")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 11, DisplayName="Committing a successful transaction")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Committing a successful transaction")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Transaction Management")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -178,7 +178,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Rolling back a failed transaction")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 19, DisplayName="Rolling back a failed transaction")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Rolling back a failed transaction")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Transaction Management")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -226,7 +226,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Nested transactions")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 28, DisplayName="Nested transactions")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Nested transactions")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Transaction Management")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -274,7 +274,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Transaction timeout handling")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 37, DisplayName="Transaction timeout handling")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Transaction timeout handling")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Transaction Management")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
@@ -316,7 +316,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Concurrent transaction handling")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 44, DisplayName="Concurrent transaction handling")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Concurrent transaction handling")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Transaction Management")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
