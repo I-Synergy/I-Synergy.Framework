@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Providers;
+using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Providers;
 using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Security;
 using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Services;
 using ISynergy.Framework.AspNetCore.Blazor.Options;
@@ -13,6 +13,7 @@ using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Sample.Services;
 using System.Reflection;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Extensions;
@@ -62,6 +63,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IMessengerService, MessengerService>();
         services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         services.TryAddSingleton<IBusyService, BusyService>();
+        services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
 
         services.TryAddScoped<TContext>();
         services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
