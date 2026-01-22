@@ -65,15 +65,15 @@
     <PackageVersion Include="NSwag.AspNetCore" Version="14.6.3" />
     <PackageVersion Include="NuGet.Commands" Version="7.0.1" />
     <PackageVersion Include="OpenIddict.Abstractions" Version="7.2.0" />
-    <PackageVersion Include="OpenTelemetry" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.14.0-beta.2" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.14.0-beta.1" />
+    <PackageVersion Include="OpenTelemetry" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.0-beta.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.0-rc.1" />
     <PackageVersion Include="Reqnroll" Version="3.3.2" />
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.2" />
     <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.2" />
@@ -81,16 +81,16 @@
     <PackageVersion Include="Sentry" Version="6.0.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.0.0" />
     <PackageVersion Include="SkiaSharp" Version="3.119.1" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="32.1.23" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="32.1.23" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="32.1.24" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="32.1.24" />
   </ItemGroup>
 </Project>
