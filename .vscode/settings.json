@@ -1,1 +1,7 @@
-{}
+{
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": "CLAUDE.md"
+    }
+  ]
+}
