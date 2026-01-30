@@ -122,12 +122,12 @@ stages:
 
         - task: CmdLine@2
           inputs:
-            script: AzureSignTool sign -kvu "$(KeyVaultUri)" -kvi "$(ClientId)" -kvs "$(ClientSecret)" -kvc "$(CertificateName)" -tr "http://ts.ssl.com" -td sha256 $(Build.ArtifactStagingDirectory)\*.nupkg
+            script: AzureSignTool sign -kvt "$(AzureTenantId)" -kvu "$(KeyVaultUri)" -kvi "$(ClientId)" -kvs "$(ClientSecret)" -kvc "$(CertificateName)" -tr "http://ts.ssl.com" -td sha256  -v $(Build.ArtifactStagingDirectory)\*.nupkg
           displayName: 'Sign Nuget packages'
 
         - task: CmdLine@2
           inputs:
-            script: AzureSignTool sign -kvu "$(KeyVaultUri)" -kvi "$(ClientId)" -kvs "$(ClientSecret)" -kvc "$(CertificateName)" -tr "http://ts.ssl.com" -td sha256 $(Build.ArtifactStagingDirectory)\*.snupkg
+            script: AzureSignTool sign -kvt "$(AzureTenantId)" -kvu "$(KeyVaultUri)" -kvi "$(ClientId)" -kvs "$(ClientSecret)" -kvc "$(CertificateName)" -tr "http://ts.ssl.com" -td sha256  -v $(Build.ArtifactStagingDirectory)\*.snupkg
           displayName: 'Sign Nuget symbol packages'
 
         - task: PublishBuildArtifacts@1
