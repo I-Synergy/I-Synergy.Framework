@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization;
+namespace ISynergy.Framework.Mathematics.Optimization;
 
 /// <summary>
 ///   Common interface for specifying objective functions.

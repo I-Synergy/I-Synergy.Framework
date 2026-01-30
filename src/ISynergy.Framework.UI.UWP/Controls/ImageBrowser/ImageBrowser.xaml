@@ -1,4 +1,4 @@
-﻿<UserControl x:Name="ImageBrowserUserControl"
+<UserControl x:Name="ImageBrowserUserControl"
     x:Class="ISynergy.Framework.UI.Controls.ImageBrowser"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

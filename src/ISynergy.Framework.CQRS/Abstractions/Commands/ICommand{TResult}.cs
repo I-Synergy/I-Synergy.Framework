@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.CQRS.Commands;
+namespace ISynergy.Framework.CQRS.Commands;
 
 /// <summary>
 /// Command interface with result

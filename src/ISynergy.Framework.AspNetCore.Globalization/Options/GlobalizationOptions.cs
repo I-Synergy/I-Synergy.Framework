@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
+using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
 
 namespace ISynergy.Framework.AspNetCore.Globalization.Options;
 

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Constants;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Extensions;

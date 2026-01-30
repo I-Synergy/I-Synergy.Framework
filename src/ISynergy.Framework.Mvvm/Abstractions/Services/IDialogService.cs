@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services;

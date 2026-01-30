@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Transforms;
+using ISynergy.Framework.Mathematics.Transforms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 

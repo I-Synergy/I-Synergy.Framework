@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Senders;
+using ISynergy.Framework.AspNetCore.Senders;
 using System.Text.Encodings.Web;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;

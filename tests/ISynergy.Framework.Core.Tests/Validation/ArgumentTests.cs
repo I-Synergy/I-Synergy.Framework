@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using ISynergy.Framework.Core.Data.Tests.TestClasses;
 
 namespace ISynergy.Framework.Core.Validation.Tests;
 

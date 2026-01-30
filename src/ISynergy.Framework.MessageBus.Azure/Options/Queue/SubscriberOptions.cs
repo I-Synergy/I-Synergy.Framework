@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Options.Base;
+using ISynergy.Framework.MessageBus.Options.Base;
 
 namespace ISynergy.Framework.MessageBus.Azure.Options.Queue;
 

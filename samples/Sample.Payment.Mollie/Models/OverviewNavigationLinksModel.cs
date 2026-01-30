@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Payment.Mollie.Models.Url;
+using ISynergy.Framework.Payment.Mollie.Models.Url;
 
 namespace Mollie.Sample.Models
 {

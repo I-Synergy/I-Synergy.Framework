@@ -1,4 +1,4 @@
-﻿namespace Sample.Syncfusion;
+namespace Sample.Syncfusion;
 
 public class TestData
 {

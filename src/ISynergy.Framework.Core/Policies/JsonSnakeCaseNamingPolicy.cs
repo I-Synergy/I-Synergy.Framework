@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using System.Text.Json;
 
 namespace ISynergy.Framework.Core.Policies;

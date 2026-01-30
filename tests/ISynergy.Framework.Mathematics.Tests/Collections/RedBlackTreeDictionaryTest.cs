@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests.Collections;

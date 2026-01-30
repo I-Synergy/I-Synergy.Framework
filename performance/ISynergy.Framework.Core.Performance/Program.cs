@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Running;
 using ISynergy.Framework.Core.Performance.Benchmarks;
 using ISynergy.Framework.Core.Performance.Models;
 

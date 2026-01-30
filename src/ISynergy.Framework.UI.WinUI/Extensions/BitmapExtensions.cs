@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Validation;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;

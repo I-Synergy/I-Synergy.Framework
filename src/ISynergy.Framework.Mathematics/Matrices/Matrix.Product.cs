@@ -1,4 +1,4 @@
-﻿
+
 using ISynergy.Framework.Mathematics.Exceptions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 

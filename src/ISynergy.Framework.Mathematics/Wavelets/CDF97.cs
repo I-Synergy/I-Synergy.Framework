@@ -1,4 +1,4 @@
-﻿// Copyright © Gregoire Pau, 2006
+// Copyright © Gregoire Pau, 2006
 // gregoire.pau at ebi.ac.uk
 // 
 // Based on the original C implementation by Gregoire Pau,

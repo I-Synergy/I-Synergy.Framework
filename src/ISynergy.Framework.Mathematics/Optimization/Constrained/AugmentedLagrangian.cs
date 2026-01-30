@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Optimization.Base;
+using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using ISynergy.Framework.Mathematics.Vectors;

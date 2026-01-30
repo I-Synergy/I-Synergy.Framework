@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Exceptions;
+namespace ISynergy.Framework.Core.Exceptions;
 
 public class FeatureNotEnabledException : Exception
 {

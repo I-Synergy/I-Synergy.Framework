@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Constraints;
+using ISynergy.Framework.AspNetCore.Globalization.Constraints;
 using ISynergy.Framework.AspNetCore.Globalization.Options;
 using ISynergy.Framework.AspNetCore.Globalization.Providers;
 using ISynergy.Framework.AspNetCore.Globalization.Services;

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions;
+namespace ISynergy.Framework.Mvvm.Abstractions;
 
 /// <summary>
 /// Defines a common interface for classes that should be cleaned up,

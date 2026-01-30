@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions;
 using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Core.Extensions;

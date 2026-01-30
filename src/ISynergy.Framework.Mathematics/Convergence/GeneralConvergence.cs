@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Convergence;
+namespace ISynergy.Framework.Mathematics.Convergence;
 
 /// <summary>
 ///     General convergence options.

@@ -1,4 +1,4 @@
-﻿// The source code presented in this file has been adapted from LIBLINEAR - 
+// The source code presented in this file has been adapted from LIBLINEAR - 
 // A Library for Large Linear Classification, leaded by Chih-Jen Lin. Its 
 // original license is given below.
 //

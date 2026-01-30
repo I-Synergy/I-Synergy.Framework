@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Base;
+namespace ISynergy.Framework.Mathematics.Optimization.Base;
 
 /// <summary>
 ///     Least Squares function delegate.

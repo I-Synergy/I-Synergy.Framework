@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Azure.Extensions;
+using ISynergy.Framework.MessageBus.Azure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

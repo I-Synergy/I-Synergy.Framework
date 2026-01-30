@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Models;
+namespace ISynergy.Framework.AspNetCore.Models;
 
 public class SwaggerEndpoint
 {

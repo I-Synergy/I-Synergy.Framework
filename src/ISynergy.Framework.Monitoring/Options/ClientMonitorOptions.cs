@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Monitoring.Options;
+namespace ISynergy.Framework.Monitoring.Options;
 
 /// <summary>
 /// Client monitor options.

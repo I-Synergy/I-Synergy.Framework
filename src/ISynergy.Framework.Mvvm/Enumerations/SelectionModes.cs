@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm.Enumerations;
+namespace ISynergy.Framework.Mvvm.Enumerations;
 
 /// <summary>
 /// Enum SelectionModes

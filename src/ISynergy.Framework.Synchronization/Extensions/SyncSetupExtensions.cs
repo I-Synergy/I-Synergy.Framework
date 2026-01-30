@@ -1,4 +1,4 @@
-﻿using Dotmim.Sync;
+using Dotmim.Sync;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using System.ComponentModel.DataAnnotations.Schema;

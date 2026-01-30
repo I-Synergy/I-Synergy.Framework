@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Attributes;
+namespace ISynergy.Framework.Core.Attributes;
 
 /// <summary>
 /// Class SymbolAttribute.

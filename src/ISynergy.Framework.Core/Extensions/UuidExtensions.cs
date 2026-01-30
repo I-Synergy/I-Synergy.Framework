@@ -1,4 +1,4 @@
-﻿#if NET8_0_OR_GREATER
+#if NET8_0_OR_GREATER
 using System.Diagnostics;
 using System.Numerics;
 using System.Security.Cryptography;

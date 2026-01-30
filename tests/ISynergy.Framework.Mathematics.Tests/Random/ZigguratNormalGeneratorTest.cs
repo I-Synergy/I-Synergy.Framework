@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Random;
+using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests.Random;

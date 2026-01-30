@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI;
+namespace ISynergy.Framework.UI;
 
 /// <summary>
 /// Class SelectionView. This class cannot be inherited.

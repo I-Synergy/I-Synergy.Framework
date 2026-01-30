@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Abstractions.Services;
+namespace ISynergy.Framework.UI.Abstractions.Services;
 
 /// <summary>
 /// Service for securely storing and retrieving authentication tokens

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Extensions;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Stream extensions

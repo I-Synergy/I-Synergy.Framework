@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mail.Options.Base;
+using ISynergy.Framework.Mail.Options.Base;
 
 namespace ISynergy.Framework.Mail.Options;
 

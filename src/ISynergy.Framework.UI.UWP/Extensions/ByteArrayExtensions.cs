@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using System;
 using System.IO;
 using Windows.UI.Xaml.Media;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using System.Diagnostics;
 using System.Text.RegularExpressions;

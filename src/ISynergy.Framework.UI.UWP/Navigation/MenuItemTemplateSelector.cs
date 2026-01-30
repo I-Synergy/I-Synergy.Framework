@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Enumerations;
 
 namespace ISynergy.Framework.Core.Attributes;
 

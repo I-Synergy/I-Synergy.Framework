@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Globalization.Enumerations;
+namespace ISynergy.Framework.AspNetCore.Globalization.Enumerations;
 
 public enum RequestCultureProviderTypes
 {

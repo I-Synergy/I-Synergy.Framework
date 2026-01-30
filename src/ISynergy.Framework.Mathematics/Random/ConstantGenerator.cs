@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Random;
+namespace ISynergy.Framework.Mathematics.Random;
 
 /// <summary>
 ///     Dummy random number generator that always generates the same number.

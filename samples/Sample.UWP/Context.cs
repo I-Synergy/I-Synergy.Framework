@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;

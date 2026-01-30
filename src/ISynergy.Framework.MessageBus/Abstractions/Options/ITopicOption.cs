@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.MessageBus.Abstractions.Options;
+namespace ISynergy.Framework.MessageBus.Abstractions.Options;
 
 /// <summary>
 /// Interface ITopicOption

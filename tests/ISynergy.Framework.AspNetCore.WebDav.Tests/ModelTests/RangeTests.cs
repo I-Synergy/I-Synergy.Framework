@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.WebDav.Server.Model.Headers;
+using ISynergy.Framework.AspNetCore.WebDav.Server.Model.Headers;
 using Xunit;
 
 namespace ISynergy.Framework.AspNetCore.WebDav.Tests.ModelTests

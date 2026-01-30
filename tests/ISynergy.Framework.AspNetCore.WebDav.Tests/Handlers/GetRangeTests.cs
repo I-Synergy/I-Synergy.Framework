@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.WebDav.Server;
+using ISynergy.Framework.AspNetCore.WebDav.Server;
 using ISynergy.Framework.AspNetCore.WebDav.Server.FileSystem;
 using ISynergy.Framework.AspNetCore.WebDav.Server.Model.Headers;
 using MimeKit;

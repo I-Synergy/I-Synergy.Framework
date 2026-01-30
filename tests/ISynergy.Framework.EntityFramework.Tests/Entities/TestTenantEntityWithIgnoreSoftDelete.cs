@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.EntityFramework.Attributes;
 using ISynergy.Framework.EntityFramework.Base;
 

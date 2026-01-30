@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Physics.Base;
+using ISynergy.Framework.Physics.Base;
 using ISynergy.Framework.Physics.Enumerations;
 
 namespace ISynergy.Framework.Physics;

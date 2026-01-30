@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.EntityFramework.Attributes;
 using Microsoft.EntityFrameworkCore;

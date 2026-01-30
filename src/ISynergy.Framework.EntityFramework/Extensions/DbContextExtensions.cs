@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.EntityFramework.Base;

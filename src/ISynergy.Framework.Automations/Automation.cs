@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Enumerations;
 using ISynergy.Framework.Core.Base;
 using System.Collections.ObjectModel;

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
 using ISynergy.Framework.Payment.Mollie.Models.List;
 using ISynergy.Framework.Payment.Mollie.Models.Url;

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Transforms;
+namespace ISynergy.Framework.Mathematics.Transforms;
 
 /// <summary>
 ///     Discrete Sine Transform

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Documents.Abstractions.Services;
+using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Models;
 
 namespace Sample.Syncfusion;

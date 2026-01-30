@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Models;
+namespace ISynergy.Framework.UI.Models;
 public record NavigationGroup : NavigationItem
 {
     public bool Expanded { get; set; }

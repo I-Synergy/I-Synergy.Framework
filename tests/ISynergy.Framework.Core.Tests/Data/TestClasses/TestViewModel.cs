@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
 
 namespace ISynergy.Framework.Core.Data.Tests.TestClasses;

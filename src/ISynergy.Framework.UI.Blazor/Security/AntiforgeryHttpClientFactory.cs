@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Abstractions.Security;
+using ISynergy.Framework.UI.Abstractions.Security;
 using Microsoft.JSInterop;
 
 namespace ISynergy.Framework.UI.Security;

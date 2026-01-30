@@ -1,4 +1,4 @@
-﻿#if !WINDOWS
+#if !WINDOWS
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 

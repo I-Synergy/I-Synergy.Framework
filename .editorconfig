@@ -1,8 +1,13 @@
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
+# All files
+[*]
+charset = utf-8
+
 # C# files
 [*.cs]
+charset = utf-8
 
 #### Core EditorConfig Options ####
 
@@ -234,14 +239,37 @@ csharp_prefer_static_anonymous_function = true:suggestion
 
 # YAML files
 [*.{yml,yaml}]
-
-#### Core EditorConfig Options ####
-
-# Indentation and spacing
+charset = utf-8
 indent_size = 2
 indent_style = space
 tab_width = 2
+end_of_line = crlf
+insert_final_newline = true
 
-# New line preferences
+# Markdown files
+[*.md]
+charset = utf-8
+indent_size = 2
+indent_style = space
+tab_width = 2
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = false
+
+# JSON files
+[*.json]
+charset = utf-8
+indent_size = 2
+indent_style = space
+tab_width = 2
+end_of_line = crlf
+insert_final_newline = true
+
+# XML and project files
+[*.{xml,csproj,props,targets,nuspec,resx}]
+charset = utf-8
+indent_size = 2
+indent_style = space
+tab_width = 2
 end_of_line = crlf
 insert_final_newline = true

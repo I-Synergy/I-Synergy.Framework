@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
 using Syncfusion.UI.Xaml.NavigationDrawer;
 

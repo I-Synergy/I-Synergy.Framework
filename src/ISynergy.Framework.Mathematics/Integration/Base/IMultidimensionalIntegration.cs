@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Ranges;
+using ISynergy.Framework.Core.Ranges;
 
 namespace ISynergy.Framework.Mathematics.Integration.Base;
 

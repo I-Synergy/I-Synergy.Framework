@@ -1,4 +1,4 @@
-﻿using OpenTelemetry.Logs;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 

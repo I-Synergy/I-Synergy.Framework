@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Extensions;

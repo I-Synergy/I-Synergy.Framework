@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Events;
+namespace ISynergy.Framework.Core.Events;
 
 public sealed class ItemPropertyChangedEventArgs<T> : EventArgs
 {

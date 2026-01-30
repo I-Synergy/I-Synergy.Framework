@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Base;
+namespace ISynergy.Framework.Core.Abstractions.Base;
 
 public interface ITenantEntity : IEntity
 {

@@ -1,4 +1,4 @@
-﻿// This class contains the original code written by Robert A. Pilgrim, originally 
+// This class contains the original code written by Robert A. Pilgrim, originally 
 // shared under the permissive MIT license. The original license text is reproduced
 // below:
 //  

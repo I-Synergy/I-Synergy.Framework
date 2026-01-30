@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace ISynergy.Framework.UI.Models;
 public record NavigationLink : NavigationItem

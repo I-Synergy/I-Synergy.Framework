@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Losses;
+namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
 /// <summary>
 ///     Base class for <see cref="ILoss{T}">loss functions</see>.

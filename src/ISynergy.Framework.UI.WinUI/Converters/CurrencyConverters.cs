@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml.Data;
 using Windows.ApplicationModel;
 

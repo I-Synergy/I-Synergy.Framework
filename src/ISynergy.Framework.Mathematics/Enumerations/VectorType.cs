@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Enumerations;
+namespace ISynergy.Framework.Mathematics.Enumerations;
 
 /// <summary>
 ///   Vector types.

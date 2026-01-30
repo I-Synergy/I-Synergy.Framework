@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions.Base;
+using ISynergy.Framework.Core.Extensions.Base;
 using ISynergy.Framework.Core.Validation;
 using System.Collections;
 using System.Collections.ObjectModel;

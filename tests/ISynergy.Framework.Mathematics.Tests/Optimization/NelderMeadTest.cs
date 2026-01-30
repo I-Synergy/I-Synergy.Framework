@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Optimization;
+using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;

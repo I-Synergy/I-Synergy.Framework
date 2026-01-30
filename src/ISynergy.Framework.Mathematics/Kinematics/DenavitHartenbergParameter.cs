@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Kinematics;
+namespace ISynergy.Framework.Mathematics.Kinematics;
 
 /// <summary>
 ///     Denavit Hartenberg joint-description parameters.

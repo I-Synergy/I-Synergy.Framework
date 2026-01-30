@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Tests.Models;
+using ISynergy.Framework.AspNetCore.Tests.Models;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using Microsoft.AspNetCore.Mvc;

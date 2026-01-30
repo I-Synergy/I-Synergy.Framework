@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Monitoring.Abstractions.Services;
+namespace ISynergy.Framework.Monitoring.Abstractions.Services;
 
 /// <summary>
 /// Monitor hub service.

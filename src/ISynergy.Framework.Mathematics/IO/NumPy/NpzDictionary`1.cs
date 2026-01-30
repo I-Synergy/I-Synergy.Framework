@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Data;
 using System.IO.Compression;
 

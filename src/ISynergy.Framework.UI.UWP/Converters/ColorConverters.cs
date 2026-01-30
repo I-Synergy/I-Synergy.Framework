@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.UI.Extensions;
 using System;
 using Windows.UI.Xaml.Media;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mail.Abstractions.Services;
 using ISynergy.Framework.Mail.Models;
 using ISynergy.Framework.Mail.Options;

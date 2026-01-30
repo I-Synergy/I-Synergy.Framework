@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Common;
+namespace ISynergy.Framework.Mathematics.Common;
 
 // Just a copy-paste of SVD algorithm from Numerical Recipes but updated for C#
 // (as authors state, the code is aimed to be machine readable, so blame them

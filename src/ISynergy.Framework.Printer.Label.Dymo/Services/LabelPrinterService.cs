@@ -1,4 +1,4 @@
-﻿using DymoSDK.Implementations;
+using DymoSDK.Implementations;
 using DymoSDK.Interfaces;
 using ISynergy.Framework.Printer.Label.Abstractions.Services;
 using Microsoft.Extensions.Logging;

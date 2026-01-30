@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Distances.Base;
+using ISynergy.Framework.Mathematics.Distances.Base;
 using ISynergy.Framework.Mathematics.Vectors;
 
 namespace ISynergy.Framework.Mathematics.Distances;

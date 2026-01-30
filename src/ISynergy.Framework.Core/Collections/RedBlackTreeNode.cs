@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Collections;
+namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>
 ///   Possible node colors for <see cref="RedBlackTree{T}"/>s.

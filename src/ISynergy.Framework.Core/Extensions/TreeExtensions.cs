@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Core.Extensions;

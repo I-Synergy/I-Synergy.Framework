@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.UI.Abstractions.Providers;
 

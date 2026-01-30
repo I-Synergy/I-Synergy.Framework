@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm.Exceptions;
+namespace ISynergy.Framework.Mvvm.Exceptions;
 
 /// <summary>
 /// Represents errors that occur during IAsyncCommand execution.
