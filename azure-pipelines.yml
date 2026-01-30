@@ -81,10 +81,12 @@ stages:
             custom: 'workload'
             arguments: 'install maui --source https://api.nuget.org/v3/index.json'
 
-        - task: DownloadSecureFile@1
-          displayName: 'Download secure file'
+        - task: DotNetCoreCLI@2
           inputs:
-            secureFile: 'intelligence-online.pfx'
+            command: 'custom'
+            custom: 'tool'
+            arguments: 'install --global azuresigntool'
+          displayName: Install AzureSignTool
 
         - task: SonarCloudPrepare@3
           displayName: 'Prepare SonarCloud'
@@ -118,17 +120,15 @@ stages:
             Contents: '*'
             TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-        - task: NuGetCommand@2
+        - task: CmdLine@2
+          inputs:
+            script: AzureSignTool sign -kvu "$(KeyVaultUri)" -kvi "$(ClientId)" -kvs "$(ClientSecret)" -kvc "$(CertificateName)" -tr "http://ts.ssl.com" -td sha256 $(Build.ArtifactStagingDirectory)\*.nupkg
           displayName: 'Sign Nuget packages'
-          inputs:
-            command: 'custom'
-            arguments: 'sign $(Build.ArtifactStagingDirectory)\*.nupkg -CertificatePath "$(Agent.WorkFolder)\_temp\intelligence-online.pfx" -CertificatePassword "$(CertPassword)" -Timestamper "$(TimestampUrl)"'
 
-        - task: NuGetCommand@2
-          displayName: 'Sign Nuget symbol packages'
+        - task: CmdLine@2
           inputs:
-            command: 'custom'
-            arguments: 'sign $(Build.ArtifactStagingDirectory)\*.snupkg -CertificatePath "$(Agent.WorkFolder)\_temp\intelligence-online.pfx" -CertificatePassword "$(CertPassword)" -Timestamper "$(TimestampUrl)"'
+            script: AzureSignTool sign -kvu "$(KeyVaultUri)" -kvi "$(ClientId)" -kvs "$(ClientSecret)" -kvc "$(CertificateName)" -tr "http://ts.ssl.com" -td sha256 $(Build.ArtifactStagingDirectory)\*.snupkg
+          displayName: 'Sign Nuget symbol packages'
 
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Artifacts'
