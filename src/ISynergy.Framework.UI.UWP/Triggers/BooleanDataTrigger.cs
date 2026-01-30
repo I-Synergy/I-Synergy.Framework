@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using Windows.UI.Xaml;
 
 namespace ISynergy.Framework.UI.Triggers;

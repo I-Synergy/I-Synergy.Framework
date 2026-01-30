@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Async;
+namespace ISynergy.Framework.Core.Abstractions.Async;
 
 /// <summary>
 /// Marks a type as requiring asynchronous initialization and provides the result of that initialization.

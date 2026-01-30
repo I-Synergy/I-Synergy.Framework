@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Services;
+namespace ISynergy.Framework.Core.Abstractions.Services;
 
 /// <summary>
 /// The Messenger is a class allowing objects to exchange messages.

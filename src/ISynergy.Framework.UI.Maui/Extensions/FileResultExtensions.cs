@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Extensions;
+namespace ISynergy.Framework.UI.Extensions;
 
 public static class FileResultExtensions
 {

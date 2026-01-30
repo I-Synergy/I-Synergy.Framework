@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Sample.Api.Models;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;

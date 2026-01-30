@@ -1,4 +1,4 @@
-﻿namespace Sample.Abstractions.Services;
+namespace Sample.Abstractions.Services;
 
 /// <summary>
 /// Provides authentication services with event-driven state management.

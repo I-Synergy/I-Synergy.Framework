@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Exceptions;
+namespace ISynergy.Framework.Mathematics.Exceptions;
 
 /// <summary>
 ///   Non-Positive Definite Matrix Exception.

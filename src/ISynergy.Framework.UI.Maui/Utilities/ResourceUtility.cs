@@ -1,4 +1,4 @@
-﻿using Microsoft.Maui.Controls.Internals;
+using Microsoft.Maui.Controls.Internals;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Utilities;

@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using ISynergy.Framework.MessageBus.Performance.Models;
 using MessagePack;
 using MessagePack.Resolvers;

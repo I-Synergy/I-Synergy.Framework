@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Serializers;
 using System.Text.Json;

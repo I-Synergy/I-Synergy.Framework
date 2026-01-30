@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Helpers;
+using ISynergy.Framework.UI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;

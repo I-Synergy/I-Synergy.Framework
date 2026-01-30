@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Points;
+using ISynergy.Framework.Core.Points;
 
 namespace ISynergy.Framework.Mathematics.Common;
 

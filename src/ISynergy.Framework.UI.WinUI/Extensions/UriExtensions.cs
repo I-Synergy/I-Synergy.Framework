@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using Windows.Storage;
 
 namespace ISynergy.Framework.UI.Extensions;

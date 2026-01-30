@@ -1,4 +1,4 @@
-﻿using NumericRange = ISynergy.Framework.Core.Ranges.NumericRange;
+using NumericRange = ISynergy.Framework.Core.Ranges.NumericRange;
 
 namespace ISynergy.Framework.Mathematics.Vectors;
 

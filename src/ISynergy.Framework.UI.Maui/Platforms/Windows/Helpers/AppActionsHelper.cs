@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 #pragma warning disable IDE0130, S1200
 

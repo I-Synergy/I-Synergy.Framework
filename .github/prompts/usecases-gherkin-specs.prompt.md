@@ -1,4 +1,4 @@
-﻿---
+---
 mode: 'agent'
 tools: []
 description: 'Generate enterprise-grade Use Cases and Gherkin BDD specifications with explicit reasoning for .NET Clean Architecture (Domain, Application, Infrastructure, Presentation).'

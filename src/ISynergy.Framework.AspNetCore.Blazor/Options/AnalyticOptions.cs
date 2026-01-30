@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Blazor.Options;
+namespace ISynergy.Framework.AspNetCore.Blazor.Options;
 public class AnalyticOptions
 {
     /// <summary>

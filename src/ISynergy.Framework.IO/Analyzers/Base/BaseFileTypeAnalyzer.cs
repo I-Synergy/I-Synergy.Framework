@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.IO.Abtractions.Analyzers;
 using ISynergy.Framework.IO.Models;
 using System.Text;

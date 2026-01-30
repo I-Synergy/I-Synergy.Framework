@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Commands;
 using System.Collections.ObjectModel;
 

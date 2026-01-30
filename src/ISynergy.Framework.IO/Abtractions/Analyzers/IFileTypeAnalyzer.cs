@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.IO.Models;
+using ISynergy.Framework.IO.Models;
 
 namespace ISynergy.Framework.IO.Abtractions.Analyzers;
 

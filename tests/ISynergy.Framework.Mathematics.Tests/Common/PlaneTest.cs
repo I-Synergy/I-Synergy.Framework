@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Geometry;
+using ISynergy.Framework.Mathematics.Geometry;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;

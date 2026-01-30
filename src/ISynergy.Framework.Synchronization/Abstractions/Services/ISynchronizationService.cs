@@ -1,4 +1,4 @@
-﻿using Dotmim.Sync;
+using Dotmim.Sync;
 using Dotmim.Sync.Enumerations;
 using ISynergy.Framework.Synchronization.Abstractions.Settings;
 

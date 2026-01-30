@@ -1,4 +1,4 @@
-﻿using Dotmim.Sync.Serialization;
+using Dotmim.Sync.Serialization;
 using MessagePack;
 using MessagePack.Resolvers;
 using System.Text;

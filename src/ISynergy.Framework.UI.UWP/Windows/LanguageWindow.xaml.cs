@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI;
+namespace ISynergy.Framework.UI;
 
 /// <summary>
 /// Class LanguageWindow. This class cannot be inherited.

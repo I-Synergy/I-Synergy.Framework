@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Converters;
+using ISynergy.Framework.Core.Converters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

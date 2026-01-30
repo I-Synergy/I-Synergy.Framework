@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Models.Results;
+namespace ISynergy.Framework.Core.Models.Results;
 
 public class PaginatedResult<T> : Result
 {

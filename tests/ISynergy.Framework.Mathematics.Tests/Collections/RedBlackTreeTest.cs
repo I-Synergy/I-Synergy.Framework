@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;

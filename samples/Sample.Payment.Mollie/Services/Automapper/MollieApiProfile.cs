@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using AutoMapper;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
 using ISynergy.Framework.Payment.Mollie.Models;

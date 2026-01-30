@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Exceptions;
+using ISynergy.Framework.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Documents.Models;
+using ISynergy.Framework.Documents.Models;
 
 namespace ISynergy.Framework.Documents.Abstractions.Services;
 

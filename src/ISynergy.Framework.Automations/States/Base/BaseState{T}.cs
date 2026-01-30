@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Automations.States.Base;

@@ -1,4 +1,4 @@
-﻿namespace Sample.TokenService
+namespace Sample.TokenService
 {
     /// <summary>
     /// Specific Claim types to be used in auth token service

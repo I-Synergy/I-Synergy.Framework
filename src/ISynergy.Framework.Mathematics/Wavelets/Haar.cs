@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Common;
+using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Wavelets.Base;
 
 namespace ISynergy.Framework.Mathematics.Wavelets;

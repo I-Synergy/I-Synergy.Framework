@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Financial;
+namespace ISynergy.Framework.Financial;
 
 /// <summary>
 /// Calculations regarding Value Added Tax (VAT).

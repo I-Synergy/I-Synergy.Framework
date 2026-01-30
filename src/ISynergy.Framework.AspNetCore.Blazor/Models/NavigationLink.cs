@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Models;
 public record NavigationLink : NavigationItem

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Core.Extensions;
 public static class LoggerExtensions

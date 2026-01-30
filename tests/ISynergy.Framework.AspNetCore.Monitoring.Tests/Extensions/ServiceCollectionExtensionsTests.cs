@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Monitoring.Extensions;
+using ISynergy.Framework.AspNetCore.Monitoring.Extensions;
 using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
 using ISynergy.Framework.Monitoring.Abstractions.Services;
 using Microsoft.Extensions.DependencyInjection;

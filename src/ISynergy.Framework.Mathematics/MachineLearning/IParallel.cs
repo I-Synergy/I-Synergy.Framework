@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Async;
+using ISynergy.Framework.Core.Abstractions.Async;
 
 namespace ISynergy.Framework.Mathematics.MachineLearning;
 

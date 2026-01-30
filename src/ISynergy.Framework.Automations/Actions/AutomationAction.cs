@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Actions.Base;
+using ISynergy.Framework.Automations.Actions.Base;
 
 namespace ISynergy.Framework.Automations.Actions;
 

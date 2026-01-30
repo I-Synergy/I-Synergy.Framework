@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Models.Results;
+using ISynergy.Framework.Core.Models.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 

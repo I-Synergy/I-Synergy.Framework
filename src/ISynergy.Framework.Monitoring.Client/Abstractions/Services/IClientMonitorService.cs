@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Monitoring.Messages;
+using ISynergy.Framework.Monitoring.Messages;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ISynergy.Framework.Monitoring.Client.Abstractions.Services;

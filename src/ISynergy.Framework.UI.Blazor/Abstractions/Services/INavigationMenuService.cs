@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Models;
+using ISynergy.Framework.UI.Models;
 
 namespace ISynergy.Framework.UI.Abstractions.Services;
 public interface INavigationMenuService

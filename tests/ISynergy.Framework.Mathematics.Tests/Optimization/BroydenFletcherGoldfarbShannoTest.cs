@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

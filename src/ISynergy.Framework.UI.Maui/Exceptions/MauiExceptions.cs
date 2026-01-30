@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Exceptions;
+namespace ISynergy.Framework.UI.Exceptions;
 
 public static class MauiExceptions
 {

@@ -1,4 +1,4 @@
-﻿using MessagePack;
+using MessagePack;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.MessageBus.Performance.Models;

@@ -4247,8 +4247,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     }
 
     // c                                                                       
-    // c  L-BFGS-B is released under the “New BSD License” (aka “Modified
-    // c  or “3-clause license”)                                           
+    // c  L-BFGS-B is released under the ï¿½New BSD Licenseï¿½ (aka ï¿½Modified
+    // c  or ï¿½3-clause licenseï¿½)                                           
     // c  Please read attached file License.txt                                
     // c                                        
     // c===========   L-BFGS-B (version 3.0.  April 25, 2011  =================
@@ -5026,8 +5026,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     }
 
     // c                                                                       
-    // c  L-BFGS-B is released under the “New BSD License” (aka “Modified
-    // c  or “3-clause license”)                                           
+    // c  L-BFGS-B is released under the ï¿½New BSD Licenseï¿½ (aka ï¿½Modified
+    // c  or ï¿½3-clause licenseï¿½)                                           
     // c  Please read attached file License.txt                                
     // c                                        
     // c

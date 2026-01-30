@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Matrices;
+namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
 {

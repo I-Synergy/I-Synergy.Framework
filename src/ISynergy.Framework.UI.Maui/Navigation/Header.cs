@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Navigation.Base;
+using ISynergy.Framework.UI.Navigation.Base;
 
 namespace ISynergy.Framework.UI.Navigation;
 

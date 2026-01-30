@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services;
 public class FormFactorService : IFormFactorService

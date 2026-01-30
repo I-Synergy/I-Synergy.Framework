@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Constraints;
+using ISynergy.Framework.AspNetCore.Globalization.Constraints;
 using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
 using ISynergy.Framework.AspNetCore.Globalization.Extensions;
 using ISynergy.Framework.AspNetCore.Globalization.Options;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.WebDav.Server;
+using ISynergy.Framework.AspNetCore.WebDav.Server;
 using ISynergy.Framework.AspNetCore.WebDav.Server.Locking;
 using System;
 using System.Collections.Concurrent;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions;
+using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;

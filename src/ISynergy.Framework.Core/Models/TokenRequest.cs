@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Models;
+namespace ISynergy.Framework.Core.Models;
 
 /// <summary>
 /// Class TokenRequest.

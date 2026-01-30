@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 
 namespace ISynergy.Framework.Mvvm.Models.Tests;

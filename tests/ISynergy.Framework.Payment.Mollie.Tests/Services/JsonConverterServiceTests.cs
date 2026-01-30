@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Payment.Mollie.Models.Payment.Response;
+using ISynergy.Framework.Payment.Mollie.Models.Payment.Response;
 using ISynergy.Framework.Payment.Mollie.Services;
 using Xunit;
 

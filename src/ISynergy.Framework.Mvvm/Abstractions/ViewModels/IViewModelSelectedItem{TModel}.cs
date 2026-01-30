@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Commands;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 

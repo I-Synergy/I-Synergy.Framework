@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Utilities;
+using ISynergy.Framework.Core.Utilities;
 using Sample.ViewModels;
 using Windows.System;
 using Windows.UI.Xaml;

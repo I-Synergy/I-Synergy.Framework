@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Data.TestClasses.Tests;
+using ISynergy.Framework.Core.Data.TestClasses.Tests;
 using ISynergy.Framework.Core.Tests.Data.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

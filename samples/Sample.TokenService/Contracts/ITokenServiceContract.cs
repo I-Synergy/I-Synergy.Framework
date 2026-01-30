@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Models.General;
+using ISynergy.Framework.AspNetCore.Authentication.Models.General;
 using Sample.TokenService.Models;
 using System.Collections.Generic;
 using System.Security.Claims;

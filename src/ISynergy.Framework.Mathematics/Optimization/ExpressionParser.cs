@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 namespace ISynergy.Framework.Mathematics.Optimization;
 
 #if !NET35

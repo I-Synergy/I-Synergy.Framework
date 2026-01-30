@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
 
 namespace Mollie.Sample.Models {

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Utilities;
+using ISynergy.Framework.Core.Utilities;
 using System.Globalization;
 using System.Windows.Data;
 

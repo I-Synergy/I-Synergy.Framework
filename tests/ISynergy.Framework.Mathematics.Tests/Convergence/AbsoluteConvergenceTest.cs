@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Convergence;
+using ISynergy.Framework.Mathematics.Convergence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests.Convergence;

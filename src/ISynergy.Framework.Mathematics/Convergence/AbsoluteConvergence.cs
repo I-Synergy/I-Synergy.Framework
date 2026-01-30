@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Convergence.Base;
+using ISynergy.Framework.Mathematics.Convergence.Base;
 
 namespace ISynergy.Framework.Mathematics.Convergence;
 

@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 
 #if !NET35 && !NET40
 namespace ISynergy.Framework.Mathematics.IO.NumPy;

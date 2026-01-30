@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Physics.Abstractions;
+using ISynergy.Framework.Physics.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Physics.Services.Tests;

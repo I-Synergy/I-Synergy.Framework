@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.States.Base;
+using ISynergy.Framework.Automations.States.Base;
 
 namespace ISynergy.Framework.Automations.States;
 

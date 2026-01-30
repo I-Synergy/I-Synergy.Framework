@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using NugetUnlister.Abstractions;
 using NugetUnlister.Models;
 using NugetUnlister.Options;

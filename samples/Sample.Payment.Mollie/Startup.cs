@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Payment.Mollie.Extensions;
 using ISynergy.Framework.Payment.Mollie.Options;

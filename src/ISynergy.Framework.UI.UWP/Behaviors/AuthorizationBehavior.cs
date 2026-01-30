@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Enumerations;
 using Microsoft.Xaml.Interactivity;

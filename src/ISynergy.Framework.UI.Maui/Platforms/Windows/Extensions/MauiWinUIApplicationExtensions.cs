@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Locators;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Windows.AppLifecycle;
 using System.Diagnostics;

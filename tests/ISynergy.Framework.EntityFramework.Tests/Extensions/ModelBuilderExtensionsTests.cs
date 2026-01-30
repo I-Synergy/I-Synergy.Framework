@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.EntityFramework.Tests.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;

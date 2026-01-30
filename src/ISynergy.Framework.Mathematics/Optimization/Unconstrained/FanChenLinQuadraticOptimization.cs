@@ -1,4 +1,4 @@
-﻿// The source code presented in this file has been adapted from LibSVM - 
+// The source code presented in this file has been adapted from LibSVM - 
 // A Library for Support Vector Machines, created by Chih-Chung Chang and
 // Chih-Jen Lin. Original license is given below.
 //

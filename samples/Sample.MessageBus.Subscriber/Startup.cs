@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions;
+using ISynergy.Framework.MessageBus.Abstractions;
 using Sample.MessageBus.Models;
 
 namespace Sample.MessageBus.Subscriber;

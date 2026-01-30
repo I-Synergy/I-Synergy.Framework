@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Payment.Mollie.Models;
 using Mollie.Sample.Framework.Validators;
 

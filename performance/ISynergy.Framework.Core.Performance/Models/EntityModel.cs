@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.EntityFramework.Base;
+using ISynergy.Framework.EntityFramework.Base;
 
 namespace ISynergy.Framework.Core.Performance.Models;
 

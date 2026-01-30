@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Storage.Abstractions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

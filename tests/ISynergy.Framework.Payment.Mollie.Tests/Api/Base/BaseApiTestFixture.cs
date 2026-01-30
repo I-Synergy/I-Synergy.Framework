@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
+using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;

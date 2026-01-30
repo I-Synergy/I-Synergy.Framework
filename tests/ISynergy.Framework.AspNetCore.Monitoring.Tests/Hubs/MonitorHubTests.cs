@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
+using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

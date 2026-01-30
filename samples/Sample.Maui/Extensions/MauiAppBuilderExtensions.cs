@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Abstractions.Services;
+using ISynergy.Framework.Synchronization.Abstractions.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.Services;
 

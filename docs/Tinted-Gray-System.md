@@ -9,7 +9,7 @@ Each of the 48 theme files now includes **tinted gray colors** that are blended 
 Each tinted gray is calculated using a **15% blend** of the primary theme color with the base neutral gray:
 
 ```
-TintedColor = BaseGray × 0.85 + PrimaryColor × 0.15
+TintedColor = BaseGray ï¿½ 0.85 + PrimaryColor ï¿½ 0.15
 ```
 
 This creates subtle, harmonious grays that complement each theme while maintaining sufficient contrast for usability.
