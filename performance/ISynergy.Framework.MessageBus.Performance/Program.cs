@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Running;
 using ISynergy.Framework.MessageBus.Performance.Benchmarks;
 
 namespace ISynergy.Framework.MessageBus.Performance;

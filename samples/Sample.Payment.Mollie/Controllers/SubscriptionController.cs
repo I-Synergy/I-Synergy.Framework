@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using ISynergy.Framework.Payment.Mollie.Models;
 using Microsoft.AspNetCore.Mvc;
 using Mollie.Sample.Models;

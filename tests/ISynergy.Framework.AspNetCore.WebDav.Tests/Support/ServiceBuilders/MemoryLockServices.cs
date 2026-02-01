@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ISynergy.Framework.AspNetCore.WebDav.Locking.InMemory;
 using ISynergy.Framework.AspNetCore.WebDav.Server;
 using ISynergy.Framework.AspNetCore.WebDav.Server.Locking;

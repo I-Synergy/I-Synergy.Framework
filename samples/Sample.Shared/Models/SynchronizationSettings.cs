@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Synchronization.Abstractions.Settings;
 
 namespace Sample.Models;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Options;
+using ISynergy.Framework.AspNetCore.Globalization.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;

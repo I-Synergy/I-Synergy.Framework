@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Helpers;
+namespace ISynergy.Framework.Core.Helpers;
 
 /// <summary>
 /// An empty scope without any logic

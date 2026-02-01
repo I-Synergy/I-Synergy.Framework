@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Geometry;
+using ISynergy.Framework.Mathematics.Geometry;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests.Common;

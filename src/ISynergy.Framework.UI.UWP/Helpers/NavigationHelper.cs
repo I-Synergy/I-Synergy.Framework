@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.UI.Helpers;

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 

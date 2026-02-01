@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Integration;
+using ISynergy.Framework.Mathematics.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests.Integration;

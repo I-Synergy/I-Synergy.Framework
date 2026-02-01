@@ -1,4 +1,4 @@
-﻿using Microsoft.Maui.LifecycleEvents;
+using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Windows.AppLifecycle;
 
 #pragma warning disable IDE0130, S1200

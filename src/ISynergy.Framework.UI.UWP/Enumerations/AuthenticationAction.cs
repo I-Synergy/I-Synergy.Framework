@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Enumerations;
+namespace ISynergy.Framework.UI.Enumerations;
 
 /// <summary>
 /// The available actions to perform when a user is not able to view a specific UI element.

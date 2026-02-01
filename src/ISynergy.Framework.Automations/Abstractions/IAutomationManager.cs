@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Automations.Abstractions;
+namespace ISynergy.Framework.Automations.Abstractions;
 
 public interface IAutomationManager
 {

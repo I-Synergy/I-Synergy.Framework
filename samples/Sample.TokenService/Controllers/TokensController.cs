@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Models.General;
+using ISynergy.Framework.AspNetCore.Authentication.Models.General;
 using Microsoft.AspNetCore.Mvc;
 using Sample.TokenService.Business;
 using Sample.TokenService.Contracts;

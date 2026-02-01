@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.MessageBus.Enumerations;
+namespace ISynergy.Framework.MessageBus.Enumerations;
 
 /// <summary>
 /// Actions of QueueMessage object.

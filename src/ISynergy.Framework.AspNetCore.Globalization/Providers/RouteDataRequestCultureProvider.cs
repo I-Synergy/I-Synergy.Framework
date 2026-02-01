@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Options;
+using ISynergy.Framework.AspNetCore.Globalization.Options;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;

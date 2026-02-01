@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Collections;
+using ISynergy.Framework.Core.Abstractions.Collections;
 
 namespace ISynergy.Framework.Core.Collections;
 

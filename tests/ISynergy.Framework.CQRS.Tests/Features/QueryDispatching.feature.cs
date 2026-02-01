@@ -131,7 +131,7 @@ namespace ISynergy.Framework.CQRS.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/QueryDispatching.feature.ndjson", 6);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Dispatching a simple query")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 13, DisplayName="Dispatching a simple query")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Dispatching a simple query")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Query Dispatching")]
         public async global::System.Threading.Tasks.Task DispatchingASimpleQuery()
@@ -168,7 +168,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Dispatching a query without a registered handler")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 18, DisplayName="Dispatching a query without a registered handler")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Dispatching a query without a registered handler")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Query Dispatching")]
         public async global::System.Threading.Tasks.Task DispatchingAQueryWithoutARegisteredHandler()
@@ -205,7 +205,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Dispatching queries with cancellation")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 23, DisplayName="Dispatching queries with cancellation")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Dispatching queries with cancellation")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Query Dispatching")]
         public async global::System.Threading.Tasks.Task DispatchingQueriesWithCancellation()
@@ -248,7 +248,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Query returns expected data type")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 30, DisplayName="Query returns expected data type")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Query returns expected data type")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Query Dispatching")]
         public async global::System.Threading.Tasks.Task QueryReturnsExpectedDataType()

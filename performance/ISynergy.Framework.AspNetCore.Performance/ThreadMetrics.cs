@@ -1,4 +1,4 @@
-﻿namespace Sample.Api.Performance;
+namespace Sample.Api.Performance;
 public class ThreadMetrics
 {
     public int TotalThreads { get; set; }

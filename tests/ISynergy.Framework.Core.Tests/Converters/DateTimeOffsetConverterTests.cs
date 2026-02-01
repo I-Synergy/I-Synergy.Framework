@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Serializers;
+using ISynergy.Framework.Core.Serializers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 

@@ -1,4 +1,4 @@
-﻿namespace Sample.Views.Controls;
+namespace Sample.Views.Controls;
 
 /// <summary>
 /// Class BaseList. This class cannot be inherited.

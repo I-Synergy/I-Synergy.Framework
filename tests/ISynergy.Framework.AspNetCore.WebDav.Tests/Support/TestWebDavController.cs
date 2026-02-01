@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.WebDav.Controllers;
+using ISynergy.Framework.AspNetCore.WebDav.Controllers;
 using ISynergy.Framework.AspNetCore.WebDav.Result;
 using ISynergy.Framework.AspNetCore.WebDav.Server;
 using Microsoft.AspNetCore.Mvc;

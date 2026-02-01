@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Vectors;
+namespace ISynergy.Framework.Mathematics.Vectors;
 
 /// <summary>
 /// 3D Vector structure with X, Y and Z coordinates.

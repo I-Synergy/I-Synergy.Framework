@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.EntityFramework.Extensions;
+using ISynergy.Framework.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ISynergy.Framework.EntityFramework.Tests.Fixtures;

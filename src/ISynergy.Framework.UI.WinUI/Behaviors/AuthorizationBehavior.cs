@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using Microsoft.UI.Xaml;

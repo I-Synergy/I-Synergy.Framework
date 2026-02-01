@@ -131,7 +131,7 @@ namespace ISynergy.Framework.CQRS.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CommandDispatching.feature.ndjson", 6);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Dispatching a simple command")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 13, DisplayName="Dispatching a simple command")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Dispatching a simple command")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Dispatching")]
         public async global::System.Threading.Tasks.Task DispatchingASimpleCommand()
@@ -171,7 +171,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Dispatching a command with result")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 19, DisplayName="Dispatching a command with result")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Dispatching a command with result")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Dispatching")]
         public async global::System.Threading.Tasks.Task DispatchingACommandWithResult()
@@ -208,7 +208,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Dispatching a command without a registered handler")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 24, DisplayName="Dispatching a command without a registered handler")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Dispatching a command without a registered handler")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Dispatching")]
         public async global::System.Threading.Tasks.Task DispatchingACommandWithoutARegisteredHandler()
@@ -248,7 +248,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Dispatching multiple commands in sequence")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 30, DisplayName="Dispatching multiple commands in sequence")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Dispatching multiple commands in sequence")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Command Dispatching")]
         public async global::System.Threading.Tasks.Task DispatchingMultipleCommandsInSequence()

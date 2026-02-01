@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Projection;
 
 namespace ISynergy.Framework.Geography.Global;

@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Core.Performance.Benchmarks;

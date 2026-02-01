@@ -81,10 +81,12 @@ stages:
             custom: 'workload'
             arguments: 'install maui --source https://api.nuget.org/v3/index.json'
 
-        - task: DownloadSecureFile@1
-          displayName: 'Download secure file'
+        - task: DotNetCoreCLI@2
+          displayName: 'Install Azure SignTool'
           inputs:
-            secureFile: 'intelligence-online.pfx'
+            command: 'custom'
+            custom: 'tool'
+            arguments: 'install --global I-Synergy.Tools.Azure.SignTool'
 
         - task: SonarCloudPrepare@3
           displayName: 'Prepare SonarCloud'
@@ -118,17 +120,10 @@ stages:
             Contents: '*'
             TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-        - task: NuGetCommand@2
+        - task: CmdLine@2
           displayName: 'Sign Nuget packages'
           inputs:
-            command: 'custom'
-            arguments: 'sign $(Build.ArtifactStagingDirectory)\*.nupkg -CertificatePath "$(Agent.WorkFolder)\_temp\intelligence-online.pfx" -CertificatePassword "$(CertPassword)" -Timestamper "$(TimestampUrl)"'
-
-        - task: NuGetCommand@2
-          displayName: 'Sign Nuget symbol packages'
-          inputs:
-            command: 'custom'
-            arguments: 'sign $(Build.ArtifactStagingDirectory)\*.snupkg -CertificatePath "$(Agent.WorkFolder)\_temp\intelligence-online.pfx" -CertificatePassword "$(CertPassword)" -Timestamper "$(TimestampUrl)"'
+            script: AzureSignTool sign -kvt "$(AzureTenantId)" -kvu "$(KeyVaultUri)" -kvi "$(ClientId)" -kvs "$(ClientSecret)" -kvc "$(CertificateName)" --timestamp-rfc3161 "$(TimeStampUrl)" -td sha256 -v --sign-nuget-contents --sign-nuget-contents-filter "ISynergy.Framework.*" $(Build.ArtifactStagingDirectory)\*.nupkg
 
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Artifacts'
@@ -188,13 +183,6 @@ stages:
           persistCredentials: true
 
         - task: PowerShell@2
-          displayName: 'Generate Release Notes'
-          inputs:
-            targetType: 'filePath'
-            filePath: '$(Build.SourcesDirectory)/scripts/New-ReleaseNotes.ps1'
-            arguments: '-BuildNumber "$(Build.BuildNumber)" -OutputPath "$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md"'
-
-        - task: PowerShell@2
           displayName: 'Create Git Tag'
           inputs:
             targetType: 'filePath'
@@ -210,5 +198,4 @@ stages:
             target: '$(Build.SourceVersion)'
             tagSource: 'gitTag'
             tag: '$(Build.BuildNumber)'
-            releaseNotesFilePath: '$(Build.ArtifactStagingDirectory)\RELEASE_NOTES.md'
             isPreRelease: ${{ eq(variables['Build.Reason'], 'PullRequest') }}

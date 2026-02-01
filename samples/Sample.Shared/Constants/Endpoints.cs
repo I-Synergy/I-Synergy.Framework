@@ -1,4 +1,4 @@
-﻿namespace Sample.Constants;
+namespace Sample.Constants;
 
 public class Endpoints
 {

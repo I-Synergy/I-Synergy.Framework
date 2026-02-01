@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models;
 using System.Security.Claims;
 
 namespace ISynergy.Framework.AspNetCore.Abstractions.Services;

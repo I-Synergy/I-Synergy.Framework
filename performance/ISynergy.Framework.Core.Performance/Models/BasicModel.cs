@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Performance.Models;
+namespace ISynergy.Framework.Core.Performance.Models;
 
 public class BasicModel
 {

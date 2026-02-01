@@ -134,7 +134,7 @@ namespace ISynergy.Framework.EntityFramework.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/QueryBuilding.feature.ndjson", 6);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Building queries with Where clause")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 10, DisplayName="Building queries with Where clause")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Building queries with Where clause")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Query Building")]
         public async global::System.Threading.Tasks.Task BuildingQueriesWithWhereClause()
@@ -174,7 +174,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Building queries with Include for eager loading")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 16, DisplayName="Building queries with Include for eager loading")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Building queries with Include for eager loading")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Query Building")]
         public async global::System.Threading.Tasks.Task BuildingQueriesWithIncludeForEagerLoading()
@@ -217,7 +217,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Building queries with OrderBy")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 23, DisplayName="Building queries with OrderBy")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Building queries with OrderBy")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Query Building")]
         public async global::System.Threading.Tasks.Task BuildingQueriesWithOrderBy()
@@ -257,7 +257,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Building complex queries with multiple operations")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 29, DisplayName="Building complex queries with multiple operations")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Building complex queries with multiple operations")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Query Building")]
         public async global::System.Threading.Tasks.Task BuildingComplexQueriesWithMultipleOperations()

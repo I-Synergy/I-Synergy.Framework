@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Monitoring.Client.Abstractions.Services;
+using ISynergy.Framework.Monitoring.Client.Abstractions.Services;
 using ISynergy.Framework.Monitoring.Enumerations;
 using ISynergy.Framework.Monitoring.Messages;
 using ISynergy.Framework.Monitoring.Options;

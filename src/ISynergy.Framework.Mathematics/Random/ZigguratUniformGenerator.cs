@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Random;
+namespace ISynergy.Framework.Mathematics.Random;
 
 /// <summary>
 ///     Uniform random number generator using the Ziggurat method.

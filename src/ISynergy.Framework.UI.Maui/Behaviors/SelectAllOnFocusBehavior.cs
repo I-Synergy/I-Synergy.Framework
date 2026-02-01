@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Behaviors;
+namespace ISynergy.Framework.UI.Behaviors;
 
 public class SelectAllOnFocusBehavior : Behavior<Entry>
 {

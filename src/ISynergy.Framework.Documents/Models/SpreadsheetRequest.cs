@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Documents.Models.Base;
+using ISynergy.Framework.Documents.Models.Base;
 
 namespace ISynergy.Framework.Documents.Models;
 

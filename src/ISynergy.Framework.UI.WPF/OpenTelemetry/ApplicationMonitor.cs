@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using System.Diagnostics;

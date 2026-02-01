@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Sample.Models;

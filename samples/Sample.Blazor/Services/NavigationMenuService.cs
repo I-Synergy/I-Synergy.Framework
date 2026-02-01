@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Blazor.Models;
+using ISynergy.Framework.AspNetCore.Blazor.Models;
 using ISynergy.Framework.AspNetCore.Blazor.Services.Base;
 using Microsoft.AspNetCore.Components.Routing;
 using Icons = Microsoft.FluentUI.AspNetCore.Components.Icons;

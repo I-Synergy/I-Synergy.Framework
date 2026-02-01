@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Constants;
+namespace ISynergy.Framework.UI.Constants;
 public class MessageConstants
 {
     public const string MESSAGES_NOTIFICATION_CENTER = "NOTIFICATION_CENTER";

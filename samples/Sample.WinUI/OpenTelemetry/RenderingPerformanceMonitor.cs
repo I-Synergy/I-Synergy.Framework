@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Media;
 using System.Diagnostics;

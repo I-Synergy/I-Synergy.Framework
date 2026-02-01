@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.EntityFramework.Tests.Entities;
+using ISynergy.Framework.EntityFramework.Tests.Entities;
 using ISynergy.Framework.EntityFramework.Tests.Fixtures;
 using ISynergy.Framework.EntityFramework.Tests.Models;
 using Microsoft.EntityFrameworkCore;

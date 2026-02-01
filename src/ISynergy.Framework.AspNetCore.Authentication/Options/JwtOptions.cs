@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Authentication.Options;
+namespace ISynergy.Framework.AspNetCore.Authentication.Options;
 
 /// <summary>
 /// Class JwtOptions.

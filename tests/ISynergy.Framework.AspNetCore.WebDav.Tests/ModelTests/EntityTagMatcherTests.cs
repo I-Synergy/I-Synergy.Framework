@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.WebDav.Server.Model.Headers;
+using ISynergy.Framework.AspNetCore.WebDav.Server.Model.Headers;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;

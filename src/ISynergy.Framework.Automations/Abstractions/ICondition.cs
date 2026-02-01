@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Enumerations;
+using ISynergy.Framework.Automations.Enumerations;
 
 namespace ISynergy.Framework.Automations.Abstractions;
 

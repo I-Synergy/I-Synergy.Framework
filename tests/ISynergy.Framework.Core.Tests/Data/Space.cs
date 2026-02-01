@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Tests.Enumerations;
 
 namespace ISynergy.Framework.Core.Tests.Data;

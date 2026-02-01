@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Exceptions;
+using ISynergy.Framework.Core.Exceptions;
 using ISynergy.Framework.Core.Extensions.Base;
 using System.Collections;
 using System.Data;

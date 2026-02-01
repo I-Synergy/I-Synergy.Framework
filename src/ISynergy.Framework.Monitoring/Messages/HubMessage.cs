@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Monitoring.Messages;
+namespace ISynergy.Framework.Monitoring.Messages;
 
 /// <summary>
 /// Class HubMessage.

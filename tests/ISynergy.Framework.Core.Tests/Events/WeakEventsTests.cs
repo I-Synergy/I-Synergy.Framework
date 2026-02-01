@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Tests.Data.TestClasses;
+using ISynergy.Framework.Core.Tests.Data.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Events.Tests;

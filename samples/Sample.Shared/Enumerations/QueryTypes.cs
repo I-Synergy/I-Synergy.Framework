@@ -1,4 +1,4 @@
-﻿namespace Sample.Enumerations;
+namespace Sample.Enumerations;
 
 /// <summary>
 /// Query types for sample.

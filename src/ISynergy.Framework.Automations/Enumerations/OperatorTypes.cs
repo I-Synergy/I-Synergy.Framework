@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Automations.Enumerations;
+namespace ISynergy.Framework.Automations.Enumerations;
 
 /// <summary>
 /// Condition types.

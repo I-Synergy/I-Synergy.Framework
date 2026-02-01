@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Synchronization.Abstractions.Settings;
+namespace ISynergy.Framework.Synchronization.Abstractions.Settings;
 
 public interface ISynchronizationSettings
 {

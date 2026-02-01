@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.WebDav.Server.Props.Converters;
+using ISynergy.Framework.AspNetCore.WebDav.Server.Props.Converters;
 using System;
 using Xunit;
 

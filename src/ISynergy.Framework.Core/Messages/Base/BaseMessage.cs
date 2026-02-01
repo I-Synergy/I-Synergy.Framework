@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Messages.Base;
+namespace ISynergy.Framework.Core.Messages.Base;
 
 /// <summary>
 /// Base class for all messages broadcasted by the Messenger.

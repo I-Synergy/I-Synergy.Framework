@@ -1,4 +1,4 @@
-﻿#define CHECKS
+#define CHECKS
 
 using ISynergy.Framework.Mathematics.Decompositions;
 using System.Collections;

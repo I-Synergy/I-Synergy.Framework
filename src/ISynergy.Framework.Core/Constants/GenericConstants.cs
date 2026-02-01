@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Constants;
+namespace ISynergy.Framework.Core.Constants;
 
 /// <summary>
 /// Class GenericConstants.

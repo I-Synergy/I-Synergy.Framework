@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
+using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
 using ISynergy.Framework.AspNetCore.Monitoring.Services;
 using ISynergy.Framework.Monitoring.Abstractions.Services;
 using Microsoft.AspNetCore.SignalR;

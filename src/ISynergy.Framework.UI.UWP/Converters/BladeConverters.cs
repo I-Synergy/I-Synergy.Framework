@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using ISynergy.Framework.Mvvm.Abstractions;
 using Windows.UI.Xaml.Data;

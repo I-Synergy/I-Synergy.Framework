@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models;
 
 namespace ISynergy.Framework.Core.Abstractions;
 

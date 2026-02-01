@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Abstractions;
+namespace ISynergy.Framework.Core.Abstractions;
 
 /// <summary>
 /// Interface IAddress

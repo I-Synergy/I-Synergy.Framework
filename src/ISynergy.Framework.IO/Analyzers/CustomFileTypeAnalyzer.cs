@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.IO.Analyzers.Base;
+using ISynergy.Framework.IO.Analyzers.Base;
 using System.Text;
 
 namespace ISynergy.Framework.IO.Analyzers;

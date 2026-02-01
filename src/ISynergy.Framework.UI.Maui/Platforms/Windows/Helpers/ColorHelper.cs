@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using System.Globalization;
 using Color = Windows.UI.Color;
 using Colors = Microsoft.UI.Colors;

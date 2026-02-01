@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Enumerations;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;

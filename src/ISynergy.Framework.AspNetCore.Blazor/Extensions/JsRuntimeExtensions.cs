@@ -1,4 +1,4 @@
-﻿using Microsoft.JSInterop;
+using Microsoft.JSInterop;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Extensions;
 

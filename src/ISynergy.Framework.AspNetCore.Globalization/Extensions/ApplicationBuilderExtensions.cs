@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
+using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
 using ISynergy.Framework.AspNetCore.Globalization.Options;
 using ISynergy.Framework.AspNetCore.Globalization.Providers;
 using Microsoft.AspNetCore.Builder;

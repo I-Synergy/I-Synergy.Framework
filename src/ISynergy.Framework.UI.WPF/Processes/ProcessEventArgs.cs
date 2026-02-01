@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Processes;
+namespace ISynergy.Framework.UI.Processes;
 
 /// <summary>
 /// The ProcessEventArgs are arguments for a console event.

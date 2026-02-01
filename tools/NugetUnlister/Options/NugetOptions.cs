@@ -1,4 +1,4 @@
-﻿namespace NugetUnlister.Options;
+namespace NugetUnlister.Options;
 
 public class NugetOptions
 {

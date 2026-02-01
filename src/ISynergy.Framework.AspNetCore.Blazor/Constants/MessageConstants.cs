@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Blazor.Constants;
+namespace ISynergy.Framework.AspNetCore.Blazor.Constants;
 public class MessageConstants
 {
     public const string MESSAGES_NOTIFICATION_CENTER = "NOTIFICATION_CENTER";

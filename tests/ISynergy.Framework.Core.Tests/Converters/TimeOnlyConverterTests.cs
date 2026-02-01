@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Serializers;
+using ISynergy.Framework.Core.Serializers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
 

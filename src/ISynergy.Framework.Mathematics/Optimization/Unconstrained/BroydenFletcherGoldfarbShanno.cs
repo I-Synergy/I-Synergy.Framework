@@ -1,4 +1,4 @@
-﻿// This class has been based on the C library of Limited memory BFGS (L-BFGS).
+// This class has been based on the C library of Limited memory BFGS (L-BFGS).
 //
 //      C library of Limited memory BFGS (L-BFGS).
 //

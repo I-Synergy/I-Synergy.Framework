@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services;
 

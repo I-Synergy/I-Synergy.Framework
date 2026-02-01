@@ -1,4 +1,4 @@
-﻿// The source code presented in this file has been adapted from the
+// The source code presented in this file has been adapted from the
 // Nelder Mead Simplex method implementation presented in the NLopt
 // Numerical Optimization Library. Original license is given below.
 //

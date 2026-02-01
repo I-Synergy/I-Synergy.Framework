@@ -122,7 +122,7 @@ namespace ISynergy.Framework.CQRS.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ErrorHandling.feature.ndjson", 5);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Command handler throws exception")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 10, DisplayName="Command handler throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Command handler throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "CQRS Error Handling")]
         public async global::System.Threading.Tasks.Task CommandHandlerThrowsException()
@@ -159,7 +159,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Query handler returns null result")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 16, DisplayName="Query handler returns null result")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Query handler returns null result")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "CQRS Error Handling")]
         public async global::System.Threading.Tasks.Task QueryHandlerReturnsNullResult()
@@ -196,7 +196,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Command validation failure")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 22, DisplayName="Command validation failure")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Command validation failure")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "CQRS Error Handling")]
         public async global::System.Threading.Tasks.Task CommandValidationFailure()

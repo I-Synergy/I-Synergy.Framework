@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Options;
+using ISynergy.Framework.AspNetCore.Authentication.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 

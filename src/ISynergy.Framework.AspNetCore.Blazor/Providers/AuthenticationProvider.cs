@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Providers;
+using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Providers;
 using ISynergy.Framework.Core.Abstractions;
 using System.Windows.Input;
 

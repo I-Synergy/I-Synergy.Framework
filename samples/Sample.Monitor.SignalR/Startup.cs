@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Monitoring.Extensions;
+using ISynergy.Framework.AspNetCore.Monitoring.Extensions;
 
 namespace Sample.Monitor.SignalR;
 

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Formats;
+namespace ISynergy.Framework.Mathematics.Formats;
 
 using ISynergy.Framework.Mathematics.Formats.Base;
 using ISynergy.Framework.Mathematics.Matrices;

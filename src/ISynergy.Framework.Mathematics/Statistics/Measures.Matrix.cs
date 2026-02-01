@@ -1,4 +1,4 @@
-﻿
+
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Matrices;
 namespace ISynergy.Framework.Mathematics.Statistics;

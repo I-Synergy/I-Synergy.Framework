@@ -1,4 +1,4 @@
-﻿namespace NugetUnlister.Models;
+namespace NugetUnlister.Models;
 
 public class NugetResponse
 {

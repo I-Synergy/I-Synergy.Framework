@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Common;
+namespace ISynergy.Framework.Mathematics.Common;
 
 
 /// <summary>

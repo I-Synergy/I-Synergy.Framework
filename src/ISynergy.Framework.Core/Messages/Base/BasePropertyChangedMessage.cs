@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Messages.Base;
+namespace ISynergy.Framework.Core.Messages.Base;
 
 /// <summary>
 /// Basis class for the <see cref="PropertyChangedMessage{T}" /> class. This

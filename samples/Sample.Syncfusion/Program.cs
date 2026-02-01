@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Documents.Extensions;
+using ISynergy.Framework.Documents.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

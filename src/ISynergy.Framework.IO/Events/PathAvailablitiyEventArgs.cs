@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.IO.Events;
+namespace ISynergy.Framework.IO.Events;
 
 /// <summary>
 /// Class PathAvailablitiyEventArgs.

@@ -1,4 +1,4 @@
-﻿// The source code presented in this file has been adapted from the
+// The source code presented in this file has been adapted from the
 // Sbplx method (based on Nelder-Mead's Simplex) given in the NLopt
 // Numerical Optimization Library. Original license is given below.
 //

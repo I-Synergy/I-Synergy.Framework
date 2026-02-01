@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Blazor.Abstractions.Services;
+namespace ISynergy.Framework.AspNetCore.Blazor.Abstractions.Services;
 public interface IFormFactorService
 {
     public string GetFormFactor();

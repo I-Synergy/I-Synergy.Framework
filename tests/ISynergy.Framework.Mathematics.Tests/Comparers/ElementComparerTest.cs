@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Comparers;
+using ISynergy.Framework.Mathematics.Comparers;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

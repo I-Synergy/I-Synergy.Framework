@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Optimization.Constrained;
+using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using System.Runtime.CompilerServices;
 namespace ISynergy.Framework.Mathematics.Optimization;

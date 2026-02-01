@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Blazor.Models;
+namespace ISynergy.Framework.AspNetCore.Blazor.Models;
 public record NavigationGroup : NavigationItem
 {
     public bool Expanded { get; set; }

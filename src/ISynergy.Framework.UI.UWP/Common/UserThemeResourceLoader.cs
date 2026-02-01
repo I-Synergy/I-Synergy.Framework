@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml.Resources;
+using Windows.UI.Xaml.Resources;
 
 namespace ISynergy.Framework.UI.Controls;
 

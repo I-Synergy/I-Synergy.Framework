@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Common;
 using System.Globalization;
 
 namespace ISynergy.Framework.Geography.Utm;
