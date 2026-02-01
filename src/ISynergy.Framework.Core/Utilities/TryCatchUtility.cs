@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Utilities;
+namespace ISynergy.Framework.Core.Utilities;
 
 public static class TryCatchUtility
 {

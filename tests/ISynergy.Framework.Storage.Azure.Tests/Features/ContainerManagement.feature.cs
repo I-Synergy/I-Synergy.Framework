@@ -130,7 +130,7 @@ namespace ISynergy.Framework.Storage.Azure.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ContainerManagement.feature.ndjson", 6);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Creating a blob container")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 9, DisplayName="Creating a blob container")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Creating a blob container")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Container Management")]
         public async global::System.Threading.Tasks.Task CreatingABlobContainer()
@@ -170,7 +170,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Listing blobs in a container")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 15, DisplayName="Listing blobs in a container")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Listing blobs in a container")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Container Management")]
         public async global::System.Threading.Tasks.Task ListingBlobsInAContainer()
@@ -210,7 +210,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Deleting a blob container")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 21, DisplayName="Deleting a blob container")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Deleting a blob container")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Container Management")]
         public async global::System.Threading.Tasks.Task DeletingABlobContainer()
@@ -250,7 +250,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Setting container access level")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 27, DisplayName="Setting container access level")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Setting container access level")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Container Management")]
         public async global::System.Threading.Tasks.Task SettingContainerAccessLevel()

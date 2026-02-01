@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Actions.Base;
+using ISynergy.Framework.Automations.Actions.Base;
 using System.Windows.Input;
 
 namespace ISynergy.Framework.Automations.Actions;

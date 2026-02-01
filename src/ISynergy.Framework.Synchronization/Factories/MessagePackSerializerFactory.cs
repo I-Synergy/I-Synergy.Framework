@@ -1,4 +1,4 @@
-﻿using Dotmim.Sync.Serialization;
+using Dotmim.Sync.Serialization;
 using ISynergy.Framework.Synchronization.Serializers;
 
 namespace ISynergy.Framework.Synchronization.Factories;

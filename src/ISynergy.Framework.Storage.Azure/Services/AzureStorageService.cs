@@ -1,4 +1,4 @@
-﻿using Azure;
+using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ISynergy.Framework.Core.Validation;

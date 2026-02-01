@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.ObjectPool;
 using System.Collections;
 using System.Text;

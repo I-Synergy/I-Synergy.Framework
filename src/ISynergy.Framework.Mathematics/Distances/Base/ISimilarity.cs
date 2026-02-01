@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Distances.Base;
+namespace ISynergy.Framework.Mathematics.Distances.Base;
 
 /// <summary>
 ///   Common interface for similarity measures.

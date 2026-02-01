@@ -1,4 +1,4 @@
-﻿using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Options;

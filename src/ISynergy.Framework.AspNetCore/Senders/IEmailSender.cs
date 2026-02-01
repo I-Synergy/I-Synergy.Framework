@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Senders;
+namespace ISynergy.Framework.AspNetCore.Senders;
 
 /// <summary>
 /// Interface IEmailSender

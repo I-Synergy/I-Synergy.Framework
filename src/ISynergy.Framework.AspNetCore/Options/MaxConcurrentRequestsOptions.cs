@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Enumerations;
+using ISynergy.Framework.AspNetCore.Enumerations;
 
 namespace ISynergy.Framework.AspNetCore.Options;
 

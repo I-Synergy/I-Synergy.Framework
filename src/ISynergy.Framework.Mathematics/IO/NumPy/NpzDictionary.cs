@@ -1,4 +1,4 @@
-﻿#if !NET35 && !NET40
+#if !NET35 && !NET40
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 /// <summary>

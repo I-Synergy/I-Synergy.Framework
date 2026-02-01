@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

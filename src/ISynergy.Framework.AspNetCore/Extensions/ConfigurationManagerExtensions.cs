@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
 public static class ConfigurationManagerExtensions

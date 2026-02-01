@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.WinUI.Tests.Enumerations;
+using ISynergy.Framework.UI.WinUI.Tests.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.UI.Converters.Tests;

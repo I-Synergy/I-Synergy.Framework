@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Enumerations;
+namespace ISynergy.Framework.Core.Enumerations;
 
 /// <summary>
 /// Enum Week

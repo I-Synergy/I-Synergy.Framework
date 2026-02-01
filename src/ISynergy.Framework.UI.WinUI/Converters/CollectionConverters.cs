@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Models.Accounts;
+using ISynergy.Framework.Core.Models.Accounts;
 using Microsoft.UI.Xaml.Data;
 using System.Collections;
 

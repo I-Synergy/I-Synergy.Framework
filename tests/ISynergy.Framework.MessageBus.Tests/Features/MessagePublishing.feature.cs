@@ -133,7 +133,7 @@ namespace ISynergy.Framework.MessageBus.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/MessagePublishing.feature.ndjson", 7);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Publishing a message to a topic")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 10, DisplayName="Publishing a message to a topic")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Publishing a message to a topic")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Publishing")]
         public async global::System.Threading.Tasks.Task PublishingAMessageToATopic()
@@ -170,7 +170,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Publishing multiple messages to the same topic")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 15, DisplayName="Publishing multiple messages to the same topic")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Publishing multiple messages to the same topic")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Publishing")]
         public async global::System.Threading.Tasks.Task PublishingMultipleMessagesToTheSameTopic()
@@ -210,7 +210,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Publishing messages to different topics")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 21, DisplayName="Publishing messages to different topics")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Publishing messages to different topics")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Publishing")]
         public async global::System.Threading.Tasks.Task PublishingMessagesToDifferentTopics()
@@ -247,7 +247,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Publishing a null message throws exception")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 26, DisplayName="Publishing a null message throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Publishing a null message throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Publishing")]
         public async global::System.Threading.Tasks.Task PublishingANullMessageThrowsException()
@@ -284,7 +284,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Publishing to an empty topic name throws exception")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 31, DisplayName="Publishing to an empty topic name throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Publishing to an empty topic name throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Publishing")]
         public async global::System.Threading.Tasks.Task PublishingToAnEmptyTopicNameThrowsException()

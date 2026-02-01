@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Blazor.Models;
+using ISynergy.Framework.AspNetCore.Blazor.Models;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Abstractions.Services;
 

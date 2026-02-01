@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 
 #if !NET35 && !NET40
 namespace ISynergy.Framework.Mathematics.IO.NumPy;

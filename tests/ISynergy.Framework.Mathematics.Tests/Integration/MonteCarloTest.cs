@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Integration;
+using ISynergy.Framework.Mathematics.Integration;
 using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

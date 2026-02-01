@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Matrices;
+namespace ISynergy.Framework.Mathematics.Matrices;
 
 /// <summary>
 ///   Reduced row Echelon form

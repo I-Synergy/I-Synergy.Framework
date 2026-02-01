@@ -1,4 +1,4 @@
-﻿using Dotmim.Sync;
+using Dotmim.Sync;
 using ISynergy.Framework.Core.Messages.Base;
 
 namespace ISynergy.Framework.Synchronization.Messages;

@@ -1,4 +1,4 @@
-﻿# MigrationService
+# MigrationService
 
 The `MigrationService` class provides functionality for migrating data from one version to another in the ISynergy.Framework.UI.Maui application.
 

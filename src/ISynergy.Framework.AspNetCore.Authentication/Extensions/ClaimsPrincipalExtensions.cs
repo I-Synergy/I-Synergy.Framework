@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Exceptions;
+using ISynergy.Framework.Core.Exceptions;
 using ISynergy.Framework.Core.Validation;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;

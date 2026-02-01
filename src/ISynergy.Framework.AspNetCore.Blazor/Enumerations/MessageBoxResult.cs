@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Blazor.Enumerations;
+namespace ISynergy.Framework.AspNetCore.Blazor.Enumerations;
 
 /// <summary>
 /// Enum MessageBoxResult

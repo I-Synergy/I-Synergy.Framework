@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.IO.Models;
+using ISynergy.Framework.IO.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.IO.Tests;

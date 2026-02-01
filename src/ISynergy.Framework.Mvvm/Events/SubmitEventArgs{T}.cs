@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm.Events;
+namespace ISynergy.Framework.Mvvm.Events;
 
 /// <summary>
 /// Class SubmitEventArgs.

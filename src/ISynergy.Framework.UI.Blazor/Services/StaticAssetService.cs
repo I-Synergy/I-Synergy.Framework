@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace ISynergy.Framework.UI.Services;

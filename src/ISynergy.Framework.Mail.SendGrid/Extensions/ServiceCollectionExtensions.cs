@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mail.Abstractions.Services;
 using ISynergy.Framework.Mail.Options;
 using ISynergy.Framework.Mail.Services;

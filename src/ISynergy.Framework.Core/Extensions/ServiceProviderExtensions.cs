@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.Hosting;
 
 namespace ISynergy.Framework.Core.Extensions;

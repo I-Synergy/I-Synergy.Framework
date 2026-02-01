@@ -1,4 +1,4 @@
-﻿using Sample.TokenService.Contracts;
+using Sample.TokenService.Contracts;
 
 namespace Sample.TokenService.Business
 {

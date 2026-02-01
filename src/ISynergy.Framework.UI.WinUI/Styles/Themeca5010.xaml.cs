@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 namespace ISynergy.Framework.UI.Styles;
 public sealed partial class Themeca5010 : ResourceDictionary

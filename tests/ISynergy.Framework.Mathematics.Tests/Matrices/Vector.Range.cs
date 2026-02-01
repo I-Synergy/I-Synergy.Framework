@@ -1,4 +1,4 @@
-﻿
+
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;

@@ -1,4 +1,4 @@
-﻿
+
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 namespace ISynergy.Framework.Mathematics.Optimization.Base;
 

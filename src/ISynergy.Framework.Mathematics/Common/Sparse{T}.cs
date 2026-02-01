@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Text;
 
 namespace ISynergy.Framework.Mathematics.Common;

@@ -130,7 +130,7 @@ namespace ISynergy.Framework.MessageBus.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/MessageSubscription.feature.ndjson", 7);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Subscribing to a topic and receiving a message")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 9, DisplayName="Subscribing to a topic and receiving a message")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Subscribing to a topic and receiving a message")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Subscription")]
         public async global::System.Threading.Tasks.Task SubscribingToATopicAndReceivingAMessage()
@@ -170,7 +170,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Multiple subscribers receive the same message")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 15, DisplayName="Multiple subscribers receive the same message")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Multiple subscribers receive the same message")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Subscription")]
         public async global::System.Threading.Tasks.Task MultipleSubscribersReceiveTheSameMessage()
@@ -210,7 +210,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Subscriber only receives messages from subscribed topics")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 21, DisplayName="Subscriber only receives messages from subscribed topics")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Subscriber only receives messages from subscribed topics")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Subscription")]
         public async global::System.Threading.Tasks.Task SubscriberOnlyReceivesMessagesFromSubscribedTopics()
@@ -247,7 +247,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Unsubscribing from a topic stops message delivery")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 26, DisplayName="Unsubscribing from a topic stops message delivery")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Unsubscribing from a topic stops message delivery")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Subscription")]
         public async global::System.Threading.Tasks.Task UnsubscribingFromATopicStopsMessageDelivery()
@@ -287,7 +287,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Subscribing with null handler throws exception")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 32, DisplayName="Subscribing with null handler throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Subscribing with null handler throws exception")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Message Subscription")]
         public async global::System.Threading.Tasks.Task SubscribingWithNullHandlerThrowsException()

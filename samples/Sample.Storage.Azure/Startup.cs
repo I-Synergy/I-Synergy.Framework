@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Storage.Abstractions.Services;
+using ISynergy.Framework.Storage.Abstractions.Services;
 
 namespace Sample.Storage.Azure;
 

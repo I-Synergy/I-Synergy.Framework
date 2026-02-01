@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Models.General;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

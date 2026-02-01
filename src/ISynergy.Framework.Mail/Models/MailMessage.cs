@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mail.Models;
+namespace ISynergy.Framework.Mail.Models;
 
 /// <summary>
 /// Mail message model.

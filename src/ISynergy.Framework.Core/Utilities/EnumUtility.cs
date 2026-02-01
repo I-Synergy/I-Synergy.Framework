@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Exceptions;
+using ISynergy.Framework.Core.Exceptions;
 using ISynergy.Framework.Core.Extensions;
 using System.Reflection;
 using System.Runtime.Serialization;

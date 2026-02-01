@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Functions;
+namespace ISynergy.Framework.Mathematics.Functions;
 
 using System;
 

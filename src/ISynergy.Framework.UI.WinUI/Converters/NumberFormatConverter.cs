@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Data;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;

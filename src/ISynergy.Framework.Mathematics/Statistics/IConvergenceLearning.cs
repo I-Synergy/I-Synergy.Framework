@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Statistics;
+namespace ISynergy.Framework.Mathematics.Statistics;
 
 /// <summary>
 ///   Common interface for convergence-based iterative learning algorithms.

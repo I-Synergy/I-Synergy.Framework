@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
+using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Builder;
 

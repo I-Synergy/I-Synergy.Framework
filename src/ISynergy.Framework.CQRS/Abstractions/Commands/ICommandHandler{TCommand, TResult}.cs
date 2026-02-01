@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.CQRS.Commands;
+using ISynergy.Framework.CQRS.Commands;
 
 namespace ISynergy.Framework.CQRS.Abstractions.Commands;
 /// <summary>

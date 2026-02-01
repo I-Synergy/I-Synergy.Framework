@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.OpenTelemetry.Abstractions.Options;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using Microsoft.Extensions.Configuration;

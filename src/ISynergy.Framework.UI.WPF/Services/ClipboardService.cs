@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Models.Results;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Converters;
 using System.IO;

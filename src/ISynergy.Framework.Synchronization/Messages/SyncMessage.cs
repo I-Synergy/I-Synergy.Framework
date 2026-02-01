@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Messages.Base;
+using ISynergy.Framework.Core.Messages.Base;
 
 namespace ISynergy.Framework.Synchronization.Messages;
 

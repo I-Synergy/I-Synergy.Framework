@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 

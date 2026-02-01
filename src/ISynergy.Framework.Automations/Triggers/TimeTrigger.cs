@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Triggers.Base;
+using ISynergy.Framework.Automations.Triggers.Base;
 using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Automations.Triggers;

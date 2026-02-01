@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Options;
+namespace ISynergy.Framework.AspNetCore.Options;
 
 public class CORSOptions
 {

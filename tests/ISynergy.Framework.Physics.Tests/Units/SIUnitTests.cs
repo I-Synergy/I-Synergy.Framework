@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Physics.Enumerations;
+using ISynergy.Framework.Physics.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Physics.Tests;

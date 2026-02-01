@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.MultiTenancy.Services;
+using ISynergy.Framework.AspNetCore.MultiTenancy.Services;
 using ISynergy.Framework.Core.Abstractions.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

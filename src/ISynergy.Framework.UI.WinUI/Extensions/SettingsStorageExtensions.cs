@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using System.Text.Json;
 using Windows.Storage;
 using Windows.Storage.Streams;

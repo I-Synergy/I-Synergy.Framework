@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Services;
+using ISynergy.Framework.AspNetCore.Authentication.Services;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Validation;
 using Sample.TokenService.Models;

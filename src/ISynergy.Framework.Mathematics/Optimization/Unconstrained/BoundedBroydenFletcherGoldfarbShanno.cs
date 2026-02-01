@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Async;
+using ISynergy.Framework.Core.Abstractions.Async;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.ComponentModel;

@@ -1,4 +1,4 @@
-﻿using Azure.Identity;
+using Azure.Identity;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mail.Abstractions.Services;

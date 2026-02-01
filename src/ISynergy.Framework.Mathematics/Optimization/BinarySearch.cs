@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization;
+namespace ISynergy.Framework.Mathematics.Optimization;
 
 /// <summary>
 ///   Binary search root finding algorithm.

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Collections;
+namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>
 /// Base class for tree structures.

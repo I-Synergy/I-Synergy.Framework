@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;

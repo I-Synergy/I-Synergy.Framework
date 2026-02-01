@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Automations.Actions;
+namespace ISynergy.Framework.Automations.Actions;
 
 /// <summary>
 /// Result from action.

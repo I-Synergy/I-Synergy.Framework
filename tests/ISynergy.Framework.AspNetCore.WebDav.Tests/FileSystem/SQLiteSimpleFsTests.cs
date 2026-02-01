@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.WebDav.Tests.Support.ServiceBuilders;
+using ISynergy.Framework.AspNetCore.WebDav.Tests.Support.ServiceBuilders;
 
 namespace ISynergy.Framework.AspNetCore.WebDav.Tests.FileSystem
 {

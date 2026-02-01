@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.AspNetCore.Authentication.Options;

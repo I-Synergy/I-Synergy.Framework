@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Physics.Base;
 using ISynergy.Framework.Physics.Enumerations;
 

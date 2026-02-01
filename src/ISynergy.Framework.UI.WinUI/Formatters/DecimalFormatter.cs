@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Windows.Globalization.NumberFormatting;
 
 namespace ISynergy.Framework.UI.Formatters;

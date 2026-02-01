@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.IO.Mat;
+namespace ISynergy.Framework.Mathematics.IO.Mat;
 
 using ISynergy.Framework.Core.Extensions;
 using System;

@@ -1,4 +1,4 @@
-﻿using Sample.ViewModels;
+using Sample.ViewModels;
 using System.Windows.Controls;
 using System.Windows.Input;
 

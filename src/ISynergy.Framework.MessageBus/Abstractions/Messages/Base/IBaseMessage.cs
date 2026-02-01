@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
+namespace ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 
 /// <summary>
 /// Interface IBusMessage

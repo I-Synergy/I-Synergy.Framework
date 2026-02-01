@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.Commands;
+namespace ISynergy.Framework.Mvvm.Abstractions.Commands;
 
 /// <summary>
 /// An interface for commands that know whether they support cancellation or not.

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
+using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.AspNetCore.Globalization.Options.Tests;

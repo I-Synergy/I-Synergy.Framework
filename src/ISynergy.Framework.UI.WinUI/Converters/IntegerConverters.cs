@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Converters.Shared;
+using ISynergy.Framework.UI.Converters.Shared;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 

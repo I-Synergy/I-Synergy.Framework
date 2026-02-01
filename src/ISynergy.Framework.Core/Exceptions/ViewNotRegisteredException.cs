@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Exceptions;
+namespace ISynergy.Framework.Core.Exceptions;
 
 /// <summary>
 /// Class ViewNotRegisteredException.

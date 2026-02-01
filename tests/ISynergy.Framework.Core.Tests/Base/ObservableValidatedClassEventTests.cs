@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Tests.Fixtures;
+using ISynergy.Framework.Core.Tests.Fixtures;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Base.Tests;

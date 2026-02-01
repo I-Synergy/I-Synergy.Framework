@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Printer.Label.Abstractions.Services;
+using ISynergy.Framework.Printer.Label.Abstractions.Services;
 using ISynergy.Framework.Printer.Label.Dymo.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

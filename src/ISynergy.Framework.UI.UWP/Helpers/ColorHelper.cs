@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using ISynergy.Framework.Core.Extensions;
 using Windows.UI;

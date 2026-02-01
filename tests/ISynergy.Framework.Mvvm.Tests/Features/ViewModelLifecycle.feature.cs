@@ -131,7 +131,7 @@ namespace ISynergy.Framework.Mvvm.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ViewModelLifecycle.feature.ndjson", 6);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="ViewModel initialization")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 9, DisplayName="ViewModel initialization")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("ViewModel initialization")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ViewModel Lifecycle")]
         public async global::System.Threading.Tasks.Task ViewModelInitialization()
@@ -174,7 +174,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="ViewModel disposal")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 16, DisplayName="ViewModel disposal")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("ViewModel disposal")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ViewModel Lifecycle")]
         public async global::System.Threading.Tasks.Task ViewModelDisposal()
@@ -217,7 +217,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="ViewModel busy state management")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 23, DisplayName="ViewModel busy state management")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("ViewModel busy state management")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ViewModel Lifecycle")]
         public async global::System.Threading.Tasks.Task ViewModelBusyStateManagement()
@@ -260,7 +260,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="ViewModel title and subtitle binding")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 30, DisplayName="ViewModel title and subtitle binding")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("ViewModel title and subtitle binding")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ViewModel Lifecycle")]
         public async global::System.Threading.Tasks.Task ViewModelTitleAndSubtitleBinding()

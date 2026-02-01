@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Tests.Enumerations;
+namespace ISynergy.Framework.Core.Tests.Enumerations;
 
 public enum SpaceTypes
 {

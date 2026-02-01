@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using System.Windows.Input;
 

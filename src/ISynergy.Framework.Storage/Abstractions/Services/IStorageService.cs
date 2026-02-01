@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Storage.Abstractions.Services;
+namespace ISynergy.Framework.Storage.Abstractions.Services;
 
 /// <summary>
 /// Interface IStorageService

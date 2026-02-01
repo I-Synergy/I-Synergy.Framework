@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.WebDav.Server;
+using ISynergy.Framework.AspNetCore.WebDav.Server;
 using System;
 using System.Net;
 using System.Net.Http;

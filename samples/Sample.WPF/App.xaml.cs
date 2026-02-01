@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;

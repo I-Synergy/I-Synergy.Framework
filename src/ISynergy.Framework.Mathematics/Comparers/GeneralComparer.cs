@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Comparers;
+namespace ISynergy.Framework.Mathematics.Comparers;
 
 /// <summary>
 ///     Directions for the General Comparer.

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Constants;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;

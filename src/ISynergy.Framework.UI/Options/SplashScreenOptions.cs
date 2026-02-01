@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.UI.Enumerations;
 
 namespace ISynergy.Framework.UI.Options;
 

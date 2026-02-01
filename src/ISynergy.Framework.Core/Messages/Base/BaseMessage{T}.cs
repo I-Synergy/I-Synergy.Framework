@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Messages.Base;
+namespace ISynergy.Framework.Core.Messages.Base;
 
 /// <summary>
 /// Passes a generic value (Content) to a recipient.

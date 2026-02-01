@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

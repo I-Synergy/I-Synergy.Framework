@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;

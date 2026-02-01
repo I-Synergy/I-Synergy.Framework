@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
 using System.ComponentModel;
 using System.Reflection;

@@ -1,4 +1,4 @@
-﻿namespace Sample.Abstractions;
+namespace Sample.Abstractions;
 
 /// <summary>
 /// Interface IMasterDataService

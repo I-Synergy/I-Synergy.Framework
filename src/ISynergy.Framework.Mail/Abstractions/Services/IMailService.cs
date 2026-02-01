@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mail.Models;
+using ISynergy.Framework.Mail.Models;
 
 namespace ISynergy.Framework.Mail.Abstractions.Services;
 

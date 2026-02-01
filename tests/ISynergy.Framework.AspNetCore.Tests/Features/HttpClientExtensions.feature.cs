@@ -121,7 +121,7 @@ namespace ISynergy.Framework.AspNetCore.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/HttpClientExtensions.feature.ndjson", 6);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Making HTTP request with timing")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 6, DisplayName="Making HTTP request with timing")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Making HTTP request with timing")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "HTTP Client Extensions")]
         public async global::System.Threading.Tasks.Task MakingHTTPRequestWithTiming()
@@ -158,7 +158,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Handling successful HTTP responses")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 12, DisplayName="Handling successful HTTP responses")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Handling successful HTTP responses")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "HTTP Client Extensions")]
         public async global::System.Threading.Tasks.Task HandlingSuccessfulHTTPResponses()
@@ -195,7 +195,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Handling failed HTTP responses")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 18, DisplayName="Handling failed HTTP responses")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Handling failed HTTP responses")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "HTTP Client Extensions")]
         public async global::System.Threading.Tasks.Task HandlingFailedHTTPResponses()
@@ -232,7 +232,7 @@ await testRunner.AndAsync("appropriate error information should be available", (
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Measuring API response times")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 24, DisplayName="Measuring API response times")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Measuring API response times")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "HTTP Client Extensions")]
         public async global::System.Threading.Tasks.Task MeasuringAPIResponseTimes()

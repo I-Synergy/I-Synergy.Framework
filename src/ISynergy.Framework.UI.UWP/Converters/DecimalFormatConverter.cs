@@ -1,4 +1,4 @@
-﻿using Windows.Globalization.NumberFormatting;
+using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Framework.UI.Converters;

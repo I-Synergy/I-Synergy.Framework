@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Fixtures;
+using ISynergy.Framework.Core.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel;
 

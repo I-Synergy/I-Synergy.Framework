@@ -1,4 +1,4 @@
-﻿<app:Application
+<app:Application
     xmlns:app="clr-namespace:ISynergy.Framework.UI;assembly=ISynergy.Framework.UI.WPF"  
     x:Class="Sample.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

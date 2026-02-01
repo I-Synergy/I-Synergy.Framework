@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Extensions;
 using Windows.UI.Xaml;

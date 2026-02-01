@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Differentiation;
+using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Base;

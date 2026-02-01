@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Enumerations;
+using ISynergy.Framework.Mathematics.Enumerations;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

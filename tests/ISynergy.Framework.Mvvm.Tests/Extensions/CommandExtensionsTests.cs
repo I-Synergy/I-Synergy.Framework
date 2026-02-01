@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Commands;
+using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Commands;
 using Moq;
 using System.Windows.Input;

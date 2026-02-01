@@ -1,4 +1,4 @@
-﻿using Windows.ApplicationModel;
+using Windows.ApplicationModel;
 using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Framework.UI.Converters;

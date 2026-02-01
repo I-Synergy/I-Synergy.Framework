@@ -130,7 +130,7 @@ namespace ISynergy.Framework.Mvvm.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/PropertyChangeNotification.feature.ndjson", 7);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Property change raises PropertyChanged event")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 9, DisplayName="Property change raises PropertyChanged event")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Property change raises PropertyChanged event")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Property Change Notification")]
         public async global::System.Threading.Tasks.Task PropertyChangeRaisesPropertyChangedEvent()
@@ -170,7 +170,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Multiple property changes raise multiple events")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 15, DisplayName="Multiple property changes raise multiple events")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Multiple property changes raise multiple events")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Property Change Notification")]
         public async global::System.Threading.Tasks.Task MultiplePropertyChangesRaiseMultipleEvents()
@@ -213,7 +213,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="SetProperty only raises event when value changes")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 22, DisplayName="SetProperty only raises event when value changes")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("SetProperty only raises event when value changes")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Property Change Notification")]
         public async global::System.Threading.Tasks.Task SetPropertyOnlyRaisesEventWhenValueChanges()
@@ -250,7 +250,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Computed property updates when dependency changes")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 27, DisplayName="Computed property updates when dependency changes")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Computed property updates when dependency changes")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Property Change Notification")]
         public async global::System.Threading.Tasks.Task ComputedPropertyUpdatesWhenDependencyChanges()
@@ -293,7 +293,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Property validation on change")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 35, DisplayName="Property validation on change")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Property validation on change")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Property Change Notification")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]

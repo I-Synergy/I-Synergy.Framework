@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Losses;
+namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
 /// <summary>
 ///     Negative log-likelihood loss.

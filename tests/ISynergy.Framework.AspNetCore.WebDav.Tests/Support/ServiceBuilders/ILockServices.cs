@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ISynergy.Framework.AspNetCore.WebDav.Tests.Support.ServiceBuilders
 {

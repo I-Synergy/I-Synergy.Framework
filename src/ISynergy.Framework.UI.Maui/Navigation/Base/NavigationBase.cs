@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Navigation;
+using ISynergy.Framework.Mvvm.Abstractions.Navigation;
 
 namespace ISynergy.Framework.UI.Navigation.Base;
 

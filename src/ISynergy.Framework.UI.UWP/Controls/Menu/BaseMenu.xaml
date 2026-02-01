@@ -1,4 +1,4 @@
-﻿<CommandBar x:Name="BaseMenuInstance"
+<CommandBar x:Name="BaseMenuInstance"
     x:Class="ISynergy.Framework.UI.Controls.BaseMenu"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

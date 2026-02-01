@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Serializers;
+using ISynergy.Framework.Core.Serializers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Text.Json;

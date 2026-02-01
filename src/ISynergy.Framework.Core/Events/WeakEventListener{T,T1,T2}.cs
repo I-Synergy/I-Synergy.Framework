@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Events;
+namespace ISynergy.Framework.Core.Events;
 
 /// <summary>
 /// Implements a weak event listener that allows the owner to be garbage

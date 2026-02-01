@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Models;
 using ISynergy.Framework.Monitoring.Enumerations;

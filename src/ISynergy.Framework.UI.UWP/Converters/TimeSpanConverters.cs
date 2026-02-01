@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Abstractions.Services;
 using System;
 using System.Text;

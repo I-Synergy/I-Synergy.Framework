@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Options;
+namespace ISynergy.Framework.Core.Options;
 
 /// <summary>
 /// Base configuration options

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;

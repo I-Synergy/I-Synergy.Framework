@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 namespace ISynergy.Framework.Mathematics.Matrices;
 public static partial class Matrix
 {

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Services;
 
 namespace ISynergy.Framework.Core.Extensions;
 

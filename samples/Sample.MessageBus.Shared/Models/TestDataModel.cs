@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions.Messages;
+using ISynergy.Framework.MessageBus.Abstractions.Messages;
 using ISynergy.Framework.MessageBus.Enumerations;
 using ISynergy.Framework.MessageBus.Models;
 

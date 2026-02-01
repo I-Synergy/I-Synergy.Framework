@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.IO.Events.Base;
 
 namespace ISynergy.Framework.IO.Events;

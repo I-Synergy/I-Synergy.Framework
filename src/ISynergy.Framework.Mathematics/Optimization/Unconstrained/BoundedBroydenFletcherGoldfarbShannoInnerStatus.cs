@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
 /// <summary>
 ///     Inner status of the <see cref="BoundedBroydenFletcherGoldfarbShanno" />

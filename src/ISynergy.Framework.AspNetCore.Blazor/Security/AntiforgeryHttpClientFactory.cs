@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Security;
+using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Security;
 using Microsoft.JSInterop;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Security;

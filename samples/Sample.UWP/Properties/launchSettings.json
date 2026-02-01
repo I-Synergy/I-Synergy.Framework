@@ -1,4 +1,4 @@
-﻿{
+{
   "profiles": {
     "Sample.UWP (Packaged)": {
       "commandName": "MsixPackage",

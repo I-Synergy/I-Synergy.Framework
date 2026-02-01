@@ -133,7 +133,7 @@ namespace ISynergy.Framework.Storage.Azure.Tests.Features
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/BlobOperations.feature.ndjson", 8);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Uploading a file to blob storage")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 10, DisplayName="Uploading a file to blob storage")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Uploading a file to blob storage")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Blob Operations")]
         public async global::System.Threading.Tasks.Task UploadingAFileToBlobStorage()
@@ -173,7 +173,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Downloading a file from blob storage")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 16, DisplayName="Downloading a file from blob storage")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Downloading a file from blob storage")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Blob Operations")]
         public async global::System.Threading.Tasks.Task DownloadingAFileFromBlobStorage()
@@ -213,7 +213,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Deleting a blob")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 22, DisplayName="Deleting a blob")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Deleting a blob")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Blob Operations")]
         public async global::System.Threading.Tasks.Task DeletingABlob()
@@ -253,7 +253,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Checking if a blob exists")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 28, DisplayName="Checking if a blob exists")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Checking if a blob exists")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Blob Operations")]
         public async global::System.Threading.Tasks.Task CheckingIfABlobExists()
@@ -293,7 +293,7 @@ await this.FeatureBackgroundAsync();
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Getting blob metadata")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 34, DisplayName="Getting blob metadata")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Getting blob metadata")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Blob Operations")]
         public async global::System.Threading.Tasks.Task GettingBlobMetadata()
@@ -333,7 +333,7 @@ await testRunner.AndAsync("the metadata properties should be accessible", ((stri
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(DisplayName="Generating a SAS token for blob access")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 40, DisplayName="Generating a SAS token for blob access")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Generating a SAS token for blob access")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Blob Operations")]
         public async global::System.Threading.Tasks.Task GeneratingASASTokenForBlobAccess()

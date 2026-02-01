@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.OpenTelemetry.Abstractions.Options;
+namespace ISynergy.Framework.OpenTelemetry.Abstractions.Options;
 public interface ITelemetryOptions
 {
     /// <summary>
