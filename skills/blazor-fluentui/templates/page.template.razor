@@ -1,0 +1,232 @@
+@*
+ * ============================================================================
+ * TEMPLATE: I-Synergy MVVM Routable Page
+ * ============================================================================
+ *
+ * Purpose: Razor page that inherits View<TViewModel> and showcases the
+ *          conventions used in samples/Sample.Blazor (Fluent UI layout,
+ *          command binding, dialogs, busy/error states, CommonServices usage).
+ * Usage:   Replace placeholders, update routes, and align the ViewModel surface.
+ *
+ * Placeholders:
+ * - {{PageName}}           => Component class (e.g., BudgetsPage)
+ * - {{Namespace}}          => Namespace (e.g., MyApp.Components.Pages)
+ * - {{ViewModelName}}      => ViewModel (e.g., BudgetsPageViewModel)
+ * - {{EntityName}}         => Entity (e.g., Budget)
+ * - {{EntityNamePlural}}   => Plural form (e.g., Budgets)
+ * - {{entityRoute}}        => Route segment (e.g., budgets)
+ *
+ * Lines: ~260
+ *@
+
+@page "/{{entityRoute}}"
+@using System.Linq
+@using ISynergy.Framework.AspNetCore.Blazor.Components.Controls
+@using ISynergy.Framework.UI.Extensions
+@using Microsoft.FluentUI.AspNetCore.Components
+@namespace {{Namespace}}
+@inherits View<{{ViewModelName}}>
+@attribute [Authorize]
+@inject ILogger<{{PageName}}> Logger
+
+<PageTitle>{{EntityNamePlural}} · @ViewModel.Title</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="16">
+    <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="16" VerticalAlignment="VerticalAlignment.Center">
+        <div>
+            <h1>@ViewModel.Title</h1>
+            <FluentBody>@ViewModel.Subtitle</FluentBody>
+        </div>
+        <FluentSpacer />
+        <FluentButton Appearance="Appearance.Accent"
+                     IconStart="@(new Icons.Regular.Size20.Add())"
+                     @attributes="@this.CommandBinding(ViewModel.CreateCommand)">
+            Add {{EntityName}}
+        </FluentButton>
+        <FluentButton Appearance="Appearance.Neutral"
+                     IconStart="@(new Icons.Regular.Size20.ArrowClockwise())"
+                     @attributes="@this.CommandBinding(ViewModel.RefreshCommand)">
+            Refresh
+        </FluentButton>
+    </FluentStack>
+
+    <FluentCard>
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="12" Wrap="true">
+            <FluentSearch Style="width: 320px;"
+                          Placeholder="Search {{EntityNamePlural}}"
+                          @bind-Value="ViewModel.SearchTerm"
+                          @bind-Value:after="ViewModel.ApplyFilters" />
+
+            <FluentSelect Label="Status"
+                          Style="width: 160px;"
+                          @bind-Value="ViewModel.StatusFilter"
+                          @bind-Value:after="ViewModel.ApplyFilters"
+                          Items="@ViewModel.StatusOptions" />
+
+            <FluentButton Appearance="Appearance.Stealth"
+                         IconStart="@(new Icons.Regular.Size20.FilterDismiss())"
+                         @attributes="@this.CommandBinding(ViewModel.ClearFiltersCommand)">
+                Clear filters
+            </FluentButton>
+
+            <FluentSpacer />
+
+            <FluentButton Appearance="Appearance.Stealth"
+                         IconStart="@(new Icons.Regular.Size20.ArrowExport())"
+                         @attributes="@this.CommandBinding(ViewModel.ExportCommand)">
+                Export
+            </FluentButton>
+            <FluentButton Appearance="Appearance.Stealth"
+                         IconStart="@(new Icons.Regular.Size20.ArrowImport())"
+                         @attributes="@this.CommandBinding(ViewModel.ImportCommand)">
+                Import
+            </FluentButton>
+        </FluentStack>
+    </FluentCard>
+
+    @if (ViewModel.IsBusy)
+    {
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8" HorizontalAlignment="HorizontalAlignment.Center">
+            <FluentProgressRing />
+            <span>@ViewModel.BusyMessage</span>
+        </FluentStack>
+    }
+    else if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+    {
+        <FluentMessageBar Intent="MessageIntent.Error">
+            <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
+                <span>@ViewModel.ErrorMessage</span>
+                <FluentButton Appearance="Appearance.Stealth"
+                             @attributes="@this.CommandBinding(ViewModel.RetryCommand)">
+                    Retry
+                </FluentButton>
+            </FluentStack>
+        </FluentMessageBar>
+    }
+    else if (ViewModel.FilteredItems?.Any() != true)
+    {
+        <FluentCard Appearance="CardAppearance.Outline">
+            <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalGap="12">
+                <FluentIcon Icon="@(new Icons.Regular.Size32.ClipboardTask())" />
+                <h3>No {{EntityNamePlural}} yet</h3>
+                <p>Use the Add button to create the first {{EntityName}}.</p>
+                <FluentButton Appearance="Appearance.Accent"
+                             @attributes="@this.CommandBinding(ViewModel.CreateCommand)">
+                    Add {{EntityName}}
+                </FluentButton>
+            </FluentStack>
+        </FluentCard>
+    }
+    else
+    {
+        <FluentDataGrid Items="@ViewModel.FilteredItems" Virtualize="true" Pagination="@ViewModel.PaginationState">
+            <PropertyColumn Property="@(x => x.Name)" Sortable="true" />
+            <PropertyColumn Property="@(x => x.Status)" Sortable="true" />
+            <PropertyColumn Property="@(x => x.Owner)" />
+            <PropertyColumn Property="@(x => x.LastUpdated)" Format="yyyy-MM-dd" Sortable="true" />
+
+            <TemplateColumn Title="Actions">
+                <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="4">
+                    <FluentButton Size="ButtonSize.Small" Appearance="Appearance.Neutral"
+                                 @attributes="@this.CommandBinding(ViewModel.EditCommand, context)">
+                        Edit
+                    </FluentButton>
+                    <FluentButton Size="ButtonSize.Small" Appearance="Appearance.Stealth"
+                                 @attributes="@this.CommandBinding(ViewModel.DeleteCommand, context)">
+                        Delete
+                    </FluentButton>
+                </FluentStack>
+            </TemplateColumn>
+        </FluentDataGrid>
+
+        <FluentPaginator State="@ViewModel.PaginationState" />
+    }
+</FluentStack>
+
+<FluentDialog @bind-Hidden="@(!ViewModel.IsEditDialogOpen)" Modal="true" TrapFocus="true" Style="min-width: 520px;">
+    <FluentDialogHeader>
+        <h3>@(ViewModel.IsEditing ? $"Edit {ViewModel.DialogTitle}" : $"Create {ViewModel.DialogTitle}")</h3>
+    </FluentDialogHeader>
+
+    <FluentDialogBody>
+        <EditForm EditContext="@ViewModel.EditContext" OnValidSubmit="@ViewModel.SaveAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
+                <FluentTextField Label="Name" @bind-Value="ViewModel.EditModel.Name" Required="true" />
+                <ValidationMessage For="@(() => ViewModel.EditModel.Name)" />
+
+                <FluentSelect Label="Status" Items="@ViewModel.StatusOptions" @bind-Value="ViewModel.EditModel.Status" />
+                <ValidationMessage For="@(() => ViewModel.EditModel.Status)" />
+
+                <FluentTextArea Label="Notes" Rows="4" @bind-Value="ViewModel.EditModel.Notes" />
+            </FluentStack>
+        </EditForm>
+    </FluentDialogBody>
+
+    <FluentDialogFooter>
+        <FluentButton Appearance="Appearance.Accent"
+                     @attributes="@this.CommandBinding(ViewModel.SaveCommand)">
+            @(ViewModel.IsSaving ? "Saving..." : "Save")
+        </FluentButton>
+        <FluentButton Appearance="Appearance.Neutral"
+                     @attributes="@this.CommandBinding(ViewModel.CancelEditCommand)">
+            Cancel
+        </FluentButton>
+    </FluentDialogFooter>
+</FluentDialog>
+
+<FluentDialog @bind-Hidden="@(!ViewModel.IsDeleteDialogOpen)" Modal="true">
+    <FluentDialogHeader>
+        <h3>Delete {{EntityName}}</h3>
+    </FluentDialogHeader>
+    <FluentDialogBody>
+        <p>Are you sure you want to delete <strong>@ViewModel.ItemPendingDeletion?.Name</strong>?</p>
+    </FluentDialogBody>
+    <FluentDialogFooter>
+        <FluentButton Appearance="Appearance.Accent"
+                     @attributes="@this.CommandBinding(ViewModel.ConfirmDeleteCommand)">
+            @(ViewModel.IsDeleting ? "Deleting..." : "Delete")
+        </FluentButton>
+        <FluentButton Appearance="Appearance.Neutral"
+                     @attributes="@this.CommandBinding(ViewModel.CancelDeleteCommand)">
+            Cancel
+        </FluentButton>
+    </FluentDialogFooter>
+</FluentDialog>
+
+@code {
+    // Razor code-behind stays minimal; all heavy lifting is done inside the
+    // ViewModel so it can be shared with WinUI/WPF/MAUI shells. Only override
+    // lifecycle methods if you need to react to navigation parameters.
+}
+
+// ============================================================================
+// EXPECTED VIEWMODEL CONTRACT (reference)
+// ============================================================================
+// public class {{ViewModelName}} : ViewModel
+// {
+//     public ObservableCollection<{{EntityName}}> Items { get; }
+//     public IEnumerable<{{EntityName}}> FilteredItems { get; private set; }
+//     public PaginationState PaginationState { get; } = new() { ItemsPerPage = 20 };
+//     public string SearchTerm { get; set; } = string.Empty;
+//     public string StatusFilter { get; set; } = "All";
+//     public IReadOnlyList<string> StatusOptions { get; } = ["All", "Active", "Inactive"];
+//     public bool IsBusy { get; private set; }
+//     public string BusyMessage { get; private set; } = string.Empty;
+//     public string? ErrorMessage { get; private set; }
+//
+//     public AsyncRelayCommand RefreshCommand { get; }
+//     public AsyncRelayCommand CreateCommand { get; }
+//     public AsyncRelayCommand EditCommand { get; }
+//     public AsyncRelayCommand DeleteCommand { get; }
+//     public AsyncRelayCommand SaveCommand { get; }
+//     public AsyncRelayCommand ConfirmDeleteCommand { get; }
+//     public RelayCommand CancelEditCommand { get; }
+//     public RelayCommand CancelDeleteCommand { get; }
+//     public RelayCommand ClearFiltersCommand { get; }
+//
+//     public void ApplyFilters() { ... }
+//     public Task SaveAsync() { ... }
+// }
