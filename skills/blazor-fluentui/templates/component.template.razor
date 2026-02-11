@@ -1,0 +1,159 @@
+@*
+ * ============================================================================
+ * TEMPLATE: I-Synergy MVVM Blazor Component
+ * ============================================================================
+ *
+ * Purpose: Razor component that inherits View<TViewModel> so it can reuse the
+ *          ISynergy Framework MVVM stack (CommonServices, command binding,
+ *          dialogs, localization, busy state, etc.).
+ * Usage:   Drop into Components/Controls/ and supply a ViewModel that exposes
+ *          the properties referenced below (Title, Description, PrimaryCommand,
+ *          etc.).
+ *
+ * Placeholders:
+ * - {{ComponentName}}   => Component class (e.g., BudgetSummary)
+ * - {{Namespace}}       => Component namespace (e.g., MyApp.Components)
+ * - {{ViewModelName}}   => ViewModel type (e.g., BudgetSummaryViewModel)
+ * - {{EntityName}}      => Entity being displayed (e.g., Budget)
+ *
+ * Lines: ~170
+ *@
+
+@using System.Linq
+@using System.Threading
+@using ISynergy.Framework.AspNetCore.Blazor.Components.Controls
+@using ISynergy.Framework.UI.Extensions
+@using Microsoft.FluentUI.AspNetCore.Components
+@namespace {{Namespace}}
+@inherits View<{{ViewModelName}}>
+@inject ILogger<{{ComponentName}}> Logger
+
+<FluentCard Appearance="CardAppearance.Neutral" Class="component-card">
+    <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8" VerticalAlignment="VerticalAlignment.Center">
+            <FluentIcon Icon="@(new Icons.Regular.Size20.Folder())" />
+            <div>
+                <h3>@ViewModel.Title</h3>
+                <FluentBody Strong="true">@ViewModel.Subtitle</FluentBody>
+            </div>
+            <FluentSpacer />
+            <FluentBadge Appearance="@ViewModel.StatusAppearance">@ViewModel.StatusText</FluentBadge>
+        </FluentStack>
+
+        @if (!string.IsNullOrWhiteSpace(ViewModel.Description))
+        {
+            <p class="text-muted">@ViewModel.Description</p>
+        }
+
+        @if (ViewModel.HighlightItems?.Any() == true)
+        {
+            <FluentList>
+                @foreach (var item in ViewModel.HighlightItems)
+                {
+                    <FluentListItem>
+                        <FluentStrong>@item.Label</FluentStrong>
+                        <FluentCaption>@item.Value</FluentCaption>
+                    </FluentListItem>
+                }
+            </FluentList>
+        }
+
+        @if (ViewModel.IsBusy)
+        {
+            <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8" VerticalAlignment="VerticalAlignment.Center">
+                <FluentProgressRing Size="ProgressRingSize.Medium" />
+                <span>@ViewModel.BusyMessage</span>
+            </FluentStack>
+        }
+
+        @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+        {
+            <FluentMessageBar Intent="MessageIntent.Error">
+                <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
+                    <span>@ViewModel.ErrorMessage</span>
+                    <FluentButton Appearance="Appearance.Stealth" @attributes="@this.CommandBinding(ViewModel.DismissErrorCommand)">
+                        Dismiss
+                    </FluentButton>
+                </FluentStack>
+            </FluentMessageBar>
+        }
+
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8" Wrap="true">
+            <FluentButton Appearance="Appearance.Accent"
+                         @attributes="@this.CommandBinding(ViewModel.PrimaryCommand)">
+                @ViewModel.PrimaryActionText
+            </FluentButton>
+
+            <FluentButton Appearance="Appearance.Neutral"
+                         @attributes="@this.CommandBinding(ViewModel.SecondaryCommand)">
+                @ViewModel.SecondaryActionText
+            </FluentButton>
+
+            @if (ViewModel.TertiaryCommands?.Any() == true)
+            {
+                foreach (var command in ViewModel.TertiaryCommands)
+                {
+                    <FluentButton Appearance="Appearance.Stealth"
+                                 @attributes="@this.CommandBinding(command.Command, command.Argument)">
+                        @command.Caption
+                    </FluentButton>
+                }
+            }
+        </FluentStack>
+
+        @if (ViewModel.ChildContent is not null)
+        {
+            <div class="detail-slot">
+                @ViewModel.ChildContent
+            </div>
+        }
+    </FluentStack>
+</FluentCard>
+
+@code {
+    /// <summary>
+    /// Optional identifier passed in from parent components. The ViewModel can
+    /// react by loading additional data.
+    /// </summary>
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    /// <summary>
+    /// Propagate incoming parameters to the ViewModel. This keeps the Razor file
+    /// thin while the ViewModel owns all actual logic.
+    /// </summary>
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        if (Id.HasValue)
+        {
+            Logger.LogDebug("{{ComponentName}} received Id {Id}", Id);
+            await ViewModel.LoadAsync(Id.Value, CancellationToken.None);
+        }
+    }
+}
+
+// ============================================================================
+// EXPECTED VIEWMODEL SURFACE (for reference only)
+// ============================================================================
+// public class {{ViewModelName}} : ViewModel
+// {
+//     public string Title { get; private set; } = "{{EntityName}}";
+//     public string Subtitle { get; private set; } = string.Empty;
+//     public string Description { get; private set; } = string.Empty;
+//     public bool IsBusy { get; private set; }
+//     public string BusyMessage { get; private set; } = "";
+//     public string ErrorMessage { get; private set; } = string.Empty;
+//     public string StatusText { get; private set; } = string.Empty;
+//     public BadgeAppearance StatusAppearance { get; private set; } = BadgeAppearance.Neutral;
+//     public IEnumerable<HighlightItem> HighlightItems { get; }
+//     public RenderFragment? ChildContent { get; private set; }
+//
+//     public AsyncRelayCommand PrimaryCommand { get; }
+//     public AsyncRelayCommand SecondaryCommand { get; }
+//     public RelayCommand DismissErrorCommand { get; }
+//     public IReadOnlyList<(string Caption, ICommand Command, object? Argument)> TertiaryCommands { get; }
+//
+//     public async Task LoadAsync(Guid id, CancellationToken ct) { ... }
+// }
