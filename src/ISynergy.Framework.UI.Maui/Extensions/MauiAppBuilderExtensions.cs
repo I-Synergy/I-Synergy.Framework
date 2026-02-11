@@ -217,7 +217,7 @@ public static class MauiAppBuilderExtensions
         action.Invoke(appBuilder);
 
         appBuilder
-            .UseMauiCommunityToolkitMediaElement()
+            .UseMauiCommunityToolkitMediaElement(false)
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("segoeui.ttf", "SegoeUI");
