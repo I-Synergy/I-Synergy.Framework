@@ -12,7 +12,7 @@
     <PackageVersion Include="CommunityToolkit.Maui.MediaElement" Version="8.0.0" />
     <PackageVersion Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
     <PackageVersion Include="CompareNETObjects" Version="4.84.0" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="coverlet.collector" Version="8.0.0" />
     <PackageVersion Include="Dotmim.Sync.Sqlite" Version="1.3.0" />
     <PackageVersion Include="Dotmim.Sync.SqlServer.ChangeTracking" Version="1.3.0" />
     <PackageVersion Include="Dotmim.Sync.Web.Client" Version="1.3.0" />
@@ -81,16 +81,16 @@
     <PackageVersion Include="Sentry" Version="6.1.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.1.0" />
     <PackageVersion Include="SkiaSharp" Version="3.119.2" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="32.2.4" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="32.2.4" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="32.2.5" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="32.2.5" />
   </ItemGroup>
 </Project>
