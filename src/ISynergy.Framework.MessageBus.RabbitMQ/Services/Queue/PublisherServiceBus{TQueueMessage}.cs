@@ -29,6 +29,8 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// </summary>
     protected readonly ILogger _logger;
 
+    private static readonly JsonSerializerOptions s_jsonOptions = new(JsonSerializerDefaults.Web);
+
     private IConnection? _connection;
     private IChannel? _channel;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
@@ -96,7 +98,7 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
             ? publisherOptions.ExchangeName
             : string.Empty;
 
-        var body = JsonSerializer.SerializeToUtf8Bytes(queueMessage);
+        var body = JsonSerializer.SerializeToUtf8Bytes(queueMessage, s_jsonOptions);
 
         var props = new BasicProperties
         {

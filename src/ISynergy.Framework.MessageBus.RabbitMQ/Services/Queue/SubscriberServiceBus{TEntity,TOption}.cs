@@ -103,27 +103,33 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// <inheritdoc />
     public virtual async Task UnSubscribeFromMessageBusAsync(CancellationToken cancellationToken = default)
     {
-        if (_channel is not null)
-            await _channel.CloseAsync(cancellationToken).ConfigureAwait(false);
-
-        if (_connection is not null)
-            await _connection.CloseAsync(cancellationToken).ConfigureAwait(false);
+        await DisposeAsync().ConfigureAwait(false);
     }
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
-        if (_disposed) return;
+        if (_disposed)
+            return;
 
         _disposed = true;
 
-        await UnSubscribeFromMessageBusAsync().ConfigureAwait(false);
+        try
+        {
+            if (_channel is not null)
+                await _channel.CloseAsync().ConfigureAwait(false);
 
-        if (_channel is not null)
-            await _channel.DisposeAsync().ConfigureAwait(false);
+            if (_connection is not null)
+                await _connection.CloseAsync().ConfigureAwait(false);
+        }
+        finally
+        {
+            if (_channel is not null)
+                await _channel.DisposeAsync().ConfigureAwait(false);
 
-        if (_connection is not null)
-            await _connection.DisposeAsync().ConfigureAwait(false);
+            if (_connection is not null)
+                await _connection.DisposeAsync().ConfigureAwait(false);
+        }
     }
 
     private async Task OnMessageReceivedAsync(object sender, BasicDeliverEventArgs args)
