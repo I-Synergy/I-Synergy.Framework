@@ -19,7 +19,7 @@ I-Synergy Framework is an open-source .NET framework providing reusable componen
 - **.NET 10** with latest C# language features
 - **ASP.NET Core** for web APIs
 - **Entity Framework Core** for data access
-- **XUnit** and **Reqnroll.NET** for testing
+- **MSTest** and **Reqnroll.NET** for testing
 - **OpenTelemetry** for observability
 
 ## Architecture Principles

@@ -132,6 +132,7 @@
     <Project Path="tests/ISynergy.Framework.AspNetCore.Authentication.Tests/ISynergy.Framework.AspNetCore.Authentication.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.AspNetCore.Globalization.Tests/ISynergy.Framework.AspNetCore.Globalization.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.AspNetCore.Monitoring.Tests/ISynergy.Framework.AspNetCore.Monitoring.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.AspNetCore.MultiTenancy.Tests/ISynergy.Framework.AspNetCore.MultiTenancy.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.AspNetCore.Tests/ISynergy.Framework.AspNetCore.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Automations.Tests/ISynergy.Framework.Automations.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Core.Tests/ISynergy.Framework.Core.Tests.csproj" />
