@@ -1,8 +1,7 @@
-using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Convergence;
+namespace ISynergy.Framework.Mathematics.Convergence;
 [TestClass]
 public class RelativeParameterConvergenceTest
 {

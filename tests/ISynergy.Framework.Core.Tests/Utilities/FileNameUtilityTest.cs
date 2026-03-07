@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Utilities.Tests;
+namespace ISynergy.Framework.Core.Utilities;
 
 /// <summary>
 /// Class FileNameUtilityTests.

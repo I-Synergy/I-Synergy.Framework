@@ -40,9 +40,9 @@ public class MonitorHub : Hub
         Argument.IsNotNull(Context);
         Argument.IsNotNull(Context.User);
 
-        var accountId = Context.User.GetAccountId();
+        var accountId = Context.User.GetTenantId();
         var userId = Context.User.GetUserId();
-        var userName = Context.User.GetUserName();
+        var userName = Context.User.GetUsername();
 
         // add user to own Group
         await Groups.AddToGroupAsync(Context.ConnectionId, userId.ToString());
@@ -66,9 +66,9 @@ public class MonitorHub : Hub
         Argument.IsNotNull(Context);
         Argument.IsNotNull(Context.User);
 
-        var accountId = Context.User.GetAccountId();
-        var userId = Context.User.GetAccountId();
-        var userName = Context.User.GetUserName();
+        var accountId = Context.User.GetTenantId();
+        var userId = Context.User.GetTenantId();
+        var userName = Context.User.GetUsername();
 
         // remove user own Group
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId.ToString());

@@ -2,7 +2,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Core;
+namespace ISynergy.Framework.Mathematics.Core;
 
 [TestClass]
 public class Matrix4x4Test

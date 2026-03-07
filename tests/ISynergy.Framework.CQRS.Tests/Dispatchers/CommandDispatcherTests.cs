@@ -1,11 +1,11 @@
 using ISynergy.Framework.CQRS.Abstractions.Commands;
 using ISynergy.Framework.CQRS.Commands;
-using ISynergy.Framework.CQRS.TestImplementations.Tests;
+using ISynergy.Framework.CQRS.TestImplementations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.CQRS.Dispatchers.Tests;
+namespace ISynergy.Framework.CQRS.Dispatchers;
 
 [TestClass]
 public class CommandDispatcherTests

@@ -1,8 +1,7 @@
-using ISynergy.Framework.Mathematics.Comparers;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Comparers;
+namespace ISynergy.Framework.Mathematics.Comparers;
 [TestClass]
 public class CustomComparerTest
 {

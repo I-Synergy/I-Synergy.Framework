@@ -2,10 +2,10 @@ using ISynergy.Framework.CQRS.Abstractions.Commands;
 using ISynergy.Framework.CQRS.Abstractions.Dispatchers;
 using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.Queries;
-using ISynergy.Framework.CQRS.TestImplementations.Tests;
+using ISynergy.Framework.CQRS.TestImplementations;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ISynergy.Framework.CQRS.Extensions.Tests;
+namespace ISynergy.Framework.CQRS.Extensions;
 
 [TestClass]
 public class ServiceCollectionExtensionsTests

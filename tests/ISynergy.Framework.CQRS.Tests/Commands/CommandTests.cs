@@ -1,6 +1,6 @@
-using ISynergy.Framework.CQRS.TestImplementations.Tests;
+using ISynergy.Framework.CQRS.TestImplementations;
 
-namespace ISynergy.Framework.CQRS.Commands.Tests;
+namespace ISynergy.Framework.CQRS.Commands;
 
 [TestClass]
 public class CommandTests

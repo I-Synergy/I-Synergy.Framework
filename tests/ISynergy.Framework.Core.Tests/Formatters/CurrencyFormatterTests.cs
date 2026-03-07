@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace ISynergy.Framework.Core.Formatters.Tests;
+namespace ISynergy.Framework.Core.Formatters;
 
 [TestClass]
 public sealed class CurrencyFormatterTests

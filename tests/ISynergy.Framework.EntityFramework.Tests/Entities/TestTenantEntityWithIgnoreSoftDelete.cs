@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.EntityFramework.Attributes;
 using ISynergy.Framework.EntityFramework.Base;
 
-namespace ISynergy.Framework.EntityFramework.Tests.Entities;
+namespace ISynergy.Framework.EntityFramework.Entities;
 
 [IgnoreSoftDelete]
 public class TestTenantEntityWithIgnoreSoftDelete : BaseTenantEntity

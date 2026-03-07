@@ -11,7 +11,7 @@
 #region Designer generated code
 #pragma warning disable
 using Reqnroll;
-namespace ISynergy.Framework.Mvvm.Tests.Features
+namespace ISynergy.Framework.Mvvm.Features
 {
     
     

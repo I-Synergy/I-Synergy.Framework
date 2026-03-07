@@ -1,8 +1,7 @@
-using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 
-namespace ISynergy.Framework.Mathematics.Tests.Matrices;
+namespace ISynergy.Framework.Mathematics.Matrices;
 [TestClass]
 public partial class MatrixTensor
 {

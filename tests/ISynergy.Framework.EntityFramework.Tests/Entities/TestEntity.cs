@@ -3,7 +3,7 @@ using ISynergy.Framework.EntityFramework.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ISynergy.Framework.EntityFramework.Tests.Entities;
+namespace ISynergy.Framework.EntityFramework.Entities;
 
 public class TestEntity : BaseEntity
 {

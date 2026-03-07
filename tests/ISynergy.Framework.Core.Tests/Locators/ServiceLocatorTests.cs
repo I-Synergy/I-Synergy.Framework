@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Concurrent;
 using System.Reflection;
-using static ISynergy.Framework.Core.Services.Tests.ScopedContextServiceTests;
+using static ISynergy.Framework.Core.Services.ScopedContextServiceTests;
 
-namespace ISynergy.Framework.Core.Locators.Tests;
+namespace ISynergy.Framework.Core.Locators;
 
 [TestClass]
 public class ServiceLocatorTests

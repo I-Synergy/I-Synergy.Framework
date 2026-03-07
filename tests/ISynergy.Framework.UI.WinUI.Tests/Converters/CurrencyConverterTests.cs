@@ -1,6 +1,7 @@
+using ISynergy.Framework.UI.Converters;
 using System.Globalization;
 
-namespace ISynergy.Framework.UI.Converters.Tests;
+namespace ISynergy.Framework.UI.WinUI.Converters;
 
 [TestClass]
 public class CurrencyConverterTests

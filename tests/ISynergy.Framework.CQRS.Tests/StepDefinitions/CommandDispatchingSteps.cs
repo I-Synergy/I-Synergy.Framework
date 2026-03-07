@@ -2,13 +2,13 @@ using ISynergy.Framework.CQRS.Abstractions.Commands;
 using ISynergy.Framework.CQRS.Abstractions.Dispatchers;
 using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.Dispatchers;
-using ISynergy.Framework.CQRS.TestImplementations.Tests;
+using ISynergy.Framework.CQRS.TestImplementations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Reqnroll;
 
-namespace ISynergy.Framework.CQRS.Tests.StepDefinitions;
+namespace ISynergy.Framework.CQRS.StepDefinitions;
 
 /// <summary>
 /// Step definitions for command dispatching scenarios.

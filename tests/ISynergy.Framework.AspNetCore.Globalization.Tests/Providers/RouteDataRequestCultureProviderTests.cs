@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace ISynergy.Framework.AspNetCore.Globalization.Providers.Tests;
+namespace ISynergy.Framework.AspNetCore.Globalization.Providers;
 
 [TestClass]
 public class RouteDataRequestCultureProviderTests

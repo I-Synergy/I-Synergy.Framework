@@ -1,7 +1,6 @@
-using ISynergy.Framework.AspNetCore.MultiTenancy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.AspNetCore.MultiTenancy.Tests;
+namespace ISynergy.Framework.AspNetCore.MultiTenancy;
 
 [TestClass]
 public class TenantContextTests

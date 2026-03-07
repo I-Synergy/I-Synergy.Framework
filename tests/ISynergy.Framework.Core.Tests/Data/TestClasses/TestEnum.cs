@@ -1,4 +1,4 @@
-namespace ISynergy.Framework.Core.Data.TestClasses.Tests;
+namespace ISynergy.Framework.Core.Data.TestClasses;
 
 /// <summary>
 /// Enum TestEnum

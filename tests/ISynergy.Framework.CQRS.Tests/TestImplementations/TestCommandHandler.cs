@@ -2,7 +2,7 @@ using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.Queries;
 using ISynergy.Framework.CQRS.Abstractions.Commands;
 
-namespace ISynergy.Framework.CQRS.TestImplementations.Tests;
+namespace ISynergy.Framework.CQRS.TestImplementations;
 
 public class TestCommandHandler : ICommandHandler<TestCommand>
 {

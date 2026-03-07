@@ -1,4 +1,4 @@
-namespace ISynergy.Framework.Core.Tests.Components;
+namespace ISynergy.Framework.Core.Components;
 
 /// <summary>
 /// Interface ILogger

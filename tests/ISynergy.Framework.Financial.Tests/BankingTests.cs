@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Financial.Tests;
+namespace ISynergy.Framework.Financial;
 
 /// <summary>
 /// Class BankingTests.

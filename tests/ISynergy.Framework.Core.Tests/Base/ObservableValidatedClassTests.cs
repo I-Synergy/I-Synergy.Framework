@@ -1,6 +1,6 @@
-using ISynergy.Framework.Core.Tests.Fixtures;
+using ISynergy.Framework.Core.Fixtures;
 
-namespace ISynergy.Framework.Core.Base.Tests;
+namespace ISynergy.Framework.Core.Base;
 
 [TestClass]
 public class ObservableValidatedClassTests

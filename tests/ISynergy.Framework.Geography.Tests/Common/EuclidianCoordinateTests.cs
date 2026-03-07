@@ -2,7 +2,7 @@ using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Projection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Common.Tests;
+namespace ISynergy.Framework.Geography.Common;
 
 /// <summary>
 /// Class EuclidianCoordinateTests.

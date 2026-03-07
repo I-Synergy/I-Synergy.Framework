@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Common.Tests;
+namespace ISynergy.Framework.Geography.Common;
 
 /// <summary>
 /// Class AngleTests.

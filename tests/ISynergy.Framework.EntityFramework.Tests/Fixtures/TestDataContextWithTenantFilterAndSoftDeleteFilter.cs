@@ -1,7 +1,7 @@
 using ISynergy.Framework.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace ISynergy.Framework.EntityFramework.Tests.Fixtures;
+namespace ISynergy.Framework.EntityFramework.Fixtures;
 internal class TestDataContextWithTenantFilterAndSoftDeleteFilter : TestDataContext
 {
     private readonly Func<Guid> _tenantId;

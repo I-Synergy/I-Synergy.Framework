@@ -1,7 +1,6 @@
-using ISynergy.Framework.CQRS.TestImplementations.Tests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.CQRS.TestImplementations;
 
-namespace ISynergy.Framework.CQRS.Queries.Tests;
+namespace ISynergy.Framework.CQRS.Queries;
 
 [TestClass]
 public class QueryTests

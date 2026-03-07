@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Attributes;
 using DescriptionAttribute = ISynergy.Framework.Core.Attributes.DescriptionAttribute;
 
-namespace ISynergy.Framework.Core.Tests.Data.TestClasses;
+namespace ISynergy.Framework.Core.Data.TestClasses;
 
 /// <summary>
 /// Enum ProductTypes

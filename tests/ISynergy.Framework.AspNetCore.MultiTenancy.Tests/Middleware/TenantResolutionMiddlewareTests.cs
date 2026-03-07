@@ -1,11 +1,9 @@
-using ISynergy.Framework.AspNetCore.MultiTenancy;
-using ISynergy.Framework.AspNetCore.MultiTenancy.Middleware;
+using ISynergy.Framework.Core.Constants;
 using Microsoft.AspNetCore.Http;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Security.Claims;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace ISynergy.Framework.AspNetCore.MultiTenancy.Tests.Middleware;
+namespace ISynergy.Framework.AspNetCore.MultiTenancy.Middleware;
 
 [TestClass]
 public class TenantResolutionMiddlewareTests
@@ -18,14 +16,14 @@ public class TenantResolutionMiddlewareTests
     // ------------------------------------------------------------------ //
 
     private static TenantResolutionMiddleware CreateMiddleware(RequestDelegate? next = null)
-        => new(next ?? (_ => Task.CompletedTask));
+        => new(next ?? (_ => Task.CompletedTask), NullLogger<TenantResolutionMiddleware>.Instance);
 
     private static HttpContext CreateAuthenticatedContext(Guid? tenantId, string? userName = null)
     {
         var claims = new List<Claim>();
 
         if (tenantId.HasValue)
-            claims.Add(new Claim(Claims.KeyId, tenantId.Value.ToString()));
+            claims.Add(new Claim(Claims.TenantId, tenantId.Value.ToString()));
 
         if (userName is not null)
             claims.Add(new Claim(Claims.Username, userName));
@@ -109,7 +107,7 @@ public class TenantResolutionMiddlewareTests
     public async Task InvokeAsync_AuthenticatedUserWithInvalidTenantClaimGuid_DoesNotSetTenantContext()
     {
         var capturedId = Guid.NewGuid();
-        var claims = new[] { new Claim(Claims.KeyId, "not-a-guid"), new Claim(Claims.Username, "carol") };
+        var claims = new[] { new Claim(Claims.TenantId, "not-a-guid"), new Claim(Claims.Username, "carol") };
         var identity = new ClaimsIdentity(claims, authenticationType: "Test");
         var context = new DefaultHttpContext { User = new ClaimsPrincipal(identity) };
         var middleware = CreateMiddleware(_ => { capturedId = TenantContext.TenantId; return Task.CompletedTask; });

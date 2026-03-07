@@ -1,8 +1,7 @@
-using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
+namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
 public class CholeskyDecompositionTest
 {

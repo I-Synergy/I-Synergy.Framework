@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.EntityFramework.Extensions.Tests;
+namespace ISynergy.Framework.EntityFramework.Extensions;
 
 /// <summary>
 /// Class QueryableExtensionTests.

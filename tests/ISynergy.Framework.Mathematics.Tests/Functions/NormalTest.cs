@@ -1,7 +1,6 @@
-using ISynergy.Framework.Mathematics.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Functions;
+namespace ISynergy.Framework.Mathematics.Functions;
 [TestClass]
 public class NormalTest
 {

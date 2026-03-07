@@ -1,10 +1,9 @@
-using ISynergy.Framework.EntityFramework.Tests.Entities;
-using ISynergy.Framework.EntityFramework.Tests.Fixtures;
+using ISynergy.Framework.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Reqnroll;
 
-namespace ISynergy.Framework.EntityFramework.Tests.StepDefinitions;
+namespace ISynergy.Framework.EntityFramework.StepDefinitions;
 
 /// <summary>
 /// Step definitions for query building scenarios.
@@ -15,57 +14,57 @@ public class QueryBuildingSteps
 {
     private readonly ILogger<QueryBuildingSteps> _logger;
     private readonly EntityFrameworkTestContext _context;
- private IQueryable<TestEntity>? _query;
+    private IQueryable<TestEntity>? _query;
 
- public QueryBuildingSteps(EntityFrameworkTestContext context)
+    public QueryBuildingSteps(EntityFrameworkTestContext context)
     {
-   var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
+        var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
         _logger = loggerFactory.CreateLogger<QueryBuildingSteps>();
         _context = context;
     }
 
     [Given(@"entities have related navigation properties")]
     public void GivenEntitiesHaveRelatedNavigationProperties()
-{
+    {
         _logger.LogInformation("Setting up entities with navigation properties");
         // Navigation properties setup (if applicable to TestEntity)
     }
 
     [When(@"I build a query with a Where predicate")]
     public void WhenIBuildAQueryWithAWherePredicate()
- {
-      _logger.LogInformation("Building query with Where predicate");
- ArgumentNullException.ThrowIfNull(_context.DbContext);
+    {
+        _logger.LogInformation("Building query with Where predicate");
+        ArgumentNullException.ThrowIfNull(_context.DbContext);
 
-    try
+        try
         {
-          _query = _context.DbContext.TestEntities!
-      .Where(e => e.IsActive == true && e.Version >= 1);
+            _query = _context.DbContext.TestEntities!
+        .Where(e => e.IsActive == true && e.Version >= 1);
 
-     _logger.LogInformation("Query built with Where predicate");
-      }
+            _logger.LogInformation("Query built with Where predicate");
+        }
         catch (Exception ex)
- {
-   _logger.LogError(ex, "Error building Where query");
-         _context.CaughtException = ex;
+        {
+            _logger.LogError(ex, "Error building Where query");
+            _context.CaughtException = ex;
         }
     }
 
     [When(@"I execute the query")]
     public async Task WhenIExecuteTheQuery()
     {
-    _logger.LogInformation("Executing query");
+        _logger.LogInformation("Executing query");
         ArgumentNullException.ThrowIfNull(_query);
 
-  try
-  {
-         _context.QueryResults = await _query.ToListAsync();
-  _logger.LogInformation("Query executed, found {Count} results", _context.QueryResults.Count);
-        }
-   catch (Exception ex)
+        try
         {
-       _logger.LogError(ex, "Error executing query");
-   _context.CaughtException = ex;
+            _context.QueryResults = await _query.ToListAsync();
+            _logger.LogInformation("Query executed, found {Count} results", _context.QueryResults.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error executing query");
+            _context.CaughtException = ex;
         }
     }
 
@@ -80,56 +79,56 @@ public class QueryBuildingSteps
             // Note: TestEntity may not have navigation properties, this is a demonstration
             _query = _context.DbContext.TestEntities!
          .Where(e => e.IsActive);
-  
+
             _logger.LogInformation("Query built with Include for eager loading");
-   }
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error building Include query");
-         _context.CaughtException = ex;
+            _context.CaughtException = ex;
         }
     }
 
     [When(@"I build a query with OrderBy ascending")]
     public void WhenIBuildAQueryWithOrderByAscending()
-  {
+    {
         _logger.LogInformation("Building query with OrderBy ascending");
         ArgumentNullException.ThrowIfNull(_context.DbContext);
 
         try
- {
+        {
             _query = _context.DbContext.TestEntities!
     .OrderBy(e => e.CreatedDate);
-            
-    _logger.LogInformation("Query built with OrderBy ascending");
+
+            _logger.LogInformation("Query built with OrderBy ascending");
         }
         catch (Exception ex)
         {
-    _logger.LogError(ex, "Error building OrderBy query");
-         _context.CaughtException = ex;
+            _logger.LogError(ex, "Error building OrderBy query");
+            _context.CaughtException = ex;
         }
     }
 
     [When(@"I build a query with Where, OrderBy, and Take")]
     public void WhenIBuildAQueryWithWhereOrderByAndTake()
     {
-    _logger.LogInformation("Building complex query with Where, OrderBy, and Take");
+        _logger.LogInformation("Building complex query with Where, OrderBy, and Take");
         ArgumentNullException.ThrowIfNull(_context.DbContext);
 
-      try
+        try
         {
             _query = _context.DbContext.TestEntities!
        .Where(e => e.IsActive)
     .OrderBy(e => e.CreatedDate)
     .Take(10);
-         
- _logger.LogInformation("Complex query built successfully");
+
+            _logger.LogInformation("Complex query built successfully");
         }
-  catch (Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Error building complex query");
-_context.CaughtException = ex;
-     }
+            _context.CaughtException = ex;
+        }
     }
 
     [Then(@"only entities matching the predicate should be returned")]
@@ -137,22 +136,22 @@ _context.CaughtException = ex;
     {
         _logger.LogInformation("Verifying query results match predicate");
 
-      if (_context.QueryResults.Any(e => !e.IsActive || e.Version < 1))
-     {
+        if (_context.QueryResults.Any(e => !e.IsActive || e.Version < 1))
+        {
             throw new InvalidOperationException("Expected all results to match the Where predicate");
-   }
+        }
 
         _logger.LogInformation("All {Count} results match the predicate", _context.QueryResults.Count);
     }
 
     [Then(@"the query should be translated to SQL correctly")]
     public void ThenTheQueryShouldBeTranslatedToSQLCorrectly()
-  {
+    {
         _logger.LogInformation("Verifying SQL translation");
-        
-     if (_context.CaughtException != null)
+
+        if (_context.CaughtException != null)
         {
-       throw new InvalidOperationException($"Query translation failed: {_context.CaughtException.Message}");
+            throw new InvalidOperationException($"Query translation failed: {_context.CaughtException.Message}");
         }
 
         _logger.LogInformation("Query translated to SQL successfully");
@@ -163,12 +162,12 @@ _context.CaughtException = ex;
     {
         _logger.LogInformation("Verifying related entities loaded");
 
-      if (_context.QueryResults.Count == 0)
+        if (_context.QueryResults.Count == 0)
         {
-  throw new InvalidOperationException("Expected query results with related entities");
+            throw new InvalidOperationException("Expected query results with related entities");
         }
 
- _logger.LogInformation("Related entities loaded successfully");
+        _logger.LogInformation("Related entities loaded successfully");
     }
 
     [Then(@"no additional database queries should be executed")]
@@ -176,23 +175,23 @@ _context.CaughtException = ex;
     {
         _logger.LogInformation("Verifying no N+1 query issues");
         // In a real scenario, you'd verify query count through profiling
-    _logger.LogInformation("Eager loading prevented additional queries");
+        _logger.LogInformation("Eager loading prevented additional queries");
     }
 
     [Then(@"the results should be sorted in ascending order")]
     public void ThenTheResultsShouldBeSortedInAscendingOrder()
     {
-      _logger.LogInformation("Verifying ascending sort order");
+        _logger.LogInformation("Verifying ascending sort order");
 
         for (int i = 1; i < _context.QueryResults.Count; i++)
         {
             if (_context.QueryResults[i].CreatedDate < _context.QueryResults[i - 1].CreatedDate)
             {
-  throw new InvalidOperationException("Results are not sorted in ascending order");
-    }
+                throw new InvalidOperationException("Results are not sorted in ascending order");
+            }
         }
 
- _logger.LogInformation("Results correctly sorted in ascending order");
+        _logger.LogInformation("Results correctly sorted in ascending order");
     }
 
     [Then(@"the first result should have the minimum value")]
@@ -202,7 +201,7 @@ _context.CaughtException = ex;
 
         if (_context.QueryResults.Count == 0)
         {
-       throw new InvalidOperationException("Expected at least one result");
+            throw new InvalidOperationException("Expected at least one result");
         }
 
         var firstDate = _context.QueryResults.First().CreatedDate;
@@ -210,7 +209,7 @@ _context.CaughtException = ex;
 
         if (firstDate != minDate)
         {
-   throw new InvalidOperationException("First result does not have the minimum value");
+            throw new InvalidOperationException("First result does not have the minimum value");
         }
 
         _logger.LogInformation("First result has minimum CreatedDate value");
@@ -222,22 +221,22 @@ _context.CaughtException = ex;
         _logger.LogInformation("Verifying complex query results");
 
         // Verify filtered (all active)
-   if (_context.QueryResults.Any(e => !e.IsActive))
-   {
-  throw new InvalidOperationException("Expected only active entities");
+        if (_context.QueryResults.Any(e => !e.IsActive))
+        {
+            throw new InvalidOperationException("Expected only active entities");
         }
 
         // Verify sorted
         for (int i = 1; i < _context.QueryResults.Count; i++)
         {
-          if (_context.QueryResults[i].CreatedDate < _context.QueryResults[i - 1].CreatedDate)
-          {
-     throw new InvalidOperationException("Results not properly sorted");
-     }
+            if (_context.QueryResults[i].CreatedDate < _context.QueryResults[i - 1].CreatedDate)
+            {
+                throw new InvalidOperationException("Results not properly sorted");
+            }
         }
 
         // Verify limited
-   if (_context.QueryResults.Count > 10)
+        if (_context.QueryResults.Count > 10)
         {
             throw new InvalidOperationException($"Expected max 10 results but got {_context.QueryResults.Count}");
         }
@@ -248,10 +247,10 @@ _context.CaughtException = ex;
     [Then(@"the query performance should be optimized")]
     public void ThenTheQueryPerformanceShouldBeOptimized()
     {
-     _logger.LogInformation("Verifying query performance optimization");
-        
+        _logger.LogInformation("Verifying query performance optimization");
+
         if (_context.CaughtException != null)
-     {
+        {
             throw new InvalidOperationException("Query execution failed");
         }
 

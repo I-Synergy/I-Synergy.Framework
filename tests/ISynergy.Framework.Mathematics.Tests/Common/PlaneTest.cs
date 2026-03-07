@@ -3,7 +3,7 @@ using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 
-namespace ISynergy.Framework.Mathematics.Tests.Common;
+namespace ISynergy.Framework.Mathematics.Common;
 [TestClass]
 public class PlaneTest
 {

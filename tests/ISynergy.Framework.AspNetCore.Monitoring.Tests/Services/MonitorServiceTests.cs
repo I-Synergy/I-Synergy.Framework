@@ -1,11 +1,10 @@
 using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
-using ISynergy.Framework.AspNetCore.Monitoring.Services;
 using ISynergy.Framework.Monitoring.Abstractions.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace ISynergy.Framework.AspNetCore.Monitoring.Tests.Services;
+namespace ISynergy.Framework.AspNetCore.Monitoring.Services;
 
 [TestClass]
 public class MonitorServiceTests
