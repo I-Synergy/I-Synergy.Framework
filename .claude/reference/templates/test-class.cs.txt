@@ -1,0 +1,107 @@
+// File: tests/{ApplicationName}.Domain.{Domain}.Tests/Features/{Entity}/Commands/Create{Entity}CommandHandlerTests.cs
+
+using ISynergy.Data;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace {ApplicationName}.Domain.{Domain}.Tests.Features.{Entity}.Commands;
+
+[TestClass]
+public class Create{Entity}CommandHandlerTests
+{
+    private Mock<DataContext> _dataContextMock = null!;
+    private Mock<ILogger<Create{Entity}CommandHandler>> _loggerMock = null!;
+    private Create{Entity}CommandHandler _handler = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _dataContextMock = new Mock<DataContext>();
+        _loggerMock = new Mock<ILogger<Create{Entity}CommandHandler>>();
+        _handler = new Create{Entity}CommandHandler(
+            _dataContextMock.Object,
+            _loggerMock.Object);
+    }
+
+    [TestMethod]
+    public async Task HandleAsync_ValidCommand_Creates{Entity}Successfully()
+    {
+        // Arrange
+        var command = new Create{Entity}Command(
+            Description: "Test Value",
+            StartingDate: DateTimeOffset.UtcNow,
+            EndingDate: DateTimeOffset.UtcNow.AddMonths(1));
+
+        _dataContextMock
+            .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(1);
+
+        // Act
+        var result = await _handler.HandleAsync(command);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreNotEqual(Guid.Empty, result.{Entity}Id);
+
+        _dataContextMock.Verify(
+            x => x.Add(It.IsAny<Entities.{Domain}.{Entity}>()),
+            Times.Once);
+
+        _dataContextMock.Verify(
+            x => x.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [TestMethod]
+    public async Task HandleAsync_SaveFails_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var command = new Create{Entity}Command(
+            Description: "Test Value",
+            StartingDate: DateTimeOffset.UtcNow,
+            EndingDate: DateTimeOffset.UtcNow.AddMonths(1));
+
+        _dataContextMock
+            .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(0);
+
+        // Act & Assert
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(
+            () => _handler.HandleAsync(command));
+    }
+
+    [TestMethod]
+    public async Task HandleAsync_ValidCommand_LogsInformation()
+    {
+        // Arrange
+        var command = new Create{Entity}Command(
+            Description: "Test Value",
+            StartingDate: DateTimeOffset.UtcNow,
+            EndingDate: DateTimeOffset.UtcNow.AddMonths(1));
+
+        _dataContextMock
+            .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(1);
+
+        // Act
+        await _handler.HandleAsync(command);
+
+        // Assert
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => true),
+                It.IsAny<Exception>(),
+                It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)),
+            Times.AtLeastOnce);
+    }
+}
+
+// Notes:
+// - Test class path mirrors handler folder structure: Features/{Entity}/Commands/
+// - Handler class name includes CommandHandler/QueryHandler suffix
+// - Verify dataContext.Add() and SaveChangesAsync() — NOT AddItemAsync
+// - Commands use named parameters in test setup
+// - No guard clause tests (handlers don't have guard clauses)

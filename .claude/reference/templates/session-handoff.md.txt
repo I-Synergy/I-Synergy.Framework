@@ -1,0 +1,76 @@
+# Session Handoff Template
+
+Use this template when ending a session and handing off to a new session.
+
+```markdown
+# Session Handoff - [Date/Time]
+
+## Task Summary
+[What was accomplished - be specific with numbers and metrics]
+
+## Decisions Made
+- **Decision 1**: [What was decided]
+  - **Rationale**: [Why this decision was made]
+  - **Alternatives considered**: [What else was considered]
+
+- **Decision 2**: [What was decided]
+  - **Rationale**: [Why this decision was made]
+  - **Alternatives considered**: [What else was considered]
+
+## Open Questions
+- **OPEN**: [Question that needs user input]
+- **ASSUMED**: [Assumption made, needs verification]
+- **BLOCKED**: [Blocker preventing progress]
+
+## Files Modified
+- `path/to/file.cs:123-145` - [What was changed]
+- `path/to/file.cs:200` - [What was changed]
+- `path/to/new-file.cs` - [Created, purpose]
+
+## Conditional Branches
+- **If X happens**: Then do Y
+- **If A happens**: Then do B
+
+## Cross-Document Relationships
+- [File A] depends on [File B] for [reason]
+- [Component X] calls [Component Y] via [interface/method]
+
+## Next Actions (Priority Order)
+1. [Next action with specific details]
+2. [Next action with specific details]
+3. [Next action with specific details]
+
+## Files to Load Next Session
+- `.claude/skills/[skill-name].md` - [Why needed]
+- `.claude/patterns/[pattern-name].md` - [Why needed]
+- `.claude/reference/[reference].md` - [Why needed]
+
+## Work Type for Next Session
+[CQRS Implementation | Testing | Security Review | etc.]
+
+## Context Budget Status
+- Current session tokens: ~[number]K
+- Reason for session switch: [32K limit | work type change | natural completion]
+
+## Session Notes
+[Any other relevant information for the next session]
+```
+
+## Why This Format?
+
+Based on Claude Context OS research, this template prevents the **five failure modes of summarization**:
+
+1. **Rounding of precise numbers** → Use exact metrics
+2. **Collapse of conditional logic** → Explicit if/then branches
+3. **Loss of decision rationale** → Document why, not just what
+4. **Flattening of cross-document relationships** → Explicit dependencies
+5. **Silent resolution of open questions** → Mark as OPEN/ASSUMED/BLOCKED
+
+## Usage
+
+Before ending session:
+1. Copy this template to `{SOLUTION_ROOT}/.claude/session-context.md`
+2. Fill in all sections with specific details
+3. Do not resolve open questions silently
+4. Include precise numbers, not ranges
+5. Specify exact files to load next session
