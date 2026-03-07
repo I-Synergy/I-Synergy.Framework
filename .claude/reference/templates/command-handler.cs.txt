@@ -116,6 +116,7 @@ public sealed record Update{Entity}Response(bool Success);
 
 using ISynergy.Data;
 using ISynergy.Framework.CQRS.Abstractions.Commands;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Update{Entity};
@@ -137,8 +138,8 @@ public sealed class Update{Entity}CommandHandler(
     {
         logger.LogInformation("Updating {entity} {Id}", command.{Entity}Id);
 
-        var entity = await dataContext.FindAsync<Entities.{Domain}.{Entity}>(
-            [command.{Entity}Id], cancellationToken);
+        var entity = await dataContext.{Entity}s.FirstOrDefaultAsync(
+            e => e.{Entity}Id == command.{Entity}Id, cancellationToken);
 
         if (entity is null)
         {
@@ -215,8 +216,8 @@ public sealed class Delete{Entity}CommandHandler(
         Delete{Entity}Command command,
         CancellationToken cancellationToken = default)
     {
-        var entity = await dataContext.FindAsync<Entities.{Domain}.{Entity}>(
-            [command.{Entity}Id], cancellationToken);
+        var entity = await dataContext.{Entity}s.FirstOrDefaultAsync(
+            e => e.{Entity}Id == command.{Entity}Id, cancellationToken);
 
         if (entity is null)
         {
@@ -224,7 +225,7 @@ public sealed class Delete{Entity}CommandHandler(
             throw new InvalidOperationException($"{{Entity}} {command.{Entity}Id} not found");
         }
 
-        dataContext.Remove(entity);
+        dataContext.{Entity}s.Remove(entity);
         var rowsAffected = await dataContext.SaveChangesAsync(cancellationToken);
 
         if (rowsAffected > 0)
