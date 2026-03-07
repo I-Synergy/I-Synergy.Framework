@@ -178,79 +178,120 @@ You are a Blazor UI Specialist responsible for building interactive web interfac
 ```
 
 ```csharp
-// File: Pages/Budgets/BudgetList.razor.cs
+// File: ViewModels/Budgets/BudgetListViewModel.cs
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using {ApplicationName}.UI.Services;
 
-namespace {ApplicationName}.UI.Pages.Budgets;
+namespace {ApplicationName}.UI.ViewModels.Budgets;
 
-public class BudgetListBase : ComponentBase, IDisposable
+public class BudgetListViewModel : ViewModel
 {
-    [Inject]
-    protected IBudgetService BudgetService { get; set; } = default!;
+    private readonly IBudgetService _budgetService;
+    private readonly NavigationManager _navigation;
+    private readonly ILogger<BudgetListViewModel> _logger;
 
-    [Inject]
-    protected NavigationManager Navigation { get; set; } = default!;
+    public ObservableCollection<BudgetResponse> Budgets { get; } = new();
 
-    [Inject]
-    protected ILogger<BudgetListBase> Logger { get; set; } = default!;
+    private bool _isBusy;
+    public bool IsBusy
+    {
+        get => _isBusy;
+        set => SetProperty(ref _isBusy, value);
+    }
 
-    protected List<BudgetResponse> Budgets { get; set; } = new();
-    protected bool IsLoading { get; set; }
-    protected string? ErrorMessage { get; set; }
+    private string? _errorMessage;
+    public string? ErrorMessage
+    {
+        get => _errorMessage;
+        set => SetProperty(ref _errorMessage, value);
+    }
 
-    protected override async Task OnInitializedAsync()
+    public BudgetListViewModel(
+        IBudgetService budgetService,
+        NavigationManager navigation,
+        ILogger<BudgetListViewModel> logger)
+        : base(logger)
+    {
+        _budgetService = budgetService;
+        _navigation = navigation;
+        _logger = logger;
+    }
+
+    public override async Task InitializeAsync()
     {
         await LoadBudgetsAsync();
     }
 
-    protected async Task LoadBudgetsAsync()
+    public async Task LoadBudgetsAsync()
     {
-        IsLoading = true;
+        IsBusy = true;
         ErrorMessage = null;
 
         try
         {
-            Budgets = await BudgetService.GetBudgetsAsync();
+            Budgets.Clear();
+            var items = await _budgetService.GetBudgetsAsync();
+            foreach (var budget in items)
+            {
+                Budgets.Add(budget);
+            }
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error loading budgets");
+            _logger.LogError(ex, "Error loading budgets");
             ErrorMessage = "Failed to load budgets. Please try again.";
         }
         finally
         {
-            IsLoading = false;
+            IsBusy = false;
         }
     }
 
-    protected void HandleCreateBudget()
+    public void CreateBudget()
     {
-        Navigation.NavigateTo("/budgets/create");
+        _navigation.NavigateTo("/budgets/create");
     }
 
-    protected void HandleEditBudget(BudgetResponse budget)
+    public void EditBudget(BudgetResponse budget)
     {
-        Navigation.NavigateTo($"/budgets/{budget.BudgetId}/edit");
+        _navigation.NavigateTo($"/budgets/{budget.BudgetId}/edit");
     }
 
-    protected async Task HandleDeleteBudget(Guid budgetId)
+    public async Task DeleteBudgetAsync(Guid budgetId)
     {
         try
         {
-            await BudgetService.DeleteBudgetAsync(budgetId);
+            await _budgetService.DeleteBudgetAsync(budgetId);
             await LoadBudgetsAsync(); // Reload list
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error deleting budget {BudgetId}", budgetId);
+            _logger.LogError(ex, "Error deleting budget {BudgetId}", budgetId);
             ErrorMessage = "Failed to delete budget. Please try again.";
         }
     }
+}
 
-    public void Dispose()
+// File: Pages/Budgets/BudgetList.razor.cs
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using {ApplicationName}.UI.ViewModels.Budgets;
+
+namespace {ApplicationName}.UI.Pages.Budgets;
+
+public partial class BudgetList
+{
+    [Inject]
+    public BudgetListViewModel ViewModel { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
     {
-        // Clean up subscriptions, timers, etc.
+        await ViewModel.InitializeAsync();
     }
 }
 ```
