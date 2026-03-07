@@ -1,7 +1,8 @@
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 
-namespace ISynergy.Framework.UI.Extensions.Tests;
+namespace ISynergy.Framework.UI.WinUI.Extensions;
 
 [TestClass]
 public class DecimalExtensionsTests

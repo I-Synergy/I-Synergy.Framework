@@ -1,11 +1,9 @@
-using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization;
-using ISynergy.Framework.Mathematics.Tests.Optimization;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Differentiation;
+namespace ISynergy.Framework.Mathematics.Differentiation;
 [TestClass]
 public class FiniteDifferencesTest
 {

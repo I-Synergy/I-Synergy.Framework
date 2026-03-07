@@ -4,6 +4,7 @@
     <UseMaui>true</UseMaui>
     <IsPackable>false</IsPackable>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <RootNamespace>ISynergy.Framework.UI.Maui</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Converters\BoolNegationConverterTests.cs" />

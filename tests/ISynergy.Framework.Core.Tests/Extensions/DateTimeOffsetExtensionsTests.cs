@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Constants;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 
-namespace ISynergy.Framework.Core.Extensions.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class DateTimeOffsetExtensionsTests.

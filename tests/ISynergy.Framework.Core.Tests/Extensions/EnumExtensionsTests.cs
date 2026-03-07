@@ -1,8 +1,7 @@
-using ISynergy.Framework.Core.Data.TestClasses.Tests;
-using ISynergy.Framework.Core.Tests.Data.TestClasses;
+using ISynergy.Framework.Core.Data.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Extensions.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class EnumExtensionsTests.

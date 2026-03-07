@@ -1,12 +1,11 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.ComponentModel;
 
-namespace ISynergy.Framework.Core.Base.Tests;
+namespace ISynergy.Framework.Core.Base;
 
 /// <summary>
 /// Tests for exception handling in PropertyChanged event invocations.

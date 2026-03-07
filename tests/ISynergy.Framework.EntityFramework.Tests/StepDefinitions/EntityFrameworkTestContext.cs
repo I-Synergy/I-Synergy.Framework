@@ -1,8 +1,8 @@
-using ISynergy.Framework.EntityFramework.Tests.Entities;
-using ISynergy.Framework.EntityFramework.Tests.Fixtures;
+using ISynergy.Framework.EntityFramework.Entities;
+using ISynergy.Framework.EntityFramework.Fixtures;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace ISynergy.Framework.EntityFramework.Tests.StepDefinitions;
+namespace ISynergy.Framework.EntityFramework.StepDefinitions;
 
 /// <summary>
 /// Shared context for EntityFramework test scenarios.

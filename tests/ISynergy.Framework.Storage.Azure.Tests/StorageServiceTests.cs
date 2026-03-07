@@ -3,7 +3,7 @@ using ISynergy.Framework.Storage.Abstractions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace ISynergy.Framework.Storage.Azure.Tests;
+namespace ISynergy.Framework.Storage.Azure;
 
 /// <summary>
 /// Class AzureBlobTests.

@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.AspNetCore.Authentication.Tests;
+namespace ISynergy.Framework.AspNetCore.Authentication;
 
 /// <summary>
 /// Class InitialTests.

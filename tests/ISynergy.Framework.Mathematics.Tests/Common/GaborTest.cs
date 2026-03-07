@@ -1,7 +1,7 @@
 using ISynergy.Framework.Mathematics.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Common;
+namespace ISynergy.Framework.Mathematics.Common;
 [TestClass]
 public class GaborTest
 {

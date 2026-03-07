@@ -1,4 +1,3 @@
-using ISynergy.Framework.AspNetCore.MultiTenancy.Extensions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.AspNetCore.MultiTenancy.Tests.Extensions;
+namespace ISynergy.Framework.AspNetCore.MultiTenancy.Extensions;
 
 [TestClass]
 public class ServiceCollectionExtensionsTests

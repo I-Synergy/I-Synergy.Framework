@@ -1,4 +1,4 @@
-namespace ISynergy.Framework.IO.Models.Tests;
+namespace ISynergy.Framework.IO.Models;
 
 /// <summary>
 /// Class ObservedFile.

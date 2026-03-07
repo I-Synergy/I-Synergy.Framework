@@ -2,7 +2,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Transforms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Common;
+namespace ISynergy.Framework.Mathematics.Common;
 [TestClass]
 public class CosineTransformTest
 {

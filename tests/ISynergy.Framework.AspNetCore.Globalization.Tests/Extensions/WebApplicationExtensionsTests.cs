@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 
-namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
+namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
 {
     [TestClass]
     public class WebApplicationExtensionsTests

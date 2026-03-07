@@ -1,13 +1,10 @@
-using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
+using ISynergy.Framework.Core.Constants;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Security.Claims;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
-
-namespace ISynergy.Framework.AspNetCore.Monitoring.Tests.Hubs;
+namespace ISynergy.Framework.AspNetCore.Monitoring.Hubs;
 
 [TestClass()]
 public class MonitorHubTests
@@ -42,10 +39,10 @@ public class MonitorHubTests
                     Claims.Username,
                     Claims.Role);
 
-                identity.AddClaim(new Claim(Claims.KeyId, groupName.ToString()));
+                identity.AddClaim(new Claim(Claims.TenantId, groupName.ToString()));
                 identity.AddClaim(new Claim(Claims.Name, "Test"));
                 identity.AddClaim(new Claim(Claims.Username, userName));
-                identity.AddClaim(new Claim(Claims.Subject, userId.ToString()));
+                identity.AddClaim(new Claim(Claims.UserId, userId.ToString()));
 
                 return new ClaimsPrincipal(identity);
             });

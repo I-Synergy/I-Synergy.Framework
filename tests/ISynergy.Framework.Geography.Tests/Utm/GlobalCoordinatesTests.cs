@@ -1,7 +1,7 @@
 using ISynergy.Framework.Geography.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Utm.Tests;
+namespace ISynergy.Framework.Geography.Utm;
 
 /// <summary>
 /// Class GlobalCoordinatesTests.

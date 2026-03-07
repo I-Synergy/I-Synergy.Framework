@@ -6,7 +6,7 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.UI.Maui.Tests.Services;
+namespace ISynergy.Framework.UI.Maui.Services;
 
 /// <summary>
 /// Tests for exception handling in DialogService.
@@ -73,7 +73,7 @@ public class DialogServiceExceptionHandlingTests
             .Setup(x => x.InitializeAsync())
             .ThrowsAsync(expectedException);
 
-        var mockWindow = new Mock<ISynergy.Framework.Mvvm.Abstractions.IWindow>();
+        var mockWindow = new Mock<Mvvm.Abstractions.IWindow>();
 
         _mockScopedContextService
      .Setup(x => x.GetRequiredService(It.IsAny<Type>()))
@@ -118,7 +118,7 @@ public class DialogServiceExceptionHandlingTests
     }
 
     // Test window and viewmodel types for testing
-    private interface TestWindow : ISynergy.Framework.Mvvm.Abstractions.IWindow { }
+    private interface TestWindow : Mvvm.Abstractions.IWindow { }
 
     private class TestViewModelDialog : ViewModelDialog<string>
     {

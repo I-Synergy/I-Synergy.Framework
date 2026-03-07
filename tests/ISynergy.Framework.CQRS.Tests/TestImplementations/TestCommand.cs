@@ -1,6 +1,6 @@
 using ISynergy.Framework.CQRS.Commands;
 
-namespace ISynergy.Framework.CQRS.TestImplementations.Tests;
+namespace ISynergy.Framework.CQRS.TestImplementations;
 
 public class TestCommand : ICommand
 {

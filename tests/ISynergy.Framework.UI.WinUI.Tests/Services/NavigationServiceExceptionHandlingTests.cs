@@ -5,7 +5,7 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.UI.WinUI.Tests.Services;
+namespace ISynergy.Framework.UI.WinUI.Services;
 
 /// <summary>
 /// Tests for exception handling in NavigationService for WinUI.

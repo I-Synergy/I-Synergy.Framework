@@ -1,10 +1,9 @@
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.IO.Events;
 using ISynergy.Framework.IO.Models;
-using ISynergy.Framework.IO.Models.Tests;
 using ISynergy.Framework.IO.Watchers;
 
-namespace ISynergy.Framework.IO.Tests.Fixtures;
+namespace ISynergy.Framework.IO.Fixtures;
 
 /// <summary>
 /// Class FileWatcherFixture.

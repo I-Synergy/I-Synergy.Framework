@@ -1,6 +1,6 @@
-using ISynergy.Framework.Storage.Azure.Tests.Fixtures;
+using ISynergy.Framework.Storage.Azure.Fixtures;
 
-namespace ISynergy.Framework.Storage.Azure.Tests.StepDefinitions;
+namespace ISynergy.Framework.Storage.Azure.StepDefinitions;
 
 /// <summary>
 /// Shared context for Azure Storage test scenarios.

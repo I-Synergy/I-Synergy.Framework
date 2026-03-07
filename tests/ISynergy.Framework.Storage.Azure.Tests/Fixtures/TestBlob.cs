@@ -1,4 +1,4 @@
-namespace ISynergy.Framework.Storage.Azure.Tests.Fixtures;
+namespace ISynergy.Framework.Storage.Azure.Fixtures;
 
 /// <summary>
 /// Test blob data for BDD scenarios.

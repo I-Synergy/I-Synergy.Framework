@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RootNamespace>ISynergy.Framework.AspNetCore.Monitoring</RootNamespace>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
@@ -13,7 +14,6 @@
 		<PackageReference Include="Moq" />
 		<PackageReference Include="MSTest.TestFramework" />
 		<PackageReference Include="MSTest.TestAdapter" />
-		<PackageReference Include="OpenIddict.Abstractions" />
 		<PackageReference Include="coverlet.collector">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel;
 
-namespace ISynergy.Framework.Core.Collections.Tests;
+namespace ISynergy.Framework.Core.Collections;
 
 [TestClass]
 public class ItemObservableCollectionTests

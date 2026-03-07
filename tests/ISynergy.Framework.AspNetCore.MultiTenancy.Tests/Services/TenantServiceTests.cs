@@ -1,10 +1,9 @@
-using ISynergy.Framework.AspNetCore.MultiTenancy;
 using ISynergy.Framework.AspNetCore.MultiTenancy.Extensions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.AspNetCore.MultiTenancy.Tests.Services;
+namespace ISynergy.Framework.AspNetCore.MultiTenancy.Services;
 
 [TestClass]
 public class TenantServiceTests

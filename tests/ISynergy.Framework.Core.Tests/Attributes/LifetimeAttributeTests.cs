@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Attributes.Tests;
+namespace ISynergy.Framework.Core.Attributes;
 
 [TestClass]
 public class LifetimeAttributeTests

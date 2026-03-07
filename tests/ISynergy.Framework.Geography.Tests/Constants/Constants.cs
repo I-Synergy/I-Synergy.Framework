@@ -1,6 +1,6 @@
 using ISynergy.Framework.Geography.Global;
 
-namespace ISynergy.Framework.Geography.Tests;
+namespace ISynergy.Framework.Geography;
 
 /// <summary>
 /// Some constants used throughout the Unit Tests.

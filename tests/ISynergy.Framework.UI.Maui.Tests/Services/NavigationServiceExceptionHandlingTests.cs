@@ -5,7 +5,7 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.UI.Maui.Tests.Services;
+namespace ISynergy.Framework.UI.Maui.Services;
 
 /// <summary>
 /// Tests for exception handling in NavigationService.

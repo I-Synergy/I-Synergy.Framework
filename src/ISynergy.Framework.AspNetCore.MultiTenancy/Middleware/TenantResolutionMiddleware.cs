@@ -1,5 +1,7 @@
+using ISynergy.Framework.Core.Exceptions;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Http;
-using static OpenIddict.Abstractions.OpenIddictConstants;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.AspNetCore.MultiTenancy.Middleware;
 
@@ -8,7 +10,7 @@ namespace ISynergy.Framework.AspNetCore.MultiTenancy.Middleware;
 /// and stores them in <see cref="TenantContext"/> for the duration of the request.
 /// Must be registered after <c>UseAuthentication()</c> and <c>UseAuthorization()</c>.
 /// </summary>
-public class TenantResolutionMiddleware(RequestDelegate next)
+public class TenantResolutionMiddleware(RequestDelegate next, ILogger<TenantResolutionMiddleware> logger)
 {
     /// <summary>
     /// Processes an HTTP request, populating <see cref="TenantContext"/> when the user is authenticated.
@@ -18,11 +20,18 @@ public class TenantResolutionMiddleware(RequestDelegate next)
     {
         if (context.User.Identity?.IsAuthenticated == true)
         {
-            var tenantIdClaim = context.User.FindFirst(Claims.KeyId)?.Value;
-            var userName = context.User.FindFirst(Claims.Username)?.Value ?? string.Empty;
+            try
+            {
+                var tenantId = context.User.GetTenantId();
+                var userName = context.User.GetUsername() ?? string.Empty;
 
-            if (Guid.TryParse(tenantIdClaim, out var tenantId))
-                TenantContext.Set(tenantId, userName);
+                if (tenantId != Guid.Empty && !string.IsNullOrEmpty(userName))
+                    TenantContext.Set(tenantId, userName);
+            }
+            catch (ClaimAuthorizationException ex)
+            {
+                logger.LogError(ex, "Tenant resolution failed: {Message}", ex.Message);
+            }
         }
 
         await next(context);
