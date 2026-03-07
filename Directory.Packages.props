@@ -75,9 +75,9 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.1" />
+    <PackageVersion Include="RabbitMQ.Client" Version="7.0.0" />
     <PackageVersion Include="Reqnroll" Version="3.3.3" />
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.3" />
-    <PackageVersion Include="RabbitMQ.Client" Version="7.0.0" />
     <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.3" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry" Version="6.1.0" />
