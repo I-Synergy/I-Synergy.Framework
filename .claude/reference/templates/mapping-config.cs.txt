@@ -1,0 +1,37 @@
+// File: {ApplicationName}.Domain.{Domain}/Mappers/Configuration.cs
+
+using Mapster;
+using {ApplicationName}.Domain.{Domain}.Models;
+
+namespace {ApplicationName}.Domain.{Domain}.Mappers;
+
+/// <summary>
+/// Mapster configuration for {Domain} entity-to-model mappings.
+/// </summary>
+internal class Configuration : IRegister
+{
+    /// <summary>
+    /// Registers all mapping configurations.
+    /// </summary>
+    public void Register(TypeAdapterConfig config)
+    {
+        // Entity -> Model (for read operations)
+        config.NewConfig<Entities.{Domain}.{Entity}, {Entity}>()
+            .Map(d => d.{Entity}Id, s => s.{Entity}Id)
+            .Map(d => d.Property1, s => s.Property1)
+            .Map(d => d.Property2, s => s.Property2)
+            .Map(d => d.Property3, s => s.Property3);
+
+        // Reverse mapping only when property names differ between entity and model
+        // config.NewConfig<{Entity}, Entities.{Domain}.{Entity}>()
+        //     .Map(d => d.Type, s => s.EntityType);  // Example: different property name
+    }
+}
+
+// Notes:
+// - Class is named "Configuration" (not "{Entity}MappingConfig")
+// - One Configuration class per domain, containing all entity mappings
+// - Only map Entity <-> Model (NOT Command -> Entity, NOT Model -> Response)
+// - Create handlers construct entities directly from command properties
+// - Response records wrap Models; no separate Model->Response mapping needed
+// - Add reverse mappings only when property names differ between entity and model

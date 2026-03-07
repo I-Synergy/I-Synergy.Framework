@@ -1,0 +1,50 @@
+{
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "feature-dev@claude-plugins-official": true,
+    "sentry@claude-plugins-official": true,
+    "stripe@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "maui-skills@maui-skills": true
+  },
+  "plansDirectory": "./.claude/plans",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dotnet build --nologo --verbosity quiet 2>&1 | tail -5"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)"
+    ],
+    "additionalDirectories": [
+      "./.claude",
+      "./.claude/analysis",
+      "./.claude/checklists",
+      "./.claude/completed",
+      "./.claude/patterns",
+      "./.claude/plans",
+      "./.claude/progress",
+      "./.claude/project",
+      "./.claude/reference",
+      "./.claude/skills"
+    ]
+  }
+}
