@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Storage.Abstractions.Services;
 using ISynergy.Framework.Storage.S3.Options;
 using ISynergy.Framework.Storage.S3.Services;
@@ -24,6 +25,9 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration,
         string prefix = "")
     {
+        Argument.IsNotNull(services);
+        Argument.IsNotNull(configuration);
+
         services.AddOptions();
         services.Configure<S3StorageOptions>(configuration.GetSection($"{prefix}{nameof(S3StorageOptions)}"));
         services.TryAddSingleton<IStorageService, S3StorageService>();
