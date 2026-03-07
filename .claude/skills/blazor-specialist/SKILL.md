@@ -65,10 +65,11 @@ You are a Blazor UI Specialist responsible for building interactive web interfac
 
 - **Every Blazor page MUST have a ViewModel.** Busy state, empty state, and all data collections are owned and managed by the ViewModel — never by razor page `@code` blocks.
 - **Every ViewModel MUST inherit from `ISynergy.Framework.Mvvm.ViewModel`** (the framework base class). Never create a plain class or use a custom base.
-- **Use `IsBusy` (from the base class) — never add `IsLoading`, `IsLoaded`, or `_isLoading` anywhere.** The framework `ViewModel` base already provides `IsBusy` for this purpose.
+- **Use `IsBusy` (from the base class) — never add `IsLoading`, `IsLoaded`, or `_isLoading` anywhere in pages or components.** The framework `ViewModel` base already provides `IsBusy` for this purpose.
 - **Never add `IsBusy`, `IsLoading`, `IsLoaded`, `_initialized`, or data fields to razor page `@code` blocks.** Page-level state is forbidden. If a page currently has no ViewModel, create one before adding any state logic.
 - Razor page `@code` blocks are limited to: injecting the ViewModel, calling `ViewModel.InitializeAsync()` in `OnInitializedAsync`, and delegating user actions to ViewModel methods.
 - ViewModel pattern: `IsBusy = true` → load data → `IsBusy = false` in a `try/finally` block.
+- **Legacy anti-pattern:** any examples or existing pages using `ComponentBase` + `IsLoading` + page-owned collections MUST be refactored to a ViewModel (`ISynergy.Framework.Mvvm.ViewModel`) and MUST NOT be copied into new code.
 
 ### Blazor Best Practices
 - Use `@rendermode` appropriately (Server, WebAssembly, Auto)
