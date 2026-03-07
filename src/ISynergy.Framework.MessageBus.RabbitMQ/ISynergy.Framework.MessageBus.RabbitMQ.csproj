@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <PackageId>I-Synergy.Framework.MessageBus.RabbitMQ</PackageId>
+        <Description>I-Synergy Framework RabbitMQ MessageBus</Description>
+        <PackageTags>I-Synergy, Framework, MessageBus, RabbitMQ</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="RabbitMQ.Client" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />
+    </ItemGroup>
+
+</Project>

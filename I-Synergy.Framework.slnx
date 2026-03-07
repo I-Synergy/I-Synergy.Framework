@@ -124,6 +124,9 @@
     <File Path="README.md" />
     <File Path="Remove-UnusedPackages.ps1" />
   </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ISynergy.Framework.MessageBus.RabbitMQ/ISynergy.Framework.MessageBus.RabbitMQ.csproj" />
+  </Folder>
   <Folder Name="/Tests/">
     <Project Path="tests/ISynergy.Framework.AspNetCore.Authentication.Tests/ISynergy.Framework.AspNetCore.Authentication.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.AspNetCore.Globalization.Tests/ISynergy.Framework.AspNetCore.Globalization.Tests.csproj" />
