@@ -78,8 +78,8 @@ This is not a demo or proof of concept. Before saying "done", actively grep the 
 
 ## Mapping (Mapster)
 
-- [ ] Mapping configuration in `{Entity}MappingConfig.cs`
-- [ ] Configuration registered in ServiceCollectionExtensions
+- [ ] Mapping configuration defined in `Mappers/Configuration.cs` for this domain, following the mapping template
+- [ ] Mapping configuration is registered in the application composition root according to `.claude/reference/templates/mapping-config.cs.txt`
 - [ ] Uses .Adapt<T>() extension method
 - [ ] No AutoMapper used
 - [ ] No manual mapping used
