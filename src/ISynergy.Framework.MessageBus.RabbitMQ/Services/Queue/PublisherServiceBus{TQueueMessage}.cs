@@ -15,7 +15,7 @@ namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 /// </summary>
 /// <typeparam name="TQueueMessage">The type of the queue message.</typeparam>
 /// <typeparam name="TOption">The type of the option.</typeparam>
-internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>
+internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>, IAsyncDisposable
     where TQueueMessage : class, IBaseMessage
     where TOption : class, IQueueOption, new()
 {
@@ -28,6 +28,10 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// The logger.
     /// </summary>
     protected readonly ILogger _logger;
+
+    private IConnection? _connection;
+    private IChannel? _channel;
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     /// <summary>
     /// Initializes a new instance of <see cref="PublisherServiceBus{TQueueMessage, TOption}"/>.
@@ -46,45 +50,67 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
         _logger = logger;
     }
 
+    private async Task EnsureConnectionAsync()
+    {
+        if (_channel is not null) return;
+
+        await _semaphore.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            if (_channel is not null) return;
+
+            var exchangeName = _option is PublisherOptions publisherOptions
+                ? publisherOptions.ExchangeName
+                : string.Empty;
+
+            var exchangeType = _option is PublisherOptions opts
+                ? opts.ExchangeType
+                : global::RabbitMQ.Client.ExchangeType.Direct;
+
+            var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
+            _connection = await factory.CreateConnectionAsync().ConfigureAwait(false);
+            _channel = await _connection.CreateChannelAsync().ConfigureAwait(false);
+
+            if (!string.IsNullOrEmpty(exchangeName))
+                await _channel.ExchangeDeclareAsync(exchangeName, exchangeType, durable: true).ConfigureAwait(false);
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
     /// <summary>
     /// Sends a message to the RabbitMQ queue.
     /// </summary>
     /// <param name="queueMessage">The queue message.</param>
     /// <param name="sessionId">Used as CorrelationId when not <see cref="Guid.Empty"/>.</param>
     /// <returns>Task.</returns>
-    /// <exception cref="ArgumentException">Thrown when queueMessage is not a valid IBaseMessage.</exception>
     public virtual async Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId)
     {
-        if (queueMessage is not { } model)
-            throw new ArgumentException("Entity should be type of IQueueMessage<TModel>");
+        Argument.IsNotNull(queueMessage);
+
+        await EnsureConnectionAsync().ConfigureAwait(false);
 
         var exchangeName = _option is PublisherOptions publisherOptions
             ? publisherOptions.ExchangeName
             : string.Empty;
 
-        var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
-
-        await using var connection = await factory.CreateConnectionAsync().ConfigureAwait(false);
-        await using var channel = await connection.CreateChannelAsync().ConfigureAwait(false);
-
-        if (!string.IsNullOrEmpty(exchangeName))
-            await channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Direct, durable: true).ConfigureAwait(false);
-
         var body = JsonSerializer.SerializeToUtf8Bytes(queueMessage);
 
         var props = new BasicProperties
         {
-            ContentType = model.ContentType,
+            ContentType = queueMessage.ContentType,
             Persistent = true
         };
 
-        if (!string.IsNullOrEmpty(model.Tag))
-            props.Type = model.Tag;
+        if (!string.IsNullOrEmpty(queueMessage.Tag))
+            props.Type = queueMessage.Tag;
 
         if (sessionId != Guid.Empty)
             props.CorrelationId = sessionId.ToString();
 
-        await channel.BasicPublishAsync(
+        await _channel!.BasicPublishAsync(
             exchange: exchangeName,
             routingKey: _option.QueueName,
             mandatory: false,
@@ -92,5 +118,17 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
             body: body).ConfigureAwait(false);
 
         _logger.LogInformation("Published message to queue {QueueName}", _option.QueueName);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        if (_channel is not null)
+            await _channel.DisposeAsync().ConfigureAwait(false);
+
+        if (_connection is not null)
+            await _connection.DisposeAsync().ConfigureAwait(false);
+
+        _semaphore.Dispose();
     }
 }
