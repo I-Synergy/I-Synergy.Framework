@@ -15,9 +15,11 @@ namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity.</typeparam>
 /// <typeparam name="TOption">The type of the option.</typeparam>
-internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
+internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>, IAsyncDisposable
     where TOption : class, IQueueOption, new()
 {
+    private static readonly JsonSerializerOptions s_jsonOptions = new(JsonSerializerDefaults.Web);
+
     /// <summary>
     /// The option.
     /// </summary>
@@ -30,6 +32,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
 
     private IConnection? _connection;
     private IChannel? _channel;
+    private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of <see cref="SubscriberServiceBus{TEntity, TOption}"/>.
@@ -61,13 +64,17 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
             ? subscriberOptions.ExchangeName
             : string.Empty;
 
+        var exchangeType = _option is SubscriberOptions subscriberOpts
+            ? subscriberOpts.ExchangeType
+            : global::RabbitMQ.Client.ExchangeType.Direct;
+
         var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
 
         _connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
         _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (!string.IsNullOrEmpty(exchangeName))
-            await _channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await _channel.ExchangeDeclareAsync(exchangeName, exchangeType, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         await _channel.QueueDeclareAsync(
             queue: _option.QueueName,
@@ -103,15 +110,28 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
             await _connection.CloseAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        if (_disposed) return;
+
+        _disposed = true;
+
+        await UnSubscribeFromMessageBusAsync().ConfigureAwait(false);
+
+        if (_channel is not null)
+            await _channel.DisposeAsync().ConfigureAwait(false);
+
+        if (_connection is not null)
+            await _connection.DisposeAsync().ConfigureAwait(false);
+    }
+
     private async Task OnMessageReceivedAsync(object sender, BasicDeliverEventArgs args)
     {
         try
         {
             var body = args.Body.ToArray();
-            var data = JsonSerializer.Deserialize<TEntity>(body, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            var data = JsonSerializer.Deserialize<TEntity>(body, s_jsonOptions);
 
             if (data is not null && ValidateMessage(data))
             {
