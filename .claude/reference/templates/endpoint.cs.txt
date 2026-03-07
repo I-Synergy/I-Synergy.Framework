@@ -112,15 +112,13 @@ public static class {Entity}Endpoints
     }
 
     /// <summary>
-    /// Retrieves a paginated list of {entities}.
+    /// Retrieves a list of {entities}.
     /// </summary>
     public static async Task<Ok<List<{Entity}>>> Get{Entity}ListAsync(
         [FromServices] IQueryHandler<Get{Entity}ListQuery, Get{Entity}ListResponse> handler,
-        [FromQuery] int pageIndex = 0,
-        [FromQuery] int pageSize = GenericConstants.DefaultPageSize,
         CancellationToken cancellationToken = default)
     {
-        var query = new Get{Entity}ListQuery(pageIndex, pageSize);
+        var query = new Get{Entity}ListQuery();
         var result = await handler.HandleAsync(query, cancellationToken);
         return TypedResults.Ok(result.{Entities} ?? []);
     }
