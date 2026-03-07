@@ -1,6 +1,6 @@
 using ISynergy.Framework.Core.Base;
 
-namespace ISynergy.Framework.Core.Tests.Fixtures;
+namespace ISynergy.Framework.Core.Fixtures;
 internal class TestObservableClass : ObservableValidatedClass
 {
     public bool IsAsyncDisposed { get; private set; }

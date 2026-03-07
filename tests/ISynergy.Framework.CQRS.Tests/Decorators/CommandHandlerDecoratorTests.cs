@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace ISynergy.Framework.CQRS.Decorators.Tests;
+namespace ISynergy.Framework.CQRS.Decorators;
 
 [TestClass]
 public class CommandHandlerDecoratorTests

@@ -1,12 +1,12 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators.Tests;
+using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Reflection;
-using static ISynergy.Framework.Core.Locators.Tests.ServiceLocatorTests;
+using static ISynergy.Framework.Core.Locators.ServiceLocatorTests;
 
-namespace ISynergy.Framework.Core.Services.Tests;
+namespace ISynergy.Framework.Core.Services;
 
 [TestClass]
 public class ScopedContextServiceTests

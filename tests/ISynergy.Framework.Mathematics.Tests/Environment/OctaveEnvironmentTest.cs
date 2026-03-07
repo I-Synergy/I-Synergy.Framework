@@ -2,7 +2,7 @@ using ISynergy.Framework.Mathematics.Environments;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Environment;
+namespace ISynergy.Framework.Mathematics.Environment;
 
 [TestClass]
 public class OctaveEnvironmentTest : OctaveEnvironment

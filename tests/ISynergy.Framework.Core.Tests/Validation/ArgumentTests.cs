@@ -1,6 +1,6 @@
-using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using ISynergy.Framework.Core.Data.TestClasses;
 
-namespace ISynergy.Framework.Core.Validation.Tests;
+namespace ISynergy.Framework.Core.Validation;
 
 /// <summary>
 /// Class ArgumentTests.

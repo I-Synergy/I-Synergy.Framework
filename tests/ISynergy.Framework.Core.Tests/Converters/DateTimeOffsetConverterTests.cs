@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Serializers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace ISynergy.Framework.Core.Converters.Tests;
+namespace ISynergy.Framework.Core.Converters;
 
 [TestClass()]
 public class DateTimeOffsetConverterTests

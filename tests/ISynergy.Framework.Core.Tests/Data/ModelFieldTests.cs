@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel;
 
-namespace ISynergy.Framework.Core.Data.Tests;
+namespace ISynergy.Framework.Core.Data;
 
 /// <summary>
 /// Class ModelFieldTests.

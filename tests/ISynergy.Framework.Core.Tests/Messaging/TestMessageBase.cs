@@ -1,6 +1,6 @@
 using ISynergy.Framework.Core.Messages.Base;
 
-namespace ISynergy.Framework.Core.Messaging.Tests;
+namespace ISynergy.Framework.Core.Messaging;
 
 public class TestMessageBase(object sender) : BaseMessage(sender), ITestMessage
 {

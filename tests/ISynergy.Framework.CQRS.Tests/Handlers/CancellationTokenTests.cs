@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.CQRS.Handlers.Tests;
+namespace ISynergy.Framework.CQRS.Handlers;
 
 [TestClass]
 public class CancellationTokenTests

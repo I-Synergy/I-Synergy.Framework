@@ -1,7 +1,6 @@
-using ISynergy.Framework.Mathematics.Optimization.Losses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Optimization.Losses;
+namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 [TestClass]
 public class ZeroOneLossTest
 {

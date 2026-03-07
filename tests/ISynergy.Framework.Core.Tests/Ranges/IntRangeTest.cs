@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Ranges.Tests;
+namespace ISynergy.Framework.Core.Ranges;
 
 [TestClass]
 public class IntRangeTest

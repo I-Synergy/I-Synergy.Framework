@@ -1,8 +1,7 @@
 using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Wavelets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Wavelets;
+namespace ISynergy.Framework.Mathematics.Wavelets;
 [TestClass]
 public class CDF97Test
 {

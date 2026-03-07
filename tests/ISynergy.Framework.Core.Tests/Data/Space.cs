@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Tests.Enumerations;
+using ISynergy.Framework.Core.Enumerations;
 
-namespace ISynergy.Framework.Core.Tests.Data;
+namespace ISynergy.Framework.Core.Data;
 
 public class Space
 {

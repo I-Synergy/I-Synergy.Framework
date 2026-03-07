@@ -1,7 +1,8 @@
+using ISynergy.Framework.UI.Formatters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 
-namespace ISynergy.Framework.UI.Formatters.Tests;
+namespace ISynergy.Framework.UI.WinUI.Formatters;
 
 [TestClass]
 public class DecimalFormatterTests

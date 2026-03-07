@@ -1,8 +1,7 @@
 using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Statistics;
+namespace ISynergy.Framework.Mathematics.Statistics;
 [TestClass]
 public class MeasuresTest
 {

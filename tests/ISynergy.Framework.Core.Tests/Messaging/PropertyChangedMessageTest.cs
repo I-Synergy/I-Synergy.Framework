@@ -6,7 +6,7 @@ using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.Core.Messaging.Tests;
+namespace ISynergy.Framework.Core.Messaging;
 
 [TestClass]
 public class PropertyChangedMessageTest

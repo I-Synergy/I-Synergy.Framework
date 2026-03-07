@@ -1,9 +1,8 @@
 using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.UI.Tests.Services;
+namespace ISynergy.Framework.UI.Services;
 
 [TestClass]
 public class ApplicationLifecycleServiceTests

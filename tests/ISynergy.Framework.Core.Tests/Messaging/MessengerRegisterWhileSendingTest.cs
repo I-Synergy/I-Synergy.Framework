@@ -1,12 +1,12 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Fixtures;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Messages.Base;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Tests.Fixtures;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.Core.Messaging.Tests;
+namespace ISynergy.Framework.Core.Messaging;
 
 [TestClass]
 public class MessengerRegisterWhileSendingTest

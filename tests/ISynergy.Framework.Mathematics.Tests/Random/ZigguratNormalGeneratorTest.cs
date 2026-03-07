@@ -1,7 +1,6 @@
-using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Random;
+namespace ISynergy.Framework.Mathematics.Random;
 [TestClass]
 public class ZigguratNormalGeneratorTest
 {

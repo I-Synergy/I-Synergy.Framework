@@ -6,6 +6,7 @@
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 		<Nullable>disable</Nullable>
+    <RootNamespace>ISynergy.Framework.Mathematics</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,0 +1,43 @@
+# File: tests/{ApplicationName}.{Domain}.Tests/Features/{Entity}Management.feature
+
+Feature: {Entity} Management
+  As a user
+  I want to manage {entities}
+  So that I can track my data
+
+  Scenario: Create a new {entity}
+    Given I am an authenticated user
+    When I create a {entity} with the following details:
+      | Property1  | Property2 | Property3  |
+      | Test Value | 100.50    | 2025-12-31 |
+    Then the {entity} should be created successfully
+    And the {entity} should have a unique identifier
+    And the {entity} should be retrievable by its identifier
+
+  Scenario: Cannot create {entity} with invalid data
+    Given I am an authenticated user
+    When I attempt to create a {entity} with negative Property2
+    Then the creation should fail with a validation error
+    And the error message should indicate Property2 must be positive
+
+  Scenario: Update an existing {entity}
+    Given I am an authenticated user
+    And a {entity} exists with Property1 "Original Value"
+    When I update the {entity} Property1 to "Updated Value"
+    Then the {entity} should be updated successfully
+    And the {entity} Property1 should be "Updated Value"
+
+  Scenario: Delete an existing {entity}
+    Given I am an authenticated user
+    And a {entity} exists
+    When I delete the {entity}
+    Then the {entity} should be deleted successfully
+    And the {entity} should not be retrievable
+
+  Scenario: Get list of {entities} with pagination
+    Given I am an authenticated user
+    And 25 {entities} exist
+    When I request page 1 with page size 10
+    Then I should receive 10 {entities}
+    When I request page 3 with page size 10
+    Then I should receive 5 {entities}

@@ -29,6 +29,9 @@ public static class SentryTelemetryExtensions
 
         telemetryExporterOptions?.Invoke(options);
 
+        if (string.IsNullOrWhiteSpace(options.Dsn))
+            return telemetryBuilder;
+
         SentrySdk.Init(sentryOptions =>
         {
             options.Map(sentryOptions);

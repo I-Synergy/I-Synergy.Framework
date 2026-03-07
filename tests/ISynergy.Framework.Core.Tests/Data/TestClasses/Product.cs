@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
 using System.ComponentModel.DataAnnotations;
 
-namespace ISynergy.Framework.Core.Data.Tests.TestClasses;
+namespace ISynergy.Framework.Core.Data.TestClasses;
 
 /// <summary>
 /// Class Product.

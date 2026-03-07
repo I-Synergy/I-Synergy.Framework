@@ -1,7 +1,7 @@
-using ISynergy.Framework.Core.Tests.Fixtures;
+using ISynergy.Framework.Core.Fixtures;
 using System.ComponentModel;
 
-namespace ISynergy.Framework.Core.Base.Tests;
+namespace ISynergy.Framework.Core.Base;
 
 [TestClass]
 public class ObservableValidatedClassEventTests

@@ -1,6 +1,5 @@
 using ISynergy.Framework.AspNetCore.Globalization.Constraints;
 using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
-using ISynergy.Framework.AspNetCore.Globalization.Extensions;
 using ISynergy.Framework.AspNetCore.Globalization.Options;
 using ISynergy.Framework.AspNetCore.Globalization.Providers;
 using ISynergy.Framework.Core.Abstractions.Services;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace ISynergy.Framework.AspNetCore.Globalization.Tests.Extensions
+namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
 {
     [TestClass]
     public class ApplicationBuilderExtensionsTests

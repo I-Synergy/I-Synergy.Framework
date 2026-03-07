@@ -1,6 +1,6 @@
 using ISynergy.Framework.Core.Base;
 
-namespace ISynergy.Framework.Core.Data.Tests.TestClasses;
+namespace ISynergy.Framework.Core.Data.TestClasses;
 
 /// <summary>
 /// Class ProductGroup.

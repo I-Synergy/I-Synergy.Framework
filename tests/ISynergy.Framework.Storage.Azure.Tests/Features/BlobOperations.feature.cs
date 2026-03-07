@@ -11,7 +11,7 @@
 #region Designer generated code
 #pragma warning disable
 using Reqnroll;
-namespace ISynergy.Framework.Storage.Azure.Tests.Features
+namespace ISynergy.Framework.Storage.Azure.Features
 {
     
     
