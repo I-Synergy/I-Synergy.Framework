@@ -126,6 +126,7 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ISynergy.Framework.MessageBus.RabbitMQ/ISynergy.Framework.MessageBus.RabbitMQ.csproj" />
+    <Project Path="src/ISynergy.Framework.Storage.S3/ISynergy.Framework.Storage.S3.csproj" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="tests/ISynergy.Framework.AspNetCore.Authentication.Tests/ISynergy.Framework.AspNetCore.Authentication.Tests.csproj" />
