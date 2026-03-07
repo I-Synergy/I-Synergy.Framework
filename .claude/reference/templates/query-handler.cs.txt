@@ -34,6 +34,7 @@ using ISynergy.Data;
 using {ApplicationName}.Domain.{Domain}.Models;
 using ISynergy.Framework.CQRS.Queries;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
@@ -55,8 +56,8 @@ public sealed class Get{Entity}ByIdQueryHandler(
     {
         logger.LogDebug("Retrieving {entity} {Id}", query.{Entity}Id);
 
-        var entity = await dataContext.FindAsync<Entities.{Domain}.{Entity}>(
-            [query.{Entity}Id], cancellationToken);
+        var entity = await dataContext.{Entities}.FirstOrDefaultAsync(
+            e => e.{Entity}Id == query.{Entity}Id, cancellationToken);
         var model = entity?.Adapt<{Entity}>();
 
         if (model is null)
