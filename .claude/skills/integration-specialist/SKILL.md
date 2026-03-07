@@ -302,19 +302,61 @@ public class WebhookProcessor(
     private readonly string _webhookSecret = configuration["ExternalService:WebhookSecret"]
         ?? throw new InvalidOperationException("Webhook secret not configured");
 
-    public bool ValidateSignature(ExternalServiceWebhookPayload payload, string signature)
+    public bool ValidateSignature(byte[] requestBody, string signature)
     {
-        var json = JsonSerializer.Serialize(payload);
-        var bytes = Encoding.UTF8.GetBytes(json);
+        if (requestBody is null)
+        {
+            throw new ArgumentNullException(nameof(requestBody));
+        }
+
+        if (string.IsNullOrWhiteSpace(signature))
+        {
+            return false;
+        }
+
         var secretBytes = Encoding.UTF8.GetBytes(_webhookSecret);
 
         using var hmac = new HMACSHA256(secretBytes);
-        var hash = hmac.ComputeHash(bytes);
-        var computedSignature = Convert.ToHexString(hash).ToLowerInvariant();
+        var computedHash = hmac.ComputeHash(requestBody);
 
-        return signature.Equals(computedSignature, StringComparison.OrdinalIgnoreCase);
+        if (!TryDecodeHexString(signature, out var expectedHash))
+        {
+            return false;
+        }
+
+        if (expectedHash.Length != computedHash.Length)
+        {
+            return false;
+        }
+
+        return CryptographicOperations.FixedTimeEquals(computedHash, expectedHash);
     }
 
+    private static bool TryDecodeHexString(string hex, out byte[] bytes)
+    {
+        if (hex is null)
+        {
+            bytes = Array.Empty<byte>();
+            return false;
+        }
+
+        if ((hex.Length & 1) != 0)
+        {
+            bytes = Array.Empty<byte>();
+            return false;
+        }
+
+        var result = new byte[hex.Length / 2];
+        for (int i = 0; i < result.Length; i++)
+        {
+            var high = Convert.ToByte(hex[2 * i].ToString(), 16);
+            var low = Convert.ToByte(hex[2 * i + 1].ToString(), 16);
+            result[i] = (byte)((high << 4) | low);
+        }
+
+        bytes = result;
+        return true;
+    }
     public async Task ProcessWebhookAsync(ExternalServiceWebhookPayload payload)
     {
         logger.LogInformation(
