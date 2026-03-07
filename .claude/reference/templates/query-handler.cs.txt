@@ -1,0 +1,139 @@
+// =============================================================================
+// GET BY ID QUERY
+// =============================================================================
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdQuery.cs
+
+using ISynergy.Framework.CQRS.Queries;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
+
+/// <summary>
+/// Query to retrieve a {entity} by its identifier.
+/// </summary>
+/// <param name="{Entity}Id">The identifier of the {entity} to retrieve.</param>
+public sealed record Get{Entity}ByIdQuery(Guid {Entity}Id) : IQuery<Get{Entity}ByIdResponse>;
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdResponse.cs
+
+using {ApplicationName}.Domain.{Domain}.Models;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
+
+/// <summary>
+/// Response containing the requested {entity}.
+/// </summary>
+/// <param name="{Entity}">The retrieved {entity}, or null if not found.</param>
+public sealed record Get{Entity}ByIdResponse({Entity}? {Entity});
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdQueryHandler.cs
+
+using ISynergy.Data;
+using {ApplicationName}.Domain.{Domain}.Models;
+using ISynergy.Framework.CQRS.Queries;
+using Mapster;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
+
+/// <summary>
+/// Handles retrieving a {entity} by its identifier.
+/// </summary>
+/// <param name="dataContext">The data context for database operations.</param>
+/// <param name="logger">The logger for diagnostic information.</param>
+public sealed class Get{Entity}ByIdQueryHandler(
+    DataContext dataContext,
+    ILogger<Get{Entity}ByIdQueryHandler> logger)
+    : IQueryHandler<Get{Entity}ByIdQuery, Get{Entity}ByIdResponse>
+{
+    /// <inheritdoc />
+    public async Task<Get{Entity}ByIdResponse> HandleAsync(
+        Get{Entity}ByIdQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        logger.LogDebug("Retrieving {entity} {Id}", query.{Entity}Id);
+
+        var entity = await dataContext.{Entities}.FirstOrDefaultAsync(
+            e => e.{Entity}Id == query.{Entity}Id, cancellationToken);
+        var model = entity?.Adapt<{Entity}>();
+
+        if (model is null)
+        {
+            logger.LogDebug("{Entity} {Id} not found", query.{Entity}Id);
+        }
+
+        return new Get{Entity}ByIdResponse(model);
+    }
+}
+
+
+// =============================================================================
+// GET LIST QUERY
+// =============================================================================
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListQuery.cs
+
+using ISynergy.Framework.CQRS.Queries;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
+
+/// <summary>
+/// Query to retrieve all {entities}.
+/// </summary>
+public sealed record Get{Entities}ListQuery() : IQuery<Get{Entities}ListResponse>;
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListResponse.cs
+
+using {ApplicationName}.Domain.{Domain}.Models;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
+
+/// <summary>
+/// Response containing the list of {entities}.
+/// </summary>
+/// <param name="{Entities}">The list of {entities}.</param>
+public sealed record Get{Entities}ListResponse(IReadOnlyList<{Entity}> {Entities});
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListQueryHandler.cs
+
+using ISynergy.Data;
+using {ApplicationName}.Domain.{Domain}.Models;
+using ISynergy.Framework.CQRS.Queries;
+using Mapster;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
+
+/// <summary>
+/// Handles retrieving all {entities}.
+/// </summary>
+/// <param name="dataContext">The data context for database operations.</param>
+/// <param name="logger">The logger for diagnostic information.</param>
+public sealed class Get{Entities}ListQueryHandler(
+    DataContext dataContext,
+    ILogger<Get{Entities}ListQueryHandler> logger)
+    : IQueryHandler<Get{Entities}ListQuery, Get{Entities}ListResponse>
+{
+    /// <inheritdoc />
+    public async Task<Get{Entities}ListResponse> HandleAsync(
+        Get{Entities}ListQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        logger.LogDebug("Retrieving all {entities}");
+
+        var models = await dataContext.{Entities}
+            .OrderBy(e => e.Description)
+            .ProjectToType<{Entity}>()
+            .ToListAsync(cancellationToken);
+
+        logger.LogDebug("Retrieved {Count} {entities}", models.Count);
+
+        return new Get{Entities}ListResponse(models);
+    }
+}

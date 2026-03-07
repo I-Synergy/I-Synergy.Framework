@@ -1,11 +1,11 @@
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.EntityFramework.Tests.Entities;
+using ISynergy.Framework.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace ISynergy.Framework.EntityFramework.Extensions.Tests;
+namespace ISynergy.Framework.EntityFramework.Extensions;
 
 [TestClass]
 public class ModelBuilderExtensionsTests

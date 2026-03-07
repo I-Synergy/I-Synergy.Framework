@@ -1,12 +1,12 @@
-using ISynergy.Framework.EntityFramework.Tests.Entities;
-using ISynergy.Framework.EntityFramework.Tests.Fixtures;
-using ISynergy.Framework.EntityFramework.Tests.Models;
+using ISynergy.Framework.EntityFramework.Entities;
+using ISynergy.Framework.EntityFramework.Fixtures;
+using ISynergy.Framework.EntityFramework.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
 
-namespace ISynergy.Framework.EntityFramework.Extensions.Tests;
+namespace ISynergy.Framework.EntityFramework.Extensions;
 
 [TestClass]
 public class DbContextExtensionsTests

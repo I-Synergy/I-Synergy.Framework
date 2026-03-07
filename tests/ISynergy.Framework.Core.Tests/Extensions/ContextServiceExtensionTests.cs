@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ISynergy.Framework.Core.Extensions.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 [TestClass]
 public class ContextServiceExtensionTests

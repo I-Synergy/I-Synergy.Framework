@@ -1,11 +1,12 @@
 using ISynergy.Framework.Mail.Models;
 using ISynergy.Framework.Mail.Options;
+using ISynergy.Framework.Mail.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OptionsX = Microsoft.Extensions.Options.Options;
 
-namespace ISynergy.Framework.Mail.Services.Tests;
+namespace ISynergy.Framework.Mail.Microsoft365.Services;
 
 public class MailServiceTests
 {

@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Collections;
+namespace ISynergy.Framework.Mathematics.Collections;
 
 [TestClass]
 public class RedBlackDictionaryTest

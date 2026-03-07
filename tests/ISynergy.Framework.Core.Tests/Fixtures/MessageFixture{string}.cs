@@ -1,6 +1,6 @@
 using ISynergy.Framework.Core.Messages.Base;
 
-namespace ISynergy.Framework.Core.Tests.Fixtures;
+namespace ISynergy.Framework.Core.Fixtures;
 
 public class MessageFixture : BaseMessage<string>
 {

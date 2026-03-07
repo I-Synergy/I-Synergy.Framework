@@ -5,6 +5,7 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>ISynergy.Framework.Mail.Microsoft365</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

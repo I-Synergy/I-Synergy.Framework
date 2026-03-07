@@ -1,7 +1,7 @@
 using ISynergy.Framework.Mathematics.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Core;
+namespace ISynergy.Framework.Mathematics.Core;
 
 [TestClass]
 public class ToolsTest

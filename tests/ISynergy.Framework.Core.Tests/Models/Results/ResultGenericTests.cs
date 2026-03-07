@@ -1,9 +1,8 @@
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Models.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 
-namespace ISynergy.Framework.Core.Tests.Models.Results;
+namespace ISynergy.Framework.Core.Models.Results;
 
 [TestClass]
 public class ResultGenericTests

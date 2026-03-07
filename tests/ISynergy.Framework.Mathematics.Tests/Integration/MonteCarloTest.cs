@@ -1,8 +1,7 @@
-using ISynergy.Framework.Mathematics.Integration;
 using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Integration;
+namespace ISynergy.Framework.Mathematics.Integration;
 [TestClass]
 public class MonteCarloIntegralTest
 {

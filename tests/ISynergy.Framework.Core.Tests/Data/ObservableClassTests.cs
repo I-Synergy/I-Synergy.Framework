@@ -1,7 +1,7 @@
-using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using ISynergy.Framework.Core.Data.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Data.Tests;
+namespace ISynergy.Framework.Core.Data;
 
 /// <summary>
 /// Class ObservableClassTests.

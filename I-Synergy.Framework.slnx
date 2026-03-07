@@ -35,6 +35,7 @@
     <Project Path="src/ISynergy.Framework.Mail/ISynergy.Framework.Mail.csproj" />
     <Project Path="src/ISynergy.Framework.Mathematics/ISynergy.Framework.Mathematics.csproj" />
     <Project Path="src/ISynergy.Framework.MessageBus.Azure/ISynergy.Framework.MessageBus.Azure.csproj" />
+    <Project Path="src/ISynergy.Framework.MessageBus.RabbitMQ/ISynergy.Framework.MessageBus.RabbitMQ.csproj" />
     <Project Path="src/ISynergy.Framework.MessageBus/ISynergy.Framework.MessageBus.csproj" />
     <Project Path="src/ISynergy.Framework.Monitoring.Client/ISynergy.Framework.Monitoring.Client.csproj" />
     <Project Path="src/ISynergy.Framework.Monitoring/ISynergy.Framework.Monitoring.csproj" />
@@ -46,6 +47,7 @@
     <Project Path="src/ISynergy.Framework.Printer.Label.Dymo/ISynergy.Framework.Printer.Label.Dymo.csproj" />
     <Project Path="src/ISynergy.Framework.Printer.Label/ISynergy.Framework.Printer.Label.csproj" />
     <Project Path="src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj" />
+    <Project Path="src/ISynergy.Framework.Storage.S3/ISynergy.Framework.Storage.S3.csproj" />
     <Project Path="src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj" />
     <Project Path="src/ISynergy.Framework.Synchronization/ISynergy.Framework.Synchronization.csproj" />
     <Project Path="src/ISynergy.Framework.UI.Blazor/ISynergy.Framework.UI.Blazor.csproj" Id="2533bd51-a65b-483e-9d9e-d9abf12f97ca" />
@@ -128,6 +130,7 @@
     <Project Path="tests/ISynergy.Framework.AspNetCore.Authentication.Tests/ISynergy.Framework.AspNetCore.Authentication.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.AspNetCore.Globalization.Tests/ISynergy.Framework.AspNetCore.Globalization.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.AspNetCore.Monitoring.Tests/ISynergy.Framework.AspNetCore.Monitoring.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.AspNetCore.MultiTenancy.Tests/ISynergy.Framework.AspNetCore.MultiTenancy.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.AspNetCore.Tests/ISynergy.Framework.AspNetCore.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Automations.Tests/ISynergy.Framework.Automations.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Core.Tests/ISynergy.Framework.Core.Tests.csproj" />
@@ -138,11 +141,13 @@
     <Project Path="tests/ISynergy.Framework.IO.Tests/ISynergy.Framework.IO.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Mail.Microsoft365.Tests/ISynergy.Framework.Mail.Microsoft365.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Mathematics.Tests/ISynergy.Framework.Mathematics.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.MessageBus.RabbitMQ.Tests/ISynergy.Framework.MessageBus.RabbitMQ.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.MessageBus.Tests/ISynergy.Framework.MessageBus.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Mvvm.Tests/ISynergy.Framework.Mvvm.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.OpenTelemetry.Tests/ISynergy.Framework.OpenTelemetry.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Physics.Tests/ISynergy.Framework.Physics.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Storage.Azure.Tests/ISynergy.Framework.Storage.Azure.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Storage.S3.Tests/ISynergy.Framework.Storage.S3.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Storage.Tests/ISynergy.Framework.Storage.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.UI.Maui.Tests/ISynergy.Framework.UI.Maui.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.UI.Tests/ISynergy.Framework.UI.Tests.csproj" Id="3bb92e9d-ffb1-4adc-9a85-7ac32bb6dec6" />

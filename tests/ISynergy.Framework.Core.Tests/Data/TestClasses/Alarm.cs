@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace ISynergy.Framework.Core.Tests.Data.TestClasses;
+namespace ISynergy.Framework.Core.Data.TestClasses;
 
 public class Alarm
 {

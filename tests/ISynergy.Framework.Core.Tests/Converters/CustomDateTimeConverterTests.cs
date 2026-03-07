@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace ISynergy.Framework.Core.Converters.Tests;
+namespace ISynergy.Framework.Core.Converters;
 
 [TestClass()]
 public class CustomDateTimeConverterTests

@@ -1,4 +1,4 @@
-namespace ISynergy.Framework.UI.WinUI.Tests.Enumerations;
+namespace ISynergy.Framework.UI.WinUI.Enumerations;
 
 public enum TestEnum
 {

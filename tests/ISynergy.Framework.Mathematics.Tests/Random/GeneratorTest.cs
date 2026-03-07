@@ -1,10 +1,9 @@
 using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Concurrent;
 
-namespace ISynergy.Framework.Mathematics.Tests.Random;
+namespace ISynergy.Framework.Mathematics.Random;
 [TestClass]
 public class GeneratorTest
 {

@@ -1,7 +1,8 @@
-using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using ISynergy.Framework.Core.Data.TestClasses;
+using ISynergy.Framework.Core.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Utilities.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class TypeExtensionsTests.

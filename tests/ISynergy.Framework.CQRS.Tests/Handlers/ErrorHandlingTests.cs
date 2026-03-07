@@ -1,12 +1,12 @@
 using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.Dispatchers;
 using ISynergy.Framework.CQRS.Queries;
-using ISynergy.Framework.CQRS.TestImplementations.Tests;
+using ISynergy.Framework.CQRS.TestImplementations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ISynergy.Framework.CQRS.Handlers.Tests;
+namespace ISynergy.Framework.CQRS.Handlers;
 
 [TestClass]
 public class ErrorHandlingTests

@@ -1,11 +1,10 @@
 using ISynergy.Framework.Core.Points;
 using ISynergy.Framework.Core.Ranges;
-using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Common;
+namespace ISynergy.Framework.Mathematics.Common;
 [TestClass]
 public class CommonToolsTest
 {

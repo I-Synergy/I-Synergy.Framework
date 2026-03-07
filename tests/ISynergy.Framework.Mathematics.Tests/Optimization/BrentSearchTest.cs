@@ -1,8 +1,7 @@
 using ISynergy.Framework.Mathematics.Exceptions;
-using ISynergy.Framework.Mathematics.Optimization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Optimization;
+namespace ISynergy.Framework.Mathematics.Optimization;
 [TestClass]
 public class BrentSearchTest
 {
