@@ -141,7 +141,7 @@ Load on demand:
 ## Workflow Preferences
 
 - When asked to 'build' or 'check the build', ONLY run the build command and report results. Do not autonomously investigate or fix errors unless explicitly asked to do so.
-- A **PostToolUse hook** is configured in [`.claude/settings.local.json`](.claude/settings.local.json) that allows PowerShell and build commands to run automatically after file edits.
+- A **PostToolUse hook** is configured in [`.claude/settings.json`](.claude/settings.json) that allows PowerShell and build commands to run automatically after file edits.
 
 ## File Management
 
