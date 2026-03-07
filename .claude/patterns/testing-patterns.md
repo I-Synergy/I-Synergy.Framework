@@ -47,8 +47,12 @@ public class Create{Entity}HandlerTests
         Assert.AreNotEqual(Guid.Empty, result.{Entity}Id);
 
         _dataContextMock.Verify(
-            x => x.AddItemAsync<{Entity}, {Entity}Model>(
-                It.IsAny<{Entity}Model>(),
+            x => x.Add(
+                It.IsAny<{Entity}Model>()),
+            Times.Once);
+
+        _dataContextMock.Verify(
+            x => x.SaveChangesAsync(
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }
