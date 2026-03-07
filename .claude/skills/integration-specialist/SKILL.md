@@ -650,46 +650,62 @@ public class OAuth2TokenService(
 {
     private string? _cachedToken;
     private DateTimeOffset _tokenExpiry = DateTimeOffset.MinValue;
+    private readonly System.Threading.SemaphoreSlim _tokenSemaphore = new(1, 1);
 
     public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default)
     {
-        // Return cached token if valid
+        // Fast-path: return cached token if valid
         if (!string.IsNullOrEmpty(_cachedToken) && DateTimeOffset.UtcNow < _tokenExpiry)
         {
             logger.LogDebug("Using cached OAuth2 token");
             return _cachedToken;
         }
 
-        logger.LogDebug("Requesting new OAuth2 token");
-
-        var tokenRequest = new Dictionary<string, string>
+        await _tokenSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
         {
-            ["grant_type"] = "client_credentials",
-            ["client_id"] = configuration["OAuth:ClientId"]!,
-            ["client_secret"] = configuration["OAuth:ClientSecret"]!,
-            ["scope"] = configuration["OAuth:Scope"]!
-        };
+            // Double-check after acquiring the lock to avoid redundant refreshes
+            if (!string.IsNullOrEmpty(_cachedToken) && DateTimeOffset.UtcNow < _tokenExpiry)
+            {
+                logger.LogDebug("Using cached OAuth2 token after synchronization");
+                return _cachedToken;
+            }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "/oauth/token")
+            logger.LogDebug("Requesting new OAuth2 token");
+
+            var tokenRequest = new Dictionary<string, string>
+            {
+                ["grant_type"] = "client_credentials",
+                ["client_id"] = configuration["OAuth:ClientId"]!,
+                ["client_secret"] = configuration["OAuth:ClientSecret"]!,
+                ["scope"] = configuration["OAuth:Scope"]!
+            };
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "/oauth/token")
+            {
+                Content = new FormUrlEncodedContent(tokenRequest)
+            };
+
+            var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+
+            var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>(
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            if (tokenResponse is null || string.IsNullOrEmpty(tokenResponse.AccessToken))
+                throw new InvalidOperationException("Failed to obtain OAuth2 token");
+
+            _cachedToken = tokenResponse.AccessToken;
+            _tokenExpiry = DateTimeOffset.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 60); // Refresh 1 minute early
+
+            logger.LogInformation("Successfully obtained OAuth2 token, expires in {ExpiresIn}s", tokenResponse.ExpiresIn);
+
+            return _cachedToken;
+        }
+        finally
         {
-            Content = new FormUrlEncodedContent(tokenRequest)
-        };
-
-        var response = await httpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>(
-            cancellationToken: cancellationToken);
-
-        if (tokenResponse is null || string.IsNullOrEmpty(tokenResponse.AccessToken))
-            throw new InvalidOperationException("Failed to obtain OAuth2 token");
-
-        _cachedToken = tokenResponse.AccessToken;
-        _tokenExpiry = DateTimeOffset.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 60); // Refresh 1 minute early
-
-        logger.LogInformation("Successfully obtained OAuth2 token, expires in {ExpiresIn}s", tokenResponse.ExpiresIn);
-
-        return _cachedToken;
+            _tokenSemaphore.Release();
+        }
     }
 
     private sealed record TokenResponse(
