@@ -31,6 +31,9 @@ internal class S3StorageService : IStorageService, IDisposable
         IOptions<S3StorageOptions> options,
         ILogger<S3StorageService> logger)
     {
+        Argument.IsNotNull(options);
+        Argument.IsNotNull(logger);
+
         _options = options.Value;
 
         Argument.IsNotNullOrEmpty(_options.AccessKey);
@@ -57,7 +60,7 @@ internal class S3StorageService : IStorageService, IDisposable
     }
 
     /// <summary>
-    /// upload file as an asynchronous operation.
+    /// Upload file as an asynchronous operation.
     /// </summary>
     /// <param name="connectionStringName">Not used for S3; credentials are configured via <see cref="S3StorageOptions"/>.</param>
     /// <param name="containerName">The S3 bucket name.</param>
@@ -80,6 +83,8 @@ internal class S3StorageService : IStorageService, IDisposable
         CancellationToken cancellationToken = default)
     {
         Argument.IsNotNullOrEmpty(containerName);
+        Argument.IsNotNullOrEmpty(filename);
+        Argument.IsNotNull(fileBytes);
 
         var key = GetObjectKey(folder, filename);
 
@@ -103,7 +108,7 @@ internal class S3StorageService : IStorageService, IDisposable
     }
 
     /// <summary>
-    /// download file as an asynchronous operation.
+    /// Download file as an asynchronous operation.
     /// </summary>
     /// <param name="connectionStringName">Not used for S3; credentials are configured via <see cref="S3StorageOptions"/>.</param>
     /// <param name="containerName">The S3 bucket name.</param>
@@ -119,6 +124,7 @@ internal class S3StorageService : IStorageService, IDisposable
         CancellationToken cancellationToken = default)
     {
         Argument.IsNotNullOrEmpty(containerName);
+        Argument.IsNotNullOrEmpty(filename);
 
         var key = GetObjectKey(folder, filename);
 
@@ -139,7 +145,7 @@ internal class S3StorageService : IStorageService, IDisposable
     }
 
     /// <summary>
-    /// update file as an asynchronous operation.
+    /// Update file as an asynchronous operation.
     /// </summary>
     /// <param name="connectionStringName">Not used for S3; credentials are configured via <see cref="S3StorageOptions"/>.</param>
     /// <param name="containerName">The S3 bucket name.</param>
@@ -159,10 +165,10 @@ internal class S3StorageService : IStorageService, IDisposable
         CancellationToken cancellationToken = default)
     {
         Argument.IsNotNullOrEmpty(containerName);
+        Argument.IsNotNullOrEmpty(filename);
+        Argument.IsNotNull(fileBytes);
 
         var key = GetObjectKey(folder, filename);
-
-        await DeleteObjectIfExistsAsync(containerName, key, cancellationToken).ConfigureAwait(false);
 
         var request = new PutObjectRequest
         {
@@ -181,7 +187,7 @@ internal class S3StorageService : IStorageService, IDisposable
     }
 
     /// <summary>
-    /// remove file as an asynchronous operation.
+    /// Remove file as an asynchronous operation.
     /// </summary>
     /// <param name="connectionStringName">Not used for S3; credentials are configured via <see cref="S3StorageOptions"/>.</param>
     /// <param name="containerName">The S3 bucket name.</param>
@@ -197,6 +203,7 @@ internal class S3StorageService : IStorageService, IDisposable
         CancellationToken cancellationToken = default)
     {
         Argument.IsNotNullOrEmpty(containerName);
+        Argument.IsNotNullOrEmpty(filename);
 
         var key = GetObjectKey(folder, filename);
 
@@ -211,6 +218,8 @@ internal class S3StorageService : IStorageService, IDisposable
             _client.Dispose();
             _disposed = true;
         }
+
+        GC.SuppressFinalize(this);
     }
 
     private static string GetObjectKey(string folder, string filename)
@@ -241,15 +250,11 @@ internal class S3StorageService : IStorageService, IDisposable
 
     private async Task<bool> DeleteObjectIfExistsAsync(string bucketName, string key, CancellationToken cancellationToken)
     {
-        try
-        {
-            var request = new DeleteObjectRequest { BucketName = bucketName, Key = key };
-            await _client.DeleteObjectAsync(request, cancellationToken).ConfigureAwait(false);
-            return true;
-        }
-        catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-        {
+        if (!await ObjectExistsAsync(bucketName, key, cancellationToken).ConfigureAwait(false))
             return false;
-        }
+
+        var request = new DeleteObjectRequest { BucketName = bucketName, Key = key };
+        await _client.DeleteObjectAsync(request, cancellationToken).ConfigureAwait(false);
+        return true;
     }
 }
