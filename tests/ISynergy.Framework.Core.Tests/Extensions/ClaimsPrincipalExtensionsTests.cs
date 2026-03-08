@@ -37,7 +37,7 @@ public class ClaimsPrincipalExtensionsTests
     public void HasClaimTest()
     {
         Assert.IsTrue(_principal.HasClaim(Claims.Name));
-        Assert.IsFalse(_principal.HasClaim(Claims.ZoneInfo));
+        Assert.IsFalse(_principal.HasClaim(Claims.Zoneinfo));
     }
 
     [TestMethod()]
