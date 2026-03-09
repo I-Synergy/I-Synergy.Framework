@@ -30,6 +30,9 @@
     <Project Path="src/ISynergy.Framework.Financial/ISynergy.Framework.Financial.csproj" />
     <Project Path="src/ISynergy.Framework.Geography/ISynergy.Framework.Geography.csproj" />
     <Project Path="src/ISynergy.Framework.IO/ISynergy.Framework.IO.csproj" />
+    <Project Path="src/ISynergy.Framework.KeyVault.Azure/ISynergy.Framework.KeyVault.Azure.csproj" Id="caf57bae-d6d9-43de-8016-195ba0a4354f" />
+    <Project Path="src/ISynergy.Framework.KeyVault.OpenBao/ISynergy.Framework.KeyVault.OpenBao.csproj" Id="5fb1fef7-ea38-4228-8486-09be06210b65" />
+    <Project Path="src/ISynergy.Framework.KeyVault/ISynergy.Framework.KeyVault.csproj" Id="b800773b-11c1-4cf7-ac03-cb273885852a" />
     <Project Path="src/ISynergy.Framework.Mail.Microsoft365/ISynergy.Framework.Mail.Microsoft365.csproj" />
     <Project Path="src/ISynergy.Framework.Mail.SendGrid/ISynergy.Framework.Mail.SendGrid.csproj" />
     <Project Path="src/ISynergy.Framework.Mail/ISynergy.Framework.Mail.csproj" />
@@ -139,6 +142,7 @@
     <Project Path="tests/ISynergy.Framework.Financial.Tests/ISynergy.Framework.Financial.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Geography.Tests/ISynergy.Framework.Geography.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.IO.Tests/ISynergy.Framework.IO.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.KeyVault.OpenBao.Tests/ISynergy.Framework.KeyVault.OpenBao.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Mail.Microsoft365.Tests/ISynergy.Framework.Mail.Microsoft365.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Mathematics.Tests/ISynergy.Framework.Mathematics.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.MessageBus.RabbitMQ.Tests/ISynergy.Framework.MessageBus.RabbitMQ.Tests.csproj" />
