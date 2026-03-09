@@ -8,32 +8,26 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
 
-namespace ISynergy.Framework.MessageBus.Azure.Services.Queue;
+namespace ISynergy.Framework.MessageBus.Services.Queue;
 
 /// <summary>
 /// Message bus implementation on Azure Service Bus.
 /// </summary>
 /// <typeparam name="TQueueMessage">The type of the t queue message.</typeparam>
 /// <typeparam name="TOption">The type of the t option.</typeparam>
-internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>
+public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>
     where TQueueMessage : class, IBaseMessage
     where TOption : class, IQueueOption, new()
 {
-    /// <summary>
-    /// The option
-    /// </summary>
-    protected readonly TOption _option;
-    /// <summary>
-    /// The logger
-    /// </summary>
-    protected readonly ILogger _logger;
+    private readonly TOption _option;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Constructor of service bus.
     /// </summary>
     /// <param name="options">The options.</param>
     /// <param name="logger">The logger.</param>
-    protected PublisherServiceBus(
+    public PublisherServiceBus(
         IOptions<TOption> options,
         ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger)
     {

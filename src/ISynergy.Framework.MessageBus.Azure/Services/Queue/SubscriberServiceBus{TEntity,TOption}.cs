@@ -7,14 +7,14 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
 
-namespace ISynergy.Framework.MessageBus.Azure.Services.Queue;
+namespace ISynergy.Framework.MessageBus.Services.Queue;
 
 /// <summary>
 /// Message bus implementation on Azure Service Bus.
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <typeparam name="TOption">The type of the t option.</typeparam>
-internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
+public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
     where TOption : class, IQueueOption, new()
 {
     /// <summary>

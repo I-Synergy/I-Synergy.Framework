@@ -1,33 +1,25 @@
+using ISynergy.Framework.Core.Serializers;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
-using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
+using ISynergy.Framework.MessageBus.Options.Queue;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
 
-namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
+namespace ISynergy.Framework.MessageBus.Services.Queue;
 
 /// <summary>
 /// Message bus subscriber implementation on RabbitMQ.
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity.</typeparam>
 /// <typeparam name="TOption">The type of the option.</typeparam>
-internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>, IAsyncDisposable
+public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>, IAsyncDisposable
     where TOption : class, IQueueOption, new()
 {
-    private static readonly JsonSerializerOptions s_jsonOptions = new(JsonSerializerDefaults.Web);
-
-    /// <summary>
-    /// The option.
-    /// </summary>
     protected readonly TOption _option;
-
-    /// <summary>
-    /// The logger.
-    /// </summary>
     protected readonly ILogger _logger;
 
     private IConnection? _connection;
@@ -66,7 +58,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
 
         var exchangeType = _option is SubscriberOptions subscriberOpts
             ? subscriberOpts.ExchangeType
-            : global::RabbitMQ.Client.ExchangeType.Direct;
+            : RabbitMQ.Client.ExchangeType.Direct;
 
         var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
 
@@ -137,7 +129,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
         try
         {
             var body = args.Body.ToArray();
-            var data = JsonSerializer.Deserialize<TEntity>(body, s_jsonOptions);
+            var data = JsonSerializer.Deserialize<TEntity>(body, DefaultJsonSerializers.Web);
 
             if (data is not null && ValidateMessage(data))
             {

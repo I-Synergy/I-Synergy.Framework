@@ -1,5 +1,5 @@
 using ISynergy.Framework.MessageBus.Abstractions;
-using ISynergy.Framework.MessageBus.RabbitMQ.Extensions;
+using ISynergy.Framework.MessageBus.Extensions;
 using ISynergy.Framework.MessageBus.RabbitMQ.Tests.Fixtures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

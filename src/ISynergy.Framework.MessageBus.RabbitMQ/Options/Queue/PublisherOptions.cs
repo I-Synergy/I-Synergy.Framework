@@ -1,12 +1,11 @@
 using ISynergy.Framework.MessageBus.Options.Base;
-using RabbitMQ.Client;
 
-namespace ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
+namespace ISynergy.Framework.MessageBus.Options.Queue;
 
 /// <summary>
 /// Queue MessageBus publisher options for RabbitMQ.
 /// </summary>
-internal class PublisherOptions : BaseQueueOption
+public class PublisherOptions : BaseQueueOption
 {
     /// <summary>
     /// Gets or sets the exchange name. Empty string uses the RabbitMQ default exchange.
@@ -16,5 +15,5 @@ internal class PublisherOptions : BaseQueueOption
     /// <summary>
     /// Gets or sets the exchange type (e.g. direct, fanout, topic, headers). Defaults to direct.
     /// </summary>
-    public string ExchangeType { get; set; } = global::RabbitMQ.Client.ExchangeType.Direct;
+    public string ExchangeType { get; set; } = RabbitMQ.Client.ExchangeType.Direct;
 }
