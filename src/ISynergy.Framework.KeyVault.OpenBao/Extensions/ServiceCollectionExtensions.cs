@@ -10,16 +10,19 @@ namespace ISynergy.Framework.KeyVault.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddOpenBaoKeyVault(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddKeyVaultIntegration(this IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddSingleton<IVaultTokenProvider, OpenBaoVaultTokenProvider>();
         services.TryAddSingleton<IKeyVaultService>(sp =>
         {
             var tokenProvider = sp.GetRequiredService<IVaultTokenProvider>();
+
             var vaultUri = configuration["KeyVaultOptions:Uri"]
                 ?? throw new InvalidOperationException("KeyVaultOptions:Uri not configured.");
-            var token = tokenProvider.GetTokenAsync().GetAwaiter().GetResult();
+
+            var token = tokenProvider.GetToken();
             var client = new VaultClient(new VaultClientSettings(vaultUri, new TokenAuthMethodInfo(token)));
+
             return new OpenBaoKeyVaultService(client);
         });
         return services;
