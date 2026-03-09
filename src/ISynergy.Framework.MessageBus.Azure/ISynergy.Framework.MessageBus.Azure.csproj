@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
-        <Description>I-Synergy Framework Azure MessageBus</Description>
-        <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
-    </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Azure.Messaging.ServiceBus" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
+    <Description>I-Synergy Framework Azure MessageBus</Description>
+    <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
+    <RootNamespace>ISynergy.Framework.MessageBus</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />
+  </ItemGroup>
 </Project>

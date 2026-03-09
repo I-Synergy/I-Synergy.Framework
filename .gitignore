@@ -334,3 +334,4 @@ ASALocalRun/
 
 *.db
 _site/
+.claude/settings.local.json

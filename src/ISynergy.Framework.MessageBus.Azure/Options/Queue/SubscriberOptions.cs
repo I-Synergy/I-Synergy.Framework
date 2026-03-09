@@ -1,10 +1,10 @@
 using ISynergy.Framework.MessageBus.Options.Base;
 
-namespace ISynergy.Framework.MessageBus.Azure.Options.Queue;
+namespace ISynergy.Framework.MessageBus.Options.Queue;
 
 /// <summary>
 /// Queue Messagebus subscriber options. 
 /// </summary>
-internal class SubscriberOptions : BaseQueueOption
+public class SubscriberOptions : BaseQueueOption
 {
 }

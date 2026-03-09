@@ -1,35 +1,27 @@
+using ISynergy.Framework.Core.Serializers;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
-using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
+using ISynergy.Framework.MessageBus.Options.Queue;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System.Text.Json;
 
-namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
+namespace ISynergy.Framework.MessageBus.Services.Queue;
 
 /// <summary>
 /// Message bus publisher implementation on RabbitMQ.
 /// </summary>
 /// <typeparam name="TQueueMessage">The type of the queue message.</typeparam>
 /// <typeparam name="TOption">The type of the option.</typeparam>
-internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>, IAsyncDisposable
+public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>, IAsyncDisposable
     where TQueueMessage : class, IBaseMessage
     where TOption : class, IQueueOption, new()
 {
-    /// <summary>
-    /// The option.
-    /// </summary>
-    protected readonly TOption _option;
-
-    /// <summary>
-    /// The logger.
-    /// </summary>
-    protected readonly ILogger _logger;
-
-    private static readonly JsonSerializerOptions s_jsonOptions = new(JsonSerializerDefaults.Web);
+    private readonly TOption _option;
+    private readonly ILogger _logger;
 
     private IConnection? _connection;
     private IChannel? _channel;
@@ -40,7 +32,7 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// </summary>
     /// <param name="options">The options.</param>
     /// <param name="logger">The logger.</param>
-    protected PublisherServiceBus(
+    public PublisherServiceBus(
         IOptions<TOption> options,
         ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger)
     {
@@ -67,7 +59,7 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
 
             var exchangeType = _option is PublisherOptions opts
                 ? opts.ExchangeType
-                : global::RabbitMQ.Client.ExchangeType.Direct;
+                : RabbitMQ.Client.ExchangeType.Direct;
 
             var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
             _connection = await factory.CreateConnectionAsync().ConfigureAwait(false);
@@ -98,7 +90,7 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
             ? publisherOptions.ExchangeName
             : string.Empty;
 
-        var body = JsonSerializer.SerializeToUtf8Bytes(queueMessage, s_jsonOptions);
+        var body = JsonSerializer.SerializeToUtf8Bytes(queueMessage, DefaultJsonSerializers.Web);
 
         var props = new BasicProperties
         {

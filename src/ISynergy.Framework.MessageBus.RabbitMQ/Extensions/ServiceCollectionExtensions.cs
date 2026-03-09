@@ -1,12 +1,11 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
-using ISynergy.Framework.MessageBus.Extensions;
-using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
-using ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
+using ISynergy.Framework.MessageBus.Options.Queue;
+using ISynergy.Framework.MessageBus.Services.Queue;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ISynergy.Framework.MessageBus.RabbitMQ.Extensions;
+namespace ISynergy.Framework.MessageBus.Extensions;
 
 /// <summary>
 /// Service collection extensions for RabbitMQ message bus.
