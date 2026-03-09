@@ -6,12 +6,13 @@ namespace ISynergy.Framework.KeyVault.Services;
 
 public sealed class OpenBaoVaultTokenProvider(IConfiguration configuration) : IVaultTokenProvider
 {
-    public Task<string> GetTokenAsync(CancellationToken cancellationToken = default)
+    public string GetToken()
     {
         // 1. Explicit token in config
         var token = configuration["KeyVaultOptions:Token"];
+
         if (!string.IsNullOrWhiteSpace(token))
-            return Task.FromResult(token);
+            return token;
 
         // 2. Resolve state directory: env var > config > fallback
         var stateDirectory = Environment.GetEnvironmentVariable("VaultInitializer__StateDirectory")
@@ -33,6 +34,6 @@ public sealed class OpenBaoVaultTokenProvider(IConfiguration configuration) : IV
         var rootToken = doc.RootElement.GetProperty("RootToken").GetString()
             ?? throw new InvalidOperationException("RootToken is missing from vault state file.");
 
-        return Task.FromResult(rootToken);
+        return rootToken;
     }
 }

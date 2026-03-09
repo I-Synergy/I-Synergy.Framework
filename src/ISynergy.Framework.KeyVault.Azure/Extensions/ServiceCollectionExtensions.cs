@@ -9,7 +9,7 @@ namespace ISynergy.Framework.KeyVault.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAzureKeyVaultIntegration(this IServiceCollection services, string vaultUri)
+    public static IServiceCollection AddKeyVaultIntegration(this IServiceCollection services, string vaultUri)
     {
         services.TryAddSingleton(_ => new SecretClient(new Uri(vaultUri), new DefaultAzureCredential()));
         services.TryAddSingleton<IKeyVaultService, AzureKeyVaultService>();

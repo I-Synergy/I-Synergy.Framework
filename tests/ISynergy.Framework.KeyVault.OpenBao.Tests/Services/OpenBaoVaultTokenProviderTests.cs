@@ -1,5 +1,5 @@
+using ISynergy.Framework.KeyVault.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.KeyVault.OpenBao.Tests.Services;
 
@@ -16,8 +16,8 @@ public class OpenBaoVaultTokenProviderTests
             })
             .Build();
 
-        var provider = new ISynergy.Framework.KeyVault.Services.OpenBaoVaultTokenProvider(config);
-        var token = await provider.GetTokenAsync();
+        var provider = new OpenBaoVaultTokenProvider(config);
+        var token = provider.GetToken();
 
         Assert.AreEqual("my-token", token);
     }
@@ -32,11 +32,11 @@ public class OpenBaoVaultTokenProviderTests
             })
             .Build();
 
-        var provider = new ISynergy.Framework.KeyVault.Services.OpenBaoVaultTokenProvider(config);
+        var provider = new OpenBaoVaultTokenProvider(config);
 
         try
         {
-            await provider.GetTokenAsync();
+            provider.GetToken();
             Assert.Fail("Expected InvalidOperationException was not thrown.");
         }
         catch (InvalidOperationException)
@@ -62,8 +62,8 @@ public class OpenBaoVaultTokenProviderTests
                 })
                 .Build();
 
-            var provider = new ISynergy.Framework.KeyVault.Services.OpenBaoVaultTokenProvider(config);
-            var token = await provider.GetTokenAsync();
+            var provider = new OpenBaoVaultTokenProvider(config);
+            var token = provider.GetToken();
 
             Assert.AreEqual("file-token", token);
         }
@@ -92,8 +92,8 @@ public class OpenBaoVaultTokenProviderTests
                 })
                 .Build();
 
-            var provider = new ISynergy.Framework.KeyVault.Services.OpenBaoVaultTokenProvider(config);
-            var token = await provider.GetTokenAsync();
+            var provider = new OpenBaoVaultTokenProvider(config);
+            var token = provider.GetToken();
 
             Assert.AreEqual("home-token", token);
         }

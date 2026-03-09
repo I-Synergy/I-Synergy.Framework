@@ -33,7 +33,10 @@ public sealed class OpenBaoKeyVaultService(IVaultClient vaultClient) : IKeyVault
         while (!cancellationToken.IsCancellationRequested)
         {
             var status = await vaultClient.V1.System.GetSealStatusAsync();
-            if (!status.Sealed) return;
+
+            if (!status.Sealed)
+                return;
+
             await Task.Delay(2000, cancellationToken);
         }
     }
