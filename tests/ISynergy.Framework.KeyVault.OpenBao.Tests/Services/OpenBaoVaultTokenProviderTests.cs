@@ -1,5 +1,6 @@
 using ISynergy.Framework.KeyVault.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.KeyVault.OpenBao.Tests.Services;
 
@@ -7,7 +8,7 @@ namespace ISynergy.Framework.KeyVault.OpenBao.Tests.Services;
 public class OpenBaoVaultTokenProviderTests
 {
     [TestMethod]
-    public async Task GetTokenAsync_ReturnsTokenFromConfig_WhenConfigured()
+    public void GetToken_ReturnsTokenFromConfig_WhenConfigured()
     {
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -23,7 +24,7 @@ public class OpenBaoVaultTokenProviderTests
     }
 
     [TestMethod]
-    public async Task GetTokenAsync_ThrowsIfStateFileNotFound_WhenTokenNotConfigured()
+    public void GetToken_ThrowsIfStateFileNotFound_WhenTokenNotConfigured()
     {
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -46,7 +47,7 @@ public class OpenBaoVaultTokenProviderTests
     }
 
     [TestMethod]
-    public async Task GetTokenAsync_FallsBackToStateFile_WhenTokenNotConfigured()
+    public async Task GetToken_FallsBackToStateFile_WhenTokenNotConfigured()
     {
         var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         Directory.CreateDirectory(tempDir);
@@ -74,7 +75,7 @@ public class OpenBaoVaultTokenProviderTests
     }
 
     [TestMethod]
-    public async Task GetTokenAsync_ExpandsTildePrefix_InStateDirectory()
+    public async Task GetToken_ExpandsTildePrefix_InStateDirectory()
     {
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var relPath = Path.Combine(".test-vault-state-" + Guid.NewGuid().ToString("N"));
