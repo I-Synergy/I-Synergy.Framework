@@ -1,5 +1,6 @@
 using ISynergy.Framework.KeyVault.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.KeyVault.OpenBao.Tests.Services;
 
