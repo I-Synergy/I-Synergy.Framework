@@ -31,6 +31,16 @@
 		                  OutputItemType="Analyzer"
 		                  ReferenceOutputAssembly="false" />
 	</ItemGroup>
+
+	<!-- Ensure the generator DLL lands in the correct NuGet folder -->
+	<Target Name="CopyGeneratorToAnalyzers" BeforeTargets="Pack">
+	  <ItemGroup>
+	    <None Include="$(OutputPath)ISynergy.Framework.UI.SourceGenerator.dll"
+	          Pack="true"
+	          PackagePath="analyzers/dotnet/cs/"
+	          Visible="false" />
+	  </ItemGroup>
+	</Target>
 	<ItemGroup>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
