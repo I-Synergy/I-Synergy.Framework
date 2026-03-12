@@ -92,7 +92,7 @@ public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<
 
             var exchangeType = _option is PublisherOptions opts
                 ? opts.ExchangeType
-                : RabbitMQ.Client.ExchangeType.Direct;
+                : global::RabbitMQ.Client.ExchangeType.Direct;
 
             var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
             _connection = await factory.CreateConnectionAsync().ConfigureAwait(false);

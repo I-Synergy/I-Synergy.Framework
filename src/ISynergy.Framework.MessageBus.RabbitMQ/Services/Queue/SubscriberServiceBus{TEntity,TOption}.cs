@@ -103,7 +103,7 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
 
         var exchangeType = _option is SubscriberOptions subscriberOpts
             ? subscriberOpts.ExchangeType
-            : RabbitMQ.Client.ExchangeType.Direct;
+            : global::RabbitMQ.Client.ExchangeType.Direct;
 
         var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
 
