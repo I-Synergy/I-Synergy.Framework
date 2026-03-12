@@ -6,7 +6,7 @@ namespace ISynergy.Framework.KeyVault.Abstractions.Services;
 public interface IVaultTokenProvider
 {
     /// <summary>
-    /// Returns the current Vault authentication token.
+    /// Returns the authentication token for the vault service.
     /// </summary>
     /// <returns>A non-empty string containing the Vault token.</returns>
     string GetToken();
