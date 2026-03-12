@@ -1,4 +1,4 @@
-using ISynergy.Framework.KeyVault.DataProtection;
+using ISynergy.Framework.KeyVault.OpenBao.DataProtection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -17,7 +17,7 @@ public class OpenBaoDataProtectionRepositoryTests
 {
     private Mock<IVaultClient> _mockClient = null!;
     private Mock<IKeyValueSecretsEngineV2> _mockKvV2 = null!;
-    private OpenBaoDataProtectionRepository _repository = null!;
+    private DataProtectionRepository _repository = null!;
 
     [TestInitialize]
     public void Initialize()
@@ -36,11 +36,11 @@ public class OpenBaoDataProtectionRepositoryTests
         _mockClient = new Mock<IVaultClient>();
         _mockClient.SetupGet(c => c.V1).Returns(mockV1.Object);
 
-        _repository = new OpenBaoDataProtectionRepository(
+        _repository = new DataProtectionRepository(
             _mockClient.Object,
             "isynergy/dataprotection",
             "secret",
-            NullLogger<OpenBaoDataProtectionRepository>.Instance);
+            NullLogger<DataProtectionRepository>.Instance);
     }
 
     [TestMethod]

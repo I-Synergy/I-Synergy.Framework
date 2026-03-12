@@ -1,4 +1,4 @@
-using ISynergy.Framework.KeyVault.Services;
+using ISynergy.Framework.KeyVault.OpenBao.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using VaultSharp;

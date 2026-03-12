@@ -5,7 +5,7 @@ namespace ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
 /// <summary>
 /// Queue MessageBus subscriber options for RabbitMQ.
 /// </summary>
-public class SubscriberOptions : BaseQueueOption
+internal class RabbitMQSubscriberOptions : BaseQueueOption
 {
     /// <summary>
     /// Gets or sets the exchange name. Empty string uses the RabbitMQ default exchange.

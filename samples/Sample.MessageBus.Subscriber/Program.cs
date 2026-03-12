@@ -1,4 +1,4 @@
-using ISynergy.Framework.MessageBus.Extensions;
+using ISynergy.Framework.MessageBus.Azure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -29,7 +29,7 @@ internal class Program
                 .AddLogging()
                 .AddOptions();
 
-            services.AddMessageBusAzureSubscribeIntegration<TestDataModel>(config);
+            services.AddAzureMessageBusSubscribeIntegration<TestDataModel>(config);
             services.TryAddScoped<Startup>();
 
             var serviceProvider = services.BuildServiceProvider();

@@ -37,7 +37,7 @@ public static class ServiceCollectionExtensions
     /// </remarks>
     [RequiresUnreferencedCode("VaultSharp uses reflection-based JSON serialization internally. Verify AOT compatibility with the VaultSharp version in use.")]
     [RequiresDynamicCode("VaultSharp may require dynamic code generation for JSON deserialization.")]
-    public static IServiceCollection AddKeyVaultIntegration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddOpenBaoKeyVaultIntegration(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<KeyVaultOptions>(configuration.GetSection(nameof(KeyVaultOptions)));
         services.Configure<VaultStateOptions>(configuration.GetSection(nameof(VaultStateOptions)));

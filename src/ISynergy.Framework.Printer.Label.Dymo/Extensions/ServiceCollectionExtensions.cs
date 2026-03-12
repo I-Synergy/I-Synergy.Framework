@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
     /// </remarks>
     [RequiresUnreferencedCode("Registers LabelPrinterService which depends on DymoSDK COM interop. Not compatible with AOT publishing.")]
     [RequiresDynamicCode("DymoSDK requires dynamic code generation.")]
-    public static IServiceCollection AddPrinterLabelDymoIntegration(this IServiceCollection services)
+    public static IServiceCollection AddDymoPrinterLabelIntegration(this IServiceCollection services)
     {
         services.TryAddSingleton<ILabelPrinterService, LabelPrinterService>();
         return services;

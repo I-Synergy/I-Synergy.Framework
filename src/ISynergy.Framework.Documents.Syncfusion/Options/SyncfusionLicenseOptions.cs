@@ -1,4 +1,4 @@
-namespace ISynergy.Framework.Documents.Options;
+namespace ISynergy.Framework.Documents.Syncfusion.Options;
 
 /// <summary>
 /// Syncfusion license options.

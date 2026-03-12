@@ -17,7 +17,7 @@ namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 /// </summary>
 /// <typeparam name="TQueueMessage">The type of the queue message.</typeparam>
 /// <typeparam name="TOption">The type of the option.</typeparam>
-public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>, IAsyncDisposable
+internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>, IAsyncDisposable
     where TQueueMessage : class, IBaseMessage
     where TOption : class, IQueueOption, new()
 {
@@ -86,11 +86,11 @@ public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<
         {
             if (_channel is not null) return;
 
-            var exchangeName = _option is PublisherOptions publisherOptions
+            var exchangeName = _option is RabbitMQPublisherOptions publisherOptions
                 ? publisherOptions.ExchangeName
                 : string.Empty;
 
-            var exchangeType = _option is PublisherOptions opts
+            var exchangeType = _option is RabbitMQPublisherOptions opts
                 ? opts.ExchangeType
                 : global::RabbitMQ.Client.ExchangeType.Direct;
 
@@ -119,7 +119,7 @@ public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<
 
         await EnsureConnectionAsync().ConfigureAwait(false);
 
-        var exchangeName = _option is PublisherOptions publisherOptions
+        var exchangeName = _option is RabbitMQPublisherOptions publisherOptions
             ? publisherOptions.ExchangeName
             : string.Empty;
 

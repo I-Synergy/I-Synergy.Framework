@@ -4,7 +4,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
 
-namespace ISynergy.Framework.OpenTelemetry.Extensions;
+namespace ISynergy.Framework.OpenTelemetry.ApplicationInsights.Extensions;
 /// <summary>
 /// Extension methods for adding Application Insights exporter to telemetry.
 /// </summary>

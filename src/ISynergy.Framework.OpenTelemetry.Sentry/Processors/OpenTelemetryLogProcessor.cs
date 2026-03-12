@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 
-namespace ISynergy.Framework.OpenTelemetry.Processors;
+namespace ISynergy.Framework.OpenTelemetry.Sentry.Processors;
 /// <summary>
 /// Processor to convert OpenTelemetry logs to Sentry events
 /// </summary>

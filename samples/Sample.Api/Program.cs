@@ -1,6 +1,8 @@
 using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.OpenTelemetry.ApplicationInsights.Extensions;
 using ISynergy.Framework.OpenTelemetry.Extensions;
+using ISynergy.Framework.OpenTelemetry.Sentry.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;

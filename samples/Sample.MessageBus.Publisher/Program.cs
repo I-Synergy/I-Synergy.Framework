@@ -1,4 +1,4 @@
-using ISynergy.Framework.MessageBus.Extensions;
+using ISynergy.Framework.MessageBus.Azure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -28,7 +28,7 @@ internal class Program
             IServiceCollection services = new ServiceCollection()
                 .AddLogging()
                 .AddOptions()
-                .AddMessageBusAzurePublishIntegration<TestDataModel>(config);
+                .AddAzureMessageBusPublishIntegration<TestDataModel>(config);
 
             services.TryAddSingleton<ApplicationAzure>();
 

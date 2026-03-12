@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Models;
-using ISynergy.Framework.Documents.Options;
+using ISynergy.Framework.Documents.Syncfusion.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Syncfusion.DocIO.DLS;
@@ -11,7 +11,7 @@ using Syncfusion.XlsIO;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ISynergy.Framework.Documents.Services;
+namespace ISynergy.Framework.Documents.Syncfusion.Services;
 
 /// <summary>
 /// Reporting service.
@@ -40,7 +40,7 @@ internal class DocumentService : IDocumentService
         ILogger<DocumentService> logger)
     {
         _logger = logger;
-        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
+        global::Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ internal class DocumentService : IDocumentService
         {
             if (documentRequest.Template is { } templateBytes && templateBytes.ToMemoryStream() is { } stream)
             {
-                using (document = new WordDocument(stream, Syncfusion.DocIO.FormatType.Docx))
+                using (document = new WordDocument(stream, global::Syncfusion.DocIO.FormatType.Docx))
                 {
                     if (documentRequest.Stationery is { } imageArray && imageArray.Length > 0)
                     {
@@ -183,7 +183,7 @@ internal class DocumentService : IDocumentService
                     {
                         using (var iORenderer = new DocIORenderer())
                         {
-                            iORenderer.Settings.ChartRenderingOptions.ImageFormat = Syncfusion.OfficeChart.ExportImageFormat.Jpeg;
+                            iORenderer.Settings.ChartRenderingOptions.ImageFormat = global::Syncfusion.OfficeChart.ExportImageFormat.Jpeg;
                             iORenderer.Settings.EmbedFonts = true;
 
                             var pdfDocument = iORenderer.ConvertToPDF(document);
@@ -194,7 +194,7 @@ internal class DocumentService : IDocumentService
                     }
                     else
                     {
-                        document.Save(result, Syncfusion.DocIO.FormatType.Docx);
+                        document.Save(result, global::Syncfusion.DocIO.FormatType.Docx);
                     }
                 }
             }

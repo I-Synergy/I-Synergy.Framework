@@ -3,8 +3,8 @@ using ISynergy.Framework.MessageBus.Options.Base;
 namespace ISynergy.Framework.MessageBus.Azure.Options.Queue;
 
 /// <summary>
-/// Queue Messagebus subscriber options. 
+/// Queue Messagebus subscriber options for Azure Service Bus.
 /// </summary>
-public class SubscriberOptions : BaseQueueOption
+internal class AzureSubscriberOptions : BaseQueueOption
 {
 }
