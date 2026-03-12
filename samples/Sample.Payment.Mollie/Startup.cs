@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Mollie.Sample.Options;
 using Mollie.Sample.Services.Customer;
 using Mollie.Sample.Services.Mandate;
 using Mollie.Sample.Services.Payment;
@@ -63,6 +64,7 @@ namespace Mollie.Sample
             services.AddOptions();
 
             services.Configure<MollieApiOptions>(Configuration.GetSection(nameof(MollieApiOptions)));
+            services.Configure<PaymentOptions>(Configuration.GetSection(nameof(PaymentOptions)));
 
             services.AddPaymentGatewayMollie();
 
