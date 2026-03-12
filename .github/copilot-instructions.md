@@ -94,7 +94,7 @@ Each library project lives at `src/ISynergy.Framework.<Area>/` and its correspon
 | Do NOT use | Use instead |
 |------------|-------------|
 | **MediatR** | Custom dispatching in `ISynergy.Framework.CQRS` |
-| **AutoMapper** | Manual mapping with extension methods |
+| **AutoMapper** | Mapster mapping library |
 | **SpecFlow** | Reqnroll.NET for BDD |
 
 ### Key Patterns
