@@ -1,13 +1,13 @@
 namespace ISynergy.Framework.KeyVault.Abstractions.Services;
 
 /// <summary>
-/// Defines a provider that supplies authentication tokens for accessing Azure Key Vault.
+/// Provides an abstraction for obtaining an authentication token used to access a vault service.
 /// </summary>
 public interface IVaultTokenProvider
 {
     /// <summary>
-    /// Retrieves the authentication token used to access the vault.
+    /// Returns the authentication token for the vault service.
     /// </summary>
-    /// <returns>A string containing the authentication token.</returns>
+    /// <returns>A string containing the vault authentication token.</returns>
     string GetToken();
 }
