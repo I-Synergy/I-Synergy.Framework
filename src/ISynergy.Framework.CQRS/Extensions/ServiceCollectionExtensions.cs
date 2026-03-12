@@ -2,7 +2,6 @@ using ISynergy.Framework.CQRS.Abstractions.Commands;
 using ISynergy.Framework.CQRS.Abstractions.Dispatchers;
 using ISynergy.Framework.CQRS.Commands;
 using ISynergy.Framework.CQRS.Decorators;
-using ISynergy.Framework.CQRS.Dispatch;
 using ISynergy.Framework.CQRS.Dispatchers;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,9 +23,6 @@ public static class ServiceCollectionExtensions
         // Add dispatchers
         services.TryAddScoped<ICommandDispatcher, CommandDispatcher>();
         services.TryAddScoped<IQueryDispatcher, QueryDispatcher>();
-
-        // Register optional AOT-safe dispatch table (populated by source-generated startup code).
-        services.TryAddSingleton<QueryDispatchTable>();
 
         return services;
     }
