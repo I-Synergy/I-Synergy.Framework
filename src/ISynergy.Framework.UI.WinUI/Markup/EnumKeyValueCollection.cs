@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Markup;
 
@@ -26,7 +27,15 @@ public class EnumKeyValueCollection : MarkupExtension
     /// Provides the value.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    /// <returns>System.Object.</returns>
+    /// <returns>A list of <see cref="KeyValuePair{TKey,TValue}"/> with enum integer values and their localized descriptions.</returns>
+    /// <remarks>
+    /// Uses <see cref="Enum.GetValues(Type)"/> with a runtime <see cref="Type"/> argument.
+    /// This requires the enum type's members to be preserved by the IL trimmer and is not compatible
+    /// with NativeAOT. For AOT-safe scenarios, compute enum key-value pairs using
+    /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code and bind to the resulting collection.
+    /// </remarks>
+    [RequiresUnreferencedCode("Enum.GetValues(Type) requires enum type members to be preserved by the trimmer.")]
+    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for runtime type resolution.")]
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsNotNull(EnumType);

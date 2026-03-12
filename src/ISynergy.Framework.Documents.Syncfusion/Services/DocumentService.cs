@@ -9,12 +9,23 @@ using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.XlsIO;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Documents.Services;
 
 /// <summary>
 /// Reporting service.
 /// </summary>
+/// <remarks>
+/// <para>
+/// <strong>AOT/Trimming notice:</strong> Syncfusion DocIO, DocIORenderer, and XlsIO libraries use reflection
+/// internally for MailMerge, document templating, and Excel I/O. This service is not compatible with
+/// Native AOT publishing. Applications targeting <c>&lt;PublishAot&gt;true&lt;/PublishAot&gt;</c> cannot use
+/// this library and should implement a native document generation alternative.
+/// </para>
+/// </remarks>
+[RequiresUnreferencedCode("DocumentService uses Syncfusion libraries that rely on reflection for MailMerge and document processing. Not compatible with AOT publishing.")]
+[RequiresDynamicCode("Syncfusion DocIO and XlsIO libraries require dynamic code generation.")]
 internal class DocumentService : IDocumentService
 {
     private readonly ILogger _logger;

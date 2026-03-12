@@ -197,11 +197,37 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Checks if a ViewModel has any running commands
     /// </summary>
+    /// <summary>
+    /// Checks if a ViewModel has any running commands.
+    /// </summary>
+    /// <remarks>
+    /// Uses <see cref="ISynergy.Framework.Mvvm.Abstractions.Commands.ICommandProvider"/> when available (AOT-safe path for .NET Native).
+    /// Falls back to property reflection when the ViewModel does not implement <see cref="ISynergy.Framework.Mvvm.Abstractions.Commands.ICommandProvider"/>.
+    /// The reflection fallback requires type metadata to be preserved in the UWP <c>Default.rd.xml</c> runtime directives file.
+    /// </remarks>
     private bool HasRunningCommands(IViewModel viewModel)
     {
-        if (viewModel == null) return false;
+        if (viewModel is null)
+            return false;
 
-        // Get all properties that are IAsyncRelayCommand
+        // AOT-safe path: ViewModel explicitly exposes its commands via ICommandProvider.
+        if (viewModel is ISynergy.Framework.Mvvm.Abstractions.Commands.ICommandProvider provider)
+            return provider.GetCommands().OfType<IAsyncRelayCommand>().Any(c => c.IsRunning);
+
+        // Reflection fallback — requires runtime directives in Default.rd.xml under .NET Native.
+        return HasRunningCommandsViaReflection(viewModel);
+    }
+
+    /// <summary>
+    /// Reflection-based fallback for <see cref="HasRunningCommands"/> used when the ViewModel
+    /// does not implement <see cref="ISynergy.Framework.Mvvm.Abstractions.Commands.ICommandProvider"/>.
+    /// Requires runtime directives (<c>Default.rd.xml</c>) under UWP .NET Native.
+    /// Not compatible with NativeAOT or aggressive IL trimming.
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
+        "Reflection over ViewModel properties is not trim-safe. Implement ICommandProvider on the ViewModel instead.")]
+    private static bool HasRunningCommandsViaReflection(IViewModel viewModel)
+    {
         var commandProperties = viewModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => typeof(IAsyncRelayCommand).IsAssignableFrom(p.PropertyType));
 

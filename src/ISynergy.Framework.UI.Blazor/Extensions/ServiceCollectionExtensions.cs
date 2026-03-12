@@ -13,6 +13,7 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -20,20 +21,28 @@ namespace ISynergy.Framework.UI.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Returns an instance of the <see cref="IServiceCollection"/> and configures all windowsAppBuilder.
+    /// Returns an instance of the <see cref="IServiceCollection"/> and configures all services.
     /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TCommonServices"></typeparam>
-    /// <typeparam name="TExceptionHandlerService"></typeparam>
-    /// <typeparam name="TSettingsService"></typeparam>
-    /// <typeparam name="TResource"></typeparam>
-    /// <param name="services"></param>
-    /// <param name="configuration"></param>
-    /// <param name="infoService"></param>
-    /// <param name="action"></param>
-    /// <param name="assembly"></param>
-    /// <param name="assemblyFilter"></param>
-    /// <returns></returns>
+    /// <typeparam name="TContext">The application context type.</typeparam>
+    /// <typeparam name="TCommonServices">The common services type.</typeparam>
+    /// <typeparam name="TExceptionHandlerService">The exception handler service type.</typeparam>
+    /// <typeparam name="TSettingsService">The settings service type.</typeparam>
+    /// <typeparam name="TResource">The resource type for localization.</typeparam>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The application configuration.</param>
+    /// <param name="infoService">The application info service.</param>
+    /// <param name="action">Additional service configuration action.</param>
+    /// <param name="assembly">The assembly to scan for ViewModels and Views.</param>
+    /// <param name="assemblyFilter">A filter function for assembly names.</param>
+    /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
+    /// <remarks>
+    /// This overload calls <c>RegisterAssemblies</c> which performs runtime assembly scanning.
+    /// This is not compatible with Blazor WASM AOT or IL trimming.
+    /// Use <c>services.AddUITypes()</c> from <c>ISynergy.Framework.UI.SourceGenerator</c> for AOT-compatible registration.
+    /// </remarks>
+    [RequiresUnreferencedCode(
+        "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
+        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
     public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IServiceCollection services,
         IConfiguration configuration,
