@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Serializers;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
@@ -7,7 +6,9 @@ using ISynergy.Framework.MessageBus.Options.Queue;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 
 namespace ISynergy.Framework.MessageBus.Services.Queue;
 
@@ -22,16 +23,48 @@ public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<
 {
     private readonly TOption _option;
     private readonly ILogger _logger;
+    private readonly JsonTypeInfo<TQueueMessage>? _jsonTypeInfo;
 
     private IConnection? _connection;
     private IChannel? _channel;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     /// <summary>
-    /// Initializes a new instance of <see cref="PublisherServiceBus{TQueueMessage, TOption}"/>.
+    /// Initializes a new instance of <see cref="PublisherServiceBus{TQueueMessage, TOption}"/> using
+    /// AOT-safe source-generated JSON serialization.
     /// </summary>
     /// <param name="options">The options.</param>
     /// <param name="logger">The logger.</param>
+    /// <param name="jsonTypeInfo">
+    /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TQueueMessage"/>, obtained from a
+    /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
+    /// </param>
+    public PublisherServiceBus(
+        IOptions<TOption> options,
+        ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger,
+        JsonTypeInfo<TQueueMessage> jsonTypeInfo)
+    {
+        _option = options.Value;
+
+        Argument.IsNotNullOrEmpty(_option.ConnectionString);
+        Argument.IsNotNullOrEmpty(_option.QueueName);
+
+        _logger = logger;
+        _jsonTypeInfo = jsonTypeInfo;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="PublisherServiceBus{TQueueMessage, TOption}"/> using
+    /// reflection-based JSON serialization.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <param name="logger">The logger.</param>
+    /// <remarks>
+    /// This overload uses the reflection-based <see cref="JsonSerializer"/> path and is not compatible with
+    /// Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/> for AOT scenarios.
+    /// </remarks>
+    [RequiresUnreferencedCode("Serialization uses reflection. Pass a JsonTypeInfo<TQueueMessage> for AOT compatibility.")]
+    [RequiresDynamicCode("Serialization uses dynamic code generation. Pass a JsonTypeInfo<TQueueMessage> for AOT compatibility.")]
     public PublisherServiceBus(
         IOptions<TOption> options,
         ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger)
@@ -90,7 +123,9 @@ public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<
             ? publisherOptions.ExchangeName
             : string.Empty;
 
-        var body = JsonSerializer.SerializeToUtf8Bytes(queueMessage, DefaultJsonSerializers.Web);
+        var body = _jsonTypeInfo is not null
+            ? JsonSerializer.SerializeToUtf8Bytes(queueMessage, _jsonTypeInfo)
+            : JsonSerializer.SerializeToUtf8Bytes(queueMessage);
 
         var props = new BasicProperties
         {

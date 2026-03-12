@@ -27,6 +27,25 @@ public static class ServiceCollectionExtensions
         return _self;
     }
 
+    /// <summary>
+    /// Adds the publishing queue message bus using a factory delegate.
+    /// </summary>
+    /// <typeparam name="TQueueMessage">The type of the queue message.</typeparam>
+    /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+    /// <param name="_self">The service collection.</param>
+    /// <param name="factory">A factory delegate that creates the implementation instance.</param>
+    /// <returns>IServiceCollection.</returns>
+    public static IServiceCollection AddPublishingQueueMessageBus<TQueueMessage, TImplementation>(
+        this IServiceCollection _self,
+        Func<IServiceProvider, TImplementation> factory)
+        where TQueueMessage : class, IBaseMessage
+        where TImplementation : class, IPublisherServiceBus<TQueueMessage>
+    {
+        _self.TryAddSingleton(factory);
+        _self.TryAddSingleton<IPublisherServiceBus<TQueueMessage>>(sp => sp.GetRequiredService<TImplementation>());
+
+        return _self;
+    }
 
     /// <summary>
     /// Adds the subscribing queue message bus.
@@ -49,6 +68,36 @@ public static class ServiceCollectionExtensions
         {
             _self.TryAddSingleton<TImplementation>();
             _self.TryAddSingleton<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
+        }
+
+        return _self;
+    }
+
+    /// <summary>
+    /// Adds the subscribing queue message bus using a factory delegate.
+    /// </summary>
+    /// <typeparam name="TQueueMessage">The type of the queue message.</typeparam>
+    /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+    /// <param name="_self">The service collection.</param>
+    /// <param name="factory">A factory delegate that creates the implementation instance.</param>
+    /// <param name="isScoped">if set to <c>true</c>, registers as scoped; otherwise singleton.</param>
+    /// <returns>IServiceCollection.</returns>
+    public static IServiceCollection AddSubscribingQueueMessageBus<TQueueMessage, TImplementation>(
+        this IServiceCollection _self,
+        Func<IServiceProvider, TImplementation> factory,
+        bool isScoped = false)
+        where TQueueMessage : class, IBaseMessage
+        where TImplementation : class, ISubscriberServiceBus<TQueueMessage>
+    {
+        if (isScoped)
+        {
+            _self.TryAddScoped(factory);
+            _self.TryAddScoped<ISubscriberServiceBus<TQueueMessage>>(sp => sp.GetRequiredService<TImplementation>());
+        }
+        else
+        {
+            _self.TryAddSingleton(factory);
+            _self.TryAddSingleton<ISubscriberServiceBus<TQueueMessage>>(sp => sp.GetRequiredService<TImplementation>());
         }
 
         return _self;

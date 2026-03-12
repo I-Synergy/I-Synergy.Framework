@@ -37,6 +37,7 @@ public class ServiceCollectionExtensionsTests
     // ------------------------------------------------------------------ //
 
     [TestMethod]
+#pragma warning disable IL2026, IL3050 // Reflection-based overload used in tests; AOT not a test concern.
     public void AddMessageBusRabbitMQPublishIntegration_ReturnsSameServiceCollection()
     {
         var services = new ServiceCollection();
@@ -80,12 +81,14 @@ public class ServiceCollectionExtensionsTests
         // TryAddSingleton: only one registration survives.
         Assert.AreEqual(1, count);
     }
+#pragma warning restore IL2026, IL3050
 
     // ------------------------------------------------------------------ //
     // AddMessageBusRabbitMQSubscribeIntegration
     // ------------------------------------------------------------------ //
 
     [TestMethod]
+#pragma warning disable IL2026, IL3050 // Reflection-based overload used in tests; AOT not a test concern.
     public void AddMessageBusRabbitMQSubscribeIntegration_ReturnsSameServiceCollection()
     {
         var services = new ServiceCollection();
@@ -128,4 +131,5 @@ public class ServiceCollectionExtensionsTests
 
         Assert.AreEqual(1, count);
     }
+#pragma warning restore IL2026, IL3050
 }

@@ -16,11 +16,10 @@ public static class ApplicationExtensions
     /// <param name="logger">Optional logger for diagnostics.</param>
     /// <returns>The application instance for method chaining.</returns>
     /// <remarks>
-    /// Theme detection uses <c>GetType().Namespace</c> to identify existing theme resource dictionaries.
-    /// This comparison is not fragile from an AOT/trimming perspective because the <see cref="Type"/>
-    /// is obtained from a live instance (not from a string lookup), so the metadata is always preserved.
-    /// However, the namespace string comparison is fragile if namespaces change. A future refactor
-    /// should replace this with a marker interface check on the theme resource dictionaries.
+    /// Theme detection uses the <see cref="ISynergy.Framework.UI.Resources.Styles.Themes.IThemeResourceDictionary"/>
+    /// marker interface to identify existing theme resource dictionaries. This is AOT-safe and robust
+    /// under IL trimming because the interface check relies on a static type test rather than a
+    /// fragile <c>GetType().Namespace</c> string comparison.
     /// </remarks>
     public static Microsoft.Maui.Controls.Application SetApplicationColor(
         this Microsoft.Maui.Controls.Application application,
@@ -32,12 +31,11 @@ public static class ApplicationExtensions
 
         logger?.LogInformation("Setting application color to {Color}", color);
 
-        // Remove existing theme dictionaries, but preserve other resource dictionaries.
-        // Note: GetType().Namespace on an allocated object is AOT-safe (metadata is preserved),
-        // but the namespace string comparison is fragile. A marker interface (e.g., IThemeResourceDictionary)
-        // would be more robust. This is noted as a future improvement.
+        // Remove existing theme dictionaries using the IThemeResourceDictionary marker interface.
+        // This is AOT-safe: an interface check on an allocated object is always preserved by the
+        // linker, unlike a fragile GetType().Namespace string comparison.
         var themesToRemove = application.Resources.MergedDictionaries
-            .Where(dict => dict.GetType().Namespace == "ISynergy.Framework.UI.Resources.Styles.Themes")
+            .Where(dict => dict is ISynergy.Framework.UI.Resources.Styles.Themes.IThemeResourceDictionary)
             .ToList();
 
         foreach (var theme in themesToRemove)
