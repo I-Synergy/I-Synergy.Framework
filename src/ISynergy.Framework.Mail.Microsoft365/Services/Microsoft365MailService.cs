@@ -28,7 +28,7 @@ namespace ISynergy.Framework.Mail.Microsoft365.Services;
 /// </para>
 /// </remarks>
 [RequiresUnreferencedCode("Microsoft.Graph SDK uses reflection-based JSON serialization. Not compatible with AOT publishing in this configuration.")]
-internal class Office365MailService : IMailService
+internal class Microsoft365MailService : IMailService
 {
     /// <summary>
     /// The mail options
@@ -44,9 +44,9 @@ internal class Office365MailService : IMailService
     /// </summary>
     /// <param name="mailOptions">The configuration.</param>
     /// <param name="logger">The logger.</param>
-    public Office365MailService(
+    public Microsoft365MailService(
         IOptions<Microsoft365MailOptions> mailOptions,
-        ILogger<Office365MailService> logger)
+        ILogger<Microsoft365MailService> logger)
     {
         _mailOptions = mailOptions.Value;
         _logger = logger;
