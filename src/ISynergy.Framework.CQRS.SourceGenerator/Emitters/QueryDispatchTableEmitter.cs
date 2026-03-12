@@ -46,7 +46,8 @@ internal static class QueryDispatchTableEmitter
             sb.AppendLine($"        table.Register<{tQuery}, {tResult}>();");
         }
 
-        sb.AppendLine("        services.TryAddSingleton(table);");
+        sb.AppendLine("        services.RemoveAll<global::ISynergy.Framework.CQRS.Dispatch.QueryDispatchTable>();");
+        sb.AppendLine("        services.AddSingleton(table);");
         sb.AppendLine("        return services;");
         sb.AppendLine("    }");
         sb.AppendLine("}");

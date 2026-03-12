@@ -27,9 +27,9 @@ namespace ISynergy.Framework.CQRS.Features
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en"), "Features", "Command Dispatching", "    As a developer using the CQRS framework\r\n    I want to dispatch commands thro" +
-                "ugh the command dispatcher\r\n    So that commands are properly handled and execut" +
-                "ed", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en"), "Features", "Command Dispatching", "    As a developer using the CQRS framework\n    I want to dispatch commands throu" +
+                "gh the command dispatcher\n    So that commands are properly handled and executed" +
+                "", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
 #line 1 "CommandDispatching.feature"
 #line hidden
