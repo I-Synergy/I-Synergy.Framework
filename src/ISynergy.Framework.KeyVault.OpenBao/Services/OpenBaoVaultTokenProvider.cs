@@ -4,8 +4,31 @@ using System.Text.Json;
 
 namespace ISynergy.Framework.KeyVault.Services;
 
+/// <summary>
+/// Provides vault authentication tokens for OpenBao by resolving them from configuration
+/// or a persisted vault-state file written by the VaultInitializer.
+/// </summary>
 public sealed class OpenBaoVaultTokenProvider(IConfiguration configuration) : IVaultTokenProvider
 {
+    /// <summary>
+    /// Retrieves the root token used to authenticate with the OpenBao vault.
+    /// </summary>
+    /// <remarks>
+    /// Token resolution order:
+    /// <list type="number">
+    ///   <item><description>The <c>KeyVaultOptions:Token</c> configuration value, if present and non-empty.</description></item>
+    ///   <item><description>The <c>RootToken</c> field read from the JSON vault-state file whose path is
+    ///       resolved via the <c>VaultInitializer__StateDirectory</c> environment variable,
+    ///       the <c>VaultInitializer:StateDirectory</c> configuration key, or the default
+    ///       path <c>.secrets/vault-state</c>.</description></item>
+    /// </list>
+    /// A leading <c>~/</c> in the state-directory path is expanded to the current user's home directory.
+    /// </remarks>
+    /// <returns>The root token string required to authenticate vault API calls.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when no token is configured and the vault-state file does not exist at the resolved path,
+    /// or when the state file exists but does not contain a <c>RootToken</c> property.
+    /// </exception>
     public string GetToken()
     {
         // 1. Explicit token in config
