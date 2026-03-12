@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ISynergy.Framework.MessageBus.Services.Queue;
+namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 
 /// <summary>
 /// Message bus subscriber implementation on RabbitMQ.
