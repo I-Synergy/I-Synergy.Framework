@@ -50,7 +50,6 @@ This is a **library/framework** project — changes affect downstream consumers.
 ├── templates/                    # Project templates
 ├── .github/
 │   ├── copilot-instructions.md   # This file
-│   ├── instructions/             # Path-specific Copilot instructions
 │   ├── prompts/                  # Reusable Copilot prompts
 │   └── docs/                     # Agent session documentation
 ├── .claude/
