@@ -98,13 +98,24 @@ stages:
             projectName: 'I-Synergy.Framework'
             projectVersion: '$(VersionPackage)'
 
-        - task: MSBuild@1
+        - task: DotNetCoreCLI@2
           displayName: 'Build I-Synergy Framework'
           inputs:
-            solution: 'I-Synergy.Framework.slnx'
-            msbuildArchitecture: 'x64'
+            command: 'build'
+            projects: 'I-Synergy.Framework.slnx'
+            arguments: '--configuration $(BuildConfiguration) -p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true /nr:false'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Pack I-Synergy Framework'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src/**/*.csproj'
+            nobuild: true
             configuration: $(BuildConfiguration)
-            msbuildArguments: '-p:Version=$(VersionPackage) -t:restore,build,pack -p:ContinuousIntegrationBuild=true /nr:false'
+            packDirectory: '$(Build.SourcesDirectory)/packages'
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+            arguments: '-p:ContinuousIntegrationBuild=true'
 
         - task: DotNetCoreCLI@2
           displayName: 'Test I-Synergy Framework'
