@@ -1,14 +1,19 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.OpenTelemetry.Serialization;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 using System.Text.Json;
 
 namespace ISynergy.Framework.OpenTelemetry.Processors;
 
+/// <summary>
+/// A log processor that enriches log records with user context information from the current scope.
+/// </summary>
 public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
 {
+    /// <inheritdoc />
     public override void OnEnd(LogRecord data)
     {
         var attributes = new List<KeyValuePair<string, object?>>();
@@ -28,8 +33,8 @@ public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
             attributes.Add(new KeyValuePair<string, object?>("CultureCode", context.Profile.CultureCode));
             attributes.Add(new KeyValuePair<string, object?>("TimeZoneId", context.Profile.TimeZoneId));
             attributes.Add(new KeyValuePair<string, object?>("Expration", context.Profile.Expiration));
-            attributes.Add(new KeyValuePair<string, object?>("Modules", JsonSerializer.Serialize(context.Profile.Modules)));
-            attributes.Add(new KeyValuePair<string, object?>("Roles", JsonSerializer.Serialize(context.Profile.Roles)));
+            attributes.Add(new KeyValuePair<string, object?>("Modules", JsonSerializer.Serialize(context.Profile.Modules, TelemetryJsonContext.Default.ListString)));
+            attributes.Add(new KeyValuePair<string, object?>("Roles", JsonSerializer.Serialize(context.Profile.Roles, TelemetryJsonContext.Default.ListString)));
         }
 
         // Add application context info

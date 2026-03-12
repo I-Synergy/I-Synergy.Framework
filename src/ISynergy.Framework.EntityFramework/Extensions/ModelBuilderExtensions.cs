@@ -3,19 +3,31 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.EntityFramework.Attributes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace ISynergy.Framework.EntityFramework.Extensions;
 
+/// <summary>
+/// Extension methods for <see cref="ModelBuilder"/> that configure EF Core models.
+/// </summary>
 public static class ModelBuilderExtensions
 {
     /// <summary>
-    /// Applies the decimal precision.
+    /// Applies decimal column precision to all decimal properties in the model.
     /// </summary>
-    /// <param name="modelBuilder"></param>
-    /// <param name="currencyPrecision"></param>
-    /// <returns></returns>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <param name="currencyPrecision">The SQL column type string for decimal precision. Defaults to <c>decimal(38, 10)</c>.</param>
+    /// <returns>The <paramref name="modelBuilder"/> for chaining.</returns>
+    /// <remarks>
+    /// This method calls <see cref="Type.GetProperties()"/> at runtime and is not AOT-safe.
+    /// Applications publishing with Native AOT should use EF Core compiled models
+    /// (<c>dotnet ef dbcontext optimize</c>) and register them via <c>UseModel()</c> in
+    /// <c>OnConfiguring</c> to avoid runtime model-building reflection.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static ModelBuilder ApplyDecimalPrecision(this ModelBuilder modelBuilder, string currencyPrecision = "decimal(38, 10)")
     {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -35,12 +47,19 @@ public static class ModelBuilderExtensions
     }
 
     /// <summary>
-    /// Applies the version to entity.
+    /// Applies EF Core row-version concurrency tokens to all entity types that implement
+    /// <see cref="IEntity"/> and are not decorated with <see cref="IgnoreVersioningAttribute"/>.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
-    /// <summary>
-    /// Applies the query filters.
-    /// </summary>
+    /// <returns>The <paramref name="modelBuilder"/> for chaining.</returns>
+    /// <remarks>
+    /// This method calls <c>Type.GetCustomAttributes(Type, bool)</c> at runtime and is not AOT-safe.
+    /// Applications publishing with Native AOT should use EF Core compiled models
+    /// (<c>dotnet ef dbcontext optimize</c>) and register them via <c>UseModel()</c> in
+    /// <c>OnConfiguring</c> to avoid runtime model-building reflection.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static ModelBuilder ApplyVersioning(this ModelBuilder modelBuilder)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes()
@@ -60,10 +79,19 @@ public static class ModelBuilderExtensions
     }
 
     /// <summary>
-    /// Applies the query filters.
+    /// Applies a global query filter scoping all <see cref="ITenantEntity"/> entities to the current tenant.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
-    /// <param name="tenantId"></param>
+    /// <param name="tenantId">A delegate that returns the current tenant identifier at query execution time.</param>
+    /// <returns>The <paramref name="modelBuilder"/> for chaining.</returns>
+    /// <remarks>
+    /// This method constructs LINQ expression trees at runtime using <see cref="Expression.Lambda(Expression,ParameterExpression[])"/>
+    /// and is not AOT-safe. Applications publishing with Native AOT should define query filters directly
+    /// in <c>OnModelCreating</c> using the strongly-typed
+    /// <c>HasQueryFilter&lt;T&gt;(Expression&lt;Func&lt;T, bool&gt;&gt;)</c> overload instead of calling this helper.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static ModelBuilder ApplyTenantFilters(this ModelBuilder modelBuilder, Func<Guid> tenantId)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
@@ -104,9 +132,19 @@ public static class ModelBuilderExtensions
     }
 
     /// <summary>
-    /// Applies the soft delete query filters.
+    /// Applies a global soft-delete query filter to all entity types that implement <see cref="IEntity"/>
+    /// and are not decorated with <see cref="IgnoreSoftDeleteAttribute"/>.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
+    /// <returns>The <paramref name="modelBuilder"/> for chaining.</returns>
+    /// <remarks>
+    /// This method constructs LINQ expression trees at runtime using <see cref="Expression.Lambda(Expression,ParameterExpression[])"/>
+    /// and is not AOT-safe. Applications publishing with Native AOT should define query filters directly
+    /// in <c>OnModelCreating</c> using the strongly-typed
+    /// <c>HasQueryFilter&lt;T&gt;(Expression&lt;Func&lt;T, bool&gt;&gt;)</c> overload instead of calling this helper.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static ModelBuilder ApplySoftDeleteFilters(this ModelBuilder modelBuilder)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes()
@@ -153,11 +191,16 @@ public static class ModelBuilderExtensions
     // we need to create a single lambda expression for all filters.
     // See: https://github.com/aspnet/EntityFrameworkCore/issues/10275
     /// <summary>
-    /// Combines the query filters.
+    /// Combines multiple query filter lambda expressions into a single <c>AndAlso</c> expression.
     /// </summary>
-    /// <param name="entityType">Type of the entity.</param>
-    /// <param name="expressions">The and also expressions.</param>
-    /// <returns>LambdaExpression.</returns>
+    /// <param name="entityType">The CLR type of the entity the filter applies to.</param>
+    /// <param name="expressions">The lambda expressions to combine.</param>
+    /// <returns>A single <see cref="LambdaExpression"/> that is the logical AND of all supplied expressions.</returns>
+    /// <remarks>
+    /// This method constructs LINQ expression trees at runtime and is not AOT-safe.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static LambdaExpression CombineQueryFilters(Type entityType, IEnumerable<LambdaExpression> expressions)
     {
         var parameter = Expression.Parameter(entityType);
@@ -189,6 +232,22 @@ public static class ModelBuilderExtensions
         return Expression.Lambda(combinedExpr, parameter);
     }
 
+    /// <summary>
+    /// Applies all <see cref="IEntityTypeConfiguration{TEntity}"/> implementations found in the supplied
+    /// assemblies to the <paramref name="modelBuilder"/>.
+    /// </summary>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <param name="assemblies">The assemblies to scan for configuration types.</param>
+    /// <returns>The <paramref name="modelBuilder"/> for chaining.</returns>
+    /// <remarks>
+    /// This overload scans assemblies at runtime using <see cref="Assembly.GetExportedTypes()"/>, which is
+    /// an AOT blocker — the linker cannot determine which types are exported from unknown assemblies at trim time.
+    /// Prefer the <see cref="ApplyModelBuilderConfigurations(ModelBuilder, IReadOnlyList{Type})"/> overload
+    /// that accepts an explicit list of configuration types for AOT/trimming compatibility.
+    /// </remarks>
+    [Obsolete("Prefer the overload accepting IReadOnlyList<Type> for AOT/trimming compatibility. This overload uses assembly scanning which is not AOT-safe.")]
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use the IReadOnlyList<Type> overload instead.")]
+    [RequiresDynamicCode("Assembly scanning uses reflection.")]
     public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, Assembly[] assemblies)
     {
         // Get the open generic type for IEntityTypeConfiguration
@@ -209,6 +268,65 @@ public static class ModelBuilderExtensions
         foreach (var assembly in entityAssemblies.EnsureNotNull())
         {
             modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+        }
+
+        return modelBuilder;
+    }
+
+    /// <summary>
+    /// Applies the supplied <see cref="IEntityTypeConfiguration{TEntity}"/> implementation types to the
+    /// <paramref name="modelBuilder"/> without performing any assembly scanning.
+    /// </summary>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <param name="configurationTypes">
+    /// An explicit list of types that implement <see cref="IEntityTypeConfiguration{TEntity}"/>.
+    /// Each type must have a public parameterless constructor.
+    /// </param>
+    /// <returns>The <paramref name="modelBuilder"/> for chaining.</returns>
+    /// <remarks>
+    /// <para>
+    /// This overload is the AOT-preferred alternative to <see cref="ApplyModelBuilderConfigurations(ModelBuilder, Assembly[])"/>.
+    /// Because the type list is supplied by the caller, the linker can statically analyse which types are used.
+    /// </para>
+    /// <para>
+    /// <c>Activator.CreateInstance</c> is still used internally, so the method requires
+    /// <c>RequiresDynamicCode</c> — but the assembly-scanning blocker is eliminated.
+    /// </para>
+    /// <example>
+    /// <code>
+    /// modelBuilder.ApplyModelBuilderConfigurations(new List&lt;Type&gt;
+    /// {
+    ///     typeof(UserEntityConfiguration),
+    ///     typeof(OrderEntityConfiguration),
+    /// });
+    /// </code>
+    /// </example>
+    /// </remarks>
+    /// <exception cref="ArgumentException">
+    /// Thrown when a type in <paramref name="configurationTypes"/> does not implement
+    /// <see cref="IEntityTypeConfiguration{TEntity}"/> or cannot be instantiated.
+    /// </exception>
+    [RequiresDynamicCode("Uses Activator.CreateInstance to instantiate configuration types at runtime.")]
+    public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, IReadOnlyList<Type> configurationTypes)
+    {
+        var configurationInterface = typeof(IEntityTypeConfiguration<>);
+
+        foreach (var type in configurationTypes.EnsureNotNull())
+        {
+            if (!type.IsClass || type.IsAbstract)
+                throw new ArgumentException($"Type '{type.FullName}' must be a non-abstract class.", nameof(configurationTypes));
+
+            var implementsInterface = type.GetInterfaces().Any(i =>
+                i.IsGenericType &&
+                i.GetGenericTypeDefinition() == configurationInterface);
+
+            if (!implementsInterface)
+                throw new ArgumentException($"Type '{type.FullName}' does not implement IEntityTypeConfiguration<>.", nameof(configurationTypes));
+
+            var instance = Activator.CreateInstance(type)
+                ?? throw new ArgumentException($"Could not create an instance of type '{type.FullName}'.", nameof(configurationTypes));
+
+            modelBuilder.ApplyConfiguration((dynamic)instance);
         }
 
         return modelBuilder;

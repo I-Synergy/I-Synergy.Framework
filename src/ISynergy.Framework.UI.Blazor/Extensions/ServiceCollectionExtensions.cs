@@ -52,10 +52,12 @@ public static class ServiceCollectionExtensions
         services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
+#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
         var languageService = new LanguageService();
         languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
         languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
+#pragma warning restore IL2026
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);

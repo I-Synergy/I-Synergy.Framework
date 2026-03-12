@@ -4,10 +4,14 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.EntityFramework.Base;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace ISynergy.Framework.EntityFramework.Extensions;
 
+/// <summary>
+/// Extension methods for <see cref="DbContext"/> providing common CRUD operations.
+/// </summary>
 public static class DbContextExtensions
 {
     private const string ErrorEntity = "Entity does not have an identity value.";
@@ -36,6 +40,16 @@ public static class DbContextExtensions
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>ValueTask&lt;TEntity&gt;.</returns>
+    /// <remarks>
+    /// This method builds a LINQ predicate and navigations chain using runtime reflection
+    /// (<see cref="System.Linq.Expressions.Expression.Parameter(Type)"/>,
+    /// <see cref="System.Linq.Expressions.Expression.Property(Expression, string)"/>, and
+    /// <see cref="System.Linq.Expressions.Expression.Lambda{TDelegate}(Expression, ParameterExpression[])"/>)
+    /// and is therefore not AOT-safe. AOT-publishing applications should use pre-compiled
+    /// <c>EF.CompileAsyncQuery</c> delegates in their repositories instead of calling this helper.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async ValueTask<TEntity?> GetItemByIdAsync<TEntity, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
         where TId : struct
@@ -81,6 +95,12 @@ public static class DbContextExtensions
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;TModel&gt; representing the asynchronous operation.</returns>
+    /// <remarks>
+    /// This method delegates to <see cref="GetItemByIdAsync{TEntity,TId}(DbContext,TId,CancellationToken)"/>
+    /// which uses runtime reflection and is not AOT-safe. See that method's remarks for migration guidance.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async Task<TModel?> GetItemByIdAsync<TEntity, TModel, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
         where TModel : BaseModel, new()
@@ -127,6 +147,16 @@ public static class DbContextExtensions
     /// <param name="e">The e.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
+    /// <remarks>
+    /// This method builds a LINQ predicate using runtime reflection
+    /// (<see cref="System.Linq.Expressions.Expression.Parameter(Type)"/>,
+    /// <see cref="System.Linq.Expressions.Expression.Property(Expression, string)"/>, and
+    /// <see cref="System.Linq.Expressions.Expression.Lambda{TDelegate}(Expression, ParameterExpression[])"/>)
+    /// and is therefore not AOT-safe. AOT-publishing applications should use pre-compiled
+    /// <c>EF.CompileAsyncQuery</c> delegates in their repositories instead of calling this helper.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async Task<int> UpdateItemAsync<TEntity, TModel>(this DbContext context, TModel e, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
         where TModel : BaseModel, new()
@@ -192,6 +222,16 @@ public static class DbContextExtensions
     /// <param name="e">The e.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
+    /// <remarks>
+    /// This method builds a LINQ predicate using runtime reflection
+    /// (<see cref="System.Linq.Expressions.Expression.Parameter(Type)"/>,
+    /// <see cref="System.Linq.Expressions.Expression.Property(Expression, string)"/>, and
+    /// <see cref="System.Linq.Expressions.Expression.Lambda{TDelegate}(Expression, ParameterExpression[])"/>)
+    /// and is therefore not AOT-safe. AOT-publishing applications should use pre-compiled
+    /// <c>EF.CompileAsyncQuery</c> delegates in their repositories instead of calling this helper.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async Task<int> AddUpdateItemAsync<TEntity, TModel>(this DbContext context, TModel e, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
         where TModel : BaseModel, new()
@@ -269,6 +309,12 @@ public static class DbContextExtensions
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
     /// <exception cref="Microsoft.EntityFrameworkCore.DbUpdateException"></exception>
+    /// <remarks>
+    /// This method delegates to <see cref="GetItemByIdAsync{TEntity,TId}(DbContext,TId,CancellationToken)"/>
+    /// which uses runtime reflection and is not AOT-safe. See that method's remarks for migration guidance.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async Task<int> RemoveItemAsync<TEntity, TIdType>(this DbContext context, TIdType id, CancellationToken cancellationToken, bool soft = false)
         where TEntity : BaseEntity, new()
         where TIdType : struct
