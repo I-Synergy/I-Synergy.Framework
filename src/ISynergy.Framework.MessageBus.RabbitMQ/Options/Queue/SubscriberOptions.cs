@@ -1,6 +1,6 @@
 using ISynergy.Framework.MessageBus.Options.Base;
 
-namespace ISynergy.Framework.MessageBus.Options.Queue;
+namespace ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
 
 /// <summary>
 /// Queue MessageBus subscriber options for RabbitMQ.
