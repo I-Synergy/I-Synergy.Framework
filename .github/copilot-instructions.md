@@ -265,8 +265,8 @@ dotnet test tests/ISynergy.Framework.Core.Tests/ISynergy.Framework.Core.Tests.cs
 
 ### Checking for Compiler Warnings / Errors
 
-```bash
-dotnet build I-Synergy.Framework.slnx --no-incremental 2>&1 | grep -E "warning|error"
+```powershell
+dotnet build I-Synergy.Framework.slnx --no-incremental 2>&1 | Select-String -Pattern 'warning|error'
 ```
 
 ## FINAL DOs AND DON'Ts
