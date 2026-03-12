@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.IO.Abtractions.Analyzers;
 using ISynergy.Framework.IO.Models;
+using ISynergy.Framework.IO.Serialization;
 using System.Text;
 using System.Text.Json;
 
@@ -228,16 +229,21 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     }
 
     /// <summary>
-    /// Loads the file types.
+    /// Loads the file types from a JSON string definition.
     /// </summary>
-    /// <param name="flatFileData">The flat file data.</param>
-    /// <returns>IEnumerable&lt;FileTypeInfo&gt;.</returns>
+    /// <param name="flatFileData">The flat file data containing the JSON array of file type definitions.</param>
+    /// <returns>
+    /// An <see cref="IEnumerable{T}"/> of <see cref="FileTypeInfo"/> instances parsed from
+    /// <paramref name="flatFileData"/>, or an empty list if the JSON cannot be deserialized.
+    /// </returns>
+    /// <remarks>
+    /// Uses <see cref="IoJsonContext"/> (a source-generated <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>)
+    /// to avoid reflection-based deserialization, making this method fully AOT-safe.
+    /// </remarks>
     private static IEnumerable<FileTypeInfo> LoadFileTypes(string flatFileData)
     {
-        if (JsonSerializer.Deserialize<IEnumerable<FileTypeInfo>>(flatFileData, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        }) is IEnumerable<FileTypeInfo> fileTypes)
+        if (JsonSerializer.Deserialize(flatFileData, IoJsonContext.Default.IEnumerableFileTypeInfo)
+            is IEnumerable<FileTypeInfo> fileTypes)
         {
             return fileTypes;
         }

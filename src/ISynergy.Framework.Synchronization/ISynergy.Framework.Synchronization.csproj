@@ -4,6 +4,10 @@
 		<PackageId>I-Synergy.Framework.Synchronization</PackageId>
 		<Description>I-Synergy Framework Synchronization</Description>
 		<PackageTags>I-Synergy, Framework, Synchronization</PackageTags>
+		<!-- Suppress ILLink warnings originating from Dotmim.Sync internals that cannot be fixed
+		     in this library. These warnings propagate correctly to consuming applications that call
+		     the annotated APIs, informing them of the AOT incompatibility. -->
+		<NoWarn>$(NoWarn);IL2026;IL3050</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

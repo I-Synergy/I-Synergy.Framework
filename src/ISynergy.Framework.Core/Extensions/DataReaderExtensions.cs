@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Utilities;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Extensions;
@@ -15,7 +16,7 @@ public static class DataReaderExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="datareader">The datareader.</param>
     /// <returns>List&lt;T&gt;.</returns>
-    public static List<T> MapToList<T>(this IDataReader datareader)
+    public static List<T> MapToList<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(this IDataReader datareader)
     {
         var list = new List<T>();
 
