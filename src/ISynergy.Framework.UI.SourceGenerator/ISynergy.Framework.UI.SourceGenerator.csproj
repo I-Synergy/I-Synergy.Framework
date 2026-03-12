@@ -10,8 +10,12 @@
     <PackageTags>I-Synergy, Framework, UI, SourceGenerator, AOT</PackageTags>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <IsRoslynComponent>true</IsRoslynComponent>
-    <!-- Do not generate a library layout; this ships as an analyzer -->
-    <GenerateLibraryLayout>false</GenerateLibraryLayout>
+    <!-- The DLL must NOT go in lib/; it must only be in analyzers/dotnet/cs/ -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- Symbol packages (snupkg) do not apply to analyzer-only packages; disable to avoid NU5017 -->
+    <IncludeSymbols>false</IncludeSymbols>
+    <!-- NU5128: expected for analyzer packages — no lib/ assemblies is intentional -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
     <!-- Suppress signing for the generator (analyzers cannot be strong-named easily) -->
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
@@ -19,5 +23,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Explicitly place the generator DLL in analyzers/dotnet/cs/ in the NuGet package -->
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 </Project>
