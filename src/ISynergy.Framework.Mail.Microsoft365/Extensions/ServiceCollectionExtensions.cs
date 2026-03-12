@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
     /// <returns>The service collection for chaining.</returns>
     /// <remarks>
     /// <para>
-    /// <strong>AOT/Trimming notice:</strong> This method registers <see cref="Office365MailService"/>, which depends on
+    /// <strong>AOT/Trimming notice:</strong> This method registers <see cref="Microsoft365MailService"/>, which depends on
     /// <c>GraphServiceClient</c> from the Microsoft.Graph SDK. That SDK uses reflection-based JSON serialization
     /// internally. Applications targeting <c>&lt;PublishAot&gt;true&lt;/PublishAot&gt;</c> should suppress
     /// <c>IL2026</c> warnings at this call site or verify that the installed Microsoft.Graph version ships with
@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddOptions();
         services.Configure<Microsoft365MailOptions>(configuration.GetSection($"{prefix}MailOptions").BindWithReload);
-        services.TryAddSingleton<IMailService, Office365MailService>();
+        services.TryAddSingleton<IMailService, Microsoft365MailService>();
         return services;
     }
 }

@@ -405,6 +405,82 @@ UI work is only complete when every element in the changed scope is fully functi
 grep -rn "TODO\|FIXME\|HACK\|NotImplemented\|Task\.FromResult\|mock\|stub\|placeholder\|hardcoded" src/
 ```
 
+## 19. Configuration: Always Use IOptions<T>, Never IConfiguration["key"]
+
+**NEVER access configuration via string indexer or `GetValue<T>("Key")`.** Always use typed `IOptions<T>` binding.
+
+```csharp
+// CORRECT — register in DI and inject typed options
+services.Configure<AzureStorageOptions>(configuration.GetSection(nameof(AzureStorageOptions)));
+
+public class AzureStorageService(IOptions<AzureStorageOptions> options)
+{
+    private readonly AzureStorageOptions _options = options.Value;
+
+    public void DoSomething()
+    {
+        var connectionString = _options.ConnectionString; // typed, safe
+    }
+}
+
+// WRONG — direct configuration indexer / GetValue<T>
+var uri = configuration["KeyVaultOptions:Uri"];
+var size = configuration.GetValue<int>("Storage:MaxSize");
+```
+
+**Configuration section name must use `nameof(TOptions)`** — avoids typos and keeps section name in sync with class name:
+
+```csharp
+// CORRECT
+services.Configure<KeyVaultOptions>(configuration.GetSection(nameof(KeyVaultOptions)));
+
+// WRONG — magic string that can drift from class name
+services.Configure<KeyVaultOptions>(configuration.GetSection("KeyVault"));
+```
+
+## 20. Library Extension Method Naming: Add{Provider}{Service}Integration
+
+Extension methods that register a provider-specific library integration must follow the pattern `Add{Provider}{Service}Integration`.
+
+```csharp
+// CORRECT
+services.AddAzureKeyVaultIntegration(configuration);
+services.AddOpenBaoKeyVaultIntegration(configuration);
+services.AddAzureStorageIntegration(configuration);
+services.AddSendGridMailIntegration(configuration);
+services.AddMicrosoft365MailIntegration(configuration);
+services.AddAzureMessageBusIntegration(configuration);
+services.AddRabbitMQMessageBusIntegration(configuration);
+
+// WRONG — generic name that collides across providers
+services.AddKeyVaultIntegration(configuration);    // which key vault?
+services.AddMailIntegration(configuration);        // which mail provider?
+services.AddStorageIntegration(configuration);     // which storage?
+```
+
+## 21. Options Class Naming: {Provider}{Service}Options
+
+Options classes must be prefixed with the provider name to avoid cross-provider naming collisions.
+
+```csharp
+// CORRECT — provider-prefixed names, one class per provider
+public class AzureKeyVaultOptions { }
+public class OpenBaoKeyVaultOptions { }
+public class AzureStorageOptions { }
+public class SendGridMailOptions { }
+public class Microsoft365MailOptions { }
+public class AzurePublisherOptions { }
+public class AzureSubscriberOptions { }
+public class RabbitMQPublisherOptions { }
+public class RabbitMQSubscriberOptions { }
+
+// WRONG — generic names that collide when both providers are referenced
+public class KeyVaultOptions { }      // Azure or OpenBao?
+public class MailOptions { }          // SendGrid or Microsoft365?
+public class PublisherOptions { }     // Azure or RabbitMQ?
+public class SubscriberOptions { }    // Azure or RabbitMQ?
+```
+
 ## Quick Violation Checklist
 
 Before submitting code, verify you haven't violated these:
@@ -431,3 +507,7 @@ Before submitting code, verify you haven't violated these:
 - [ ] No TODOs, mocks, stubs, hardcoded data, or `NotImplementedException` remain in changed code
 - [ ] All UI data comes from real API calls — no fake/static data
 - [ ] All write operations hit real API endpoints
+- [ ] Configuration accessed via `IOptions<T>` only — no `configuration["Key"]` or `GetValue<T>("Key")`
+- [ ] Configuration section registered with `nameof(TOptions)` as section name
+- [ ] Library extension methods named `Add{Provider}{Service}Integration`
+- [ ] Options classes named `{Provider}{Service}Options` (no generic `PublisherOptions`, `MailOptions`, etc.)
