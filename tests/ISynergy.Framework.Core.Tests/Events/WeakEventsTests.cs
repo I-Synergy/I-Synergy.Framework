@@ -52,4 +52,39 @@ public class WeakEventsTests
         alarm.Beep();
         Assert.AreEqual(2, sleepy.SnoozeCount);
     }
+
+    // Counter used by the static handler test below
+    private static int s_staticHandlerCallCount;
+
+    private static void StaticEventHandler(object? sender, EventArgs e)
+    {
+        s_staticHandlerCallCount++;
+    }
+
+    [TestMethod]
+    public void StaticHandlerShouldBeInvokedCorrectly()
+    {
+        s_staticHandlerCallCount = 0;
+        var source = new WeakEventSource<EventArgs>();
+        source.Subscribe(StaticEventHandler);
+
+        source.Raise(this, EventArgs.Empty);
+        source.Raise(this, EventArgs.Empty);
+
+        Assert.AreEqual(2, s_staticHandlerCallCount);
+    }
+
+    [TestMethod]
+    public void StaticHandlerShouldBeUnsubscribable()
+    {
+        s_staticHandlerCallCount = 0;
+        var source = new WeakEventSource<EventArgs>();
+        source.Subscribe(StaticEventHandler);
+        source.Raise(this, EventArgs.Empty);
+
+        source.Unsubscribe(StaticEventHandler);
+        source.Raise(this, EventArgs.Empty);
+
+        Assert.AreEqual(1, s_staticHandlerCallCount);
+    }
 }
