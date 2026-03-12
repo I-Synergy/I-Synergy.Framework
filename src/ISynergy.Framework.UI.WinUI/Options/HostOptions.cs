@@ -1,6 +1,4 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.UI.Options;
@@ -31,13 +29,4 @@ public partial class HostOptions
     } =
         BackgroundServiceExceptionBehavior.StopHost;
 
-    internal void Initialize(IConfiguration configuration)
-    {
-        var timeoutSeconds = configuration["shutdownTimeoutSeconds"];
-        if (!string.IsNullOrEmpty(timeoutSeconds)
-            && int.TryParse(timeoutSeconds, NumberStyles.None, CultureInfo.InvariantCulture, out var seconds))
-        {
-            ShutdownTimeout = TimeSpan.FromSeconds(seconds);
-        }
-    }
 }
