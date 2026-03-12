@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using ISynergy.Framework.MessageBus.Azure.Options.Queue;
-using ISynergy.Framework.MessageBus.Azure.Services.Queue;
+using ISynergy.Framework.MessageBus.Services.Queue;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization.Metadata;
