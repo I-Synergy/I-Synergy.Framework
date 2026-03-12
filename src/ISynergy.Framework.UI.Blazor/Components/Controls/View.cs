@@ -1,9 +1,11 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Input;
 
@@ -59,19 +61,53 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// <summary>
     /// Automatically subscribes to CanExecuteChanged events for all ICommand properties in the ViewModel.
     /// </summary>
+    /// <remarks>
+    /// When <typeparamref name="TViewModel"/> implements <see cref="ICommandProvider"/>, commands are
+    /// discovered via <see cref="ICommandProvider.GetCommands"/> — this path is AOT-safe.
+    /// For ViewModels that do not implement <see cref="ICommandProvider"/>, a reflection-based fallback
+    /// is used. The fallback is annotated with <see cref="RequiresUnreferencedCodeAttribute"/> so that
+    /// IL trimmer analysis correctly flags untrimmed-safe assemblies consuming that path.
+    /// Implement <see cref="ICommandProvider"/> on your ViewModels to use Blazor WASM AOT compilation.
+    /// </remarks>
     private void SubscribeToViewModelCommands()
     {
         if (ViewModel is null)
             return;
 
-        var commandProperties = ViewModel.GetType()
+        if (ViewModel is ICommandProvider provider)
+        {
+            foreach (var command in provider.GetCommands())
+            {
+                command.CanExecuteChanged += OnCommandCanExecuteChanged;
+                _subscribedCommands.Add(command);
+            }
+        }
+        else
+        {
+#pragma warning disable IL2026 // Reflection path: ViewModel does not implement ICommandProvider; trim-unsafe for WASM AOT
+            SubscribeToViewModelCommandsViaReflection(ViewModel);
+#pragma warning restore IL2026
+        }
+    }
+
+    /// <summary>
+    /// Reflection-based fallback for command subscription.
+    /// This path is not trim-safe; implement <see cref="ICommandProvider"/> on the ViewModel instead.
+    /// </summary>
+    /// <param name="viewModel">The ViewModel instance to scan for command properties.</param>
+    [RequiresUnreferencedCode(
+        "Reflection-based command subscription scans ViewModel properties and is not trim-safe. " +
+        "Implement ICommandProvider on the ViewModel for AOT-compatible command discovery.")]
+    private void SubscribeToViewModelCommandsViaReflection(TViewModel viewModel)
+    {
+        var commandProperties = viewModel.GetType()
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => typeof(ICommand).IsAssignableFrom(p.PropertyType))
             .ToList();
 
         foreach (var property in commandProperties)
         {
-            if (property.GetValue(ViewModel) is ICommand command)
+            if (property.GetValue(viewModel) is ICommand command)
             {
                 command.CanExecuteChanged += OnCommandCanExecuteChanged;
                 _subscribedCommands.Add(command);

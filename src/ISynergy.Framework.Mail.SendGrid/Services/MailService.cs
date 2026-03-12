@@ -6,12 +6,23 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mail.Services;
 
 /// <summary>
 /// Email service to send email through SendGrid.
 /// </summary>
+/// <remarks>
+/// <para>
+/// <strong>AOT/Trimming notice:</strong> SendGrid SDK v9.x uses <c>Newtonsoft.Json</c> for request and
+/// response serialization, which is not AOT-compatible. Applications targeting
+/// <c>&lt;PublishAot&gt;true&lt;/PublishAot&gt;</c> should use
+/// <c>ISynergy.Framework.Mail.Microsoft365</c> instead.
+/// </para>
+/// </remarks>
+[RequiresUnreferencedCode("SendGrid SDK uses Newtonsoft.Json for serialization, which is not AOT-compatible. Use a different mail provider for AOT publishing.")]
+[RequiresDynamicCode("Newtonsoft.Json requires dynamic code generation.")]
 internal class MailService : IMailService
 {
     private readonly MailOptions _sendGridOptions;

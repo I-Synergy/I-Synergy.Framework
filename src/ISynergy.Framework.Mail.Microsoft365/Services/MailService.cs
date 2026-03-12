@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Users.Item.SendMail;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mail.Services;
 
@@ -17,6 +18,16 @@ namespace ISynergy.Framework.Mail.Services;
 /// Implements the <see cref="IMailService" />
 /// </summary>
 /// <seealso cref="IMailService" />
+/// <remarks>
+/// <para>
+/// <strong>AOT/Trimming notice:</strong> <see cref="GraphServiceClient"/> in the Microsoft.Graph SDK uses
+/// reflection-based JSON serialization for Graph API responses and may not be fully AOT-compatible depending
+/// on the version in use. Applications targeting <c>&lt;PublishAot&gt;true&lt;/PublishAot&gt;</c> should
+/// suppress <c>IL2026</c> warnings at the <c>AddMicrosoft365MailIntegration</c> call site or verify that the
+/// installed Microsoft.Graph version ships with full AOT annotations.
+/// </para>
+/// </remarks>
+[RequiresUnreferencedCode("Microsoft.Graph SDK uses reflection-based JSON serialization. Not compatible with AOT publishing in this configuration.")]
 internal class MailService : IMailService
 {
     /// <summary>

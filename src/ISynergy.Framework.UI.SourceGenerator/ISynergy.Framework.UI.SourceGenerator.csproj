@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>I-Synergy.Framework.UI.SourceGenerator</PackageId>
+    <Description>Roslyn source generator for I-Synergy UI AOT-compatible view/viewmodel/window type registration</Description>
+    <PackageTags>I-Synergy, Framework, UI, SourceGenerator, AOT</PackageTags>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <!-- Do not generate a library layout; this ships as an analyzer -->
+    <GenerateLibraryLayout>false</GenerateLibraryLayout>
+    <!-- Suppress signing for the generator (analyzers cannot be strong-named easily) -->
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

@@ -4,17 +4,24 @@ using Microsoft.Extensions.Logging;
 namespace ISynergy.Framework.UI.Extensions;
 
 /// <summary>
-/// Extension methods for MAUI Application to manage dynamic theme switching
+/// Extension methods for MAUI Application to manage dynamic theme switching.
 /// </summary>
 public static class ApplicationExtensions
 {
     /// <summary>
-    /// Sets the application color theme dynamically
+    /// Sets the application color theme dynamically.
     /// </summary>
-    /// <param name="application">The MAUI application instance</param>
-    /// <param name="color">The hex color string (e.g., "#FFB900")</param>
-    /// <param name="logger">Optional logger for diagnostics</param>
-    /// <returns>The application instance for method chaining</returns>
+    /// <param name="application">The MAUI application instance.</param>
+    /// <param name="color">The hex color string (e.g., "#FFB900").</param>
+    /// <param name="logger">Optional logger for diagnostics.</param>
+    /// <returns>The application instance for method chaining.</returns>
+    /// <remarks>
+    /// Theme detection uses <c>GetType().Namespace</c> to identify existing theme resource dictionaries.
+    /// This comparison is not fragile from an AOT/trimming perspective because the <see cref="Type"/>
+    /// is obtained from a live instance (not from a string lookup), so the metadata is always preserved.
+    /// However, the namespace string comparison is fragile if namespaces change. A future refactor
+    /// should replace this with a marker interface check on the theme resource dictionaries.
+    /// </remarks>
     public static Microsoft.Maui.Controls.Application SetApplicationColor(
         this Microsoft.Maui.Controls.Application application,
         string color,
@@ -25,7 +32,10 @@ public static class ApplicationExtensions
 
         logger?.LogInformation("Setting application color to {Color}", color);
 
-        // Remove existing theme dictionaries, but preserve other resource dictionaries
+        // Remove existing theme dictionaries, but preserve other resource dictionaries.
+        // Note: GetType().Namespace on an allocated object is AOT-safe (metadata is preserved),
+        // but the namespace string comparison is fragile. A marker interface (e.g., IThemeResourceDictionary)
+        // would be more robust. This is noted as a future improvement.
         var themesToRemove = application.Resources.MergedDictionaries
             .Where(dict => dict.GetType().Namespace == "ISynergy.Framework.UI.Resources.Styles.Themes")
             .ToList();
