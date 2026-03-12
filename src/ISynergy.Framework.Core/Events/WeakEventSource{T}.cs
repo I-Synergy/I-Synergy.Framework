@@ -92,8 +92,11 @@ public class WeakEventSource<TEventArgs>
             new ConcurrentDictionary<MethodInfo, OpenEventHandler>();
 
         /// <summary>
-        /// Creates the open handler using <c>Delegate.CreateDelegate</c> instead of
-        /// expression tree compilation. This approach is AOT-safe and does not require JIT.
+        /// Creates the open handler. For instance methods, an open-instance delegate is used
+        /// (AOT-safe via <c>Delegate.CreateDelegate</c>). For static methods, a closed delegate
+        /// is wrapped to adapt the two-parameter static signature <c>(sender, e)</c> to the
+        /// three-parameter <see cref="OpenEventHandler"/> signature <c>(target, sender, e)</c>
+        /// by ignoring the unused <c>target</c> argument.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>OpenEventHandler.</returns>
@@ -101,8 +104,13 @@ public class WeakEventSource<TEventArgs>
         {
             if (method.IsStatic)
             {
-                // For static methods, create a closed delegate (no open-instance binding needed)
-                return (OpenEventHandler)Delegate.CreateDelegate(typeof(OpenEventHandler), method);
+                // Static EventHandler methods have signature (object? sender, TEventArgs e).
+                // OpenEventHandler expects (object? target, object? sender, TEventArgs e).
+                // Delegate.CreateDelegate cannot adapt the arity difference, so we create a
+                // correctly-typed closed delegate and wrap it in a lambda that discards target.
+                var closedDelegate = (EventHandler<TEventArgs>)Delegate.CreateDelegate(
+                    typeof(EventHandler<TEventArgs>), method);
+                return (object? target, object? sender, TEventArgs e) => closedDelegate(sender, e);
             }
             else
             {
