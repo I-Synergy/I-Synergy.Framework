@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
-using ISynergy.Framework.MessageBus.Options.Queue;
+using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
@@ -92,7 +92,7 @@ public class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<
 
             var exchangeType = _option is PublisherOptions opts
                 ? opts.ExchangeType
-                : RabbitMQ.Client.ExchangeType.Direct;
+                : global::RabbitMQ.Client.ExchangeType.Direct;
 
             var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
             _connection = await factory.CreateConnectionAsync().ConfigureAwait(false);
