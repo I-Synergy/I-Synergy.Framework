@@ -1,43 +1,273 @@
----
-description: AI rules derived by SpecStory from the project AI interaction history
-globs: *
----
+# I-Synergy Framework — Copilot Instructions
 
 ## PROJECT OVERVIEW
 
-(This section is intentionally blank, awaiting content.)
+I-Synergy Framework is an open-source .NET framework providing reusable components for building enterprise applications. The repository contains 40+ library projects (in `src/`) and 29+ test projects (in `tests/`).
+
+**Library areas:**
+- **Core** (`ISynergy.Framework.Core`): Base classes, extensions, validation, `Result<T>`/`Option<T>` types
+- **CQRS** (`ISynergy.Framework.CQRS`): Custom command/query dispatching — **no MediatR**
+- **MVVM** (`ISynergy.Framework.Mvvm`): Model-View-ViewModel for UI applications
+- **ASP.NET Core** (`ISynergy.Framework.AspNetCore.*`): Authentication, globalization, monitoring, multi-tenancy
+- **UI** (`ISynergy.Framework.UI.*`): Cross-platform UI — WPF, WinUI, MAUI, Blazor
+- **Infrastructure** (`ISynergy.Framework.EntityFramework`, `ISynergy.Framework.Storage.*`, `ISynergy.Framework.Mail.*`, `ISynergy.Framework.MessageBus.*`): EF Core, Azure Storage, S3, mail, RabbitMQ/Azure messaging
+- **Domain-specific** (`ISynergy.Framework.Financial`, `ISynergy.Framework.Geography`, `ISynergy.Framework.Mathematics`, `ISynergy.Framework.Physics`): specialized domain libraries
+
+This is a **library/framework** project — changes affect downstream consumers. Maintain backwards compatibility and follow SemVer. All public APIs must have XML documentation.
 
 ## CODE STYLE
 
-(This section is intentionally blank, awaiting content.)
+- **Language**: C# with nullable reference types enabled (`<Nullable>enable</Nullable>`) and implicit usings (`<ImplicitUsings>enable</ImplicitUsings>`)
+- **Brace style**: Allman style (braces on new lines)
+- **Indentation**: 4 spaces, no tabs
+- **Line length**: Prefer lines under 120 characters
+- **Naming**:
+  - Types (classes, enums, structs): `PascalCase`
+  - Interfaces: `IPascalCase`
+  - Methods and properties: `PascalCase`
+  - Private fields: `_camelCase`
+  - Static fields: `s_camelCase`
+  - Local variables and parameters: `camelCase`
+  - Constants: `PascalCase`
+  - Boolean properties: `Is`, `Has`, `Can` prefixes
+- **No abbreviations**: `Customer` not `Cust`; `Manager` not `Mgr`
+- **No Hungarian notation**: avoid `strName`, `intCount`
+- **Modern C# features**: records, pattern matching, expression-bodied members, nullable reference types
+- **Async/await**: always include `CancellationToken` as the last parameter; use `ConfigureAwait(false)` in library code
+- **XML documentation**: required on all `public` members
 
 ## FOLDER ORGANIZATION
 
-(This section is intentionally blank, awaiting content.)
+```
+/
+├── src/                          # Library source projects (ISynergy.Framework.*)
+├── tests/                        # Test projects (ISynergy.Framework.*.Tests)
+├── samples/                      # Sample applications
+├── docs/                         # Documentation
+├── scripts/                      # Build and utility scripts (PowerShell)
+├── performance/                  # BenchmarkDotNet performance projects
+├── tools/                        # Tool utilities
+├── templates/                    # Project templates
+├── .github/
+│   ├── copilot-instructions.md   # This file
+│   ├── prompts/                  # Reusable Copilot prompts
+│   └── docs/                     # Agent session documentation
+├── .claude/
+│   ├── reference/                # Critical rules, patterns, naming conventions
+│   └── patterns/                 # CQRS, MVVM, testing patterns
+├── CLAUDE.md                     # Comprehensive AI instructions (root)
+├── Directory.Build.props         # Common MSBuild properties for all projects
+├── Directory.Build.targets       # Common MSBuild targets
+├── Directory.Packages.props      # Central NuGet package version management
+├── I-Synergy.Framework.slnx      # Solution file
+├── global.json                   # .NET SDK version pin (10.0.103)
+├── azure-pipelines.yml           # CI/CD pipeline definition
+└── codecoverage.runsettings      # Code coverage configuration
+```
+
+Each library project lives at `src/ISynergy.Framework.<Area>/` and its corresponding test project at `tests/ISynergy.Framework.<Area>.Tests/`.
 
 ## TECH STACK
 
-(This section is intentionally blank, awaiting content.)
+| Component | Details |
+|-----------|---------|
+| Runtime | .NET 10 (SDK 10.0.103, pinned in `global.json`) |
+| Language | C# (latest) |
+| Build tool | MSBuild / `dotnet` CLI |
+| Package manager | NuGet — central versioning via `Directory.Packages.props` |
+| Web framework | ASP.NET Core |
+| Data access | Entity Framework Core |
+| Unit testing | MSTest v4 |
+| BDD testing | Reqnroll.NET (Gherkin scenarios) |
+| Observability | OpenTelemetry |
+| UI platforms | WPF, WinUI 3, MAUI, Blazor |
+| Messaging | Azure Service Bus, RabbitMQ |
+| Storage | Azure Blob Storage, Amazon S3 |
+| CI/CD | Azure Pipelines (`azure-pipelines.yml`) |
+| Code quality | SonarCloud |
 
 ## PROJECT-SPECIFIC STANDARDS
 
-(This section is intentionally blank, awaiting content.)
+### Prohibited Libraries — Use Framework Alternatives
+
+| Do NOT use | Use instead |
+|------------|-------------|
+| **MediatR** | Custom dispatching in `ISynergy.Framework.CQRS` |
+| **AutoMapper** | Mapster mapping library |
+| **SpecFlow** | Reqnroll.NET for BDD |
+
+### Key Patterns
+
+- **CQRS**: Commands (`ICommand<TResponse>`) and Queries (`IQuery<TResponse>`) dispatched through `ICommandDispatcher` / `IQueryDispatcher`
+- **Result types**: Use `Result<T>` and `Option<T>` (from `ISynergy.Framework.Core`) for explicit error handling — never throw for expected failures
+- **Guard clauses**: Validate all public method inputs with guard clauses
+- **Clean Architecture layers**: Domain → Application → Infrastructure → Presentation (no upward dependencies)
+- **Central package management**: All NuGet versions in `Directory.Packages.props`; project files use `<PackageReference>` without a `Version` attribute
+- **XML docs**: All `public` APIs require `<summary>`, `<param>`, `<returns>`, and `<exception>` tags
+- **Structured logging**: Use `ILogger<T>` with EventIds and structured format strings; never log PII
+
+### Architecture Layers
+
+| Layer | Responsibility |
+|-------|----------------|
+| **Domain** | Business entities, value objects, domain events, repository interfaces (zero external dependencies) |
+| **Application** | CQRS handlers, business logic orchestration |
+| **Infrastructure** | EF Core, messaging, storage, mail, third-party integrations |
+| **Presentation** | ASP.NET Core controllers, middleware, DTOs |
 
 ## WORKFLOW & RELEASE RULES
 
-(This section is intentionally blank, awaiting content.)
+### Build & Test Commands
+
+```bash
+# Restore and build entire solution
+dotnet build I-Synergy.Framework.slnx
+
+# Run all tests
+dotnet test I-Synergy.Framework.slnx
+
+# Run tests with code coverage
+dotnet test I-Synergy.Framework.slnx --collect:"Code Coverage" --settings:codecoverage.runsettings
+
+# Build, restore, and pack NuGet packages (CI mode)
+msbuild I-Synergy.Framework.slnx -t:restore,build,pack -p:ContinuousIntegrationBuild=true
+```
+
+> **Note:** MAUI projects require the MAUI workload: `dotnet workload install maui`
+
+### CI/CD Pipeline (`azure-pipelines.yml`)
+
+1. Set version variables from build number
+2. Install .NET SDK (from `global.json`) and MAUI workloads
+3. MSBuild restore + build + pack all projects
+4. `dotnet test` with code coverage (`codecoverage.runsettings`)
+5. Sign NuGet packages with Azure Key Vault code signing
+6. Publish to NuGet.org and create a GitHub release
+
+### Release Process
+
+- Triggered on merges to `main`; PRs trigger a pre-release build
+- Package versions use a date-based format (`yyyy.1MMdd.1HHmm`) derived from the build number
+- This is effectively calendar versioning; do not infer Semantic Versioning compatibility guarantees from the numeric version alone
+- We still follow Semantic Versioning principles when planning and documenting changes (breaking changes vs. new features vs. fixes) in the `CHANGELOG.md`, but the NuGet `Version` field itself is date-based
+
+### Before Submitting a PR
+
+1. Ensure `dotnet build` and `dotnet test` pass locally
+2. Add or update unit tests for changed code
+3. Update XML documentation on any modified public APIs
+4. Update `CHANGELOG.md` if applicable
 
 ## REFERENCE EXAMPLES
 
-(This section is intentionally blank, awaiting content.)
+### Command / Handler (CQRS)
+
+```csharp
+// Command (immutable record)
+public record CreateOrderCommand(Guid CustomerId, List<OrderItem> Items) : ICommand<CreateOrderResponse>;
+
+// Handler
+public class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, CreateOrderResponse>
+{
+    private readonly IOrderRepository _repository;
+    private readonly ILogger<CreateOrderCommandHandler> _logger;
+
+    public CreateOrderCommandHandler(IOrderRepository repository, ILogger<CreateOrderCommandHandler> logger)
+    {
+        _repository = repository;
+        _logger = logger;
+    }
+
+    public async Task<Result<CreateOrderResponse>> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Creating order for customer {CustomerId}", command.CustomerId);
+        var order = Order.Create(command.CustomerId, command.Items);
+        await _repository.AddAsync(order, cancellationToken);
+        return Result.Success(new CreateOrderResponse(order.Id));
+    }
+}
+```
+
+### Result<T> Usage
+
+```csharp
+// Return explicit success/failure without exceptions
+public async Task<Result<Order>> GetOrderAsync(Guid id, CancellationToken cancellationToken)
+{
+    var order = await _repository.GetByIdAsync(id, cancellationToken);
+    return order is null
+        ? Result.Failure<Order>($"Order {id} not found")
+        : Result.Success(order);
+}
+
+// Caller checks result
+var result = await orderService.GetOrderAsync(orderId, ct);
+if (result.IsSuccess)
+    return Ok(result.Value);
+return NotFound(result.Error);
+```
+
+### Unit Test (MSTest)
+
+```csharp
+[TestClass]
+public class OrderServiceTests
+{
+    [TestMethod]
+    public async Task GetOrderAsync_WithValidId_ReturnsOrder()
+    {
+        // Arrange
+        var orderId = Guid.NewGuid();
+        var mockRepo = new Mock<IOrderRepository>();
+        mockRepo.Setup(r => r.GetByIdAsync(orderId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Order { Id = orderId });
+        var service = new OrderService(mockRepo.Object);
+
+        // Act
+        var result = await service.GetOrderAsync(orderId, CancellationToken.None);
+
+        // Assert
+        Assert.IsTrue(result.IsSuccess);
+        Assert.AreEqual(orderId, result.Value.Id);
+    }
+}
+```
 
 ## PROJECT DOCUMENTATION & CONTEXT SYSTEM
 
-(This section is intentionally blank, awaiting content.)
+| File / Directory | Purpose |
+|-----------------|---------|
+| `CLAUDE.md` (root) | Comprehensive AI assistant instructions — full coding standards, patterns, examples |
+| `.claude/reference/critical-rules.md` | Hard rules the agent must follow (forbidden patterns, required patterns) |
+| `.claude/reference/naming-conventions.md` | Naming conventions details |
+| `.claude/patterns/*.md` | CQRS, MVVM, testing, and other architectural pattern guides |
+| `.github/copilot-instructions.md` | This file — GitHub Copilot repository-wide instructions |
+| `.github/instructions/` | Path-specific Copilot instructions (apply only to matching file paths) |
+| `.github/prompts/` | Reusable prompt files for common tasks |
+| `CHANGELOG.md` | Version history — update when making user-visible changes |
+| `README.md` | Public-facing project documentation |
+
+**Tip**: Before making changes, read `.claude/reference/critical-rules.md` for absolute constraints and `CLAUDE.md` for detailed patterns and examples.
 
 ## DEBUGGING
 
-(This section is intentionally blank, awaiting content.)
+### Common Build Issues
+
+- **Missing MAUI workload**: Run `dotnet workload install maui` then retry the build
+- **SDK version mismatch**: Ensure .NET 10 SDK ≥ 10.0.103 is installed (`dotnet --version`); `global.json` enforces the version
+- **Package version conflict**: All package versions are centrally managed — do not add `Version` attributes to `<PackageReference>` in project files; update `Directory.Packages.props` instead
+
+### Running a Single Test Project
+
+```bash
+dotnet test tests/ISynergy.Framework.Core.Tests/ISynergy.Framework.Core.Tests.csproj
+```
+
+### Checking for Compiler Warnings / Errors
+
+```powershell
+dotnet build I-Synergy.Framework.slnx --no-incremental 2>&1 | Select-String -Pattern 'warning|error'
+```
 
 ## FINAL DOs AND DON'Ts
 
