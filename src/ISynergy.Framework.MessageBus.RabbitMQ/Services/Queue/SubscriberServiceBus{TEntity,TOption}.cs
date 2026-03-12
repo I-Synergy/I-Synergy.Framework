@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Serializers;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
-using ISynergy.Framework.MessageBus.Options.Queue;
+using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ISynergy.Framework.MessageBus.Services.Queue;
+namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 
 /// <summary>
 /// Message bus subscriber implementation on RabbitMQ.
@@ -103,7 +103,7 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
 
         var exchangeType = _option is SubscriberOptions subscriberOpts
             ? subscriberOpts.ExchangeType
-            : RabbitMQ.Client.ExchangeType.Direct;
+            : global::RabbitMQ.Client.ExchangeType.Direct;
 
         var factory = new ConnectionFactory { Uri = new Uri(_option.ConnectionString) };
 
