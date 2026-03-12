@@ -17,6 +17,7 @@
   <Folder Name="/Projects/">
     <Project Path="src/ISynergy.Framework.AspNetCore.Authentication/ISynergy.Framework.AspNetCore.Authentication.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.Blazor/ISynergy.Framework.AspNetCore.Blazor.csproj" Id="28f9504a-3fd5-4a9f-a3fb-f7cb277dce1a" />
+    <Project Path="src/ISynergy.Framework.AspNetCore.Blazor.SourceGenerator/ISynergy.Framework.AspNetCore.Blazor.SourceGenerator.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.Globalization/ISynergy.Framework.AspNetCore.Globalization.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.Monitoring/ISynergy.Framework.AspNetCore.Monitoring.csproj" />
     <Project Path="src/ISynergy.Framework.AspNetCore.MultiTenancy/ISynergy.Framework.AspNetCore.MultiTenancy.csproj" />
@@ -62,6 +63,7 @@
     <Project Path="src/ISynergy.Framework.UI.WinUI/ISynergy.Framework.UI.WinUI.csproj" />
     <Project Path="src/ISynergy.Framework.UI.WPF/ISynergy.Framework.UI.WPF.csproj" />
     <Project Path="src/ISynergy.Framework.UI/ISynergy.Framework.UI.csproj" />
+    <Project Path="src/ISynergy.Framework.UI.SourceGenerator/ISynergy.Framework.UI.SourceGenerator.csproj" />
   </Folder>
   <Folder Name="/Samples/" />
   <Folder Name="/Samples/Applications/">
