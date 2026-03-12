@@ -27,9 +27,9 @@ namespace ISynergy.Framework.CQRS.Features
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en"), "Features", "CQRS Error Handling", "    As a developer using the CQRS framework\r\n    I want proper error handling for" +
-                " commands and queries\r\n    So that failures are managed gracefully and diagnosti" +
-                "cally", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en"), "Features", "CQRS Error Handling", "    As a developer using the CQRS framework\n    I want proper error handling for " +
+                "commands and queries\n    So that failures are managed gracefully and diagnostica" +
+                "lly", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
 #line 1 "ErrorHandling.feature"
 #line hidden
