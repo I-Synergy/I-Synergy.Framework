@@ -33,9 +33,9 @@
 	</ItemGroup>
 
 	<!-- Ensure the generator DLL lands in the correct NuGet folder -->
-	<Target Name="CopyGeneratorToAnalyzers" BeforeTargets="Pack">
+	<Target Name="CopyGeneratorToAnalyzers" BeforeTargets="_GetPackageFiles">
 	  <ItemGroup>
-	    <None Include="$(OutputPath)ISynergy.Framework.UI.SourceGenerator.dll"
+	    <None Include="$(MSBuildProjectDirectory)\..\ISynergy.Framework.UI.SourceGenerator\bin\$(Configuration)\netstandard2.0\ISynergy.Framework.UI.SourceGenerator.dll"
 	          Pack="true"
 	          PackagePath="analyzers/dotnet/cs/"
 	          Visible="false" />
