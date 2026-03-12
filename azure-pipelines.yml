@@ -32,7 +32,7 @@ variables:
     - group: PROD
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2025-vs2026'
 
 stages:
   - stage: BuildStage
@@ -98,12 +98,13 @@ stages:
             projectName: 'I-Synergy.Framework'
             projectVersion: '$(VersionPackage)'
 
-        - task: DotNetCoreCLI@2
+        - task: MSBuild@1
           displayName: 'Build I-Synergy Framework'
           inputs:
-            command: 'build'
-            projects: 'I-Synergy.Framework.slnx'
-            arguments: '--configuration $(BuildConfiguration) -p:Version=$(VersionPackage) -p:ContinuousIntegrationBuild=true /nr:false'
+            solution: 'I-Synergy.Framework.slnx'
+            msbuildArchitecture: 'x64'
+            configuration: $(BuildConfiguration)
+            msbuildArguments: '/restore /p:Version=$(VersionPackage) /p:ContinuousIntegrationBuild=true /nr:false'
 
         - task: DotNetCoreCLI@2
           displayName: 'Pack I-Synergy Framework'
