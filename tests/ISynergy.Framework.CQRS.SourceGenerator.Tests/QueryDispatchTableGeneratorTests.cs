@@ -50,15 +50,17 @@ public class QueryDispatchTableGeneratorTests
     }
 
     /// <summary>
-    /// The generated method must register the table as a singleton via <c>TryAddSingleton</c>.
+    /// The generated method must register the table as a singleton, replacing any existing registration.
+    /// Uses RemoveAll + AddSingleton to guarantee the compile-time table is always used.
     /// </summary>
     [TestMethod]
-    public void Generator_DispatchTable_RegistersTryAddSingleton()
+    public void Generator_DispatchTable_RegistersAsSingleton()
     {
         var output = SourceGeneratorTestHelper.RunGenerator(QueryHandlerSource);
         var source = output["CqrsQueryDispatchTable.g.cs"];
 
-        StringAssert.Contains(source, "TryAddSingleton");
+        StringAssert.Contains(source, "RemoveAll");
+        StringAssert.Contains(source, "AddSingleton");
         StringAssert.Contains(source, "QueryDispatchTable");
     }
 

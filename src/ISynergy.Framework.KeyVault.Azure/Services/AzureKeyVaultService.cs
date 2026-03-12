@@ -1,7 +1,7 @@
 using Azure.Security.KeyVault.Secrets;
 using ISynergy.Framework.KeyVault.Abstractions.Services;
 
-namespace ISynergy.Framework.KeyVault.Services;
+namespace ISynergy.Framework.KeyVault.Azure.Services;
 
 internal sealed class AzureKeyVaultService(SecretClient secretClient) : IKeyVaultService
 {

@@ -3,24 +3,24 @@ using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
 using VaultSharp;
 
-namespace ISynergy.Framework.KeyVault.DataProtection;
+namespace ISynergy.Framework.KeyVault.OpenBao.DataProtection;
 
 /// <summary>
 /// Stores ASP.NET Core Data Protection keys in OpenBao KV v2.
 /// Keys are stored at {mountPoint}/{keyPath}/{friendlyName} as JSON: { "xml": "&lt;key /&gt;" }
 /// </summary>
-public class OpenBaoDataProtectionRepository : IXmlRepository
+public class DataProtectionRepository : IXmlRepository
 {
     private readonly IVaultClient _vaultClient;
     private readonly string _keyPath;
     private readonly string _mountPoint;
-    private readonly ILogger<OpenBaoDataProtectionRepository> _logger;
+    private readonly ILogger<DataProtectionRepository> _logger;
 
-    public OpenBaoDataProtectionRepository(
+    public DataProtectionRepository(
         IVaultClient vaultClient,
         string keyPath,
         string mountPoint,
-        ILogger<OpenBaoDataProtectionRepository> logger)
+        ILogger<DataProtectionRepository> logger)
     {
         _vaultClient = vaultClient;
         _keyPath = keyPath;

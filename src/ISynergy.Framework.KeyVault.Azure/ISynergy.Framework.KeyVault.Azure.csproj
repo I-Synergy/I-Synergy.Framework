@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <RootNamespace>ISynergy.Framework.KeyVault</RootNamespace>
     <PackageId>I-Synergy.Framework.KeyVault.Azure</PackageId>
     <Description>Azure Key Vault implementation of the I-Synergy Framework KeyVault abstractions.</Description>
   </PropertyGroup>

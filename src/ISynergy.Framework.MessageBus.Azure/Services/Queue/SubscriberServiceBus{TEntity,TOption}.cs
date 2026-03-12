@@ -16,7 +16,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue;
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <typeparam name="TOption">The type of the t option.</typeparam>
-public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
+internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
     where TOption : class, IQueueOption, new()
 {
     /// <summary>
@@ -51,7 +51,7 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
     /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TEntity"/>, obtained from a
     /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
     /// </param>
-    protected SubscriberServiceBus(
+    public SubscriberServiceBus(
         IOptions<TOption> options,
         ILogger<SubscriberServiceBus<TEntity, TOption>> logger,
         JsonTypeInfo<TEntity> jsonTypeInfo)

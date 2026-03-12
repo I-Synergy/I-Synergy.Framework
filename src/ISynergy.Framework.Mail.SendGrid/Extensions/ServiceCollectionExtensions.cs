@@ -1,13 +1,13 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mail.Abstractions.Services;
-using ISynergy.Framework.Mail.Options;
-using ISynergy.Framework.Mail.Services;
+using ISynergy.Framework.Mail.SendGrid.Options;
+using ISynergy.Framework.Mail.SendGrid.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ISynergy.Framework.Mail.Extensions;
+namespace ISynergy.Framework.Mail.SendGrid.Extensions;
 
 /// <summary>
 /// Service collection extensions for SendGrid mail integration.
@@ -31,11 +31,11 @@ public static class ServiceCollectionExtensions
     /// </remarks>
     [RequiresUnreferencedCode("SendGrid SDK uses Newtonsoft.Json for serialization, which is not AOT-compatible. Use a different mail provider for AOT publishing.")]
     [RequiresDynamicCode("Newtonsoft.Json requires dynamic code generation.")]
-    public static IServiceCollection AddMailSendGridIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
+    public static IServiceCollection AddSendGridMailIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<MailOptions>(configuration.GetSection($"{prefix}{nameof(MailOptions)}").BindWithReload);
-        services.TryAddSingleton<IMailService, MailService>();
+        services.Configure<SendGridMailOptions>(configuration.GetSection($"{prefix}MailOptions").BindWithReload);
+        services.TryAddSingleton<IMailService, SendGridMailService>();
         return services;
     }
 }

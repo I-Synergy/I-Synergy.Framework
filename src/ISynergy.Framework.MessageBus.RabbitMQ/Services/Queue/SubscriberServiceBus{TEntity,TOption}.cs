@@ -18,7 +18,7 @@ namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity.</typeparam>
 /// <typeparam name="TOption">The type of the option.</typeparam>
-public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>, IAsyncDisposable
+internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>, IAsyncDisposable
     where TOption : class, IQueueOption, new()
 {
     /// <summary>
@@ -50,7 +50,7 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
     /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TEntity"/>, obtained from a
     /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
     /// </param>
-    protected SubscriberServiceBus(
+    public SubscriberServiceBus(
         IOptions<TOption> options,
         ILogger<SubscriberServiceBus<TEntity, TOption>> logger,
         JsonTypeInfo<TEntity> jsonTypeInfo)
@@ -97,11 +97,11 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
     /// <inheritdoc />
     public virtual async Task SubscribeToMessageBusAsync(CancellationToken cancellationToken = default)
     {
-        var exchangeName = _option is SubscriberOptions subscriberOptions
+        var exchangeName = _option is RabbitMQSubscriberOptions subscriberOptions
             ? subscriberOptions.ExchangeName
             : string.Empty;
 
-        var exchangeType = _option is SubscriberOptions subscriberOpts
+        var exchangeType = _option is RabbitMQSubscriberOptions subscriberOpts
             ? subscriberOpts.ExchangeType
             : global::RabbitMQ.Client.ExchangeType.Direct;
 

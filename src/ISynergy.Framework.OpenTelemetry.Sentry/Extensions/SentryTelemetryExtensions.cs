@@ -2,12 +2,12 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
-using ISynergy.Framework.OpenTelemetry.Processors;
+using ISynergy.Framework.OpenTelemetry.Sentry.Processors;
 using OpenTelemetry.Logs;
 using Sentry.OpenTelemetry;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ISynergy.Framework.OpenTelemetry.Extensions;
+namespace ISynergy.Framework.OpenTelemetry.Sentry.Extensions;
 
 /// <summary>
 /// Extension methods for adding Sentry exporter to telemetry.

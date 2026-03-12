@@ -1,9 +1,9 @@
 using ISynergy.Framework.KeyVault.Abstractions.Services;
 using VaultSharp;
 
-namespace ISynergy.Framework.KeyVault.Services;
+namespace ISynergy.Framework.KeyVault.OpenBao.Services;
 
-public sealed class OpenBaoKeyVaultService(IVaultClient vaultClient) : IKeyVaultService
+internal sealed class OpenBaoKeyVaultService(IVaultClient vaultClient) : IKeyVaultService
 {
     public async Task<IDictionary<string, string?>> GetSecretAsync(string path, string mountPoint, CancellationToken cancellationToken = default)
     {

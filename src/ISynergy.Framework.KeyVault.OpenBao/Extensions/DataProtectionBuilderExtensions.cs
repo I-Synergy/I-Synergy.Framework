@@ -1,4 +1,4 @@
-using ISynergy.Framework.KeyVault.DataProtection;
+using ISynergy.Framework.KeyVault.OpenBao.DataProtection;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using VaultSharp;
 using VaultSharp.V1.AuthMethods.Token;
 
-namespace ISynergy.Framework.KeyVault.Extensions;
+namespace ISynergy.Framework.KeyVault.OpenBao.Extensions;
 
 public static class DataProtectionBuilderExtensions
 {
@@ -32,11 +32,11 @@ public static class DataProtectionBuilderExtensions
                 var clientSettings = new VaultClientSettings(vaultUri, authMethod);
                 var client = new VaultClient(clientSettings);
 
-                options.XmlRepository = new OpenBaoDataProtectionRepository(
+                options.XmlRepository = new DataProtectionRepository(
                     client,
                     keyPath,
                     mountPoint,
-                    loggerFactory.CreateLogger<OpenBaoDataProtectionRepository>());
+                    loggerFactory.CreateLogger<DataProtectionRepository>());
             });
 
         return builder;

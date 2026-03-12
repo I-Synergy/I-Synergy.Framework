@@ -1,23 +1,23 @@
-using ISynergy.Framework.KeyVault.Services;
-using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.KeyVault.OpenBao.Services;
+using ISynergy.Framework.KeyVault.Options;
+using Microsoft.Extensions.Options;
 
 namespace ISynergy.Framework.KeyVault.OpenBao.Tests.Services;
 
 [TestClass]
 public class OpenBaoVaultTokenProviderTests
 {
-    [TestMethod]
-    public void GetToken_ReturnsTokenFromConfig_WhenConfigured()
+    private static OpenBaoVaultTokenProvider CreateProvider(string? token = null, string? stateDirectory = null)
     {
-        var config = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["KeyVaultOptions:Token"] = "my-token"
-            })
-            .Build();
+        var keyVaultOptions = Microsoft.Extensions.Options.Options.Create(new KeyVaultOptions { Token = token ?? string.Empty });
+        var vaultStateOptions = Microsoft.Extensions.Options.Options.Create(new VaultStateOptions { StateDirectory = stateDirectory ?? ".secrets/vault-state" });
+        return new OpenBaoVaultTokenProvider(keyVaultOptions, vaultStateOptions);
+    }
 
-        var provider = new OpenBaoVaultTokenProvider(config);
+    [TestMethod]
+    public void GetToken_ReturnsTokenFromOptions_WhenConfigured()
+    {
+        var provider = CreateProvider(token: "my-token");
         var token = provider.GetToken();
 
         Assert.AreEqual("my-token", token);
@@ -26,14 +26,7 @@ public class OpenBaoVaultTokenProviderTests
     [TestMethod]
     public void GetToken_ThrowsIfStateFileNotFound_WhenTokenNotConfigured()
     {
-        var config = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["VaultInitializer:StateDirectory"] = "/nonexistent/path/that/does/not/exist"
-            })
-            .Build();
-
-        var provider = new OpenBaoVaultTokenProvider(config);
+        var provider = CreateProvider(stateDirectory: "/nonexistent/path/that/does/not/exist");
 
         try
         {
@@ -56,14 +49,7 @@ public class OpenBaoVaultTokenProviderTests
 
         try
         {
-            var config = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string?>
-                {
-                    ["VaultInitializer:StateDirectory"] = tempDir
-                })
-                .Build();
-
-            var provider = new OpenBaoVaultTokenProvider(config);
+            var provider = CreateProvider(stateDirectory: tempDir);
             var token = provider.GetToken();
 
             Assert.AreEqual("file-token", token);
@@ -78,7 +64,7 @@ public class OpenBaoVaultTokenProviderTests
     public async Task GetToken_ExpandsTildePrefix_InStateDirectory()
     {
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var relPath = Path.Combine(".test-vault-state-" + Guid.NewGuid().ToString("N"));
+        var relPath = ".test-vault-state-" + Guid.NewGuid().ToString("N");
         var fullDir = Path.Combine(home, relPath);
         Directory.CreateDirectory(fullDir);
         var stateFile = Path.Combine(fullDir, "vault-state.json");
@@ -86,14 +72,7 @@ public class OpenBaoVaultTokenProviderTests
 
         try
         {
-            var config = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string?>
-                {
-                    ["VaultInitializer:StateDirectory"] = $"~/{relPath}"
-                })
-                .Build();
-
-            var provider = new OpenBaoVaultTokenProvider(config);
+            var provider = CreateProvider(stateDirectory: $"~/{relPath}");
             var token = provider.GetToken();
 
             Assert.AreEqual("home-token", token);

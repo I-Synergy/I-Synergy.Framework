@@ -3,8 +3,8 @@ using ISynergy.Framework.MessageBus.Options.Base;
 namespace ISynergy.Framework.MessageBus.Azure.Options.Queue;
 
 /// <summary>
-/// Queue Messagebus publisher options. 
+/// Queue Messagebus publisher options for Azure Service Bus.
 /// </summary>
-public class PublisherOptions : BaseQueueOption
+internal class AzurePublisherOptions : BaseQueueOption
 {
 }
