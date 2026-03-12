@@ -147,9 +147,9 @@ msbuild I-Synergy.Framework.slnx -t:restore,build,pack -p:ContinuousIntegrationB
 ### Release Process
 
 - Triggered on merges to `main`; PRs trigger a pre-release build
-- Version follows `yyyy.1MMdd.1HHmm` format from the build number
-- Packages are signed before publishing
-- **SemVer is enforced**: breaking changes → major bump; new features → minor bump; fixes → patch bump
+- Package versions use a date-based format (`yyyy.1MMdd.1HHmm`) derived from the build number
+- This is effectively calendar versioning; do not infer Semantic Versioning compatibility guarantees from the numeric version alone
+- We still follow Semantic Versioning principles when planning and documenting changes (breaking changes vs. new features vs. fixes) in the `CHANGELOG.md`, but the NuGet `Version` field itself is date-based
 
 ### Before Submitting a PR
 
