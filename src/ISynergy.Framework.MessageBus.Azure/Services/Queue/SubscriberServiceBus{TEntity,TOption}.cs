@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ISynergy.Framework.MessageBus.Services.Queue;
+namespace ISynergy.Framework.MessageBus.Azure.Services.Queue;
 
 /// <summary>
 /// Message bus implementation on Azure Service Bus.
