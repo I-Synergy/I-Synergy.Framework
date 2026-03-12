@@ -78,7 +78,7 @@ Each library project lives at `src/ISynergy.Framework.<Area>/` and its correspon
 | Package manager | NuGet — central versioning via `Directory.Packages.props` |
 | Web framework | ASP.NET Core |
 | Data access | Entity Framework Core |
-| Unit testing | MSTest v3 |
+| Unit testing | MSTest v4 |
 | BDD testing | Reqnroll.NET (Gherkin scenarios) |
 | Observability | OpenTelemetry |
 | UI platforms | WPF, WinUI 3, MAUI, Blazor |
