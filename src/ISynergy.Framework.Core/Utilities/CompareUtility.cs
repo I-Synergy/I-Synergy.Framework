@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Utilities;
 
@@ -13,6 +14,7 @@ public static class CompareUtility
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
     /// <returns>List&lt;System.String&gt;.</returns>
+    [RequiresUnreferencedCode("CompareObject uses reflection over unknown object types.")]
     public static List<string> CompareObject(object source, object destination)
     {
         var oType = source.GetType();

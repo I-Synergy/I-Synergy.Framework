@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Events;
@@ -93,34 +92,23 @@ public class WeakEventSource<TEventArgs>
             new ConcurrentDictionary<MethodInfo, OpenEventHandler>();
 
         /// <summary>
-        /// Creates the open handler.
+        /// Creates the open handler using <c>Delegate.CreateDelegate</c> instead of
+        /// expression tree compilation. This approach is AOT-safe and does not require JIT.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>OpenEventHandler.</returns>
         private static OpenEventHandler CreateOpenHandler(MethodInfo method)
         {
-            var target = Expression.Parameter(typeof(object), "target");
-            var sender = Expression.Parameter(typeof(object), "sender");
-            var e = Expression.Parameter(typeof(TEventArgs), "e");
-
             if (method.IsStatic)
             {
-                var expr = Expression.Lambda<OpenEventHandler>(
-                    Expression.Call(
-                        method,
-                        sender, e),
-                    target, sender, e);
-                return expr.Compile();
+                // For static methods, create a closed delegate (no open-instance binding needed)
+                return (OpenEventHandler)Delegate.CreateDelegate(typeof(OpenEventHandler), method);
             }
             else
             {
-                var expr = Expression.Lambda<OpenEventHandler>(
-                    Expression.Call(
-                        Expression.Convert(target, method.DeclaringType!),
-                        method,
-                        sender, e),
-                    target, sender, e);
-                return expr.Compile();
+                // For instance methods, create an open-instance delegate by passing null as the first target.
+                // The first parameter of OpenEventHandler (object? target) will be bound at invoke time.
+                return (OpenEventHandler)Delegate.CreateDelegate(typeof(OpenEventHandler), null, method);
             }
         }
 

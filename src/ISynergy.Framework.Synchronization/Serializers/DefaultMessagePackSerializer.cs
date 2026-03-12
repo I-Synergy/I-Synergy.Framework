@@ -1,10 +1,39 @@
 using Dotmim.Sync.Serialization;
 using MessagePack;
 using MessagePack.Resolvers;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace ISynergy.Framework.Synchronization.Serializers;
 
+/// <summary>
+/// A <see cref="ISerializer"/> implementation backed by <see cref="MessagePackSerializer"/>
+/// using <see cref="ContractlessStandardResolver"/>.
+/// </summary>
+/// <remarks>
+/// <para>
+/// <strong>AOT / Trimming incompatibility:</strong> This class is fundamentally incompatible
+/// with Native AOT and linker-trimmed builds. <see cref="ContractlessStandardResolver"/> is a
+/// reflection-based MessagePack resolver that discovers all members of a serialized type at
+/// runtime — it does not require <c>[MessagePackObject]</c> attributes, which means it cannot
+/// function without the full type metadata that AOT compilation removes.
+/// </para>
+/// <para>
+/// To achieve AOT-compatible MessagePack serialization, decorate all types that cross the
+/// serialization boundary with <c>[MessagePackObject]</c> and <c>[Key(n)]</c> attributes, then
+/// replace <see cref="ContractlessStandardResolver"/> with
+/// <c>StaticCompositeResolver</c>. Note that changing the resolver alters the binary wire
+/// format, making this a breaking change for existing persisted or transmitted data.
+/// </para>
+/// <para>
+/// This class is suitable for use in non-AOT (JIT) scenarios only.
+/// </para>
+/// </remarks>
+[RequiresUnreferencedCode(
+    "DefaultMessagePackSerializer uses ContractlessStandardResolver which requires runtime reflection " +
+    "on serialized types. Use MessagePackObject-attributed types with StaticCompositeResolver for AOT compatibility.")]
+[RequiresDynamicCode(
+    "DefaultMessagePackSerializer uses ContractlessStandardResolver which generates dynamic code at runtime.")]
 public class DefaultMessagePackSerializer : ISerializer
 {
     private readonly MessagePackSerializerOptions options = MessagePackSerializerOptions.Standard.WithResolver(ContractlessStandardResolver.Instance);
