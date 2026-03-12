@@ -135,6 +135,29 @@ public class ServiceCollectionExtensionsTests
     }
 
     [TestMethod]
+    public void AddQueryDispatchTable_AfterAddCQRS_DispatchTableIsPopulated()
+    {
+        // Arrange — this validates the fix for the bug where AddCQRS registered an empty
+        // QueryDispatchTable via TryAddSingleton, which blocked AddQueryDispatchTable from
+        // registering the source-generated populated table.
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddCQRS();              // used to pre-register an empty QueryDispatchTable
+        services.AddCQRSHandlers();
+        services.AddQueryDispatchTable(); // must win over any empty table from AddCQRS
+        var provider = services.BuildServiceProvider();
+
+        // Act
+        var table = provider.GetService<ISynergy.Framework.CQRS.Dispatch.QueryDispatchTable>();
+
+        // Assert — table must be registered and contain the TestQuery dispatcher
+        Assert.IsNotNull(table, "QueryDispatchTable should be registered by AddQueryDispatchTable().");
+        Assert.IsTrue(
+            table.TryGetDispatcher(typeof(TestQuery), out _),
+            "Dispatch table must contain the TestQuery entry. If empty, AddCQRS() is blocking AddQueryDispatchTable().");
+    }
+
+    [TestMethod]
     public async Task GeneratedCqrsHandlers_QueryDispatch_DoublyGenericOverload_WorksWithoutTable()
     {
         // Arrange — doubly-generic overload is AOT-safe even without a dispatch table

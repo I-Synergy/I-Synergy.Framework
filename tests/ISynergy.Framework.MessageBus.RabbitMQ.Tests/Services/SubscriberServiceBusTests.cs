@@ -1,6 +1,6 @@
 using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
 using ISynergy.Framework.MessageBus.RabbitMQ.Tests.Fixtures;
-using ISynergy.Framework.MessageBus.Services.Queue;
+using ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 using Microsoft.Extensions.Logging.Abstractions;
 using MsOptions = Microsoft.Extensions.Options;
 
