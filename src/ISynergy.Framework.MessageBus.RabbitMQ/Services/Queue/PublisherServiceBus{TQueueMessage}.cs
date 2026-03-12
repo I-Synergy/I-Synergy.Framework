@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
-using ISynergy.Framework.MessageBus.Options.Queue;
+using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ISynergy.Framework.MessageBus.Services.Queue;
+namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 
 /// <summary>
 /// Message bus publisher implementation on RabbitMQ.
