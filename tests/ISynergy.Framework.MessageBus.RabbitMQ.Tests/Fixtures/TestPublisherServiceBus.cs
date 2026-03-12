@@ -10,10 +10,12 @@ namespace ISynergy.Framework.MessageBus.RabbitMQ.Tests.Fixtures;
 /// </summary>
 internal class TestPublisherServiceBus : PublisherServiceBus<TestMessage, PublisherOptions>
 {
+#pragma warning disable IL2026, IL3050 // Reflection-based serializer used in tests; AOT not a test concern.
     public TestPublisherServiceBus(
         IOptions<PublisherOptions> options,
         ILogger<PublisherServiceBus<TestMessage, PublisherOptions>> logger)
         : base(options, logger)
     {
     }
+#pragma warning restore IL2026, IL3050
 }

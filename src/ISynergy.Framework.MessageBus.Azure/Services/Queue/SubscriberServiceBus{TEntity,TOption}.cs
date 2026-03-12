@@ -4,8 +4,10 @@ using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 
 namespace ISynergy.Framework.MessageBus.Services.Queue;
 
@@ -25,6 +27,10 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
     /// The logger
     /// </summary>
     protected readonly ILogger _logger;
+    /// <summary>
+    /// The JSON type info used for AOT-safe deserialization.
+    /// </summary>
+    protected readonly JsonTypeInfo<TEntity>? _jsonTypeInfo;
 
     /// <summary>
     /// ServiceBus client.
@@ -37,10 +43,39 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
     private ServiceBusProcessor? _serviceBusProcessor;
 
     /// <summary>
-    /// Constructor of service bus.
+    /// Constructor of service bus. Uses AOT-safe source-generated JSON deserialization.
     /// </summary>
     /// <param name="options">The options.</param>
     /// <param name="logger">The logger.</param>
+    /// <param name="jsonTypeInfo">
+    /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TEntity"/>, obtained from a
+    /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
+    /// </param>
+    protected SubscriberServiceBus(
+        IOptions<TOption> options,
+        ILogger<SubscriberServiceBus<TEntity, TOption>> logger,
+        JsonTypeInfo<TEntity> jsonTypeInfo)
+    {
+        _option = options.Value;
+
+        Argument.IsNotNullOrEmpty(_option.ConnectionString);
+        Argument.IsNotNullOrEmpty(_option.QueueName);
+
+        _logger = logger;
+        _jsonTypeInfo = jsonTypeInfo;
+    }
+
+    /// <summary>
+    /// Constructor of service bus. Uses reflection-based JSON deserialization.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <param name="logger">The logger.</param>
+    /// <remarks>
+    /// This overload uses the reflection-based <see cref="JsonSerializer"/> path and is not compatible with
+    /// Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/> for AOT scenarios.
+    /// </remarks>
+    [RequiresUnreferencedCode("Deserialization uses reflection. Pass a JsonTypeInfo<TEntity> for AOT compatibility.")]
+    [RequiresDynamicCode("Deserialization uses dynamic code generation. Pass a JsonTypeInfo<TEntity> for AOT compatibility.")]
     protected SubscriberServiceBus(
         IOptions<TOption> options,
         ILogger<SubscriberServiceBus<TEntity, TOption>> logger)
@@ -129,17 +164,20 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
     {
         var message = arg.Message;
         var body = Encoding.UTF8.GetString(message.Body.ToArray());
-        var data = JsonSerializer.Deserialize<TEntity>(body, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+
+        var data = _jsonTypeInfo is not null
+            ? JsonSerializer.Deserialize(body, _jsonTypeInfo)
+            : JsonSerializer.Deserialize<TEntity>(body, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
         if (data is not null && ValidateMessage(data))
         {
             if (await ProcessDataAsync(data).ConfigureAwait(false))
             {
                 // Now that we're done with "processing" the message, we tell the broker about that being the
-                // case. The MessageReceiver.CompleteAsync operation will settle the message transfer with 
+                // case. The MessageReceiver.CompleteAsync operation will settle the message transfer with
                 // the broker and remove it from the broker.
                 await arg.CompleteMessageAsync(message)
                     .ConfigureAwait(false);
@@ -148,7 +186,7 @@ public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServic
             {
                 // If the message does not meet our processing criteria, we will dead letter it, meaning
                 // it is put into a special queue for handling defective messages. The broker will automatically
-                // dead letter the message, if delivery has been attempted too many times. 
+                // dead letter the message, if delivery has been attempted too many times.
                 await arg.DeadLetterMessageAsync(message)
                     .ConfigureAwait(false);
             }
