@@ -4,7 +4,6 @@
 		<PackageId>I-Synergy.Framework.OpenTelemetry.Sentry</PackageId>
 		<Description>I-Synergy Framework OpenTelemetry for Sentry</Description>
 		<PackageTags>I-Synergy, Framework, OpenTelemetry, Sentry.io, Windows, Uno</PackageTags>
-		<RootNamespace>ISynergy.Framework.OpenTelemetry</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnableMsixTooling>true</EnableMsixTooling>
 	</PropertyGroup>

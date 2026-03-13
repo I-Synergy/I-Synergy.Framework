@@ -3,7 +3,6 @@ using ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 using ISynergy.Framework.MessageBus.RabbitMQ.Tests.Fixtures;
 using Microsoft.Extensions.Logging.Abstractions;
 using MsOptions = Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.MessageBus.RabbitMQ.Tests.Services;
 
@@ -18,12 +17,12 @@ public class SubscriberServiceBusTests
         string connectionString = "amqp://localhost",
         string queueName = "test-queue")
     {
-        var options = MsOptions.Options.Create(new SubscriberOptions
+        var options = MsOptions.Options.Create(new RabbitMQSubscriberOptions
         {
             ConnectionString = connectionString,
             QueueName = queueName
         });
-        var logger = NullLogger<SubscriberServiceBus<TestMessage, SubscriberOptions>>.Instance;
+        var logger = NullLogger<SubscriberServiceBus<TestMessage, RabbitMQSubscriberOptions>>.Instance;
         return new TestSubscriberServiceBus(options, logger);
     }
 
@@ -34,12 +33,12 @@ public class SubscriberServiceBusTests
     [TestMethod]
     public void Constructor_EmptyConnectionString_ThrowsArgumentNullException()
     {
-        var options = MsOptions.Options.Create(new SubscriberOptions
+        var options = MsOptions.Options.Create(new RabbitMQSubscriberOptions
         {
             ConnectionString = "",
             QueueName = "test-queue"
         });
-        var logger = NullLogger<SubscriberServiceBus<TestMessage, SubscriberOptions>>.Instance;
+        var logger = NullLogger<SubscriberServiceBus<TestMessage, RabbitMQSubscriberOptions>>.Instance;
 
         Assert.Throws<ArgumentNullException>(() =>
             new TestSubscriberServiceBus(options, logger));
@@ -48,12 +47,12 @@ public class SubscriberServiceBusTests
     [TestMethod]
     public void Constructor_EmptyQueueName_ThrowsArgumentNullException()
     {
-        var options = MsOptions.Options.Create(new SubscriberOptions
+        var options = MsOptions.Options.Create(new RabbitMQSubscriberOptions
         {
             ConnectionString = "amqp://localhost",
             QueueName = ""
         });
-        var logger = NullLogger<SubscriberServiceBus<TestMessage, SubscriberOptions>>.Instance;
+        var logger = NullLogger<SubscriberServiceBus<TestMessage, RabbitMQSubscriberOptions>>.Instance;
 
         Assert.Throws<ArgumentNullException>(() =>
             new TestSubscriberServiceBus(options, logger));

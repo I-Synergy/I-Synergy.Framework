@@ -73,6 +73,10 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 | Enum naming | Plural names (`PaymentProviders`, not `PaymentProvider`) | Singular names for non-`*Status` enums |
 | Backwards compat | Mark old APIs `[Obsolete]` before removal | Silent breaking changes |
 | All public APIs | XML documentation required | Undocumented public members |
+| Configuration access | `IOptions<T>` injected via DI | `configuration["Key"]` or `GetValue<T>("Key")` |
+| Config section name | `nameof(TOptions)` in `GetSection()` | Magic strings like `"KeyVault"` |
+| Extension method naming | `Add{Provider}{Service}Integration` | Generic names like `AddKeyVaultIntegration` |
+| Options class naming | `{Provider}{Service}Options` | Generic names like `PublisherOptions`, `MailOptions` |
 
 ## Session & Task Protocol
 

@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Attributes;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Extensions;
@@ -15,7 +16,7 @@ public static class EnumExtensions
     /// <param name="enumerationValue">The enumeration value.</param>
     /// <returns>System.String.</returns>
     /// <exception cref="ArgumentException">EnumerationValue must be of Enum type - enumerationValue</exception>
-    public static string GetDescription<T>(this T enumerationValue)
+    public static string GetDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this T enumerationValue)
         where T : Enum
     {
         Type type = enumerationValue.GetType();
@@ -45,7 +46,7 @@ public static class EnumExtensions
     /// <param name="enumerationValue">The enumeration value.</param>
     /// <returns>System.String.</returns>
     /// <exception cref="ArgumentException">EnumerationValue must be of Enum type - enumerationValue</exception>
-    public static string GetLocalizedDescription<T>(this T enumerationValue)
+    public static string GetLocalizedDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this T enumerationValue)
         where T : Enum
     {
         Type type = enumerationValue.GetType();
@@ -72,7 +73,7 @@ public static class EnumExtensions
     /// </summary>
     /// <param name="enumeration"></param>
     /// <returns></returns>
-    public static List<Enum> ToList(this Type enumeration)
+    public static List<Enum> ToList([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] this Type enumeration)
     {
         var list = new List<Enum>();
 

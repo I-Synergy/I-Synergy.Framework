@@ -9,14 +9,16 @@ namespace ISynergy.Framework.MessageBus.RabbitMQ.Tests.Fixtures;
 /// Concrete subscriber that implements the abstract members for testing.
 /// ProcessDataAsync returns true; ValidateMessage accepts any non-null message.
 /// </summary>
-internal class TestSubscriberServiceBus : SubscriberServiceBus<TestMessage, SubscriberOptions>
+internal class TestSubscriberServiceBus : SubscriberServiceBus<TestMessage, RabbitMQSubscriberOptions>
 {
+#pragma warning disable IL2026, IL3050 // Reflection-based deserializer used in tests; AOT not a test concern.
     public TestSubscriberServiceBus(
-        IOptions<SubscriberOptions> options,
-        ILogger<SubscriberServiceBus<TestMessage, SubscriberOptions>> logger)
+        IOptions<RabbitMQSubscriberOptions> options,
+        ILogger<SubscriberServiceBus<TestMessage, RabbitMQSubscriberOptions>> logger)
         : base(options, logger)
     {
     }
+#pragma warning restore IL2026, IL3050
 
     public override Task<bool> ProcessDataAsync(TestMessage queueMessage) =>
         Task.FromResult(true);

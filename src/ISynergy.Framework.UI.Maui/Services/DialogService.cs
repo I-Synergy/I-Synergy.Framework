@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -586,6 +587,13 @@ public class DialogService : IDialogService
         }
     }
 
+    /// <remarks>
+    /// This overload resolves the dialog window using <c>window.GetType()</c> which is not AOT-safe.
+    /// Prefer the strongly-typed overload <c>ShowDialogAsync&lt;TWindow, TViewModel, TEntity&gt;()</c>
+    /// when the concrete window type is known at compile time.
+    /// </remarks>
+    [RequiresUnreferencedCode(
+        "GetType() on the window instance is not trim-safe. Use ShowDialogAsync<TWindow,TViewModel,TEntity>() for AOT-safe dialog display.")]
     private async Task ShowDialogAsyncInternal<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
         try

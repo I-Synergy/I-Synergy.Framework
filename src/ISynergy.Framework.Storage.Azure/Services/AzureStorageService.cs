@@ -3,8 +3,9 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Storage.Abstractions.Services;
-using Microsoft.Extensions.Configuration;
+using ISynergy.Framework.Storage.Azure.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ISynergy.Framework.Storage.Azure.Services;
 
@@ -15,19 +16,22 @@ namespace ISynergy.Framework.Storage.Azure.Services;
 /// <seealso cref="IStorageService" />
 internal class AzureStorageService : IStorageService
 {
-    private readonly IConfiguration _configuration;
+    private readonly AzureStorageOptions _options;
     private readonly ILogger<AzureStorageService> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AzureStorageService"/> class.
     /// </summary>
-    /// <param name="configuration"></param>
-    /// <param name="logger"></param>
+    /// <param name="options">The Azure storage options.</param>
+    /// <param name="logger">The logger.</param>
     public AzureStorageService(
-        IConfiguration configuration,
+        IOptions<AzureStorageOptions> options,
         ILogger<AzureStorageService> logger)
     {
-        _configuration = configuration;
+        Argument.IsNotNull(options);
+        Argument.IsNotNull(logger);
+
+        _options = options.Value;
         _logger = logger;
     }
 
@@ -50,7 +54,7 @@ internal class AzureStorageService : IStorageService
         Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var connectionString = _configuration.GetConnectionString(connectionStringName);
+        var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
@@ -87,7 +91,7 @@ internal class AzureStorageService : IStorageService
         Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var connectionString = _configuration.GetConnectionString(connectionStringName);
+        var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
@@ -123,7 +127,7 @@ internal class AzureStorageService : IStorageService
         Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var connectionString = _configuration.GetConnectionString(connectionStringName);
+        var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);
@@ -163,7 +167,7 @@ internal class AzureStorageService : IStorageService
         Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var connectionString = _configuration.GetConnectionString(connectionStringName);
+        var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
         blobContainer.CreateIfNotExists(PublicAccessType.Blob);

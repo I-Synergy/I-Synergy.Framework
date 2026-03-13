@@ -27,7 +27,20 @@
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.UI.SourceGenerator\ISynergy.Framework.UI.SourceGenerator.csproj"
+		                  OutputItemType="Analyzer"
+		                  ReferenceOutputAssembly="false" />
 	</ItemGroup>
+
+	<!-- Ensure the generator DLL lands in the correct NuGet folder -->
+	<Target Name="CopyGeneratorToAnalyzers" BeforeTargets="_GetPackageFiles">
+	  <ItemGroup>
+	    <None Include="$(MSBuildProjectDirectory)\..\ISynergy.Framework.UI.SourceGenerator\bin\$(Configuration)\netstandard2.0\ISynergy.Framework.UI.SourceGenerator.dll"
+	          Pack="true"
+	          PackagePath="analyzers/dotnet/cs/"
+	          Visible="false" />
+	  </ItemGroup>
+	</Target>
 	<ItemGroup>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>

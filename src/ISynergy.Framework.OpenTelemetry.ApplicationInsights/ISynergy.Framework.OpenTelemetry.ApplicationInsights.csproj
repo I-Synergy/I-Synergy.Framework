@@ -4,7 +4,6 @@
 		<PackageId>I-Synergy.Framework.OpenTelemetry.ApplicationInsights</PackageId>
 		<Description>I-Synergy Framework OpenTelemetry library for ApplicationInsights</Description>
 		<PackageTags>I-Synergy, Framework, OpenTelemetry, Application Insights</PackageTags>
-		<RootNamespace>ISynergy.Framework.OpenTelemetry</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnableMsixTooling>true</EnableMsixTooling>
 	</PropertyGroup>

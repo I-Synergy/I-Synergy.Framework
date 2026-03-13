@@ -4,17 +4,23 @@ using Microsoft.Extensions.Logging;
 namespace ISynergy.Framework.UI.Extensions;
 
 /// <summary>
-/// Extension methods for MAUI Application to manage dynamic theme switching
+/// Extension methods for MAUI Application to manage dynamic theme switching.
 /// </summary>
 public static class ApplicationExtensions
 {
     /// <summary>
-    /// Sets the application color theme dynamically
+    /// Sets the application color theme dynamically.
     /// </summary>
-    /// <param name="application">The MAUI application instance</param>
-    /// <param name="color">The hex color string (e.g., "#FFB900")</param>
-    /// <param name="logger">Optional logger for diagnostics</param>
-    /// <returns>The application instance for method chaining</returns>
+    /// <param name="application">The MAUI application instance.</param>
+    /// <param name="color">The hex color string (e.g., "#FFB900").</param>
+    /// <param name="logger">Optional logger for diagnostics.</param>
+    /// <returns>The application instance for method chaining.</returns>
+    /// <remarks>
+    /// Theme detection uses the <see cref="ISynergy.Framework.UI.Resources.Styles.Themes.IThemeResourceDictionary"/>
+    /// marker interface to identify existing theme resource dictionaries. This is AOT-safe and robust
+    /// under IL trimming because the interface check relies on a static type test rather than a
+    /// fragile <c>GetType().Namespace</c> string comparison.
+    /// </remarks>
     public static Microsoft.Maui.Controls.Application SetApplicationColor(
         this Microsoft.Maui.Controls.Application application,
         string color,
@@ -25,9 +31,11 @@ public static class ApplicationExtensions
 
         logger?.LogInformation("Setting application color to {Color}", color);
 
-        // Remove existing theme dictionaries, but preserve other resource dictionaries
+        // Remove existing theme dictionaries using the IThemeResourceDictionary marker interface.
+        // This is AOT-safe: an interface check on an allocated object is always preserved by the
+        // linker, unlike a fragile GetType().Namespace string comparison.
         var themesToRemove = application.Resources.MergedDictionaries
-            .Where(dict => dict.GetType().Namespace == "ISynergy.Framework.UI.Resources.Styles.Themes")
+            .Where(dict => dict is ISynergy.Framework.UI.Resources.Styles.Themes.IThemeResourceDictionary)
             .ToList();
 
         foreach (var theme in themesToRemove)

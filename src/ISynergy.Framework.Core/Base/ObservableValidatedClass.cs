@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
@@ -59,6 +60,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+    [RequiresUnreferencedCode("Equality comparison uses GetType().GetProperties() on runtime types, which is not AOT-safe.")]
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

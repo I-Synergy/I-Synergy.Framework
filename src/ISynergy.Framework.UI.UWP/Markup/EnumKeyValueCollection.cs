@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
+using System.Diagnostics.CodeAnalysis;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 
@@ -24,7 +25,15 @@ public class EnumKeyValueCollection : MarkupExtension
     /// <summary>
     /// Provides the value.
     /// </summary>
-    /// <returns>System.Object.</returns>
+    /// <returns>A list of <see cref="KeyValuePair{TKey,TValue}"/> with enum integer values and their localized descriptions.</returns>
+    /// <remarks>
+    /// Uses <see cref="Enum.GetValues(Type)"/> with a runtime <see cref="Type"/> argument.
+    /// Under UWP .NET Native, the enum type must be declared in <c>Default.rd.xml</c> with
+    /// <c>Browse="Required All"</c>. For AOT-safe scenarios, compute enum key-value pairs using
+    /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code and bind to the resulting collection.
+    /// </remarks>
+    [RequiresUnreferencedCode("Enum.GetValues(Type) requires enum type members to be preserved. Declare the enum type in Default.rd.xml for UWP .NET Native.")]
+    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for runtime type resolution.")]
     protected override object ProvideValue()
     {
         Argument.IsNotNull(EnumType);

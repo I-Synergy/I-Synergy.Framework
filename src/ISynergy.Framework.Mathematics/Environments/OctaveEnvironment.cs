@@ -1,6 +1,7 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.Mathematics.Environments;
@@ -15,11 +16,19 @@ namespace ISynergy.Framework.Mathematics.Environments;
 ///   C# which is remarkably similar to Octave. Please take a loook
 ///   on what is possible to do using this class in the examples
 ///   section.</para>
-///   
+///
 /// <para>
 ///   To use this class, inherit from <see cref="OctaveEnvironment"/>.
 ///   After this step, all code written inside your child class will
 ///   be able to use the syntax below:</para>
+///
+/// <para>
+///   <strong>AOT Limitation:</strong> The base constructor uses reflection to auto-initialise
+///   <c>mat</c>-typed fields on derived classes. This makes <see cref="OctaveEnvironment"/>
+///   subclasses incompatible with Native AOT and aggressive trimming. To use this class in an
+///   AOT-published application, initialise all <c>mat</c> fields explicitly in the field
+///   declaration rather than relying on the automatic initialisation in the base constructor.
+/// </para>
 /// </remarks>
 /// 
 /// <example>
@@ -540,7 +549,22 @@ public abstract class OctaveEnvironment
     /// <summary>
     ///   Initializes a new instance of the <see cref="OctaveEnvironment"/> class.
     /// </summary>
-    /// 
+    /// <remarks>
+    /// <para>
+    ///   This constructor uses reflection (<c>Type.GetFields</c> and
+    ///   <c>FieldInfo.SetValue</c>) to automatically initialise all
+    ///   <c>mat</c>-typed fields declared in derived classes. This pattern is not compatible with
+    ///   Native AOT or aggressive trimming because the trimmer cannot statically determine which
+    ///   fields will exist on unknown subclass types at compile time.
+    /// </para>
+    /// <para>
+    ///   AOT-published applications that subclass <see cref="OctaveEnvironment"/> should initialise
+    ///   their <c>mat</c> fields explicitly (e.g., <c>mat x = new mat(null);</c>) rather than
+    ///   relying on this automatic initialisation.
+    /// </para>
+    /// </remarks>
+    [RequiresUnreferencedCode("OctaveEnvironment uses reflection to initialise mat fields on derived types. Subclasses may not be AOT-compatible. Initialise mat fields explicitly for AOT-safe scenarios.")]
+    [RequiresDynamicCode("OctaveEnvironment uses reflection to set field values at runtime. This is not compatible with Native AOT.")]
     protected OctaveEnvironment()
     {
         var type = this.GetType();

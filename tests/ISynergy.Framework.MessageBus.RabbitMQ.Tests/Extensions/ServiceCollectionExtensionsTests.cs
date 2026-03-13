@@ -3,7 +3,6 @@ using ISynergy.Framework.MessageBus.RabbitMQ.Extensions;
 using ISynergy.Framework.MessageBus.RabbitMQ.Tests.Fixtures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.MessageBus.RabbitMQ.Tests.Extensions;
 
@@ -18,8 +17,8 @@ public class ServiceCollectionExtensionsTests
         new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["PublisherOptions:ConnectionString"] = "amqp://localhost",
-                ["PublisherOptions:QueueName"] = "test-queue"
+                ["RabbitMQPublisherOptions:ConnectionString"] = "amqp://localhost",
+                ["RabbitMQPublisherOptions:QueueName"] = "test-queue"
             })
             .Build();
 
@@ -27,8 +26,8 @@ public class ServiceCollectionExtensionsTests
         new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["SubscriberOptions:ConnectionString"] = "amqp://localhost",
-                ["SubscriberOptions:QueueName"] = "test-queue"
+                ["RabbitMQSubscriberOptions:ConnectionString"] = "amqp://localhost",
+                ["RabbitMQSubscriberOptions:QueueName"] = "test-queue"
             })
             .Build();
 
@@ -37,10 +36,11 @@ public class ServiceCollectionExtensionsTests
     // ------------------------------------------------------------------ //
 
     [TestMethod]
+#pragma warning disable IL2026, IL3050 // Reflection-based overload used in tests; AOT not a test concern.
     public void AddMessageBusRabbitMQPublishIntegration_ReturnsSameServiceCollection()
     {
         var services = new ServiceCollection();
-        var result = services.AddMessageBusRabbitMQPublishIntegration<TestMessage>(CreatePublisherConfig());
+        var result = services.AddRabbitMQMessageBusPublishIntegration<TestMessage>(CreatePublisherConfig());
 
         Assert.AreSame(services, result);
     }
@@ -49,7 +49,7 @@ public class ServiceCollectionExtensionsTests
     public void AddMessageBusRabbitMQPublishIntegration_RegistersIPublisherServiceBus()
     {
         var services = new ServiceCollection();
-        services.AddMessageBusRabbitMQPublishIntegration<TestMessage>(CreatePublisherConfig());
+        services.AddRabbitMQMessageBusPublishIntegration<TestMessage>(CreatePublisherConfig());
 
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IPublisherServiceBus<TestMessage>));
 
@@ -60,7 +60,7 @@ public class ServiceCollectionExtensionsTests
     public void AddMessageBusRabbitMQPublishIntegration_RegistersAsSingleton()
     {
         var services = new ServiceCollection();
-        services.AddMessageBusRabbitMQPublishIntegration<TestMessage>(CreatePublisherConfig());
+        services.AddRabbitMQMessageBusPublishIntegration<TestMessage>(CreatePublisherConfig());
 
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IPublisherServiceBus<TestMessage>));
 
@@ -72,24 +72,26 @@ public class ServiceCollectionExtensionsTests
     public void AddMessageBusRabbitMQPublishIntegration_CalledTwice_DoesNotDuplicate()
     {
         var services = new ServiceCollection();
-        services.AddMessageBusRabbitMQPublishIntegration<TestMessage>(CreatePublisherConfig());
-        services.AddMessageBusRabbitMQPublishIntegration<TestMessage>(CreatePublisherConfig());
+        services.AddRabbitMQMessageBusPublishIntegration<TestMessage>(CreatePublisherConfig());
+        services.AddRabbitMQMessageBusPublishIntegration<TestMessage>(CreatePublisherConfig());
 
         var count = services.Count(d => d.ServiceType == typeof(IPublisherServiceBus<TestMessage>));
 
         // TryAddSingleton: only one registration survives.
         Assert.AreEqual(1, count);
     }
+#pragma warning restore IL2026, IL3050
 
     // ------------------------------------------------------------------ //
     // AddMessageBusRabbitMQSubscribeIntegration
     // ------------------------------------------------------------------ //
 
     [TestMethod]
+#pragma warning disable IL2026, IL3050 // Reflection-based overload used in tests; AOT not a test concern.
     public void AddMessageBusRabbitMQSubscribeIntegration_ReturnsSameServiceCollection()
     {
         var services = new ServiceCollection();
-        var result = services.AddMessageBusRabbitMQSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
+        var result = services.AddRabbitMQMessageBusSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
 
         Assert.AreSame(services, result);
     }
@@ -98,7 +100,7 @@ public class ServiceCollectionExtensionsTests
     public void AddMessageBusRabbitMQSubscribeIntegration_RegistersISubscriberServiceBus()
     {
         var services = new ServiceCollection();
-        services.AddMessageBusRabbitMQSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
+        services.AddRabbitMQMessageBusSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
 
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(ISubscriberServiceBus<TestMessage>));
 
@@ -109,7 +111,7 @@ public class ServiceCollectionExtensionsTests
     public void AddMessageBusRabbitMQSubscribeIntegration_RegistersAsSingleton()
     {
         var services = new ServiceCollection();
-        services.AddMessageBusRabbitMQSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
+        services.AddRabbitMQMessageBusSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
 
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(ISubscriberServiceBus<TestMessage>));
 
@@ -121,11 +123,12 @@ public class ServiceCollectionExtensionsTests
     public void AddMessageBusRabbitMQSubscribeIntegration_CalledTwice_DoesNotDuplicate()
     {
         var services = new ServiceCollection();
-        services.AddMessageBusRabbitMQSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
-        services.AddMessageBusRabbitMQSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
+        services.AddRabbitMQMessageBusSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
+        services.AddRabbitMQMessageBusSubscribeIntegration<TestMessage>(CreateSubscriberConfig());
 
         var count = services.Count(d => d.ServiceType == typeof(ISubscriberServiceBus<TestMessage>));
 
         Assert.AreEqual(1, count);
     }
+#pragma warning restore IL2026, IL3050
 }

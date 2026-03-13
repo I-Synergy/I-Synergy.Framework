@@ -81,6 +81,8 @@ public sealed class ScopedContextService : IScopedContextService
     /// </summary>
     /// <param name="serviceType">Type of the service.</param>
     /// <returns>System.Object.</returns>
+    [RequiresUnreferencedCode("Non-generic service resolution by runtime Type is not AOT-safe. Use GetService<TService>() instead.")]
+    [RequiresDynamicCode("Non-generic service resolution by runtime Type requires dynamic code. Use GetService<TService>() instead.")]
     public object GetService(Type serviceType)
     {
         if (_disposed)
@@ -101,6 +103,8 @@ public sealed class ScopedContextService : IScopedContextService
     /// </summary>
     /// <param name="serviceType">Type of the service.</param>
     /// <returns>System.Object.</returns>
+    [RequiresUnreferencedCode("Non-generic service resolution by runtime Type is not AOT-safe. Use GetRequiredService<TService>() instead.")]
+    [RequiresDynamicCode("Non-generic service resolution by runtime Type requires dynamic code. Use GetRequiredService<TService>() instead.")]
     public object GetRequiredService([NotNull] Type serviceType)
     {
         if (_disposed)
