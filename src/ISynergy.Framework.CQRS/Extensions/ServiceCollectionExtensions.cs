@@ -6,6 +6,7 @@ using ISynergy.Framework.CQRS.Dispatchers;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.CQRS.Extensions;
@@ -32,6 +33,7 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection</param>
     /// <param name="assemblies">Assemblies to scan</param>
     /// <returns>Service collection for chaining</returns>
+    [RequiresUnreferencedCode("Assembly scanning for CQRS handlers uses reflection and is not AOT-compatible. Use the source-generated AddCQRSHandlers() extension method instead.")]
     public static IServiceCollection AddHandlers(this IServiceCollection services, params Assembly[] assemblies)
     {
         RegisterCommandHandlers(services, assemblies);

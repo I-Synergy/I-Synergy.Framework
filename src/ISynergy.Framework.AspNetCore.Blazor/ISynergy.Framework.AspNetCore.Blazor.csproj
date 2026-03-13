@@ -14,7 +14,20 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
 	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore.Blazor.SourceGenerator\ISynergy.Framework.AspNetCore.Blazor.SourceGenerator.csproj"
+	                    OutputItemType="Analyzer"
+	                    ReferenceOutputAssembly="false" />
 	</ItemGroup>
+
+	<!-- Ensure the generator DLL lands in the correct NuGet folder -->
+	<Target Name="CopyGeneratorToAnalyzers" BeforeTargets="_GetPackageFiles">
+	  <ItemGroup>
+	    <None Include="$(MSBuildProjectDirectory)\..\ISynergy.Framework.AspNetCore.Blazor.SourceGenerator\bin\$(Configuration)\netstandard2.0\ISynergy.Framework.AspNetCore.Blazor.SourceGenerator.dll"
+	          Pack="true"
+	          PackagePath="analyzers/dotnet/cs/"
+	          Visible="false" />
+	  </ItemGroup>
+	</Target>
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>

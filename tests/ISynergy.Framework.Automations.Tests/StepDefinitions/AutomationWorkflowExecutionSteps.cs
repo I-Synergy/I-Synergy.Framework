@@ -56,6 +56,16 @@ public class AutomationWorkflowExecutionSteps
         services.AddScoped<IActionExecutor<CommandAction>, CommandActionExecutor>();
         services.AddScoped<IActionExecutor<AutomationAction>, AutomationActionExecutor>();
 
+        // Register the AOT-safe executor registry
+        services.AddSingleton(sp =>
+        {
+            var registry = new ActionExecutorRegistry();
+            registry.Register<DelayAction>(sp => sp.GetRequiredService<IActionExecutor<DelayAction>>());
+            registry.Register<CommandAction>(sp => sp.GetRequiredService<IActionExecutor<CommandAction>>());
+            registry.Register<AutomationAction>(sp => sp.GetRequiredService<IActionExecutor<AutomationAction>>());
+            return registry;
+        });
+
         services.AddScoped<IActionExecutorFactory, ActionExecutorFactory>();
 
         // Register operator strategies by concrete type

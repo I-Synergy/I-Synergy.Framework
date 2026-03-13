@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ISynergy.Framework.Core.Helpers;
 
 /// <summary>
@@ -11,6 +13,7 @@ internal static class DesignerLibrary
     /// <value>The detected designer library.</value>
     internal static DesignerPlatformLibrary DetectedDesignerLibrary
     {
+        [RequiresUnreferencedCode("Platform detection uses Type.GetType with assembly-qualified names.")]
         get
         {
             if (_detectedDesignerPlatformLibrary is null)
@@ -25,6 +28,7 @@ internal static class DesignerLibrary
     /// Gets the current platform.
     /// </summary>
     /// <returns>DesignerPlatformLibrary.</returns>
+    [RequiresUnreferencedCode("Platform detection uses Type.GetType with assembly-qualified names.")]
     private static DesignerPlatformLibrary GetCurrentPlatform()
     {
         // We check Silverlight first because when in the VS designer, the .NET libraries will resolve

@@ -1,3 +1,4 @@
+using ISynergy.Framework.CQRS.Dispatch;
 using ISynergy.Framework.CQRS.Queries;
 using ISynergy.Framework.CQRS.TestImplementations;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +52,7 @@ public class QueryDispatcherTests
         var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
 
         // Act & Assert
-        await Assert.ThrowsAsync<NullReferenceException>(async () =>
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await dispatcher.DispatchAsync<string>((IQuery<string>?)null!));
     }
 
@@ -106,5 +107,43 @@ public class QueryDispatcherTests
         // Act & Assert
         await Assert.ThrowsAsync<OperationCanceledException>(async () =>
             await dispatcher.DispatchAsync<string>(query, cts.Token));
+    }
+
+    [TestMethod]
+    public async Task QueryDispatcher_DoublyGenericOverload_ReturnsExpectedResult()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddScoped<IQueryHandler<TestQuery, string>>(_ => new TestQueryHandler());
+        var provider = services.BuildServiceProvider();
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
+        var query = new TestQuery { Parameter = "Generic Test" };
+
+        // Act
+        var result = await dispatcher.DispatchAsync<TestQuery, string>(query);
+
+        // Assert
+        Assert.AreEqual("Query Result: Generic Test", result);
+    }
+
+    [TestMethod]
+    public async Task QueryDispatcher_WithDispatchTable_UsesTablePath()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddScoped<IQueryHandler<TestQuery, string>>(_ => new TestQueryHandler());
+        var provider = services.BuildServiceProvider();
+
+        var table = new QueryDispatchTable();
+        table.Register<TestQuery, string>();
+
+        var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>(), table);
+        var query = new TestQuery { Parameter = "Table Path" };
+
+        // Act
+        var result = await dispatcher.DispatchAsync<string>(query);
+
+        // Assert
+        Assert.AreEqual("Query Result: Table Path", result);
     }
 }

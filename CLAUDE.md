@@ -1788,3 +1788,9 @@ dotnet pack
 - **Propose alternatives**: Offer multiple solutions with trade-offs
 - **Highlight risks**: Point out potential issues or breaking changes
 - **Request review**: For significant changes, suggest human review
+
+
+## Process Management
+- Always run `dotnet build-server shutdown` after completing a build/test session
+- Never use `dotnet run` for long-running services; use Aspire AppHost only
+- After finishing work on a project, kill lingering processes

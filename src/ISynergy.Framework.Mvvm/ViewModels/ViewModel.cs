@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Extensions;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -151,6 +152,12 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>System.String.</returns>
+    /// <remarks>
+    /// This method uses runtime reflection to read <see cref="DisplayAttribute"/> from enum fields.
+    /// It is not AOT-compatible. In AOT-published applications, suppress IL2026 with a justified pragma
+    /// or use a static lookup dictionary for enum descriptions.
+    /// </remarks>
+    [RequiresUnreferencedCode("Enum field custom attribute lookup uses runtime reflection.")]
     public string GetEnumDescription(Enum value)
     {
         Argument.IsNotNull(value);
@@ -269,21 +276,25 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
     /// Called when navigating away from this ViewModel.
     /// Cancel any running commands if needed.
     /// </summary>
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     public virtual void OnNavigatedFrom() => CancelRunningCommands();
 
     /// <summary>
     /// Called when navigating to this ViewModel.
     /// Reset command states.
     /// </summary>
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     public virtual void OnNavigatedTo() => ResetCommandStates();
 
     /// <summary>
     /// Cancels all running commands in this ViewModel.
     /// </summary>
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     protected virtual void CancelRunningCommands() => this.CancelAllCommands();
 
     /// <summary>
     /// Resets the state of commands when returning to this ViewModel.
     /// </summary>
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     protected virtual void ResetCommandStates() => this.ResetAllCommandStates();
 }

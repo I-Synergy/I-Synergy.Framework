@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Input;
 
@@ -59,6 +60,14 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// <summary>
     /// Automatically subscribes to CanExecuteChanged events for all ICommand properties in the ViewModel.
     /// </summary>
+    /// <remarks>
+    /// This method uses runtime reflection to enumerate all public instance properties of the ViewModel
+    /// to discover <see cref="ICommand"/> properties. It is not AOT-compatible.
+    /// For NativeAOT scenarios, implement explicit command subscription or introduce an
+    /// <c>ICommandProvider</c> interface on ViewModels that exposes their commands directly.
+    /// </remarks>
+    [RequiresUnreferencedCode("Reflects over ViewModel properties to discover ICommand instances. Not AOT-compatible.")]
+    [RequiresDynamicCode("Reflects over ViewModel properties to discover ICommand instances. Not AOT-compatible.")]
     private void SubscribeToViewModelCommands()
     {
         if (ViewModel is null)

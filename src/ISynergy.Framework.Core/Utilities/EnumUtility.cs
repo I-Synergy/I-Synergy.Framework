@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Exceptions;
 using ISynergy.Framework.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -30,7 +31,7 @@ public static class EnumUtility
     /// <param name="str">The string.</param>
     /// <param name="result">The result.</param>
     /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-    public static bool TryToEnum<T>(string str, out T result)
+    public static bool TryToEnum<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string str, out T result)
         where T : struct
     {
         var enumType = typeof(T);
@@ -55,6 +56,7 @@ public static class EnumUtility
     /// </summary>
     /// <param name="flags">The flags.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
+    [RequiresUnreferencedCode("Enum.GetValues on a runtime-typed enum is not AOT-safe.")]
     public static IEnumerable<Enum> GetUniqueFlags(this Enum flags)
     {
         ulong flag = 1;

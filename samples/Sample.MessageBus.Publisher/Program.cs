@@ -28,7 +28,7 @@ internal class Program
             IServiceCollection services = new ServiceCollection()
                 .AddLogging()
                 .AddOptions()
-                .AddMessageBusAzurePublishIntegration<TestDataModel>(config);
+                .AddAzureMessageBusPublishIntegration<TestDataModel>(config);
 
             services.TryAddSingleton<ApplicationAzure>();
 

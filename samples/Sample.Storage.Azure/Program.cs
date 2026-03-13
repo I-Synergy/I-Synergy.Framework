@@ -26,7 +26,7 @@ internal class Program
                 .AddLogging()
                 .AddOptions();
 
-            services.AddAzureStorageIntegration();
+            services.AddAzureStorageIntegration(config);
             services.TryAddScoped<Startup>();
 
             var serviceProvider = services.BuildServiceProvider();

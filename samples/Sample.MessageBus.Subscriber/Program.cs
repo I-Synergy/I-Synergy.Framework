@@ -29,7 +29,7 @@ internal class Program
                 .AddLogging()
                 .AddOptions();
 
-            services.AddMessageBusAzureSubscribeIntegration<TestDataModel>(config);
+            services.AddAzureMessageBusSubscribeIntegration<TestDataModel>(config);
             services.TryAddScoped<Startup>();
 
             var serviceProvider = services.BuildServiceProvider();

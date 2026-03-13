@@ -13,27 +13,37 @@ using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Extensions;
 
+/// <summary>
+/// Extension methods for <see cref="IServiceCollection"/> for Blazor application setup.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Returns an instance of the <see cref="IServiceCollection"/> and configures all windowsAppBuilder.
     /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TCommonServices"></typeparam>
-    /// <typeparam name="TExceptionHandlerService"></typeparam>
-    /// <typeparam name="TSettingsService"></typeparam>
-    /// <typeparam name="TResource"></typeparam>
-    /// <param name="services"></param>
-    /// <param name="configuration"></param>
-    /// <param name="infoService"></param>
-    /// <param name="action"></param>
-    /// <param name="assembly"></param>
-    /// <param name="assemblyFilter"></param>
-    /// <returns></returns>
+    /// <typeparam name="TContext">The context type.</typeparam>
+    /// <typeparam name="TCommonServices">The common services type.</typeparam>
+    /// <typeparam name="TExceptionHandlerService">The exception handler service type.</typeparam>
+    /// <typeparam name="TSettingsService">The settings service type.</typeparam>
+    /// <typeparam name="TResource">The resource type for localization.</typeparam>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The application configuration.</param>
+    /// <param name="infoService">The info service instance.</param>
+    /// <param name="action">An optional action to further configure services.</param>
+    /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
+    /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
+    /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
+    /// <remarks>
+    /// This overload calls the reflection-based <c>RegisterAssemblies</c> method, which is not
+    /// AOT-compatible. Replace the <c>RegisterAssemblies</c> call with <c>AddBlazorRegistrations()</c>
+    /// (emitted by the bundled source generator) for NativeAOT and trimmed publish scenarios.
+    /// </remarks>
+    [RequiresUnreferencedCode("RegisterAssemblies uses runtime assembly scanning. Use AddBlazorRegistrations() for AOT scenarios.")]
     public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -52,10 +62,12 @@ public static class ServiceCollectionExtensions
         services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
+#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
         var languageService = new LanguageService();
         languageService.AddResourceManager(typeof(Framework.Mvvm.Properties.Resources));
         languageService.AddResourceManager(typeof(Framework.AspNetCore.Blazor.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
+#pragma warning restore IL2026
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
@@ -91,11 +103,19 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Registers the assemblies.
+    /// Registers the assemblies by scanning them at runtime for <c>IView</c>, <c>IWindow</c>,
+    /// and <c>IViewModel</c> implementors.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="assembly"></param>
-    /// <param name="assemblyFilter">The assembly filter.</param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
+    /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
+    /// <remarks>
+    /// This overload uses runtime assembly scanning and is not AOT-compatible.
+    /// Replace with the source-generator-emitted <c>AddBlazorRegistrations()</c> extension method
+    /// for NativeAOT and trimmed publish scenarios.
+    /// </remarks>
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
+    [RequiresDynamicCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
     public static void RegisterAssemblies(this IServiceCollection services, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
         var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
@@ -114,10 +134,18 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Registers the assemblies.
+    /// Registers the assemblies by scanning a set of pre-loaded assemblies for
+    /// <c>IView</c>, <c>IWindow</c>, and <c>IViewModel</c> implementors.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="assemblies"></param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="assemblies">The assemblies to scan.</param>
+    /// <remarks>
+    /// This overload uses runtime assembly scanning and is not AOT-compatible.
+    /// Replace with the source-generator-emitted <c>AddBlazorRegistrations()</c> extension method
+    /// for NativeAOT and trimmed publish scenarios.
+    /// </remarks>
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
+    [RequiresDynamicCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
     public static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
         var viewTypes = assemblies.ToViewTypes();

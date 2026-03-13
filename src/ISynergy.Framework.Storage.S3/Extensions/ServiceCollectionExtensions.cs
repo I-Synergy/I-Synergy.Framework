@@ -20,6 +20,15 @@ public static class ServiceCollectionExtensions
     /// <param name="configuration">The configuration.</param>
     /// <param name="prefix">Optional configuration section prefix.</param>
     /// <returns>The service collection.</returns>
+    /// <remarks>
+    /// <para>
+    /// <strong>AOT/Trimming notice:</strong> The <c>AWSSDK.S3</c> dependency uses reflection-based
+    /// HTTP marshalling internally and does not currently support Native AOT publishing or aggressive trimming.
+    /// Applications targeting <c>&lt;PublishAot&gt;true&lt;/PublishAot&gt;</c> should use Azure Blob Storage
+    /// (<c>ISynergy.Framework.Storage.Azure</c>) or another storage provider with AOT-compatible SDK support
+    /// until AWS SDK AOT support is available.
+    /// </para>
+    /// </remarks>
     public static IServiceCollection AddS3StorageIntegration(
         this IServiceCollection services,
         IConfiguration configuration,

@@ -4,18 +4,29 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.Extensions;
 
+/// <summary>
+/// Reflection-based extension helpers for scanning assemblies and registering UI types.
+/// </summary>
+/// <remarks>
+/// All public methods in this class that call <c>GetExportedTypes</c> or <c>AppDomain.CurrentDomain</c>
+/// are annotated with <see cref="RequiresUnreferencedCodeAttribute"/> because they walk the full set of
+/// exported types at runtime, which is incompatible with NativeAOT trimming.
+/// Use the source-generator-emitted <c>AddUITypes()</c> extension method instead.
+/// </remarks>
 public static class ReflectionExtensions
 {
     /// <summary>
     /// Get viewmodel types from assemblies.
     /// </summary>
-    /// <param name="assemblies"></param>
-    /// <returns></returns>
+    /// <param name="assemblies">The assemblies to scan.</param>
+    /// <returns>All discovered ViewModel types.</returns>
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddUITypes() instead.")]
     public static IEnumerable<Type> ToViewModelTypes(this IEnumerable<Assembly> assemblies)
     {
         foreach (var assembly in assemblies)
@@ -29,9 +40,10 @@ public static class ReflectionExtensions
     }
 
     /// <summary>
-    /// Get viewmodel types from assemblies.
+    /// Get viewmodel types from all loaded assemblies.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>All discovered ViewModel types across the application domain.</returns>
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddUITypes() instead.")]
     public static IEnumerable<Type> GetViewModelTypes() =>
     AppDomain.CurrentDomain.GetAssemblies()
         .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
@@ -45,8 +57,9 @@ public static class ReflectionExtensions
     /// <summary>
     /// Get view types from assemblies.
     /// </summary>
-    /// <param name="assemblies"></param>
-    /// <returns></returns>
+    /// <param name="assemblies">The assemblies to scan.</param>
+    /// <returns>All discovered View types.</returns>
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddUITypes() instead.")]
     public static IEnumerable<Type> ToViewTypes(this IEnumerable<Assembly> assemblies)
     {
         foreach (var assembly in assemblies)
@@ -61,9 +74,10 @@ public static class ReflectionExtensions
     }
 
     /// <summary>
-    /// Get view types from assemblies.
+    /// Get view types from all loaded assemblies.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>All discovered View types across the application domain.</returns>
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddUITypes() instead.")]
     public static IEnumerable<Type> GetViewTypes() =>
         AppDomain.CurrentDomain.GetAssemblies()
             .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
@@ -79,8 +93,9 @@ public static class ReflectionExtensions
     /// <summary>
     /// Get window types from assemblies.
     /// </summary>
-    /// <param name="assemblies"></param>
-    /// <returns></returns>
+    /// <param name="assemblies">The assemblies to scan.</param>
+    /// <returns>All discovered Window types.</returns>
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddUITypes() instead.")]
     public static IEnumerable<Type> ToWindowTypes(this IEnumerable<Assembly> assemblies)
     {
         foreach (var assembly in assemblies)
@@ -94,9 +109,10 @@ public static class ReflectionExtensions
     }
 
     /// <summary>
-    /// Get window types from assemblies.
+    /// Get window types from all loaded assemblies.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>All discovered Window types across the application domain.</returns>
+    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddUITypes() instead.")]
     public static IEnumerable<Type> GetWindowTypes() =>
         AppDomain.CurrentDomain.GetAssemblies()
             .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
@@ -110,8 +126,9 @@ public static class ReflectionExtensions
     /// <summary>
     /// Register windows.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="windows"></param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="windows">The window types to register.</param>
+    [RequiresUnreferencedCode("Runtime type registration via reflection is not AOT-compatible. Use AddUITypes() instead.")]
     public static void RegisterWindows(this IServiceCollection services, IEnumerable<Type> windows)
     {
         foreach (var window in windows.Distinct().EnsureNotNull())
@@ -119,10 +136,11 @@ public static class ReflectionExtensions
     }
 
     /// <summary>
-    /// Register window.
+    /// Register a window type.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="window"></param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="window">The window type to register.</param>
+    [RequiresUnreferencedCode("Runtime type registration via reflection is not AOT-compatible. Use AddUITypes() instead.")]
     public static void RegisterWindow(this IServiceCollection services, Type window)
     {
         var abstraction = Array.Find(
@@ -135,8 +153,9 @@ public static class ReflectionExtensions
     /// <summary>
     /// Register views.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="views"></param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="views">The view types to register.</param>
+    [RequiresUnreferencedCode("Runtime type registration via reflection is not AOT-compatible. Use AddUITypes() instead.")]
     public static void RegisterViews(this IServiceCollection services, IEnumerable<Type> views)
     {
         foreach (var view in views.Distinct().EnsureNotNull())
@@ -144,10 +163,11 @@ public static class ReflectionExtensions
     }
 
     /// <summary>
-    /// Register view.
+    /// Register a view type.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="view"></param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="view">The view type to register.</param>
+    [RequiresUnreferencedCode("Runtime type registration via reflection is not AOT-compatible. Use AddUITypes() instead.")]
     public static void RegisterView(this IServiceCollection services, Type view)
     {
         var abstraction = Array.Find(
@@ -158,10 +178,11 @@ public static class ReflectionExtensions
     }
 
     /// <summary>
-    /// Register windows.
+    /// Register view models.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="viewmodels"></param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="viewmodels">The viewmodel types to register.</param>
+    [RequiresUnreferencedCode("Runtime type registration via reflection is not AOT-compatible. Use AddUITypes() instead.")]
     public static void RegisterViewModels(this IServiceCollection services, IEnumerable<Type> viewmodels)
     {
         foreach (var viewmodel in viewmodels.Distinct().EnsureNotNull())
@@ -169,10 +190,11 @@ public static class ReflectionExtensions
     }
 
     /// <summary>
-    /// Register window.
+    /// Register a view model type.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="viewmodel"></param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="viewmodel">The viewmodel type to register.</param>
+    [RequiresUnreferencedCode("Runtime type registration via reflection is not AOT-compatible. Use AddUITypes() instead.")]
     public static void RegisterViewModel(this IServiceCollection services, Type viewmodel)
     {
         var abstraction = Array.Find(
@@ -184,28 +206,6 @@ public static class ReflectionExtensions
 
     private static void Register(this IServiceCollection services, Type type, Type? abstraction)
     {
-        //if (type.IsSingleton())
-        //{
-        //    if (abstraction is not null)
-        //        services.TryAddSingleton(abstraction, type);
-
-        //    services.TryAddSingleton(type);
-        //}
-        //else if (type.IsScoped())
-        //{
-        //    if (abstraction is not null)
-        //        services.TryAddScoped(abstraction, type);
-
-        //    services.TryAddScoped(type);
-        //}
-        //else
-        //{
-        //    if (abstraction is not null)
-        //        services.TryAddTransient(abstraction, type);
-
-        //    services.TryAddTransient(type);
-        //}
-
         if (abstraction is not null)
             services.TryAddTransient(abstraction, type);
 

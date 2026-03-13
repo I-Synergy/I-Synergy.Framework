@@ -58,6 +58,8 @@ public class ServiceLocator
         return _scopedContextService.ServiceProvider.GetService<TService>();
     }
 
+    [RequiresUnreferencedCode("Non-generic service resolution by runtime Type is not AOT-safe. Use GetService<TService>() instead.")]
+    [RequiresDynamicCode("Non-generic service resolution by runtime Type requires dynamic code. Use GetService<TService>() instead.")]
     public object? GetService(Type serviceType)
     {
         ThrowIfDisposed();
@@ -77,6 +79,8 @@ public class ServiceLocator
 
 #pragma warning disable CS8603
     [return: NotNull]
+    [RequiresUnreferencedCode("Non-generic service resolution by runtime Type is not AOT-safe. Use GetRequiredService<TService>() instead.")]
+    [RequiresDynamicCode("Non-generic service resolution by runtime Type requires dynamic code. Use GetRequiredService<TService>() instead.")]
     public object GetRequiredService(Type serviceType)
     {
         ThrowIfDisposed();

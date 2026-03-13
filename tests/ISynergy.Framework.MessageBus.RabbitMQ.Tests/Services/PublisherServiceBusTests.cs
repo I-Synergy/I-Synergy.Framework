@@ -3,7 +3,6 @@ using ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 using ISynergy.Framework.MessageBus.RabbitMQ.Tests.Fixtures;
 using Microsoft.Extensions.Logging.Abstractions;
 using MsOptions = Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.MessageBus.RabbitMQ.Tests.Services;
 
@@ -18,12 +17,12 @@ public class PublisherServiceBusTests
         string connectionString = "amqp://localhost",
         string queueName = "test-queue")
     {
-        var options = MsOptions.Options.Create(new PublisherOptions
+        var options = MsOptions.Options.Create(new RabbitMQPublisherOptions
         {
             ConnectionString = connectionString,
             QueueName = queueName
         });
-        var logger = NullLogger<PublisherServiceBus<TestMessage, PublisherOptions>>.Instance;
+        var logger = NullLogger<PublisherServiceBus<TestMessage, RabbitMQPublisherOptions>>.Instance;
         return new TestPublisherServiceBus(options, logger);
     }
 
@@ -34,12 +33,12 @@ public class PublisherServiceBusTests
     [TestMethod]
     public void Constructor_EmptyConnectionString_ThrowsArgumentNullException()
     {
-        var options = MsOptions.Options.Create(new PublisherOptions
+        var options = MsOptions.Options.Create(new RabbitMQPublisherOptions
         {
             ConnectionString = "",
             QueueName = "test-queue"
         });
-        var logger = NullLogger<PublisherServiceBus<TestMessage, PublisherOptions>>.Instance;
+        var logger = NullLogger<PublisherServiceBus<TestMessage, RabbitMQPublisherOptions>>.Instance;
 
         Assert.Throws<ArgumentNullException>(() =>
             new TestPublisherServiceBus(options, logger));
@@ -48,12 +47,12 @@ public class PublisherServiceBusTests
     [TestMethod]
     public void Constructor_EmptyQueueName_ThrowsArgumentNullException()
     {
-        var options = MsOptions.Options.Create(new PublisherOptions
+        var options = MsOptions.Options.Create(new RabbitMQPublisherOptions
         {
             ConnectionString = "amqp://localhost",
             QueueName = ""
         });
-        var logger = NullLogger<PublisherServiceBus<TestMessage, PublisherOptions>>.Instance;
+        var logger = NullLogger<PublisherServiceBus<TestMessage, RabbitMQPublisherOptions>>.Instance;
 
         Assert.Throws<ArgumentNullException>(() =>
             new TestPublisherServiceBus(options, logger));

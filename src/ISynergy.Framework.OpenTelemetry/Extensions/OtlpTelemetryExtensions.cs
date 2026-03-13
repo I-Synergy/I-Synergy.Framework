@@ -43,22 +43,24 @@ public static class OtlpTelemetryExtensions
         return telemetryBuilder;
     }
 
+    /// <summary>
+    /// Copies all public settable properties from <paramref name="source"/> to <paramref name="target"/>.
+    /// </summary>
+    /// <param name="source">The source options to copy from.</param>
+    /// <param name="target">The target options to copy to.</param>
+    /// <remarks>
+    /// Uses explicit property assignments instead of reflection to ensure AOT (Ahead-of-Time) compilation
+    /// compatibility. Reflection-based property copying is blocked under AOT trimming.
+    /// </remarks>
     private static void Map(this OtlpExporterOptions source, OtlpExporterOptions target)
     {
-        foreach (var prop in source.GetType().GetProperties())
-        {
-            if (prop.CanRead)
-            {
-                // Check if the property exists in the target type
-                var targetProp = target.GetType().GetProperty(prop.Name);
-
-                // Only proceed if the property exists in the target and is writable
-                if (targetProp != null && targetProp.CanWrite)
-                {
-                    var value = prop.GetValue(source);
-                    targetProp.SetValue(target, value);
-                }
-            }
-        }
+        target.Endpoint = source.Endpoint;
+        target.Headers = source.Headers;
+        target.TimeoutMilliseconds = source.TimeoutMilliseconds;
+        target.Protocol = source.Protocol;
+        target.UserAgentProductIdentifier = source.UserAgentProductIdentifier;
+        target.ExportProcessorType = source.ExportProcessorType;
+        target.BatchExportProcessorOptions = source.BatchExportProcessorOptions;
+        target.HttpClientFactory = source.HttpClientFactory;
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Events;
@@ -93,34 +92,31 @@ public class WeakEventSource<TEventArgs>
             new ConcurrentDictionary<MethodInfo, OpenEventHandler>();
 
         /// <summary>
-        /// Creates the open handler.
+        /// Creates the open handler. For instance methods, an open-instance delegate is used
+        /// (AOT-safe via <c>Delegate.CreateDelegate</c>). For static methods, a closed delegate
+        /// is wrapped to adapt the two-parameter static signature <c>(sender, e)</c> to the
+        /// three-parameter <see cref="OpenEventHandler"/> signature <c>(target, sender, e)</c>
+        /// by ignoring the unused <c>target</c> argument.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>OpenEventHandler.</returns>
         private static OpenEventHandler CreateOpenHandler(MethodInfo method)
         {
-            var target = Expression.Parameter(typeof(object), "target");
-            var sender = Expression.Parameter(typeof(object), "sender");
-            var e = Expression.Parameter(typeof(TEventArgs), "e");
-
             if (method.IsStatic)
             {
-                var expr = Expression.Lambda<OpenEventHandler>(
-                    Expression.Call(
-                        method,
-                        sender, e),
-                    target, sender, e);
-                return expr.Compile();
+                // Static EventHandler methods have signature (object? sender, TEventArgs e).
+                // OpenEventHandler expects (object? target, object? sender, TEventArgs e).
+                // Delegate.CreateDelegate cannot adapt the arity difference, so we create a
+                // correctly-typed closed delegate and wrap it in a lambda that discards target.
+                var closedDelegate = (EventHandler<TEventArgs>)Delegate.CreateDelegate(
+                    typeof(EventHandler<TEventArgs>), method);
+                return (object? target, object? sender, TEventArgs e) => closedDelegate(sender, e);
             }
             else
             {
-                var expr = Expression.Lambda<OpenEventHandler>(
-                    Expression.Call(
-                        Expression.Convert(target, method.DeclaringType!),
-                        method,
-                        sender, e),
-                    target, sender, e);
-                return expr.Compile();
+                // For instance methods, create an open-instance delegate by passing null as the first target.
+                // The first parameter of OpenEventHandler (object? target) will be bound at invoke time.
+                return (OpenEventHandler)Delegate.CreateDelegate(typeof(OpenEventHandler), null, method);
             }
         }
 

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Serializers;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 
 namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 
@@ -18,10 +21,8 @@ namespace ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>, IAsyncDisposable
     where TOption : class, IQueueOption, new()
 {
-    private static readonly JsonSerializerOptions s_jsonOptions = new(JsonSerializerDefaults.Web);
-
     /// <summary>
-    /// The option.
+    /// The queue option.
     /// </summary>
     protected readonly TOption _option;
 
@@ -30,15 +31,51 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// </summary>
     protected readonly ILogger _logger;
 
+    /// <summary>
+    /// The JSON type info used for AOT-safe deserialization.
+    /// </summary>
+    protected readonly JsonTypeInfo<TEntity>? _jsonTypeInfo;
+
     private IConnection? _connection;
     private IChannel? _channel;
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="SubscriberServiceBus{TEntity, TOption}"/>.
+    /// Initializes a new instance of <see cref="SubscriberServiceBus{TEntity, TOption}"/> using
+    /// AOT-safe source-generated JSON deserialization.
     /// </summary>
     /// <param name="options">The options.</param>
     /// <param name="logger">The logger.</param>
+    /// <param name="jsonTypeInfo">
+    /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TEntity"/>, obtained from a
+    /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
+    /// </param>
+    public SubscriberServiceBus(
+        IOptions<TOption> options,
+        ILogger<SubscriberServiceBus<TEntity, TOption>> logger,
+        JsonTypeInfo<TEntity> jsonTypeInfo)
+    {
+        _option = options.Value;
+
+        Argument.IsNotNullOrEmpty(_option.ConnectionString);
+        Argument.IsNotNullOrEmpty(_option.QueueName);
+
+        _logger = logger;
+        _jsonTypeInfo = jsonTypeInfo;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="SubscriberServiceBus{TEntity, TOption}"/> using
+    /// reflection-based JSON deserialization.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <param name="logger">The logger.</param>
+    /// <remarks>
+    /// This overload uses the reflection-based <see cref="JsonSerializer"/> path and is not compatible with
+    /// Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/> for AOT scenarios.
+    /// </remarks>
+    [RequiresUnreferencedCode("Deserialization uses reflection. Pass a JsonTypeInfo<TEntity> for AOT compatibility.")]
+    [RequiresDynamicCode("Deserialization uses dynamic code generation. Pass a JsonTypeInfo<TEntity> for AOT compatibility.")]
     protected SubscriberServiceBus(
         IOptions<TOption> options,
         ILogger<SubscriberServiceBus<TEntity, TOption>> logger)
@@ -60,11 +97,11 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// <inheritdoc />
     public virtual async Task SubscribeToMessageBusAsync(CancellationToken cancellationToken = default)
     {
-        var exchangeName = _option is SubscriberOptions subscriberOptions
+        var exchangeName = _option is RabbitMQSubscriberOptions subscriberOptions
             ? subscriberOptions.ExchangeName
             : string.Empty;
 
-        var exchangeType = _option is SubscriberOptions subscriberOpts
+        var exchangeType = _option is RabbitMQSubscriberOptions subscriberOpts
             ? subscriberOpts.ExchangeType
             : global::RabbitMQ.Client.ExchangeType.Direct;
 
@@ -137,7 +174,10 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
         try
         {
             var body = args.Body.ToArray();
-            var data = JsonSerializer.Deserialize<TEntity>(body, s_jsonOptions);
+
+            var data = _jsonTypeInfo is not null
+                ? JsonSerializer.Deserialize(body, _jsonTypeInfo)
+                : JsonSerializer.Deserialize<TEntity>(body, DefaultJsonSerializers.Web);
 
             if (data is not null && ValidateMessage(data))
             {

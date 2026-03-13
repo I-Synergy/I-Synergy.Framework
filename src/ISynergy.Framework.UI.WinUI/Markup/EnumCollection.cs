@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Markup;
 
@@ -27,7 +28,15 @@ public class EnumCollection : MarkupExtension
     /// Provides the value.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    /// <returns>System.Object.</returns>
+    /// <returns>A list of enum values for <see cref="EnumType"/>.</returns>
+    /// <remarks>
+    /// Calls <c>EnumType.ToList()</c> which internally uses <see cref="Enum.GetValues(Type)"/>
+    /// with a runtime <see cref="Type"/> argument. This requires the enum type's members to be
+    /// preserved by the IL trimmer. For AOT-safe scenarios, populate enum collections using
+    /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code.
+    /// </remarks>
+    [RequiresUnreferencedCode("ToList() on a runtime Type uses Enum.GetValues(Type) which requires enum type members to be preserved by the trimmer.")]
+    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for runtime type resolution.")]
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsEnumType(EnumType);
