@@ -59,7 +59,6 @@
     <Project Path="src/ISynergy.Framework.UI.Maui/ISynergy.Framework.UI.Maui.csproj">
       <Deploy />
     </Project>
-    <Project Path="src/ISynergy.Framework.UI.UWP/ISynergy.Framework.UI.UWP.csproj" Id="4cb056e8-2b39-4ed8-b50b-08db2960000a" />
     <Project Path="src/ISynergy.Framework.UI.WinUI/ISynergy.Framework.UI.WinUI.csproj" />
     <Project Path="src/ISynergy.Framework.UI.WPF/ISynergy.Framework.UI.WPF.csproj" />
     <Project Path="src/ISynergy.Framework.UI/ISynergy.Framework.UI.csproj" />
@@ -72,13 +71,6 @@
       <Deploy Solution="Debug|Any CPU" />
     </Project>
     <Project Path="samples/Sample.Shared/Sample.Shared.csproj" />
-    <Project Path="samples/Sample.UWP/Sample.UWP.csproj">
-      <Platform Solution="*|Any CPU" Project="x64" />
-      <Platform Solution="*|arm64" Project="arm64" />
-      <Platform Solution="*|x64" Project="x64" />
-      <Platform Solution="*|x86" Project="x86" />
-      <Deploy />
-    </Project>
     <Project Path="samples/Sample.WinUI/Sample.WinUI.csproj">
       <Platform Solution="*|Any CPU" Project="x64" />
       <Platform Solution="*|arm64" Project="arm64" />
