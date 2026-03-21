@@ -100,7 +100,7 @@ public class AuthenticationService : IAuthenticationService
             Username = username,
             Email = $"{username}@demo.com",
             Roles = new List<string> { "Administrator", "User" },
-            Modules = new List<string> { "Dashboard", "Settings", "Admin" },
+            Features = new List<string> { "Dashboard", "Settings", "Admin" },
             Expiration = DateTimeOffset.Now.AddHours(24)
         };
 
