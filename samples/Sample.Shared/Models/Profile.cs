@@ -61,10 +61,10 @@ public sealed class Profile : IProfile
     public List<string> Roles { get; set; } = new();
 
     /// <summary>
-    /// Gets the modules.
+    /// Gets the features.
     /// </summary>
-    /// <value>The modules.</value>
-    public List<string> Modules { get; set; } = new();
+    /// <value>The features.</value>
+    public List<string> Features { get; set; } = new();
 
     /// <summary>
     /// Gets the license expration.
