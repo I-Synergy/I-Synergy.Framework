@@ -7,7 +7,8 @@ These packages are NOT allowed in this template architecture. Always use the spe
 | ❌ DO NOT USE | ✅ USE INSTEAD | Why? |
 |---------------|---------------|------|
 | **MediatR** | CQRS framework of choice | Project uses different CQRS implementation |
-| **AutoMapper** | Mapster | Faster, explicit configuration, better performance |
+| **AutoMapper** | Manual inline mapping | Any mapper adds implicit magic; explicit property assignment is always clear |
+| **Mapster** | Manual inline mapping | Any mapper adds implicit magic; explicit property assignment is always clear |
 | **SpecFlow** | Reqnroll | SpecFlow requires license, Reqnroll is OSS fork |
 | **xUnit** | MSTest | Project standard, better VS integration |
 | **NUnit** | MSTest | Project standard, consistency |
@@ -48,32 +49,26 @@ public class CreateBudgetHandler : ICommandHandler<CreateBudgetCommand, CreateBu
 }
 ```
 
-### AutoMapper vs. Mapster
+### AutoMapper and Mapster vs. Manual Inline Mapping
 
-**Problem:** AutoMapper uses reflection heavily, slower performance, implicit configuration.
+**Problem:** All mapper libraries (AutoMapper, Mapster, etc.) introduce implicit magic — hidden conventions, runtime errors, and reduced readability.
 
-**Solution:** Use Mapster with explicit configuration:
+**Solution:** Use explicit manual property assignment:
 
 ```csharp
 ❌ WRONG - AutoMapper
-public class BudgetProfile : Profile
-{
-    public BudgetProfile()
-    {
-        CreateMap<Budget, BudgetModel>();
-    }
-}
+var model = _mapper.Map<BudgetModel>(entity);
 
-✅ CORRECT - Mapster
-internal class Configuration : IRegister
+❌ WRONG - Mapster
+var model = entity.Adapt<BudgetModel>();
+
+✅ CORRECT - Manual inline mapping
+var model = new BudgetModel
 {
-    public void Register(TypeAdapterConfig config)
-    {
-        config.NewConfig<Budget, BudgetModel>()
-            .Map(dest => dest.BudgetId, src => src.BudgetId)
-            .Map(dest => dest.Name, src => src.Name);
-    }
-}
+    BudgetId = entity.BudgetId,
+    Name = entity.Name,
+    Description = entity.Description,
+};
 ```
 
 ### SpecFlow vs. Reqnroll
@@ -247,6 +242,11 @@ IRequestHandler<T, R>
 // AutoMapper
 using AutoMapper;
 IMapper _mapper
+
+// Mapster
+using Mapster;
+entity.Adapt<T>()
+ProjectToType<T>()
 
 // xUnit
 using Xunit;

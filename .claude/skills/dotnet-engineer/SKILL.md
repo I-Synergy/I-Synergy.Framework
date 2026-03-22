@@ -25,7 +25,7 @@ Reference implementation: `ISynergy.Domain.Budgets`
    - Create Command/Query/Handler/Response classes (each in own file, subfolder per operation)
    - Handler naming: `Create{Entity}CommandHandler`, `Get{Entity}ByIdQueryHandler`
    - Add structured logging
-   - Map entities to Models via Mapster
+   - Map entities to Models via manual inline property assignment
 
 2. **Build API Endpoints**
    - Create Minimal API endpoints
@@ -35,7 +35,6 @@ Reference implementation: `ISynergy.Domain.Budgets`
 
 3. **Data Access**
    - Use EF Core primitives: `FindAsync`, `Add`, `Update`, `Remove`, `SaveChangesAsync`
-   - Use `ProjectToType<T>()` for list queries
    - Write efficient LINQ queries
    - Prevent N+1 query problems
    - Implement proper async patterns
@@ -52,17 +51,15 @@ Reference implementation: `ISynergy.Domain.Budgets`
 - Queries use named parameters for optional filters
 - Never expose domain entities directly (responses wrap Models)
 - Always include `CancellationToken` in async methods
-- Use Mapster for Entity → Model mapping (NOT AutoMapper)
+- Use manual inline mapping for Entity → Model (no mapper libraries)
 - No repository interfaces (use DataContext directly)
-- Create handlers construct entities directly (NOT `command.Adapt<Entity>()`)
+- Create handlers construct entities directly with explicit property assignment
 - Models are positional records without "Model" suffix (e.g., `Budget`, not `BudgetModel`)
-- One `Configuration` class per domain in `Mappers/` (NOT per-entity mapping configs)
 
 ## Templates to Use
 
 - [`command-handler.cs.txt`](../../reference/templates/command-handler.cs.txt)
 - [`query-handler.cs.txt`](../../reference/templates/query-handler.cs.txt)
-- [`mapping-config.cs.txt`](../../reference/templates/mapping-config.cs.txt)
 - [`endpoint.cs.txt`](../../reference/templates/endpoint.cs.txt)
 
 ## Patterns to Follow
@@ -76,7 +73,7 @@ Reference implementation: `ISynergy.Domain.Budgets`
 - [ ] Structured logging throughout
 - [ ] Async all the way (no .Wait() or .Result)
 - [ ] Responses wrap Models (not entities)
-- [ ] Mapster configuration registered in `Mappers/Configuration.cs`
+- [ ] Manual inline mapping used (no mapper libraries)
 - [ ] Proper error handling with `InvalidOperationException`
 - [ ] XML documentation on public APIs
 - [ ] Each type in own file, each operation in own subfolder
