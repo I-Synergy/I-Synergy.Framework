@@ -80,13 +80,13 @@ await dataContext.SaveChangesAsync(cancellationToken);
 
 // Read single
 var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, cancellationToken);
-var model = entity?.Adapt<Budget>();
+var model = entity is null ? null : new Budget(entity.BudgetId, entity.Description, entity.StartingDate, entity.EndingDate);
 
-// Read list (using named DbSet + ProjectToType)
-var models = await dataContext.Budgets
+// Read list — fetch entities, then map manually
+var entities = await dataContext.Budgets
     .OrderBy(b => b.Description)
-    .ProjectToType<Budget>()
     .ToListAsync(cancellationToken);
+var models = entities.Select(e => new Budget(e.BudgetId, e.Description, e.StartingDate, e.EndingDate)).ToList();
 
 // Update — no .Update() call needed; change tracker detects property mutations on tracked entities
 var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
@@ -106,18 +106,19 @@ await dataContext.AddItemAsync<Budget, BudgetModel>(model, ct);
 await dataContext.GetItemByIdAsync<Budget, BudgetModel, Guid>(id, ct);
 ```
 
-## 5. Mapping: Mapster Only
+## 5. Mapping: Manual Inline Only
 
-Configure mappings in `Mappers/Configuration.cs` (implements `IRegister`).
+All mapping must be done manually with direct property assignment. No mapper libraries (Mapster, AutoMapper, or any other) are permitted.
 
 ```csharp
-// CORRECT - Mapster with configuration
-var model = entity.Adapt<Budget>();
-
-// CORRECT - ProjectToType for list queries (server-side projection)
-var models = await dataContext.Budgets
-    .ProjectToType<Budget>()
-    .ToListAsync(cancellationToken);
+// CORRECT - Manual inline mapping for reads
+var model = new Budget
+{
+    BudgetId = entity.BudgetId,
+    Description = entity.Description,
+    StartingDate = entity.StartingDate,
+    EndingDate = entity.EndingDate,
+};
 
 // CORRECT - Direct entity construction in Create handlers
 var entity = new Entities.Budgets.Budget
@@ -126,14 +127,15 @@ var entity = new Entities.Budgets.Budget
     Description = command.Description,
 };
 
-// WRONG - AutoMapper
-var model = _mapper.Map<Budget>(entity);
+// CORRECT - Update handlers mutate tracked entity properties directly
+entity.Description = command.Description;
+entity.StartingDate = command.StartingDate;
+await dataContext.SaveChangesAsync(cancellationToken);
 
-// WRONG - Manual mapping for reads (use Mapster instead)
-var model = new Budget { BudgetId = entity.BudgetId, ... };
-
-// WRONG - Mapping command to entity via Mapster
-var entity = command.Adapt<Budget>(); // Don't do this
+// WRONG - Any mapper library
+var model = entity.Adapt<Budget>();            // Mapster — forbidden
+var model = _mapper.Map<Budget>(entity);       // AutoMapper — forbidden
+var models = await dataContext.Budgets.ProjectToType<Budget>().ToListAsync(); // Mapster — forbidden
 ```
 
 ## 6. Async: Always Include CancellationToken
@@ -145,7 +147,7 @@ public async Task<GetBudgetByIdResponse> HandleAsync(
     CancellationToken cancellationToken = default)
 {
     var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == query.BudgetId, cancellationToken);
-    var budget = entity?.Adapt<Budget>();
+    var budget = entity is null ? null : new Budget(entity.BudgetId, entity.Description, entity.StartingDate, entity.EndingDate);
     return new GetBudgetByIdResponse(budget);
 }
 
@@ -169,11 +171,11 @@ public async Task<GetBudgetByIdResponse> HandleAsync(GetBudgetByIdQuery query)
 Always map to Models before returning from handlers. Responses wrap Models.
 
 ```csharp
-// CORRECT - Response wraps Model
+// CORRECT - Response wraps Model (manual inline mapping)
 public async Task<GetBudgetByIdResponse> HandleAsync(...)
 {
     var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == query.BudgetId, ct);
-    var budget = entity?.Adapt<Budget>();
+    var budget = entity is null ? null : new Budget(entity.BudgetId, entity.Description, entity.StartingDate, entity.EndingDate);
     return new GetBudgetByIdResponse(budget);
 }
 
@@ -489,8 +491,8 @@ Before submitting code, verify you haven't violated these:
 - [ ] Delete operations use `FirstOrDefaultAsync` + `Remove` + `SaveChangesAsync`
 - [ ] Queries use named parameters for optional filters
 - [ ] Data access uses named DbSet properties on DataContext with `FirstOrDefaultAsync` for single lookups (no `.Set<T>()`, no `FindAsync`, no extension methods, no repositories)
-- [ ] Mapping uses Mapster (not AutoMapper or manual for reads)
-- [ ] Create handlers construct entities directly (not via `command.Adapt<Entity>()`)
+- [ ] Mapping uses manual inline property assignment (no Mapster, no AutoMapper, no mapper libraries)
+- [ ] Create handlers construct entities directly with explicit property assignment
 - [ ] All async methods include CancellationToken
 - [ ] Domain entities never exposed directly (responses wrap Models)
 - [ ] Handlers named with `CommandHandler` / `QueryHandler` suffix

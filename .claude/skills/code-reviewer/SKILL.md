@@ -57,9 +57,7 @@ Specialized agent for code quality assurance and review.
 - [ ] No blocking on async (.Wait() or .Result)
 
 ### Mapping
-- [ ] Mapster used (NOT AutoMapper)
-- [ ] Mapping configurations registered
-- [ ] No manual mapping
+- [ ] Manual inline mapping used (no AutoMapper, no Mapster)
 - [ ] Domain entities never exposed directly
 
 ### Validation & Error Handling
@@ -101,7 +99,8 @@ Specialized agent for code quality assurance and review.
 
 Immediately flag if found:
 - MediatR (use project's CQRS framework)
-- AutoMapper (use Mapster)
+- AutoMapper (use manual inline mapping)
+- Mapster (use manual inline mapping)
 - xUnit/NUnit (use MSTest)
 - FluentValidation (use Data Annotations)
 - Swashbuckle (use Microsoft.AspNetCore.OpenApi)
