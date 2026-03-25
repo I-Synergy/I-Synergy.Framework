@@ -6,8 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper"  />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"  />
     <PackageReference Include="BuildBundlerMinifier"  />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"  />
     <PackageReference Include="System.Text.Encodings.Web"  />

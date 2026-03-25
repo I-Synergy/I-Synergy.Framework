@@ -211,8 +211,12 @@ public class CobylaTest
 
         Cobyla cobyla = new(function, constraints);
 
-        for (int i = 0; i < cobyla.Solution.Length; i++)
-            cobyla.Solution[i] = 1;
+        // Start at a feasible point with the correct sign for x[2] (the minimum requires x[2] < 0).
+        // Starting at [1,1,1] violates the constraint and is in the wrong half-space, causing
+        // COBYLA's linear approximation to converge to a suboptimal feasible point.
+        cobyla.Solution[0] = 0.5;
+        cobyla.Solution[1] = 0.4;
+        cobyla.Solution[2] = -0.3;
 
         Assert.IsTrue(cobyla.Minimize());
         double minimum = cobyla.Value;

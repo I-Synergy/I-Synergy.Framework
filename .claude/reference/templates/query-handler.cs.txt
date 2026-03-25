@@ -33,7 +33,6 @@ public sealed record Get{Entity}ByIdResponse({Entity}? {Entity});
 using ISynergy.Data;
 using {ApplicationName}.Domain.{Domain}.Models;
 using ISynergy.Framework.CQRS.Queries;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -58,12 +57,19 @@ public sealed class Get{Entity}ByIdQueryHandler(
 
         var entity = await dataContext.{Entities}.FirstOrDefaultAsync(
             e => e.{Entity}Id == query.{Entity}Id, cancellationToken);
-        var model = entity?.Adapt<{Entity}>();
 
-        if (model is null)
+        if (entity is null)
         {
             logger.LogDebug("{Entity} {Id} not found", query.{Entity}Id);
+            return new Get{Entity}ByIdResponse(null);
         }
+
+        // Manual inline mapping — add all properties explicitly
+        var model = new {Entity}(
+            entity.{Entity}Id,
+            entity.Property1,
+            entity.Property2,
+            entity.Property3);
 
         return new Get{Entity}ByIdResponse(model);
     }
@@ -104,7 +110,6 @@ public sealed record Get{Entities}ListResponse(IReadOnlyList<{Entity}> {Entities
 using ISynergy.Data;
 using {ApplicationName}.Domain.{Domain}.Models;
 using ISynergy.Framework.CQRS.Queries;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -127,10 +132,16 @@ public sealed class Get{Entities}ListQueryHandler(
     {
         logger.LogDebug("Retrieving all {entities}");
 
-        var models = await dataContext.{Entities}
+        // Fetch entities, then map manually — no mapper library
+        var entities = await dataContext.{Entities}
             .OrderBy(e => e.Description)
-            .ProjectToType<{Entity}>()
             .ToListAsync(cancellationToken);
+
+        var models = entities.Select(e => new {Entity}(
+            e.{Entity}Id,
+            e.Property1,
+            e.Property2,
+            e.Property3)).ToList();
 
         logger.LogDebug("Retrieved {Count} {entities}", models.Count);
 

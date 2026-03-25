@@ -20,7 +20,7 @@ Reference implementation: `ISynergy.Domain.Budgets`
 4. **Never expose** domain entities in public APIs — not as parameters, not as return values
 5. One handler per command/query (Single Responsibility)
 6. **Data access** uses named DbSet properties on DataContext for **all** operations: `dataContext.{Entities}.FirstOrDefaultAsync`, `.Add`, `.Remove`, `SaveChangesAsync` — **never call `.Update()` on tracked entities** (change tracker handles property mutations automatically)
-7. **Mapping flow**: Entity → Model (via Mapster) | Response wraps Model
+7. **Mapping flow**: Entity → Model (via manual inline property assignment) | Response wraps Model
 8. Entities are used **internally** for domain logic and persistence — never passed across layer boundaries
 9. Each operation gets its own **subfolder** with separate files for Command/Query, Handler, and Response
 10. Handler classes are named with `CommandHandler` / `QueryHandler` suffix
@@ -67,8 +67,6 @@ src/{ApplicationName}.Domain.{Domain}/
         Get{Entities}ListResponse.cs
   Models/
     {Entity}.cs                    (positional record)
-  Mappers/
-    Configuration.cs               (single IRegister per domain)
   Extensions/
     ServiceCollectionExtensions.cs
 ```
@@ -343,7 +341,6 @@ public sealed class Delete{Entity}CommandHandler(
 using ISynergy.Data;
 using {App}.Domain.{Domain}.Models;
 using ISynergy.Framework.CQRS.Queries;
-using Mapster;
 using Microsoft.Extensions.Logging;
 
 namespace {App}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
@@ -360,12 +357,18 @@ public sealed class Get{Entity}ByIdQueryHandler(
         logger.LogDebug("Retrieving {entity} {Id}", query.{Entity}Id);
 
         var entity = await dataContext.{Entities}.FirstOrDefaultAsync(e => e.{Entity}Id == query.{Entity}Id, cancellationToken);
-        var model = entity?.Adapt<{Entity}>();
 
-        if (model is null)
+        if (entity is null)
         {
             logger.LogDebug("{Entity} {Id} not found", query.{Entity}Id);
+            return new Get{Entity}ByIdResponse(null);
         }
+
+        var model = new {Entity}(
+            entity.{Entity}Id,
+            entity.Description,
+            entity.StartingDate,
+            entity.EndingDate);
 
         return new Get{Entity}ByIdResponse(model);
     }
@@ -379,7 +382,6 @@ public sealed class Get{Entity}ByIdQueryHandler(
 using ISynergy.Data;
 using {App}.Domain.{Domain}.Models;
 using ISynergy.Framework.CQRS.Queries;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -396,10 +398,15 @@ public sealed class Get{Entities}ListQueryHandler(
     {
         logger.LogDebug("Retrieving all {entities}");
 
-        var models = await dataContext.{Entities}
+        var entities = await dataContext.{Entities}
             .OrderBy(e => e.Description)
-            .ProjectToType<{Entity}>()
             .ToListAsync(cancellationToken);
+
+        var models = entities.Select(e => new {Entity}(
+            e.{Entity}Id,
+            e.Description,
+            e.StartingDate,
+            e.EndingDate)).ToList();
 
         logger.LogDebug("Retrieved {Count} {entities}", models.Count);
 
@@ -428,10 +435,15 @@ public async Task<Get{Entities}ByFilterResponse> HandleAsync(
     if (!string.IsNullOrWhiteSpace(query.SearchTerm))
         queryable = queryable.Where(e => e.Description.Contains(query.SearchTerm));
 
-    var models = await queryable
+    var entities = await queryable
         .OrderBy(e => e.Description)
-        .ProjectToType<{Entity}>()
         .ToListAsync(cancellationToken);
+
+    var models = entities.Select(e => new {Entity}(
+        e.{Entity}Id,
+        e.Description,
+        e.StartingDate,
+        e.EndingDate)).ToList();
 
     return new Get{Entities}ByFilterResponse(models);
 }
@@ -474,15 +486,15 @@ var entity = new Entities.{Domain}.{Entity} { {Entity}Id = Guid.NewGuid(), ... }
 dataContext.{Entities}.Add(entity);
 var rowsAffected = await dataContext.SaveChangesAsync(cancellationToken);
 
-// Read single — named DbSet FirstOrDefaultAsync + Mapster Adapt
+// Read single — named DbSet FirstOrDefaultAsync + manual inline mapping
 var entity = await dataContext.{Entities}.FirstOrDefaultAsync(e => e.{Entity}Id == id, cancellationToken);
-var model = entity?.Adapt<{Entity}>();
+var model = entity is null ? null : new {Entity}(entity.{Entity}Id, entity.Description, entity.StartingDate, entity.EndingDate);
 
-// Read list — named DbSet + ProjectToType
-var models = await dataContext.{Entities}
+// Read list — named DbSet + manual inline mapping
+var entities = await dataContext.{Entities}
     .OrderBy(e => e.Description)
-    .ProjectToType<{Entity}>()
     .ToListAsync(cancellationToken);
+var models = entities.Select(e => new {Entity}(e.{Entity}Id, e.Description, e.StartingDate, e.EndingDate)).ToList();
 
 // Update — FirstOrDefaultAsync + property mutation (no .Update() needed — change tracker handles it)
 var entity = await dataContext.{Entities}.FirstOrDefaultAsync(e => e.{Entity}Id == command.{Entity}Id, cancellationToken);
@@ -525,50 +537,11 @@ await _repository.Add(model);
 
 ---
 
-## Mapper Configuration
-
-Single `Configuration` class per domain, containing all entity-to-model mappings:
-
-```csharp
-// File: Mappers/Configuration.cs
-using Mapster;
-using {App}.Domain.{Domain}.Models;
-
-namespace {App}.Domain.{Domain}.Mappers;
-
-internal class Configuration : IRegister
-{
-    public void Register(TypeAdapterConfig config)
-    {
-        config.NewConfig<Entities.{Domain}.{Entity}, {Entity}>()
-            .Map(d => d.{Entity}Id, s => s.{Entity}Id)
-            .Map(d => d.Description, s => s.Description)
-            .Map(d => d.StartingDate, s => s.StartingDate)
-            .Map(d => d.EndingDate, s => s.EndingDate);
-
-        // Reverse mapping only when property names differ
-        // config.NewConfig<{Entity}, Entities.{Domain}.{Entity}>()
-        //     .Map(d => d.Type, s => s.EntityType);
-    }
-}
-```
-
-Key rules:
-- Class named `Configuration` (not `{Entity}MappingConfig`)
-- One per domain, all entity mappings in one class
-- Only Entity → Model mappings (and reverse when names differ)
-- NO Command → Entity mappings (handlers construct entities directly)
-- NO Model → Response mappings (responses wrap models, no mapping needed)
-- Cross-domain entity mappings are allowed when a domain references entities from another domain (e.g., Budgets domain mapping `Entities.Settings.ExpenseType` → `ExpenseType`)
-
----
-
 ## Service Registration
 
 ```csharp
 // File: Extensions/ServiceCollectionExtensions.cs
 using ISynergy.Framework.CQRS.Extensions;
-using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace {App}.Domain.{Domain}.Extensions;
@@ -579,10 +552,6 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
     {
         var assembly = typeof(ServiceCollectionExtensions).Assembly;
-
-        // Register Mapster configurations
-        var mappingConfigs = TypeAdapterConfig.GlobalSettings.Scan(assembly);
-        TypeAdapterConfig.GlobalSettings.Apply(mappingConfigs);
 
         // Register CQRS handlers
         services.AddCQRS().AddHandlers(assembly);
@@ -625,13 +594,14 @@ dataContext.Budgets.Remove(entity);
 await dataContext.SaveChangesAsync(ct);
 ```
 
-### Wrong: Mapping Commands to Entities via Mapster
+### Wrong: Using Mapper Libraries for Entity Construction
 
 ```csharp
-// WRONG
-var entity = command.Adapt<Budget>();
+// WRONG - any mapper library
+var entity = command.Adapt<Budget>();        // Mapster — forbidden
+var entity = _mapper.Map<Budget>(command);  // AutoMapper — forbidden
 
-// CORRECT - Construct entity directly
+// CORRECT - Construct entity directly with explicit property assignment
 var entity = new Entities.Budgets.Budget
 {
     BudgetId = Guid.NewGuid(),
@@ -672,7 +642,7 @@ public async Task<Entities.Budgets.Budget> HandleAsync(...) { return entity; }
 public async Task<GetBudgetByIdResponse> HandleAsync(...)
 {
     var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == query.BudgetId, ct);
-    var budget = entity?.Adapt<Budget>();
+    var budget = entity is null ? null : new Budget(entity.BudgetId, entity.Description, entity.StartingDate, entity.EndingDate);
     return new GetBudgetByIdResponse(budget);
 }
 ```
