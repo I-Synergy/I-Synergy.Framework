@@ -140,7 +140,7 @@ Authentication Context:
 | **ORM** | EF Core 10 | Microsoft standard |
 | **Caching** | Azure Redis | Distributed caching |
 | **CQRS** | I-Synergy.Framework.CQRS | Project standard |
-| **Mapping** | Mapster | Performance |
+| **Mapping** | Manual inline (direct property assignment) | Explicit, no hidden magic |
 | **Logging** | I-Synergy.Framework.OpenTelemetry | Observability |
 | **Testing** | MSTest | Microsoft standard |
 | **Auth** | OpenIddict | OAuth2/OIDC |

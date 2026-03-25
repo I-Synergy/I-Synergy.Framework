@@ -76,13 +76,11 @@ This is not a demo or proof of concept. Before saying "done", actively grep the 
 - [ ] Async all the way (no .Wait() or .Result)
 - [ ] CancellationToken passed through all layers
 
-## Mapping (Mapster)
+## Mapping
 
-- [ ] Mapping configuration defined in `Mappers/Configuration.cs` for this domain, following the mapping template
-- [ ] Mapping configuration is registered in the application composition root according to `.claude/reference/templates/mapping-config.cs.txt`
-- [ ] Uses .Adapt<T>() extension method
+- [ ] All mapping uses manual inline property assignment (no mapper libraries)
 - [ ] No AutoMapper used
-- [ ] No manual mapping used
+- [ ] No Mapster used
 
 ## Error Handling & Logging
 
@@ -114,7 +112,6 @@ This is not a demo or proof of concept. Before saying "done", actively grep the 
 ## Service Registration
 
 - [ ] Handlers registered in ServiceCollectionExtensions
-- [ ] Mapster configurations scanned and applied
 - [ ] Extension method follows pattern: With{Domain}DomainHandlers
 
 ## Endpoints
@@ -129,7 +126,8 @@ This is not a demo or proof of concept. Before saying "done", actively grep the 
 ## Forbidden Technologies
 
 - [ ] NO MediatR (using CQRS framework)
-- [ ] NO AutoMapper (using Mapster)
+- [ ] NO AutoMapper (use manual inline mapping)
+- [ ] NO Mapster (use manual inline mapping)
 - [ ] NO xUnit/NUnit (using MSTest)
 - [ ] NO Swashbuckle (using Microsoft.AspNetCore.OpenApi)
 - [ ] NO FluentValidation (using Data Annotations)

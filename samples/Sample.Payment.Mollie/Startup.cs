@@ -1,4 +1,3 @@
-using AutoMapper;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Payment.Mollie.Extensions;
 using ISynergy.Framework.Payment.Mollie.Options;
@@ -79,7 +78,6 @@ namespace Mollie.Sample
             services.AddScoped<IMandateStorageClient, MandateStorageClient>();
             services.AddScoped<IRefundPaymentClient, RefundPaymentClient>();
 
-            services.AddAutoMapper(typeof(Startup));
             services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
         }
 

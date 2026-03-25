@@ -47,7 +47,8 @@ Do NOT use these libraries - use the framework's custom implementations instead:
 | Prohibited | Use Instead |
 |------------|-------------|
 | **MediatR** | Custom command/query dispatching in `ISynergy.Framework.CQRS` |
-| **AutoMapper** | Manual mapping with extension methods |
+| **AutoMapper** | Manual inline mapping (direct property assignment) |
+| **Mapster** | Manual inline mapping (direct property assignment) |
 | **SpecFlow** | Reqnroll.NET for BDD scenarios |
 
 ## Coding Standards & Practices

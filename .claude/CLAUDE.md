@@ -68,8 +68,7 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 | CQRS commands | Individual parameters | Passing model objects |
 | CQRS handler naming | `Create{Entity}CommandHandler` / `Get{Entity}ByIdQueryHandler` | Missing `CommandHandler`/`QueryHandler` suffix |
 | Async | Always include `CancellationToken` | Omit or use `.Result` |
-| Mapping | Mapster `entity.Adapt<T>()` or `ProjectToType<T>()` | AutoMapper or manual mapping |
-| Mapper config | `internal class Configuration : IRegister` (one per domain) | Entity-specific class names like `BudgetMappingConfig` |
+| Mapping | Manual inline mapping (direct property assignment) | AutoMapper, Mapster, or any other mapper library |
 | Enum naming | Plural names (`PaymentProviders`, not `PaymentProvider`) | Singular names for non-`*Status` enums |
 | Backwards compat | Mark old APIs `[Obsolete]` before removal | Silent breaking changes |
 | All public APIs | XML documentation required | Undocumented public members |
@@ -122,7 +121,7 @@ Load on demand:
 
 | Task Type | Files to Load |
 |-|-|
-| CQRS | [`.claude/skills/dotnet-engineer/SKILL.md`](.claude/skills/dotnet-engineer/SKILL.md), [`.claude/patterns/cqrs-patterns.md`](.claude/patterns/cqrs-patterns.md), [`.claude/reference/critical-rules.md`](.claude/reference/critical-rules.md), [`.claude/reference/templates/command-handler.cs.txt`](.claude/reference/templates/command-handler.cs.txt), [`.claude/reference/templates/query-handler.cs.txt`](.claude/reference/templates/query-handler.cs.txt), [`.claude/reference/templates/mapping-config.cs.txt`](.claude/reference/templates/mapping-config.cs.txt) |
+| CQRS | [`.claude/skills/dotnet-engineer/SKILL.md`](.claude/skills/dotnet-engineer/SKILL.md), [`.claude/patterns/cqrs-patterns.md`](.claude/patterns/cqrs-patterns.md), [`.claude/reference/critical-rules.md`](.claude/reference/critical-rules.md), [`.claude/reference/templates/command-handler.cs.txt`](.claude/reference/templates/command-handler.cs.txt), [`.claude/reference/templates/query-handler.cs.txt`](.claude/reference/templates/query-handler.cs.txt) |
 | API Endpoints | [`.claude/patterns/api-patterns.md`](.claude/patterns/api-patterns.md), [`.claude/reference/templates/endpoint.cs.txt`](.claude/reference/templates/endpoint.cs.txt) |
 | Unit Tests | [`.claude/skills/unit-tester/SKILL.md`](.claude/skills/unit-tester/SKILL.md), [`.claude/patterns/testing-patterns.md`](.claude/patterns/testing-patterns.md), [`.claude/reference/templates/test-class.cs.txt`](.claude/reference/templates/test-class.cs.txt) |
 | Blazor UI | [`.claude/skills/blazor-specialist/SKILL.md`](.claude/skills/blazor-specialist/SKILL.md), [`.claude/patterns/mvvm.md`](.claude/patterns/mvvm.md) |
