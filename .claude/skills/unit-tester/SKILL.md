@@ -7,6 +7,10 @@ description: MSTest unit testing specialist. Use when writing unit tests, creati
 
 Specialized agent for MSTest, Moq, and Reqnroll testing.
 
+> **Context:** This skill covers two scenarios. Identify which applies before writing tests:
+> - **Framework library tests** (`tests/ISynergy.Framework.*.Tests`) — test the framework's own classes (extensions, CQRS dispatchers, validators, etc.) using standard DI or direct instantiation. No `DataContext`, no `TenantContext`.
+> - **Application tests** (projects built on top of I-Synergy Framework) — test CQRS handlers against a real `DataContext` with `UseInMemoryDatabase`. The `DataContext`/`TenantContext`/`TestDataHelper` patterns below apply here.
+
 ## Expertise Areas
 
 - MSTest framework
@@ -31,11 +35,11 @@ Specialized agent for MSTest, Moq, and Reqnroll testing.
    - Cover happy paths and error cases
    - Make scenarios readable for non-technical stakeholders
 
-3. **Mock Dependencies**
-   - Mock DataContext operations
-   - Mock external services
-   - Setup return values
-   - Verify method calls
+3. **Use Real DataContext with InMemory Provider**
+   - NEVER mock DataContext — use real `DataContext` with `UseInMemoryDatabase`
+   - ALWAYS call `TenantContext.Set(TestDataHelper.TestTenantId)` BEFORE `new DataContext(options)`
+   - Seed test data via `await _dataContext.{DbSet}.AddAsync(entity); await _dataContext.SaveChangesAsync()`
+   - Mock only external service dependencies (non-DataContext), never the DataContext itself
 
 4. **Ensure Coverage**
    - Aim for 80%+ code coverage
@@ -103,13 +107,45 @@ Feature: {Entity} Management
 
 - [`testing-patterns.md`](../../patterns/testing-patterns.md)
 
+## FORBIDDEN Patterns — Will Cause Silent Test Failures
+
+**Never use any of the following:**
+
+- `Mock<DataContext>` — EF Core global query filters are bypassed; tests pass against empty sets
+- `InMemoryDataContext` (custom subclass) — never create DataContext subclasses for tests
+- `MockDbSetHelper` — creates fake `DbSet<T>` that ignores tenant filter
+- `new DataContext(options)` without `TenantContext.Set(TestDataHelper.TestTenantId)` first
+
+**Why this matters:** `BaseDbContext` applies `e.TenantId == TenantContext.TenantId` to all `ITenantEntity` types via global EF query filters. `TenantContext.TenantId` defaults to `Guid.Empty`. All test entities have a real TenantId set by `TestDataHelper`. If you forget `TenantContext.Set(...)`, every query returns an empty result — tests that check "entity exists" will silently fail to validate anything.
+
+## Correct DataContext Setup (Required in Every Test That Uses DataContext)
+
+```csharp
+[TestInitialize]
+public void Setup()
+{
+    var options = new DbContextOptionsBuilder<DataContext>()
+        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+        .Options;
+
+    TenantContext.Set(TestDataHelper.TestTenantId); // MUST come before new DataContext(...)
+    _dataContext = new DataContext(options);
+}
+
+[TestCleanup]
+public void Cleanup() => _dataContext?.Dispose();
+```
+
 ## Checklist Before Completion
 
 - [ ] All handlers have unit tests
 - [ ] All tests use MSTest (not xUnit/NUnit)
 - [ ] Descriptive test names following convention
 - [ ] AAA pattern used consistently
-- [ ] Mocks setup and verified correctly
+- [ ] DataContext uses real InMemory provider (NOT `Mock<DataContext>`)
+- [ ] `TenantContext.Set(TestDataHelper.TestTenantId)` called before `new DataContext(options)` in every test class
+- [ ] Test data seeded via `AddAsync` / `AddRangeAsync` + `SaveChangesAsync` on real DataContext
+- [ ] State verified by querying the real DataContext, not via `mock.Verify`
 - [ ] BDD scenarios for complex workflows
 - [ ] All tests pass
 - [ ] Coverage meets 80%+ target

@@ -58,6 +58,7 @@ public abstract class ObservableClass : IObservableClass
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Equality comparison intentionally uses runtime reflection. Not safe for AOT, but this is a framework base class fallback.")]
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

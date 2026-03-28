@@ -50,19 +50,3 @@ public class Account : BaseModel
     [Required]
     public required string CultureCode { get; set; }
 }
-
-/// <summary>
-/// Class AccountFull.
-/// Implements the <see cref="Account" />
-/// </summary>
-/// <seealso cref="Account" />
-public class AccountFull : Account
-{
-    public AccountFull()
-        : base()
-    {
-        Users = new List<UserFull>();
-    }
-
-    public List<UserFull> Users { get; set; }
-}

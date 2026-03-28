@@ -2,6 +2,7 @@ using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
@@ -264,6 +265,8 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = I</c>.
     /// </summary>
+    [RequiresUnreferencedCode("Calls Matrix.Identity<double>(int) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Matrix.Identity<double>(int) which requires dynamic code generation.")]
     public double[,] Inverse()
     {
         return Solve(Matrix.Identity<double>(n));
@@ -296,6 +299,8 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
         var X = Reverse();
         return X.TransposeAndDot(X).Inverse();
     }
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Vector.Ones<double> is safe for AOT as double is a known type.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Vector.Ones<double> is safe for AOT as double is a known type.")]
     private void LLt()
     {
         Diagonal = Vector.Ones<double>(n);
@@ -631,6 +636,8 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     ///     an already computed left triangular matrix <c>L</c>.
     /// </summary>
     /// <param name="leftTriangular">The left triangular matrix from a Cholesky decomposition.</param>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Vector.Ones<double> is safe for AOT as double is a known type.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Vector.Ones<double> is safe for AOT as double is a known type.")]
     public static CholeskyDecomposition FromLeftTriangularMatrix(double[,] leftTriangular)
     {
         var chol = new CholeskyDecomposition();

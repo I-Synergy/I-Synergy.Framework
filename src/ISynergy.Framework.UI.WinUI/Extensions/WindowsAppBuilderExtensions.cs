@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -34,7 +35,11 @@ public static class WindowsAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "BindWithReload and RegisterAssemblies use reflection. These are intentional design choices for configuration binding and assembly scanning at startup; types are preserved through explicit registration.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2091",
+        Justification = "Generic type parameters TContext, TCommonServices, TExceptionHandlerService, TSettingsService are registered via DI and their public constructors are available at runtime.")]
+    public static IHostBuilder ConfigureServices<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>(
         this IHostBuilder windowsAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,

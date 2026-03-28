@@ -5,7 +5,8 @@
 		<Description>I-Synergy Framework Mail with Microsoft 365</Description>
 		<PackageTags>I-Synergy, Framework, Mail, Microsoft, Graph, Office, 365</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	</PropertyGroup>
+	  <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Azure.Identity" />
 		<PackageReference Include="Microsoft.Graph" />

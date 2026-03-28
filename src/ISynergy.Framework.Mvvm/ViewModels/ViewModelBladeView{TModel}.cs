@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -201,6 +202,8 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
+    [RequiresUnreferencedCode("JSON serialization without a JsonSerializerContext is not trim-safe.")]
+    [RequiresDynamicCode("JSON serialization without a JsonSerializerContext requires dynamic code.")]
     protected ViewModelBladeView(
         ICommonServices commonServices,
         ILogger<ViewModelBladeView<TModel>> logger)

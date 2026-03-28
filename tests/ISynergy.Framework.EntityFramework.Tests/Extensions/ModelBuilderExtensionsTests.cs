@@ -3,7 +3,6 @@ using ISynergy.Framework.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace ISynergy.Framework.EntityFramework.Extensions;
 
@@ -316,13 +315,13 @@ public class ModelBuilderExtensionsTests
     }
 
     [TestMethod]
-    public void ApplyModelBuilderConfigurations_WithEmptyAssemblies_ReturnsModelBuilder()
+    public void ApplyModelBuilderConfigurations_WithEmptyTypes_ReturnsModelBuilder()
     {
         // Arrange
-        Assembly[] emptyAssemblies = Array.Empty<Assembly>();
+        IReadOnlyList<Type> emptyTypes = Array.Empty<Type>();
 
         // Act
-        var result = _modelBuilder.ApplyModelBuilderConfigurations(emptyAssemblies);
+        var result = _modelBuilder.ApplyModelBuilderConfigurations(emptyTypes);
 
         // Assert
         Assert.IsNotNull(result);
@@ -330,24 +329,27 @@ public class ModelBuilderExtensionsTests
     }
 
     [TestMethod]
-    public void ApplyModelBuilderConfigurations_WithNullAssemblies_ReturnsModelBuilder()
+    public void ApplyModelBuilderConfigurations_WithNullTypes_ReturnsModelBuilder()
     {
-        // Arrange
-        Assembly[]? nullAssemblies = null;
+        // Arrange — EnsureNotNull() treats null as empty, so no exception is thrown
+        IReadOnlyList<Type>? nullTypes = null;
 
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _modelBuilder.ApplyModelBuilderConfigurations(nullAssemblies!));
+        // Act
+        var result = _modelBuilder.ApplyModelBuilderConfigurations(nullTypes!);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(_modelBuilder, result);
     }
 
     [TestMethod]
-    public void ApplyModelBuilderConfigurations_WithValidAssemblies_AppliesConfigurations()
+    public void ApplyModelBuilderConfigurations_WithValidTypes_AppliesConfigurations()
     {
         // Arrange
-        var assemblies = new[] { typeof(TestEntityConfiguration).Assembly };
+        IReadOnlyList<Type> configurationTypes = new[] { typeof(TestEntityConfiguration) };
 
         // Act
-        var result = _modelBuilder.ApplyModelBuilderConfigurations(assemblies);
+        var result = _modelBuilder.ApplyModelBuilderConfigurations(configurationTypes);
 
         // Assert
         Assert.IsNotNull(result);
@@ -358,17 +360,13 @@ public class ModelBuilderExtensionsTests
     }
 
     [TestMethod]
-    public void ApplyModelBuilderConfigurations_WithMixedAssemblies_OnlyAppliesRelevantConfigurations()
+    public void ApplyModelBuilderConfigurations_WithMultipleConfigurationTypes_AppliesAllConfigurations()
     {
         // Arrange
-        // Include current assembly (which has our test configuration) and System assembly (which doesn't)
-        var assemblies = new[] {
-                typeof(TestEntityConfiguration).Assembly,
-                typeof(string).Assembly // System assembly with no configurations
-            };
+        IReadOnlyList<Type> configurationTypes = new[] { typeof(TestEntityConfiguration) };
 
         // Act
-        var result = _modelBuilder.ApplyModelBuilderConfigurations(assemblies);
+        var result = _modelBuilder.ApplyModelBuilderConfigurations(configurationTypes);
 
         // Assert
         Assert.IsNotNull(result);

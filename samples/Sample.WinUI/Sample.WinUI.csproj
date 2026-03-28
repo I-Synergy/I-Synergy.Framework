@@ -14,7 +14,7 @@
 		<AssemblyName>Sample</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
-		<DefaultLanguage>en</DefaultLanguage>
+		<DefaultLanguage>en-US</DefaultLanguage>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>

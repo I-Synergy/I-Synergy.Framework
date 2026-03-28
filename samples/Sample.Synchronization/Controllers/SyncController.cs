@@ -1,6 +1,6 @@
 using Dotmim.Sync;
 using Dotmim.Sync.Enumerations;
-using Dotmim.Sync.SqlServer;
+using Dotmim.Sync.PostgreSql;
 using Dotmim.Sync.Web.Server;
 using ISynergy.Framework.Core.Serializers;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +39,7 @@ namespace Sample.Synchronization.Controllers
         {
             var remoteOrchestrator = _webServerAgent.RemoteOrchestrator;
             var connectionString = remoteOrchestrator.Provider.ConnectionString;
-            remoteOrchestrator.Provider = new SqlSyncProvider(connectionString);
+            remoteOrchestrator.Provider = new NpgsqlSyncProvider(connectionString);
 
             // Deprovision everything
             var provisioning =
@@ -62,7 +62,7 @@ namespace Sample.Synchronization.Controllers
         {
             var remoteOrchestrator = _webServerAgent.RemoteOrchestrator;
             var connectionString = remoteOrchestrator.Provider.ConnectionString;
-            remoteOrchestrator.Provider = new SqlSyncProvider(connectionString);
+            remoteOrchestrator.Provider = new NpgsqlSyncProvider(connectionString);
 
             var setup = new SyncSetup(new[] {
             "Address",

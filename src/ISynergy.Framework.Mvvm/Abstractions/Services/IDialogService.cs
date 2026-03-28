@@ -1,5 +1,6 @@
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
@@ -88,6 +89,8 @@ public interface IDialogService
     /// <param name="window">The window.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
+    [RequiresUnreferencedCode(
+        "GetType() on the window instance is not trim-safe. Use ShowDialogAsync<TWindow,TViewModel,TEntity>() for AOT-safe dialog display.")]
     Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel);
 
     /// <summary>

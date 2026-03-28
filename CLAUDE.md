@@ -382,9 +382,14 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Creat
 ```csharp
 public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, GetUserResponse>
 {
-    private readonly IUserReadRepository _userRepository;
-    private readonly IMapper _mapper;
+    private readonly DataContext _context;
     private readonly ILogger<GetUserByIdQueryHandler> _logger;
+
+    public GetUserByIdQueryHandler(DataContext context, ILogger<GetUserByIdQueryHandler> logger)
+    {
+        _context = context;
+        _logger = logger;
+    }
 
     public async Task<Result<GetUserResponse>> Handle(
         GetUserByIdQuery query,
@@ -392,7 +397,9 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, GetUserRe
     {
         _logger.LogDebug("Retrieving user {UserId}", query.UserId);
 
-        var user = await _userRepository.GetByIdAsync(query.UserId, cancellationToken);
+        var user = await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == query.UserId, cancellationToken);
 
         if (user == null)
         {
@@ -400,7 +407,14 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, GetUserRe
             return Result.Failure<GetUserResponse>("User not found");
         }
 
-        var response = _mapper.Map<GetUserResponse>(user);
+        var response = new GetUserResponse
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email
+        };
+
         return Result.Success(response);
     }
 }

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>I-Synergy.Framework.EventSourcing.EntityFramework</PackageId>
+    <Description>EF Core implementation of IEventStore and IAggregateRepository for I-Synergy Event Sourcing</Description>
+    <PackageTags>I-Synergy, Framework, EventSourcing, EntityFramework, DDD, CQRS</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+    <ProjectReference Include="..\ISynergy.Framework.EventSourcing\ISynergy.Framework.EventSourcing.csproj" />
+  </ItemGroup>
+</Project>

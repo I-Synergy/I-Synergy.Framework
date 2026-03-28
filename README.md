@@ -27,11 +27,13 @@
 - ☁️ **Cloud Ready** - Azure integration and multi-tenant support
 - 📊 **Monitoring & Observability** - OpenTelemetry with Application Insights & Sentry
 - 💾 **Data Access** - Entity Framework Core with advanced abstractions
+- 📅 **Event Sourcing** - Domain event persistence and aggregate replay with AOT-compatible serialization
 - ✉️ **Communication** - Mail, Message Bus, and SignalR capabilities
 - 🔐 **Authentication** - Enterprise security patterns and multi-tenancy
 - 🌍 **Globalization** - Multi-language and localization support
 - 📄 **Document Processing** - PDF, Excel with Syncfusion support
 - 🧮 **Scientific Computing** - Financial, Geography, Physics, Mathematics libraries
+- ⚡ **AOT / Trim Ready** - All libraries annotated for Native AOT and trimmed deployments; source generators for zero-reflection registration
 
 ---
 
@@ -66,6 +68,8 @@
 | Package | Latest Version |
 |:---|:---|
 | **I-Synergy.Framework.EntityFramework** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EntityFramework?label=) |
+| **I-Synergy.Framework.EventSourcing** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EventSourcing?label=) |
+| **I-Synergy.Framework.EventSourcing.EntityFramework** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EventSourcing.EntityFramework?label=) |
 | **I-Synergy.Framework.Storage** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage?label=) |
 | **I-Synergy.Framework.Storage.Azure** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage.Azure?label=) |
 
@@ -143,10 +147,12 @@
 
 - **Clean Architecture** - Clear separation of concerns across Domain, Application, Infrastructure, and Presentation layers
 - **CQRS Pattern** - Command Query Responsibility Segregation for scalable event-driven applications
+- **Event Sourcing** - Domain event store with aggregate replay; pluggable `IEventSerializer` supporting both reflection and AOT-safe source-generated JSON
 - **Dependency Injection** - Built-in DI throughout all layers
 - **Entity Framework Core** - Advanced data access with repository pattern
 - **Domain-Driven Design** - Rich domain models with aggregate roots
 - **Vertical Slice Architecture** - Feature-organized application structure
+- **Native AOT / Trim** - Source generators and compile-time registrations eliminate runtime reflection across all libraries
 
 ---
 

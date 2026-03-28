@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.Core.Extensions;
@@ -11,12 +12,10 @@ public static class BinaryReaderExtensions
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
     /// 
-    public static bool Read<T>(this BinaryReader stream, out T structure)
+    public static bool Read<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(this BinaryReader stream, out T structure)
         where T : struct
     {
-        var type = typeof(T);
-
-        int size = Marshal.SizeOf(type);
+        int size = Marshal.SizeOf<T>();
         byte[] buffer = new byte[size];
         if (stream.Read(buffer, 0, buffer.Length) == 0)
         {
@@ -28,7 +27,7 @@ public static class BinaryReaderExtensions
 
         try
         {
-            structure = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T))!;
+            structure = Marshal.PtrToStructure<T>(handle.AddrOfPinnedObject());
         }
         finally
         {
@@ -45,8 +44,7 @@ public static class BinaryReaderExtensions
     public static T[][] ReadJagged<T>(this BinaryReader stream, int rows, int columns)
         where T : struct
     {
-        var type = typeof(T);
-        int size = Marshal.SizeOf(type);
+        int size = Marshal.SizeOf<T>();
         var buffer = new byte[size * columns];
         T[][] matrix = new T[rows][];
         for (int i = 0; i < matrix.Length; i++)
@@ -64,7 +62,8 @@ public static class BinaryReaderExtensions
     /// <summary>
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
-    /// 
+    ///
+    [RequiresDynamicCode("Calls the non-generic ReadMatrix overload which requires dynamic code generation.")]
     public static T[,] ReadMatrix<T>(this BinaryReader stream, int rows, int columns)
         where T : struct
     {
@@ -75,6 +74,7 @@ public static class BinaryReaderExtensions
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
     /// 
+    [RequiresDynamicCode("Marshal.SizeOf and Array.CreateInstance with runtime types require dynamic code generation.")]
     public static Array ReadMatrix(this BinaryReader stream, Type type, params int[] lengths)
     {
         int size = Marshal.SizeOf(type);

@@ -5,6 +5,7 @@ using ISynergy.Framework.MessageBus.Azure.Services.Queue;
 using ISynergy.Framework.MessageBus.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization.Metadata;
 
 namespace ISynergy.Framework.MessageBus.Azure.Extensions;
@@ -27,6 +28,8 @@ public static class ServiceCollectionExtensions
     /// </param>
     /// <param name="prefix">Optional configuration section prefix.</param>
     /// <returns>The service collection.</returns>
+    [RequiresUnreferencedCode("Configuration binding via BindWithReload uses reflection and is not AOT-safe.")]
+    [RequiresDynamicCode("Configuration binding via BindWithReload requires dynamic code generation.")]
     public static IServiceCollection AddAzureMessageBusPublishIntegration<TQueuePublishMessage>(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -84,6 +87,8 @@ public static class ServiceCollectionExtensions
     /// </param>
     /// <param name="prefix">Optional configuration section prefix.</param>
     /// <returns>The service collection.</returns>
+    [RequiresUnreferencedCode("Configuration binding via BindWithReload uses reflection and is not AOT-safe.")]
+    [RequiresDynamicCode("Configuration binding via BindWithReload requires dynamic code generation.")]
     public static IServiceCollection AddAzureMessageBusSubscribeIntegration<TQueueSubscribeMessage>(
         this IServiceCollection services,
         IConfiguration configuration,

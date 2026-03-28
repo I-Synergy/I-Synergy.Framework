@@ -10,8 +10,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<StaticWebAssetSupport>true</StaticWebAssetSupport>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IsTrimmable>true</IsTrimmable>
-		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<IsAotCompatible>true</IsAotCompatible>
 	</PropertyGroup>
 
 	<ItemGroup>

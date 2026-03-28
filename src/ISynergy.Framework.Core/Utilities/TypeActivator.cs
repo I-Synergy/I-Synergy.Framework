@@ -30,6 +30,8 @@ public static class TypeActivator
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>T.</returns>
+    [RequiresUnreferencedCode("Calls CreateInstance(Type) which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls CreateInstance(Type) which requires dynamic code generation.")]
     public static T CreateInstance<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>() => (T)CreateInstance(typeof(T));
 
     /// <summary>

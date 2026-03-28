@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mathematics.Common;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Vectors;
 
@@ -27,6 +28,8 @@ public static partial class Vector
     /// 
     /// <returns>A vector of the specified size.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[] Ones<T>(int size)
     {
         return Create(size, Constants.One<T>());
@@ -42,6 +45,8 @@ public static partial class Vector
     /// 
     /// <param name="mask">The boolean mask determining where ones will be placed.</param>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[] Ones<T>(bool[] mask)
     {
         return Create(Constants.One<T>(), mask);
@@ -68,6 +73,8 @@ public static partial class Vector
     /// 
     /// <returns>A vector of the specified size.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Ones<double>(int) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Ones<double>(int) which requires dynamic code generation.")]
     public static double[] Ones(int size)
     {
         return Ones<double>(size);
@@ -81,6 +88,8 @@ public static partial class Vector
     /// 
     /// <param name="mask">The boolean mask determining where ones will be placed.</param>
     /// 
+    [RequiresUnreferencedCode("Calls Ones<double>(bool[]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Ones<double>(bool[]) which requires dynamic code generation.")]
     public static double[] Ones(bool[] mask)
     {
         return Ones<double>(mask);
@@ -170,6 +179,8 @@ public static partial class Vector
     /// 
     /// <returns>A one-hot vector where only a single position is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls OneHot<T>(int, T[]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls OneHot<T>(int, T[]) which requires dynamic code generation.")]
     public static T[] OneHot<T>(int index, int columns)
     {
         return OneHot<T>(index, new T[columns]);
@@ -182,6 +193,8 @@ public static partial class Vector
     /// 
     /// <param name="mask">The boolean mask determining where the values will be placed.</param>
     /// 
+    [RequiresUnreferencedCode("Calls OneHot<T>(int, T[]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls OneHot<T>(int, T[]) which requires dynamic code generation.")]
     public static T[] OneHot<T>(bool mask)
     {
         return OneHot<T>(mask, new T[2]);
@@ -195,6 +208,8 @@ public static partial class Vector
     /// <param name="mask">The boolean mask determining where the values will be placed.</param>
     /// <param name="result">The vector where the one-hot should be marked.</param>
     /// 
+    [RequiresUnreferencedCode("Calls OneHot<T>(int, T[]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls OneHot<T>(int, T[]) which requires dynamic code generation.")]
     public static T[] OneHot<T>(bool mask, T[] result)
     {
         return OneHot<T>(mask ? 0 : 1, result);
@@ -227,6 +242,8 @@ public static partial class Vector
     /// 
     /// <returns>A one-hot vector where only a single position is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[] OneHot<T>(int index, T[] result)
     {
         result[index] = Constants.One<T>();
@@ -259,6 +276,8 @@ public static partial class Vector
     /// 
     /// <returns>A k-hot vector where the indicated positions are one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls KHot<T>(int[], T[]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls KHot<T>(int[], T[]) which requires dynamic code generation.")]
     public static T[] KHot<T>(int[] indices, int columns)
     {
         return KHot<T>(indices, new T[columns]);
@@ -289,6 +308,8 @@ public static partial class Vector
     /// 
     /// <returns>A k-hot vector where the indicated positions are one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[] KHot<T>(int[] indices, T[] result)
     {
         var one = Constants.One<T>();
@@ -307,6 +328,8 @@ public static partial class Vector
     ///
     /// <returns>A k-hot vector where the indicated positions are one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[] KHot<T>(bool[] mask, T[] result)
     {
         var one = Constants.One<T>();

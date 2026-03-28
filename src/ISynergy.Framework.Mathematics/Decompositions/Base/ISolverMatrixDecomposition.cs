@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ISynergy.Framework.Mathematics.Decompositions.Base;
 
 /// <summary>
@@ -19,6 +21,8 @@ public interface ISolverMatrixDecomposition<T> where T : struct
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = I</c>.
     /// </summary>
+    [RequiresUnreferencedCode("Implementations may use reflection-based type conversion.")]
+    [RequiresDynamicCode("Implementations may require dynamic code generation.")]
     T[,] Inverse();
 
     /// <summary>

@@ -29,6 +29,8 @@
     <Project Path="src/ISynergy.Framework.Documents.Syncfusion/ISynergy.Framework.Documents.Syncfusion.csproj" />
     <Project Path="src/ISynergy.Framework.Documents/ISynergy.Framework.Documents.csproj" />
     <Project Path="src/ISynergy.Framework.EntityFramework/ISynergy.Framework.EntityFramework.csproj" />
+    <Project Path="src/ISynergy.Framework.EventSourcing/ISynergy.Framework.EventSourcing.csproj" />
+    <Project Path="src/ISynergy.Framework.EventSourcing.EntityFramework/ISynergy.Framework.EventSourcing.EntityFramework.csproj" />
     <Project Path="src/ISynergy.Framework.Financial/ISynergy.Framework.Financial.csproj" />
     <Project Path="src/ISynergy.Framework.Geography/ISynergy.Framework.Geography.csproj" />
     <Project Path="src/ISynergy.Framework.IO/ISynergy.Framework.IO.csproj" />
@@ -80,11 +82,17 @@
     </Project>
     <Project Path="samples/Sample.WPF/Sample.WPF.csproj" />
   </Folder>
-  <Folder Name="/Samples/Services/" />
+  <Folder Name="/Samples/Services/">
+    <Project Path="samples/Sample.AppHost/Sample.AppHost.csproj" />
+  </Folder>
   <Folder Name="/Samples/Services/AspNetCore/">
     <Project Path="samples/Sample.Api/Sample.Api.csproj" />
     <Project Path="samples/Sample.Automation/Sample.Automation.csproj" />
     <Project Path="samples/Sample.Synchronization/Sample.Synchronization.csproj" />
+  </Folder>
+  <Folder Name="/Samples/Services/EventSourcing/">
+    <Project Path="samples/Sample.EventSourcing.Api/Sample.EventSourcing.Api.csproj" />
+    <Project Path="samples/Sample.EventSourcing.Web/Sample.EventSourcing.Web.csproj" />
   </Folder>
   <Folder Name="/Samples/Services/Azure/">
     <Project Path="samples/Sample.Storage.Azure/Sample.Storage.Azure.csproj" />
@@ -135,6 +143,8 @@
     <Project Path="tests/ISynergy.Framework.CQRS.Tests/ISynergy.Framework.CQRS.Tests.csproj" Id="b84f3f8e-a874-4f99-9d3e-8fb2f96c9b7a" />
     <Project Path="tests/ISynergy.Framework.CQRS.SourceGenerator.Tests/ISynergy.Framework.CQRS.SourceGenerator.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.EntityFramework.Tests/ISynergy.Framework.EntityFramework.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.EventSourcing.Tests/ISynergy.Framework.EventSourcing.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.EventSourcing.EntityFramework.Tests/ISynergy.Framework.EventSourcing.EntityFramework.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Financial.Tests/ISynergy.Framework.Financial.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Geography.Tests/ISynergy.Framework.Geography.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.IO.Tests/ISynergy.Framework.IO.Tests.csproj" />

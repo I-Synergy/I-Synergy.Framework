@@ -2,6 +2,8 @@
 
 Use this checklist before considering any task complete.
 
+> **Context:** Many items below (DataContext, Kiota API calls, UI completeness, service registration) apply to **application projects built on top of I-Synergy Framework**. When working on the **framework library itself** (`src/ISynergy.Framework.*`), skip the application-specific sections (UI Completeness, Service Registration, Endpoints) and focus on: backwards compatibility, XML documentation, public API surface, and `tests/ISynergy.Framework.*.Tests`.
+
 ## Production Completeness (MANDATORY SELF-EVALUATION)
 
 This is not a demo or proof of concept. Before saying "done", actively grep the changed scope and verify:

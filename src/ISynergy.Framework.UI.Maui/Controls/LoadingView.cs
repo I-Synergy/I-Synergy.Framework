@@ -22,8 +22,6 @@ public class LoadingView : ContentPage
     private MediaElement? _backgroundMediaElement;
     private Image? _backgroundImage;
     private Button? _signInButton;
-    private BusyIndicator? _indicatorControl;
-
     /// <summary>
     /// Initializes a new instance of the LoadingView class.
     /// </summary>

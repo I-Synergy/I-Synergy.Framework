@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -10,6 +11,7 @@ public static partial class Matrix
     /// </summary>
     /// <param name="array">The array.</param>
     /// <param name="dimension">The index where the dimension should be added.</param>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array ExpandDimensions(this Array array, int dimension)
     {
         var dimensions = array.GetLength().ToList();
@@ -23,6 +25,8 @@ public static partial class Matrix
     ///     Removes dimensions of length 1 from the array.
     /// </summary>
     /// <param name="array">The array.</param>
+    [RequiresUnreferencedCode("Calls Jagged.Zeros(Type,...) and Copy which are not AOT-safe.")]
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Squeeze(this Array array)
     {
         var dimensions = array.GetLength().Where(x => x != 1).ToArray();
@@ -58,6 +62,7 @@ public static partial class Matrix
     ///     Pass 0 to perform a copy in column-major copy. Default is 1
     ///     (row-major, c-style order).
     /// </param>
+    [RequiresDynamicCode("Uses Array.CreateInstance and Marshal.SizeOf with runtime-resolved types.")]
     public static Array Flatten(this Array array, MatrixOrder order = MatrixOrder.CRowMajor)
     {
         var t = array.GetInnerMostType();
@@ -91,6 +96,7 @@ public static partial class Matrix
     ///     Pass 0 to perform a copy in column-major copy. Default is 1
     ///     (row-major, c-style order).
     /// </param>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Reshape(this Array array, int[] shape, MatrixOrder order = MatrixOrder.CRowMajor)
     {
         var t = array.GetInnerMostType();
@@ -112,6 +118,8 @@ public static partial class Matrix
     /// </summary>
     /// <typeparam name="TOutput">The type of the output.</typeparam>
     /// <param name="array">The tensor to be converted.</param>
+    [RequiresUnreferencedCode("Calls Convert(Array, Type) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Convert(Array, Type) which requires dynamic code generation.")]
     public static Array Convert<TOutput>(this Array array)
     {
         return Convert(array, typeof(TOutput));
@@ -122,6 +130,8 @@ public static partial class Matrix
     /// </summary>
     /// <param name="type">The type of the output.</param>
     /// <param name="array">The tensor to be converted.</param>
+    [RequiresUnreferencedCode("Uses ObjectExtensions.To(Object, Type) which is not AOT-safe.")]
+    [RequiresDynamicCode("Uses ObjectExtensions.To(Object, Type) and Array.CreateInstance with runtime types.")]
     public static Array Convert(this Array array, Type type)
     {
         Array r = Matrix.Zeros(type, array.GetLength(true));
@@ -141,6 +151,7 @@ public static partial class Matrix
     /// <param name="source">The tensor to return the subvector from.</param>
     /// <param name="dimension">The dimension from which the indices should be extracted.</param>
     /// <param name="indices">Array of indices.</param>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Get(this Array source, int dimension, int[] indices)
     {
         var lengths = source.GetLength();
@@ -161,6 +172,7 @@ public static partial class Matrix
     /// <param name="source">The tensor to return the subvector from.</param>
     /// <param name="dimension">The dimension from which the indices should be extracted.</param>
     /// <param name="index">The index.</param>
+    [RequiresDynamicCode("Calls Get(Array, int, int, int) which uses Array.CreateInstance and Marshal.SizeOf with runtime-resolved types.")]
     public static Array Get(this Array source, int dimension, int index)
     {
         return Get(source, dimension, index, index + 1);
@@ -173,6 +185,7 @@ public static partial class Matrix
     /// <param name="dimension">The dimension from which the indices should be extracted.</param>
     /// <param name="start">The start index.</param>
     /// <param name="end">The end index.</param>
+    [RequiresDynamicCode("Uses Array.CreateInstance and Marshal.SizeOf with runtime-resolved types.")]
     public static Array Get(this Array source, int dimension, int start, int end)
     {
         if (dimension != 0)
@@ -205,6 +218,7 @@ public static partial class Matrix
     /// <param name="dimension">The dimension where indices refer to.</param>
     /// <param name="value">The matrix of values to which matrix elements will be set.</param>
     /// <param name="index">The index.</param>
+    [RequiresDynamicCode("Calls Set(Array, int, int, int, Array) which uses Marshal.SizeOf with runtime-resolved types.")]
     public static void Set(this Array destination, int dimension, int index, Array value)
     {
         Set(destination, dimension, index, index + 1, value);
@@ -218,6 +232,7 @@ public static partial class Matrix
     /// <param name="value">The matrix of values to which matrix elements will be set.</param>
     /// <param name="start">The start index.</param>
     /// <param name="end">The end index.</param>
+    [RequiresDynamicCode("Uses Marshal.SizeOf with a runtime-resolved element type.")]
     public static void Set(this Array destination, int dimension, int start, int end, Array value)
     {
         if (dimension != 0)
@@ -250,6 +265,7 @@ public static partial class Matrix
     /// </summary>
     /// <param name="shape">The number of dimensions that the tensor should have.</param>
     /// <returns>A tensor of the specified shape.</returns>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Zeros<T>(params int[] shape)
     {
         return Array.CreateInstance(typeof(T), shape);
@@ -261,6 +277,7 @@ public static partial class Matrix
     /// <param name="type">The type of the elements to be contained in the tensor.</param>
     /// <param name="shape">The number of dimensions that the tensor should have.</param>
     /// <returns>A tensor of the specified shape.</returns>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved type.")]
     public static Array Zeros(Type type, params int[] shape)
     {
         return Array.CreateInstance(type, shape);
@@ -272,6 +289,7 @@ public static partial class Matrix
     /// <param name="shape">The number of dimensions that the matrix should have.</param>
     /// <param name="value">The initial values for the vector.</param>
     /// <returns>A matrix of the specified size.</returns>
+    [RequiresDynamicCode("Calls Create(Type, int[], object) which uses Array.CreateInstance with a runtime-resolved type.")]
     public static Array Create<T>(int[] shape, T value)
     {
         return Create(typeof(T), shape, value);
@@ -284,6 +302,7 @@ public static partial class Matrix
     /// <param name="shape">The number of dimensions that the matrix should have.</param>
     /// <param name="value">The initial values for the vector.</param>
     /// <returns>A matrix of the specified size.</returns>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved type.")]
     public static Array Create(Type elementType, int[] shape, object value)
     {
         var arr = Array.CreateInstance(elementType, shape);

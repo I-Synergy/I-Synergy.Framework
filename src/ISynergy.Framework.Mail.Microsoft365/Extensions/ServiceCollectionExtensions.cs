@@ -31,6 +31,7 @@ public static class ServiceCollectionExtensions
     /// </para>
     /// </remarks>
     [RequiresUnreferencedCode("Registers MailService which depends on Microsoft.Graph SDK using reflection-based JSON serialization. Not compatible with AOT publishing in this configuration.")]
+    [RequiresDynamicCode("Calls BindWithReload which uses ConfigurationBinder.Bind requiring dynamic code generation at runtime.")]
     public static IServiceCollection AddMicrosoft365MailIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();

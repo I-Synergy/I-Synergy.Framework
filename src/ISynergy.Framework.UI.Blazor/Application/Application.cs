@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 #pragma warning disable IDE0130, S1200
@@ -44,6 +45,7 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Default constructor.
     /// </summary>
+    [RequiresUnreferencedCode("Calls InitializeEnvironmentVariables which uses ConfigurationBinder.GetValue<T> that is not trim-safe.")]
     protected Application(
         ICommonServices commonServices,
         ISettingsService settingsService,
@@ -129,6 +131,7 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
+    [RequiresUnreferencedCode("ConfigurationBinder.GetValue<T> is not trim-safe.")]
     protected virtual void InitializeEnvironmentVariables()
     {
         try

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -16,7 +17,7 @@ public static class FrameExtensions
     /// <param name="sourcePageType">Type of the source page.</param>
     /// <param name="parameter">The parameter.</param>
     /// <returns>IView.</returns>
-    public static IView? NavigateToView(this Frame frame, Type sourcePageType, object parameter)
+    public static IView? NavigateToView(this Frame frame, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type sourcePageType, object parameter)
     {
         var navigationalView = Activator.CreateInstance(sourcePageType) as IView;
 

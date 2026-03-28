@@ -5,7 +5,8 @@
         <Description>I-Synergy Framework AspNetCore SignalR Monitoring</Description>
         <PackageTags>I-Synergy, Framework, Monitoring, SignalR, AspNetCore</PackageTags>
         <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    </PropertyGroup>
+      <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj" />

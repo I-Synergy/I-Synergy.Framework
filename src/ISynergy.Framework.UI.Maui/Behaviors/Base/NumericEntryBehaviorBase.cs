@@ -9,7 +9,6 @@ namespace ISynergy.Framework.UI.Behaviors.Base;
 /// </summary>
 public abstract class NumericEntryBehaviorBase : Behavior<Entry>
 {
-    private bool _isUpdating;
     private string _lastValidText = string.Empty;
 
     /// <summary>
@@ -139,17 +138,9 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
             {
                 if (TryParseInput(entry.Text, out var initialValue) && IsValueValid(initialValue))
                 {
-                    _isUpdating = true;
-                    try
-                    {
-                        var formatted = FormatValue(initialValue);
-                        entry.Text = formatted;
-                        _lastValidText = formatted;
-                    }
-                    finally
-                    {
-                        _isUpdating = false;
-                    }
+                    var formatted = FormatValue(initialValue);
+                    entry.Text = formatted;
+                    _lastValidText = formatted;
                 }
             }
         });
@@ -195,23 +186,14 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
             currentText == Culture.NumberFormat.NegativeSign)
         {
             // Clear invalid input
-            _isUpdating = true;
-            try
-            {
-                entry.Text = string.Empty;
-                _lastValidText = string.Empty;
-            }
-            finally
-            {
-                _isUpdating = false;
-            }
+            entry.Text = string.Empty;
+            _lastValidText = string.Empty;
             return;
         }
 
         // Parse and reformat the value
         if (TryParseInput(currentText, out var value) && IsValueValid(value))
         {
-            _isUpdating = true;
             SetIsFormatting(entry, true);
             
             // Format will handle rounding
@@ -225,8 +207,7 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
             entry.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(50), () =>
             {
                 SetIsFormatting(entry, false);
-                _isUpdating = false;
-                
+
                 // Reapply formatted text if it was overwritten
                 if (entry.Text != formatted && !entry.IsFocused)
                 {
@@ -237,15 +218,7 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         else
         {
             // Invalid input - clear or revert to last valid
-            _isUpdating = true;
-            try
-            {
-                entry.Text = string.IsNullOrEmpty(_lastValidText) ? string.Empty : _lastValidText;
-            }
-            finally
-            {
-                _isUpdating = false;
-            }
+            entry.Text = string.IsNullOrEmpty(_lastValidText) ? string.Empty : _lastValidText;
         }
     }
 

@@ -24,75 +24,70 @@ public class Program
         infoService.LoadAssembly(mainAssembly!);
 
         // Add telemetry
-        builder.Host
-            .ConfigureLogging(loggingBuilder =>
-            {
-                loggingBuilder.
-                    AddTelemetry(
-                        builder,
-                        infoService,
-                        tracerProviderBuilderAction: (tracing) =>
+        builder.Logging
+            .AddTelemetry(
+                builder,
+                infoService,
+                tracerProviderBuilderAction: (tracing) =>
+                {
+                    tracing.AddAspNetCoreInstrumentation(opts =>
+                    {
+                        opts.RecordException = true;
+                        opts.EnrichWithHttpRequest = (activity, request) =>
                         {
-                            tracing.AddAspNetCoreInstrumentation(opts =>
-                            {
-                                opts.RecordException = true;
-                                opts.EnrichWithHttpRequest = (activity, request) =>
-                                {
-                                    activity.SetTag("http.request.header.user_agent", request.Headers.UserAgent);
-                                    activity.SetTag("http.request.method", request.Method);
-                                };
-                                opts.EnrichWithHttpResponse = (activity, response) =>
-                                {
-                                    activity.SetTag("http.response.status_code", response.StatusCode);
-                                };
-                            });
-
-                            tracing.AddSqlClientInstrumentation(options =>
-                            {
-                                options.RecordException = true;
-                            });
-
-                            tracing.AddEntityFrameworkCoreInstrumentation();
-                        },
-                        meterProviderBuilderAction: (metrics) =>
+                            activity.SetTag("http.request.header.user_agent", request.Headers.UserAgent);
+                            activity.SetTag("http.request.method", request.Method);
+                        };
+                        opts.EnrichWithHttpResponse = (activity, response) =>
                         {
-                            metrics.AddAspNetCoreInstrumentation();
+                            activity.SetTag("http.response.status_code", response.StatusCode);
+                        };
+                    });
 
-                            // ASP.NET Core metrics
-                            metrics.AddMeter("Microsoft.AspNetCore.Hosting");
-                            metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
+                    tracing.AddSqlClientInstrumentation(options =>
+                    {
+                        options.RecordException = true;
+                    });
 
-                            // EF Core metrics
-                            metrics.AddMeter("Microsoft.EntityFrameworkCore");
-                        },
-                        loggerProviderBuilderAction: (logger) =>
-                        {
-                        })
-                        .AddOtlpExporter()
-                        .AddApplicationInsightsExporter()
-                        .AddSentryExporter(
-                            options =>
-                            {
-                                options.Environment = builder.Environment.EnvironmentName;
-                                options.Debug = builder.Environment.IsDevelopment();
-                            });
-            })
-            .ConfigureServices((context, services) =>
-            {
-                services.AddHealthChecks()
-                    // Add a default liveness check to ensure app is responsive
-                    .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+                    tracing.AddEntityFrameworkCoreInstrumentation();
+                },
+                meterProviderBuilderAction: (metrics) =>
+                {
+                    metrics.AddAspNetCoreInstrumentation();
 
-                // Add services to the container.
-                services.AddControllerWithDefaultJsonSerialization();
+                    // ASP.NET Core metrics
+                    metrics.AddMeter("Microsoft.AspNetCore.Hosting");
+                    metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
 
-                services.AddDbContext<TestDbContext>(options =>
-                    options.UseInMemoryDatabase("TestDb"));
+                    // EF Core metrics
+                    metrics.AddMeter("Microsoft.EntityFrameworkCore");
+                },
+                loggerProviderBuilderAction: (logger) =>
+                {
+                })
+                .AddOtlpExporter()
+                .AddApplicationInsightsExporter()
+                .AddSentryExporter(
+                    options =>
+                    {
+                        options.Environment = builder.Environment.EnvironmentName;
+                        options.Debug = builder.Environment.IsDevelopment();
+                    });
 
-                services.AddEndpointsApiExplorer();
+        builder.Services
+            .AddHealthChecks()
+            // Add a default liveness check to ensure app is responsive
+            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
-                services.AddOpenApiDocument();
-            });
+        // Add services to the container.
+        builder.Services.AddControllerWithDefaultJsonSerialization();
+
+        builder.Services.AddDbContext<TestDbContext>(options =>
+            options.UseInMemoryDatabase("TestDb"));
+
+        builder.Services.AddEndpointsApiExplorer();
+
+        builder.Services.AddOpenApiDocument();
 
 
         var app = builder

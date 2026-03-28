@@ -38,6 +38,8 @@ public class QueryDispatcher : IQueryDispatcher
     }
 
     /// <inheritdoc/>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Reflection fallback is only reached when QueryDispatchTable is absent. AOT builds must register a dispatch table via AddQueryDispatchTable().")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Reflection fallback is only reached when QueryDispatchTable is absent. AOT builds must register a dispatch table via AddQueryDispatchTable().")]
     public async Task<TResult> DispatchAsync<TResult>(
         IQuery<TResult> query,
         CancellationToken cancellationToken = default)

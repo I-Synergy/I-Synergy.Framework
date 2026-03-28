@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Exceptions;
 using ISynergy.Framework.Core.Extensions.Base;
 using System.Collections;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Extensions;
 
@@ -16,6 +17,7 @@ public static class EnumerableExtensions
     /// <param name="value">Value to test</param>
     /// <param name="desiredFlags">Flags we wish to find</param>
     /// <returns>Whether the two specified values have any flags in common.</returns>
+    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static bool HasAny(this Enum value, Enum desiredFlags)
     {
         return desiredFlags.GetIndividualFlags().EnsureNotNull().Any(flag => value.HasFlag(flag));
@@ -65,6 +67,7 @@ public static class EnumerableExtensions
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
+    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static IEnumerable<Enum> GetFlags(this Enum value)
     {
         return GetFlags(value, Enum.GetValues(value.GetType()).Cast<Enum>().ToArray());
@@ -75,6 +78,7 @@ public static class EnumerableExtensions
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
+    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static IEnumerable<Enum> GetIndividualFlags(this Enum value)
     {
         return GetFlags(value, GetFlagValues(value.GetType()).ToArray());
@@ -115,6 +119,7 @@ public static class EnumerableExtensions
     /// </summary>
     /// <param name="enumType">Type of the enum.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
+    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     private static IEnumerable<Enum> GetFlagValues(Type enumType)
     {
         ulong flag = 0x1;
@@ -147,7 +152,7 @@ public static class EnumerableExtensions
     /// <param name="collection">The collection.</param>
     /// <param name="tableName">Name of the table.</param>
     /// <returns>DataTable.</returns>
-    public static DataTable ToDataTable<T>(this IEnumerable<T> collection, string tableName) =>
+    public static DataTable ToDataTable<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this IEnumerable<T> collection, string tableName) =>
         collection.ToDataTableBase(tableName);
 
     /// <summary>
@@ -157,6 +162,6 @@ public static class EnumerableExtensions
     /// <param name="type">The type.</param>
     /// <param name="tableName">Name of the table.</param>
     /// <returns>DataTable.</returns>
-    public static DataTable ToDataTable(this IEnumerable collection, Type type, string tableName) =>
+    public static DataTable ToDataTable(this IEnumerable collection, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type, string tableName) =>
         collection.ToDataTableBase(tableName, type);
 }
