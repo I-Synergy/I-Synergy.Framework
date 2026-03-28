@@ -133,7 +133,8 @@ public static class ViewModelExtensions
     public static string GetRelatedWindow(this IViewModel viewModel) =>
         viewModel.GetType().GetRelatedWindow();
 
-    public static string GetRelatedViewModel(this Type type)
+    [RequiresUnreferencedCode("Inspecting interfaces of a type at runtime is not trim-safe.")]
+    public static string GetRelatedViewModel([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] this Type type)
     {
         var result = type.Name;
 
@@ -148,9 +149,11 @@ public static class ViewModelExtensions
         return result;
     }
 
+    [RequiresUnreferencedCode("Inspecting interfaces of a type at runtime is not trim-safe.")]
     public static string GetRelatedViewModel(this IView view) =>
         view.GetType().GetRelatedViewModel();
 
+    [RequiresUnreferencedCode("Inspecting interfaces of a type at runtime is not trim-safe.")]
     public static string GetRelatedViewModel(this IWindow window) =>
         window.GetType().GetRelatedViewModel();
 

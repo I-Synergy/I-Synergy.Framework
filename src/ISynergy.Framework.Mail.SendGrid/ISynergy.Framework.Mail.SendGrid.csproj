@@ -5,7 +5,8 @@
 		<Description>I-Synergy Framework Mail with SendGrid</Description>
 		<PackageTags>I-Synergy, Framework, Mail, SendGrid</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-    </PropertyGroup>
+      <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="SendGrid" />

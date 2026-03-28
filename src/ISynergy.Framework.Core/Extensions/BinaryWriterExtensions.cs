@@ -10,12 +10,11 @@ public static class BinaryWriterExtensions
     /// <summary>
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
-    /// 
+    ///
     public static bool Write<T>(this BinaryWriter stream, T[] array)
         where T : struct
     {
-        var type = typeof(T);
-        int size = Marshal.SizeOf(type);
+        int size = Marshal.SizeOf<T>();
         byte[] buffer = new byte[size * array.Length];
 
         Buffer.BlockCopy(array, 0, buffer, 0, buffer.Length);
@@ -27,12 +26,11 @@ public static class BinaryWriterExtensions
     /// <summary>
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
-    /// 
+    ///
     public static bool Write<T>(this BinaryWriter stream, T[][] array)
         where T : struct
     {
-        var type = typeof(T);
-        int size = Marshal.SizeOf(type);
+        int size = Marshal.SizeOf<T>();
         byte[] buffer = new byte[size * array[0].Length];
 
         for (int i = 0; i < array.Length; i++)
@@ -47,12 +45,11 @@ public static class BinaryWriterExtensions
     /// <summary>
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
-    /// 
+    ///
     public static bool Write<T>(this BinaryWriter stream, T[,] array)
         where T : struct
     {
-        var type = typeof(T);
-        int size = Marshal.SizeOf(type);
+        int size = Marshal.SizeOf<T>();
         byte[] buffer = new byte[size * array.Length];
 
         Buffer.BlockCopy(array, 0, buffer, 0, buffer.Length);

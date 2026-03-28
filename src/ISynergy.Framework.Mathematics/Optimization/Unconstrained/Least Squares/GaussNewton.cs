@@ -3,6 +3,7 @@ using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Statistics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Optimization;
 
@@ -87,6 +88,8 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod, IConverg
     /// <summary>
     ///     Gets standard error for each parameter in the solution.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Calls JaggedSingularValueDecomposition.Inverse() which operates on Double[][] - a well-known type safe for trimming.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Calls JaggedSingularValueDecomposition.Inverse() which operates on Double[][] - a well-known type safe for AOT.")]
     public double[] StandardErrors => decomposition.Inverse().Diagonal().Sqrt();
     /// <summary>
     ///     Attempts to find the best values for the parameter vector

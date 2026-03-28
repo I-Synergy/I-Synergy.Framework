@@ -8,6 +8,7 @@
 		<RootNamespace>ISynergy.Framework.OpenTelemetry</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnableMsixTooling>true</EnableMsixTooling>
+		<IsAotCompatible>true</IsAotCompatible>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -4,6 +4,7 @@
         <PackageId>I-Synergy.Framework.MessageBus</PackageId>
         <Description>I-Synergy Framework MessageBus</Description>
         <PackageTags>I-Synergy, Framework, MessageBus</PackageTags>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
 	<ItemGroup>

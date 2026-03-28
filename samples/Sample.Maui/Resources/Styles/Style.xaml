@@ -310,7 +310,7 @@
     <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="TextColor" Value="{DynamicResource White}" />
         <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}" />
         <Setter Property="Padding" Value="14,10" />
@@ -341,7 +341,7 @@
     <Style x:Key="SecondaryButton" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray300}, Dark={DynamicResource TintedGray500}}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="BorderWidth" Value="1" />
         <Setter Property="BorderColor" Value="{DynamicResource Primary}" />
         <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}" />
@@ -390,7 +390,7 @@
     <Style TargetType="DatePicker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
@@ -412,7 +412,7 @@
     <Style TargetType="Editor">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
@@ -434,7 +434,7 @@
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
@@ -453,19 +453,10 @@
         </Setter>
     </Style>
 
-    <!-- Note: Frame is obsolete as of .NET 9. Use Border instead.
-         This style is kept for backward compatibility but should be migrated to Border. -->
-    <Style TargetType="Frame">
-        <Setter Property="HasShadow" Value="False" />
-        <Setter Property="BorderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray600}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="CornerRadius" Value="8" />
-    </Style>
-
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -486,23 +477,16 @@
 
     <Style x:Key="Headline" TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource MidnightBlue}, Dark={DynamicResource White}}" />
-        <Setter Property="FontSize" Value="Title" />
+        <Setter Property="FontSize" Value="24" />
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="SubHeadline" TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource MidnightBlue}, Dark={DynamicResource White}}" />
-        <Setter Property="FontSize" Value="Subtitle" />
+        <Setter Property="FontSize" Value="16" />
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
-    </Style>
-
-    <!-- Note: ListView is deprecated as of .NET 9. Use CollectionView instead.
-         This style is kept for backward compatibility but should be migrated to CollectionView. -->
-    <Style TargetType="ListView">
-        <Setter Property="SeparatorColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray500}}" />
-        <Setter Property="RefreshControlColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
     </Style>
 
     <Style TargetType="CollectionView">
@@ -518,7 +502,7 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
         <Setter Property="TitleColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
@@ -557,7 +541,7 @@
     <Style TargetType="RadioButton">
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
@@ -599,7 +583,7 @@
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="CancelButtonColor" Value="{DynamicResource Primary}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -622,7 +606,7 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="PlaceholderColor" Value="{DynamicResource Gray500}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -702,7 +686,7 @@
     <Style TargetType="TimePicker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontSize" Value="Caption" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="behaviors:CursorBehavior.Cursor" Value="Hand"/>
@@ -789,7 +773,7 @@
             </Image>
             <Label
                 Grid.Column="1"
-                FontSize="Caption"
+                FontSize="12"
                 Text="{Binding Name}"
                 VerticalOptions="Center" />
             <Grid.GestureRecognizers>

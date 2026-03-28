@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 
 #if !NET35 && !NET40
@@ -13,6 +14,7 @@ public static partial class NpzFormat
     /// <param name="arrays">The arrays to be saved to the array of bytes.</param>
     /// <param name="compression">The compression level to use when compressing the array.</param>
     /// <returns>A byte array containig the saved arrays.</returns>
+    [RequiresDynamicCode("Calls NpyFormat.Save(Array, Stream) which requires dynamic code generation.")]
     public static byte[] Save(Dictionary<string, Array> arrays, CompressionLevel compression = DEFAULT_COMPRESSION)
     {
         using (var stream = new MemoryStream())
@@ -28,6 +30,7 @@ public static partial class NpzFormat
     /// <param name="array">The array to be saved to the array of bytes.</param>
     /// <param name="compression">The compression level to use when compressing the array.</param>
     /// <returns>A byte array containig the saved array.</returns>
+    [RequiresDynamicCode("Calls NpyFormat.Save(Array, Stream) which requires dynamic code generation.")]
     public static byte[] Save(Array array, CompressionLevel compression = DEFAULT_COMPRESSION)
     {
         using (var stream = new MemoryStream())
@@ -42,6 +45,7 @@ public static partial class NpzFormat
     /// <param name="arrays">The arrays to be saved to disk.</param>
     /// <param name="path">The disk path under which the file will be saved.</param>
     /// <param name="compression">The compression level to use when compressing the array.</param>
+    [RequiresDynamicCode("Calls NpyFormat.Save(Array, Stream) which requires dynamic code generation.")]
     public static void Save(Dictionary<string, Array> arrays, string path,
         CompressionLevel compression = DEFAULT_COMPRESSION)
     {
@@ -57,6 +61,7 @@ public static partial class NpzFormat
     /// <param name="array">The array to be saved to disk.</param>
     /// <param name="path">The disk path under which the file will be saved.</param>
     /// <param name="compression">The compression level to use when compressing the array.</param>
+    [RequiresDynamicCode("Calls NpyFormat.Save(Array, Stream) which requires dynamic code generation.")]
     public static void Save(Array array, string path, CompressionLevel compression = DEFAULT_COMPRESSION)
     {
         using (var stream = new FileStream(path, FileMode.Create))
@@ -71,6 +76,7 @@ public static partial class NpzFormat
     /// <param name="stream">The stream to which the file will be saved.</param>
     /// <param name="compression">The compression level to use when compressing the array.</param>
     /// <param name="leaveOpen">True to leave the stream opened after the file is saved; false otherwise.</param>
+    [RequiresDynamicCode("Calls NpyFormat.Save(Array, Stream) which requires dynamic code generation.")]
     public static void Save(Dictionary<string, Array> arrays, Stream stream,
         CompressionLevel compression = DEFAULT_COMPRESSION, bool leaveOpen = false)
     {
@@ -91,6 +97,7 @@ public static partial class NpzFormat
     /// <param name="stream">The stream to which the file will be saved.</param>
     /// <param name="compression">The compression level to use when compressing the array.</param>
     /// <param name="leaveOpen">True to leave the stream opened after the file is saved; false otherwise.</param>
+    [RequiresDynamicCode("Calls NpyFormat.Save(Array, Stream) which requires dynamic code generation.")]
     public static void Save(Array array, Stream stream, CompressionLevel compression = DEFAULT_COMPRESSION,
         bool leaveOpen = false)
     {

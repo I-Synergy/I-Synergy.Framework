@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Aspire AppHost",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/samples/Sample.AppHost/Sample.AppHost.csproj",
+            "launchProfile": "https"
+        },
+        {
             "name": ".NET MAUI",
             "type": "maui",
             "request": "launch",

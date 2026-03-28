@@ -29,6 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `[RequiresUnreferencedCode]`, `[RequiresDynamicCode]`, and `[DynamicallyAccessedMembers]` attributes to all reflection-heavy public APIs across: `ISynergy.Framework.Core`, `ISynergy.Framework.CQRS`, `ISynergy.Framework.IO`, `ISynergy.Framework.Mathematics`, `ISynergy.Framework.Physics`, `ISynergy.Framework.Synchronization`, `ISynergy.Framework.Automations`, `ISynergy.Framework.Mvvm`, `ISynergy.Framework.EntityFramework`, `ISynergy.Framework.AspNetCore` (all five libraries), `ISynergy.Framework.MessageBus.*`, `ISynergy.Framework.OpenTelemetry.*`, and `ISynergy.Framework.Monitoring`
 - Set `<IsTrimmable>true</IsTrimmable>` and `<EnableTrimAnalyzer>true</EnableTrimAnalyzer>` in all platform UI project files: `ISynergy.Framework.UI.WPF`, `ISynergy.Framework.UI.WinUI`, `ISynergy.Framework.UI.Maui`, `ISynergy.Framework.UI.Blazor`, and `ISynergy.Framework.UI.UWP`
 
+#### AOT Compatibility — EventSourcing
+- **ISynergy.Framework.EventSourcing.EntityFramework**: `IEventSerializer` abstraction — pluggable serialization contract for domain events, separating JSON strategy from `EventStore` and `AggregateRepository`
+- **ISynergy.Framework.EventSourcing.EntityFramework**: `JsonReflectionEventSerializer` — reflection-based `IEventSerializer` implementation; annotated `[RequiresUnreferencedCode]`/`[RequiresDynamicCode]` for use in non-trimmed deployments
+- **ISynergy.Framework.EventSourcing.EntityFramework**: `JsonSourceGeneratedEventSerializer` — AOT-safe `IEventSerializer` backed by a consumer-supplied `JsonSerializerContext`; requires `[JsonSerializable]` attributes on all event types
+- **ISynergy.Framework.EventSourcing.EntityFramework**: `DictionaryEventTypeResolver` — AOT/trim-safe `IEventTypeResolver` using an explicit compile-time type map; use instead of `DefaultEventTypeResolver` in trimmed deployments
+- **ISynergy.Framework.EventSourcing.EntityFramework**: AOT-safe `AddEventSourcingEntityFramework` overload accepting a `JsonSerializerContext` and explicit event-type map
+
 ### Changed
 
 #### AOT Compatibility — Wave 1 (Core infrastructure)
@@ -54,6 +61,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ISynergy.Framework.MessageBus.Azure**: All publisher/consumer classes now accept `JsonTypeInfo<T>` in constructors and DI registration; `JsonSerializerOptions` paths retained with `[RequiresDynamicCode]` for backwards compatibility
 - **ISynergy.Framework.MessageBus.RabbitMQ**: All publisher/consumer classes now accept `JsonTypeInfo<T>` in constructors and DI registration; `JsonSerializerOptions` paths retained with `[RequiresDynamicCode]` for backwards compatibility
 
+#### AOT Compatibility — Wave 5 (EventSourcing)
+- **ISynergy.Framework.EventSourcing.EntityFramework**: `EventStore` and `AggregateRepository` refactored to accept `IEventSerializer` — inline `JsonSerializer` calls removed from both classes; serialization strategy is now fully pluggable
+- **ISynergy.Framework.EventSourcing.EntityFramework**: `ServiceCollectionExtensions.AddEventSourcingEntityFramework` — existing reflection-based overload annotated `[RequiresUnreferencedCode]`/`[RequiresDynamicCode]` and now registers `JsonReflectionEventSerializer` automatically
+- **ISynergy.Framework.EventSourcing.EntityFramework**: `<IsAotCompatible>true</IsAotCompatible>` added to project file; the trim analyzer now validates AOT-safe code paths at build time
+
+- **[BREAKING] ISynergy.Framework.EventSourcing**: `IEventStore.AppendEventAsync` — `object? metadata` parameter renamed to `string? metadataJson`; callers must pre-serialize metadata to JSON. No existing callers passed this parameter (all call sites used the default `null`), so the impact is limited to custom implementations of `IEventStore`.
+
 - **[BREAKING] ISynergy.Framework.UI.UWP**: Minimum Windows version raised from 10.0.17763.0 (Version 1809) to 10.0.19041.0 (Version 2004)
   - **Location**: `src/ISynergy.Framework.UI.UWP/ISynergy.Framework.UI.UWP.csproj` line 4
   - **Old Value**: `<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>`
@@ -61,6 +75,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Affected Scenarios**: Any UWP application targeting Windows 10 Version 1809 must upgrade to Version 2004 or later
   - **Technical Justification**: Windows 10 Version 2004 provides access to modern Windows SDK APIs and tooling features required for optimal compatibility with .NET 10, including enhanced platform capabilities and improved build toolchain support
   - **Migration Path**: See [UWP Migration Guide](src/ISynergy.Framework.UI.UWP/readme.md#migration-guide) in the package README
+
+### Fixed
+- **Sample.WinUI**: Changed `<DefaultLanguage>` from `en` to `en-US` to eliminate PRI257 resource packaging warning; `makepri.exe` requires the default language tag to match the actual resource qualifiers present (`en-us`, `de-de`, etc.)
+- **Sample.Maui (Android 16)**: Resolved XA0141 by pinning `SQLitePCLRaw.lib.e_sqlite3.android` to 2.1.11 in central package management and adding a direct Android-conditional `PackageReference`; the transitively-pulled version 2.1.6 (via `Dotmim.Sync.Sqlite`) used 4KB ELF segment alignment which Android 16 rejects
+- **Compiler warnings — MAUI samples**: Replaced all deprecated `NamedSize` string values (`Title`, `Body`, `Subtitle`, `Caption`, `Large`) in MAUI XAML files with explicit numeric pixel values; removed obsolete `Frame` and `ListView` XAML styles
+- **Compiler warnings — library projects**: Removed unused private fields (`CS0169`, `CS0414`), removed unused local variables (`CS0219`), fixed nullable return on `SignUpViewModel.Mail` getter (`CS8603`), and resolved ambiguous XML `<see cref>` in `MauiAppBuilderExtensions` (`CS0419`)
 
 ### Deprecated
 - **ISynergy.Framework.Core** `ObjectExtensions.Clone<T>()` (reflection-based overload): Use `Clone<T>(JsonSerializerContext)` in AOT/trimmed deployments. The parameterless overload is annotated `[RequiresUnreferencedCode]` and will be removed in a future major version.

@@ -216,7 +216,10 @@ public static class ReflectionExtensions
         services.Register(viewmodel, abstraction);
     }
 
-    private static void Register(this IServiceCollection services, Type type, Type? abstraction)
+    private static void Register(
+        this IServiceCollection services,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type type,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type? abstraction)
     {
         if (type.IsSingleton())
         {

@@ -38,11 +38,14 @@ public class EnumToBooleanConverter : IValueConverter
     /// change XAML usages from <c>EnumType="Namespace.MyEnum"</c> to pass the type via a
     /// strongly-typed binding or use a generic alternative.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "Type.GetType(string) is used to resolve the enum type at runtime. This is not trim-safe. " +
-        "Migrate XAML callers to provide a Type via x:Type syntax and update EnumType to Type.")]
-    [RequiresDynamicCode(
-        "Enum.IsDefined and Enum.Parse require dynamic code for runtime type resolution.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2046",
+        Justification = "IValueConverter is an external WinUI SDK interface without RequiresUnreferencedCode; suppressing annotation mismatch.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "Type.GetType(string) is intentionally used for XAML-driven enum resolution; callers must ensure enum types are preserved.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2057",
+        Justification = "Type.GetType(string) with a runtime string is intentional for XAML enum resolution; the caller must ensure the type is preserved.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050",
+        Justification = "Enum.IsDefined and Enum.Parse require dynamic code; not AOT-safe by design.")]
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if (parameter is string enumString)
@@ -78,10 +81,14 @@ public class EnumToBooleanConverter : IValueConverter
     /// This method uses <see cref="Type.GetType(string)"/> to resolve the enum type at runtime.
     /// Not trim-safe — see <see cref="Convert"/> remarks.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "Type.GetType(string) is used to resolve the enum type at runtime. This is not trim-safe.")]
-    [RequiresDynamicCode(
-        "Enum.Parse requires dynamic code for runtime type resolution.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2046",
+        Justification = "IValueConverter is an external WinUI SDK interface without RequiresUnreferencedCode; suppressing annotation mismatch.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "Type.GetType(string) is intentionally used for XAML-driven enum resolution; callers must ensure enum types are preserved.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2057",
+        Justification = "Type.GetType(string) with a runtime string is intentional for XAML enum resolution; the caller must ensure the type is preserved.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050",
+        Justification = "Enum.Parse requires dynamic code; not AOT-safe by design.")]
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
         if (parameter is string enumString)
@@ -113,8 +120,12 @@ public class EnumToArrayConverter : IValueConverter
     /// metadata to be preserved by the trimmer. For NativeAOT compatibility, prefer
     /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code instead of this converter.
     /// </remarks>
-    [RequiresUnreferencedCode("Enum.GetValues(Type) requires the enum type members to be preserved by the trimmer.")]
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for runtime type resolution.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2046",
+        Justification = "IValueConverter is an external WinUI SDK interface without RequiresUnreferencedCode; suppressing annotation mismatch.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "Enum.GetValues(Type) is intentionally used for XAML-driven enum resolution; callers must ensure enum types are preserved.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050",
+        Justification = "Enum.GetValues requires dynamic code; not AOT-safe by design.")]
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         var list = new List<KeyValuePair<int, string>>();
@@ -184,10 +195,14 @@ public class EnumToStringConverter : IValueConverter
     /// trim-unsafe. Prefer passing the enum value directly (without a string parameter) to avoid
     /// the trim-unsafe code path.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "When 'parameter' is a string type name, Type.GetType(string) is used which is not trim-safe. " +
-        "Pass the enum value directly without a string parameter for the AOT-safe code path.")]
-    [RequiresDynamicCode("Enum.Parse requires dynamic code for runtime type resolution.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2046",
+        Justification = "IValueConverter is an external WinUI SDK interface without RequiresUnreferencedCode; suppressing annotation mismatch.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "Type.GetType(string) is intentionally used for XAML-driven enum resolution; callers must ensure enum types are preserved.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2057",
+        Justification = "Type.GetType(string) with a runtime string is intentional for XAML enum resolution; the caller must ensure the type is preserved.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050",
+        Justification = "Enum.Parse requires dynamic code; not AOT-safe by design.")]
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()!) is { } type && type.IsEnum)

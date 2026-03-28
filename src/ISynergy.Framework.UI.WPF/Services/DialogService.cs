@@ -5,6 +5,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using MessageBoxButtons = ISynergy.Framework.Mvvm.Enumerations.MessageBoxButtons;
 using MessageBoxImage = System.Windows.MessageBoxImage;
@@ -155,6 +156,8 @@ public class DialogService : IDialogService
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TEntity"></typeparam>
     /// <returns></returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface IDialogService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Non-generic service resolution by runtime Type is intentional; callers must ensure types are preserved.")]
     public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>()
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
@@ -172,6 +175,8 @@ public class DialogService : IDialogService
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <param name="e">The selected item.</param>
     /// <returns>Task{TEntity}.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface IDialogService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Non-generic service resolution by runtime Type is intentional; callers must ensure types are preserved.")]
     public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(TEntity e)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
@@ -191,6 +196,8 @@ public class DialogService : IDialogService
     /// <param name="window">The window.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface IDialogService.ShowDialogAsync<TEntity> carries RequiresUnreferencedCodeAttribute; implementation matches.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Non-generic service resolution by runtime Type is intentional; callers must ensure types are preserved.")]
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
         if (_scopedContextService.GetRequiredService(window.GetType()) is Window dialog)
@@ -204,6 +211,8 @@ public class DialogService : IDialogService
     /// <param name="type">The type.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface IDialogService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Non-generic service resolution by runtime Type is intentional; callers must ensure types are preserved.")]
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
         if (_scopedContextService.GetRequiredService(type) is Window dialog)

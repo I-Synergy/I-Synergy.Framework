@@ -37,7 +37,7 @@
             Grid.Column="1"
             Spacing="5">
             <Label
-                FontSize="Title"
+                FontSize="24"
                 HorizontalOptions="Center"
                 LineBreakMode="WordWrap"
                 SemanticProperties.HeadingLevel="Level1"
@@ -45,7 +45,7 @@
                 TextColor="{DynamicResource Primary}" />
 
             <Label
-                FontSize="Body"
+                FontSize="14"
                 HorizontalOptions="Center"
                 LineBreakMode="WordWrap"
                 SemanticProperties.HeadingLevel="Level2"

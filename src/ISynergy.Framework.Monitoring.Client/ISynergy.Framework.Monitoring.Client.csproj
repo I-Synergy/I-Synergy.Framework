@@ -5,7 +5,8 @@
 		<Description>I-Synergy Framework SignalR Monitoring Client for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, Client, SignalR</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-    </PropertyGroup>
+      <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />

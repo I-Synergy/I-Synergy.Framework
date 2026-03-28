@@ -5,7 +5,8 @@
 		<Description>I-Synergy Framework Globalization</Description>
 		<PackageTags>I-Synergy, Framework, Globalization</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	</PropertyGroup>
+	  <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />

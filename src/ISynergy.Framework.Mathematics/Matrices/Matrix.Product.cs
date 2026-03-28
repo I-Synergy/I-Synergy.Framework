@@ -1,4 +1,4 @@
-
+﻿
 using ISynergy.Framework.Mathematics.Exceptions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -259,7 +259,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[,] Dot(this double[,] a, double[,] b, double[,] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[,] Dot(this double[,] a, double[,] b, double[,] result)
     {
         int N = result.Rows();
         int K = a.Columns();
@@ -323,7 +324,8 @@ public static partial class Matrix
     /// <param name="b">The right matrix <c>B</c>.</param>
     /// <param name="result">The matrix <c>R</c> to store the product.</param>
     /// 
-    public static double[][] Dot(this double[][] a, double[][] b, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] Dot(this double[][] a, double[][] b, double[][] result)
     {
 #if DEBUG
         if (a.Columns() != b.Length || result.Length > a.Length || result.Columns() > b.Columns())
@@ -366,7 +368,8 @@ public static partial class Matrix
     /// <param name="b">The right matrix <c>B</c>.</param>
     /// <param name="result">The matrix <c>R</c> to store the product.</param>
     /// 
-    public static double[][] Dot(this double[][] a, double[,] b, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] Dot(this double[][] a, double[,] b, double[][] result)
     {
 #if DEBUG
         if (a.Columns() != b.Rows() || result.Length > a.Length || result.Columns() > b.Columns())
@@ -420,7 +423,8 @@ public static partial class Matrix
     /// <param name="b">The right matrix <c>B</c>.</param>
     /// <param name="result">The matrix <c>R</c> to store the product.</param>
     /// 
-    public static double[][] Dot(this double[,] a, double[][] b, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] Dot(this double[,] a, double[][] b, double[][] result)
     {
 #if DEBUG
         if (a.Columns() != b.Length || result.Length > a.Length || result.Columns() > b.Columns())
@@ -617,7 +621,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B'</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     ///    
-    public static double[,] DotWithTransposed(this double[,] a, double[,] b, double[,] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[,] DotWithTransposed(this double[,] a, double[,] b, double[,] result)
     {
 #if DEBUG
         if (a.Columns() != b.Columns() || result.Rows() > a.Rows() || result.Columns() > b.Rows())
@@ -695,7 +700,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A'*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[,] TransposeAndDot(this double[,] a, double[,] b, double[,] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[,] TransposeAndDot(this double[,] a, double[,] b, double[,] result)
     {
         int n = a.Rows();
         int m = a.Columns();
@@ -769,7 +775,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B'</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     ///    
-    public static double[][] DotWithTransposed(this double[][] a, double[,] b, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] DotWithTransposed(this double[][] a, double[,] b, double[][] result)
     {
 #if DEBUG
         if (a.Columns() != b.Columns() || result.Rows() > a.Rows() || result.Columns() > b.Rows())
@@ -811,7 +818,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B'</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     ///   
-    public static double[][] DotWithTransposed(this double[,] a, double[][] b, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] DotWithTransposed(this double[,] a, double[][] b, double[][] result)
     {
 #if DEBUG
         if (a.Columns() != b.Columns() || result.Rows() > a.Rows() || result.Columns() > b.Rows())
@@ -853,7 +861,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B'</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     ///    
-    public static double[][] DotWithTransposed(this double[][] a, double[][] b, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] DotWithTransposed(this double[][] a, double[][] b, double[][] result)
     {
 #if DEBUG
         if (a.Columns() != b.Columns() || result.Rows() > a.Rows() || result.Columns() > b.Rows())
@@ -953,7 +962,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A'*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[,] TransposeAndDot(this int[,] a, double[,] b, double[,] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[,] TransposeAndDot(this int[,] a, double[,] b, double[,] result)
     {
         int n = a.Rows();
         int m = a.Columns();
@@ -1012,7 +1022,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A'*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[][] TransposeAndDot(this int[][] a, double[][] b, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] TransposeAndDot(this int[][] a, double[][] b, double[][] result)
     {
 #if DEBUG
         if (a.Length != b.Length || result.Length > a.Columns() || result.Columns() > b.Columns())
@@ -1052,7 +1063,8 @@ public static partial class Matrix
     /// <param name="result">The vector <c>r</c> to store the product <c>r = A'*b</c>
     ///   of the given matrix <c>A</c> and vector <c>b</c>.</param>
     /// 
-    public static double[] TransposeAndDot(this int[,] matrix, double[] columnVector, double[] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[] TransposeAndDot(this int[,] matrix, double[] columnVector, double[] result)
     {
 #if DEBUG
         if (matrix.Rows() != columnVector.Length || result.Length > matrix.Columns())
@@ -1083,7 +1095,8 @@ public static partial class Matrix
     /// <param name="result">The vector <c>r</c> to store the product <c>r = A'*b</c>
     ///   of the given matrix <c>A</c> and vector <c>b</c>.</param>
     /// 
-    public static double[] TransposeAndDot(this int[][] matrix, double[] columnVector, double[] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[] TransposeAndDot(this int[][] matrix, double[] columnVector, double[] result)
     {
 #if DEBUG
         if (matrix.Length != columnVector.Length || result.Length > matrix.Columns())
@@ -1142,7 +1155,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A'*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[][] TransposeAndDot(this double[][] a, double[][] b, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] TransposeAndDot(this double[][] a, double[][] b, double[][] result)
     {
 #if DEBUG
         if (a.Length != b.Length || result.Length > a.Columns() || result.Columns() > b.Columns())
@@ -1226,7 +1240,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[,] TransposeAndDotWithDiagonal(this double[,] a, double[] diagonal, double[,] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[,] TransposeAndDotWithDiagonal(this double[,] a, double[] diagonal, double[,] result)
     {
 #if DEBUG
         var C = Dot(a.Transpose().To<double[,]>(), Matrix.Diagonal(diagonal.To<double[]>()));
@@ -1251,7 +1266,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[][] TransposeAndDotWithDiagonal(this double[][] a, double[] diagonal, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] TransposeAndDotWithDiagonal(this double[][] a, double[] diagonal, double[][] result)
     {
 #if DEBUG
         var C = Dot(a.Transpose().To<double[,]>(), Matrix.Diagonal(diagonal.To<double[]>()));
@@ -1290,7 +1306,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[,] DotWithDiagonal(this double[,] a, double[] diagonal, double[,] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[,] DotWithDiagonal(this double[,] a, double[] diagonal, double[,] result)
     {
 #if DEBUG
         var C = Dot(a.To<double[,]>(), Matrix.Diagonal(diagonal.To<double[]>()));
@@ -1325,7 +1342,8 @@ public static partial class Matrix
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
     /// 
-    public static double[][] DotWithDiagonal(this double[][] a, double[] diagonal, double[][] result)
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for trimming.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only called with double arrays in #if DEBUG blocks - well-known type safe for AOT.")]    public static double[][] DotWithDiagonal(this double[][] a, double[] diagonal, double[][] result)
     {
 #if DEBUG
         var C = Dot(a.To<double[,]>(), Matrix.Diagonal(diagonal.To<double[]>()));

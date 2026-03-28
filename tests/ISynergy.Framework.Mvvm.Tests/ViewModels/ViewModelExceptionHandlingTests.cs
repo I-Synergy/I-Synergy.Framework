@@ -66,7 +66,6 @@ public class ViewModelExceptionHandlingTests
         var expectedException = new InvalidOperationException("Handler exception");
         var submitEventArgs = new SubmitEventArgs<string>("test");
         bool handler1Called = false;
-        bool handler2Called = false;
         bool handler3Called = false;
 
         viewModel.Submitted += (s, e) => handler1Called = true;

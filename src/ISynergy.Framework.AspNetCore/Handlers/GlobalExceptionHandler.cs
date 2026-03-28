@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 
 namespace ISynergy.Framework.AspNetCore.Handlers;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, ProblemDetailsFactory problemDetailsFactory) : IExceptionHandler
 {
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "WriteAsJsonAsync is used with ProblemDetails which is preserved by ASP.NET Core infrastructure.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "WriteAsJsonAsync is used with ProblemDetails which is preserved by ASP.NET Core infrastructure.")]
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         // Client disconnected — this is expected behaviour (browser tab closed, network

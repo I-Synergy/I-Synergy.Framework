@@ -1,17 +1,35 @@
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using ISynergy.Framework.AspNetCore.Abstractions.Services;
+using ISynergy.Framework.AspNetCore.Authentication.Options;
+using ISynergy.Framework.Core.Extensions;
+using Sample.TokenService.Business;
+using Sample.TokenService.Services;
 
-namespace Sample.TokenService
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<JwtOptions>(
+    builder.Configuration.GetSection(nameof(JwtOptions)).BindWithReload);
+
+builder.Services.AddTransient<ITokenManager, TokenManager>();
+builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApiDocument(c => c.Title = "Token Service Sample");
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-    }
+    app.UseDeveloperExceptionPage();
+    app.UseOpenApi();
+    app.UseSwaggerUi();
 }
+else
+{
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.MapControllers();
+
+app.Run();

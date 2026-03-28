@@ -32,6 +32,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Safely calls OnNavigatedTo with exception handling.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "IViewModel.OnNavigatedTo() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
     private void SafeOnNavigatedTo(IViewModel viewModel)
     {
         try
@@ -47,6 +49,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Safely calls OnNavigatedFrom with exception handling.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "IViewModel.OnNavigatedFrom() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
     private void SafeOnNavigatedFrom(IViewModel viewModel)
     {
         try
@@ -190,6 +194,8 @@ public class NavigationService : INavigationService
     /// The reflection fallback is decorated with <see cref="System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute"/>
     /// to surface a warning at call sites when publishing with trimming enabled.
     /// </remarks>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "HasRunningCommandsViaReflection is the reflection fallback path. The AOT-safe path via ICommandProvider is tried first. Reflection fallback is preserved for backwards compatibility.")]
     private bool HasRunningCommands(IViewModel viewModel)
     {
         if (viewModel is null)
@@ -227,6 +233,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// get navigation blade as an asynchronous operation.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "GetRelatedViewType() and GetRequiredService(Type) use reflection/runtime-type lookup. All view and ViewModel types are preserved through DI registration.")]
     private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
         var viewType = default(Type);
@@ -280,6 +288,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common blade setup logic
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "CancelAllCommands uses reflection to discover commands on ViewModel. All ViewModel types are preserved through DI registration.")]
     private async Task<IView?> SetupBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, Func<Task<IView?>> getViewFunc)
     {
         // Check if owner ViewModel can navigate away (if it has running commands)
@@ -364,6 +374,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Opens blade with a custom defined view.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "GetRequiredService(typeof(TView)) is called with a compile-time generic type argument. The type is preserved through DI registration.")]
     public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
         where TView : IView
     {
@@ -472,6 +484,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common navigation logic for handling current ViewModel
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "CancelAllCommands uses reflection to discover commands on ViewModel. All ViewModel types are preserved through DI registration.")]
     private bool HandleCurrentViewModel(IViewModel currentViewModel, bool backNavigation)
     {
         if (currentViewModel == null)
@@ -518,6 +532,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common logic for initializing a view and its ViewModel
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "IViewModel.OnNavigatedTo() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
     private async Task InitializeViewAndViewModel(View page, bool backNavigation)
     {
         // Initialize if needed and notify ViewModel it's being navigated to
@@ -548,6 +564,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// navigate as an asynchronous operation.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "CreatePage<TViewModel> uses GetRelatedViewType() which scans assemblies. All view and ViewModel types are preserved through DI registration.")]
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
     {
@@ -615,6 +633,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Navigates viewmodel to a specified view.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "GetRequiredService(typeof(TView)) and GetRequiredService(typeof(TViewModel)) are called with compile-time generic type arguments. Types are preserved through DI registration.")]
     public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView
@@ -659,6 +679,8 @@ public class NavigationService : INavigationService
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "CreatePage<TViewModel> uses GetRelatedViewType() which scans assemblies. All view and ViewModel types are preserved through DI registration.")]
     public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
         where TViewModel : class, IViewModel
     {

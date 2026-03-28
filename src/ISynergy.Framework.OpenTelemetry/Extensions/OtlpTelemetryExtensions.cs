@@ -6,6 +6,7 @@ using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.OpenTelemetry.Extensions;
 
@@ -20,6 +21,8 @@ public static class OtlpTelemetryExtensions
     /// <param name="telemetryBuilder">The telemetry builder.</param>
     /// <param name="telemetryExporterOptions"></param>
     /// <returns>The telemetry builder for chaining.</returns>
+    [RequiresUnreferencedCode("Configuration binding via BindWithReload uses reflection and is not AOT-safe.")]
+    [RequiresDynamicCode("Configuration binding via BindWithReload requires dynamic code generation.")]
     public static TelemetryBuilder AddOtlpExporter(
         this TelemetryBuilder telemetryBuilder,
         Action<OtlpExporterOptions>? telemetryExporterOptions = null)

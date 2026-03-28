@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
@@ -29,11 +30,14 @@ public interface IViewModel : IObservableValidatedClass, ICleanup
 
     Task CancelAsync();
     Task CloseAsync();
+    [RequiresUnreferencedCode("Enum field custom attribute lookup uses runtime reflection.")]
     string GetEnumDescription(Enum value);
     Task InitializeAsync();
     void OnCancelled(EventArgs e);
     void OnClosed(EventArgs e);
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     void OnNavigatedFrom();
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     void OnNavigatedTo();
     void OnPropertyChanged(object? sender, PropertyChangedEventArgs e);
 }

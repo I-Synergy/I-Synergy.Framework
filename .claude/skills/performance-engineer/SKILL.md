@@ -228,9 +228,8 @@ public async Task CreateMultipleBudgets(List<CreateBudgetCommand> commands)
 {
     foreach (var command in commands)
     {
-        var entity = command.Adapt<Budget>();
-        var model = entity.Adapt<BudgetModel>();
-        await _context.AddItemAsync<Budget, BudgetModel>(model);
+        var entity = new Budget { Name = command.Name, Amount = command.Amount, TenantId = TenantContext.TenantId };
+        _context.Budgets.Add(entity);
         await _context.SaveChangesAsync(); // Multiple round trips!
     }
 }
@@ -238,11 +237,11 @@ public async Task CreateMultipleBudgets(List<CreateBudgetCommand> commands)
 // ✅ GOOD - Batch operation
 public async Task CreateMultipleBudgets(List<CreateBudgetCommand> commands)
 {
-    var models = commands
-        .Select(c => c.Adapt<Budget>().Adapt<BudgetModel>())
+    var entities = commands
+        .Select(c => new Budget { Name = c.Name, Amount = c.Amount, TenantId = TenantContext.TenantId })
         .ToList();
 
-    _context.Budgets.AddRange(models);
+    _context.Budgets.AddRange(entities);
     await _context.SaveChangesAsync(); // Single round trip
 }
 ```
@@ -334,11 +333,12 @@ public class CachedBudgetService(
         logger.LogDebug("Cache miss for Budget {BudgetId}", budgetId);
 
         // Load from database
-        var budget = await dataContext.GetItemByIdAsync<Budget, BudgetModel, Guid>(
-            budgetId,
-            cancellationToken);
+        var entity = await dataContext.Budgets
+            .AsNoTracking()
+            .FirstOrDefaultAsync(b => b.BudgetId == budgetId, cancellationToken)
+            ?? throw new InvalidOperationException("Budget not found");
 
-        var response = budget.Adapt<BudgetResponse>();
+        var response = new BudgetResponse(entity.BudgetId, entity.Name, entity.Amount);
 
         // Cache for 1 hour
         await distributedCache.SetStringAsync(
@@ -377,12 +377,13 @@ public sealed class UpdateBudgetHandler(
         UpdateBudgetCommand command,
         CancellationToken cancellationToken = default)
     {
-        var entity = command.Adapt<Budget>();
-        var model = entity.Adapt<BudgetModel>();
+        var entity = await dataContext.Budgets
+            .FirstOrDefaultAsync(b => b.BudgetId == command.BudgetId, cancellationToken)
+            ?? throw new InvalidOperationException("Budget not found");
 
-        await dataContext.UpdateItemAsync<Budget, BudgetModel>(
-            model,
-            cancellationToken);
+        entity.Name = command.Name;
+        entity.Amount = command.Amount;
+        await dataContext.SaveChangesAsync(cancellationToken);
 
         // Invalidate cache
         var cacheKey = $"budget:{command.BudgetId}";

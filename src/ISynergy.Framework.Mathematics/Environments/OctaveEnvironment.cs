@@ -143,6 +143,8 @@ public abstract class OctaveEnvironment
     /// <summary>Inverts a matrix.</summary>
     protected static mat pinv(double[,] matrix) { return Matrix.PseudoInverse(matrix); }
     /// <summary>Creates a unit matrix.</summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Matrix.Ones(int, int) uses double which is safe for AOT.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Matrix.Ones(int, int) uses double which is safe for AOT.")]
     protected static mat ones(int size) { return Matrix.Ones(size, size); }
     /// <summary>Creates a unit matrix.</summary>
     protected static mat ones(int n, int m) { return Matrix.Create(n, m, 1.0); }

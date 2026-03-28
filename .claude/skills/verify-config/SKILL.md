@@ -16,13 +16,12 @@ Audits project documentation against actual codebase conventions to detect and f
    - Extract all documented conventions (data access patterns, naming, file structure, mapping, etc.)
 
 2. **Sample the codebase for actual patterns**
-   - Pick `ISynergy.Domain.Budgets` as the reference implementation
-   - Read 2-3 command handlers (Create, Update, Delete)
-   - Read 2-3 query handlers (GetById, GetList)
-   - Read the `Mappers/Configuration.cs`
-   - Read 2-3 Model records from `Models/`
-   - Read 2-3 Response records
-   - Check `Extensions/ServiceCollectionExtensions.cs`
+   - Use `src/ISynergy.Framework.CQRS/` as the primary CQRS reference (interfaces, dispatchers, handlers)
+   - Use `src/ISynergy.Framework.Core/` as the reference for base classes, extensions, Result/Option types
+   - Search for concrete handler implementations across `src/` with `Grep pattern="ICommandHandler|IQueryHandler"`
+   - Read 2-3 command/query handler implementations to verify naming and structure
+   - Read service registration extensions to verify `Add{Provider}{Service}Integration` pattern
+   - Check `Directory.Packages.props` for central package management conventions
 
 3. **Compare and report**
    - For each documented convention, verify it matches the actual code

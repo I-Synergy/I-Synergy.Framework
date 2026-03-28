@@ -2,6 +2,7 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
@@ -956,6 +957,8 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     /// <summary>
     ///     Computes the (pseudo-)inverse of the matrix given to the Singular value decomposition.
     /// </summary>
+    [RequiresUnreferencedCode("Implements ISolverArrayDecomposition<T>.Inverse() which may use reflection-based type conversion.")]
+    [RequiresDynamicCode("Implements ISolverArrayDecomposition<T>.Inverse() which may require dynamic code generation.")]
     public double[][] Inverse()
     {
         var e = Threshold;

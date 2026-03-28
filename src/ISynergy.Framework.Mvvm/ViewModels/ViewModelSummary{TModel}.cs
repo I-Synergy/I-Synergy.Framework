@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -122,6 +123,8 @@ public abstract class ViewModelSummary<TModel> : ViewModel, IViewModelSummary<TM
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
+    [RequiresUnreferencedCode("JSON serialization without a JsonSerializerContext is not trim-safe.")]
+    [RequiresDynamicCode("JSON serialization without a JsonSerializerContext requires dynamic code.")]
     protected ViewModelSummary(
         ICommonServices commonServices,
         ILogger<ViewModelSummary<TModel>> logger)

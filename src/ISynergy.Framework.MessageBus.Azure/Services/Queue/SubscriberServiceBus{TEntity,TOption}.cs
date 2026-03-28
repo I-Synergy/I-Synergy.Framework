@@ -160,6 +160,8 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
             await _serviceBusProcessor.CloseAsync();
     }
 
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresUnreferencedCode] constructor.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresDynamicCode] constructor.")]
     private async Task MessageHandlerAsync(ProcessMessageEventArgs arg)
     {
         var message = arg.Message;

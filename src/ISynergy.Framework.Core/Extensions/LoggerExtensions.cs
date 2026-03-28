@@ -5,7 +5,7 @@ public static class LoggerExtensions
 {
     public static LogLevel CurrentLogLevel(this ILogger logger)
     {
-        foreach (LogLevel logLevel in Enum.GetValues(typeof(LogLevel)))
+        foreach (LogLevel logLevel in Enum.GetValues<LogLevel>())
         {
             if (logger.IsEnabled(logLevel))
                 return logLevel;
