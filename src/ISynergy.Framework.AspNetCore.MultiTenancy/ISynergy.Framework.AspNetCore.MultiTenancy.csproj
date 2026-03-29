@@ -5,7 +5,8 @@
 		<Description>I-Synergy Framework MultiTenancy</Description>
 		<PackageTags>I-Synergy, Framework, MultiTenancy, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	</PropertyGroup>
+	  <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj" />

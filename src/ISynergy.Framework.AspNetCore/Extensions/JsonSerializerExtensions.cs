@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Serializers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
@@ -79,6 +80,7 @@ public static class JsonSerializerExtensions
     /// </summary>
     /// <param name="services">The service collection to configure</param>
     /// <returns>The service collection for chaining</returns>
+    [RequiresUnreferencedCode("Calls AddControllers() which uses reflection-based MVC infrastructure. Not compatible with AOT publishing.")]
     public static IMvcBuilder AddControllerWithDefaultJsonSerialization(this IServiceCollection services) =>
         AddControllerWithDefaultJsonSerialization(services, null);
 
@@ -88,6 +90,7 @@ public static class JsonSerializerExtensions
     /// <param name="services">The service collection to configure</param>
     /// <param name="configure"></param>
     /// <returns>The service collection for chaining</returns>
+    [RequiresUnreferencedCode("Calls AddControllers() which uses reflection-based MVC infrastructure. Not compatible with AOT publishing.")]
     public static IMvcBuilder AddControllerWithDefaultJsonSerialization(this IServiceCollection services, Action<MvcOptions>? configure)
     {
         services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options => options.ApplyDefaultJsonSerializerOptions());

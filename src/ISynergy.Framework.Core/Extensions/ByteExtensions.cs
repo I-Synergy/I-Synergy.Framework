@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.Core.Extensions;
@@ -38,18 +39,17 @@ public static class ByteExtensions
     /// <param name="position">The starting position in the rawData array where the object is located.</param>
     /// <returns>The object stored in the byte array.</returns>
     /// 
-    public static T? ToStruct<T>(this byte[] rawData, int position = 0)
+    public static T? ToStruct<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(this byte[] rawData, int position = 0)
         where T : struct
     {
-        Type type = typeof(T);
-        int rawsize = Marshal.SizeOf(type);
+        int rawsize = Marshal.SizeOf<T>();
 
         if (rawsize > (rawData.Length - position))
             throw new ArgumentException("The given array is smaller than the object size.");
 
         IntPtr buffer = Marshal.AllocHGlobal(rawsize);
         Marshal.Copy(rawData, position, buffer, rawsize);
-        T? obj = (T?)Marshal.PtrToStructure(buffer, type);
+        T? obj = Marshal.PtrToStructure<T>(buffer);
         Marshal.FreeHGlobal(buffer);
         return obj;
     }

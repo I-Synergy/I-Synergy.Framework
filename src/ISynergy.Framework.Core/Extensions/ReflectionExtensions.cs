@@ -38,7 +38,7 @@ public static class ReflectionExtensions
     /// <returns>System.Object.</returns>
     public static object? GetIdentityValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this T _self) where T : class
     {
-        var result = _self.GetType().GetProperties().Where(
+        var result = typeof(T).GetProperties().Where(
                 e => e.IsDefined(typeof(IdentityAttribute))
             );
 
@@ -59,7 +59,7 @@ public static class ReflectionExtensions
         where T : class
         where TResult : struct
     {
-        var result = _self.GetType().GetProperties().Where(
+        var result = typeof(T).GetProperties().Where(
                 e => e.IsDefined(typeof(IdentityAttribute))
             );
 
@@ -100,7 +100,7 @@ public static class ReflectionExtensions
     /// <returns>PropertyInfo.</returns>
     public static PropertyInfo? GetIdentityProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this T _self) where T : class
     {
-        var result = _self.GetType().GetProperties().Where(
+        var result = typeof(T).GetProperties().Where(
                 e => e.IsDefined(typeof(IdentityAttribute))
             );
 
@@ -128,7 +128,7 @@ public static class ReflectionExtensions
     /// <returns><c>true</c> if [has identity property] [the specified self]; otherwise, <c>false</c>.</returns>
     public static bool HasIdentityProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this T _self) where T : class
     {
-        return _self.GetType().GetProperties().Any(e => e.IsDefined(typeof(IdentityAttribute)));
+        return typeof(T).GetProperties().Any(e => e.IsDefined(typeof(IdentityAttribute)));
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public static class ReflectionExtensions
         where T : class
         where TResult : IComparable<TResult>
     {
-        var propInfo = _self.GetType().GetProperty(propertyName);
+        var propInfo = typeof(T).GetProperty(propertyName);
         var prop = propInfo?.GetValue(_self, null);
 
         if (prop is TResult result)
@@ -243,7 +243,7 @@ public static class ReflectionExtensions
     /// <returns>System.Object.</returns>
     public static string GetTitleValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this T _self) where T : class
     {
-        var result = _self.GetType().GetProperties().Where(
+        var result = typeof(T).GetProperties().Where(
                 e => e.IsDefined(typeof(TitleAttribute))
             );
 
@@ -254,18 +254,18 @@ public static class ReflectionExtensions
     }
 
     public static bool HasParentIdentityProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>() where T : class =>
-        typeof(T).HasParentIdentityProperty();
+        typeof(T).GetProperties().Any(e => e.IsDefined(typeof(ParentIdentityAttribute)));
 
     public static bool HasParentIdentityProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this T _self) where T : class =>
-        _self.GetType().GetProperties().Any(e => e.IsDefined(typeof(ParentIdentityAttribute)));
+        typeof(T).GetProperties().Any(e => e.IsDefined(typeof(ParentIdentityAttribute)));
 
-    public static PropertyInfo GetParentIdentityProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>() where T : class =>
-        typeof(T).GetParentIdentityProperty();
+    public static PropertyInfo? GetParentIdentityProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>() where T : class =>
+        typeof(T).GetProperties().FirstOrDefault(e => e.IsDefined(typeof(ParentIdentityAttribute)));
 
     public static PropertyInfo GetParentIdentityProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this T _self)
         where T : class
     {
-        var property = _self.GetType().GetProperties().FirstOrDefault(e => e.IsDefined(typeof(ParentIdentityAttribute)));
+        var property = typeof(T).GetProperties().FirstOrDefault(e => e.IsDefined(typeof(ParentIdentityAttribute)));
 
         if (property is null)
             throw new InvalidOperationException("Parent identity property not found. Check with HasParentIdentityProperty first.");

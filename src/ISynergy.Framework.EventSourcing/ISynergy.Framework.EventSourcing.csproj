@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsAotCompatible>true</IsAotCompatible>
+    <PackageId>I-Synergy.Framework.EventSourcing</PackageId>
+    <Description>I-Synergy Framework Event Sourcing — aggregate roots, domain events, projections</Description>
+    <PackageTags>I-Synergy, Framework, EventSourcing, DDD, CQRS</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+  </ItemGroup>
+</Project>

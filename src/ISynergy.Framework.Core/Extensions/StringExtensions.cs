@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Reflection;
@@ -480,7 +481,7 @@ public static class StringExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="methodName">Name of the method.</param>
     /// <returns><c>true</c> if the specified method name has method; otherwise, <c>false</c>.</returns>
-    public static bool HasMethod<T>(string methodName) =>
+    public static bool HasMethod<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(string methodName) =>
         typeof(T).GetMethod(methodName) is not null;
 
     /// <summary>

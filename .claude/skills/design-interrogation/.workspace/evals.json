@@ -1,0 +1,116 @@
+{
+  "skill_name": "design-interrogation",
+  "evals": [
+    {
+      "id": 1,
+      "name": "event-sourcing-projections",
+      "prompt": "Interview me about my Laboratory Information Management System (LIMS). We need:\n- Sample tracking with barcode registration\n- Experiment execution with result recording\n- Event sourcing for complete audit trail (regulatory compliance ISO/IEC 17025)\n- Fast read queries using projections\n- PostgreSQL database\n- .NET 10, EF Core\n\nGrill me on the architecture and produce a complete Architecture-Document.md",
+      "expected_output": "Architecture document that:\n1. References IEntityTypeConfiguration pattern for projections\n2. NO SQL DDL statements (CREATE TABLE)\n3. Links to event-sourcing-projections.instructions.md\n4. Shows entity class + configuration class examples\n5. Uses DateTimeOffset (not DateTime)\n6. Includes verification checklist in closing summary",
+      "files": [],
+      "assertions": [
+        {
+          "name": "no_sql_ddl",
+          "description": "Architecture doc contains NO SQL DDL (CREATE TABLE, ALTER TABLE, CREATE INDEX)",
+          "type": "forbidden_pattern",
+          "pattern": "CREATE TABLE|ALTER TABLE|CREATE INDEX|DROP TABLE"
+        },
+        {
+          "name": "has_entity_configuration_pattern",
+          "description": "Architecture doc references IEntityTypeConfiguration pattern",
+          "type": "required_pattern",
+          "pattern": "IEntityTypeConfiguration"
+        },
+        {
+          "name": "links_to_instruction_files",
+          "description": "Architecture doc links to .github/instructions/ files",
+          "type": "required_pattern",
+          "pattern": "\\.github/instructions/.*\\.instructions\\.md"
+        },
+        {
+          "name": "no_datetime",
+          "description": "Architecture doc uses DateTimeOffset, not DateTime",
+          "type": "forbidden_pattern",
+          "pattern": "DateTime\\s+(?!Offset)"
+        },
+        {
+          "name": "has_verification_checklist",
+          "description": "Closing summary includes Architecture Document Verification section",
+          "type": "required_pattern",
+          "pattern": "Architecture Document Verification"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "aspire-microservices",
+      "prompt": "Interview me about a microservices e-commerce platform:\n- 4 services: Products, Orders, Customers, Inventory\n- .NET Aspire for orchestration\n- PostgreSQL per service (schema isolation)\n- Service discovery via Aspire\n- No API gateway\n\nGrill me and produce Architecture-Document.md",
+      "expected_output": "Architecture document that:\n1. References .WithReference() pattern for Aspire\n2. NO hardcoded connection strings\n3. Links to aspire-orchestration.instructions.md\n4. Shows AppHost Program.cs pattern\n5. Service discovery via Aspire native",
+      "files": [],
+      "assertions": [
+        {
+          "name": "no_hardcoded_connection_strings",
+          "description": "Architecture doc contains NO hardcoded connection strings in examples",
+          "type": "forbidden_pattern",
+          "pattern": "Host=localhost;Port=5432;Database="
+        },
+        {
+          "name": "has_withreference_pattern",
+          "description": "Architecture doc references .WithReference() Aspire pattern",
+          "type": "required_pattern",
+          "pattern": "\\.WithReference\\("
+        },
+        {
+          "name": "links_to_aspire_instructions",
+          "description": "Architecture doc links to aspire-orchestration.instructions.md",
+          "type": "required_pattern",
+          "pattern": "aspire-orchestration\\.instructions\\.md"
+        },
+        {
+          "name": "has_verification_checklist",
+          "description": "Closing summary includes Architecture Document Verification section",
+          "type": "required_pattern",
+          "pattern": "Architecture Document Verification"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "cqrs-without-mediatr",
+      "prompt": "Interview me about a task management system:\n- CQRS without MediatR (direct handler injection)\n- Commands: CreateTask, UpdateTask, CompleteTask\n- Queries: GetTaskById, ListTasks with filters\n- ASP.NET Core Minimal API\n- Clean Architecture (Domain, Application, Infrastructure, Services)\n\nGrill me and produce Architecture-Document.md",
+      "expected_output": "Architecture document that:\n1. Shows direct ICommandHandler injection (NO MediatR)\n2. Individual command parameters (NOT model objects)\n3. Links to cqrs-implementation.instructions.md\n4. Shows Minimal API endpoint pattern with direct injection\n5. Result<T> pattern for error handling",
+      "files": [],
+      "assertions": [
+        {
+          "name": "no_mediatr_references",
+          "description": "Architecture doc contains NO MediatR references",
+          "type": "forbidden_pattern",
+          "pattern": "MediatR|IRequest|IRequestHandler|_mediator\\.Send"
+        },
+        {
+          "name": "has_direct_handler_injection",
+          "description": "Architecture doc shows ICommandHandler<TCommand, Result<TResponse>> pattern",
+          "type": "required_pattern",
+          "pattern": "ICommandHandler<.*Result<"
+        },
+        {
+          "name": "has_individual_parameters",
+          "description": "Architecture doc shows individual parameters (not model objects) in commands",
+          "type": "required_content",
+          "description_extended": "Command constructors should have individual parameters like (string code, string title, Guid protocolId), NOT (CreateProductModel model)"
+        },
+        {
+          "name": "links_to_cqrs_instructions",
+          "description": "Architecture doc links to cqrs-implementation.instructions.md",
+          "type": "required_pattern",
+          "pattern": "cqrs-implementation\\.instructions\\.md"
+        },
+        {
+          "name": "has_verification_checklist",
+          "description": "Closing summary includes Architecture Document Verification section",
+          "type": "required_pattern",
+          "pattern": "Architecture Document Verification"
+        }
+      ]
+    }
+  ]
+}

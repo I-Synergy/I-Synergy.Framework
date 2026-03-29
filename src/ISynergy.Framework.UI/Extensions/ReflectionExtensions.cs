@@ -204,7 +204,10 @@ public static class ReflectionExtensions
         services.Register(viewmodel, abstraction);
     }
 
-    private static void Register(this IServiceCollection services, Type type, Type? abstraction)
+    private static void Register(
+        this IServiceCollection services,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type? abstraction)
     {
         if (abstraction is not null)
             services.TryAddTransient(abstraction, type);

@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Validation;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Extensions;
 
@@ -251,6 +252,7 @@ public static class CollectionExtensions
     /// <param name="collection">The collection.</param>
     /// <param name="elementType">Type of the array elements.</param>
     /// <returns>An array containing the collection items.</returns>
+    [RequiresDynamicCode("Array.CreateInstance with a runtime Type requires dynamic code generation.")]
     public static Array ToArray(this IEnumerable? collection, Type elementType)
     {
         Argument.IsNotNull(elementType);
@@ -356,7 +358,7 @@ public static class CollectionExtensions
     /// <param name="collection">The collection to convert.</param>
     /// <param name="tableName">The name for the DataTable.</param>
     /// <returns>A DataTable representation of the collection.</returns>
-    public static DataTable ToDataTable<T>(this ICollection<T> collection, string tableName) =>
+    public static DataTable ToDataTable<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this ICollection<T> collection, string tableName) =>
         collection.ToDataTableBase<T>(tableName);
 
     /// <summary>
@@ -366,6 +368,6 @@ public static class CollectionExtensions
     /// <param name="type">The type of items in the collection.</param>
     /// <param name="tableName">The name for the DataTable.</param>
     /// <returns>A DataTable representation of the collection.</returns>
-    public static DataTable ToDataTable(this ICollection collection, Type type, string tableName) =>
+    public static DataTable ToDataTable(this ICollection collection, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type, string tableName) =>
         collection.ToDataTableBase(tableName, type);
 }

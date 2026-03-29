@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Vectors;
+using System.Diagnostics.CodeAnalysis;
 using System.Data;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -12,6 +13,7 @@ public static partial class Matrix
     /// <summary>
     ///     Converts a jagged-array into a multidimensional array.
     /// </summary>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array DeepToMatrix(this Array array)
     {
         var shape = array.GetLength();
@@ -285,6 +287,8 @@ public static partial class Matrix
     /// </summary>
     /// <typeparam name="TOutput">The type of the output.</typeparam>
     /// <param name="array">The vector or array to be converted.</param>
+    [RequiresUnreferencedCode("Calls ObjectExtensions.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls To(Array, Type) which requires dynamic code generation.")]
     public static TOutput To<TOutput>(this Array array)
     {
         return To(array, typeof(TOutput)).To<TOutput>();
@@ -297,6 +301,8 @@ public static partial class Matrix
     /// </summary>
     /// <param name="array">The vector or array to be converted.</param>
     /// <param name="outputType">The type of the output.</param>
+    [RequiresUnreferencedCode("Uses ObjectExtensions.To(Object, Type) which is not AOT-safe.")]
+    [RequiresDynamicCode("Uses ObjectExtensions.To(Object, Type) and Array.CreateInstance with runtime types.")]
     public static object To(this Array array, Type outputType)
     {
         if (array.GetType() == outputType)
@@ -326,6 +332,8 @@ public static partial class Matrix
     /// </summary>
     /// <param name="source">The array whose elements should be copied from.</param>
     /// <param name="destination">The array where elements will be written to.</param>
+    [RequiresUnreferencedCode("Calls convertValue which uses ObjectExtensions.To(Object, Type) which is not AOT-safe.")]
+    [RequiresDynamicCode("Uses Marshal.SizeOf with a runtime-resolved element type.")]
     public static void Copy(this Array source, Array destination)
     {
         var outputElementType = destination.GetInnerMostType();
@@ -451,6 +459,7 @@ public static partial class Matrix
     ///     A one-dimensional array of 32-bit integers that represent
     ///     the indexes specifying the position of the element to set.
     /// </param>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static void SetValue(this Array array, object value, bool deep, int[] indices)
     {
         if (deep && array.IsJagged())
@@ -480,6 +489,8 @@ public static partial class Matrix
         }
     }
 
+    [RequiresUnreferencedCode("Calls ObjectExtensions.To(Object, Type) which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls ObjectExtensions.To(Object, Type) which requires dynamic code generation.")]
     private static object convertValue(Type outputElementType, object inputValue)
     {
         var inputArray = inputValue as Array;
@@ -736,6 +747,7 @@ public static partial class Matrix
     /// DataTable dataTable = data.ToTable();
     /// </code>
     /// </example>
+    [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "GetType() and GetHighestEnclosingType() return runtime types passed to DataColumnCollection.Add; this method is not AOT-safe by design.")]
     public static DataTable ToTable(this object[,] matrix, string[] columnNames)
     {
         var table = new DataTable();

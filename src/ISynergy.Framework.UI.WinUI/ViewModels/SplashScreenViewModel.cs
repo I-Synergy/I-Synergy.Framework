@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.ViewModels;
 
@@ -226,6 +227,7 @@ public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>System.String.</returns>
+    [RequiresUnreferencedCode("Reflection over enum fields for DisplayAttribute is not trim-safe.")]
     public string GetEnumDescription(Enum value)
     {
         Argument.IsNotNull(value);
@@ -322,12 +324,14 @@ public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
     /// Called when navigating away from this ViewModel.
     /// Cancel any running commands if needed.
     /// </summary>
+    [RequiresUnreferencedCode("CancelAllCommands uses reflection to discover commands on the ViewModel. Implement ICommandProvider for AOT-safe command cancellation.")]
     public virtual void OnNavigatedFrom() => this.CancelAllCommands();
 
     /// <summary>
     /// Called when navigating to this ViewModel.
     /// Reset command states.
     /// </summary>
+    [RequiresUnreferencedCode("ResetAllCommandStates uses reflection to discover commands on the ViewModel. Implement ICommandProvider for AOT-safe command state management.")]
     public virtual void OnNavigatedTo() => this.ResetAllCommandStates();
 
     /// <summary>

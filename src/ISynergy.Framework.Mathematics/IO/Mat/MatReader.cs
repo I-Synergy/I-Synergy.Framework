@@ -3,6 +3,7 @@ namespace ISynergy.Framework.Mathematics.IO.Mat;
 using ISynergy.Framework.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -149,6 +150,7 @@ public class MatReader : IDisposable
     /// <param name="lazy">Whether matrices should be read lazily (if set to true, only
     ///   matrices that have explicitly been asked for will be loaded).</param>
     /// 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     public MatReader(string fileName, bool autoTranspose = true, bool lazy = true)
     {
         init(new BinaryReader(new FileStream(fileName, FileMode.Open, FileAccess.Read)), autoTranspose, lazy);
@@ -164,6 +166,7 @@ public class MatReader : IDisposable
     /// <param name="lazy">Whether matrices should be read lazily (if set to true, only
     ///   matrices that have explicitly been asked for will be loaded).</param>
     /// 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     public MatReader(Stream input, bool autoTranspose = true, bool lazy = true)
     {
         init(new BinaryReader(input), autoTranspose, lazy);
@@ -179,6 +182,7 @@ public class MatReader : IDisposable
     /// <param name="lazy">Whether matrices should be read lazily (if set to true, only
     ///   matrices that have explicitly been asked for will be loaded).</param>
     /// 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     public MatReader(byte[] input, bool autoTranspose = true, bool lazy = true)
     {
         init(new BinaryReader(new MemoryStream(input)), autoTranspose, lazy);
@@ -194,11 +198,13 @@ public class MatReader : IDisposable
     /// <param name="lazy">Whether matrices should be read lazily (if set to true, only
     ///   matrices that have explicitly been asked for will be loaded).</param>
     /// 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     public MatReader(BinaryReader reader, bool autoTranspose = true, bool lazy = true)
     {
         init(reader, autoTranspose, lazy);
     }
 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     private void init(BinaryReader reader, bool autoTranspose, bool lazy)
     {
         this.autoTranspose = autoTranspose;

@@ -1,21 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>Sample.TokenService.xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore"  />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"  />
-    <PackageReference Include="System.Text.Encodings.Web"  />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="NSwag.AspNetCore" />
   </ItemGroup>
-
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj" />
   </ItemGroup>
 </Project>

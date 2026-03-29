@@ -34,8 +34,12 @@ public class EnumKeyValueCollection : MarkupExtension
     /// with NativeAOT. For AOT-safe scenarios, compute enum key-value pairs using
     /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code and bind to the resulting collection.
     /// </remarks>
-    [RequiresUnreferencedCode("Enum.GetValues(Type) requires enum type members to be preserved by the trimmer.")]
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for runtime type resolution.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2046",
+        Justification = "MarkupExtension.ProvideValue is an external WinUI SDK base method without RequiresUnreferencedCode; suppressing annotation mismatch.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "Enum.GetValues(Type) is intentionally used for XAML markup; callers must ensure enum types are preserved.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050",
+        Justification = "Enum.GetValues requires dynamic code; not AOT-safe by design.")]
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsNotNull(EnumType);

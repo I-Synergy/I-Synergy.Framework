@@ -28,6 +28,7 @@ internal static class BaseCollectionExtensions
     /// <param name="name">The name.</param>
     /// <param name="type">The type.</param>
     /// <returns>DataTable.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "PropertyInfo.PropertyType is preserved because 'type' is annotated with DynamicallyAccessedMemberTypes.PublicProperties, which preserves all public property types transitively.")]
     public static DataTable ToDataTableBase(this IEnumerable collection, string name, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type)
     {
         var dataTable = new DataTable()

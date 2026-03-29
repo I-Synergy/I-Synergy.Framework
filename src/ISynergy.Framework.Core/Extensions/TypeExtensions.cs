@@ -14,7 +14,7 @@ public static class TypeExtensions
     /// <param name="_self">The self.</param>
     /// <param name="includeInherited">if set to <c>true</c> [include inherited].</param>
     /// <returns>IEnumerable&lt;Type&gt;.</returns>
-    public static IEnumerable<Type> GetInterfaces(this Type _self, bool includeInherited)
+    public static IEnumerable<Type> GetInterfaces([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] this Type _self, bool includeInherited)
     {
         if (includeInherited || _self.BaseType is null)
             return _self.GetInterfaces();
@@ -72,6 +72,7 @@ public static class TypeExtensions
     /// <param name="jagged">Whether to return a type for a jagged array of the given rank, or a 
     /// multdimensional array. Default is false (default is to return multidimensional array types).</param>
     /// 
+    [RequiresDynamicCode("Creating an array type at runtime requires dynamic code generation.")]
     public static Type MakeArrayType(this Type elementType, int rank, bool jagged)
     {
         if (!jagged)

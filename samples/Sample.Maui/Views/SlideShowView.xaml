@@ -28,13 +28,13 @@
             IsVisible="{Binding SelectedItem, Converter={StaticResource NullToInversedIsVisibleConverter}}">
             <Label
                 Text="No Image Available"
-                FontSize="Large"
+                FontSize="18"
                 FontAttributes="Bold"
                 HorizontalTextAlignment="Center"
                 TextColor="{AppThemeBinding Light={DynamicResource Gray600}, Dark={DynamicResource Gray400}}" />
             <Label
                 Text="The selected item does not have an image"
-                FontSize="Body"
+                FontSize="14"
                 HorizontalTextAlignment="Center"
                 Margin="0,8,0,0"
                 TextColor="{AppThemeBinding Light={DynamicResource Gray500}, Dark={DynamicResource Gray500}}" />

@@ -43,6 +43,9 @@ public static class ServiceCollectionExtensions
     [RequiresUnreferencedCode(
         "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
         "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
+    [RequiresDynamicCode(
+        "BindWithReload uses dynamic code generation which is not AOT-compatible. " +
+        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
     public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IServiceCollection services,
         IConfiguration configuration,

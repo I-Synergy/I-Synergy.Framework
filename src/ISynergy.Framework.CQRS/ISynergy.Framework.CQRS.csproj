@@ -5,6 +5,7 @@
 		<Description>I-Synergy Framework CQRS (Command Query Responsibility Segregation)</Description>
 		<PackageTags>I-Synergy, Framework, CQRS</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IsAotCompatible>true</IsAotCompatible>
 	</PropertyGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

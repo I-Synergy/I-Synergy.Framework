@@ -37,6 +37,8 @@ public partial class View<TViewModel> : ComponentBase, IView
         set => ViewModel = (TViewModel)value;
     }
 
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "SubscribeToViewModelCommands is called on a known ViewModel type within the component lifecycle.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "SubscribeToViewModelCommands is called on a known ViewModel type within the component lifecycle.")]
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();

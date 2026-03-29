@@ -113,6 +113,8 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// <param name="queueMessage">The queue message.</param>
     /// <param name="sessionId">Used as CorrelationId when not <see cref="Guid.Empty"/>.</param>
     /// <returns>Task.</returns>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresUnreferencedCode] constructor.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresDynamicCode] constructor.")]
     public virtual async Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId)
     {
         Argument.IsNotNull(queueMessage);

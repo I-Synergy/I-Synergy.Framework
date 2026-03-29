@@ -64,6 +64,12 @@
 	<ItemGroup>
 		<MauiFont Include="Extensions\FluentUI.cs" />
 	</ItemGroup>
+	<!-- Override transitive SQLitePCLRaw.lib.e_sqlite3.android to 2.1.10+ which contains
+	     16KB page-aligned libe_sqlite3.so, eliminating XA0141 on Android 16 devices.
+	     Version is pinned in Directory.Packages.props. -->
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-android'))">
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.android" />
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />
 		<PackageReference Include="Microsoft.Maui.Controls" />

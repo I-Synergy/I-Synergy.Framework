@@ -5,6 +5,7 @@
     <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
     <Description>I-Synergy Framework Azure MessageBus</Description>
     <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>

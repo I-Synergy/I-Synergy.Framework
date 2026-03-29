@@ -5,6 +5,7 @@ using ISynergy.Framework.Storage.S3.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Storage.S3.Extensions;
 
@@ -29,6 +30,8 @@ public static class ServiceCollectionExtensions
     /// until AWS SDK AOT support is available.
     /// </para>
     /// </remarks>
+    [RequiresUnreferencedCode("Calls services.Configure<S3StorageOptions> which uses ConfigurationBinder.Bind with reflection.")]
+    [RequiresDynamicCode("Calls services.Configure<S3StorageOptions> which requires dynamic code generation at runtime.")]
     public static IServiceCollection AddS3StorageIntegration(
         this IServiceCollection services,
         IConfiguration configuration,

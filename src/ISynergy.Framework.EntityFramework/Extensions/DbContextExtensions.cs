@@ -22,7 +22,7 @@ public static class DbContextExtensions
     /// <param name="predicate">The predicate.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public static Task<bool> ExistsAsync<TEntity>(this DbContext context, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    public static Task<bool> ExistsAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>(this DbContext context, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
     {
         return context.Set<TEntity>().AnyAsync(predicate, cancellationToken);
