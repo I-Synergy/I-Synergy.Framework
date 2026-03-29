@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -122,6 +123,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "ConfigurationBinder.GetValue<T> with a primitive string type is safe at runtime even when trimmed.")]
     protected virtual void InitializeEnvironmentVariables()
     {
         try

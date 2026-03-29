@@ -1,6 +1,7 @@
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
@@ -137,6 +138,8 @@ public class LinearConstraint : IConstraint
     /// 
     /// <param name="numberOfVariables">The number of variables in the constraint.</param>
     /// 
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
     public LinearConstraint(int numberOfVariables)
         : this()
     {

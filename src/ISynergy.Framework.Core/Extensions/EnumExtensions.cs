@@ -16,17 +16,15 @@ public static class EnumExtensions
     /// <param name="enumerationValue">The enumeration value.</param>
     /// <returns>System.String.</returns>
     /// <exception cref="ArgumentException">EnumerationValue must be of Enum type - enumerationValue</exception>
-    public static string GetDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this T enumerationValue)
+    public static string GetDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicNestedTypes | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicEvents)] T>(this T enumerationValue)
         where T : Enum
     {
-        Type type = enumerationValue.GetType();
-
-        if (!type.IsEnum)
+        if (!typeof(T).IsEnum)
             throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
 
         //Tries to find a DescriptionAttribute for a potential friendly name
         //for the enum
-        MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+        MemberInfo[] memberInfo = typeof(T).GetMember(enumerationValue.ToString());
         if (memberInfo is not null && memberInfo.Length > 0)
         {
             object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
@@ -46,16 +44,15 @@ public static class EnumExtensions
     /// <param name="enumerationValue">The enumeration value.</param>
     /// <returns>System.String.</returns>
     /// <exception cref="ArgumentException">EnumerationValue must be of Enum type - enumerationValue</exception>
-    public static string GetLocalizedDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this T enumerationValue)
+    public static string GetLocalizedDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicNestedTypes | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicEvents)] T>(this T enumerationValue)
         where T : Enum
     {
-        Type type = enumerationValue.GetType();
-        if (!type.IsEnum)
+        if (!typeof(T).IsEnum)
             throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
 
         //Tries to find a DescriptionAttribute for a potential friendly name
         //for the enum
-        MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+        MemberInfo[] memberInfo = typeof(T).GetMember(enumerationValue.ToString());
         if (memberInfo is not null && memberInfo.Length > 0)
         {
             object[] attrs = memberInfo[0].GetCustomAttributes(typeof(LocalizedDescriptionAttribute), false);
@@ -73,6 +70,7 @@ public static class EnumExtensions
     /// </summary>
     /// <param name="enumeration"></param>
     /// <returns></returns>
+    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static List<Enum> ToList([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] this Type enumeration)
     {
         var list = new List<Enum>();

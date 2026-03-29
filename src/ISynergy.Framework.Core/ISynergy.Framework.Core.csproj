@@ -5,6 +5,7 @@
 		<Description>I-Synergy Framework Core</Description>
 		<PackageTags>I-Synergy, Framework, Core</PackageTags>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<IsAotCompatible>true</IsAotCompatible>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -306,6 +306,7 @@ public static class ModelBuilderExtensions
     /// Thrown when a type in <paramref name="configurationTypes"/> does not implement
     /// <see cref="IEntityTypeConfiguration{TEntity}"/> or cannot be instantiated.
     /// </exception>
+    [RequiresUnreferencedCode("Uses Type.GetInterfaces() and Activator.CreateInstance with runtime-resolved types. Not AOT-safe.")]
     [RequiresDynamicCode("Uses Activator.CreateInstance to instantiate configuration types at runtime.")]
     public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, IReadOnlyList<Type> configurationTypes)
     {

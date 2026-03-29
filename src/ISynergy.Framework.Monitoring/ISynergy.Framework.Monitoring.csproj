@@ -5,5 +5,6 @@
 		<Description>I-Synergy Framework Monitoring</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	</PropertyGroup>
+	  <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 </Project>

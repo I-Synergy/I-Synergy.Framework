@@ -44,6 +44,7 @@ public static class ServiceCollectionExtensions
     /// (emitted by the bundled source generator) for NativeAOT and trimmed publish scenarios.
     /// </remarks>
     [RequiresUnreferencedCode("RegisterAssemblies uses runtime assembly scanning. Use AddBlazorRegistrations() for AOT scenarios.")]
+    [RequiresDynamicCode("BindWithReload and RegisterAssemblies use dynamic code generation which is not AOT-compatible. Use AddBlazorRegistrations() for AOT scenarios.")]
     public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IServiceCollection services,
         IConfiguration configuration,

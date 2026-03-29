@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mathematics.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -82,6 +83,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
     ///     </paramref>
     ///     .
     /// </param>
+    [RequiresDynamicCode("Calls parse() which uses Expression.Lambda requiring dynamic code generation.")]
     public NonlinearConstraint(IObjectiveFunction objective,
         Expression<Func<double[], bool>> constraint,
         Func<double[], double[]> gradient = null)
@@ -110,6 +112,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
     ///     </paramref>
     ///     .
     /// </param>
+    [RequiresDynamicCode("Calls parse() which uses Expression.Lambda requiring dynamic code generation.")]
     public NonlinearConstraint(int numberOfVariables,
         Expression<Func<double[], bool>> constraint,
         Func<double[], double[]> gradient = null)
@@ -291,6 +294,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
         this.function = function;
         this.gradient = gradient;
     }
+    [RequiresDynamicCode("Uses Expression.Lambda which requires dynamic code generation.")]
     private static void parse(Expression<Func<double[], bool>> constraint,
         out Func<double[], double> function, out ConstraintType shouldBe, out double value)
     {

@@ -9,12 +9,13 @@
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.6.0" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.27.0" />
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.19.1" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.19.4" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="CommunityToolkit.Maui.MediaElement" Version="8.0.1" />
     <PackageVersion Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
     <PackageVersion Include="CompareNETObjects" Version="4.84.0" />
     <PackageVersion Include="coverlet.collector" Version="8.0.1" />
+    <PackageVersion Include="Dotmim.Sync.PostgreSql" Version="1.3.0" />
     <PackageVersion Include="Dotmim.Sync.Sqlite" Version="1.3.0" />
     <PackageVersion Include="Dotmim.Sync.SqlServer.ChangeTracking" Version="1.3.0" />
     <PackageVersion Include="Dotmim.Sync.Web.Client" Version="1.3.0" />
@@ -22,10 +23,20 @@
     <PackageVersion Include="DYMO.Connect.SDK" Version="1.6.0" />
     <PackageVersion Include="MessagePack" Version="3.1.4" />
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="3.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.5" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.2.0" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.2.0" />
+    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.2.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.4.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.5" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="10.0.5" />
@@ -54,8 +65,8 @@
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.14.0" />
     <PackageVersion Include="Microsoft.Graph" Version="5.103.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.83.1" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.50" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.50" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.51" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.51" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
@@ -69,10 +80,10 @@
     <PackageVersion Include="NodaTime" Version="3.3.1" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.6.3" />
     <PackageVersion Include="NuGet.Commands" Version="7.3.0" />
-    <PackageVersion Include="OpenTelemetry" Version="1.15.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.15.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.0-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
@@ -87,6 +98,9 @@
     <PackageVersion Include="Sentry" Version="6.2.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.2.0" />
     <PackageVersion Include="SkiaSharp" Version="3.119.2" />
+    <!-- Pin to 2.1.10+ to provide 16KB page-aligned libe_sqlite3.so for Android 16 (XA0141).
+         Dotmim.Sync.Sqlite 1.3.0 pulls 2.1.6 transitively; the managed API is unchanged. -->
+    <PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3.android" Version="2.1.11" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="33.1.45" />
     <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="33.1.45" />
     <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="33.1.45" />

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Validation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Extensions;
 
@@ -15,7 +16,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="node">The node.</param>
     /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
-    public static TreeNode<TKey, TModel> GetRootNode<TKey, TModel>(this TreeNode<TKey, TModel> node)
+    public static TreeNode<TKey, TModel> GetRootNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this TreeNode<TKey, TModel> node)
         where TKey : struct
         where TModel : class
     {
@@ -35,7 +36,7 @@ public static class TreeExtensions
     /// <param name="node">The node.</param>
     /// <param name="key">The key.</param>
     /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
-    public static TreeNode<TKey, TModel>? FindNode<TKey, TModel>(this TreeNode<TKey, TModel> node, TKey key)
+    public static TreeNode<TKey, TModel>? FindNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this TreeNode<TKey, TModel> node, TKey key)
         where TKey : struct
         where TModel : class
     {
@@ -51,7 +52,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="node">The node.</param>
     /// <returns>IEnumerable&lt;TreeNode&lt;TKey, TModel&gt;&gt;.</returns>
-    public static IEnumerable<TreeNode<TKey, TModel>> FlattenAll<TKey, TModel>(this TreeNode<TKey, TModel> node)
+    public static IEnumerable<TreeNode<TKey, TModel>> FlattenAll<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this TreeNode<TKey, TModel> node)
         where TKey : struct
         where TModel : class
     {
@@ -68,7 +69,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="node">The node.</param>
     /// <returns>IEnumerable&lt;ITreeNode&gt;.</returns>
-    public static IEnumerable<TreeNode<TKey, TModel>> Flatten<TKey, TModel>(this TreeNode<TKey, TModel> node)
+    public static IEnumerable<TreeNode<TKey, TModel>> Flatten<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this TreeNode<TKey, TModel> node)
         where TKey : struct
         where TModel : class
     {
@@ -90,7 +91,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="node">The tree.</param>
     /// <returns>IEnumerable&lt;ITreeNode&gt;.</returns>
-    public static IEnumerable<TreeNode<TKey, TModel>> FlattenList<TKey, TModel>(this TreeNode<TKey, TModel> node)
+    public static IEnumerable<TreeNode<TKey, TModel>> FlattenList<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this TreeNode<TKey, TModel> node)
         where TKey : struct
         where TModel : class =>
         node.Flatten().ToList();
@@ -102,7 +103,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="node">The tree.</param>
     /// <returns>IEnumerable&lt;System.Object&gt;.</returns>
-    public static IEnumerable<TModel> FlattenDataList<TKey, TModel>(this TreeNode<TKey, TModel> node)
+    public static IEnumerable<TModel> FlattenDataList<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this TreeNode<TKey, TModel> node)
     where TKey : struct
     where TModel : class =>
     node.Flatten().Select(s => s.Data!).ToList();
@@ -115,7 +116,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="nodes">The data.</param>
     /// <returns>TreeNode&lt;T&gt;.</returns>
-    public static TreeNode<TKey, TModel>? ToTree<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
+    public static TreeNode<TKey, TModel>? ToTree<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
         where TKey : struct
         where TModel : class
     {
@@ -151,7 +152,7 @@ public static class TreeExtensions
     /// <param name="nodes">The nodes.</param>
     /// <param name="key">The identifier.</param>
     /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
-    public static TreeNode<TKey, TModel>? GetNodeById<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes, TKey key)
+    public static TreeNode<TKey, TModel>? GetNodeById<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes, TKey key)
         where TKey : struct
         where TModel : class
     {
@@ -176,7 +177,7 @@ public static class TreeExtensions
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <param name="nodes">The nodes.</param>
     /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
-    public static TreeNode<TKey, TModel>? GetSelectedNode<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
+    public static TreeNode<TKey, TModel>? GetSelectedNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
         where TKey : struct
         where TModel : class
     {

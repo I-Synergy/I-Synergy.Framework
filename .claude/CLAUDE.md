@@ -124,13 +124,21 @@ Load on demand:
 | CQRS | [`.claude/skills/dotnet-engineer/SKILL.md`](.claude/skills/dotnet-engineer/SKILL.md), [`.claude/patterns/cqrs-patterns.md`](.claude/patterns/cqrs-patterns.md), [`.claude/reference/critical-rules.md`](.claude/reference/critical-rules.md), [`.claude/reference/templates/command-handler.cs.txt`](.claude/reference/templates/command-handler.cs.txt), [`.claude/reference/templates/query-handler.cs.txt`](.claude/reference/templates/query-handler.cs.txt) |
 | API Endpoints | [`.claude/patterns/api-patterns.md`](.claude/patterns/api-patterns.md), [`.claude/reference/templates/endpoint.cs.txt`](.claude/reference/templates/endpoint.cs.txt) |
 | Unit Tests | [`.claude/skills/unit-tester/SKILL.md`](.claude/skills/unit-tester/SKILL.md), [`.claude/patterns/testing-patterns.md`](.claude/patterns/testing-patterns.md), [`.claude/reference/templates/test-class.cs.txt`](.claude/reference/templates/test-class.cs.txt) |
+| E2E / UI Tests | [`.claude/skills/playwright-tester/SKILL.md`](.claude/skills/playwright-tester/SKILL.md) |
 | Blazor UI | [`.claude/skills/blazor-specialist/SKILL.md`](.claude/skills/blazor-specialist/SKILL.md), [`.claude/patterns/mvvm.md`](.claude/patterns/mvvm.md) |
 | MAUI | [`.claude/skills/maui-specialist/SKILL.md`](.claude/skills/maui-specialist/SKILL.md), [`.claude/patterns/mvvm.md`](.claude/patterns/mvvm.md) |
 | Database | [`.claude/skills/database-migration/SKILL.md`](.claude/skills/database-migration/SKILL.md) |
 | Architecture | [`.claude/skills/architect/SKILL.md`](.claude/skills/architect/SKILL.md) |
+| Architecture Review | [`.claude/skills/design-interrogation/SKILL.md`](.claude/skills/design-interrogation/SKILL.md) |
 | Code Review | [`.claude/skills/code-reviewer/SKILL.md`](.claude/skills/code-reviewer/SKILL.md), [`.claude/checklists/pre-submission.md`](.claude/checklists/pre-submission.md) |
-| Security | [`.claude/skills/security/SKILL.md`](.claude/skills/security/SKILL.md), [`.claude/skills/api-security/SKILL.md`](.claude/skills/api-security/SKILL.md) |
-| Refactoring | [`.claude/reference/refactoring.md`](.claude/reference/refactoring.md) |
+| API Security | [`.claude/skills/api-security/SKILL.md`](.claude/skills/api-security/SKILL.md), [`.claude/patterns/api-patterns.md`](.claude/patterns/api-patterns.md) |
+| App Security | [`.claude/skills/software-security/SKILL.md`](.claude/skills/software-security/SKILL.md) |
+| Security Strategy | [`.claude/skills/security/SKILL.md`](.claude/skills/security/SKILL.md), [`.claude/skills/api-security/SKILL.md`](.claude/skills/api-security/SKILL.md) |
+| Performance | [`.claude/skills/performance-engineer/SKILL.md`](.claude/skills/performance-engineer/SKILL.md), [`.claude/patterns/cqrs-patterns.md`](.claude/patterns/cqrs-patterns.md) |
+| External Integration | [`.claude/skills/integration-specialist/SKILL.md`](.claude/skills/integration-specialist/SKILL.md), [`.claude/patterns/api-patterns.md`](.claude/patterns/api-patterns.md) |
+| DevOps / CI/CD | [`.claude/skills/devops-engineer/SKILL.md`](.claude/skills/devops-engineer/SKILL.md) |
+| Documentation | [`.claude/skills/technical-writer/SKILL.md`](.claude/skills/technical-writer/SKILL.md) |
+| Refactoring | [`.claude/skills/refactor/SKILL.md`](.claude/skills/refactor/SKILL.md), [`.claude/reference/refactoring.md`](.claude/reference/refactoring.md) |
 
 ## Key Reference Files
 

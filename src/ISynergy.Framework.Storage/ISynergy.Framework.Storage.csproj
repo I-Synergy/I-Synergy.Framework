@@ -4,7 +4,8 @@
 		<PackageId>I-Synergy.Framework.Storage</PackageId>
 		<Description>I-Synergy Framework Storage</Description>
 		<PackageTags>I-Synergy, Framework, Storage</PackageTags>
-	</PropertyGroup>
+	  <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

@@ -1,12 +1,15 @@
 ---
 name: dotnet-engineer
-description: .NET/C#/Blazor/MAUI development expert. Use for implementing CQRS handlers, API endpoints, Blazor components, MAUI apps, or any .NET code development tasks.
+description: .NET/C#/Blazor/MAUI development expert. Use for implementing CQRS handlers, API endpoints, Blazor components, MAUI apps, or any .NET code development tasks. Trigger any time the user asks to add, modify, or implement code in the I-Synergy solution — even if they don't call it "CQRS" or ".NET".
 ---
 
 # .NET Engineer Skill
 
 Specialized agent for .NET, C#, Blazor, and MAUI development.
-Reference implementation: `ISynergy.Domain.Budgets`
+
+> **Context:** This skill covers two scenarios. Adjust accordingly:
+> - **Framework library work** (`src/ISynergy.Framework.*`) — extending or modifying the framework itself; no `DataContext`, no tenant filtering, no application-layer patterns.
+> - **Application work** (projects built on top of I-Synergy Framework) — implementing CQRS handlers, endpoints, and data access using `DataContext` directly. Reference implementation: `ISynergy.Domain.Budgets`.
 
 ## Expertise Areas
 
@@ -25,7 +28,7 @@ Reference implementation: `ISynergy.Domain.Budgets`
    - Create Command/Query/Handler/Response classes (each in own file, subfolder per operation)
    - Handler naming: `Create{Entity}CommandHandler`, `Get{Entity}ByIdQueryHandler`
    - Add structured logging
-   - Map entities to Models via manual inline property assignment
+   - Map entities to Models inline: `new Model(entity.Field1, ...)`
 
 2. **Build API Endpoints**
    - Create Minimal API endpoints
@@ -47,13 +50,13 @@ Reference implementation: `ISynergy.Domain.Budgets`
 ## Key Rules to Enforce
 
 - Commands use individual parameters (NOT model objects)
-- Delete operations use `FindAsync` + `Remove` + `SaveChangesAsync`
+- Delete operations use `FirstOrDefaultAsync` + `Remove` + `SaveChangesAsync`
 - Queries use named parameters for optional filters
 - Never expose domain entities directly (responses wrap Models)
 - Always include `CancellationToken` in async methods
-- Use manual inline mapping for Entity → Model (no mapper libraries)
+- Map entities to Models inline in handlers (no mapping library — no Mapster, no AutoMapper)
 - No repository interfaces (use DataContext directly)
-- Create handlers construct entities directly with explicit property assignment
+- Create handlers construct entities directly (NOT via any mapping library)
 - Models are positional records without "Model" suffix (e.g., `Budget`, not `BudgetModel`)
 
 ## Templates to Use
@@ -73,7 +76,7 @@ Reference implementation: `ISynergy.Domain.Budgets`
 - [ ] Structured logging throughout
 - [ ] Async all the way (no .Wait() or .Result)
 - [ ] Responses wrap Models (not entities)
-- [ ] Manual inline mapping used (no mapper libraries)
+- [ ] No separate mapper class — mapping is inline in the handler
 - [ ] Proper error handling with `InvalidOperationException`
 - [ ] XML documentation on public APIs
 - [ ] Each type in own file, each operation in own subfolder

@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.OpenTelemetry.ApplicationInsights.Extensions;
 /// <summary>
@@ -16,6 +17,8 @@ public static class ApplicationInsightsTelemetryExtensions
     /// <param name="telemetryBuilder">The telemetry builder.</param>
     /// <param name="telemetryExporterOptions"></param>
     /// <returns>The telemetry builder for chaining.</returns>
+    [RequiresUnreferencedCode("Calls BindWithReload which uses ConfigurationBinder.Bind with reflection.")]
+    [RequiresDynamicCode("Calls BindWithReload which requires dynamic code generation at runtime.")]
     public static TelemetryBuilder AddApplicationInsightsExporter(
         this TelemetryBuilder telemetryBuilder,
         Action<AzureMonitorExporterOptions>? telemetryExporterOptions = null)

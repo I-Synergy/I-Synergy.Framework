@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Safely calls OnNavigatedTo with exception handling.
     /// </summary>
+    [RequiresUnreferencedCode("Calls IViewModel.OnNavigatedTo() which uses runtime reflection over property types.")]
     private void SafeOnNavigatedTo(IViewModel viewModel)
     {
         try
@@ -46,6 +48,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Safely calls OnNavigatedFrom with exception handling.
     /// </summary>
+    [RequiresUnreferencedCode("Calls IViewModel.OnNavigatedFrom() which uses runtime reflection over property types.")]
     private void SafeOnNavigatedFrom(IViewModel viewModel)
     {
         try
@@ -134,6 +137,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Goes the back.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Calls NavigateAsync which uses assembly scanning; callers must ensure types are preserved.")]
     public Task GoBackAsync()
     {
         // Keep track of whether we had items before popping
@@ -189,6 +193,7 @@ public class NavigationService : INavigationService
     /// The reflection fallback is decorated with <see cref="System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute"/>
     /// to surface a warning at call sites when publishing with trimming enabled.
     /// </remarks>
+    [RequiresUnreferencedCode("Falls back to HasRunningCommandsViaReflection when ICommandProvider is not implemented.")]
     private bool HasRunningCommands(IViewModel viewModel)
     {
         if (viewModel is null)
@@ -226,6 +231,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// get navigation blade as an asynchronous operation.
     /// </summary>
+    [RequiresUnreferencedCode("Uses GetRelatedViewType() and GetRequiredService(Type) which are not trim-safe.")]
     private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
         var view = viewModel.GetRelatedView();
@@ -284,6 +290,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common blade setup logic
     /// </summary>
+    [RequiresUnreferencedCode("Calls HasRunningCommands and SafeOnNavigatedFrom which use runtime reflection.")]
     private async Task<IView?> SetupBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, Func<Task<IView?>> getViewFunc)
     {
         // Check if owner ViewModel can navigate away (if it has running commands)
@@ -330,6 +337,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common logic for adding a blade to the owner
     /// </summary>
+    [RequiresUnreferencedCode("Calls SafeOnNavigatedFrom which uses runtime reflection over property types.")]
     private void AddBladeToOwner(IViewModelBladeView owner, IView view)
     {
         if (!owner.Blades.Any(a => a.GetType().FullName!.Equals(view.GetType().FullName)))
@@ -352,6 +360,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// open blade as an asynchronous operation.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [RequiresUnreferencedCode("Uses GetRelatedViewType() and runtime reflection for view/ViewModel resolution which are not trim-safe.")]
     public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
     {
         Argument.IsNotNull(owner);
@@ -368,6 +378,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Opens blade with a custom defined view.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [RequiresUnreferencedCode("Uses GetRequiredService(Type) and runtime reflection for view/ViewModel resolution which are not trim-safe.")]
     public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
         where TView : IView
     {
@@ -425,6 +437,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Removes the blade asynchronous.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [RequiresUnreferencedCode("Calls SafeOnNavigatedFrom and SafeOnNavigatedTo which use runtime reflection over property types.")]
     public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
     {
         Argument.IsNotNull(owner);
@@ -461,6 +475,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Navigates to a specified viewmodel asynchronous.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Assembly scanning for view resolution is intentional; callers must ensure types are preserved.")]
     public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel =>
         NavigateAsync(default(TViewModel)!, parameter, backNavigation);
@@ -468,6 +484,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Navigates viewmodel to a specified view.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Runtime type-based service resolution is intentional; callers must ensure types are preserved.")]
     public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView =>
@@ -476,6 +494,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common navigation logic for handling current ViewModel
     /// </summary>
+    [RequiresUnreferencedCode("Calls CancelAllCommands and SafeOnNavigatedFrom which use runtime reflection over property types.")]
     private bool HandleCurrentViewModel(IViewModel currentViewModel, bool backNavigation)
     {
         if (currentViewModel == null)
@@ -522,6 +541,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Common logic for initializing a view and its ViewModel
     /// </summary>
+    [RequiresUnreferencedCode("Calls IViewModel.OnNavigatedTo() which uses runtime reflection over property types.")]
     private async Task InitializeViewAndViewModel(View page, bool backNavigation)
     {
         // Initialize if needed and notify ViewModel it's being navigated to
@@ -568,6 +588,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// navigate as an asynchronous operation.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [RequiresUnreferencedCode("Uses CreatePage<TViewModel> and GetRelatedViewType() which scan loaded assemblies and are not trim-safe.")]
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
     {
@@ -635,6 +657,8 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Navigates viewmodel to a specified view.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [RequiresUnreferencedCode("Uses GetRequiredService(Type) and runtime reflection for view/ViewModel resolution which are not trim-safe.")]
     public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView
@@ -679,6 +703,8 @@ public class NavigationService : INavigationService
         }
     }
 
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [RequiresUnreferencedCode("Uses CreatePage<TViewModel> and GetRelatedViewType() which scan loaded assemblies and are not trim-safe.")]
     public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
         where TViewModel : class, IViewModel
     {

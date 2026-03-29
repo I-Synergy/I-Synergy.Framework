@@ -6,6 +6,7 @@ using ISynergy.Framework.Mathematics.Enumerations;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -70,6 +71,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the number of bytes contained in an array.
     /// </summary>
+    [RequiresDynamicCode("Uses Marshal.SizeOf(Type) on a runtime-resolved element type.")]
     public static int GetNumberOfBytes(this Array array)
     {
         var elementType = array.GetInnerMostType();
@@ -771,6 +773,7 @@ public static partial class Matrix
     /// </summary>
     /// <param name="array">A tensor.</param>
     /// <returns>The transpose of the given tensor.</returns>
+    [RequiresDynamicCode("Calls transpose() which uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Transpose(this Array array)
     {
         return Transpose(array, Vector.Range(array.Rank - 1, -1));
@@ -782,6 +785,7 @@ public static partial class Matrix
     /// <param name="array">A tensor.</param>
     /// <param name="order">The new order for the tensor's dimensions.</param>
     /// <returns>The transpose of the given tensor.</returns>
+    [RequiresDynamicCode("Calls transpose() which uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Transpose(this Array array, int[] order)
     {
         return transpose(array, order);
@@ -793,6 +797,7 @@ public static partial class Matrix
     /// <param name="array">A tensor.</param>
     /// <param name="order">The new order for the tensor's dimensions.</param>
     /// <returns>The transpose of the given tensor.</returns>
+    [RequiresDynamicCode("Calls transpose() which uses Array.CreateInstance with a runtime-resolved element type.")]
     public static T Transpose<T>(this T array, int[] order)
         where T : class, IList
     {
@@ -804,6 +809,7 @@ public static partial class Matrix
         return transpose(arr, order) as T;
     }
 
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     private static Array transpose(Array array, int[] order)
     {
         if (order.Length != array.Rank)
@@ -865,7 +871,7 @@ public static partial class Matrix
     /// </summary>
     public static int GetSizeInBytes<T>(this T[] elements)
     {
-        return elements.GetNumberOfElements() * Marshal.SizeOf(typeof(T));
+        return elements.GetNumberOfElements() * Marshal.SizeOf<T>();
     }
 
     /// <summary>
@@ -873,7 +879,7 @@ public static partial class Matrix
     /// </summary>
     public static int GetSizeInBytes<T>(this T[][] elements)
     {
-        return elements.GetNumberOfElements() * Marshal.SizeOf(typeof(T));
+        return elements.GetNumberOfElements() * Marshal.SizeOf<T>();
     }
 
     /// <summary>
@@ -881,11 +887,7 @@ public static partial class Matrix
     /// </summary>
     public static int GetSizeInBytes<T>(this T[,] elements)
     {
-#if NETSTANDARD1_4
         return elements.GetNumberOfElements() * Marshal.SizeOf<T>();
-#else
-        return elements.GetNumberOfElements() * Marshal.SizeOf(typeof(T));
-#endif
     }
 
     /// <summary>
@@ -1634,6 +1636,7 @@ public static partial class Matrix
     ///     Transforms a jagged array matrix into a single vector.
     /// </summary>
     /// <param name="array">A jagged array.</param>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array DeepFlatten(this Array array)
     {
         var totalLength = array.GetTotalLength();

@@ -410,57 +410,38 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 ## Authentication Implementation
 
-### OpenIddict Configuration
+### Keycloak JWT Configuration
 
 ```csharp
 // File: {ApplicationName}.Services.API/Program.cs
 
-using OpenIddict.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenIddict()
-    .AddCore(options =>
+// Keycloak is provisioned via Aspire — configure JWT validation
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        options.UseEntityFrameworkCore()
-            .UseDbContext<DataContext>();
-    })
-    .AddServer(options =>
-    {
-        options.SetTokenEndpointUris("/connect/token")
-            .SetAuthorizationEndpointUris("/connect/authorize")
-            .SetUserinfoEndpointUris("/connect/userinfo");
+        options.Authority = builder.Configuration["Keycloak:Authority"];
+        options.Audience = builder.Configuration["Keycloak:Audience"];
+        options.RequireHttpsMetadata = true;
 
-        options.AllowPasswordFlow()
-            .AllowRefreshTokenFlow()
-            .AllowAuthorizationCodeFlow();
-
-        // Encryption and signing keys from Key Vault
-        var encryptionKey = builder.Configuration["OpenIddict:EncryptionKey"];
-        var signingKey = builder.Configuration["OpenIddict:SigningKey"];
-
-        options.AddEncryptionKey(new SymmetricSecurityKey(
-            Convert.FromBase64String(encryptionKey!)));
-
-        options.AddSigningKey(new SymmetricSecurityKey(
-            Convert.FromBase64String(signingKey!)));
-
-        // Token lifetimes
-        options.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
-        options.SetRefreshTokenLifetime(TimeSpan.FromDays(14));
-
-        options.UseAspNetCore()
-            .EnableTokenEndpointPassthrough()
-            .EnableAuthorizationEndpointPassthrough()
-            .EnableUserinfoEndpointPassthrough();
-    })
-    .AddValidation(options =>
-    {
-        options.UseLocalServer();
-        options.UseAspNetCore();
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero
+        };
     });
 
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
 app.Run();
 ```
 
@@ -576,8 +557,8 @@ public sealed class CreateUserHandler(
             CreatedDate = DateTimeOffset.UtcNow
         };
 
-        var model = user.Adapt<UserModel>();
-        await dataContext.AddItemAsync<User, UserModel>(model, cancellationToken);
+        dataContext.Users.Add(user);
+        await dataContext.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation(
             "Created user {Email} (ID: {UserId})",
@@ -853,7 +834,7 @@ updates:
 - [ ] State-changing operations use POST/PUT/DELETE
 
 ### Authentication
-- [ ] OpenIddict or ASP.NET Identity used
+- [ ] Keycloak JWT authentication configured
 - [ ] JWT tokens validated
 - [ ] Short-lived access tokens (< 30 minutes)
 - [ ] Refresh tokens implemented
@@ -1143,7 +1124,7 @@ _logger.LogInformation(
 - [ ] Security headers configured
 - [ ] CSP implemented
 - [ ] Anti-forgery tokens used
-- [ ] OpenIddict or ASP.NET Identity configured
+- [ ] Keycloak JWT authentication configured
 - [ ] JWT tokens validated
 - [ ] Passwords hashed with BCrypt/Argon2
 - [ ] Azure Key Vault configured for secrets

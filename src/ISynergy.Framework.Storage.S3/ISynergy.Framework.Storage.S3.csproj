@@ -5,7 +5,8 @@
         <PackageId>I-Synergy.Framework.Storage.S3</PackageId>
         <Description>I-Synergy Framework S3 Storage (AWS S3 and S3-compatible providers such as MinIO)</Description>
         <PackageTags>I-Synergy, Framework, Storage, S3, AWS, MinIO</PackageTags>
-    </PropertyGroup>
+      <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="AWSSDK.S3" />

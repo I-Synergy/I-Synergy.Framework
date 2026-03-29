@@ -32,6 +32,8 @@ public struct WeightedSquareEuclidean : IDistance<double[]>, ISimilarity<double[
     /// Initializes a new instance of the <see cref="WeightedSquareEuclidean"/> struct.
     /// </summary>
     /// <param name="dimensions">The number of dimensions (columns) in the dataset.</param>
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
     public WeightedSquareEuclidean(int dimensions)
     {
         this.weights = Vector.Ones(dimensions);

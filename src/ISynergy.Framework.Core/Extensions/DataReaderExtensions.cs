@@ -16,6 +16,8 @@ public static class DataReaderExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="datareader">The datareader.</param>
     /// <returns>List&lt;T&gt;.</returns>
+    [RequiresUnreferencedCode("Calls TypeActivator.CreateInstance<T>() which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls TypeActivator.CreateInstance<T>() which requires dynamic code generation.")]
     public static List<T> MapToList<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(this IDataReader datareader)
     {
         var list = new List<T>();
@@ -25,7 +27,7 @@ public static class DataReaderExtensions
             var fieldNames = Enumerable.Range(0, datareader.FieldCount).Select(i => datareader.GetName(i)).ToArray();
             T? obj = TypeActivator.CreateInstance<T>();
 
-            foreach (var prop in obj!.GetType().GetProperties().EnsureNotNull())
+            foreach (var prop in typeof(T).GetProperties().EnsureNotNull())
             {
                 if (fieldNames.Contains(prop.Name) && !datareader.IsDBNull(prop.Name))
                 {

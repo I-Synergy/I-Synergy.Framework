@@ -140,10 +140,10 @@ Authentication Context:
 | **ORM** | EF Core 10 | Microsoft standard |
 | **Caching** | Azure Redis | Distributed caching |
 | **CQRS** | I-Synergy.Framework.CQRS | Project standard |
-| **Mapping** | Manual inline (direct property assignment) | Explicit, no hidden magic |
+| **Mapping** | Direct inline mapping | No library dependency |
 | **Logging** | I-Synergy.Framework.OpenTelemetry | Observability |
 | **Testing** | MSTest | Microsoft standard |
-| **Auth** | OpenIddict | OAuth2/OIDC |
+| **Auth** | Keycloak (via Aspire) | OAuth2/OIDC |
 
 ### Architecture Decision Template
 
@@ -202,7 +202,7 @@ L3: Database (source of truth)
 - Centralized log aggregation (Application Insights)
 
 ### Security Architecture
-- Authentication: OpenIddict (OAuth2/OIDC)
+- Authentication: Keycloak (OAuth2/OIDC, provisioned via Aspire)
 - Authorization: Claims-based, policies
 - API keys for service-to-service
 - Azure Key Vault for secrets

@@ -1,4 +1,6 @@
 #if !NET35 && !NET40
+using System.Diagnostics.CodeAnalysis;
+
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 /// <summary>
@@ -18,6 +20,8 @@ public class NpzDictionary : NpzDictionary<Array>
     ///     Pass true to deserialize matrices as jagged matrices. Pass false
     ///     to deserialize them as multi-dimensional matrices.
     /// </param>
+    [RequiresUnreferencedCode("Calls NpzDictionary<T>(Stream) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls NpzDictionary<T>(Stream) which requires dynamic code generation.")]
     public NpzDictionary(Stream stream, bool jagged)
         : base(stream)
     {
@@ -27,6 +31,8 @@ public class NpzDictionary : NpzDictionary<Array>
     /// <summary>
     ///     Loads the array from the specified stream.
     /// </summary>
+    [RequiresUnreferencedCode("Calls NpyFormat.LoadJagged(Stream) which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls NpyFormat.LoadJagged/LoadMatrix which require dynamic code generation.")]
     protected override Array Load(Stream s)
     {
         if (jagged)

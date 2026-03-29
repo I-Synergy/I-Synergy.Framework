@@ -2,6 +2,7 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
@@ -307,6 +308,8 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     }
 
     /// <summary>Least squares solution of <c>A * X = I</c></summary>
+    [RequiresUnreferencedCode("Implements ISolverArrayDecomposition<T>.Inverse() which may use reflection-based type conversion.")]
+    [RequiresDynamicCode("Implements ISolverArrayDecomposition<T>.Inverse() which may require dynamic code generation.")]
     public double[][] Inverse()
     {
         if (!FullRank)

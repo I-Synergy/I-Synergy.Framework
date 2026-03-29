@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Code quality and architecture review specialist. Use when reviewing code for SOLID principles, CQRS patterns, security issues, or architecture compliance before merging.
+description: Code quality and architecture review specialist. Use when reviewing code for SOLID principles, CQRS patterns, security issues, or architecture compliance before merging. Always trigger this skill before approving any PR or declaring a feature done — even if the user doesn't explicitly ask for a review.
 ---
 
 # Code Reviewer Skill
@@ -51,13 +51,15 @@ Specialized agent for code quality assurance and review.
 - [ ] All async methods include CancellationToken
 
 ### Data Access
-- [ ] Delete operations use `RemoveItemAsync<TEntity, TKey>()`
+- [ ] Delete operations use `FirstOrDefaultAsync` + `Remove` + `SaveChangesAsync` (no extension methods)
 - [ ] No N+1 query problems (proper Include usage)
 - [ ] LINQ queries are efficient
 - [ ] No blocking on async (.Wait() or .Result)
 
 ### Mapping
-- [ ] Manual inline mapping used (no AutoMapper, no Mapster)
+- [ ] Direct inline mapping used (no Mapster, no AutoMapper)
+- [ ] No `.Adapt<T>()`, `.ProjectToType<T>()`, or `_mapper.Map<T>()` calls
+- [ ] No `Mappers/` folder or mapper class files
 - [ ] Domain entities never exposed directly
 
 ### Validation & Error Handling
@@ -99,8 +101,7 @@ Specialized agent for code quality assurance and review.
 
 Immediately flag if found:
 - MediatR (use project's CQRS framework)
-- AutoMapper (use manual inline mapping)
-- Mapster (use manual inline mapping)
+- AutoMapper or Mapster (use direct inline mapping)
 - xUnit/NUnit (use MSTest)
 - FluentValidation (use Data Annotations)
 - Swashbuckle (use Microsoft.AspNetCore.OpenApi)

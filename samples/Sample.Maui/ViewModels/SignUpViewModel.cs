@@ -40,7 +40,7 @@ public class SignUpViewModel : ViewModel
     /// <value>The registration mail.</value>
     public string Mail
     {
-        get { return GetValue<string>()?.ToLowerInvariant(); }
+        get { return GetValue<string>()?.ToLowerInvariant() ?? string.Empty; }
         set { SetValue(value?.ToLowerInvariant()); }
     }
 

@@ -1,6 +1,6 @@
 ---
 name: api-security
-description: API security specialist. Use for securing APIs, implementing authentication/authorization, protecting against OWASP API Top 10, or handling security best practices.
+description: API security specialist. Use for securing APIs, implementing authentication/authorization, protecting against OWASP API Top 10, or reviewing code for security issues. Trigger whenever the user asks about auth, JWT, permissions, rate limiting, CORS, input validation, or "is this secure" — even if they don't say "security".
 ---
 
 # API Security Specialist Skill
@@ -14,7 +14,7 @@ You are an API Security Specialist responsible for securing APIs, implementing a
 ## Expertise Areas
 
 - OWASP Top 10 for APIs
-- OAuth2 and OpenID Connect (OpenIddict)
+- OAuth2 and OpenID Connect (Keycloak)
 - JWT token management
 - Claims-based authorization
 - Input validation and sanitization
@@ -72,8 +72,8 @@ You are an API Security Specialist responsible for securing APIs, implementing a
 - Document security decisions and rationale
 
 ### Authentication
-- Use OpenIddict for OAuth2/OIDC (NOT custom JWT implementation)
-- Validate JWT tokens on every request
+- Use Keycloak (via Aspire) for OAuth2/OIDC (NOT custom JWT implementation)
+- Validate JWT tokens on every request via JwtBearer middleware
 - Use short-lived access tokens (15-30 minutes)
 - Implement refresh tokens for long sessions
 - Store tokens securely (HttpOnly cookies or secure storage)
@@ -126,34 +126,25 @@ app.MapGet("/budgets/{id}", async (
 
 ### 2. Broken Authentication
 ```csharp
-// ✅ CORRECT - Configure OpenIddict
-builder.Services.AddOpenIddict()
-    .AddCore(options =>
+// ✅ CORRECT - Configure Keycloak JWT validation
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        options.UseEntityFrameworkCore()
-            .UseDbContext<DataContext>();
-    })
-    .AddServer(options =>
-    {
-        options.SetTokenEndpointUris("/connect/token");
+        options.Authority = builder.Configuration["Keycloak:Authority"];
+        options.Audience = builder.Configuration["Keycloak:Audience"];
+        options.RequireHttpsMetadata = true;
 
-        options.AllowPasswordFlow()
-            .AllowRefreshTokenFlow();
-
-        options.AddEncryptionKey(new SymmetricSecurityKey(
-            Convert.FromBase64String(configuration["OpenIddict:EncryptionKey"]!)));
-
-        options.AddSigningKey(new SymmetricSecurityKey(
-            Convert.FromBase64String(configuration["OpenIddict:SigningKey"]!)));
-
-        options.UseAspNetCore()
-            .EnableTokenEndpointPassthrough();
-    })
-    .AddValidation(options =>
-    {
-        options.UseLocalServer();
-        options.UseAspNetCore();
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero
+        };
     });
+
+builder.Services.AddAuthorization();
 ```
 
 ### 3. Broken Object Property Level Authorization
@@ -444,7 +435,7 @@ app.MapPost("/upload", async (IFormFile file) =>
 ```csharp
 // Program.cs
 builder.Configuration.AddAzureKeyVault(
-    new Uri($"https://{builder.Configuration["KeyVault:Name"]}.vault.azure.net/"),
+    new Uri($"https://{builder.Configuration["KeyVault:Name"]}.secrets.azure.net/"),
     new DefaultAzureCredential());
 
 // Access secrets
@@ -493,12 +484,17 @@ public sealed class CreateBudgetHandler(
             userId, ipAddress, command.Name, Activity.Current?.Id);
 
         // Create budget
-        var entity = command.Adapt<Budget>();
-        entity.CreatedBy = userId;
+        var entity = new Budget
+        {
+            BudgetId = Guid.NewGuid(),
+            Name = command.Name,
+            Amount = command.Amount,
+            CreatedBy = userId,
+            TenantId = TenantContext.TenantId
+        };
 
-        await dataContext.AddItemAsync<Budget, BudgetModel>(
-            entity.Adapt<BudgetModel>(),
-            cancellationToken);
+        dataContext.Budgets.Add(entity);
+        await dataContext.SaveChangesAsync(cancellationToken);
 
         // Audit log success
         logger.LogInformation(
@@ -610,7 +606,7 @@ app.MapGet("/budgets/{id}", async (
 ## Security Review Checklist
 
 ### Authentication & Authorization
-- [ ] OpenIddict configured correctly
+- [ ] Keycloak JWT validation configured correctly
 - [ ] JWT tokens validated on every request
 - [ ] Authorization checks at all endpoints
 - [ ] Claims-based authorization implemented

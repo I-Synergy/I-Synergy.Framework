@@ -302,61 +302,19 @@ public class WebhookProcessor(
     private readonly string _webhookSecret = configuration["ExternalService:WebhookSecret"]
         ?? throw new InvalidOperationException("Webhook secret not configured");
 
-    public bool ValidateSignature(byte[] requestBody, string signature)
+    public bool ValidateSignature(ExternalServiceWebhookPayload payload, string signature)
     {
-        if (requestBody is null)
-        {
-            throw new ArgumentNullException(nameof(requestBody));
-        }
-
-        if (string.IsNullOrWhiteSpace(signature))
-        {
-            return false;
-        }
-
+        var json = JsonSerializer.Serialize(payload);
+        var bytes = Encoding.UTF8.GetBytes(json);
         var secretBytes = Encoding.UTF8.GetBytes(_webhookSecret);
 
         using var hmac = new HMACSHA256(secretBytes);
-        var computedHash = hmac.ComputeHash(requestBody);
+        var hash = hmac.ComputeHash(bytes);
+        var computedSignature = Convert.ToHexString(hash).ToLowerInvariant();
 
-        if (!TryDecodeHexString(signature, out var expectedHash))
-        {
-            return false;
-        }
-
-        if (expectedHash.Length != computedHash.Length)
-        {
-            return false;
-        }
-
-        return CryptographicOperations.FixedTimeEquals(computedHash, expectedHash);
+        return signature.Equals(computedSignature, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool TryDecodeHexString(string hex, out byte[] bytes)
-    {
-        if (hex is null)
-        {
-            bytes = Array.Empty<byte>();
-            return false;
-        }
-
-        if ((hex.Length & 1) != 0)
-        {
-            bytes = Array.Empty<byte>();
-            return false;
-        }
-
-        var result = new byte[hex.Length / 2];
-        for (int i = 0; i < result.Length; i++)
-        {
-            var high = Convert.ToByte(hex[2 * i].ToString(), 16);
-            var low = Convert.ToByte(hex[2 * i + 1].ToString(), 16);
-            result[i] = (byte)((high << 4) | low);
-        }
-
-        bytes = result;
-        return true;
-    }
     public async Task ProcessWebhookAsync(ExternalServiceWebhookPayload payload)
     {
         logger.LogInformation(
@@ -650,62 +608,46 @@ public class OAuth2TokenService(
 {
     private string? _cachedToken;
     private DateTimeOffset _tokenExpiry = DateTimeOffset.MinValue;
-    private readonly System.Threading.SemaphoreSlim _tokenSemaphore = new(1, 1);
 
     public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default)
     {
-        // Fast-path: return cached token if valid
+        // Return cached token if valid
         if (!string.IsNullOrEmpty(_cachedToken) && DateTimeOffset.UtcNow < _tokenExpiry)
         {
             logger.LogDebug("Using cached OAuth2 token");
             return _cachedToken;
         }
 
-        await _tokenSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-        try
+        logger.LogDebug("Requesting new OAuth2 token");
+
+        var tokenRequest = new Dictionary<string, string>
         {
-            // Double-check after acquiring the lock to avoid redundant refreshes
-            if (!string.IsNullOrEmpty(_cachedToken) && DateTimeOffset.UtcNow < _tokenExpiry)
-            {
-                logger.LogDebug("Using cached OAuth2 token after synchronization");
-                return _cachedToken;
-            }
+            ["grant_type"] = "client_credentials",
+            ["client_id"] = configuration["OAuth:ClientId"]!,
+            ["client_secret"] = configuration["OAuth:ClientSecret"]!,
+            ["scope"] = configuration["OAuth:Scope"]!
+        };
 
-            logger.LogDebug("Requesting new OAuth2 token");
-
-            var tokenRequest = new Dictionary<string, string>
-            {
-                ["grant_type"] = "client_credentials",
-                ["client_id"] = configuration["OAuth:ClientId"]!,
-                ["client_secret"] = configuration["OAuth:ClientSecret"]!,
-                ["scope"] = configuration["OAuth:Scope"]!
-            };
-
-            var request = new HttpRequestMessage(HttpMethod.Post, "/oauth/token")
-            {
-                Content = new FormUrlEncodedContent(tokenRequest)
-            };
-
-            var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>(
-                cancellationToken: cancellationToken).ConfigureAwait(false);
-
-            if (tokenResponse is null || string.IsNullOrEmpty(tokenResponse.AccessToken))
-                throw new InvalidOperationException("Failed to obtain OAuth2 token");
-
-            _cachedToken = tokenResponse.AccessToken;
-            _tokenExpiry = DateTimeOffset.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 60); // Refresh 1 minute early
-
-            logger.LogInformation("Successfully obtained OAuth2 token, expires in {ExpiresIn}s", tokenResponse.ExpiresIn);
-
-            return _cachedToken;
-        }
-        finally
+        var request = new HttpRequestMessage(HttpMethod.Post, "/oauth/token")
         {
-            _tokenSemaphore.Release();
-        }
+            Content = new FormUrlEncodedContent(tokenRequest)
+        };
+
+        var response = await httpClient.SendAsync(request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>(
+            cancellationToken: cancellationToken);
+
+        if (tokenResponse is null || string.IsNullOrEmpty(tokenResponse.AccessToken))
+            throw new InvalidOperationException("Failed to obtain OAuth2 token");
+
+        _cachedToken = tokenResponse.AccessToken;
+        _tokenExpiry = DateTimeOffset.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 60); // Refresh 1 minute early
+
+        logger.LogInformation("Successfully obtained OAuth2 token, expires in {ExpiresIn}s", tokenResponse.ExpiresIn);
+
+        return _cachedToken;
     }
 
     private sealed record TokenResponse(

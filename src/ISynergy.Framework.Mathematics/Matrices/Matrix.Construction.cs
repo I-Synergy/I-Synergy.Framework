@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -180,6 +181,8 @@ public static partial class Matrix
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <returns>A matrix of the specified size.</returns>
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[,] Ones<T>(int rows, int columns)
     {
         return Create(rows, columns, Constants.One<T>());
@@ -213,6 +216,8 @@ public static partial class Matrix
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <returns>A vector of the specified size.</returns>
+    [RequiresUnreferencedCode("Calls Ones<double>(int, int) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Ones<double>(int, int) which requires dynamic code generation.")]
     public static double[,] Ones(int rows, int columns)
     {
         return Ones<double>(rows, columns);
@@ -303,6 +308,8 @@ public static partial class Matrix
     ///     A matrix containing one-hot vectors where only a single position
     ///     is one and the others are zero.
     /// </returns>
+    [RequiresUnreferencedCode("Calls OneHot<T>(int[], int) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls OneHot<T>(int[], int) which requires dynamic code generation.")]
     public static T[,] OneHot<T>(int[] indices)
     {
         return OneHot<T>(indices, Enumerable.Max(indices) + 1);
@@ -333,6 +340,8 @@ public static partial class Matrix
     ///     A matrix containing one-hot vectors where only a single position
     ///     is one and the others are zero.
     /// </returns>
+    [RequiresUnreferencedCode("Calls OneHot<T>(int[], T[,]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls OneHot<T>(int[], T[,]) which requires dynamic code generation.")]
     public static T[,] OneHot<T>(int[] indices, int columns)
     {
         return OneHot(indices, new T[indices.Length, columns]);
@@ -364,6 +373,8 @@ public static partial class Matrix
     ///     A matrix containing one-hot vectors where only a single position
     ///     is one and the others are zero.
     /// </returns>
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[,] OneHot<T>(int[] indices, T[,] result)
     {
         var one = Constants.One<T>();
@@ -399,6 +410,8 @@ public static partial class Matrix
     ///     A matrix containing k-hot vectors where only elements at the indicated
     ///     <paramref name="indices" /> are set to one and the others are zero.
     /// </returns>
+    [RequiresUnreferencedCode("Calls KHot<T>(int[][], T[,]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls KHot<T>(int[][], T[,]) which requires dynamic code generation.")]
     public static T[,] KHot<T>(int[][] indices, int columns)
     {
         return KHot(indices, new T[indices.Length, columns]);
@@ -430,6 +443,8 @@ public static partial class Matrix
     ///     A matrix containing k-hot vectors where only elements at the indicated
     ///     <paramref name="indices" /> are set to one and the others are zero.
     /// </returns>
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[,] KHot<T>(int[][] indices, T[,] result)
     {
         var one = Constants.One<T>();
@@ -460,6 +475,8 @@ public static partial class Matrix
     /// <summary>
     ///     Creates a new multidimensional matrix with the same shape as another matrix.
     /// </summary>
+    [RequiresUnreferencedCode("Calls GetShape which uses Vector.Ones<int>(int) with reflection-based type conversion.")]
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array CreateAs(Array matrix, Type type)
     {
         var outputShape = GetShape(matrix, type);
@@ -468,6 +485,8 @@ public static partial class Matrix
         return Array.CreateInstance(type.GetInnerMostType(), outputShape);
     }
 
+    [RequiresUnreferencedCode("Calls Vector.Ones<int>(int) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Vector.Ones<int>(int) which requires dynamic code generation.")]
     internal static int[] GetShape(Array matrix, Type type)
     {
         var outputShape = matrix.GetLength(true);
@@ -671,6 +690,8 @@ public static partial class Matrix
     /// <summary>
     ///     Creates a square matrix with ones across its diagonal.
     /// </summary>
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[,] Identity<T>(int size)
     {
         return Diagonal(size, Constants.One<T>());
@@ -956,6 +977,7 @@ public static partial class Matrix
     ///     Trims the specified array, removing zero and empty entries from arrays.
     /// </summary>
     /// <param name="array">The array to be trimmed.</param>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Trim(this Array array)
     {
         if (array.IsMatrix())

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
@@ -24,6 +25,8 @@ public class CategoryCrossEntropyLoss : LossBase<bool[][]>, ILoss<int[]>, ILoss<
     ///     Initializes a new instance of the <see cref="CategoryCrossEntropyLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Jagged.OneHot<bool> is safe for AOT as bool is a known type.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Jagged.OneHot<bool> is safe for AOT as bool is a known type.")]
     public CategoryCrossEntropyLoss(int[] expected)
     {
         Expected = Jagged.OneHot<bool>(expected);
@@ -65,6 +68,8 @@ public class CategoryCrossEntropyLoss : LossBase<bool[][]>, ILoss<int[]>, ILoss<
     ///     The loss value between the expected values and
     ///     the actual predicted values.
     /// </returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Jagged.OneHot<bool> is safe for AOT as bool is a known type.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Jagged.OneHot<bool> is safe for AOT as bool is a known type.")]
     public double Loss(int[] actual)
     {
         return Loss(Jagged.OneHot<bool>(actual));

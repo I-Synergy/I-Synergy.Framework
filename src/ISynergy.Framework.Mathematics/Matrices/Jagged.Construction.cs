@@ -3,6 +3,7 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -67,6 +68,8 @@ public static partial class Jagged
     /// 
     /// <returns>A matrix of the specified size.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[][] Ones<T>(int rows, int columns)
     {
         return Create<T>(rows, columns, Constants.One<T>());
@@ -109,7 +112,9 @@ public static partial class Jagged
     /// <param name="columns">The number of columns in the matrix.</param>
     /// 
     /// <returns>A vector of the specified size.</returns>
-    /// 
+    ///
+    [RequiresUnreferencedCode("Calls Ones<double>(int, int) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Ones<double>(int, int) which requires dynamic code generation.")]
     public static double[][] Ones(int rows, int columns)
     {
         return Ones<double>(rows, columns);
@@ -147,11 +152,15 @@ public static partial class Jagged
     /// 
     /// <returns>A matrix of the specified size.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls TypeExtensions.GetDefaultValue and TypeExtensions.MakeArrayType which are not AOT-safe.")]
+    [RequiresDynamicCode("Uses Array.CreateInstance and TypeExtensions.MakeArrayType with runtime-resolved types.")]
     public static Array Create(Type elementType, int[] shape, object value)
     {
         return create(elementType, shape, 0, value);
     }
 
+    [RequiresUnreferencedCode("Calls TypeExtensions.MakeArrayType which is not AOT-safe.")]
+    [RequiresDynamicCode("Uses Array.CreateInstance and TypeExtensions.MakeArrayType with runtime-resolved types.")]
     private static Array create(Type elementType, int[] shape, int dimension, object value)
     {
         Type arrayType = elementType.MakeArrayType(shape.Length - dimension - 1, jagged: true);
@@ -180,6 +189,8 @@ public static partial class Jagged
     /// 
     /// <returns>A matrix of the specified size.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Create(Type,...) which uses TypeExtensions.GetDefaultValue and TypeExtensions.MakeArrayType that are not AOT-safe.")]
+    [RequiresDynamicCode("Calls Create(Type,...) which uses Array.CreateInstance with runtime-resolved types.")]
     public static Array Create<T>(int[] shape, T value)
     {
         return Create(typeof(T), shape, value);
@@ -194,6 +205,8 @@ public static partial class Jagged
     /// 
     /// <returns>A matrix of the specified size.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls TypeExtensions.GetDefaultValue and Create(Type,...) which are not AOT-safe.")]
+    [RequiresDynamicCode("Calls Create(Type,...) which requires dynamic code generation.")]
     public static Array Zeros(Type elementType, params int[] shape)
     {
         return Create(elementType, shape, elementType.GetDefaultValue());
@@ -206,6 +219,8 @@ public static partial class Jagged
     /// 
     /// <returns>A matrix of the specified size.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Create(Type,...) which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls Create(Type,...) which requires dynamic code generation.")]
     public static Array Zeros<T>(params int[] shape)
     {
         return Create(typeof(T), shape, 0);
@@ -297,6 +312,8 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls OneHot<T>(bool[], T[][]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls OneHot<T>(bool[], T[][]) which requires dynamic code generation.")]
     public static T[][] OneHot<T>(bool[] mask)
     {
         return OneHot<T>(mask, Jagged.Create<T>(mask.Length, 2));
@@ -314,6 +331,8 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     /// is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls OneHot<T>(int[], int) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls OneHot<T>(int[], int) which requires dynamic code generation.")]
     public static T[][] OneHot<T>(int[] indices)
     {
         return OneHot<T>(indices, indices.Max() + 1);
@@ -347,6 +366,8 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     /// is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls OneHot<T>(int[], T[][]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls OneHot<T>(int[], T[][]) which requires dynamic code generation.")]
     public static T[][] OneHot<T>(int[] indices, int columns)
     {
         return OneHot<T>(indices, Jagged.Create<T>(indices.Length, columns));
@@ -382,6 +403,8 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[][] OneHot<T>(bool[] mask, T[][] result)
     {
         var one = Constants.One<T>();
@@ -406,6 +429,8 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     /// is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[][] OneHot<T>(int[] indices, T[][] result)
     {
         var one = Constants.One<T>();
@@ -444,6 +469,8 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls KHot<T>(bool[][], T[][]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls KHot<T>(bool[][], T[][]) which requires dynamic code generation.")]
     public static T[][] KHot<T>(bool[][] mask)
     {
         return KHot<T>(mask, Jagged.CreateAs<bool, T>(mask));
@@ -462,6 +489,8 @@ public static partial class Jagged
     /// <returns>A matrix containing k-hot vectors where only elements at the indicated 
     ///   <paramref name="indices"/> are set to one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls KHot<T>(int[][], T[][]) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls KHot<T>(int[][], T[][]) which requires dynamic code generation.")]
     public static T[][] KHot<T>(int[][] indices, int columns)
     {
         return KHot<T>(indices, Jagged.Create<T>(indices.Length, columns));
@@ -495,6 +524,8 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "KHot<double> is safe for AOT as double is a known type.")]
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "KHot<double> is safe for AOT as double is a known type.")]
     public static double[][] KHot(bool[][] mask, int columns)
     {
         return KHot(mask, Jagged.Create<double>(mask.Length, columns));
@@ -514,6 +545,8 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[][] KHot<T>(bool[][] mask, T[][] result)
     {
         var one = Constants.One<T>();
@@ -537,6 +570,8 @@ public static partial class Jagged
     /// <returns>A matrix containing k-hot vectors where only elements at the indicated 
     ///   <paramref name="indices"/> are set to one and the others are zero.</returns>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[][] KHot<T>(int[][] indices, T[][] result)
     {
         var one = Constants.One<T>();
@@ -569,6 +604,8 @@ public static partial class Jagged
     ///   Creates a new multidimensional matrix with the same shape as another matrix.
     /// </summary>
     /// 
+    [RequiresUnreferencedCode("Calls Jagged.Create which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls Jagged.Create which requires dynamic code generation.")]
     public static Array CreateAs(Array matrix, Type type)
     {
         int[] outputShape = Matrix.GetShape(matrix, type);
@@ -638,6 +675,8 @@ public static partial class Jagged
     ///   Creates a square matrix with ones across its diagonal.
     /// </summary>
     /// 
+    [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
     public static T[][] Identity<T>(int size)
     {
         return Diagonal(size, Constants.One<T>());

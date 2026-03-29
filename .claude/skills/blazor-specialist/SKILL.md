@@ -1,6 +1,6 @@
 ---
 name: blazor-specialist
-description: Blazor UI development specialist. Use for building Blazor Server or WebAssembly apps, component development, state management, or form handling.
+description: Blazor UI development specialist. Use for building Blazor Server or WebAssembly apps, component development, state management, or form handling. Trigger any time the user works on a Blazor page, component, ViewModel, or form — even if they don't say "Blazor" explicitly.
 ---
 
 # Blazor UI Specialist Skill
@@ -65,11 +65,10 @@ You are a Blazor UI Specialist responsible for building interactive web interfac
 
 - **Every Blazor page MUST have a ViewModel.** Busy state, empty state, and all data collections are owned and managed by the ViewModel — never by razor page `@code` blocks.
 - **Every ViewModel MUST inherit from `ISynergy.Framework.Mvvm.ViewModel`** (the framework base class). Never create a plain class or use a custom base.
-- **Use `IsBusy` (from the base class) — never add `IsLoading`, `IsLoaded`, or `_isLoading` anywhere in pages or components.** The framework `ViewModel` base already provides `IsBusy` for this purpose.
+- **Use `IsBusy` (from the base class) — never add `IsLoading`, `IsLoaded`, or `_isLoading` anywhere.** The framework `ViewModel` base already provides `IsBusy` for this purpose.
 - **Never add `IsBusy`, `IsLoading`, `IsLoaded`, `_initialized`, or data fields to razor page `@code` blocks.** Page-level state is forbidden. If a page currently has no ViewModel, create one before adding any state logic.
 - Razor page `@code` blocks are limited to: injecting the ViewModel, calling `ViewModel.InitializeAsync()` in `OnInitializedAsync`, and delegating user actions to ViewModel methods.
 - ViewModel pattern: `IsBusy = true` → load data → `IsBusy = false` in a `try/finally` block.
-- **Legacy anti-pattern:** any examples or existing pages using `ComponentBase` + `IsLoading` + page-owned collections MUST be refactored to a ViewModel (`ISynergy.Framework.Mvvm.ViewModel`) and MUST NOT be copied into new code.
 
 ### Blazor Best Practices
 - Use `@rendermode` appropriately (Server, WebAssembly, Auto)
@@ -136,91 +135,66 @@ You are a Blazor UI Specialist responsible for building interactive web interfac
 }
 ```
 
-### Component with Code-Behind
+### Component with ViewModel (Required Pattern)
 ```razor
 @* File: Pages/Budgets/BudgetList.razor *@
 @page "/budgets"
 @namespace {ApplicationName}.UI.Pages.Budgets
-@inherits BudgetListBase
+@inject BudgetListViewModel ViewModel
 
 <PageTitle>Budgets</PageTitle>
 
 <div class="budget-list-page">
     <h1>Budgets</h1>
 
-    @if (IsLoading)
+    @if (ViewModel.IsBusy)
     {
         <p>Loading budgets...</p>
     }
-    else if (ErrorMessage is not null)
-    {
-        <div class="error">@ErrorMessage</div>
-    }
-    else if (!Budgets.Any())
+    else if (!ViewModel.Budgets.Any())
     {
         <p>No budgets found. Create your first budget!</p>
     }
     else
     {
         <div class="budget-grid">
-            @foreach (var budget in Budgets)
+            @foreach (var budget in ViewModel.Budgets)
             {
                 <BudgetCard
                     Budget="@budget"
-                    OnEdit="@HandleEditBudget"
-                    OnDelete="@HandleDeleteBudget" />
+                    OnEdit="@ViewModel.HandleEditBudget"
+                    OnDelete="@ViewModel.HandleDeleteBudget" />
             }
         </div>
     }
 
-    <button @onclick="HandleCreateBudget" class="primary">Create Budget</button>
+    <button @onclick="ViewModel.HandleCreateBudget" class="primary">Create Budget</button>
 </div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.InitializeAsync();
+    }
+}
 ```
 
 ```csharp
-// File: ViewModels/Budgets/BudgetListViewModel.cs
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.ViewModels;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
+// File: Pages/Budgets/BudgetListViewModel.cs
+using ISynergy.Framework.Mvvm;
 using {ApplicationName}.UI.Services;
 
-namespace {ApplicationName}.UI.ViewModels.Budgets;
+namespace {ApplicationName}.UI.Pages.Budgets;
 
-public class BudgetListViewModel : ViewModel
+// ✅ CORRECT - Inherits from ISynergy.Framework.Mvvm.ViewModel
+// IsBusy is provided by the base class — never add IsLoading
+public class BudgetListViewModel(
+    IBudgetService budgetService,
+    NavigationManager navigation,
+    ILogger<BudgetListViewModel> logger
+) : ViewModel
 {
-    private readonly IBudgetService _budgetService;
-    private readonly NavigationManager _navigation;
-    private readonly ILogger<BudgetListViewModel> _logger;
-
-    public ObservableCollection<BudgetResponse> Budgets { get; } = new();
-
-    private bool _isBusy;
-    public bool IsBusy
-    {
-        get => _isBusy;
-        set => SetProperty(ref _isBusy, value);
-    }
-
-    private string? _errorMessage;
-    public string? ErrorMessage
-    {
-        get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
-    }
-
-    public BudgetListViewModel(
-        IBudgetService budgetService,
-        NavigationManager navigation,
-        ILogger<BudgetListViewModel> logger)
-        : base(logger)
-    {
-        _budgetService = budgetService;
-        _navigation = navigation;
-        _logger = logger;
-    }
+    public List<BudgetResponse> Budgets { get; private set; } = [];
 
     public override async Task InitializeAsync()
     {
@@ -230,21 +204,13 @@ public class BudgetListViewModel : ViewModel
     public async Task LoadBudgetsAsync()
     {
         IsBusy = true;
-        ErrorMessage = null;
-
         try
         {
-            Budgets.Clear();
-            var items = await _budgetService.GetBudgetsAsync();
-            foreach (var budget in items)
-            {
-                Budgets.Add(budget);
-            }
+            Budgets = await budgetService.GetBudgetsAsync();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error loading budgets");
-            ErrorMessage = "Failed to load budgets. Please try again.";
+            logger.LogError(ex, "Error loading budgets");
         }
         finally
         {
@@ -252,46 +218,23 @@ public class BudgetListViewModel : ViewModel
         }
     }
 
-    public void CreateBudget()
-    {
-        _navigation.NavigateTo("/budgets/create");
-    }
+    public void HandleCreateBudget() =>
+        navigation.NavigateTo("/budgets/create");
 
-    public void EditBudget(BudgetResponse budget)
-    {
-        _navigation.NavigateTo($"/budgets/{budget.BudgetId}/edit");
-    }
+    public void HandleEditBudget(BudgetResponse budget) =>
+        navigation.NavigateTo($"/budgets/{budget.BudgetId}/edit");
 
-    public async Task DeleteBudgetAsync(Guid budgetId)
+    public async Task HandleDeleteBudget(Guid budgetId)
     {
         try
         {
-            await _budgetService.DeleteBudgetAsync(budgetId);
-            await LoadBudgetsAsync(); // Reload list
+            await budgetService.DeleteBudgetAsync(budgetId);
+            await LoadBudgetsAsync();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deleting budget {BudgetId}", budgetId);
-            ErrorMessage = "Failed to delete budget. Please try again.";
+            logger.LogError(ex, "Error deleting budget {BudgetId}", budgetId);
         }
-    }
-}
-
-// File: Pages/Budgets/BudgetList.razor.cs
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using {ApplicationName}.UI.ViewModels.Budgets;
-
-namespace {ApplicationName}.UI.Pages.Budgets;
-
-public partial class BudgetList
-{
-    [Inject]
-    public BudgetListViewModel ViewModel { get; set; } = default!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await ViewModel.InitializeAsync();
     }
 }
 ```
@@ -431,7 +374,7 @@ namespace {ApplicationName}.UI.Store.BudgetState;
 public record BudgetState
 {
     public List<BudgetResponse> Budgets { get; init; } = new();
-    public bool IsLoading { get; init; }
+    public bool IsBusy { get; init; }
     public string? ErrorMessage { get; init; }
 }
 ```
@@ -457,15 +400,15 @@ public static class BudgetReducers
 {
     [ReducerMethod]
     public static BudgetState ReduceLoadBudgetsAction(BudgetState state, LoadBudgetsAction action) =>
-        state with { IsLoading = true, ErrorMessage = null };
+        state with { IsBusy = true, ErrorMessage = null };
 
     [ReducerMethod]
     public static BudgetState ReduceLoadBudgetsSuccessAction(BudgetState state, LoadBudgetsSuccessAction action) =>
-        state with { IsLoading = false, Budgets = action.Budgets };
+        state with { IsBusy = false, Budgets = action.Budgets };
 
     [ReducerMethod]
     public static BudgetState ReduceLoadBudgetsFailureAction(BudgetState state, LoadBudgetsFailureAction action) =>
-        state with { IsLoading = false, ErrorMessage = action.ErrorMessage };
+        state with { IsBusy = false, ErrorMessage = action.ErrorMessage };
 }
 ```
 
@@ -511,7 +454,7 @@ builder.Services.AddFluxor(options =>
 @inject IDispatcher Dispatcher
 
 <div>
-    @if (BudgetState.Value.IsLoading)
+    @if (BudgetState.Value.IsBusy)
     {
         <p>Loading...</p>
     }

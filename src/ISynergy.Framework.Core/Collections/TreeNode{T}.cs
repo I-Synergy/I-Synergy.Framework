@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Collections;
 
@@ -15,7 +16,7 @@ namespace ISynergy.Framework.Core.Collections;
 /// <typeparam name="TModel">The type of the t model.</typeparam>
 /// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IDisposable" />
-public class TreeNode<TKey, TModel> : ObservableValidatedClass
+public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel> : ObservableValidatedClass
     where TKey : struct
     where TModel : class
 {

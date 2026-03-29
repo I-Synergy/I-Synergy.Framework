@@ -1,0 +1,282 @@
+@page "/orders/{OrderId:guid}"
+@rendermode InteractiveServer
+@inject OrdersApiClient Api
+@inject NavigationManager Nav
+
+<PageTitle>Order @OrderId.ToString()[..8]… — Event Sourcing Demo</PageTitle>
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/orders">Orders</a></li>
+        <li class="breadcrumb-item active">@OrderId.ToString()[..8]…</li>
+    </ol>
+</nav>
+
+@if (_loading)
+{
+    <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+}
+else if (_order is null)
+{
+    <div class="alert alert-warning">Order not found.</div>
+}
+else
+{
+    <div class="row g-4">
+        @* ── Order card ──────────────────────────────────────────────────────── *@
+        <div class="col-md-5">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Order Details</h5>
+                    <span class="badge @StatusBadgeClass">@_order.Status</span>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-5">Order ID</dt>
+                        <dd class="col-7 font-monospace small">@_order.OrderId</dd>
+                        <dt class="col-5">Customer</dt>
+                        <dd class="col-7">@_order.CustomerName</dd>
+                        <dt class="col-5">Total</dt>
+                        <dd class="col-7">@_order.Total.ToString("C")</dd>
+                        <dt class="col-5">Version</dt>
+                        <dd class="col-7">@_order.Version</dd>
+                        @if (_order.TrackingNumber is not null)
+                        {
+                            <dt class="col-5">Tracking</dt>
+                            <dd class="col-7">@_order.TrackingNumber</dd>
+                        }
+                        @if (_order.CancellationReason is not null)
+                        {
+                            <dt class="col-5">Cancelled</dt>
+                            <dd class="col-7 text-danger">@_order.CancellationReason</dd>
+                        }
+                    </dl>
+                </div>
+                @if (_order.Status == "Pending")
+                {
+                    <div class="card-footer d-flex gap-2">
+                        <button class="btn btn-sm btn-primary" @onclick="OpenEditModal">Edit</button>
+                        <button class="btn btn-sm btn-success" @onclick="() => _showShip = true">Ship</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => _showCancel = true">Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @* ── Event stream ────────────────────────────────────────────────────── *@
+        <div class="col-md-7">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Event Stream <span class="badge bg-secondary">@_events.Count</span></h5>
+                </div>
+                <div class="card-body p-0">
+                    <ol class="list-group list-group-flush rounded-0">
+                        @foreach (var ev in _events)
+                        {
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-semibold small">v@ev.AggregateVersion &nbsp; @ShortTypeName(ev.EventType)</span>
+                                    <span class="text-muted small">@ev.Timestamp.LocalDateTime.ToString("HH:mm:ss")</span>
+                                </div>
+                                @if (ev.UserId is not null)
+                                {
+                                    <div class="text-muted small">by @ev.UserId</div>
+                                }
+                            </li>
+                        }
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* ── Action error ────────────────────────────────────────────────────────── *@
+@if (_actionError is not null)
+{
+    <div class="alert alert-danger mt-3 d-flex justify-content-between align-items-center">
+        @_actionError
+        <button class="btn-close" @onclick="() => _actionError = null"></button>
+    </div>
+}
+
+@* ── Edit modal ───────────────────────────────────────────────────────────── *@
+@if (_showEdit)
+{
+    <div class="modal d-block" tabindex="-1" style="background:rgba(0,0,0,.4)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Order</h5>
+                    <button class="btn-close" @onclick="() => _showEdit = false"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Customer Name</label>
+                        <input class="form-control" @bind="_editCustomerName" placeholder="Customer name" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total</label>
+                        <input class="form-control" type="number" step="0.01" @bind="_editTotal" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="() => _showEdit = false">Cancel</button>
+                    <button class="btn btn-primary" @onclick="DoEditAsync" disabled="@_acting">
+                        @(_acting ? "Saving…" : "Save")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* ── Ship modal ──────────────────────────────────────────────────────────── *@
+@if (_showShip)
+{
+    <div class="modal d-block" tabindex="-1" style="background:rgba(0,0,0,.4)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ship Order</h5>
+                    <button class="btn-close" @onclick="() => _showShip = false"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Tracking Number</label>
+                    <input class="form-control" @bind="_trackingNumber" placeholder="TRACK-001" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="() => _showShip = false">Cancel</button>
+                    <button class="btn btn-success" @onclick="DoShipAsync" disabled="@_acting">
+                        @(_acting ? "Shipping…" : "Ship")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* ── Cancel modal ────────────────────────────────────────────────────────── *@
+@if (_showCancel)
+{
+    <div class="modal d-block" tabindex="-1" style="background:rgba(0,0,0,.4)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cancel Order</h5>
+                    <button class="btn-close" @onclick="() => _showCancel = false"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Reason</label>
+                    <input class="form-control" @bind="_cancelReason" placeholder="Changed my mind" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="() => _showCancel = false">Back</button>
+                    <button class="btn btn-danger" @onclick="DoCancelAsync" disabled="@_acting">
+                        @(_acting ? "Cancelling…" : "Cancel Order")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid OrderId { get; set; }
+
+    private OrderDetail? _order;
+    private List<EventEntry> _events = [];
+    private bool _loading = true;
+
+    private bool _showEdit;
+    private string _editCustomerName = string.Empty;
+    private decimal _editTotal;
+
+    private bool _showShip;
+    private string _trackingNumber = string.Empty;
+
+    private bool _showCancel;
+    private string _cancelReason = string.Empty;
+
+    private bool _acting;
+    private string? _actionError;
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+        try
+        {
+            _order = await Api.GetOrderAsync(OrderId);
+            _events = await Api.GetOrderEventsAsync(OrderId);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void OpenEditModal()
+    {
+        _editCustomerName = _order!.CustomerName;
+        _editTotal = _order.Total;
+        _showEdit = true;
+    }
+
+    private async Task DoEditAsync()
+    {
+        _acting = true;
+        _actionError = null;
+        try
+        {
+            await Api.EditOrderAsync(OrderId, _editCustomerName, _editTotal);
+            _showEdit = false;
+            await LoadAsync();
+        }
+        catch (Exception ex) { _actionError = ex.Message; }
+        finally { _acting = false; }
+    }
+
+    private async Task DoShipAsync()
+    {
+        _acting = true;
+        _actionError = null;
+        try
+        {
+            await Api.ShipOrderAsync(OrderId, _trackingNumber);
+            _showShip = false;
+            await LoadAsync();
+        }
+        catch (Exception ex) { _actionError = ex.Message; }
+        finally { _acting = false; }
+    }
+
+    private async Task DoCancelAsync()
+    {
+        _acting = true;
+        _actionError = null;
+        try
+        {
+            await Api.CancelOrderAsync(OrderId, _cancelReason);
+            _showCancel = false;
+            await LoadAsync();
+        }
+        catch (Exception ex) { _actionError = ex.Message; }
+        finally { _acting = false; }
+    }
+
+    private string StatusBadgeClass => _order?.Status switch
+    {
+        "Pending"   => "bg-warning text-dark",
+        "Shipped"   => "bg-success",
+        "Cancelled" => "bg-secondary",
+        _           => "bg-light text-dark"
+    };
+
+    private static string ShortTypeName(string fullName)
+    {
+        var dot = fullName.LastIndexOf('.');
+        return dot >= 0 ? fullName[(dot + 1)..] : fullName;
+    }
+}

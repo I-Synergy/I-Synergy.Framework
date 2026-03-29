@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Enumerations;
 using ISynergy.Framework.Physics.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Physics.Services;
 
@@ -102,6 +103,7 @@ public partial class UnitConversionService : IUnitConversionService
     /// <param name="value"></param>
     /// <param name="targetUnit"></param>
     /// <returns></returns>
+    [RequiresUnreferencedCode("Calls EnumExtensions.GetSymbol which uses reflection to read SymbolAttribute from enum members.")]
     public double Convert(Units sourceUnit, double value, Units targetUnit)
     {
         Argument.IsNotNull(sourceUnit);

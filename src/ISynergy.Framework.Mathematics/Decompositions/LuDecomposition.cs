@@ -1,6 +1,7 @@
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
@@ -284,6 +285,8 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = I</c>.
     /// </summary>
+    [RequiresUnreferencedCode("Implements ISolverMatrixDecomposition<T>.Inverse() which may use reflection-based type conversion.")]
+    [RequiresDynamicCode("Implements ISolverMatrixDecomposition<T>.Inverse() which may require dynamic code generation.")]
     public double[,] Inverse()
     {
         if (!Nonsingular)

@@ -1,0 +1,22 @@
+@inherits LayoutComponentBase
+
+<div class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">&#128230; Event Sourcing Demo</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/orders">Orders</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow-1 py-4">
+        <div class="container">
+            @Body
+        </div>
+    </main>
+
+    <footer class="bg-light py-3 mt-auto text-center text-muted small">
+        I-Synergy Framework &mdash; EventSourcing + EF Core + PostgreSQL via Aspire
+    </footer>
+</div>
