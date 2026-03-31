@@ -4,7 +4,7 @@ This file provides Claude Code workflow and session guidance. For project overvi
 
 ## Environment
 
-This is a Windows development environment. Use PowerShell-compatible commands only (no bash-specific syntax). Temp paths should use Windows conventions. When diagnosing build issues, consider Windows-specific constraints like long path limitations.
+This is a Windows development environment. Use PowerShell-compatible commands only (no bash-specific syntax, no `&&`, no `/tmp/` paths). When diagnosing build issues, consider Windows-specific constraints like long path limitations.
 
 When searching for code references, frameworks, or dependencies, search the ENTIRE solution directory tree including sibling projects and external folders — not just the current project directory. Ask the user for the correct path if unsure.
 
@@ -28,6 +28,9 @@ dotnet test --filter "TestMethod=SomeTest"                   # Single test
 
 # Pack NuGet packages
 dotnet pack
+
+# Cleanup — always run after completing a build/test session
+dotnet build-server shutdown
 ```
 
 ## Critical Coding Rules
@@ -36,10 +39,12 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 
 | Rule | Correct | Wrong |
 |-|-|-|
-| CQRS commands | Individual parameters | Passing model objects |
+| CQRS commands | Individual primitive parameters | Passing model objects |
 | CQRS handler naming | `Create{Entity}CommandHandler` / `Get{Entity}ByIdQueryHandler` | Missing `CommandHandler`/`QueryHandler` suffix |
-| Async | Always include `CancellationToken` | Omit or use `.Result` |
-| Mapping | Manual inline mapping (direct property assignment) | AutoMapper, Mapster, or any other mapper library |
+| Data access | EF Core primitives directly (`Add`, `FirstOrDefaultAsync`, `Remove`, `SaveChangesAsync`) | Forbidden extension methods (`AddItemAsync`, `GetItemByIdAsync`, etc.) or repository pattern in handlers |
+| Entity exposure | Always map to Models before returning; responses wrap Models | Returning domain entities directly |
+| Async | Always include `CancellationToken` | Omit or use `.Result` / `.Wait()` |
+| Mapping | Manual inline mapping (direct property assignment) | AutoMapper, Mapster, or any mapper library |
 | Enum naming | Plural names (`PaymentProviders`, not `PaymentProvider`) | Singular names for non-`*Status` enums |
 | Backwards compat | Mark old APIs `[Obsolete]` before removal | Silent breaking changes |
 | All public APIs | XML documentation required | Undocumented public members |
@@ -47,6 +52,7 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 | Config section name | `nameof(TOptions)` in `GetSection()` | Magic strings like `"KeyVault"` |
 | Extension method naming | `Add{Provider}{Service}Integration` | Generic names like `AddKeyVaultIntegration` |
 | Options class naming | `{Provider}{Service}Options` | Generic names like `PublisherOptions`, `MailOptions` |
+| AOT compatibility | `<IsAotCompatible>true</IsAotCompatible>` on all eligible library projects | Reflection-based serialization without AOT-safe alternative |
 
 ## Session & Task Protocol
 
@@ -54,16 +60,21 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 
 **Do NOT use the built-in `TaskCreate`/`TaskUpdate`/`TaskList` tools** — they store data globally in `~/.claude/todos/` and are not visible in the repository. Instead, use local markdown files in `.claude/progress/` for tracking task progress.
 
+### Session Start
+1. Run `phantom_codebase_query` to recall relevant context
+2. Check `.claude/progress/` for any in-flight tasks — resume from there
+
 ### Non-trivial Tasks (3+ steps / multi-file)
 1. Call `EnterPlanMode` and wait for approval
-2. Create `.claude/progress/{task-slug}.md` with step checklist
+2. Create `.claude/progress/{task-slug}.md` with step checklist — include any OPEN/ASSUMED/BLOCKED items
 3. Mark steps done with `Edit` (`- [ ]` → `- [x]`) — never overwrite whole file
 4. **On completion (mandatory, not optional):**
    - Edit the progress file: add `**Status:** DONE` near the top
    - Move the file to `.claude/completed/`
+   - Feed key decisions and outcomes to Phantom via `phantom_ask`
    - **Do not end the session without completing this step**
 
-> **Why this matters:** Files left in `.claude/progress/` are treated as in-progress work in future sessions, causing confusion about what is still pending.
+> **Why this matters:** Files left in `.claude/progress/` are treated as in-progress work in future sessions. Phantom + progress files replace the old session-handoff.md approach.
 
 **When delegating to subagents**, include explicit progress file instructions — subagents do not inherit this CLAUDE.md.
 
@@ -78,13 +89,14 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 | Implementation planning | `Plan` |
 | Shell commands, git, build | `Bash` |
 
-```
-Progress file: .claude/progress/{task-slug}.md
-After each step, Edit the file:
-  old: "- [ ] {step}"
-  new: "- [x] {step}"
-Do NOT use Write on the progress file — only Edit individual lines.
-```
+## Phantom Knowledge Tracking
+
+Phantom (MCP) is the persistent knowledge base for this repository. It accumulates architectural decisions, completed work, conventions, and history across sessions.
+
+- **After completing a task:** feed key decisions and outcomes via `phantom_ask`
+- **At session start:** use `phantom_codebase_query` to recall context before re-exploring the codebase
+- **After significant refactors:** also update `.claude/completed/` and feed to Phantom
+- GitHub integration is not yet configured (no `gh` CLI token)
 
 ## Work-Type Context Files
 
@@ -117,21 +129,14 @@ Load on demand:
 - [`.claude/reference/refactoring.md`](.claude/reference/refactoring.md) — refactoring conventions
 - [`.claude/reference/forbidden-tech.md`](.claude/reference/forbidden-tech.md) — banned libraries/approaches
 - [`.claude/reference/tokens.md`](.claude/reference/tokens.md) — template token definitions
+- [`.claude/reference/copilot-integration.md`](.claude/reference/copilot-integration.md) — Claude + Copilot collaboration guidelines
 - [`.claude/checklists/pre-submission.md`](.claude/checklists/pre-submission.md) — run before marking any task complete
-- [`.claude/reference/templates/session-handoff.md.txt`](.claude/reference/templates/session-handoff.md.txt) — session handoff template
 
-## Workflow Preferences
+## Maintenance
 
-- When asked to 'build' or 'check the build', ONLY run the build command and report results. Do not autonomously investigate or fix errors unless explicitly asked to do so.
-- A **PostToolUse hook** is configured in [`.claude/settings.json`](.claude/settings.json) that allows PowerShell and build commands to run automatically after file edits.
-
-## File Management
-
-- Never autonomously delete documentation files, progress tracking files, or session context files unless the user explicitly asks for deletion. Always ask before removing any non-code artifacts.
-- This is a Windows environment using PowerShell. Do not use bash-specific syntax (e.g., `&&`, `/tmp/` paths). Use PowerShell-compatible commands and Windows paths.
-
-## Documentation Maintenance
-
+- When asked to 'build' or 'check the build', ONLY run the build command and report results. Do not autonomously investigate or fix errors unless explicitly asked.
+- Never autonomously delete documentation files, progress tracking files, or session context files unless the user explicitly asks. Always ask before removing non-code artifacts.
+- A **PostToolUse hook** is configured in [`.claude/settings.json`](.claude/settings.json) that automatically runs a quiet build after file edits.
 - When making architectural changes, update CLAUDE.md and the relevant [`.claude/`](.claude/) reference files in the same session.
 - After completing a feature or refactor, verify that CLAUDE.md, [`.claude/reference/critical-rules.md`](.claude/reference/critical-rules.md), and [`.claude/patterns/cqrs-patterns.md`](.claude/patterns/cqrs-patterns.md) still accurately describe the codebase. Flag any drift to the user.
 - Run `/verify-config` periodically to audit CLAUDE.md against the actual codebase.
