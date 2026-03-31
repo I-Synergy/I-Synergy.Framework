@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides Claude Code workflow and session guidance. For project overview, architecture principles, coding standards, and CQRS patterns, see the root [`CLAUDE.md`](../CLAUDE.md).
 
 ## Environment
 
@@ -13,35 +13,6 @@ When searching for code references, frameworks, or dependencies, search the ENTI
 - Use local `.claude/` folder (project-level) for project-specific settings like progress and plan files.
 - Do NOT place project-specific config in the global `~/.claude/` directory unless explicitly instructed.
 - When modifying CLAUDE.md or any configuration files, always read the existing file first and preserve existing conventions before making changes.
-
-## Project Identity
-
-**I-Synergy Framework** — Open-source .NET 10 framework providing reusable components for enterprise applications.
-
-**Library categories:**
-- `ISynergy.Framework.Core` — Base classes, extensions, validation, Result/Option types
-- `ISynergy.Framework.Mvvm` — MVVM implementation
-- `ISynergy.Framework.CQRS` — Custom command/query dispatching (no MediatR)
-- `ISynergy.Framework.AspNetCore.*` — ASP.NET Core integration (auth, globalization, multi-tenancy, monitoring)
-- `ISynergy.Framework.UI.*` — Cross-platform UI libraries (WPF, UWP, WinUI, MAUI, Blazor)
-- `ISynergy.Framework.EntityFramework` — EF Core integration
-- `ISynergy.Framework.Storage.*` — Storage abstractions and Azure implementation
-- `ISynergy.Framework.Mail.*` — Email services
-- `ISynergy.Framework.OpenTelemetry.*` — Observability (AppInsights, Sentry)
-- `ISynergy.Framework.MessageBus.*` — Message bus abstractions
-
-**This is a framework/library project** — changes affect downstream consumers. Maintain backwards compatibility unless explicitly breaking.
-
-## Project Architecture
-
-### Project Layout
-
-```
-src/ISynergy.Framework.{Name}/       # Library source projects
-tests/ISynergy.Framework.{Name}.Tests/  # Corresponding test projects
-```
-
-All library projects target **net10.0**. Test projects use **MSTest** + **Reqnroll** (BDD).
 
 ## Commands
 
