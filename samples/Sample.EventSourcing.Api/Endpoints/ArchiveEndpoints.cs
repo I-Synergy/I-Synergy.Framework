@@ -11,7 +11,7 @@ public static class ArchiveEndpoints
     /// <summary>Registers archive-related endpoints on <paramref name="app"/>.</summary>
     public static IEndpointRouteBuilder MapArchiveEndpoints(this IEndpointRouteBuilder app)
     {
-        // POST /api/archive/run  — manually trigger the archive job for the current tenant
+        // POST /api/archive/run  — manually trigger the global cross-tenant archive job
         app.MapPost("/api/archive/run", async (
             IEventArchiver archiver,
             CancellationToken ct) =>
@@ -20,10 +20,10 @@ public static class ArchiveEndpoints
             return Results.Ok(result);
         })
         .WithName("RunArchive")
-        .WithSummary("Trigger the event archive job")
+        .WithSummary("Trigger the global event archive job")
         .WithDescription(
-            "Archives events older than the configured RetentionDays to blob cold storage. " +
-            "Returns the number of streams and events archived.");
+            "Archives events older than the configured RetentionDays to blob cold storage " +
+            "across all tenants. Returns the number of streams and events archived.");
 
         // GET /api/orders/{id}/full-history — cold + hot event history for an order
         app.MapGet("/api/orders/{id:guid}/full-history", async (

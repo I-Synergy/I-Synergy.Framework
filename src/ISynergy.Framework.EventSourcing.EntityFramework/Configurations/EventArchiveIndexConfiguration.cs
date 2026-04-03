@@ -27,6 +27,11 @@ internal sealed class EventArchiveIndexConfiguration : IEntityTypeConfiguration<
         builder.HasIndex(e => new { e.TenantId, e.StreamId, e.StreamType })
             .HasDatabaseName("IX_EventArchiveIndex_TenantId_StreamId_StreamType");
 
+        // Enforces idempotency for archive retries by preventing duplicate rows for the same stream segment.
+        builder.HasIndex(e => new { e.TenantId, e.StreamId, e.StreamType, e.VersionFrom, e.VersionTo })
+            .IsUnique()
+            .HasDatabaseName("UX_EventArchiveIndex_TenantId_StreamId_StreamType_VersionFrom_VersionTo");
+
         // Supports time-range audit queries per tenant.
         builder.HasIndex(e => new { e.TenantId, e.ArchivedAt })
             .HasDatabaseName("IX_EventArchiveIndex_TenantId_ArchivedAt");

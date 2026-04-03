@@ -28,8 +28,8 @@ public sealed class EventArchiveIndex
     public int EventCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the blob path in the format
-    /// <c>{tenantId}/{StreamType}/{StreamId}/{VersionFrom}-{VersionTo}.json</c>.
+    /// Gets or sets the blob path within the tenant's storage container, typically in the format
+    /// <c>{StreamType}/{StreamId}/{VersionFrom}-{VersionTo}.json</c>.
     /// </summary>
     public string BlobPath { get; set; } = string.Empty;
 

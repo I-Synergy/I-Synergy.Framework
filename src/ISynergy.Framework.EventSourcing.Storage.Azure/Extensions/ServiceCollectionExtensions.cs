@@ -19,20 +19,16 @@ public static class ServiceCollectionExtensions
     /// Prerequisite: <see cref="BlobServiceClient"/> must already be registered in DI
     /// (e.g. via <c>builder.AddAzureBlobServiceClient("blobs")</c> in Aspire, or
     /// <c>services.AddSingleton(new BlobServiceClient(connectionString))</c> directly).
+    /// Each tenant's events are isolated in a separate container named after the tenant GUID.
     /// </remarks>
     /// <param name="services">The service collection.</param>
-    /// <param name="containerName">
-    /// The Azure Blob container name. Defaults to <c>event-archive</c>.
-    /// </param>
     /// <returns>The <paramref name="services"/> for chaining.</returns>
     public static IServiceCollection AddAzureEventArchiveStorage(
-        this IServiceCollection services,
-        string containerName = "archive")
+        this IServiceCollection services)
     {
         services.AddScoped<IEventArchiveStorage>(sp =>
             new AzureBlobEventArchiveStorage(
                 sp.GetRequiredService<BlobServiceClient>(),
-                containerName,
                 sp.GetRequiredService<ILogger<AzureBlobEventArchiveStorage>>()));
 
         return services;

@@ -10,13 +10,13 @@ namespace ISynergy.Framework.EventSourcing.Storage.Azure.Services;
 
 /// <summary>
 /// Azure Blob Storage implementation of <see cref="IEventArchiveStorage"/>.
-/// Events are stored as a JSON array at path
-/// <c>{tenantId}/{streamType}/{streamId}/{vFrom}-{vTo}.json</c>.
+/// Events are stored as a JSON array in a tenant-specific container at path
+/// <c>{streamType}/{streamId}/{vFrom}-{vTo}.json</c>.
+/// Each tenant receives its own isolated container named after the tenant GUID.
 /// </summary>
 public sealed class AzureBlobEventArchiveStorage : IEventArchiveStorage
 {
     private readonly BlobServiceClient _blobServiceClient;
-    private readonly string _containerName;
     private readonly ILogger<AzureBlobEventArchiveStorage> _logger;
 
     private static readonly JsonSerializerOptions s_jsonOptions = new()
@@ -31,15 +31,12 @@ public sealed class AzureBlobEventArchiveStorage : IEventArchiveStorage
     /// <c>AddAzureBlobServiceClient("blobs")</c> in Aspire or
     /// <c>services.AddSingleton(new BlobServiceClient(connStr))</c>.
     /// </param>
-    /// <param name="containerName">The blob container name (e.g. <c>event-archive</c>).</param>
     /// <param name="logger">Logger.</param>
     public AzureBlobEventArchiveStorage(
         BlobServiceClient blobServiceClient,
-        string containerName,
         ILogger<AzureBlobEventArchiveStorage> logger)
     {
         _blobServiceClient = blobServiceClient;
-        _containerName = containerName;
         _logger = logger;
     }
 

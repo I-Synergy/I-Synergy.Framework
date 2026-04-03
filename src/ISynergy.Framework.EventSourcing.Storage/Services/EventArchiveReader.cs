@@ -1,4 +1,3 @@
-using ISynergy.Framework.EventSourcing.Abstractions.Events;
 using ISynergy.Framework.EventSourcing.EntityFramework;
 using ISynergy.Framework.EventSourcing.Models;
 using ISynergy.Framework.EventSourcing.Storage.Abstractions;
@@ -14,17 +13,14 @@ public sealed class EventArchiveReader : IEventArchiveReader
 {
     private readonly EventSourcingDbContext _context;
     private readonly IEventArchiveStorage _storage;
-    private readonly IEventStore _eventStore;
 
     /// <summary>Initializes a new instance of <see cref="EventArchiveReader"/>.</summary>
     public EventArchiveReader(
         EventSourcingDbContext context,
-        IEventArchiveStorage storage,
-        IEventStore eventStore)
+        IEventArchiveStorage storage)
     {
         _context = context;
         _storage = storage;
-        _eventStore = eventStore;
     }
 
     /// <inheritdoc />
