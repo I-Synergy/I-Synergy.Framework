@@ -75,7 +75,7 @@ else
                         {
                             <li class="list-group-item">
                                 <div class="d-flex justify-content-between">
-                                    <span class="fw-semibold small">v@ev.AggregateVersion &nbsp; @ShortTypeName(ev.EventType)</span>
+                                    <span class="fw-semibold small">v@(ev.AggregateVersion) &nbsp; @ShortTypeName(ev.EventType)</span>
                                     <span class="text-muted small">@ev.Timestamp.LocalDateTime.ToString("HH:mm:ss")</span>
                                 </div>
                                 @if (ev.UserId is not null)
@@ -86,6 +86,59 @@ else
                         }
                     </ol>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    @* ── Full History (cold + hot) ────────────────────────────────────────── *@
+    <div class="row g-4 mt-0">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        Full History (Cold + Hot)
+                        @if (_fullHistory.Count > 0)
+                        {
+                            <span class="badge bg-info ms-1">@_fullHistory.Count</span>
+                        }
+                    </h5>
+                    <button class="btn btn-sm btn-outline-info" @onclick="LoadFullHistoryAsync" disabled="@_loadingHistory">
+                        @(_loadingHistory ? "Loading…" : "Load Full History")
+                    </button>
+                </div>
+                @if (_historyError is not null)
+                {
+                    <div class="card-body py-2">
+                        <div class="alert alert-danger mb-0 py-1">@_historyError</div>
+                    </div>
+                }
+                else if (_fullHistory.Count > 0)
+                {
+                    <div class="card-body p-0">
+                        <ol class="list-group list-group-flush rounded-0">
+                            @foreach (var ev in _fullHistory)
+                            {
+                                var isCold = _events.All(h => h.EventId != ev.EventId);
+                                <li class="list-group-item @(isCold ? "list-group-item-secondary" : "")">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-semibold small">
+                                            v@(ev.AggregateVersion) &nbsp; @ShortTypeName(ev.EventType)
+                                            @if (isCold)
+                                            {
+                                                <span class="badge bg-secondary ms-1" title="Archived to cold storage">Archived</span>
+                                            }
+                                        </span>
+                                        <span class="text-muted small">@ev.Timestamp.LocalDateTime.ToString("HH:mm:ss")</span>
+                                    </div>
+                                    @if (ev.UserId is not null)
+                                    {
+                                        <div class="text-muted small">by @ev.UserId</div>
+                                    }
+                                </li>
+                            }
+                        </ol>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -188,6 +241,10 @@ else
     private List<EventEntry> _events = [];
     private bool _loading = true;
 
+    private List<EventEntry> _fullHistory = [];
+    private bool _loadingHistory;
+    private string? _historyError;
+
     private bool _showEdit;
     private string _editCustomerName = string.Empty;
     private decimal _editTotal;
@@ -214,6 +271,24 @@ else
         finally
         {
             _loading = false;
+        }
+    }
+
+    private async Task LoadFullHistoryAsync()
+    {
+        _loadingHistory = true;
+        _historyError = null;
+        try
+        {
+            _fullHistory = await Api.GetOrderFullHistoryAsync(OrderId);
+        }
+        catch (Exception ex)
+        {
+            _historyError = ex.Message;
+        }
+        finally
+        {
+            _loadingHistory = false;
         }
     }
 

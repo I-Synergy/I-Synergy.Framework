@@ -49,6 +49,27 @@ public abstract class AggregateRoot<TId> : IAggregateRoot<TId>
         }
     }
 
+    /// <summary>
+    /// Restores the aggregate's persisted version from a snapshot, bypassing event replay.
+    /// Call this before <see cref="LoadFromHistory"/> with only the events that came AFTER
+    /// the snapshot version. Called by infrastructure — do not use in business logic.
+    /// </summary>
+    public void LoadFromSnapshot(long snapshotVersion) => Version = snapshotVersion;
+
+    /// <summary>
+    /// Returns the domain state as a JSON string suitable for snapshot storage.
+    /// Override in aggregate classes that support archiving to capture domain fields.
+    /// Default returns <c>"{}"</c>.
+    /// </summary>
+    public virtual string GetSnapshotData() => "{}";
+
+    /// <summary>
+    /// Restores domain state from a JSON snapshot produced by <see cref="GetSnapshotData"/>.
+    /// Override in aggregate classes that support archiving.
+    /// Default is a no-op (aggregate relies on full event replay only).
+    /// </summary>
+    public virtual void RestoreState(string json) { }
+
     /// <inheritdoc />
     public IReadOnlyList<IDomainEvent> GetUncommittedEvents() => _uncommittedEvents.AsReadOnly();
 

@@ -1,6 +1,7 @@
 using ISynergy.Framework.EventSourcing.Abstractions.Aggregates;
 using ISynergy.Framework.EventSourcing.Abstractions.Events;
 using ISynergy.Framework.EventSourcing.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 using Sample.EventSourcing.Api.Domain;
 using System.Text.Json;
 
@@ -60,25 +61,42 @@ public static class OrderEndpoints
     }
 
     private static async Task<IResult> ListOrdersAsync(
+        IAggregateRepository<Order, Guid> repository,
         IEventStore store,
+        EventSourcingDbContext dbContext,
         CancellationToken cancellationToken)
     {
-        // Derive the event type name the same way EventStore serialises it.
+        // Discover order IDs from two sources so archived orders remain visible:
+        // 1. Hot events still in PostgreSQL (OrderPlaced event type)
+        // 2. EventArchiveIndex rows for StreamType == "Order" (events moved to cold storage)
         var typeName = typeof(OrderPlaced).FullName!;
-        var events = await store.GetEventsByTypeAsync(typeName, cancellationToken: cancellationToken);
 
-        var orders = events.Select(e =>
+        var hotIds = (await store.GetEventsByTypeAsync(typeName, cancellationToken: cancellationToken))
+            .Select(e => e.AggregateId)
+            .ToHashSet();
+
+        var archivedIds = await dbContext.ArchiveIndexes
+            .Where(a => a.StreamType == "Order")
+            .Select(a => a.StreamId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        var allIds = hotIds.Union(archivedIds).ToList();
+
+        var orders = new List<object>();
+        foreach (var id in allIds)
         {
-            var data = JsonSerializer.Deserialize<OrderPlaced>(e.Data,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return new
+            var order = await repository.LoadAsync(id, cancellationToken);
+            if (order is null) continue;
+
+            orders.Add(new
             {
-                orderId = e.AggregateId,
-                customerName = data?.CustomerName,
-                total = data?.Total,
-                placedAt = e.Timestamp
-            };
-        });
+                orderId      = order.Id,
+                customerName = order.CustomerName,
+                total        = order.Total,
+                placedAt     = order.PlacedAt
+            });
+        }
 
         return Results.Ok(orders);
     }

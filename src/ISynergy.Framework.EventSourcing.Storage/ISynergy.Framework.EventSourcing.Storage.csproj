@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>I-Synergy.Framework.EventSourcing.Storage</PackageId>
+    <Description>Provider-agnostic cold-tier archiving abstractions and services for I-Synergy Event Sourcing</Description>
+    <PackageTags>I-Synergy, Framework, EventSourcing, Archive, Storage, CQRS</PackageTags>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Reflection is used for aggregate instantiation (Activator.CreateInstance) -->
+    <IsAotCompatible>false</IsAotCompatible>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ISynergy.Framework.EventSourcing\ISynergy.Framework.EventSourcing.csproj" />
+    <ProjectReference Include="..\ISynergy.Framework.EventSourcing.EntityFramework\ISynergy.Framework.EventSourcing.EntityFramework.csproj" />
+  </ItemGroup>
+</Project>

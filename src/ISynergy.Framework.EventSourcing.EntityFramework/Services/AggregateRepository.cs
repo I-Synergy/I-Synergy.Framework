@@ -51,7 +51,7 @@ public sealed class AggregateRepository<TAggregate, TId> : IAggregateRepository<
 
     /// <inheritdoc />
     /// <returns>
-    /// A hydrated aggregate if events exist, or <c>null</c> when no events are found
+    /// A hydrated aggregate if events or a snapshot exist, or <c>null</c> when neither is found
     /// (meaning the aggregate has never been created).
     /// </returns>
     public async Task<TAggregate?> LoadAsync(TId id, CancellationToken cancellationToken = default)
@@ -59,11 +59,28 @@ public sealed class AggregateRepository<TAggregate, TId> : IAggregateRepository<
         var aggregateId = ToGuid(id);
         var aggregateType = typeof(TAggregate).Name;
 
-        var records = await _eventStore
-            .GetEventsForAggregateAsync(aggregateType, aggregateId, cancellationToken: cancellationToken)
+        // Check for a snapshot first (written by the archive job).
+        // If one exists: restore domain state + version from it, then replay only newer events.
+        // This keeps the hot path fast even after old events are moved to cold storage.
+        var snapshot = await _eventStore
+            .GetSnapshotAsync(aggregateId, cancellationToken)
             .ConfigureAwait(false);
 
-        if (records.Count == 0)
+        long? fromVersion = null;
+        var aggregate = new TAggregate();
+
+        if (snapshot is not null)
+        {
+            aggregate.RestoreState(snapshot.Data);
+            aggregate.LoadFromSnapshot(snapshot.Version);
+            fromVersion = snapshot.Version + 1;
+        }
+
+        var records = await _eventStore
+            .GetEventsForAggregateAsync(aggregateType, aggregateId, fromVersion: fromVersion, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        if (records.Count == 0 && snapshot is null)
             return null;
 
         var events = records
@@ -72,7 +89,6 @@ public sealed class AggregateRepository<TAggregate, TId> : IAggregateRepository<
             .Cast<IDomainEvent>()
             .ToList();
 
-        var aggregate = new TAggregate();
         aggregate.LoadFromHistory(events);
         return aggregate;
     }

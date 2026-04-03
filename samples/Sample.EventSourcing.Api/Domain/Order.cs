@@ -1,5 +1,6 @@
 using ISynergy.Framework.EventSourcing.Abstractions.Events;
 using ISynergy.Framework.EventSourcing.Aggregates;
+using System.Text.Json;
 
 namespace Sample.EventSourcing.Api.Domain;
 
@@ -14,6 +15,7 @@ public sealed class Order : AggregateRoot<Guid>
     public OrderStatus Status { get; private set; } = OrderStatus.Pending;
     public string? TrackingNumber { get; private set; }
     public string? CancellationReason { get; private set; }
+    public DateTimeOffset PlacedAt { get; private set; }
 
     /// <summary>Places a new order, raising <see cref="OrderPlaced"/>.</summary>
     public void Place(Guid orderId, string customerName, decimal total) =>
@@ -50,6 +52,25 @@ public sealed class Order : AggregateRoot<Guid>
     }
 
     /// <inheritdoc />
+    public override string GetSnapshotData() =>
+        JsonSerializer.Serialize(new OrderSnapshot(Id, CustomerName, Total, Status, TrackingNumber, CancellationReason, PlacedAt));
+
+    /// <inheritdoc />
+    public override void RestoreState(string json)
+    {
+        var snap = JsonSerializer.Deserialize<OrderSnapshot>(json);
+        if (snap is null) return;
+
+        Id = snap.Id;
+        CustomerName = snap.CustomerName;
+        Total = snap.Total;
+        Status = snap.Status;
+        TrackingNumber = snap.TrackingNumber;
+        CancellationReason = snap.CancellationReason;
+        PlacedAt = snap.PlacedAt;
+    }
+
+    /// <inheritdoc />
     protected override void When(IDomainEvent @event)
     {
         switch (@event)
@@ -59,6 +80,7 @@ public sealed class Order : AggregateRoot<Guid>
                 CustomerName = e.CustomerName;
                 Total = e.Total;
                 Status = OrderStatus.Pending;
+                PlacedAt = e.OccurredAt;
                 break;
 
             case OrderShipped e:
@@ -78,3 +100,13 @@ public sealed class Order : AggregateRoot<Guid>
         }
     }
 }
+
+/// <summary>Mutable DTO used to serialize/deserialize <see cref="Order"/> snapshot state.</summary>
+internal sealed record OrderSnapshot(
+    Guid Id,
+    string CustomerName,
+    decimal Total,
+    OrderStatus Status,
+    string? TrackingNumber,
+    string? CancellationReason,
+    DateTimeOffset PlacedAt);
