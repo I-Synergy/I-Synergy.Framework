@@ -56,11 +56,21 @@ public sealed class EventStore : IEventStore
         CancellationToken cancellationToken = default)
     {
         // Bypass the global tenant query filter so the version check uses the explicit tenantId.
-        var currentVersion = await _context.Events
+        var hotVersion = await _context.Events
             .IgnoreQueryFilters()
             .Where(e => e.AggregateId == aggregateId && e.TenantId == tenantId)
             .OrderByDescending(e => e.AggregateVersion)
             .Select(e => (long?)e.AggregateVersion)
+            .FirstOrDefaultAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        // If no hot events exist the aggregate may have been archived: the snapshot
+        // records the highest version that was moved to cold storage, which is the
+        // true current version for concurrency purposes.
+        var currentVersion = hotVersion ?? await _context.Snapshots
+            .IgnoreQueryFilters()
+            .Where(s => s.AggregateId == aggregateId && s.TenantId == tenantId)
+            .Select(s => (long?)s.Version)
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false) ?? 0L;
 

@@ -1,6 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.EventSourcing.EntityFramework;
 using ISynergy.Framework.EventSourcing.EntityFramework.Extensions;
+using ISynergy.Framework.EventSourcing.Storage.Azure.Extensions;
+using ISynergy.Framework.EventSourcing.Storage.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Sample.EventSourcing.Api.Domain;
 using Sample.EventSourcing.Api.Endpoints;
@@ -24,6 +26,13 @@ var connectionString = builder.Configuration.GetConnectionString("eventsourcing"
 builder.Services
     .AddEventSourcingEntityFramework(o => o.UseNpgsql(connectionString))
     .AddAggregateRepository<Order, Guid>();
+
+// ── Archive services (cold-tier blob storage) ─────────────────────────────────
+// BlobServiceClient is injected by Aspire from the "blobs" resource.
+builder.AddAzureBlobServiceClient("blobs");
+builder.Services
+    .AddAzureEventArchiveStorage()
+    .AddEventArchiving(builder.Configuration);
 
 // ── Service discovery ─────────────────────────────────────────────────────────
 builder.Services.AddServiceDiscovery();
@@ -86,5 +95,6 @@ app.MapHealthChecks("/health");
 
 // ── Endpoints ─────────────────────────────────────────────────────────────────
 app.MapOrderEndpoints();
+app.MapArchiveEndpoints();
 
 app.Run();

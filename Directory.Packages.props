@@ -22,12 +22,14 @@
     <PackageVersion Include="Dotmim.Sync.Web.Server" Version="1.3.0" />
     <PackageVersion Include="DYMO.Connect.SDK" Version="1.6.0" />
     <PackageVersion Include="MessagePack" Version="3.1.4" />
-    <PackageVersion Include="Microsoft.ApplicationInsights" Version="3.0.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights" Version="3.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.5" />
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.2.1" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.2.1" />
+    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="13.2.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.2.1" />
     <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.2.1" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.4.0" />

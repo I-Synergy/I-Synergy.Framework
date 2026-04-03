@@ -11,6 +11,9 @@ builder.Services.AddRazorComponents()
 builder.Services.AddServiceDiscovery();
 builder.Services.ConfigureHttpClientDefaults(h => h.AddServiceDiscovery());
 
+// ── Tenant context (scoped — persists across page navigations within a circuit) ─
+builder.Services.AddScoped<TenantContext>();
+
 // ── Typed HTTP client for the Orders API ─────────────────────────────────────
 // "http+https://eventsourcing-api" is resolved by Aspire service discovery to the API's actual URL.
 builder.Services.AddHttpClient<OrdersApiClient>(client =>

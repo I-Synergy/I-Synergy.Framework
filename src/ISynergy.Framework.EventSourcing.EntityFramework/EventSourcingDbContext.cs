@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.EventSourcing.EntityFramework.Configurations;
+using ISynergy.Framework.EventSourcing.EntityFramework.Entities;
 using ISynergy.Framework.EventSourcing.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
@@ -49,6 +50,9 @@ public class EventSourcingDbContext : DbContext
     /// <summary>Gets the snapshots table.</summary>
     public DbSet<Snapshot> Snapshots => Set<Snapshot>();
 
+    /// <summary>Gets the archive index table — one row per blob segment per stream.</summary>
+    public DbSet<EventArchiveIndex> ArchiveIndexes => Set<EventArchiveIndex>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,6 +60,7 @@ public class EventSourcingDbContext : DbContext
 
         modelBuilder.ApplyConfiguration(new EventRecordConfiguration());
         modelBuilder.ApplyConfiguration(new SnapshotConfiguration());
+        modelBuilder.ApplyConfiguration(new EventArchiveIndexConfiguration());
 
         // Global tenant filter: all SELECT queries are automatically scoped to the current tenant.
         // The lambda captures _tenantService (not the TenantId value), so TenantId is re-evaluated
@@ -65,5 +70,8 @@ public class EventSourcingDbContext : DbContext
 
         modelBuilder.Entity<Snapshot>()
             .HasQueryFilter(s => s.TenantId == _tenantService.TenantId);
+
+        modelBuilder.Entity<EventArchiveIndex>()
+            .HasQueryFilter(a => a.TenantId == _tenantService.TenantId);
     }
 }
