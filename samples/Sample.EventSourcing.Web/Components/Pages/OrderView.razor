@@ -114,11 +114,12 @@ else
                 }
                 else if (_fullHistory.Count > 0)
                 {
+                    var hotEventIds = _events.Select(e => e.EventId).ToHashSet();
                     <div class="card-body p-0">
                         <ol class="list-group list-group-flush rounded-0">
                             @foreach (var ev in _fullHistory)
                             {
-                                var isCold = _events.All(h => h.EventId != ev.EventId);
+                                var isCold = !hotEventIds.Contains(ev.EventId);
                                 <li class="list-group-item @(isCold ? "list-group-item-secondary" : "")">
                                     <div class="d-flex justify-content-between">
                                         <span class="fw-semibold small">

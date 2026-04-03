@@ -271,4 +271,45 @@ public class EventStoreTests
 
         Assert.IsNull(snapshot, "Snapshot from tenant A should not be visible to tenant B.");
     }
+
+    // ── AppendEventAsync snapshot-fallback ────────────────────────────────────
+
+    [TestMethod]
+    public async Task AppendEventAsync_WithSnapshotButNoHotEvents_UsesSnapshotVersionForConcurrencyCheck()
+    {
+        // Arrange: simulate a fully archived aggregate — snapshot exists but no hot events.
+        var tenantId = _tenantService.TenantId;
+        var aggregateId = Guid.NewGuid();
+        const long snapshotVersion = 3L;
+
+        await _store.SaveSnapshotAsync(new Models.Snapshot(
+            aggregateId, tenantId, "OrderAggregate", snapshotVersion,
+            "{}", DateTimeOffset.UtcNow));
+
+        // Act: append a new event with expectedVersion = snapshotVersion
+        var newVersion = await _store.AppendEventAsync(
+            tenantId, "OrderAggregate", aggregateId, snapshotVersion,
+            new OrderPlaced(aggregateId, "Alice", 99m));
+
+        // Assert: event is stored as version snapshotVersion + 1
+        Assert.AreEqual(snapshotVersion + 1, newVersion);
+    }
+
+    [TestMethod]
+    public async Task AppendEventAsync_WithSnapshotButNoHotEvents_ThrowsOnWrongExpectedVersion()
+    {
+        // Arrange: snapshot at version 3, no hot events.
+        var tenantId = _tenantService.TenantId;
+        var aggregateId = Guid.NewGuid();
+
+        await _store.SaveSnapshotAsync(new Models.Snapshot(
+            aggregateId, tenantId, "OrderAggregate", 3L,
+            "{}", DateTimeOffset.UtcNow));
+
+        // Act & Assert: using expectedVersion = 0 should fail because current version is 3.
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            _store.AppendEventAsync(
+                tenantId, "OrderAggregate", aggregateId, expectedVersion: 0,
+                new OrderPlaced(aggregateId, "Bob", 50m)));
+    }
 }
