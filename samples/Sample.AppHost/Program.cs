@@ -13,10 +13,16 @@ var postgres = builder.AddPostgres("postgres")
 var eventsourcingDb = postgres.AddDatabase("eventsourcing");
 var synchronizationDb = postgres.AddDatabase("synchronization-db");
 
+// ── Azure Blob Storage (Azurite emulator for local development) ───────────────
+var storage = builder.AddAzureStorage("storage").RunAsEmulator();
+var blobs = storage.AddBlobs("blobs");
+
 // ── Event Sourcing ────────────────────────────────────────────────────────────
 var eventSourcingApi = builder.AddProject<Projects.Sample_EventSourcing_Api>("eventsourcing-api")
     .WithReference(eventsourcingDb)
-    .WaitFor(eventsourcingDb);
+    .WaitFor(eventsourcingDb)
+    .WithReference(blobs)
+    .WaitFor(blobs);
 
 builder.AddProject<Projects.Sample_EventSourcing_Web>("eventsourcing-web")
     .WithReference(eventSourcingApi)

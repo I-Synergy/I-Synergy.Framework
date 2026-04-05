@@ -2,15 +2,29 @@
 @page "/orders"
 @rendermode InteractiveServer
 @inject OrdersApiClient Api
+@inject Sample.EventSourcing.Web.Services.TenantContext TenantCtx
 
 <PageTitle>Orders — Event Sourcing Demo</PageTitle>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Orders</h1>
-    <button class="btn btn-primary" @onclick="() => _showCreate = true">
-        + Place Order
-    </button>
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" @onclick="RunArchiveAsync" disabled="@_archiving">
+            @(_archiving ? "Archiving…" : "Run Archive")
+        </button>
+        <button class="btn btn-primary" @onclick="() => _showCreate = true">
+            + Place Order
+        </button>
+    </div>
 </div>
+
+@if (_archiveMessage is not null)
+{
+    <div class="alert @(_archiveError ? "alert-danger" : "alert-success") alert-dismissible" role="alert">
+        @_archiveMessage
+        <button type="button" class="btn-close" aria-label="Close" @onclick="() => _archiveMessage = null"></button>
+    </div>
+}
 
 @* ── Tenant selector ─────────────────────────────────────────────────────── *@
 <div class="card mb-4 border-info">
@@ -128,9 +142,17 @@ else
     private bool _placing;
     private string? _createError;
 
-    private string _tenantId = "11111111-1111-1111-1111-111111111111";
+    private string _tenantId = string.Empty;
 
-    protected override async Task OnInitializedAsync() => await LoadAsync();
+    private bool _archiving;
+    private string? _archiveMessage;
+    private bool _archiveError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tenantId = TenantCtx.TenantId.ToString();
+        await LoadAsync();
+    }
 
     private async Task LoadAsync()
     {
@@ -154,8 +176,32 @@ else
     {
         if (Guid.TryParse(_tenantId, out var id))
         {
-            Api.TenantId = id;
+            TenantCtx.TenantId = id;
             await LoadAsync();
+        }
+    }
+
+    private async Task RunArchiveAsync()
+    {
+        _archiving = true;
+        _archiveMessage = null;
+        _archiveError = false;
+        try
+        {
+            var result = await Api.RunArchiveAsync();
+            _archiveMessage = result is null
+                ? "Archive completed."
+                : $"Archive complete: {result.StreamsArchived} stream(s), {result.EventsArchived} event(s) archived" +
+                  (result.Errors > 0 ? $" ({result.Errors} error(s))" : ".");
+        }
+        catch (Exception ex)
+        {
+            _archiveError = true;
+            _archiveMessage = $"Archive failed: {ex.Message}";
+        }
+        finally
+        {
+            _archiving = false;
         }
     }
 

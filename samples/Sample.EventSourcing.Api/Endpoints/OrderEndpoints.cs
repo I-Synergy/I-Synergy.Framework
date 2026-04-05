@@ -1,6 +1,7 @@
 using ISynergy.Framework.EventSourcing.Abstractions.Aggregates;
 using ISynergy.Framework.EventSourcing.Abstractions.Events;
 using ISynergy.Framework.EventSourcing.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 using Sample.EventSourcing.Api.Domain;
 using System.Text.Json;
 
@@ -59,28 +60,78 @@ public static class OrderEndpoints
         return Results.Created($"/api/orders/{orderId}", new { orderId, version = order.Version });
     }
 
+    private static readonly JsonSerializerOptions s_caseInsensitive = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     private static async Task<IResult> ListOrdersAsync(
         IEventStore store,
+        EventSourcingDbContext dbContext,
+        ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
-        // Derive the event type name the same way EventStore serialises it.
-        var typeName = typeof(OrderPlaced).FullName!;
-        var events = await store.GetEventsByTypeAsync(typeName, cancellationToken: cancellationToken);
+        var logger = loggerFactory.CreateLogger(nameof(OrderEndpoints));
+        // Build order summaries without loading full aggregates to avoid N+1 queries.
+        var summaries = new Dictionary<Guid, object>();
 
-        var orders = events.Select(e =>
+        // 1. Populate from snapshots — a single query covers all archived orders and any
+        //    order that has been snapshotted.  The tenant query filter ensures isolation.
+        var snapshots = await dbContext.Snapshots
+            .Select(s => new { s.AggregateId, s.Data })
+            .ToListAsync(cancellationToken);
+
+        foreach (var snap in snapshots)
         {
-            var data = JsonSerializer.Deserialize<OrderPlaced>(e.Data,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return new
+            try
             {
-                orderId = e.AggregateId,
-                customerName = data?.CustomerName,
-                total = data?.Total,
-                placedAt = e.Timestamp
-            };
-        });
+                var data = JsonSerializer.Deserialize<OrderSnapshot>(snap.Data, s_caseInsensitive);
+                if (data is not null)
+                    summaries[snap.AggregateId] = new
+                    {
+                        orderId      = data.Id,
+                        customerName = data.CustomerName,
+                        total        = data.Total,
+                        placedAt     = data.PlacedAt
+                    };
+            }
+            catch (JsonException ex)
+            {
+                logger.LogWarning(ex,
+                    "Skipping malformed snapshot data for aggregate {AggregateId}.",
+                    snap.AggregateId);
+            }
+        }
 
-        return Results.Ok(orders);
+        // 2. Hot orders not yet snapshotted — read from their OrderPlaced event (single query).
+        var placedTypeName = typeof(OrderPlaced).FullName!;
+        var hotEvents = await store.GetEventsByTypeAsync(placedTypeName, cancellationToken: cancellationToken);
+
+        foreach (var ev in hotEvents)
+        {
+            if (summaries.ContainsKey(ev.AggregateId)) continue;
+
+            try
+            {
+                var placed = JsonSerializer.Deserialize<OrderPlaced>(ev.Data, s_caseInsensitive);
+                if (placed is not null)
+                    summaries[ev.AggregateId] = new
+                    {
+                        orderId      = placed.OrderId,
+                        customerName = placed.CustomerName,
+                        total        = placed.Total,
+                        placedAt     = ev.Timestamp
+                    };
+            }
+            catch (JsonException ex)
+            {
+                logger.LogWarning(ex,
+                    "Skipping malformed OrderPlaced event data for aggregate {AggregateId} (timestamp {Timestamp}).",
+                    ev.AggregateId, ev.Timestamp);
+            }
+        }
+
+        return Results.Ok(summaries.Values);
     }
 
     private static async Task<IResult> GetOrderAsync(

@@ -259,4 +259,82 @@ public class AggregateRootTests
         Assert.AreEqual(0, aggregate.GetUncommittedEvents().Count);
         Assert.AreEqual("TRACK-NEW", aggregate.TrackingNumber);
     }
+
+    // -------------------------------------------------------------------------
+    // LoadFromSnapshot
+    // -------------------------------------------------------------------------
+
+    [TestMethod]
+    public void LoadFromSnapshot_SetsVersionToSnapshotVersion()
+    {
+        var aggregate = new OrderAggregate();
+
+        aggregate.LoadFromSnapshot(5L);
+
+        Assert.AreEqual(5L, aggregate.Version);
+    }
+
+    [TestMethod]
+    public void LoadFromSnapshot_ThenLoadFromHistory_VersionIsSnapshotPlusDelta()
+    {
+        var orderId = Guid.NewGuid();
+        var aggregate = new OrderAggregate();
+
+        aggregate.LoadFromSnapshot(3L);
+        aggregate.LoadFromHistory([new OrderShipped(orderId, "TRACK-007")]);
+
+        Assert.AreEqual(4L, aggregate.Version);
+    }
+
+    [TestMethod]
+    public void LoadFromSnapshot_DoesNotAddToUncommittedEvents()
+    {
+        var aggregate = new OrderAggregate();
+
+        aggregate.LoadFromSnapshot(10L);
+
+        Assert.AreEqual(0, aggregate.GetUncommittedEvents().Count);
+    }
+
+    // -------------------------------------------------------------------------
+    // GetSnapshotData
+    // -------------------------------------------------------------------------
+
+    [TestMethod]
+    public void GetSnapshotData_DefaultImplementation_ReturnsEmptyJson()
+    {
+        var aggregate = new OrderAggregate();
+
+        var data = aggregate.GetSnapshotData();
+
+        Assert.AreEqual("{}", data);
+    }
+
+    // -------------------------------------------------------------------------
+    // RestoreState
+    // -------------------------------------------------------------------------
+
+    [TestMethod]
+    public void RestoreState_DefaultImplementation_DoesNotThrow()
+    {
+        var aggregate = new OrderAggregate();
+
+        // Default is a no-op; should not throw for any JSON payload.
+        aggregate.RestoreState("{}");
+        aggregate.RestoreState("{\"customerName\":\"Alice\",\"total\":100}");
+
+        // Version should remain unchanged.
+        Assert.AreEqual(0L, aggregate.Version);
+    }
+
+    [TestMethod]
+    public void RestoreState_DoesNotChangeVersion()
+    {
+        var aggregate = new OrderAggregate();
+        aggregate.LoadFromSnapshot(7L);
+
+        aggregate.RestoreState("{\"any\":\"value\"}");
+
+        Assert.AreEqual(7L, aggregate.Version);
+    }
 }
