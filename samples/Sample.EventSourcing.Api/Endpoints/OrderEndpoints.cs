@@ -68,8 +68,10 @@ public static class OrderEndpoints
     private static async Task<IResult> ListOrdersAsync(
         IEventStore store,
         EventSourcingDbContext dbContext,
+        ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
+        var logger = loggerFactory.CreateLogger(nameof(OrderEndpoints));
         // Build order summaries without loading full aggregates to avoid N+1 queries.
         var summaries = new Dictionary<Guid, object>();
 
@@ -93,7 +95,12 @@ public static class OrderEndpoints
                         placedAt     = data.PlacedAt
                     };
             }
-            catch (JsonException) { /* skip malformed snapshot data */ }
+            catch (JsonException ex)
+            {
+                logger.LogWarning(ex,
+                    "Skipping malformed snapshot data for aggregate {AggregateId}.",
+                    snap.AggregateId);
+            }
         }
 
         // 2. Hot orders not yet snapshotted — read from their OrderPlaced event (single query).
@@ -116,7 +123,12 @@ public static class OrderEndpoints
                         placedAt     = ev.Timestamp
                     };
             }
-            catch (JsonException) { /* skip malformed event data */ }
+            catch (JsonException ex)
+            {
+                logger.LogWarning(ex,
+                    "Skipping malformed OrderPlaced event data for aggregate {AggregateId} (timestamp {Timestamp}).",
+                    ev.AggregateId, ev.Timestamp);
+            }
         }
 
         return Results.Ok(summaries.Values);
