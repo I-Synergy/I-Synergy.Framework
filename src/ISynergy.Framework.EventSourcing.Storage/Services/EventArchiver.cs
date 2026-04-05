@@ -238,9 +238,9 @@ public sealed class EventArchiver : IEventArchiver
             if (domainEventType is null)
             {
                 _logger.LogError(
-                    "Cannot build snapshot for {AggregateType}/{AggregateId}: event type '{EventType}' " +
+                    "Cannot build snapshot for {AggregateType}/{AggregateId}: event type '{EventType}' at version {Version} " +
                     "could not be resolved. Aborting archive for this stream to prevent data loss.",
-                    aggregateType, aggregateId, record.EventType);
+                    aggregateType, aggregateId, record.EventType, record.AggregateVersion);
                 return false;
             }
 
