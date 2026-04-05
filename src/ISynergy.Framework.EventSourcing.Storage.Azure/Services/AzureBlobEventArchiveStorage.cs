@@ -1,5 +1,6 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.EventSourcing.Models;
 using ISynergy.Framework.EventSourcing.Storage.Abstractions;
 using Microsoft.Extensions.Logging;
@@ -36,6 +37,9 @@ public sealed class AzureBlobEventArchiveStorage : IEventArchiveStorage
         BlobServiceClient blobServiceClient,
         ILogger<AzureBlobEventArchiveStorage> logger)
     {
+        Argument.IsNotNull(blobServiceClient);
+        Argument.IsNotNull(logger);
+
         _blobServiceClient = blobServiceClient;
         _logger = logger;
     }
