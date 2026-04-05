@@ -22,7 +22,7 @@
 {
     <div class="alert @(_archiveError ? "alert-danger" : "alert-success") alert-dismissible" role="alert">
         @_archiveMessage
-        <button type="button" class="btn-close" @onclick="() => _archiveMessage = null"></button>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="() => _archiveMessage = null"></button>
     </div>
 }
 

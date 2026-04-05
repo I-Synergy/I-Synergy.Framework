@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.EventSourcing.Storage.Abstractions;
+using Microsoft.Extensions.Hosting;
 
 namespace Sample.EventSourcing.Api.Endpoints;
 
@@ -11,19 +12,27 @@ public static class ArchiveEndpoints
     /// <summary>Registers archive-related endpoints on <paramref name="app"/>.</summary>
     public static IEndpointRouteBuilder MapArchiveEndpoints(this IEndpointRouteBuilder app)
     {
-        // POST /api/archive/run  — manually trigger the global cross-tenant archive job
-        app.MapPost("/api/archive/run", async (
-            IEventArchiver archiver,
-            CancellationToken ct) =>
+        var env = app.ServiceProvider.GetRequiredService<IHostEnvironment>();
+
+        // POST /api/archive/run  — only exposed in Development.
+        // This endpoint triggers a global cross-tenant archive operation that permanently
+        // deletes hot-tier events. In production, trigger via a scheduled background job
+        // or an admin-only endpoint protected with proper authorization.
+        if (env.IsDevelopment())
         {
-            var result = await archiver.ArchiveOldEventsAsync(ct);
-            return Results.Ok(result);
-        })
-        .WithName("RunArchive")
-        .WithSummary("Trigger the global event archive job")
-        .WithDescription(
-            "Archives events older than the configured RetentionDays to blob cold storage " +
-            "across all tenants. Returns the number of streams and events archived.");
+            app.MapPost("/api/archive/run", async (
+                IEventArchiver archiver,
+                CancellationToken ct) =>
+            {
+                var result = await archiver.ArchiveOldEventsAsync(ct);
+                return Results.Ok(result);
+            })
+            .WithName("RunArchive")
+            .WithSummary("Trigger the global event archive job (Development only)")
+            .WithDescription(
+                "Archives events older than the configured RetentionDays to blob cold storage " +
+                "across all tenants. Returns the number of streams and events archived.");
+        }
 
         // GET /api/orders/{id}/full-history — cold + hot event history for an order
         app.MapGet("/api/orders/{id:guid}/full-history", async (
