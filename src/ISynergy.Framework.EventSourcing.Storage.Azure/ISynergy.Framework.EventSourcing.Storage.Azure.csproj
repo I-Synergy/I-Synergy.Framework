@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>I-Synergy.Framework.EventSourcing.Storage.Azure</PackageId>
+    <Description>Azure Blob Storage implementation of IEventArchiveStorage for I-Synergy Event Sourcing</Description>
+    <PackageTags>I-Synergy, Framework, EventSourcing, Azure, BlobStorage, Archive, CQRS</PackageTags>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsAotCompatible>false</IsAotCompatible>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ISynergy.Framework.EventSourcing.Storage\ISynergy.Framework.EventSourcing.Storage.csproj" />
+  </ItemGroup>
+</Project>

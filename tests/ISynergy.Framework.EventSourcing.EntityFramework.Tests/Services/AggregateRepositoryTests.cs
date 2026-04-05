@@ -167,4 +167,52 @@ public class AggregateRepositoryTests
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             _repository.SaveAsync(instanceB));
     }
+
+    // ── Snapshot hydration ────────────────────────────────────────────────────
+
+    [TestMethod]
+    public async Task LoadAsync_WithSnapshotOnly_ReturnsAggregateAtSnapshotVersion()
+    {
+        // Arrange: save a snapshot directly (no hot events — simulates a fully archived aggregate).
+        var aggregateId = Guid.NewGuid();
+        var tenantId = _tenantService.TenantId;
+
+        await _store.SaveSnapshotAsync(new Models.Snapshot(
+            aggregateId, tenantId, "OrderAggregate", 5L,
+            "{}", DateTimeOffset.UtcNow));
+
+        // Act
+        var loaded = await _repository.LoadAsync(aggregateId);
+
+        // Assert: aggregate returned (not null) with version set from snapshot.
+        Assert.IsNotNull(loaded);
+        Assert.AreEqual(5L, loaded.Version);
+    }
+
+    [TestMethod]
+    public async Task LoadAsync_WithSnapshotAndDeltaEvents_ReplaysDeltaOnTopOfSnapshot()
+    {
+        // Arrange: snapshot at version 1 + one additional (delta) event at version 2.
+        var aggregateId = Guid.NewGuid();
+        var tenantId = _tenantService.TenantId;
+        const long snapshotVersion = 1L;
+
+        // Save snapshot at version 1 (simulating archive boundary).
+        await _store.SaveSnapshotAsync(new Models.Snapshot(
+            aggregateId, tenantId, "OrderAggregate", snapshotVersion,
+            "{}", DateTimeOffset.UtcNow));
+
+        // Append a delta event with expectedVersion = snapshotVersion (hot-tier only).
+        await _store.AppendEventAsync(
+            tenantId, "OrderAggregate", aggregateId, expectedVersion: snapshotVersion,
+            new OrderShipped(aggregateId, "TRACK-DELTA"));
+
+        // Act
+        var loaded = await _repository.LoadAsync(aggregateId);
+
+        // Assert: version is snapshot version + 1 delta event.
+        Assert.IsNotNull(loaded);
+        Assert.AreEqual(snapshotVersion + 1, loaded.Version);
+        Assert.AreEqual("TRACK-DELTA", loaded.TrackingNumber);
+    }
 }

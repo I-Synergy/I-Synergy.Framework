@@ -6,20 +6,14 @@ namespace Sample.EventSourcing.Web.Services;
 /// <summary>
 /// Typed HTTP client for the Event Sourcing API.
 /// The base URL is resolved via Aspire service discovery ("api").
-/// All requests carry the configured <see cref="TenantId"/> as X-Tenant-Id header.
+/// All requests carry the active tenant ID from <see cref="TenantContext"/> as X-Tenant-Id header.
 /// </summary>
-public sealed class OrdersApiClient(HttpClient http)
+public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext)
 {
     private static readonly JsonSerializerOptions s_jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
-
-    /// <summary>
-    /// The tenant ID sent with every request.
-    /// Change this to switch tenants and observe data isolation.
-    /// </summary>
-    public Guid TenantId { get; set; } = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
     public async Task<List<OrderSummary>> GetOrdersAsync(CancellationToken ct = default)
     {
@@ -89,10 +83,26 @@ public sealed class OrdersApiClient(HttpClient http)
         return await response.Content.ReadFromJsonAsync<OrderDetail>(s_jsonOptions, ct);
     }
 
+    public async Task<ArchiveRunResult?> RunArchiveAsync(CancellationToken ct = default)
+    {
+        using var request = BuildRequest(HttpMethod.Post, "/api/archive/run");
+        var response = await http.SendAsync(request, ct);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<ArchiveRunResult>(s_jsonOptions, ct);
+    }
+
+    public async Task<List<EventEntry>> GetOrderFullHistoryAsync(Guid orderId, CancellationToken ct = default)
+    {
+        using var request = BuildRequest(HttpMethod.Get, $"/api/orders/{orderId}/full-history");
+        var response = await http.SendAsync(request, ct);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<List<EventEntry>>(s_jsonOptions, ct) ?? [];
+    }
+
     private HttpRequestMessage BuildRequest(HttpMethod method, string url)
     {
         var request = new HttpRequestMessage(method, url);
-        request.Headers.Add("X-Tenant-Id", TenantId.ToString());
+        request.Headers.Add("X-Tenant-Id", tenantContext.TenantId.ToString());
         return request;
     }
 }
@@ -101,3 +111,4 @@ public record OrderSummary(Guid OrderId, string? CustomerName, decimal? Total, D
 public record OrderDetail(Guid OrderId, string CustomerName, decimal Total, string Status, string? TrackingNumber, string? CancellationReason, long Version);
 public record EventEntry(Guid EventId, string EventType, long AggregateVersion, DateTimeOffset Timestamp, string? UserId);
 public record PlaceOrderResult(Guid OrderId, long Version);
+public record ArchiveRunResult(int StreamsArchived, long EventsArchived, int Errors);
