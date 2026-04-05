@@ -101,7 +101,7 @@ public sealed class Order : AggregateRoot<Guid>
     }
 }
 
-/// <summary>Mutable DTO used to serialize/deserialize <see cref="Order"/> snapshot state.</summary>
+/// <summary>Immutable snapshot DTO used to serialize/deserialize <see cref="Order"/> state.</summary>
 internal sealed record OrderSnapshot(
     Guid Id,
     string CustomerName,

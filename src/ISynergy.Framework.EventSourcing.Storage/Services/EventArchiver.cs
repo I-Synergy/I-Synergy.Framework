@@ -115,31 +115,40 @@ public sealed class EventArchiver : IEventArchiver
         DateTimeOffset cutoff,
         CancellationToken ct)
     {
-        // Load ALL events for this stream (across all versions).
-        var allEvents = await _context.Events
+        // Query only the events eligible for archiving (before the cutoff).
+        // Events after the cutoff remain as hot-tier data and do not need to be loaded.
+        var toArchive = await _context.Events
             .IgnoreQueryFilters()
             .Where(e => e.TenantId == tenantId
                      && e.AggregateType == aggregateType
-                     && e.AggregateId == aggregateId)
+                     && e.AggregateId == aggregateId
+                     && e.Timestamp < cutoff)
             .OrderBy(e => e.AggregateVersion)
             .ToListAsync(ct)
             .ConfigureAwait(false);
 
-        // Identify which events to archive (before the cutoff).
-        var toArchive = allEvents
-            .Where(e => e.Timestamp < cutoff)
-            .ToList();
-
         if (toArchive.Count == 0)
             return 0;
 
-        var versionFrom = toArchive.Min(e => e.AggregateVersion);
-        var versionTo   = toArchive.Max(e => e.AggregateVersion);
+        var versionFrom = toArchive[0].AggregateVersion;   // list is already sorted ascending
+        var versionTo   = toArchive[^1].AggregateVersion;
 
         // Ensure a snapshot exists at or above versionTo before deleting events.
-        await EnsureSnapshotAsync(
-            tenantId, aggregateType, aggregateId, allEvents, versionTo, ct)
+        // If the snapshot cannot be guaranteed (e.g., aggregate type unresolvable or
+        // event deserialization fails), abort this stream to prevent data loss: events
+        // would be removed from the hot tier but the aggregate could not be reconstituted.
+        var snapshotReady = await EnsureSnapshotAsync(
+            tenantId, aggregateType, aggregateId, toArchive, versionTo, ct)
             .ConfigureAwait(false);
+
+        if (!snapshotReady)
+        {
+            _logger.LogWarning(
+                "Skipping archive for stream {AggregateType}/{AggregateId} (tenant {TenantId}): " +
+                "could not guarantee a valid snapshot at version {VersionTo}.",
+                aggregateType, aggregateId, tenantId, versionTo);
+            return 0;
+        }
 
         // Upload archived events to cold storage.
         var blobPath = await _storage.UploadEventsAsync(
@@ -161,9 +170,7 @@ public sealed class EventArchiver : IEventArchiver
         });
 
         // Delete the archived hot-tier event rows.
-        var toArchiveIds = toArchive.Select(e => e.EventId).ToHashSet();
-        _context.Events.RemoveRange(
-            allEvents.Where(e => toArchiveIds.Contains(e.EventId)));
+        _context.Events.RemoveRange(toArchive);
 
         await _context.SaveChangesAsync(ct).ConfigureAwait(false);
 
@@ -174,11 +181,21 @@ public sealed class EventArchiver : IEventArchiver
         return toArchive.Count;
     }
 
-    private async Task EnsureSnapshotAsync(
+    /// <summary>
+    /// Ensures a snapshot exists at or above <paramref name="requiredVersion"/> before events
+    /// are deleted from the hot tier.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> when a valid snapshot is guaranteed; <see langword="false"/> when
+    /// the aggregate type cannot be instantiated (stream is skipped, no data is deleted).
+    /// Throws if an event type cannot be resolved or deserialized, because proceeding would
+    /// produce an incomplete snapshot and corrupt subsequent aggregate loads.
+    /// </returns>
+    private async Task<bool> EnsureSnapshotAsync(
         Guid tenantId,
         string aggregateType,
         Guid aggregateId,
-        List<EventRecord> allEvents,
+        List<EventRecord> candidateEvents,
         long requiredVersion,
         CancellationToken ct)
     {
@@ -190,14 +207,9 @@ public sealed class EventArchiver : IEventArchiver
             .ConfigureAwait(false);
 
         if (existing is not null && existing.Version >= requiredVersion)
-            return; // Snapshot covers all events we are about to archive.
+            return true; // Snapshot already covers all events we are about to archive.
 
-        // Rebuild aggregate state up to requiredVersion.
-        var eventsToReplay = allEvents
-            .Where(e => e.AggregateVersion <= requiredVersion)
-            .OrderBy(e => e.AggregateVersion)
-            .ToList();
-
+        // Instantiate a fresh aggregate.
         var aggregate = CreateAggregate(aggregateType);
         if (aggregate is null)
         {
@@ -205,18 +217,42 @@ public sealed class EventArchiver : IEventArchiver
                 "Cannot create snapshot: aggregate type '{AggregateType}' could not be instantiated. " +
                 "Ensure the assembly is loaded and the type name matches.",
                 aggregateType);
-            return;
+            return false;
         }
 
-        foreach (var record in eventsToReplay)
+        // If a previous snapshot exists, restore state from it so we only replay delta events.
+        long replayFromVersion = 0;
+        if (existing is not null)
+        {
+            aggregate.RestoreState(existing.Data);
+            aggregate.LoadFromSnapshot(existing.Version);
+            replayFromVersion = existing.Version;
+        }
+
+        // Replay only the events after the previous snapshot boundary.
+        // Failing to resolve or deserialize any event is treated as an error: proceeding would
+        // persist an incomplete snapshot and corrupt subsequent aggregate loads after archiving.
+        foreach (var record in candidateEvents.Where(e => e.AggregateVersion > replayFromVersion))
         {
             var domainEventType = _typeResolver.Resolve(record.EventType);
             if (domainEventType is null)
-                continue;
+            {
+                _logger.LogError(
+                    "Cannot build snapshot for {AggregateType}/{AggregateId}: event type '{EventType}' " +
+                    "could not be resolved. Aborting archive for this stream to prevent data loss.",
+                    aggregateType, aggregateId, record.EventType);
+                return false;
+            }
 
             var domainEvent = _serializer.Deserialize(record.Data, domainEventType);
             if (domainEvent is null)
-                continue;
+            {
+                _logger.LogError(
+                    "Cannot build snapshot for {AggregateType}/{AggregateId}: failed to deserialize " +
+                    "event '{EventType}' at version {Version}. Aborting archive for this stream to prevent data loss.",
+                    aggregateType, aggregateId, record.EventType, record.AggregateVersion);
+                return false;
+            }
 
             aggregate.LoadFromHistory([domainEvent]);
         }
@@ -235,6 +271,7 @@ public sealed class EventArchiver : IEventArchiver
 
         _context.Snapshots.Add(snapshot);
         // SaveChanges is called by the caller after all changes are staged.
+        return true;
     }
 
     [RequiresUnreferencedCode("Uses Type.GetType to resolve aggregate type by short name.")]

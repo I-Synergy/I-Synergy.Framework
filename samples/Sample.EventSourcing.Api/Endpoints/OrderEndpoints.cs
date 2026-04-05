@@ -60,45 +60,66 @@ public static class OrderEndpoints
         return Results.Created($"/api/orders/{orderId}", new { orderId, version = order.Version });
     }
 
+    private static readonly JsonSerializerOptions s_caseInsensitive = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     private static async Task<IResult> ListOrdersAsync(
-        IAggregateRepository<Order, Guid> repository,
         IEventStore store,
         EventSourcingDbContext dbContext,
         CancellationToken cancellationToken)
     {
-        // Discover order IDs from two sources so archived orders remain visible:
-        // 1. Hot events still in PostgreSQL (OrderPlaced event type)
-        // 2. EventArchiveIndex rows for StreamType == "Order" (events moved to cold storage)
-        var typeName = typeof(OrderPlaced).FullName!;
+        // Build order summaries without loading full aggregates to avoid N+1 queries.
+        var summaries = new Dictionary<Guid, object>();
 
-        var hotIds = (await store.GetEventsByTypeAsync(typeName, cancellationToken: cancellationToken))
-            .Select(e => e.AggregateId)
-            .ToHashSet();
-
-        var archivedIds = await dbContext.ArchiveIndexes
-            .Where(a => a.StreamType == "Order")
-            .Select(a => a.StreamId)
-            .Distinct()
+        // 1. Populate from snapshots — a single query covers all archived orders and any
+        //    order that has been snapshotted.  The tenant query filter ensures isolation.
+        var snapshots = await dbContext.Snapshots
+            .Select(s => new { s.AggregateId, s.Data })
             .ToListAsync(cancellationToken);
 
-        var allIds = hotIds.Union(archivedIds).ToList();
-
-        var orders = new List<object>();
-        foreach (var id in allIds)
+        foreach (var snap in snapshots)
         {
-            var order = await repository.LoadAsync(id, cancellationToken);
-            if (order is null) continue;
-
-            orders.Add(new
+            try
             {
-                orderId      = order.Id,
-                customerName = order.CustomerName,
-                total        = order.Total,
-                placedAt     = order.PlacedAt
-            });
+                var data = JsonSerializer.Deserialize<OrderSnapshot>(snap.Data, s_caseInsensitive);
+                if (data is not null)
+                    summaries[snap.AggregateId] = new
+                    {
+                        orderId      = data.Id,
+                        customerName = data.CustomerName,
+                        total        = data.Total,
+                        placedAt     = data.PlacedAt
+                    };
+            }
+            catch (JsonException) { /* skip malformed snapshot data */ }
         }
 
-        return Results.Ok(orders);
+        // 2. Hot orders not yet snapshotted — read from their OrderPlaced event (single query).
+        var placedTypeName = typeof(OrderPlaced).FullName!;
+        var hotEvents = await store.GetEventsByTypeAsync(placedTypeName, cancellationToken: cancellationToken);
+
+        foreach (var ev in hotEvents)
+        {
+            if (summaries.ContainsKey(ev.AggregateId)) continue;
+
+            try
+            {
+                var placed = JsonSerializer.Deserialize<OrderPlaced>(ev.Data, s_caseInsensitive);
+                if (placed is not null)
+                    summaries[ev.AggregateId] = new
+                    {
+                        orderId      = placed.OrderId,
+                        customerName = placed.CustomerName,
+                        total        = placed.Total,
+                        placedAt     = ev.Timestamp
+                    };
+            }
+            catch (JsonException) { /* skip malformed event data */ }
+        }
+
+        return Results.Ok(summaries.Values);
     }
 
     private static async Task<IResult> GetOrderAsync(
