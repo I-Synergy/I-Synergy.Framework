@@ -70,8 +70,12 @@
 | **I-Synergy.Framework.EntityFramework** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EntityFramework?label=) |
 | **I-Synergy.Framework.EventSourcing** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EventSourcing?label=) |
 | **I-Synergy.Framework.EventSourcing.EntityFramework** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EventSourcing.EntityFramework?label=) |
+| **I-Synergy.Framework.EventSourcing.Storage** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EventSourcing.Storage?label=) |
+| **I-Synergy.Framework.EventSourcing.Storage.Azure** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EventSourcing.Storage.Azure?label=) |
+| **I-Synergy.Framework.EventSourcing.Storage.S3** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.EventSourcing.Storage.S3?label=) |
 | **I-Synergy.Framework.Storage** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage?label=) |
 | **I-Synergy.Framework.Storage.Azure** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage.Azure?label=) |
+| **I-Synergy.Framework.Storage.S3** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Storage.S3?label=) |
 
 ### 📧 Communication & Messaging
 
@@ -82,6 +86,15 @@
 | **I-Synergy.Framework.Mail.SendGrid** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mail.SendGrid?label=) |
 | **I-Synergy.Framework.MessageBus** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.MessageBus?label=) |
 | **I-Synergy.Framework.MessageBus.Azure** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.MessageBus.Azure?label=) |
+| **I-Synergy.Framework.MessageBus.RabbitMQ** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.MessageBus.RabbitMQ?label=) |
+
+### 🔑 Key Vault & Secrets
+
+| Package | Latest Version |
+|:---|:---|
+| **I-Synergy.Framework.KeyVault** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.KeyVault?label=) |
+| **I-Synergy.Framework.KeyVault.Azure** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.KeyVault.Azure?label=) |
+| **I-Synergy.Framework.KeyVault.OpenBao** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.KeyVault.OpenBao?label=) |
 
 ### 🔍 Monitoring & Observability
 
