@@ -19,6 +19,19 @@
             "command": "dotnet build --nologo --verbosity quiet 2>&1 | tail -5"
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "agent",
+            "if": "Write(src/**/*.csproj)|Edit(src/**/*.csproj)",
+            "prompt": "A .csproj file in src/ was just written or edited. Reconcile README.md with the actual library projects: (1) Extract PackageId from every .csproj under src/ that has one. (2) Compare against all package entries in the README.md tables. (3) Add any missing packages to the correct section using the badge format `![Version](https://img.shields.io/nuget/vpre/{PackageId}?label=)`. (4) Remove rows for packages that no longer exist. (5) Section placement rules: EventSourcing.* → Data & Persistence; Storage.* → Data & Persistence; KeyVault.* → Key Vault & Secrets; MessageBus.* → Communication & Messaging; Mail.* → Communication & Messaging; Monitoring.* / OpenTelemetry.* → Monitoring & Observability; UI.* → UI & Client Frameworks; AspNetCore.* → Web & API Development or Enterprise Features; CQRS / Core / Automations → Application Architecture; Financial/Geography/Mathematics/Physics/IO/Documents/Printer/Synchronization/Mvvm → Specialized Libraries. Only edit README.md if changes are actually needed. Do not commit.",
+            "timeout": 120,
+            "statusMessage": "Syncing README package tables...",
+            "async": true
+          }
+        ]
       }
     ]
   },
