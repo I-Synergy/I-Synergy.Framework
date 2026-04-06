@@ -58,6 +58,9 @@ public class EventSourcingDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Place all event-sourcing tables in the dedicated "events" schema.
+        modelBuilder.HasDefaultSchema("events");
+
         modelBuilder.ApplyConfiguration(new EventRecordConfiguration());
         modelBuilder.ApplyConfiguration(new SnapshotConfiguration());
         modelBuilder.ApplyConfiguration(new EventArchiveIndexConfiguration());
