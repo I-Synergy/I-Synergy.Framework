@@ -14,11 +14,21 @@ public class S3StorageOptions
     /// <summary>
     /// Gets or sets the AWS access key or S3-compatible provider access key.
     /// </summary>
+    /// <remarks>
+    /// <strong>Security notice:</strong> This credential must never be stored in plain-text configuration
+    /// files or committed to source control. Source it from a Key Vault provider, an environment variable,
+    /// or — where supported — use IAM roles / instance profiles so that no long-lived key is required.
+    /// </remarks>
     public string AccessKey { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the AWS secret key or S3-compatible provider secret key.
     /// </summary>
+    /// <remarks>
+    /// <strong>Security notice:</strong> This credential must never be stored in plain-text configuration
+    /// files or committed to source control. Source it from a Key Vault provider, an environment variable,
+    /// or — where supported — use IAM roles / instance profiles so that no long-lived key is required.
+    /// </remarks>
     public string SecretKey { get; set; } = string.Empty;
 
     /// <summary>
