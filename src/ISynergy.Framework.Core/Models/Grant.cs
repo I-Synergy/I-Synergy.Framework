@@ -4,6 +4,12 @@ namespace ISynergy.Framework.Core.Models;
 /// <summary>
 /// Class Grant.
 /// </summary>
+/// <remarks>
+/// <strong>Security notice:</strong> This object contains sensitive credential fields
+/// (<see cref="password"/>, <see cref="client_secret"/>, <see cref="refresh_token"/>).
+/// Never log instances of this class. <see cref="ToString"/> is overridden to return a
+/// redacted placeholder to prevent accidental exposure through structured logging.
+/// </remarks>
 public class Grant
 {
     /// <summary>
@@ -46,4 +52,10 @@ public class Grant
     /// </summary>
     /// <value>The code.</value>
     [JsonPropertyName("code")] public string code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Returns a redacted string to prevent accidental credential exposure through logging or debugging.
+    /// </summary>
+    /// <returns>A fixed string indicating this object contains redacted sensitive data.</returns>
+    public override string ToString() => "[Grant: redacted — contains sensitive credentials]";
 }
