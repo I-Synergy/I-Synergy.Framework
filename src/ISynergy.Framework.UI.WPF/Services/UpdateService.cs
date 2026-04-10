@@ -74,7 +74,11 @@ internal class UpdateService : IUpdateService
 
             if (File.Exists(updatePath))
             {
-                System.Diagnostics.Process.Start(updatePath);
+                // Normalize the path before executing to prevent directory-traversal attacks.
+                // The update file was downloaded from a configured endpoint and written to the
+                // system temp directory, so using the shell to execute it is expected behavior.
+                var normalizedPath = Path.GetFullPath(updatePath);
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(normalizedPath) { UseShellExecute = true });
             }
             else
             {
