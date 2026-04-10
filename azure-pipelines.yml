@@ -88,15 +88,24 @@ stages:
             custom: 'tool'
             arguments: 'install --global I-Synergy.Tools.Azure.SignTool'
 
-        - task: SonarCloudPrepare@4
-          displayName: 'Prepare SonarCloud'
+        - task: DotNetCoreCLI@2
+          displayName: 'Install SonarScanner .NET tool'
           inputs:
-            SonarCloud: 'SonarCloud'
-            organization: 'i-synergy-github'
-            scannerMode: 'dotnet'
-            projectKey: 'I-Synergy.Framework'
-            projectName: 'I-Synergy.Framework'
-            projectVersion: '$(VersionPackage)'
+            command: 'custom'
+            custom: 'tool'
+            arguments: 'install --global dotnet-sonarscanner'
+
+        - task: CmdLine@2
+          displayName: 'Begin SonarCloud analysis'
+          inputs:
+            script: >
+              dotnet sonarscanner begin
+              /o:"i-synergy-github"
+              /k:"I-Synergy_I-Synergy.Framework"
+              /n:"I-Synergy.Framework"
+              /v:"$(VersionPackage)"
+              /d:sonar.token="$(SonarToken)"
+              /d:sonar.host.url="https://sonarcloud.io"
 
         - task: MSBuild@1
           displayName: 'Build I-Synergy Framework'
@@ -144,13 +153,10 @@ stages:
             artifactName: Output
             publishLocation: 'Container'
 
-        - task: SonarCloudAnalyze@4
-          displayName: 'Run SonarCloud analyzer'
-
-        - task: SonarCloudPublish@4
-          displayName: 'Publish SonarCloud analysis'
+        - task: CmdLine@2
+          displayName: 'End SonarCloud analysis'
           inputs:
-            pollingTimeoutSec: '300'
+            script: dotnet sonarscanner end /d:sonar.token="$(SonarToken)"
 
   - stage: Release
     displayName: 'Release'
