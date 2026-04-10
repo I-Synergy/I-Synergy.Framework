@@ -15,6 +15,11 @@ namespace ISynergy.Framework.IO.Analyzers.Base;
 public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
 {
     /// <summary>
+    /// Maximum allowed stream length in bytes to guard against out-of-memory conditions (50 MB).
+    /// </summary>
+    public const long MaxStreamSize = 50 * 1024 * 1024;
+
+    /// <summary>
     /// The lazy file types
     /// </summary>
     private readonly Lazy<IEnumerable<FileTypeInfo>> lazyFileTypes;
@@ -53,10 +58,16 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <param name="extension">The extension.</param>
     /// <returns>FileTypeInfo.</returns>
     /// <exception cref="ArgumentNullException">inputStream</exception>
+    /// <exception cref="ArgumentException">Thrown when the stream length exceeds <see cref="MaxStreamSize"/>.</exception>
     public FileTypeInfo? DetectType(Stream? inputStream, string extension)
     {
         if (inputStream is null)
             throw new ArgumentNullException(nameof(inputStream));
+
+        if (inputStream.CanSeek && inputStream.Length > MaxStreamSize)
+            throw new ArgumentException(
+                $"Stream length {inputStream.Length:N0} bytes exceeds the maximum allowed size of {MaxStreamSize:N0} bytes.",
+                nameof(inputStream));
 
         if (inputStream.CanSeek)
             inputStream.Position = 0;
