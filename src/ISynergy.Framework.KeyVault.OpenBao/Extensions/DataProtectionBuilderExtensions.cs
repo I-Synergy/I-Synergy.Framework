@@ -15,7 +15,15 @@ public static class DataProtectionBuilderExtensions
     /// </summary>
     /// <param name="builder">The data protection builder.</param>
     /// <param name="vaultUri">The OpenBao URI, e.g. http://localhost:8200</param>
-    /// <param name="vaultToken">The OpenBao token.</param>
+    /// <param name="vaultToken">
+    /// The OpenBao authentication token.
+    /// <para>
+    /// <strong>Security notice:</strong> Do not hard-code this value or read it from a plain-text
+    /// configuration file. Prefer sourcing it from the <c>VAULT_TOKEN</c> environment variable or
+    /// from an <c>IVaultTokenProvider</c> implementation. Passing a root token is suitable only for
+    /// local development; use an AppRole or JWT auth method in production.
+    /// </para>
+    /// </param>
     /// <param name="keyPath">The KV path under which keys are stored. Default: isynergy/dataprotection</param>
     /// <param name="mountPoint">The KV v2 mount point. Default: secret</param>
     public static IDataProtectionBuilder PersistKeysToOpenBao(

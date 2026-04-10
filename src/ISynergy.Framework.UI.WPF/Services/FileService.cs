@@ -74,11 +74,25 @@ public class FileService : IFileService<FileResult>
 
     public async Task OpenFileAsync(string fileToOpen)
     {
+        // Normalize to an absolute path to prevent directory-traversal payloads such as "../../../evil".
+        var normalizedPath = Path.GetFullPath(fileToOpen);
+
+        if (!File.Exists(normalizedPath))
+            throw new FileNotFoundException("The file to open was not found.", normalizedPath);
+
         await Task.Run(() =>
         {
-            Process docProcess = new Process();
-            docProcess.StartInfo.FileName = fileToOpen;
-            docProcess.StartInfo.UseShellExecute = true;
+            // UseShellExecute = true is required on Windows to open a document with its default
+            // associated application (e.g. PDF with Acrobat, DOCX with Word). The path has been
+            // normalized and existence-checked above to mitigate path-traversal risks.
+            var docProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo(normalizedPath)
+                {
+                    UseShellExecute = true
+                }
+            };
+
             docProcess.Start();
         });
     }

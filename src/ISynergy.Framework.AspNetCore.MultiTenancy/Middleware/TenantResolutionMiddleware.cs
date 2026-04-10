@@ -25,7 +25,19 @@ public class TenantResolutionMiddleware(RequestDelegate next, ILogger<TenantReso
                 var tenantId = context.User.GetTenantId();
                 var userName = context.User.GetUsername() ?? string.Empty;
 
-                if (tenantId != Guid.Empty && !string.IsNullOrEmpty(userName))
+                if (tenantId == Guid.Empty)
+                {
+                    // An authenticated user without a TenantId claim indicates either a misconfigured
+                    // token or an incorrect middleware registration order (UseAuthentication() must be
+                    // called before this middleware). Fail loudly so the misconfiguration is visible
+                    // immediately rather than silently allowing un-tenanted data access.
+                    throw new InvalidOperationException(
+                        "Tenant ID could not be resolved for an authenticated user. " +
+                        "Ensure the JWT token contains a valid tenant claim and that " +
+                        "UseAuthentication() is registered before UseTenantResolution() in the middleware pipeline.");
+                }
+
+                if (!string.IsNullOrEmpty(userName))
                     TenantContext.Set(tenantId, userName);
             }
             catch (ClaimAuthorizationException ex)

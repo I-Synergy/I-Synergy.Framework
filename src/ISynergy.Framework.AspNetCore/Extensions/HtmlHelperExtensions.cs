@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Encodings.Web;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
 
@@ -123,9 +124,10 @@ public static class HtmlHelperExtensions
     {
         var base64 = Convert.ToBase64String(array);
 
+        // HTML-encode attribute values to prevent attribute-injection attacks.
         var attrs = (attributes is null)
             ? string.Empty
-            : string.Join(" ", attributes.Select(x => string.Format("{0}=\"{1}\"", x.Key, x.Value)));
+            : string.Join(" ", attributes.Select(x => string.Format("{0}=\"{1}\"", x.Key, HtmlEncoder.Default.Encode(x.Value?.ToString() ?? string.Empty))));
 
         var img = $"<img src=\"data:{contentType};base64,{base64}\" {attrs}/>";
 
@@ -147,9 +149,10 @@ public static class HtmlHelperExtensions
 
         var props = attributes?.GetType().GetProperties().ToDictionary(x => x.Name, x => x.GetValue(attributes));
 
+        // HTML-encode attribute values to prevent attribute-injection attacks.
         var attrs = (props is null)
             ? string.Empty
-            : string.Join(" ", props.Select(x => string.Format("{0}=\"{1}\"", x.Key, x.Value)));
+            : string.Join(" ", props.Select(x => string.Format("{0}=\"{1}\"", x.Key, HtmlEncoder.Default.Encode(x.Value?.ToString() ?? string.Empty))));
 
         var img = $"<img src=\"data:{contentType};base64,{base64}\" {attrs}/>";
 

@@ -1,24 +1,25 @@
 using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Utilities;
 
 /// <summary>
-/// Class SecretUtility.
+/// Provides utilities for generating cryptographically random secrets.
 /// </summary>
 public static class SecretUtility
 {
     /// <summary>
-    /// Generates the secret.
+    /// Generates a cryptographically random secret suitable for use as a symmetric key,
+    /// API key, or similar credential.
     /// </summary>
-    /// <returns>System.String.</returns>
+    /// <returns>
+    /// A 64-character uppercase hexadecimal string (256 bits of entropy) derived from
+    /// <see cref="RandomNumberGenerator"/>.
+    /// </returns>
+    /// <remarks>
+    /// The hex encoding is URL-safe, contains no padding, and preserves full entropy from
+    /// the 32 random bytes. The previous Base64-with-character-replacement approach silently
+    /// reduced entropy by mapping non-alphanumeric characters to a fixed value.
+    /// </remarks>
     public static string GenerateSecret()
-    {
-        const int byteLength = 66; // 64-bits, round up to get a string without padding in base64.
-        var rng = RandomNumberGenerator.Create();
-
-        var secretBytes = new byte[byteLength];
-        rng.GetNonZeroBytes(secretBytes);
-        return Regex.Replace(Convert.ToBase64String(secretBytes), "[^A-Za-z0-9]", "X", RegexOptions.None, TimeSpan.FromMilliseconds(100));
-    }
+        => Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
 }
