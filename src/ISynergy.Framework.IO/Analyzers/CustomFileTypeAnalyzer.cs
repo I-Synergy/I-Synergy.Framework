@@ -35,7 +35,9 @@ public class CustomFileTypeAnalyzer : BaseFileTypeAnalyzer
     {
         ArgumentNullException.ThrowIfNull(filePath);
 
-        // Resolve to an absolute path to prevent directory-traversal payloads (e.g. "../../../etc/passwd").
+        // Resolve to an absolute path to normalize any relative segments.
+        // Note: this does NOT restrict which directories may be read; callers are
+        // responsible for ensuring that only trusted paths are supplied.
         var resolvedPath = Path.GetFullPath(filePath);
 
         if (!File.Exists(resolvedPath))
