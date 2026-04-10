@@ -73,10 +73,10 @@ public class StaticAssetService : IStaticAssetService
         if (string.IsNullOrWhiteSpace(url))
             return false;
 
-        // Reject scheme-relative URLs (e.g. "//evil.example/path" or "\\server\share") which
-        // are not parsed as absolute URIs but are resolved by HttpClient against their own host,
-        // bypassing the application base-address restriction.
-        if (url.StartsWith("//", StringComparison.Ordinal) || url.StartsWith("\\", StringComparison.Ordinal))
+        // Reject scheme-relative URLs (e.g. "//evil.example/path") and UNC-style paths
+        // (e.g. "\\server\share") which are not parsed as absolute URIs but are resolved
+        // by HttpClient against their own host, bypassing the application base-address restriction.
+        if (url.StartsWith("//", StringComparison.Ordinal) || url.StartsWith("\\\\", StringComparison.Ordinal))
             return false;
 
         // Relative URLs are always safe — the HttpClient BaseAddress constrains the target.

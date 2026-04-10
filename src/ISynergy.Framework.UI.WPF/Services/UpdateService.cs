@@ -80,7 +80,7 @@ internal class UpdateService : IUpdateService
             var normalizedPath = Path.GetFullPath(updatePath);
             var tempRoot = Path.GetFullPath(Path.GetTempPath());
 
-            if (!normalizedPath.StartsWith(tempRoot, StringComparison.OrdinalIgnoreCase))
+            if (!normalizedPath.StartsWith(tempRoot.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException("Resolved update path is outside the system temp directory.");
 
             if (File.Exists(normalizedPath))
