@@ -92,7 +92,7 @@ stages:
           displayName: 'Prepare SonarCloud'
           inputs:
             SonarCloud: 'SonarCloud'
-            organization: 'i-synergy'
+            organization: 'i-synergy-github'
             scannerMode: 'dotnet'
             projectKey: 'I-Synergy.Framework'
             projectName: 'I-Synergy.Framework'
