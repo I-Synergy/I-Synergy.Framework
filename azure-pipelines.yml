@@ -88,7 +88,7 @@ stages:
             custom: 'tool'
             arguments: 'install --global I-Synergy.Tools.Azure.SignTool'
 
-        - task: SonarCloudPrepare@3
+        - task: SonarCloudPrepare@4
           displayName: 'Prepare SonarCloud'
           inputs:
             SonarCloud: 'SonarCloud'
@@ -144,10 +144,10 @@ stages:
             artifactName: Output
             publishLocation: 'Container'
 
-        - task: SonarCloudAnalyze@3
+        - task: SonarCloudAnalyze@4
           displayName: 'Run SonarCloud analyzer'
 
-        - task: SonarCloudPublish@3
+        - task: SonarCloudPublish@4
           displayName: 'Publish SonarCloud analysis'
           inputs:
             pollingTimeoutSec: '300'
