@@ -26,6 +26,7 @@ namespace ISynergy.Framework.Mail.SendGrid.Services;
 internal class SendGridMailService : IMailService
 {
     private readonly SendGridMailOptions _sendGridOptions;
+    private readonly SendGridClient _sendGridClient;
     private readonly ILogger _logger;
 
     /// <summary>
@@ -43,6 +44,9 @@ internal class SendGridMailService : IMailService
         Argument.IsNotNullOrEmpty(_sendGridOptions.EmailAddress);
         Argument.IsNotNullOrEmpty(_sendGridOptions.Sender);
         Argument.IsNotNullOrEmpty(_sendGridOptions.Key);
+
+        // Create the client once to avoid exposing the API key in stack traces on every call.
+        _sendGridClient = new SendGridClient(_sendGridOptions.Key);
     }
 
     /// <summary>
@@ -55,8 +59,6 @@ internal class SendGridMailService : IMailService
     {
         try
         {
-            // Plug in your email service here to send an email.
-            var client = new SendGridClient(_sendGridOptions.Key);
             var personalization = new Personalization();
 
             if (emailMessage.EmailAddressesTo.Count > 0)
@@ -86,7 +88,7 @@ internal class SendGridMailService : IMailService
                 Personalizations = [personalization]
             };
 
-            var response = await client.SendEmailAsync(msg).ConfigureAwait(false);
+            var response = await _sendGridClient.SendEmailAsync(msg).ConfigureAwait(false);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {

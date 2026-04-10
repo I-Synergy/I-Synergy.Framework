@@ -22,11 +22,28 @@ public class CustomFileTypeAnalyzer : BaseFileTypeAnalyzer
     /// <summary>
     /// Initializes a <see cref="CustomFileTypeAnalyzer" /> with the definitions at the provided file path.
     /// </summary>
-    /// <param name="filePath">Definitions file path.</param>
+    /// <param name="filePath">Definitions file path. The path must point to an existing file.</param>
     /// <param name="encoding">The encoding.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is <c>null</c>.</exception>
+    /// <exception cref="FileNotFoundException">Thrown when the resolved file path does not exist.</exception>
     public CustomFileTypeAnalyzer(string filePath, Encoding encoding)
-        : base(File.ReadAllText(filePath, encoding))
+        : base(ReadDefinitionsFile(filePath, encoding))
     {
+    }
+
+    private static string ReadDefinitionsFile(string filePath, Encoding encoding)
+    {
+        ArgumentNullException.ThrowIfNull(filePath);
+
+        // Resolve to an absolute path to normalize any relative segments.
+        // Note: this does NOT restrict which directories may be read; callers are
+        // responsible for ensuring that only trusted paths are supplied.
+        var resolvedPath = Path.GetFullPath(filePath);
+
+        if (!File.Exists(resolvedPath))
+            throw new FileNotFoundException("The definitions file was not found at the resolved path.", resolvedPath);
+
+        return File.ReadAllText(resolvedPath, encoding);
     }
 
     /// <summary>

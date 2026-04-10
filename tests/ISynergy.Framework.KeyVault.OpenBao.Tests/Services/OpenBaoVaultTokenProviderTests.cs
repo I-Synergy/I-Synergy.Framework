@@ -9,7 +9,9 @@ public class OpenBaoVaultTokenProviderTests
 {
     private static OpenBaoVaultTokenProvider CreateProvider(string? token = null, string? stateDirectory = null)
     {
+#pragma warning disable CS0618 // Token property is obsolete in production but set here for testing the backward-compatible code path.
         var keyVaultOptions = Microsoft.Extensions.Options.Options.Create(new KeyVaultOptions { Token = token ?? string.Empty });
+#pragma warning restore CS0618
         var vaultStateOptions = Microsoft.Extensions.Options.Options.Create(new VaultStateOptions { StateDirectory = stateDirectory ?? ".secrets/vault-state" });
         return new OpenBaoVaultTokenProvider(keyVaultOptions, vaultStateOptions);
     }

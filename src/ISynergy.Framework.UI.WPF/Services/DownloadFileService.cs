@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Diagnostics;
+using System.IO;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -33,7 +34,16 @@ public class DownloadFileService : IDownloadFileService
     {
         if (await _fileService.SaveFileAsync(folder, filename, file) is { } savedFile)
         {
-            Process.Start(savedFile.FilePath);
+            // Normalize and verify the saved path before opening to prevent path-traversal attacks.
+            var normalizedPath = Path.GetFullPath(savedFile.FilePath);
+
+            if (File.Exists(normalizedPath))
+            {
+                // UseShellExecute = true is required on Windows to open the file with its default
+                // associated application. The path was produced by a SaveFileDialog and has been
+                // normalized, so it is safe to pass to the shell.
+                Process.Start(new ProcessStartInfo(normalizedPath) { UseShellExecute = true });
+            }
         }
     }
 }

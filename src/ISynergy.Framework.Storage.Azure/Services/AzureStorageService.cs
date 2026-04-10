@@ -57,7 +57,11 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        await blobContainer
+            .CreateIfNotExistsAsync(
+                publicAccessType: PublicAccessType.None,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
@@ -94,7 +98,11 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        await blobContainer
+            .CreateIfNotExistsAsync(
+                publicAccessType: PublicAccessType.None,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
         var stream = new MemoryStream();
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
@@ -130,7 +138,11 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        await blobContainer
+            .CreateIfNotExistsAsync(
+                publicAccessType: PublicAccessType.None,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
@@ -170,7 +182,11 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        await blobContainer
+            .CreateIfNotExistsAsync(
+                publicAccessType: PublicAccessType.None,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
