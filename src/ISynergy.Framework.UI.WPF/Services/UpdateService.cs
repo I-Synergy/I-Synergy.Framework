@@ -70,14 +70,23 @@ internal class UpdateService : IUpdateService
         {
             await GetUpdateAsync(_updateOptions.ApplicationId);
 
-            var updatePath = Path.Combine(Path.GetTempPath(), _updateOptions.Filename);
+            // Strip any directory components from the configured filename so that a
+            // rooted or relative path cannot escape the system temp directory.
+            var safeFilename = Path.GetFileName(_updateOptions.Filename);
+            var updatePath = Path.Combine(Path.GetTempPath(), safeFilename);
 
-            if (File.Exists(updatePath))
+            // Verify the resolved path still starts with the temp directory to guard
+            // against edge cases such as UNC paths or symbolic links.
+            var normalizedPath = Path.GetFullPath(updatePath);
+            var tempRoot = Path.GetFullPath(Path.GetTempPath());
+
+            if (!normalizedPath.StartsWith(tempRoot, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Resolved update path is outside the system temp directory.");
+
+            if (File.Exists(normalizedPath))
             {
-                // Normalize the path before executing to prevent directory-traversal attacks.
                 // The update file was downloaded from a configured endpoint and written to the
                 // system temp directory, so using the shell to execute it is expected behavior.
-                var normalizedPath = Path.GetFullPath(updatePath);
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(normalizedPath) { UseShellExecute = true });
             }
             else
