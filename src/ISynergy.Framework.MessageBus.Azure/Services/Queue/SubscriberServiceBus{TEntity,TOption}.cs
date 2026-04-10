@@ -151,10 +151,11 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     private async Task ErrorHandlerAsync(ProcessErrorEventArgs arg)
     {
         _logger.LogError(arg.Exception, "Message handler encountered an exception");
-        _logger.LogDebug($"- Error Source: {arg.ErrorSource}");
-        _logger.LogDebug($"- Fully Qualified Namespace: {arg.FullyQualifiedNamespace}");
-        _logger.LogDebug($"- Entity Path: {arg.EntityPath}");
-        _logger.LogDebug($"- Exception: {arg.Exception.ToString()}");
+        // Log structured fields individually to avoid embedding connection strings in the output.
+        _logger.LogDebug("- Error Source: {ErrorSource}", arg.ErrorSource);
+        _logger.LogDebug("- Entity Path: {EntityPath}", arg.EntityPath);
+        // FullyQualifiedNamespace may contain the SAS connection endpoint; log only the exception type and message.
+        _logger.LogDebug("- Exception: {ExceptionType}: {ExceptionMessage}", arg.Exception.GetType().Name, arg.Exception.Message);
 
         if (_serviceBusProcessor is not null)
             await _serviceBusProcessor.CloseAsync();
