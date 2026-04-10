@@ -26,9 +26,12 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, Prob
 
         logger.LogError(exception, "An unhandled exception occurred while processing the request.");
 
+        // Do not expose the raw exception message to the caller — it may contain sensitive
+        // implementation details (connection strings, file paths, table names, etc.).
+        // The TraceIdentifier allows the caller to correlate with server-side logs.
         var problemDetails = problemDetailsFactory.CreateProblemDetails(httpContext,
             statusCode: StatusCodes.Status500InternalServerError,
-            detail: exception.Message);
+            detail: $"An unexpected error occurred. If the problem persists, contact support and provide trace ID: {httpContext.TraceIdentifier}.");
 
         httpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
         httpContext.Response.StatusCode = (int)problemDetails.Status!;
