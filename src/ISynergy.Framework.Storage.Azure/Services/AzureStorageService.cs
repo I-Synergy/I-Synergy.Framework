@@ -57,7 +57,7 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        blobContainer.CreateIfNotExists(PublicAccessType.None);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
@@ -94,7 +94,7 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        blobContainer.CreateIfNotExists(PublicAccessType.None);
         var stream = new MemoryStream();
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
@@ -130,7 +130,7 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        blobContainer.CreateIfNotExists(PublicAccessType.None);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
@@ -170,7 +170,7 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        blobContainer.CreateIfNotExists(PublicAccessType.None);
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
