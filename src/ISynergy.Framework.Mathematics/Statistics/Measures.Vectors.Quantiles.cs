@@ -5,6 +5,13 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Runtime.CompilerServices;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 /// <summary>
@@ -262,17 +269,17 @@ public static partial class Measures
     public static double[] Quantiles(this double[] values, double[] probabilities, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
     {
         if (values is null)
-            throw new ArgumentNullException("Sequence of observations can't be null.", "values");
+            throw new ArgumentNullException(nameof(values), "Sequence of observations can't be null.");
         if (values.Length == 0)
-            throw new ArgumentException("Sequence of observations can't be empty.", "values");
+            throw new ArgumentException("Sequence of observations can't be empty.", nameof(values));
 
         if (probabilities is null)
-            throw new ArgumentNullException("Sequence of quantile probabilities can't be null.", "probabilities");
+            throw new ArgumentNullException(nameof(probabilities), "Sequence of quantile probabilities can't be null.");
         if (probabilities.Length == 0)
-            throw new ArgumentNullException("Sequence of quantile probabilities can't be empty.", "probabilities");
+            throw new ArgumentNullException(nameof(probabilities), "Sequence of quantile probabilities can't be empty.");
 
         if (probabilities.Any(pv => pv < 0.0 || pv > 1.0))
-            throw new ArgumentException("There is invalid probability in the sequence of quantile probabilities.", "probabilities");
+            throw new ArgumentException("There is invalid probability in the sequence of quantile probabilities.", nameof(probabilities));
 
         double[] result = new double[probabilities.Length];
 
@@ -291,7 +298,7 @@ public static partial class Measures
             case QuantileMethod.Type8: return Q8(values, probabilities, alreadySorted, result);
             case QuantileMethod.Type9: return Q9(values, probabilities, alreadySorted, result);
             default:
-                throw new ArgumentException("Invalid quantile type, must be between 1 and 9 (inclusive)", "type");
+                throw new ArgumentException("Invalid quantile type, must be between 1 and 9 (inclusive)", nameof(type));
         }
     }
     private static double[] Q1(double[] x, double[] p, bool alreadySorted, double[] result)

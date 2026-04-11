@@ -1,6 +1,13 @@
 using ISynergy.Framework.Mathematics.Common;
 using System.Numerics;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Transforms;
 
 /// <summary>
@@ -251,10 +258,10 @@ public static class FourierTransform
 
         // check data size
         if (!Tools.IsPowerOf2(k) || !Tools.IsPowerOf2(n))
-            throw new ArgumentException("The matrix rows and columns must be a power of 2.");
+            throw new ArgumentException("The matrix rows and columns must be a power of 2.", nameof(data));
 
         if (k < minLength || k > maxLength || n < minLength || n > maxLength)
-            throw new ArgumentException("Incorrect data length.");
+            throw new ArgumentException("Incorrect data length.", nameof(data));
 
         // process rows
         var row = new Complex[n];
@@ -367,7 +374,7 @@ public static class FourierTransform
 
         // check data length
         if ((len < minLength) || (len > maxLength) || (!Tools.IsPowerOf2(len)))
-            throw new ArgumentException("Incorrect data length.");
+            throw new ArgumentException("Incorrect data length.", nameof(data));
 
         int[] rBits = GetReversedBits(Tools.Log2(len));
 

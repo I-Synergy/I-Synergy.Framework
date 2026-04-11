@@ -2,6 +2,14 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S907  // goto is required in ported numerical algorithms
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
 /// <summary>
@@ -784,7 +792,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
                     z[i, k] += t * v2;
                 }
 
-            L260:;
+            L260: { }
         }
 
         goto L70; // End QZ step
@@ -1093,7 +1101,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             L505:
             isw = 3 - isw;
 
-        L510:;
+        L510: { }
         }
 
         b[n - 1, 0] = epsb;
@@ -1192,7 +1200,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             L690:
                 isw = 3 - isw;
 
-            L700:;
+            L700: { }
             }
 
             // End real vector
@@ -1309,14 +1317,14 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
                 b[i, na] = t1;
                 b[i, en] = t2;
 
-            L790:;
+            L790: { }
             }
 
         // End complex vector
         L795:
             isw = 3 - isw;
 
-        L800:;
+        L800: { }
         }
 
         // End back substitution. Transform to original coordinate system.
@@ -1375,7 +1383,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
         L945:
             isw = 3 - isw;
 
-        L950:;
+        L950: { }
         }
 
         return 0;

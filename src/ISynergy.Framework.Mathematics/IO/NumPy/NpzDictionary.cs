@@ -1,6 +1,13 @@
 #if !NET35 && !NET40
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 /// <summary>
@@ -39,44 +46,5 @@ public class NpzDictionary : NpzDictionary<Array>
             return NpyFormat.LoadJagged(s);
         return NpyFormat.LoadMatrix(s);
     }
-
-    /*
-    public static bool TryRead(Stream stream, bool jagged, out NpzDictionary dictionary)
-    {
-        long offset = stream.Position;
-        dictionary = null;
-
-        try
-        {
-            dictionary = new NpzDictionary(stream, jagged);
-            return true;
-        }
-        catch
-        {
-            stream.Position = offset;
-        }
-
-        return false;
-    }
-
-    public static bool TryRead<T>(Stream stream, bool jagged, out NpzDictionary<T> dictionary)
-        where T : class, ICloneable, IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
-    {
-        long offset = stream.Position;
-        dictionary = null;
-
-        try
-        {
-            dictionary = new NpzDictionary<T>(stream);
-            return true;
-        }
-        catch
-        {
-            stream.Position = offset;
-        }
-
-        return false;
-    }
-    */
 }
 #endif

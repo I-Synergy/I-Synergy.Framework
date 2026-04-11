@@ -9,6 +9,13 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 /// <summary>
@@ -444,10 +451,10 @@ public static partial class Matrix
             return true;
 
         if (objA is null)
-            throw new ArgumentNullException("objA");
+            throw new ArgumentNullException(nameof(objA));
 
         if (objB is null)
-            throw new ArgumentNullException("objB");
+            throw new ArgumentNullException(nameof(objB));
 
         if (!objA.GetLength().IsEqual(objB.GetLength()))
             return false;
@@ -714,7 +721,7 @@ public static partial class Matrix
         if (inPlace)
         {
             if (rows != cols)
-                throw new ArgumentException("Only square matrices can be transposed in place.", "matrix");
+                throw new ArgumentException("Only square matrices can be transposed in place.", nameof(matrix));
 
 #if DEBUG
             var expected = matrix.Transpose();
@@ -730,7 +737,7 @@ public static partial class Matrix
 
 #if DEBUG
             if (!expected.IsEqual(matrix))
-                throw new Exception();
+                throw new InvalidOperationException("Debug assertion failed: transposed matrix does not match expected.");
 #endif
 
             return matrix;
@@ -804,7 +811,7 @@ public static partial class Matrix
         var arr = array as Array;
 
         if (arr is null)
-            throw new ArgumentException("The given object must inherit from System.Array.", "array");
+            throw new ArgumentException("The given object must inherit from System.Array.", nameof(array));
 
         return transpose(arr, order) as T;
     }
@@ -813,7 +820,7 @@ public static partial class Matrix
     private static Array transpose(Array array, int[] order)
     {
         if (order.Length != array.Rank)
-            throw new ArgumentException("order");
+            throw new ArgumentException("Invalid order specification.", nameof(order));
 
         if (array.Length == 1 || array.Length == 0)
             return array;
@@ -999,7 +1006,7 @@ public static partial class Matrix
     public static bool IsSquare<T>(this T[][] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return matrix.Rows() == matrix.Columns(true);
     }
@@ -1010,7 +1017,7 @@ public static partial class Matrix
     public static bool IsSquare<T>(this T[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return matrix.Rows() == matrix.Columns();
     }
@@ -1019,7 +1026,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsUpperTriangular<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         var zero = default(T);
 
@@ -1039,7 +1046,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsLowerTriangular<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         var zero = default(T);
 
@@ -1176,7 +1183,6 @@ public static partial class Matrix
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = 0; j < i + s; j++)
                 r[i, j] = matrix[i, j];
-        ;
         return r;
     }
 
@@ -1190,7 +1196,6 @@ public static partial class Matrix
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = i + s; j < matrix.Columns(); j++)
                 r[i, j] = matrix[i, j];
-        ;
         return r;
     }
 
@@ -1216,7 +1221,7 @@ public static partial class Matrix
                         result[i, j] = result[j, i] = matrix[i, j];
                 break;
             default:
-                throw new Exception("Matrix type can be either LowerTriangular or UpperTrianguler.");
+                throw new ArgumentException("Matrix type can be either LowerTriangular or UpperTriangular.", nameof(type));
         }
 
         return result;
@@ -1227,7 +1232,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsDiagonal<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         var zero = default(T);
 
@@ -1252,7 +1257,7 @@ public static partial class Matrix
     /// </remarks>
     public static double Trace(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         var rows = matrix.GetLength(0);
 
@@ -1294,7 +1299,7 @@ public static partial class Matrix
     public static int Trace(this int[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         var rows = matrix.GetLength(0);
 
@@ -1315,7 +1320,7 @@ public static partial class Matrix
     public static float Trace(this float[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         var rows = matrix.GetLength(0);
 
@@ -1333,7 +1338,7 @@ public static partial class Matrix
     public static T[] Diagonal<T>(this T[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         var r = new T[matrix.GetLength(0)];
         for (var i = 0; i < r.Length; i++)
@@ -1357,7 +1362,7 @@ public static partial class Matrix
     public static double Determinant(this double[,] matrix, bool symmetric)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         if (symmetric) // Use faster robust Cholesky decomposition
         {
@@ -1389,7 +1394,7 @@ public static partial class Matrix
     public static double LogDeterminant(this double[,] matrix, bool symmetric)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         if (symmetric) // Use faster robust Cholesky decomposition
         {
@@ -1412,7 +1417,7 @@ public static partial class Matrix
     public static double PseudoDeterminant(this double[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return new SingularValueDecomposition(matrix,
             false, false,
@@ -1425,7 +1430,7 @@ public static partial class Matrix
     public static double PseudoDeterminant(this double[][] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return new JaggedSingularValueDecomposition(matrix,
             false, false,
@@ -1438,7 +1443,7 @@ public static partial class Matrix
     public static double LogPseudoDeterminant(this double[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return new SingularValueDecomposition(matrix,
             false, false,
@@ -1451,7 +1456,7 @@ public static partial class Matrix
     public static double LogPseudoDeterminant(this double[][] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return new JaggedSingularValueDecomposition(matrix,
             false, false,
@@ -1472,7 +1477,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsSingular(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
         return new SingularValueDecomposition(matrix).IsSingular;
     }
 
@@ -1481,7 +1486,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsPositiveDefinite(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         return new CholeskyDecomposition(matrix).IsPositiveDefinite;
     }
@@ -1596,7 +1601,7 @@ public static partial class Matrix
     public static double[,] Round(this double[,] matrix, int decimals = 0)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         var rows = matrix.GetLength(0);
         var cols = matrix.GetLength(1);
@@ -1616,7 +1621,7 @@ public static partial class Matrix
     public static double[] Round(double[] vector, int decimals = 0)
     {
         if (vector is null)
-            throw new ArgumentNullException("vector");
+            throw new ArgumentNullException(nameof(vector));
 
         var result = new double[vector.Length];
         for (var i = 0; i < result.Length; i++)

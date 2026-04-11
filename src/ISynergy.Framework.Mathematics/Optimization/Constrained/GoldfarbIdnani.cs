@@ -6,6 +6,14 @@ using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics;
 
+#pragma warning disable S907  // goto is required in ported numerical algorithms
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained;
 
 /// <summary>

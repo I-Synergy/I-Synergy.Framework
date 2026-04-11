@@ -5,6 +5,13 @@ using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 /// <summary>
@@ -981,7 +988,7 @@ public static partial class Matrix
     public static Array Trim(this Array array)
     {
         if (array.IsMatrix())
-            throw new Exception();
+            throw new InvalidOperationException("Matrix arrays cannot be trimmed; only jagged arrays are supported.");
 
         var list = new List<object>();
         for (var i = 0; i < array.Length; i++)
