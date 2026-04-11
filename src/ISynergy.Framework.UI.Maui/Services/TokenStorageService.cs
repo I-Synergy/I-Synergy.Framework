@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services;
+using System.Globalization;
 
 #if WINDOWS
 using Windows.Security.Credentials;
@@ -48,7 +49,7 @@ public class TokenStorageService : ITokenStorageService
         if (string.IsNullOrEmpty(expiryString))
             return null;
 
-        if (DateTimeOffset.TryParse(expiryString, out var expiry))
+        if (DateTimeOffset.TryParse(expiryString, CultureInfo.InvariantCulture, DateTimeStyles.None, out var expiry))
             return expiry;
 
         return null;
