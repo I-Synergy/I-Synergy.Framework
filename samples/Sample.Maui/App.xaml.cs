@@ -134,7 +134,7 @@ public partial class App : Application
     /// Called when authentication succeeds (user has logged in).
     /// The profile has already been set in the context by the AuthenticationService.
     /// </summary>
-    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e)
+    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e) // NOSONAR - parameter required by event handler signature
     {
         try
         {

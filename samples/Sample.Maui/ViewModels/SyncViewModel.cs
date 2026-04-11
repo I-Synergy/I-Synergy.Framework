@@ -193,23 +193,19 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task ProvisionClientAsync()
     {
-        if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive)
+        if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive &&
+            _commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
         {
-            if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
-            {
-                var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
-                await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
-            }
+            var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
+            await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
         }
     }
 
     private async Task DeprovisionClientAsync()
     {
-        if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive)
-        {
-            if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
-                await agent.LocalOrchestrator.DeprovisionAsync();
-        }
+        if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive &&
+            _commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
+            await agent.LocalOrchestrator.DeprovisionAsync();
     }
 
     protected override void Dispose(bool disposing)
