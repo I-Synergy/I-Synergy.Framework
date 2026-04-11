@@ -329,40 +329,38 @@ public static partial class NpyFormat
     [RequiresDynamicCode("Calls Matrix.SetValue which requires dynamic code generation.")]
     private static Array readStringMatrix(BinaryReader reader, Array matrix, int bytes, Type type, int[] shape)
     {
+        if (bytes <= 0)
+            throw new InvalidDataException($"Invalid NumPy string element size {bytes}: must be greater than zero.");
+
         var buffer = new byte[bytes];
 
-        unsafe
+        foreach (var p in matrix.GetIndices(true))
         {
-            fixed (byte* b = buffer)
-            {
-                foreach (var p in matrix.GetIndices(true))
-                {
-                    reader.Read(buffer, 0, bytes);
-                    if (buffer[0] == byte.MinValue)
-                    {
-                        var isNull = true;
-                        for (var i = 1; i < buffer.Length; i++)
-                            if (buffer[i] != byte.MaxValue)
-                            {
-                                isNull = false;
-                                break;
-                            }
+            reader.Read(buffer, 0, bytes);
 
-                        if (isNull)
-                        {
-                            matrix.SetValue(null, true, p);
-                            continue;
-                        }
+            if (buffer[0] == byte.MinValue)
+            {
+                var isNull = true;
+                for (var i = 1; i < buffer.Length; i++)
+                    if (buffer[i] != byte.MaxValue)
+                    {
+                        isNull = false;
+                        break;
                     }
 
-#if NETSTANDARD1_4
-                    String s = new String((char*)b);
-#else
-                    var s = new string((sbyte*)b);
-#endif
-                    matrix.SetValue(s, true, p);
+                if (isNull)
+                {
+                    matrix.SetValue(null, true, p);
+                    continue;
                 }
             }
+
+            // Find the null terminator within the buffer bounds so we never read past it.
+            // Using Encoding.ASCII.GetString is safe and avoids a null-terminated pointer read.
+            var nullIdx = Array.IndexOf(buffer, (byte)0);
+            var strLen = nullIdx >= 0 ? nullIdx : bytes;
+            var s = System.Text.Encoding.ASCII.GetString(buffer, 0, strLen);
+            matrix.SetValue(s, true, p);
         }
 
         return matrix;
