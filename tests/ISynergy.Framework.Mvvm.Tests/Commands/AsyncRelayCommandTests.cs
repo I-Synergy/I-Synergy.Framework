@@ -264,6 +264,7 @@ public class AsyncRelayCommandTests
 
         // Act & Assert - should not throw
         await command.ExecuteAsync(null);
+        Assert.IsFalse(command.IsRunning);
     }
 
     [TestMethod]
