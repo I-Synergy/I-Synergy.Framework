@@ -103,6 +103,10 @@ public class MatNode : IEnumerable<MatNode>
 
         if (nameTag.IsSmallFormat)
         {
+            // SmallData_Value is a fixed byte[4] buffer. Guard against malformed MAT data
+            // that could cause the string constructor to read past the 4-byte boundary.
+            if (nameTag.SmallData_NumberOfBytes < 0 || nameTag.SmallData_NumberOfBytes > 4)
+                throw new InvalidDataException($"Malformed MAT file: name small-data length {nameTag.SmallData_NumberOfBytes} exceeds the 4-byte fixed buffer at position {readBytes}.");
             Name = new string((sbyte*)nameTag.SmallData_Value, 0, nameTag.SmallData_NumberOfBytes);
         }
         else
@@ -246,6 +250,10 @@ public class MatNode : IEnumerable<MatNode>
                 matType = contentsTag.SmallData_Type;
                 if (matType == MatDataType.miUTF8)
                 {
+                    // SmallData_Value is a fixed byte[4] buffer. Guard against malformed MAT data
+                    // that could cause the string constructor to read past the 4-byte boundary.
+                    if (contentsTag.SmallData_NumberOfBytes < 0 || contentsTag.SmallData_NumberOfBytes > 4)
+                        throw new InvalidDataException($"Malformed MAT file: content small-data length {contentsTag.SmallData_NumberOfBytes} exceeds the 4-byte fixed buffer at position {readBytes}.");
                     value = new string((sbyte*)contentsTag.SmallData_Value, 0,
                         contentsTag.SmallData_NumberOfBytes);
                 }
