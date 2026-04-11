@@ -128,6 +128,9 @@ public static partial class Matrix
             if (la[i] != lb[i])
                 return false;
 
+        if (a.Length == 0)
+            return true;
+
         var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
         var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
         if (rtol > 0)
@@ -626,6 +629,9 @@ public static partial class Matrix
     public static bool IsEqual(this Double[,] a, Double b, Double atol = 0, Double rtol = 0)
     {
         if (a is null)
+            return true;
+
+        if (a.Length == 0)
             return true;
 
         var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);

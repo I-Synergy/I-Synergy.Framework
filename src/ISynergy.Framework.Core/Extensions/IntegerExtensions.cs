@@ -28,6 +28,8 @@ public static class IntegerExtensions
     /// <returns>System.String.</returns>
     public static string GenerateAlphaNumericKey(this int _self)
     {
+        if (_self <= 0)
+            return string.Empty;
         const string rawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
         var result = new StringBuilder(_self);
         for (var i = 0; i < _self; i++)
@@ -42,6 +44,8 @@ public static class IntegerExtensions
     /// <returns>System.String.</returns>
     public static string GenerateNumericKey(this int _self)
     {
+        if (_self <= 0)
+            return string.Empty;
         const string rawChars = "0123456789";
         var result = new StringBuilder(_self);
         for (var i = 0; i < _self; i++)

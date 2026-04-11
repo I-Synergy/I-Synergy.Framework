@@ -136,6 +136,9 @@ public static partial class Elementwise
     {
         bool[,] r = MatrixCreateAs<Double, bool>(a);
 
+        if (a.Length == 0)
+            return r;
+
         var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
         var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
         var spanR = MemoryMarshal.CreateSpan(ref r[0, 0], r.Length);
@@ -764,6 +767,9 @@ public static partial class Elementwise
     public static bool[,] Equals(Double[,] a, Double b, Double atol = 0, Double rtol = 0)
     {
         bool[,] r = MatrixCreateAs<Double, bool>(a);
+
+        if (a.Length == 0)
+            return r;
 
         var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
         var spanR = MemoryMarshal.CreateSpan(ref r[0, 0], r.Length);
