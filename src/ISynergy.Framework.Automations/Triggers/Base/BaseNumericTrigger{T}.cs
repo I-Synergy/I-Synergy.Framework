@@ -64,16 +64,5 @@ public abstract class BaseNumericTrigger<T> : BaseTrigger, ITrigger
         Func<T, Task> callbackAsync)
         : this(automationId, below, above, TimeSpan.Zero)
     {
-        //if (function.Invoke() is (IObservableClass Entity, IProperty<T> Property) result)
-        //{
-        //    result.Property.BroadCastChanges = true;
-
-        //    MessageService.Default.Register<PropertyChangedMessage<T>>(this, m =>
-        //    {
-        //        var comparer = Comparer<T>.Default;
-        //        if (comparer.Compare(m.NewValue, below) < 0 && comparer.Compare(m.NewValue, above) > 0)
-        //            callbackAsync.Invoke(m.NewValue).Wait();
-        //    });
-        //}
     }
 }

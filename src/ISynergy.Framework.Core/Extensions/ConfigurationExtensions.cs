@@ -73,12 +73,6 @@ public static class ConfigurationExtensions
 
         try
         {
-            // Use BinderOptions to ignore errors
-            var options = new BinderOptions
-            {
-                ErrorOnUnknownConfiguration = false
-            };
-
             configuration.Bind(instance, options => options.ErrorOnUnknownConfiguration = false);
 
             // Register change callback and store the token for disposal

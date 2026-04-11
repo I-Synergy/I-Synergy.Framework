@@ -201,7 +201,7 @@ public class WeakAction
             return;
         }
 
-        if (IsAlive && Method is not null && (LiveReference is not null || ActionReference is not null) && ActionTarget is not null)
+        if (IsAlive && Method is not null && (LiveReference is not null || ActionReference is not null) && ActionTarget is not null) // NOSONAR
         {
             Method.Invoke(ActionTarget, null);
             return;

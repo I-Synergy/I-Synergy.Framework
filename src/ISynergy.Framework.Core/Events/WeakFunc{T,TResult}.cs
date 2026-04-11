@@ -155,7 +155,6 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
     /// <returns>The result of the operation.</returns>
     public object? ExecuteWithObject(T parameter)
     {
-        //var parameterCasted = parameter is T typedParameter ? typedParameter : default!;
         return Execute(parameter);
     }
 

@@ -145,7 +145,7 @@ public abstract class MercatorProjection : IEquatable<MercatorProjection>
             throw new ArgumentNullException();
 
         if (!(point1.Projection.Equals(this) && point2.Projection.Equals(this)))
-            throw new ArgumentException(Properties.Resources.POINT_NOT_OWNED);
+            throw new ArgumentException(Properties.Resources.POINT_NOT_OWNED, nameof(point1));
 
         return point1.DistanceTo(point2);
     }

@@ -128,7 +128,7 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
     public override double DistanceTo(EuclidianCoordinate other)
     {
         if (!(other is UtmCoordinate obj) || !Grid.Equals(obj.Grid))
-            throw new ArgumentException();
+            throw new ArgumentException(null, nameof(other));
         return base.DistanceTo(other);
     }
 

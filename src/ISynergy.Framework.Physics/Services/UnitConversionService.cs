@@ -57,20 +57,10 @@ public partial class UnitConversionService : IUnitConversionService
         // if both units are non-SI units and have an intersecting SI unit
         if (source is Unit s2 && target is Unit t2 && t2.UnitTypes.Intersect(s2.UnitTypes).Any())
         {
-            //Get SI unit of source
-            var sourceSI = Units
-                .Where(q => q.UnitTypes.Intersect(s2.UnitTypes).Any() && q is SIUnit)
-                .Single();
-
-            //Get SI unit of target
-            var targetSI = Units
-                .Where(q => q.UnitTypes.Intersect(t2.UnitTypes).Any() && q is SIUnit)
-                .Single();
-
             return t2.FormulaConvertBack(s2.FormulaConvert(value));
         }
 
-        throw new Exception("Conversion exception occured.");
+        throw new InvalidOperationException("Conversion exception occured.");
     }
 
     /// <summary>

@@ -160,7 +160,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// <param name="projection">The projection to use</param>
     /// <param name="coord">Latitude/Longitude of the location</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public UtmGrid(UtmProjection projection, GlobalCoordinates coord) : this(projection)
+    public UtmGrid(UtmProjection projection, GlobalCoordinates coord) : this(projection) // NOSONAR
     {
         if (coord.Latitude < projection.MinLatitude || coord.Latitude > projection.MaxLatitude)
             throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_LATITUDE);
@@ -628,12 +628,12 @@ public struct UtmGrid : IEquatable<UtmGrid>
         {
             if (Band == 'U' && _zone == 31 ||
                 Band == 'W' && (_zone == 32 || _zone == 34 || _zone == 36))
-                throw new Exception(Properties.Resources.NO_UNIQUE_NORTH_NEIGHBOR);
+                throw new InvalidOperationException(Properties.Resources.NO_UNIQUE_NORTH_NEIGHBOR);
 
             var newBand = _band + 1;
 
             if (newBand > MaxBand)
-                throw new Exception(Properties.Resources.NO_NORTH_NEIGHBOR);
+                throw new InvalidOperationException(Properties.Resources.NO_NORTH_NEIGHBOR);
 
             return new UtmGrid(Projection, _zone, newBand);
         }
@@ -649,12 +649,12 @@ public struct UtmGrid : IEquatable<UtmGrid>
         get
         {
             if (Band == 'W' && _zone == 31 || Band == 'X' && _zone >= 31 && _zone <= 37)
-                throw new Exception(Properties.Resources.NO_UNIQUE_SOUTH_NEIGHBOR);
+                throw new InvalidOperationException(Properties.Resources.NO_UNIQUE_SOUTH_NEIGHBOR);
 
             var newBand = _band - 1;
 
             if (newBand < MinBand)
-                throw new Exception(Properties.Resources.NO_SOUTH_NEIGHBOR);
+                throw new InvalidOperationException(Properties.Resources.NO_SOUTH_NEIGHBOR);
 
             return new UtmGrid(Projection, _zone, newBand);
         }

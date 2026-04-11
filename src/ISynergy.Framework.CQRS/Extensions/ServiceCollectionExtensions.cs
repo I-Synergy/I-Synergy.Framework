@@ -63,7 +63,6 @@ public static class ServiceCollectionExtensions
         foreach (var descriptor in serviceDescriptors)
         {
             var serviceType = descriptor.ServiceType;
-            var implementationType = descriptor.ImplementationType;
 
             if (serviceType.IsGenericType)
             {

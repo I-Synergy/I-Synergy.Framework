@@ -98,7 +98,7 @@ public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPos
     {
         var hash = Coordinates.GetHashCode();
 
-        if (Elevation != 0) hash *= (int)Elevation;
+        if (Elevation != 0) hash *= (int)Elevation; // NOSONAR
 
         return hash;
     }
