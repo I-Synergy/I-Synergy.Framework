@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using System.Globalization;
-//using Windows.UI;
 
 namespace ISynergy.Framework.UI.Helpers;
 
@@ -22,8 +21,6 @@ public static class ColorHelper
 
         if (hc.Length != 6)
         {
-            // you can choose whether to throw an exception
-            //throw new ArgumentException("hexColor is not exactly 6 digits.");
             return Colors.Transparent;
         }
 
@@ -46,8 +43,6 @@ public static class ColorHelper
         }
         catch
         {
-            // you can choose whether to throw an exception
-            //throw new ArgumentException("Conversion failed.");
             return Colors.Transparent;
         }
         return color;

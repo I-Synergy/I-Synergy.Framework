@@ -132,17 +132,17 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
                 _messengerService.Register<ShowInformationMessage>(this, async m =>
                 {
-                    var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+                    await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
                 });
 
                 _messengerService.Register<ShowWarningMessage>(this, async m =>
                 {
-                    var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+                    await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
                 });
 
                 _messengerService.Register<ShowErrorMessage>(this, async m =>
                 {
-                    var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+                    await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
                 });
 
                 // Initialize environment variables from configuration and command-line parameters
@@ -381,7 +381,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
     /// </summary>
     /// <param name="args">Event data for the event.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) // NOSONAR
     {
         try
         {

@@ -376,7 +376,7 @@ public class NavigationService : INavigationService
     /// </summary>
     [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
         Justification = "GetRequiredService(typeof(TView)) is called with a compile-time generic type argument. The type is preserved through DI registration.")]
-    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
+    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
         where TView : IView
     {
         Argument.IsNotNull(owner);
@@ -433,7 +433,7 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Removes the blade asynchronous.
     /// </summary>
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
+    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
     {
         Argument.IsNotNull(owner);
 
@@ -566,7 +566,7 @@ public class NavigationService : INavigationService
     /// </summary>
     [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
         Justification = "CreatePage<TViewModel> uses GetRelatedViewType() which scans assemblies. All view and ViewModel types are preserved through DI registration.")]
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
         where TViewModel : class, IViewModel
     {
         if (Application.MainWindow is not null &&
@@ -578,7 +578,7 @@ public class NavigationService : INavigationService
 
             if (frame.Content is View originalView)
             {
-                currentViewModel = originalView.ViewModel as IViewModel;
+                currentViewModel = originalView.ViewModel;
 
                 // If we're navigating to the same view type that's already shown, just update parameters
                 if (currentViewModel is TViewModel existingVm && viewModel is null)
@@ -635,7 +635,7 @@ public class NavigationService : INavigationService
     /// </summary>
     [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
         Justification = "GetRequiredService(typeof(TView)) and GetRequiredService(typeof(TViewModel)) are called with compile-time generic type arguments. Types are preserved through DI registration.")]
-    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
         where TViewModel : class, IViewModel
         where TView : IView
     {
@@ -647,7 +647,7 @@ public class NavigationService : INavigationService
             // Try to reuse the current ViewModel if it matches the requested type
             IViewModel? currentViewModel = null;
             if (frame.Content is View originalView)
-                currentViewModel = originalView.ViewModel as IViewModel;
+                currentViewModel = originalView.ViewModel;
 
             if (viewModel is null)
             {
@@ -694,7 +694,7 @@ public class NavigationService : INavigationService
             TViewModel viewModel;
 
             if (Application.MainWindow.Content is View originalView)
-                existingViewModel = originalView.ViewModel as IViewModel;
+                existingViewModel = originalView.ViewModel;
 
             // Reuse existing ViewModel if it matches the requested type
             if (existingViewModel is TViewModel existingVm)

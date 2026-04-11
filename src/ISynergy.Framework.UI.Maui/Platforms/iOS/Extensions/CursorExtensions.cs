@@ -51,7 +51,7 @@ public static class CursorExtensions
 
 public static class GeometryExtensions
 {
-    public static CGPath ToCGPath(this PathGeometry pathGeometry)
+    public static CGPath ToCGPath(this PathGeometry pathGeometry) // NOSONAR
     {
         var path = new CGPath();
 

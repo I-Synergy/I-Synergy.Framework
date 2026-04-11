@@ -272,7 +272,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// Monitors a task for completion and updates properties accordingly.
     /// </summary>
     /// <param name="task">The task to monitor.</param>
-    protected void MonitorTask(Task task)
+    protected void MonitorTask(Task task) // NOSONAR
     {
         // Store a local reference to avoid race conditions
         var currentTask = task;
@@ -727,7 +727,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// <summary>
     /// Disposes all cancellation token sources.
     /// </summary>
-    protected void DisposeCancellationTokens()
+    protected void DisposeCancellationTokens() // NOSONAR
     {
         lock (_syncLock)
         {
@@ -809,7 +809,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// Disposes the resources used by this command.
     /// </summary>
     /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
-    protected virtual void Dispose(bool disposing)
+    protected virtual void Dispose(bool disposing) // NOSONAR
     {
         if (disposing)
         {

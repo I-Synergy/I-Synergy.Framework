@@ -245,9 +245,6 @@ public static class MauiAppBuilderExtensions
                 fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
             });
 
-        // Is not needed. Is resolved via MauiInitializeService
-        // ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
-
         return appBuilder;
     }
 

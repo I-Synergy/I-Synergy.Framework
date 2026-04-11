@@ -215,7 +215,7 @@ public partial class BladeView : UserControl, IDisposable
 
     private void UnregisterBlade(IView view)
     {
-        if (_bladeStates.TryGetValue(view, out var state))
+        if (_bladeStates.ContainsKey(view))
         {
             _bladeStates.Remove(view);
         }

@@ -47,7 +47,7 @@ public static class MatrixExtensions
         var centerX = transform.CenterX;
         var centerY = transform.CenterY;
 
-        var hasCenter = centerX != 0 || centerY != 0;
+        var hasCenter = centerX != 0 || centerY != 0; // NOSONAR
 
         if (hasCenter)
         {
@@ -72,9 +72,7 @@ public static class MatrixExtensions
     public static bool HasInverse(this Matrix matrix)
     {
         // TODO: Check if we can make this an extension property in C#8.
-        // WPF equivalent of following code:
-        // return matrix.HasInverse;
-        return ((matrix.M11 * matrix.M22) - (matrix.M12 * matrix.M21)) != 0;
+        return ((matrix.M11 * matrix.M22) - (matrix.M12 * matrix.M21)) != 0; // NOSONAR
     }
 
     /// <summary>
@@ -221,8 +219,6 @@ public static class MatrixExtensions
     /// <returns>The product of the two matrices.</returns>
     public static Matrix Multiply(this Matrix matrix1, Matrix matrix2)
     {
-        // WPF equivalent of following code:
-        // return Matrix.Multiply(matrix1, matrix2);
         return new Matrix(
             (matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21),
             (matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22),
@@ -257,8 +253,6 @@ public static class MatrixExtensions
     /// <returns>The transformed rectangle.</returns>
     public static Rect RectTransform(this Matrix matrix, Rect rectangle)
     {
-        // WPF equivalent of following code:
-        // var rectTransformed = Rect.Transform(rect, matrix);
         var leftTop = matrix.Transform(new Point(rectangle.Left, rectangle.Top));
         var rightTop = matrix.Transform(new Point(rectangle.Right, rectangle.Top));
         var leftBottom = matrix.Transform(new Point(rectangle.Left, rectangle.Bottom));

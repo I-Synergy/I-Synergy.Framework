@@ -31,7 +31,7 @@ public static class DependencyObjectExtensions
             var foundChild = child.FindDescendant<T>();
 
             if (foundChild is not null)
-                return (T)foundChild;
+                return foundChild;
         }
 
         return null;
@@ -50,8 +50,7 @@ public static class DependencyObjectExtensions
             var tmpFoundChild = GetDescendant<T>(childName, child);
             if (tmpFoundChild is not null)
             {
-                var foundChild = tmpFoundChild;
-                return foundChild;
+                return tmpFoundChild;
             }
         }
 

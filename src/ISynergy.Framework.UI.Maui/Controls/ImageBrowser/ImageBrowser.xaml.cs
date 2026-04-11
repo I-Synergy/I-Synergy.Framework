@@ -91,13 +91,11 @@ public partial class ImageBrowser : ContentView
                 DateTime = System.DateTime.Now;
             }
         }
-        ;
     }
 
     private async void BrowseButton_Clicked(object? sender, EventArgs e)
     {
-        if (ServiceLocator.Default.GetRequiredService<ILanguageService>() is { } languageService &&
-            ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
+        if (ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
         {
             var result = await fileService.BrowseFileAsync(FileTypeConstants.FileTypesImages);
 
@@ -109,6 +107,5 @@ public partial class ImageBrowser : ContentView
                 DateTime = System.DateTime.Now;
             }
         }
-        ;
     }
 }

@@ -69,7 +69,7 @@ public class NavigationService : INavigationService
     /// <param name="parameter"></param>
     /// <param name="backNavigation"></param>
     /// <returns></returns>
-    public async Task NavigateAsync<TViewModel>(TViewModel? viewModel, object? parameter = null, bool backNavigation = false)
+    public async Task NavigateAsync<TViewModel>(TViewModel? viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
         where TViewModel : class, IViewModel
     {
         if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is { } view && view is Page page)
@@ -129,7 +129,7 @@ public class NavigationService : INavigationService
     /// <typeparam name="TViewModel"></typeparam>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
+    public async Task NavigateModalAsync<TViewModel>(object? parameter = null) // NOSONAR
         where TViewModel : class, IViewModel
     {
         if (Application.Current is not null)

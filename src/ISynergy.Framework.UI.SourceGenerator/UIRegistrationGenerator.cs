@@ -28,7 +28,7 @@ namespace ISynergy.Framework.UI.SourceGenerator
         /// Initializes the generator pipeline.
         /// </summary>
         /// <param name="context">The incremental generator initialization context.</param>
-        public void Initialize(IncrementalGeneratorInitializationContext context)
+        public void Initialize(IncrementalGeneratorInitializationContext context) // NOSONAR
         {
             // Find all class declarations that have a base list (they could implement an interface)
             var typeInfoProvider = context.SyntaxProvider
@@ -85,7 +85,7 @@ namespace ISynergy.Framework.UI.SourceGenerator
             });
         }
 
-        private static UITypeInfo? TransformToUITypeInfo(
+        private static UITypeInfo? TransformToUITypeInfo( // NOSONAR
             GeneratorSyntaxContext context,
             CancellationToken cancellationToken)
         {

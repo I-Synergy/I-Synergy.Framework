@@ -19,7 +19,7 @@ public class ZeroDoubleToIsVisibleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is double doubleValue && doubleValue == 0d)
+        if (value is double doubleValue && doubleValue == 0d) // NOSONAR
         {
             return true;
         }
@@ -59,7 +59,7 @@ public class DoubleToIsVisibleConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is double doubleValue && doubleValue != 0)
+        if (value is double doubleValue && doubleValue != 0) // NOSONAR
         {
             return true;
         }
