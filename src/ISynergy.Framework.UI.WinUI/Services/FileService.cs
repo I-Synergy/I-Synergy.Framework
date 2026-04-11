@@ -33,7 +33,7 @@ public class FileService : IFileService<FileResult>
         ILogger<FileService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"FileService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("FileService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _dialogService = dialogService;
         _languageService = languageService;
