@@ -106,6 +106,7 @@ stages:
               /v:"$(VersionPackage)"
               /d:sonar.token="$(SonarToken)"
               /d:sonar.host.url="https://sonarcloud.io"
+              /d:sonar.cs.opencover.reportsPaths="$(Build.SourcesDirectory)/TestResults/**/coverage.opencover.xml"
 
         - task: MSBuild@1
           displayName: 'Build I-Synergy Framework'
@@ -132,7 +133,7 @@ stages:
           inputs:
             command: test
             projects: 'I-Synergy.Framework.slnx'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --results-directory "$(Build.SourcesDirectory)/TestResults" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
 
         - task: CopyFiles@2
           displayName: 'Copy NuGet packages'
