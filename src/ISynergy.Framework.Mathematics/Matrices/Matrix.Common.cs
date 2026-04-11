@@ -1272,6 +1272,9 @@ public static partial class Matrix
 
         var length = matrixA.Length;
 
+        if (length == 0)
+            return 0.0;
+
         var spanA = MemoryMarshal.CreateSpan(ref matrixA[0, 0], length);
         var spanB = MemoryMarshal.CreateSpan(ref matrixB[0, 0], length);
         var trace = 0.0;

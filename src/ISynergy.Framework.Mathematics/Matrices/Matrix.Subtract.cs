@@ -318,6 +318,8 @@ public static partial class Elementwise
     public static double[,] Subtract(this double[,] a, double[,] b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
+        if (a.Length == 0)
+            return result;
         var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
         var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
@@ -377,6 +379,8 @@ public static partial class Elementwise
     public static double[,] Subtract(this double a, double[,] b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
+        if (b.Length == 0)
+            return result;
         var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
         for (var j = 0; j < spanB.Length; j++)
@@ -397,6 +401,8 @@ public static partial class Elementwise
     public static double[,] Subtract(this double[,] a, double b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
+        if (a.Length == 0)
+            return result;
         var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
         for (var i = 0; i < spanA.Length; i++)

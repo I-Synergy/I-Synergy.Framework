@@ -350,9 +350,11 @@ public static partial class Matrix
     /// 
     public static double[,] SignedPow(this double[,] value, double y, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (Math.Sign(v) * Math.Pow(Math.Abs(v), y));
@@ -413,9 +415,11 @@ public static partial class Matrix
     /// 
     public static double[,] Pow(this double[,] value, double y, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (Math.Pow(Math.Abs(v), y));
@@ -475,9 +479,11 @@ public static partial class Matrix
     /// 
     public static double[,] Exp(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Exp((double)v));
@@ -535,9 +541,11 @@ public static partial class Matrix
     /// 
     public static double[,] Log(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Log((double)v));
@@ -595,9 +603,11 @@ public static partial class Matrix
     /// 
     public static double[,] Sign(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Sign(v));
@@ -655,9 +665,11 @@ public static partial class Matrix
     /// 
     public static double[,] Abs(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Abs(v));
@@ -715,9 +727,11 @@ public static partial class Matrix
     /// 
     public static double[,] Sqrt(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Sqrt((double)v));
@@ -775,9 +789,11 @@ public static partial class Matrix
     /// 
     public static double[,] SignSqrt(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
@@ -835,9 +851,11 @@ public static partial class Matrix
     /// 
     public static double[,] Floor(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Floor((double)v));
@@ -895,9 +913,11 @@ public static partial class Matrix
     /// 
     public static double[,] Ceiling(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Ceiling((double)v));
@@ -955,9 +975,11 @@ public static partial class Matrix
     /// 
     public static double[,] Round(this double[,] value, double[,] result)
     {
+        if (value.Length == 0)
+            return result;
         var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanR.Length; j++)
+        for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Round((double)v));
