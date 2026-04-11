@@ -32,8 +32,8 @@ public class UtmGridTests
     public void TestConstructor1()
     {
         UtmGrid g = new(utm, 1, 'C');
-        Assert.AreEqual(g.LowerLeftCorner.Longitude, -180);
-        Assert.AreEqual(g.LowerLeftCorner.Latitude, utm.MinLatitude);
+        Assert.AreEqual(-180, g.LowerLeftCorner.Longitude);
+        Assert.AreEqual(utm.MinLatitude, g.LowerLeftCorner.Latitude);
         Assert.AreEqual(6.0, g.Width);
         ValidateCorners(g);
     }
@@ -45,8 +45,8 @@ public class UtmGridTests
     public void TestConstructor2()
     {
         UtmGrid g = new(utm, 1, 'X');
-        Assert.AreEqual(g.LowerLeftCorner.Longitude, -180);
-        Assert.AreEqual(g.LowerLeftCorner.Latitude, utm.MaxLatitude - g.Height);
+        Assert.AreEqual(-180, g.LowerLeftCorner.Longitude);
+        Assert.AreEqual(utm.MaxLatitude - g.Height, g.LowerLeftCorner.Latitude);
         Assert.AreEqual(12.0, g.Height);
         Assert.AreEqual(6.0, g.Width);
         ValidateCorners(g);

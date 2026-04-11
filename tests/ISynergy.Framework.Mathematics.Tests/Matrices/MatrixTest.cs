@@ -209,7 +209,7 @@ public partial class MatrixTest
 
         actual = Vector.Interval(0.0, 0.0, 5);
         Assert.IsTrue(actual.All(x => x == 0));
-        Assert.AreEqual(actual.Length, 5);
+        Assert.AreEqual(5, actual.Length);
     }
 
     [TestMethod]
@@ -226,7 +226,7 @@ public partial class MatrixTest
         actual = Vector.Interval(0.0, 0.0, 5.0);
 #pragma warning restore CS0618 // Type or member is obsolete
         Assert.AreEqual(0, actual[0]);
-        Assert.AreEqual(actual.Length, 1);
+        Assert.AreEqual(1, actual.Length);
     }
 
     [TestMethod]
@@ -3620,7 +3620,7 @@ public partial class MatrixTest
     {
         double[,] v = Matrix.Ones(2, 0);
         int[][] idx = v.GetIndices().ToArray();
-        Assert.AreEqual(idx.Length, 0);
+        Assert.AreEqual(0, idx.Length);
     }
 
     [TestMethod]
@@ -3628,7 +3628,7 @@ public partial class MatrixTest
     {
         double[,] v = Matrix.Ones(0, 3);
         int[][] idx = v.GetIndices().ToArray();
-        Assert.AreEqual(idx.Length, 0);
+        Assert.AreEqual(0, idx.Length);
     }
 
     [TestMethod]
@@ -3636,7 +3636,7 @@ public partial class MatrixTest
     {
         double[][] v = Jagged.Ones(0, 3);
         int[][] idx = v.GetIndices().ToJagged();
-        Assert.AreEqual(idx.Length, 0);
+        Assert.AreEqual(0, idx.Length);
     }
 
     [TestMethod]

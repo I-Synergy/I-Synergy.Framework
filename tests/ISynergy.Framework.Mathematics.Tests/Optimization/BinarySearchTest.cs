@@ -118,16 +118,16 @@ public class BinarySearchTest
         int a7 = search.Find(elements.Min() - 1);
         int a8 = search.Find(elements.Min());
 
-        Assert.AreEqual(a1, 4);
-        Assert.AreEqual(a2, 5);
+        Assert.AreEqual(4, a1);
+        Assert.AreEqual(5, a2);
 
-        Assert.AreEqual(a3, 8);
-        Assert.AreEqual(a4, 8);
-        Assert.AreEqual(a5, 8);
+        Assert.AreEqual(8, a3);
+        Assert.AreEqual(8, a4);
+        Assert.AreEqual(8, a5);
 
-        Assert.AreEqual(a6, 1);
-        Assert.AreEqual(a7, 0);
-        Assert.AreEqual(a8, 0);
+        Assert.AreEqual(1, a6);
+        Assert.AreEqual(0, a7);
+        Assert.AreEqual(0, a8);
     }
 
 }
