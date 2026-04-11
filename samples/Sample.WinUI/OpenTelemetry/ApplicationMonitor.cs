@@ -67,12 +67,6 @@ public class ApplicationMonitor : IDisposable
             // Collect and report metrics
             var memoryMegabytes = _currentProcess.WorkingSet64 / (1024.0 * 1024.0);
 
-            var tags = new TagList
-                {
-                    { "process.name", _currentProcess.ProcessName },
-                    { "process.id", _currentProcess.Id }
-                };
-
             // Monitor memory usage
             _meter.CreateObservableGauge("winui.memory.usage.mb", () => memoryMegabytes, "MB", "Memory usage");
 

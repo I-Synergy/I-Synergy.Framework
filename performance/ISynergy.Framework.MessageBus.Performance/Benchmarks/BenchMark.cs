@@ -20,11 +20,6 @@ public class BenchMark
     /// <value>The model.</value>
     private TestModel? _model { get; set; }
 
-    ///// <summary>
-    ///// The file name
-    ///// </summary>
-    //[Params("file.docx", "file.pdf", "file.jpg", "file.json", "file.xlsx", "file.zip")]
-    //private string _fileName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BenchMark"/> class.
@@ -66,63 +61,6 @@ public class BenchMark
         return result;
     }
 
-    //[GlobalSetup]
-    //public async Task GlobalSetup()
-    //{
-    //    var file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", _fileName));
-    //    var bytes = SerializeToByteArray(GetTestObject(file));
-
-    //    using MemoryStream memoryStream = new MemoryStream();
-    //    using (var zipStream = new GZipStream(memoryStream, CompressionMode.Compress))
-    //    {
-    //        zipStream.Write(bytes, 0, bytes.Length);
-    //        zipStream.Close();
-
-    //        _model = memoryStream.ToArray();
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Globals the setup.
-    ///// </summary>
-    //[GlobalSetup]
-    //public async Task GlobalSetup()
-    //{
-    //    byte[] file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", _fileName));
-    //    _model = GetTestObject(file);
-    //}
-
-    //private byte[] SerializeToByteArray(object obj)
-    //{
-    //    if (obj is null)
-    //    {
-    //        return null;
-    //    }
-    //    var bf = new BinaryFormatter();
-    //    using (var ms = new MemoryStream())
-    //    {
-    //        bf.Serialize(ms, obj);
-    //        return ms.ToArray();
-    //    }
-    //}
-
-    //private T Deserialize<T>(byte[] byteArray) where T : class
-    //{
-    //    if (byteArray is null)
-    //    {
-    //        return null;
-    //    }
-    //    using (var memStream = new MemoryStream())
-    //    {
-    //        var binForm = new BinaryFormatter();
-    //        memStream.Write(byteArray, 0, byteArray.Length);
-    //        memStream.Seek(0, SeekOrigin.Begin);
-    //        var obj = (T)binForm.Deserialize(memStream);
-    //        return obj;
-    //    }
-    //}
-
-
     /// <summary>
     /// Jsons this instance.
     /// </summary>
@@ -135,57 +73,6 @@ public class BenchMark
             PropertyNameCaseInsensitive = true
         });
     }
-
-    ///// <summary>
-    ///// Binaries the formatter.
-    ///// </summary>
-    //[Benchmark]
-    //public void BinaryFormatter()
-    //{
-    //    byte[] result = null;
-
-    //    using (MemoryStream ms = new MemoryStream())
-    //    {
-    //        BinaryFormatter serializer = new BinaryFormatter();
-    //        serializer.Serialize(ms, _model);
-    //        result = ms.ToArray();
-    //    }
-
-    //    using (MemoryStream ms2 = new MemoryStream(result))
-    //    {
-    //        BinaryFormatter serializer = new BinaryFormatter();
-    //        serializer.Deserialize(ms2);
-    //    };
-    //}
-
-    ///// <summary>
-    ///// Bsons this instance.
-    ///// </summary>
-    //[Benchmark]
-    //public void Bson()
-    //{
-    //    byte[] result = null;
-
-    //    using (MemoryStream ms = new MemoryStream())
-    //    {
-    //        using (BsonDataWriter writer = new BsonDataWriter(ms))
-    //        {
-    //            JsonSerializer serializer = new JsonSerializer();
-    //            serializer.Serialize(writer, _model);
-    //        }
-
-    //        result = ms.ToArray();
-    //    }
-
-    //    using (MemoryStream ms2 = new MemoryStream(result))
-    //    {
-    //        using (BsonDataReader reader = new BsonDataReader(ms2))
-    //        {
-    //            JsonSerializer serializer = new JsonSerializer();
-    //            serializer.Deserialize(reader);
-    //        }
-    //    };
-    //}
 
     /// <summary>
     /// Messages the pack.

@@ -213,14 +213,11 @@ public class ControlsViewModel : ViewModelNavigation<object>
     {
         base.Dispose(disposing);
 
-        if (disposing)
+        if (disposing && _timer is not null)
         {
-            if (_timer is not null)
-            {
-                _timer.Stop();
-                _timer.Elapsed -= Timer_Elapsed;
-                _timer.Dispose();
-            }
+            _timer.Stop();
+            _timer.Elapsed -= Timer_Elapsed;
+            _timer.Dispose();
         }
     }
 }

@@ -50,14 +50,6 @@ public static class MauiProgram
                 {
                     // Additional custom logger provider configuration can be added here
                 });
-        //.AddOtlpExporter();
-        //.AddApplicationInsightsExporter()
-        //.AddSentryExporter(
-        //    options =>
-        //    {
-        //        options.Environment = builder.Environment.EnvironmentName;
-        //        options.Debug = builder.Environment.IsDevelopment();
-        //    });
 
         builder
             .UseMauiApp<App>()
