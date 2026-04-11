@@ -64,16 +64,12 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this int[,] value, double[,] result)
     {
-					unsafe
-			{
-				fixed (int* src = value)
-				fixed (double* dst = result)
-				{
-					for (var i = 0; i < value.Length; i++)
-						dst[i] = (Double)src[i];
-				}
-			}
-		
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Double)value[i, j];
+
         return result;
     }
 
@@ -83,16 +79,14 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this int[,,] value, double[,,] result)
     {
-					unsafe
-			{
-				fixed (int* src = value)
-				fixed (double* dst = result)
-				{
-					for (var i = 0; i < value.Length; i++)
-						dst[i] = (Double)src[i];
-				}
-			}
-		
+        int d0 = value.GetLength(0);
+        int d1 = value.GetLength(1);
+        int d2 = value.GetLength(2);
+        for (int i = 0; i < d0; i++)
+            for (int j = 0; j < d1; j++)
+                for (int k = 0; k < d2; k++)
+                    result[i, j, k] = (Double)value[i, j, k];
+
         return result;
     }
 
@@ -207,16 +201,12 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this int[,] value, Complex[,] result)
     {
-					unsafe
-			{
-				fixed (int* src = value)
-				fixed (Complex* dst = result)
-				{
-					for (var i = 0; i < value.Length; i++)
-						dst[i] = (Complex)src[i];
-				}
-			}
-		
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Complex)value[i, j];
+
         return result;
     }
 
@@ -226,16 +216,14 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this int[,,] value, Complex[,,] result)
     {
-					unsafe
-			{
-				fixed (int* src = value)
-				fixed (Complex* dst = result)
-				{
-					for (var i = 0; i < value.Length; i++)
-						dst[i] = (Complex)src[i];
-				}
-			}
-		
+        int d0 = value.GetLength(0);
+        int d1 = value.GetLength(1);
+        int d2 = value.GetLength(2);
+        for (int i = 0; i < d0; i++)
+            for (int j = 0; j < d1; j++)
+                for (int k = 0; k < d2; k++)
+                    result[i, j, k] = (Complex)value[i, j, k];
+
         return result;
     }
 

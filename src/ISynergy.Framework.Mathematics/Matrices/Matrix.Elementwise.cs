@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
@@ -348,19 +350,12 @@ public static partial class Matrix
     /// 
     public static double[,] SignedPow(this double[,] value, double y, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (Math.Sign(v) * Math.Pow(Math.Abs(v), y));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (Math.Sign(v) * Math.Pow(Math.Abs(v), y));
         }
 
         return result;
@@ -374,18 +369,15 @@ public static partial class Matrix
     /// <param name="y">A power.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] SignedPow(this double[][] value, double y, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (Math.Sign(v) * Math.Pow(Math.Abs(v), y));
-                }
+                var v = value[i][j];
+                result[i][j] = (Math.Sign(v) * Math.Pow(Math.Abs(v), y));
             }
         }
         return result;
@@ -421,19 +413,12 @@ public static partial class Matrix
     /// 
     public static double[,] Pow(this double[,] value, double y, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (Math.Pow(Math.Abs(v), y));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (Math.Pow(Math.Abs(v), y));
         }
 
         return result;
@@ -447,18 +432,15 @@ public static partial class Matrix
     /// <param name="y">A power.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Pow(this double[][] value, double y, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (Math.Pow(Math.Abs(v), y));
-                }
+                var v = value[i][j];
+                result[i][j] = (Math.Pow(Math.Abs(v), y));
             }
         }
         return result;
@@ -493,19 +475,12 @@ public static partial class Matrix
     /// 
     public static double[,] Exp(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Exp((double)v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Exp((double)v));
         }
 
         return result;
@@ -518,18 +493,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Exp(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Exp((double)v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Exp((double)v));
             }
         }
         return result;
@@ -563,19 +535,12 @@ public static partial class Matrix
     /// 
     public static double[,] Log(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Log((double)v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Log((double)v));
         }
 
         return result;
@@ -588,18 +553,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Log(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Log((double)v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Log((double)v));
             }
         }
         return result;
@@ -633,19 +595,12 @@ public static partial class Matrix
     /// 
     public static double[,] Sign(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Sign(v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Sign(v));
         }
 
         return result;
@@ -658,18 +613,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Sign(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Sign(v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Sign(v));
             }
         }
         return result;
@@ -703,19 +655,12 @@ public static partial class Matrix
     /// 
     public static double[,] Abs(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Abs(v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Abs(v));
         }
 
         return result;
@@ -728,18 +673,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Abs(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Abs(v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Abs(v));
             }
         }
         return result;
@@ -773,19 +715,12 @@ public static partial class Matrix
     /// 
     public static double[,] Sqrt(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Sqrt((double)v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Sqrt((double)v));
         }
 
         return result;
@@ -798,18 +733,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Sqrt(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Sqrt((double)v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Sqrt((double)v));
             }
         }
         return result;
@@ -843,19 +775,12 @@ public static partial class Matrix
     /// 
     public static double[,] SignSqrt(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Sign(v) * Math.Sqrt((double)v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
         }
 
         return result;
@@ -868,18 +793,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] SignSqrt(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
             }
         }
         return result;
@@ -913,19 +835,12 @@ public static partial class Matrix
     /// 
     public static double[,] Floor(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Floor((double)v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Floor((double)v));
         }
 
         return result;
@@ -938,18 +853,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Floor(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Floor((double)v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Floor((double)v));
             }
         }
         return result;
@@ -983,19 +895,12 @@ public static partial class Matrix
     /// 
     public static double[,] Ceiling(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Ceiling((double)v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Ceiling((double)v));
         }
 
         return result;
@@ -1008,18 +913,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Ceiling(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Ceiling((double)v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Ceiling((double)v));
             }
         }
         return result;
@@ -1053,19 +955,12 @@ public static partial class Matrix
     /// 
     public static double[,] Round(this double[,] value, double[,] result)
     {
-        unsafe
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanR.Length; j++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
-            {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (var j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Round((double)v));
-                }
-            }
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Round((double)v));
         }
 
         return result;
@@ -1078,18 +973,15 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Round(this double[][] value, double[][] result)
     {
-        unsafe
+        for (var i = 0; i < value.Length; i++)
         {
-            for (var i = 0; i < value.Length; i++)
+            for (var j = 0; j < value[i].Length; j++)
             {
-                for (var j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Round((double)v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Round((double)v));
             }
         }
         return result;

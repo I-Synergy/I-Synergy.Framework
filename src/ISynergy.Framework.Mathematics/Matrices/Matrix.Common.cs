@@ -1272,20 +1272,12 @@ public static partial class Matrix
 
         var length = matrixA.Length;
 
-        unsafe
-        {
-            fixed (double* ptrA = matrixA)
-            fixed (double* ptrB = matrixB)
-            {
-                var a = ptrA;
-                var b = ptrB;
-
-                var trace = 0.0;
-                for (var i = 0; i < length; i++)
-                    trace += *a++ * *b++;
-                return trace;
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref matrixA[0, 0], length);
+        var spanB = MemoryMarshal.CreateSpan(ref matrixB[0, 0], length);
+        var trace = 0.0;
+        for (var i = 0; i < length; i++)
+            trace += spanA[i] * spanB[i];
+        return trace;
     }
 
     /// <summary>

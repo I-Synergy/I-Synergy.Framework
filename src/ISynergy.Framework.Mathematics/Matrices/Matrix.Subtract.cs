@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mathematics.Enumerations;
+using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -317,19 +318,11 @@ public static partial class Elementwise
     public static double[,] Subtract(this double[,] a, double[,] b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) - (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (double)((double)spanA[i] - (double)spanB[i]);
 
         return result;
     }
@@ -384,17 +377,10 @@ public static partial class Elementwise
     public static double[,] Subtract(this double a, double[,] b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a - (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (double)((double)a - (double)spanB[j]);
 
         return result;
     }
@@ -411,17 +397,10 @@ public static partial class Elementwise
     public static double[,] Subtract(this double[,] a, double b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) - (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (double)((double)spanA[i] - (double)b);
 
         return result;
     }
@@ -608,17 +587,8 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe
-        {
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a - (double)(*pb));
-            }
-        }
+        for (var j = 0; j < rows; j++)
+            result[j, j] = (double)((double)a - (double)b[j, j]);
         return result;
     }
 
@@ -636,17 +606,8 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe
-        {
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] - (double)(*pb));
-            }
-        }
+        for (var j = 0; j < rows; j++)
+            result[j, j] = (double)((double)a[j] - (double)b[j, j]);
         return result;
     }
 
@@ -664,17 +625,8 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) - (double)b);
-            }
-        }
+        for (var j = 0; j < rows; j++)
+            result[j, j] = (double)((double)a[j, j] - (double)b);
         return result;
     }
 
@@ -692,17 +644,8 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) - (double)b[j]);
-            }
-        }
+        for (var j = 0; j < rows; j++)
+            result[j, j] = (double)((double)a[j, j] - (double)b[j]);
         return result;
     }
 
