@@ -193,10 +193,12 @@ public static partial class Matrix
     {
         int cols = matrix.Columns();
         int rows = matrix.Rows();
-#if DEBUG
+
+        // Validate dimensions in all build configurations.
+        // In Release the pointer arithmetic pa2 = a + cols would stride out of bounds
+        // if the dimensions were wrong, so this guard must not be DEBUG-only.
         if (rowVector.Length != rows || cols != columnVector.Length)
             throw new DimensionMismatchException();
-#endif
         double result = 0;
 
         unsafe
