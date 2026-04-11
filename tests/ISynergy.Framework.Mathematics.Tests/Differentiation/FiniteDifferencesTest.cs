@@ -226,22 +226,22 @@ public class FiniteDifferencesTest
         double[] result = calculator.Gradient(aParam);
         double[][] actual = calculator.Hessian(aParam);
 
-        Assert.AreEqual(actual[0][0], -57.6160442364672, 1e-2);
-        Assert.AreEqual(actual[0][1], -1.27840745168738, 1e-2);
-        Assert.AreEqual(actual[0][2], 0.0255249049748045, 1e-2);
-        Assert.AreEqual(actual[0][3], 0.0231494572415752, 1e-2);
-        Assert.AreEqual(actual[1][0], -1.27840745168738, 1e-2);
-        Assert.AreEqual(actual[1][1], 173.045435758468, 1e-1);
-        Assert.AreEqual(actual[1][2], 29.9809421733244, 1e-2);
-        Assert.AreEqual(actual[1][3], 29.8568458845239, 1e-1);
-        Assert.AreEqual(actual[2][0], 0.0255249049748045, 1e-2);
-        Assert.AreEqual(actual[2][1], 29.9809421733244, 1e-2);
-        Assert.AreEqual(actual[2][2], 5.2012616436059, 1e-2);
-        Assert.AreEqual(actual[2][3], 5.17856868498256, 1e-2);
-        Assert.AreEqual(actual[3][0], 0.0231494572415752, 1e-2);
-        Assert.AreEqual(actual[3][1], 29.8568458845239, 1e-2);
-        Assert.AreEqual(actual[3][2], 5.17856868498256, 1e-2);
-        Assert.AreEqual(actual[3][3], 5.15878895157584, 1e-2);
+        Assert.AreEqual(-57.6160442364672, actual[0][0], 1e-2);
+        Assert.AreEqual(-1.27840745168738, actual[0][1], 1e-2);
+        Assert.AreEqual(0.0255249049748045, actual[0][2], 1e-2);
+        Assert.AreEqual(0.0231494572415752, actual[0][3], 1e-2);
+        Assert.AreEqual(-1.27840745168738, actual[1][0], 1e-2);
+        Assert.AreEqual(173.045435758468, actual[1][1], 1e-1);
+        Assert.AreEqual(29.9809421733244, actual[1][2], 1e-2);
+        Assert.AreEqual(29.8568458845239, actual[1][3], 1e-1);
+        Assert.AreEqual(0.0255249049748045, actual[2][0], 1e-2);
+        Assert.AreEqual(29.9809421733244, actual[2][1], 1e-2);
+        Assert.AreEqual(5.2012616436059, actual[2][2], 1e-2);
+        Assert.AreEqual(5.17856868498256, actual[2][3], 1e-2);
+        Assert.AreEqual(0.0231494572415752, actual[3][0], 1e-2);
+        Assert.AreEqual(29.8568458845239, actual[3][1], 1e-2);
+        Assert.AreEqual(5.17856868498256, actual[3][2], 1e-2);
+        Assert.AreEqual(5.15878895157584, actual[3][3], 1e-2);
     }
 
 }

@@ -156,14 +156,14 @@ public partial class MatrixTest
         Assert.AreEqual(3, groups[0].Length);
         Assert.AreEqual(4, groups[1].Length);
 
-        Assert.AreEqual(groups[0][0], 1);
-        Assert.AreEqual(groups[0][1], 2);
-        Assert.AreEqual(groups[0][2], 3);
+        Assert.AreEqual(1, groups[0][0]);
+        Assert.AreEqual(2, groups[0][1]);
+        Assert.AreEqual(3, groups[0][2]);
 
-        Assert.AreEqual(groups[1][0], 4);
-        Assert.AreEqual(groups[1][1], 5);
-        Assert.AreEqual(groups[1][2], 6);
-        Assert.AreEqual(groups[1][3], 7);
+        Assert.AreEqual(4, groups[1][0]);
+        Assert.AreEqual(5, groups[1][1]);
+        Assert.AreEqual(6, groups[1][2]);
+        Assert.AreEqual(7, groups[1][3]);
     }
 
     [TestMethod]
@@ -185,13 +185,13 @@ public partial class MatrixTest
         Assert.AreEqual(0, groups[3].Length);
         Assert.AreEqual(4, groups[4].Length);
 
-        Assert.AreEqual(groups[0][0], 1);
-        Assert.AreEqual(groups[0][1], 2);
-        Assert.AreEqual(groups[0][2], 3);
+        Assert.AreEqual(1, groups[0][0]);
+        Assert.AreEqual(2, groups[0][1]);
+        Assert.AreEqual(3, groups[0][2]);
 
-        Assert.AreEqual(groups[4][0], 4);
-        Assert.AreEqual(groups[4][1], 5);
-        Assert.AreEqual(groups[4][2], 6);
-        Assert.AreEqual(groups[4][3], 7);
+        Assert.AreEqual(4, groups[4][0]);
+        Assert.AreEqual(5, groups[4][1]);
+        Assert.AreEqual(6, groups[4][2]);
+        Assert.AreEqual(7, groups[4][3]);
     }
 }

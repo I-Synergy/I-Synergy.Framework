@@ -13,17 +13,17 @@ public class Vector3Test
         Vector3 v2 = new(-1, -2, -3);
         Vector3 v3 = new(7);
 
-        Assert.AreEqual(v1.X, 1);
-        Assert.AreEqual(v1.Y, 2);
-        Assert.AreEqual(v1.Z, 3);
+        Assert.AreEqual(1, v1.X);
+        Assert.AreEqual(2, v1.Y);
+        Assert.AreEqual(3, v1.Z);
 
-        Assert.AreEqual(v2.X, -1);
-        Assert.AreEqual(v2.Y, -2);
-        Assert.AreEqual(v2.Z, -3);
+        Assert.AreEqual(-1, v2.X);
+        Assert.AreEqual(-2, v2.Y);
+        Assert.AreEqual(-3, v2.Z);
 
-        Assert.AreEqual(v3.X, 7);
-        Assert.AreEqual(v3.Y, 7);
-        Assert.AreEqual(v3.Z, 7);
+        Assert.AreEqual(7, v3.X);
+        Assert.AreEqual(7, v3.Y);
+        Assert.AreEqual(7, v3.Z);
     }
 
     [DataTestMethod]
@@ -43,11 +43,11 @@ public class Vector3Test
     {
         Vector3 vector = new(x, y, z);
 
-        Assert.AreEqual(vector.Min, expectedMin);
-        Assert.AreEqual(vector.Max, expectedMax);
+        Assert.AreEqual(expectedMin, vector.Min);
+        Assert.AreEqual(expectedMax, vector.Max);
 
-        Assert.AreEqual(vector.MinIndex, expectedMinIndex);
-        Assert.AreEqual(vector.MaxIndex, expectedMaxIndex);
+        Assert.AreEqual(expectedMinIndex, vector.MinIndex);
+        Assert.AreEqual(expectedMaxIndex, vector.MaxIndex);
     }
 
     [DataTestMethod]
@@ -63,8 +63,8 @@ public class Vector3Test
 
         float norm = vector.Norm;
 
-        Assert.AreEqual(norm, expectedNorm);
-        Assert.AreEqual(norm * norm, vector.Square);
+        Assert.AreEqual(expectedNorm, norm);
+        Assert.AreEqual(vector.Square, norm * norm);
     }
 
     [DataTestMethod]
@@ -76,11 +76,11 @@ public class Vector3Test
         Vector3 vector1 = new(x1, y1, z1);
         Vector3 vector2 = new(x2, y2, z2);
 
-        Assert.AreEqual(vector1 == vector2, expected);
-        Assert.AreEqual(vector1 != vector2, !expected);
+        Assert.AreEqual(expected, vector1 == vector2);
+        Assert.AreEqual(!expected, vector1 != vector2);
 
-        Assert.AreEqual(vector1.Equals(vector2), expected);
-        Assert.AreEqual(vector1.Equals((object)vector2), expected);
+        Assert.AreEqual(expected, vector1.Equals(vector2));
+        Assert.AreEqual(expected, vector1.Equals((object)vector2));
     }
 
     [DataTestMethod]
@@ -96,8 +96,8 @@ public class Vector3Test
         Vector3 result1 = vector1 + vector2;
         Vector3 result2 = Vector3.Add(vector1, vector2);
 
-        Assert.AreEqual(expectedResult == result1, true);
-        Assert.AreEqual(expectedResult == result2, true);
+        Assert.AreEqual(true, expectedResult == result1);
+        Assert.AreEqual(true, expectedResult == result2);
     }
 
     [DataTestMethod]
@@ -112,8 +112,8 @@ public class Vector3Test
         Vector3 result1 = vector + value;
         Vector3 result2 = Vector3.Add(vector, value);
 
-        Assert.AreEqual(expectedResult == result1, true);
-        Assert.AreEqual(expectedResult == result2, true);
+        Assert.AreEqual(true, expectedResult == result1);
+        Assert.AreEqual(true, expectedResult == result2);
     }
 
     [DataTestMethod]
@@ -129,8 +129,8 @@ public class Vector3Test
         Vector3 result1 = vector1 - vector2;
         Vector3 result2 = Vector3.Subtract(vector1, vector2);
 
-        Assert.AreEqual(expectedResult == result1, true);
-        Assert.AreEqual(expectedResult == result2, true);
+        Assert.AreEqual(true, expectedResult == result1);
+        Assert.AreEqual(true, expectedResult == result2);
     }
 
     [DataTestMethod]
@@ -145,8 +145,8 @@ public class Vector3Test
         Vector3 result1 = vector - value;
         Vector3 result2 = Vector3.Subtract(vector, value);
 
-        Assert.AreEqual(expectedResult == result1, true);
-        Assert.AreEqual(expectedResult == result2, true);
+        Assert.AreEqual(true, expectedResult == result1);
+        Assert.AreEqual(true, expectedResult == result2);
     }
 
     [DataTestMethod]
@@ -162,8 +162,8 @@ public class Vector3Test
         Vector3 result1 = vector1 * vector2;
         Vector3 result2 = Vector3.Multiply(vector1, vector2);
 
-        Assert.AreEqual(expectedResult == result1, true);
-        Assert.AreEqual(expectedResult == result2, true);
+        Assert.AreEqual(true, expectedResult == result1);
+        Assert.AreEqual(true, expectedResult == result2);
     }
 
     [DataTestMethod]
@@ -178,8 +178,8 @@ public class Vector3Test
         Vector3 result1 = vector * value;
         Vector3 result2 = Vector3.Multiply(vector, value);
 
-        Assert.AreEqual(expectedResult == result1, true);
-        Assert.AreEqual(expectedResult == result2, true);
+        Assert.AreEqual(true, expectedResult == result1);
+        Assert.AreEqual(true, expectedResult == result2);
     }
 
     [DataTestMethod]
@@ -195,8 +195,8 @@ public class Vector3Test
         Vector3 result1 = vector1 / vector2;
         Vector3 result2 = Vector3.Divide(vector1, vector2);
 
-        Assert.AreEqual(expectedResult == result1, true);
-        Assert.AreEqual(expectedResult == result2, true);
+        Assert.AreEqual(true, expectedResult == result1);
+        Assert.AreEqual(true, expectedResult == result2);
     }
 
     [DataTestMethod]
@@ -211,8 +211,8 @@ public class Vector3Test
         Vector3 result1 = vector / value;
         Vector3 result2 = Vector3.Divide(vector, value);
 
-        Assert.AreEqual(expectedResult == result1, true);
-        Assert.AreEqual(expectedResult == result2, true);
+        Assert.AreEqual(true, expectedResult == result1);
+        Assert.AreEqual(true, expectedResult == result2);
     }
 
     [DataTestMethod]
@@ -229,7 +229,7 @@ public class Vector3Test
         float norm1 = vector.Norm;
         float norm2 = vector.Normalize();
 
-        Assert.AreEqual(expectedResult == vector, true);
+        Assert.AreEqual(true, expectedResult == vector);
         Assert.AreEqual(norm1, norm2);
     }
 
@@ -246,7 +246,7 @@ public class Vector3Test
 
         Vector3 result = vector.Inverse();
 
-        Assert.AreEqual(expectedResult == result, true);
+        Assert.AreEqual(true, expectedResult == result);
     }
 
     [DataTestMethod]
@@ -259,7 +259,7 @@ public class Vector3Test
         Vector3 vector1 = new(x1, y1, z1);
         Vector3 vector2 = new(x2, y2, z2);
 
-        Assert.AreEqual(Vector3.Dot(vector1, vector2), expectedResult);
+        Assert.AreEqual(expectedResult, Vector3.Dot(vector1, vector2));
     }
 
     [DataTestMethod]
@@ -273,6 +273,6 @@ public class Vector3Test
         Vector3 vector2 = new(x2, y2, z2);
         Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
-        Assert.AreEqual(Vector3.Cross(vector1, vector2) == expectedResult, true);
+        Assert.AreEqual(true, Vector3.Cross(vector1, vector2) == expectedResult);
     }
 }
