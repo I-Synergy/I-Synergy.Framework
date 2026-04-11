@@ -156,7 +156,7 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
 
                 foreach (var item in collection.EnsureNotNull())
                 {
-                    result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item), DateTimeKind.Local)));
+                    result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item, CultureInfo.InvariantCulture), DateTimeKind.Local)));
                 }
             }
         }
@@ -280,7 +280,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 public class IsoDateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
 {
     public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        DateTimeOffset.ParseExact(reader.GetString()!, "o", null);
+        DateTimeOffset.ParseExact(reader.GetString()!, "o", CultureInfo.InvariantCulture);
 
     public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
     {

@@ -152,7 +152,7 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
 
                 foreach (var item in collection.EnsureNotNull())
                 {
-                    result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item), DateTimeKind.Local)));
+                    result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item, CultureInfo.InvariantCulture), DateTimeKind.Local)));
                 }
             }
         }

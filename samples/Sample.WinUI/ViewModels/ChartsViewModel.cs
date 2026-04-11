@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
+using System.Globalization;
 
 namespace Sample.ViewModels;
 
@@ -49,7 +50,7 @@ public class ChartsViewModel : ViewModelNavigation<TestItem>
             new Measurement(Guid.NewGuid(), "Category 1", 100)
         ];
 
-        OperationBudget = BuildOperationBudget(DateTimeOffset.Parse("2021-01-01"), 12, 1250, 1500);
+        OperationBudget = BuildOperationBudget(DateTimeOffset.Parse("2021-01-01", CultureInfo.InvariantCulture), 12, 1250, 1500);
     }
 
     private List<Measurement> BuildOperationBudget(DateTimeOffset startDate, int totalMonths, double earnings, double expenses)
