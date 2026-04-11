@@ -10,7 +10,7 @@
 
 </div>
 
----
+<!-- ---
 
 ## 📖 Documentation & Resources
 
@@ -18,7 +18,7 @@
 |:---:|:---:|:---:|
 | [Framework Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Libraries) | [Sample Projects](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Samples) | [Developer Docs](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers) |
 
----
+--- -->
 
 ## ✨ Key Features
 
