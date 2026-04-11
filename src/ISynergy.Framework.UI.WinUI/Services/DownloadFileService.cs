@@ -24,7 +24,7 @@ public class DownloadFileService : IDownloadFileService
         ILogger<DownloadFileService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"DownloadFileService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("DownloadFileService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _fileService = fileservice;
     }

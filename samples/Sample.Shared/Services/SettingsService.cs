@@ -24,7 +24,7 @@ public class SettingsService : ISettingsService
     public SettingsService(ILogger<SettingsService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"SettingsService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("SettingsService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _localSettings = new LocalSettings();
         _roamingSettings = new RoamingSettings();

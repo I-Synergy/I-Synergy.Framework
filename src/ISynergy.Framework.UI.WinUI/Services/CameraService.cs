@@ -30,7 +30,7 @@ public class CameraService : ICameraService
         ILogger<CameraService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"CameraService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("CameraService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _dialogService = dialogService;
         _languageService = languageService;

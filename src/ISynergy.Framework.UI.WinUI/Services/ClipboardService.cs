@@ -18,7 +18,7 @@ public class ClipboardService : IClipboardService
     public ClipboardService(ILogger<ClipboardService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"ClipboardService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("ClipboardService instance created with ID: {InstanceId}", Guid.NewGuid());
     }
 
     /// <summary>

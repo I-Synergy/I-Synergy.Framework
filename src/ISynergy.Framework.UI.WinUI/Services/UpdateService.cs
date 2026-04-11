@@ -32,7 +32,7 @@ internal class UpdateService : IUpdateService
         _languageService = languageService;
 
         _logger = logger;
-        _logger.LogTrace($"UpdateService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("UpdateService instance created with ID: {InstanceId}", Guid.NewGuid());
 
 
     }

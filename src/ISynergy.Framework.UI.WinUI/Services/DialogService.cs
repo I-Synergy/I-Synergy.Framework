@@ -33,7 +33,7 @@ public class DialogService : IDialogService
         ILogger<DialogService> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _logger.LogTrace($"DialogService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("DialogService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
         _languageService = languageService ?? throw new ArgumentNullException(nameof(languageService));
@@ -291,7 +291,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error showing dialog for {typeof(TWindow).Name} and {typeof(TViewModel).Name}");
+            _logger.LogError(ex, "Error showing dialog for {WindowType} and {ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name);
         }
     }
 
@@ -320,7 +320,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error showing dialog for {typeof(TWindow).Name} and {typeof(TViewModel).Name} with entity");
+            _logger.LogError(ex, "Error showing dialog for {WindowType} and {ViewModelType} with entity", typeof(TWindow).Name, typeof(TViewModel).Name);
         }
     }
 
@@ -350,7 +350,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error showing dialog for {window.GetType().Name}");
+            _logger.LogError(ex, "Error showing dialog for {WindowType}", window.GetType().Name);
         }
     }
 
@@ -375,7 +375,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error showing dialog for {type.Name}");
+            _logger.LogError(ex, "Error showing dialog for {WindowType}", type.Name);
         }
     }
 

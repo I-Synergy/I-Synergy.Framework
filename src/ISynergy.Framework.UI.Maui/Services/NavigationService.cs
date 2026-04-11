@@ -27,7 +27,7 @@ public class NavigationService : INavigationService
         ILogger<NavigationService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"NavigationService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("NavigationService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
         _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
