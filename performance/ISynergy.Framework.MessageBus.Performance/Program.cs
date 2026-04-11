@@ -6,7 +6,7 @@ namespace ISynergy.Framework.MessageBus.Performance;
 /// <summary>
 /// Class Program.
 /// </summary>
-class Program
+static class Program
 {
     /// <summary>
     /// When long file paths is not enabled you get the "Invalid runtimeconfig.json in .NET Benchmark" error.

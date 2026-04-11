@@ -17,7 +17,7 @@ builder.Services.AddScoped<TenantContext>();
 // ── Typed HTTP client for the Orders API ─────────────────────────────────────
 // "http+https://eventsourcing-api" is resolved by Aspire service discovery to the API's actual URL.
 builder.Services.AddHttpClient<OrdersApiClient>(client =>
-    client.BaseAddress = new Uri("http+https://eventsourcing-api"));
+    client.BaseAddress = new Uri("http+https://eventsourcing-api")); // NOSONAR - Aspire service discovery URI resolved at runtime
 
 // ── Health checks ─────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();

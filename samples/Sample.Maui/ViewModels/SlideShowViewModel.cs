@@ -75,10 +75,10 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         // Get initial images from source.
         Items = new ObservableCollection<MediaItem>()
         {
-            new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
-            new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
-            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
-            new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
+            new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" } // NOSONAR - demo image URL
         };
 
         // Set timer if images count is at least 1.
@@ -122,10 +122,10 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
 
         Items = new ObservableCollection<MediaItem>()
         {
-            new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
-            new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
-            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
-            new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
+            new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" } // NOSONAR - demo image URL
         };
 
         UpdateSourceTimer.Enabled = true;

@@ -177,7 +177,7 @@ public class AuthenticationService : IAuthenticationService
     /// Generates a demo token for testing purposes.
     /// This is NOT a real JWT token, just a random string for demo use.
     /// </summary>
-    private string GenerateToken()
+    private static string GenerateToken()
     {
         return Convert.ToBase64String(Guid.NewGuid().ToByteArray()) +
           Convert.ToBase64String(Guid.NewGuid().ToByteArray());

@@ -283,9 +283,7 @@ public class SignUpViewModel : ViewModel
     {
         if (Validate())
         {
-            if (!HasErrors &&
-                PasswordCheck is not null && Password is not null &&
-                PasswordCheck.Equals(Password) &&
+            if (!HasErrors && PasswordCheck is not null && Password is not null && PasswordCheck.Equals(Password) &&
                 Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             {
                 _ = new RegistrationData()

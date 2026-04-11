@@ -24,7 +24,7 @@ internal class SynchronizationService : ISynchronizationService
     private readonly IContext _context;
     private readonly IMessengerService _messengerService;
     private readonly ISettingsService _settingsService;
-    private readonly ISynchronizationSettings? _synchronizationSettings;
+    private readonly ISynchronizationSettings? _synchronizationSettings; // NOSONAR - field is read in SynchronizeAsync
 
     public bool IsActive { get; }
     public SyncAgent? SynchronizationAgent { get; }
