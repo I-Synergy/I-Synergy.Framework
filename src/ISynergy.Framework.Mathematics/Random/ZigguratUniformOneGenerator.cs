@@ -1,3 +1,10 @@
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 namespace ISynergy.Framework.Mathematics.Random;
 
 /// <summary>
@@ -100,7 +107,6 @@ public sealed class ZigguratUniformOneGenerator :
             jsr = jsr ^ (jsr >> 17);
             jsr = jsr ^ (jsr << 5);
             // https://core.ac.uk/download/files/153/6287927.pdf
-            // return 0.5 + (value + jsr) * 0.2328306e-9;
             return (0.5 + (value + jsr) / 65536.0 / 65536.0) % 1.0;
         }
     }

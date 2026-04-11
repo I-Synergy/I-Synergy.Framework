@@ -35,6 +35,15 @@
 //
 
 using ISynergy.Framework.Mathematics.Common;
+
+#pragma warning disable S907  // goto is required in ported numerical algorithms
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1110 // parentheses in ported FORTRAN algorithms are intentional
+
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
 partial class BoundedBroydenFletcherGoldfarbShanno
@@ -3505,11 +3514,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
             if ((task.StartsWith("ERROR", StringComparison.OrdinalIgnoreCase)))
             {
-                /*
-                Prn3lb.prn3lb(n, x, _x_offset, f, task, iprint,
-                    info, itfile, iter, nfgv, nintol, nskip, nact, sbgnrm, 0.0, nseg, word,
-                    iback, stp, xstep, k, cachyt, sbtime, lnscht);
-                */
                 return;
             }
 
@@ -3880,10 +3884,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         // Print iteration information.
         // 
-        /* Prn2lb.prn2lb(n, x, _x_offset, f, g, _g_offset, iprint, itfile,
-                iter, nfgv, nact, sbgnrm, nseg, ref word,
-                iword, iback, stp, xstep); */
-
         goto L1000;
 
     L777:
@@ -4012,13 +4012,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         goto L222;
 
     L999:
-    //Timer.timer(time2);
-    //time = (time2 - time1);
-
-    /*Prn3lb.prn3lb(n, x, _x_offset, f, task, iprint, info, itfile,
-        iter, nfgv, nintol, nskip, nact, sbgnrm, time, nseg, word,
-        iback, stp, xstep, k, cachyt, sbtime, lnscht);*/
-
     L1000:
         // 
         //   Save local variables.

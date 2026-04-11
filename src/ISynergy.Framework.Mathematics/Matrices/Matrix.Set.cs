@@ -1,5 +1,12 @@
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
@@ -293,10 +300,10 @@ public static partial class Matrix
     public static void Set<T>(this T[] destination, T value, int[] indices)
     {
         if (destination is null)
-            throw new ArgumentNullException("source");
+            throw new ArgumentNullException(nameof(destination));
 
         if (indices is null)
-            throw new ArgumentNullException("Indices");
+            throw new ArgumentNullException(nameof(indices));
 
         for (var i = 0; i < indices.Length; i++)
             destination[Matrix.index(indices[i], destination.Length)] = value;
@@ -329,7 +336,7 @@ public static partial class Matrix
     public static void Set<T>(this T[] destination, T value, int index)
     {
         if (destination is null)
-            throw new ArgumentNullException("source");
+            throw new ArgumentNullException(nameof(destination));
 
         if (index >= destination.Length)
             throw new ArgumentOutOfRangeException("index");
@@ -350,10 +357,10 @@ public static partial class Matrix
     public static void Set<T>(this List<T> destination, T value, int[] indices)
     {
         if (destination is null)
-            throw new ArgumentNullException("source");
+            throw new ArgumentNullException(nameof(destination));
 
         if (indices is null)
-            throw new ArgumentNullException("Indices");
+            throw new ArgumentNullException(nameof(indices));
 
         for (var i = 0; i < indices.Length; i++)
             destination[indices[i]] = value;
@@ -364,10 +371,10 @@ public static partial class Matrix
         T[,] src, int[] srcRowIndices, int[] srcColumnIndices)
     {
         if (src is null)
-            throw new ArgumentNullException("source");
+            throw new ArgumentNullException(nameof(src));
 
         if (dst is null)
-            throw new ArgumentNullException("destination");
+            throw new ArgumentNullException(nameof(dst));
 
         if (srcRowIndices is null)
             srcRowIndices = Vector.Range(0, src.Rows());
@@ -399,10 +406,10 @@ public static partial class Matrix
         T[][] src, int[] srcRowIndices, int[] srcColumnIndices)
     {
         if (src is null)
-            throw new ArgumentNullException("source");
+            throw new ArgumentNullException(nameof(src));
 
         if (dst is null)
-            throw new ArgumentNullException("destination");
+            throw new ArgumentNullException(nameof(dst));
 
         if (srcRowIndices is null)
             srcRowIndices = Vector.Range(0, src.Rows());

@@ -3,6 +3,13 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 #if !NET35 && !NET40
@@ -396,7 +403,7 @@ public static partial class NpyFormat
         t = GetType(type, out bytes, out isLittleEndian);
 
         if (isLittleEndian.HasValue && isLittleEndian.Value == false)
-            throw new Exception();
+            throw new NotSupportedException("Big-endian NumPy format is not supported.");
 
         mark = "'fortran_order': ";
         s = header.IndexOf(mark) + mark.Length;
@@ -404,7 +411,7 @@ public static partial class NpyFormat
         var fortran = bool.Parse(header.Substring(s, e - s));
 
         if (fortran)
-            throw new Exception();
+            throw new NotSupportedException("Fortran-order (column-major) NumPy format is not supported.");
 
         mark = "'shape': (";
         s = header.IndexOf(mark) + mark.Length;
@@ -465,7 +472,7 @@ public static partial class NpyFormat
                 littleEndian = null;
                 break;
             default:
-                throw new Exception();
+                throw new NotSupportedException("The specified NumPy data type is not supported.");
         }
 
         return littleEndian;

@@ -1,5 +1,12 @@
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 /// <summary>
@@ -379,7 +386,7 @@ public struct Matrix4x4
             throw new ArgumentOutOfRangeException("farPlaneDistance", "Far view plane distance must be greater than zero.");
 
         if (nearPlaneDistance >= farPlaneDistance)
-            throw new ArgumentException("Near plane must be closer than the far plane.", "farPlaneDistance");
+            throw new ArgumentException("Near plane must be closer than the far plane.", nameof(farPlaneDistance));
 
         Matrix4x4 m = new Matrix4x4();
 
@@ -502,7 +509,7 @@ public struct Matrix4x4
     public Vector4 GetRow(int index)
     {
         if (index < 0 || index > 3)
-            throw new ArgumentException("Invalid row index was specified.", "index");
+            throw new ArgumentException("Invalid row index was specified.", nameof(index));
 
         return index == 0 ? new Vector4(V00, V01, V02, V03) :
                index == 1 ? new Vector4(V10, V11, V12, V13) :
@@ -522,7 +529,7 @@ public struct Matrix4x4
     public Vector4 GetColumn(int index)
     {
         if (index < 0 || index > 3)
-            throw new ArgumentException("Invalid column index was specified.", "index");
+            throw new ArgumentException("Invalid column index was specified.", nameof(index));
 
         return index == 0 ? new Vector4(V00, V10, V20, V30) :
                index == 1 ? new Vector4(V01, V11, V21, V31) :

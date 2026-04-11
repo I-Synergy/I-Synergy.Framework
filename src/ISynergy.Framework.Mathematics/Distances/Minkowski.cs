@@ -3,6 +3,13 @@ namespace ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 /// <summary>
 ///   The Minkowski distance is a metric in a normed vector space which can be 
 ///   considered as a generalization of both the <see cref="Euclidean">Euclidean 
@@ -45,7 +52,7 @@ public struct Minkowski : IMetric<double[]>, IMetric<int[]>, ICloneable
     public Minkowski(double p)
     {
         if (p < 1)
-            throw new ArgumentOutOfRangeException("The Minkowski distance is not a metric for p < 1.");
+            throw new ArgumentOutOfRangeException(nameof(p), "The Minkowski distance is not a metric for p < 1.");
 
         this.p = p;
     }
