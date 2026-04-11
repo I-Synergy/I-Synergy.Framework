@@ -36,21 +36,23 @@ public static class ExceptionExtensions
     private static readonly ObjectPool<StringBuilder> _builderPool =
         new DefaultObjectPool<StringBuilder>(new StringBuilderPooledObjectPolicy());
 
+    private static readonly TimeSpan _regexTimeout = TimeSpan.FromMilliseconds(100);
+
     // Patterns for sensitive data that should be sanitized
     private static readonly Regex[] _sensitivePatterns = new[]
     {
         // Connection strings
-        new Regex(@"(?i)(ConnectionString|Connection String|Data Source|Server|Initial Catalog|Database|User ID|User Id|UID|Pwd|Password|Integrated Security|Trusted_Connection)\s*=\s*[^;,\s]+", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+        new Regex(@"(?i)(ConnectionString|Connection String|Data Source|Server|Initial Catalog|Database|User ID|User Id|UID|Pwd|Password|Integrated Security|Trusted_Connection)\s*=\s*[^;,\s]+", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
         // Passwords and tokens
-        new Regex(@"(?i)(password|pwd|passwd|pass|token|accesstoken|bearer|apikey|secret|key)\s*[:=]\s*['""]?[^'""\s]+['""]?", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+        new Regex(@"(?i)(password|pwd|passwd|pass|token|accesstoken|bearer|apikey|secret|key)\s*[:=]\s*['""]?[^'""\s]+['""]?", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
         // API keys and secrets
-        new Regex(@"(?i)(api[_-]?key|secret[_-]?key|private[_-]?key|public[_-]?key)\s*[:=]\s*['""]?[A-Za-z0-9+/=]{20,}['""]?", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+        new Regex(@"(?i)(api[_-]?key|secret[_-]?key|private[_-]?key|public[_-]?key)\s*[:=]\s*['""]?[A-Za-z0-9+/=]{20,}['""]?", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
         // JWT tokens
-        new Regex(@"(?i)(eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})", RegexOptions.Compiled),
+        new Regex(@"(?i)(eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})", RegexOptions.Compiled, _regexTimeout),
         // File paths with usernames (Windows)
-        new Regex(@"(?i)(C:\\Users\\)[^\\]+", RegexOptions.Compiled),
+        new Regex(@"(?i)(C:\\Users\\)[^\\]+", RegexOptions.Compiled, _regexTimeout),
         // File paths with usernames (Unix)
-        new Regex(@"(?i)(/home/|/Users/)[^/]+", RegexOptions.Compiled),
+        new Regex(@"(?i)(/home/|/Users/)[^/]+", RegexOptions.Compiled, _regexTimeout),
         // Email addresses (optional - may want to keep for some scenarios)
         // new Regex(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}", RegexOptions.Compiled),
     };
@@ -70,17 +72,25 @@ public static class ExceptionExtensions
         var sanitized = input;
         foreach (var pattern in _sensitivePatterns)
         {
-            sanitized = pattern.Replace(sanitized, match =>
+            try
             {
-                // Preserve the key part but redact the value
-                var matchValue = match.Value;
-                var colonOrEqualsIndex = matchValue.IndexOfAny(new[] { ':', '=' });
-                if (colonOrEqualsIndex > 0 && colonOrEqualsIndex < matchValue.Length - 1)
+                sanitized = pattern.Replace(sanitized, match =>
                 {
-                    return matchValue.Substring(0, colonOrEqualsIndex + 1) + " " + SanitizedValue;
-                }
-                return SanitizedValue;
-            });
+                    // Preserve the key part but redact the value
+                    var matchValue = match.Value;
+                    var colonOrEqualsIndex = matchValue.IndexOfAny(new[] { ':', '=' });
+                    if (colonOrEqualsIndex > 0 && colonOrEqualsIndex < matchValue.Length - 1)
+                    {
+                        return matchValue.Substring(0, colonOrEqualsIndex + 1) + " " + SanitizedValue;
+                    }
+                    return SanitizedValue;
+                });
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                // If the pattern times out on a very long/complex input, skip it and continue.
+                // Returning the partially-sanitized string is safer than propagating the exception.
+            }
         }
 
         return sanitized;

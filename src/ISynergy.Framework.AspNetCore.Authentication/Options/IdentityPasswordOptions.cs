@@ -14,5 +14,5 @@ public class IdentityPasswordOptions : PasswordOptions
     /// Gets or sets the required regex match.
     /// </summary>
     /// <value>The required regex match.</value>
-    public Regex RequiredRegexMatch { get; set; } = new Regex(string.Empty);
+    public Regex RequiredRegexMatch { get; set; } = new Regex(string.Empty, RegexOptions.None, TimeSpan.FromMilliseconds(100));
 }
