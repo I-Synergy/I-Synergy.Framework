@@ -52,8 +52,6 @@ using System.Linq;
 public class MatReader : IDisposable
 {
     private BinaryReader reader;
-    private bool autoTranspose;
-
     private Dictionary<string, MatNode> contents;
 
     /// <summary>
@@ -107,7 +105,7 @@ public class MatReader : IDisposable
     ///   to .NET row and column format if necessary.
     /// </summary>
     /// 
-    public bool Transpose { get { return autoTranspose; } }
+    public bool Transpose { get; private set; }
 
     /// <summary>
     ///   Returns the underlying stream.
@@ -207,7 +205,7 @@ public class MatReader : IDisposable
     [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     private void init(BinaryReader reader, bool autoTranspose, bool lazy)
     {
-        this.autoTranspose = autoTranspose;
+        Transpose = autoTranspose;
 
         long startOffset = reader.BaseStream.Position;
         this.reader = reader;

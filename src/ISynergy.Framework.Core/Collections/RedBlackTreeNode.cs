@@ -9,10 +9,6 @@ namespace ISynergy.Framework.Core.Collections;
 [Serializable]
 public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
 {
-    private RedBlackTreeNode<T>? _parent;
-    private RedBlackTreeNodeType _color;
-    private T? _value;
-
     /// <summary>
     ///   Constructs a new empty node.
     /// </summary>
@@ -27,38 +23,26 @@ public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
     ///
     public RedBlackTreeNode(T value)
     {
-        _value = value;
+        Value = value;
     }
 
     /// <summary>
     ///   Gets or sets a reference to this node's parent node.
     /// </summary>
     ///
-    public RedBlackTreeNode<T>? Parent
-    {
-        get { return _parent; }
-        set { _parent = value; }
-    }
+    public RedBlackTreeNode<T>? Parent { get; set; }
 
     /// <summary>
     ///   Gets or sets this node's color.
     /// </summary>
     ///
-    public RedBlackTreeNodeType Color
-    {
-        get { return _color; }
-        set { _color = value; }
-    }
+    public RedBlackTreeNodeType Color { get; set; }
 
     /// <summary>
     ///   Gets or sets the value associated with this node.
     /// </summary>
     ///
-    public T? Value
-    {
-        get { return this._value; }
-        set { this._value = value; }
-    }
+    public T? Value { get; set; }
 
     /// <summary>
     /// Returns a <see cref="System.String" /> that represents this instance.
@@ -68,7 +52,7 @@ public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
     /// </returns>
     public override string ToString()
     {
-        if (_color == RedBlackTreeNodeType.Black)
+        if (Color == RedBlackTreeNodeType.Black)
             return $"Black: {Value}";
         return $"Red: {Value}";
     }
