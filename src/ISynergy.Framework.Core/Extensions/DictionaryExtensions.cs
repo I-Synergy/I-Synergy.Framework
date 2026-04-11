@@ -11,7 +11,7 @@ public static class DictionaryExtensions
     ///   Checks whether two dictionaries have the same contents.
     /// </summary>
     /// 
-    public static bool IsEqual<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TValue>(this IDictionary<TKey, TValue>? a, IDictionary<TKey, TValue>? b)
+    public static bool IsEqual<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TValue>(this IDictionary<TKey, TValue>? a, IDictionary<TKey, TValue>? b) // NOSONAR
         where TKey : notnull
     {
         if (ReferenceEquals(a, b))

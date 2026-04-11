@@ -163,7 +163,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
 
         if (extensionAliasOrMimeType.Equals("txt", StringComparison.OrdinalIgnoreCase) ||
             extensionAliasOrMimeType.Equals("text/plain", StringComparison.OrdinalIgnoreCase))
-            return IsText(fileContent, out bool hasBOM);
+            return IsText(fileContent, out _);
 
         return false;
     }

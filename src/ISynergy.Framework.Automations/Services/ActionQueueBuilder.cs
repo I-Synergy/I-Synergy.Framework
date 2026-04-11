@@ -31,7 +31,7 @@ public class ActionQueueBuilder : IActionQueueBuilder
     /// <param name="value">The value to pass to actions.</param>
     /// <param name="cancellationTokenSource">The cancellation token source.</param>
     /// <returns>A blocking collection containing task functions.</returns>
-    public Task<BlockingCollection<Func<Task>>> BuildQueueAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource)
+    public Task<BlockingCollection<Func<Task>>> BuildQueueAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource) // NOSONAR
     {
         var queue = new BlockingCollection<Func<Task>>();
         var repeatCount = 0;

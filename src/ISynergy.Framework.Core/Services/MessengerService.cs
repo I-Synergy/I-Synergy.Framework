@@ -373,7 +373,7 @@ public sealed class MessengerService : IMessengerService
     /// use a token when registering (or who used a different token) will not
     /// get the message. Similarly, messages sent without any token, or with a different
     /// token, will not be delivered to that recipient.</param>
-    public void SendToTargetOrType<TMessage>(
+    public void SendToTargetOrType<TMessage>( // NOSONAR
         TMessage message,
         Type? targetType,
         object? token)

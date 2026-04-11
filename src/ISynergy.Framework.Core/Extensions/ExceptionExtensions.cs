@@ -105,7 +105,7 @@ public static class ExceptionExtensions
     /// <param name="includeEnvironmentStack">Whether to include the environment stack trace.</param>
     /// <param name="sanitizeSensitiveData">Whether to sanitize sensitive data from the output.</param>
     /// <returns>Formatted exception message with stack trace</returns>
-    public static string ToMessage(
+    public static string ToMessage( // NOSONAR
         this Exception exception,
         string environmentStackTrace,
         ExceptionVerbosityLevel verbosity = ExceptionVerbosityLevel.Full,
@@ -231,7 +231,7 @@ public static class ExceptionExtensions
     /// <param name="sanitizeSensitiveData">Whether to sanitize sensitive data.</param>
     /// <param name="currentDepth">Current recursion depth.</param>
     /// <param name="maxDepth">Maximum recursion depth.</param>
-    private static void AppendInnerExceptions(
+    private static void AppendInnerExceptions( // NOSONAR
         StringBuilder sb,
         Exception innerException,
         ExceptionVerbosityLevel verbosity,

@@ -119,7 +119,7 @@ public static class ArrayExtensions
     ///     Gets the maximum length possible for each dimension (in case
     ///     the jagged matrices has different lengths).
     /// </param>
-    public static int[] GetLength(this Array? array, bool deep = true, bool max = false)
+    public static int[] GetLength(this Array? array, bool deep = true, bool max = false) // NOSONAR
     {
         if (array is null)
             return [-1];

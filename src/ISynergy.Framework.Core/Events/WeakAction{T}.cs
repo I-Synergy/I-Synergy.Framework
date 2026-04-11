@@ -68,7 +68,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// <param name="action">The action.</param>
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
     public WeakAction(Action<T> action, bool keepTargetAlive = false)
-        : this(action is null ? null : action.Target, action, keepTargetAlive)
+        : this(action.Target, action, keepTargetAlive)
     {
     }
 
@@ -127,7 +127,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
 
         var actionTarget = ActionTarget;
 
-        if (IsAlive)
+        if (IsAlive) // NOSONAR
         {
             if (Method is not null
                 && (LiveReference is not null

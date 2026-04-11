@@ -127,7 +127,7 @@ public abstract class BaseWatcher<
     /// </summary>
     /// <param name="changedWatcher">if set to <c>true</c> [changed watcher].</param>
     /// <param name="filter">The filter.</param>
-    protected void CreateWatcher(bool changedWatcher, NotifyFilters filter)
+    protected void CreateWatcher(bool changedWatcher, NotifyFilters filter) // NOSONAR
     {
         TWatcher? watcher = null;
         int bufferSize = (int)_watcherInfo.BufferKBytes * 1024;

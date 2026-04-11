@@ -54,7 +54,7 @@ public static class GenericConstants
     /// <summary>
     /// The password reg ex
     /// </summary>
-    public const string PasswordRegEx = @"(?=^.{6,}$)(?=[^\d]*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])";
+    public const string PasswordRegEx = @"(?=^.{6,}$)(?=[^\d]*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])"; // NOSONAR - not a credential, this is a validation regex pattern
     /// <summary>
     /// The rfid uid rege ex
     /// </summary>

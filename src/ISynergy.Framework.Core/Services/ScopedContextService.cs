@@ -66,8 +66,7 @@ public sealed class ScopedContextService : IScopedContextService
             // Dispose old scope if it exists
             if (oldScope is not null)
             {
-                oldScope?.Dispose();
-                oldScope = null;
+                oldScope.Dispose();
             }
         }
         catch (Exception)

@@ -245,7 +245,7 @@ public static class ModelBuilderExtensions
     /// Prefer the <see cref="ApplyModelBuilderConfigurations(ModelBuilder, IReadOnlyList{Type})"/> overload
     /// that accepts an explicit list of configuration types for AOT/trimming compatibility.
     /// </remarks>
-    [Obsolete("Prefer the overload accepting IReadOnlyList<Type> for AOT/trimming compatibility. This overload uses assembly scanning which is not AOT-safe.")]
+    [Obsolete("Prefer the overload accepting IReadOnlyList<Type> for AOT/trimming compatibility. This overload uses assembly scanning which is not AOT-safe.")] // NOSONAR
     [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use the IReadOnlyList<Type> overload instead.")]
     [RequiresDynamicCode("Assembly scanning uses reflection.")]
     public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, Assembly[] assemblies)

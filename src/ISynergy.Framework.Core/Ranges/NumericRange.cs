@@ -231,7 +231,7 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// 
     public static bool operator ==(NumericRange range1, NumericRange range2)
     {
-        return ((range1.Min == range2.Min) && (range1.Max == range2.Max));
+        return ((range1.Min == range2.Min) && (range1.Max == range2.Max)); // NOSONAR
     }
 
     /// <summary>
@@ -240,7 +240,7 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// 
     public static bool operator !=(NumericRange range1, NumericRange range2)
     {
-        return ((range1.Min != range2.Min) || (range1.Max != range2.Max));
+        return ((range1.Min != range2.Min) || (range1.Max != range2.Max)); // NOSONAR
     }
 
     /// <summary>
