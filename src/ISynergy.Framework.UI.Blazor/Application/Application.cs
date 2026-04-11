@@ -95,17 +95,17 @@ public abstract class Application : ComponentBase
 
             _messengerService.Register<ShowInformationMessage>(this, async m =>
             {
-                var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+                await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
             });
 
             _messengerService.Register<ShowWarningMessage>(this, async m =>
             {
-                var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+                await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
             });
 
             _messengerService.Register<ShowErrorMessage>(this, async m =>
             {
-                var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+                await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
             });
 
             // Initialize environment variables from configuration and command-line parameters

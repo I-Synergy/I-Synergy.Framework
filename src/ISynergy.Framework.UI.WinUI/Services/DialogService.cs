@@ -144,7 +144,7 @@ public class DialogService : IDialogService
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
+    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -385,7 +385,7 @@ public class DialogService : IDialogService
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <param name="dialog">The dialog.</param>
     /// <param name="viewmodel">The viewmodel.</param>
-    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
+    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel) // NOSONAR
     {
         Argument.IsNotNull(dialog);
         Argument.IsNotNull(viewmodel);

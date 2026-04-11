@@ -57,7 +57,6 @@ public class CameraService : ICameraService
 
             var capture = await mediaCapture.PrepareLowLagPhotoCaptureAsync(ImageEncodingProperties.CreatePng()).AsTask();
             var photo = await capture.CaptureAsync().AsTask();
-            var bitmap = photo.Frame.SoftwareBitmap;
 
             if (photo.Frame is not null)
             {

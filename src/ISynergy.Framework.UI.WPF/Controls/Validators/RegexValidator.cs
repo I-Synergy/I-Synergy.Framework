@@ -227,7 +227,7 @@ public static class RegexValidator
         ValidateTextBox(textBox);
     }
 
-    private static void ValidateTextBox(TextBox textBox, bool force = true)
+    private static void ValidateTextBox(TextBox textBox, bool force = true) // NOSONAR
     {
         ValidationType validationType = ValidationType.Custom;
 

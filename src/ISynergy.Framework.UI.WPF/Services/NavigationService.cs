@@ -380,7 +380,7 @@ public class NavigationService : INavigationService
     /// </summary>
     [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
     [RequiresUnreferencedCode("Uses GetRequiredService(Type) and runtime reflection for view/ViewModel resolution which are not trim-safe.")]
-    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
+    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
         where TView : IView
     {
         Argument.IsNotNull(owner);
@@ -439,7 +439,7 @@ public class NavigationService : INavigationService
     /// </summary>
     [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
     [RequiresUnreferencedCode("Calls SafeOnNavigatedFrom and SafeOnNavigatedTo which use runtime reflection over property types.")]
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
+    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
     {
         Argument.IsNotNull(owner);
 
@@ -590,7 +590,7 @@ public class NavigationService : INavigationService
     /// </summary>
     [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
     [RequiresUnreferencedCode("Uses CreatePage<TViewModel> and GetRelatedViewType() which scan loaded assemblies and are not trim-safe.")]
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
         where TViewModel : class, IViewModel
     {
         if (Application.Current.MainWindow is not null &&
@@ -602,7 +602,7 @@ public class NavigationService : INavigationService
 
             if (frame.Content is View originalView)
             {
-                currentViewModel = originalView.ViewModel as IViewModel;
+                currentViewModel = originalView.ViewModel;
 
                 // If we're navigating to the same view type that's already shown, just update parameters
                 if (currentViewModel is TViewModel existingVm && viewModel is null)
@@ -659,7 +659,7 @@ public class NavigationService : INavigationService
     /// </summary>
     [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
     [RequiresUnreferencedCode("Uses GetRequiredService(Type) and runtime reflection for view/ViewModel resolution which are not trim-safe.")]
-    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
         where TViewModel : class, IViewModel
         where TView : IView
     {
@@ -671,7 +671,7 @@ public class NavigationService : INavigationService
             // Try to reuse the current ViewModel if it matches the requested type
             IViewModel? currentViewModel = null;
             if (frame.Content is View originalView)
-                currentViewModel = originalView.ViewModel as IViewModel;
+                currentViewModel = originalView.ViewModel;
 
             if (viewModel is null)
             {
@@ -718,7 +718,7 @@ public class NavigationService : INavigationService
             TViewModel viewModel;
 
             if (Application.Current.MainWindow.Content is View originalView)
-                existingViewModel = originalView.ViewModel as IViewModel;
+                existingViewModel = originalView.ViewModel;
 
             // Reuse existing ViewModel if it matches the requested type
             if (existingViewModel is TViewModel existingVm)

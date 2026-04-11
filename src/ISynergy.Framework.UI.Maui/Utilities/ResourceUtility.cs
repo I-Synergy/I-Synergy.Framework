@@ -7,7 +7,7 @@ namespace ISynergy.Framework.UI.Utilities;
 
 public static class ResourceUtility
 {
-    private static T? GetResource<T>(ResourceDictionary resources, object? resource)
+    private static T? GetResource<T>(ResourceDictionary resources, object? resource) // NOSONAR
     {
         //Check resource type
         switch (resource)

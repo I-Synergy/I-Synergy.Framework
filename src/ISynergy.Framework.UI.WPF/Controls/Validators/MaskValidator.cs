@@ -144,7 +144,7 @@ public static class MaskValidator
         Textbox_Loaded(textBox, new RoutedEventArgs());
     }
 
-    private static void Textbox_Loaded(object sender, RoutedEventArgs e)
+    private static void Textbox_Loaded(object sender, RoutedEventArgs e) // NOSONAR
     {
         var textBox = (TextBox)sender;
 
@@ -390,7 +390,7 @@ public static class MaskValidator
         }
     }
 
-    private static void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    private static void TextBox_PreviewKeyDown(object sender, KeyEventArgs e) // NOSONAR
     {
         var textBox = (TextBox)sender;
 

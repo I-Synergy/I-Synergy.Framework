@@ -133,7 +133,7 @@ internal class UpdateService : IUpdateService
             return false;
         }
 
-        throw new Exception(_languageService.GetString("CouldNotRetrieveVersionInformation"));
+        throw new InvalidOperationException(_languageService.GetString("CouldNotRetrieveVersionInformation"));
     }
 
     protected async Task GetUpdateAsync(int applicationId)
@@ -161,7 +161,7 @@ internal class UpdateService : IUpdateService
             }
             else
             {
-                throw new Exception(string.Format("{0}" + System.Environment.NewLine + "{1}",
+                throw new NotSupportedException(string.Format("{0}" + System.Environment.NewLine + "{1}",
                     _languageService.GetString("NoInternetConnectionAvailable"),
                     _languageService.GetString("CannotInstallUpdate")));
             }

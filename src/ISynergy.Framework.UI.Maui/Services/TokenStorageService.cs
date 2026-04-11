@@ -122,8 +122,9 @@ public class TokenStorageService : ITokenStorageService
             credential.RetrievePassword();
             return Task.FromResult<string?>(credential.Password);
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogDebug(ex, "Credential not found in PasswordVault for key: {Key}", key);
             return Task.FromResult<string?>(null);
         }
 #elif ANDROID
@@ -159,7 +160,10 @@ public class TokenStorageService : ITokenStorageService
                 var oldCredential = vault.Retrieve(_infoService.ProductName, key);
                 vault.Remove(oldCredential);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "No existing credential to remove for key: {Key}", key);
+            }
 
             vault.Add(new PasswordCredential(_infoService.ProductName, key, value));
         }
@@ -196,7 +200,10 @@ public class TokenStorageService : ITokenStorageService
             var credential = vault.Retrieve(_infoService.ProductName, key);
             vault.Remove(credential);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Credential not found for deletion, key: {Key}", key);
+        }
 #elif ANDROID
         var preferences = Android.App.Application.Context.GetSharedPreferences(_infoService.ProductName, Android.Content.FileCreationMode.Private);
         var editor = preferences?.Edit();

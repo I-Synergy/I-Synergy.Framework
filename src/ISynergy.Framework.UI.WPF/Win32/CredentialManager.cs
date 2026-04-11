@@ -88,7 +88,7 @@ public static class CredentialManager
         if (written)
             return 0;
 
-        throw new Exception(string.Format("CredWrite failed with the error code {0}.", lastError));
+        throw new InvalidOperationException(string.Format("CredWrite failed with the error code {0}.", lastError));
     }
 
     public static IReadOnlyList<Credential> EnumerateCrendentials(string resource)

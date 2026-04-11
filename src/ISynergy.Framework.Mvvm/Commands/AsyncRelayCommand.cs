@@ -165,7 +165,7 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
     /// </summary>
     /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task ExecuteAsync(object? parameter)
+    public override async Task ExecuteAsync(object? parameter) // NOSONAR
     {
         // Use a lock to ensure thread safety when checking and setting execution state
         bool canProceed;

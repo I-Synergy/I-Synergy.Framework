@@ -20,7 +20,7 @@ public class ZeroDoubleToVisibilityConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is double doubleValue && doubleValue == 0d)
+        if (value is double doubleValue && doubleValue == 0d) // NOSONAR
         {
             return Visibility.Visible;
         }

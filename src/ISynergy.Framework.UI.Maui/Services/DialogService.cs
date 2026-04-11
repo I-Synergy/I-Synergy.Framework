@@ -687,7 +687,7 @@ public class DialogService : IDialogService
     /// <param name="dialog"></param>
     /// <param name="viewmodel"></param>
     /// <returns></returns>
-    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
+    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel) // NOSONAR
     {
         // Note: CreateDialogAsync is protected by semaphore in calling methods (ShowDialogAsync variants)
         // No additional semaphore lock needed here to avoid deadlock

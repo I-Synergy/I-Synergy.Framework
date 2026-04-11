@@ -59,7 +59,6 @@ public static class DependencyObjectExtensions
     public static T? GetVisualChildByName<T>(this FrameworkElement root, string name)
         where T : FrameworkElement
     {
-        var chil = VisualTreeHelper.GetChild(root, 0);
         FrameworkElement? child = null;
 
         var count = VisualTreeHelper.GetChildrenCount(root);

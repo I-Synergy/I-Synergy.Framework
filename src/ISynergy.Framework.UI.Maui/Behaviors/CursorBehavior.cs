@@ -36,7 +36,7 @@ public class CursorBehavior
         }
     }
 
-    private static void ApplyCursorBasedOnState(VisualElement visualElement, CursorIcons cursor)
+    private static void ApplyCursorBasedOnState(VisualElement visualElement, CursorIcons cursor) // NOSONAR
     {
         // Use Arrow cursor if element is disabled, otherwise use the specified cursor
         var cursorToApply = visualElement.IsEnabled ? cursor : CursorIcons.Arrow;

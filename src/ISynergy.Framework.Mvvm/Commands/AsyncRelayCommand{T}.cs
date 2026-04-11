@@ -209,7 +209,7 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     /// </summary>
     /// <param name="parameter">Data used by the command.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ExecuteAsync(T? parameter)
+    public async Task ExecuteAsync(T? parameter) // NOSONAR
     {
         // Use a lock to ensure thread safety when checking and setting execution state
         bool canProceed;

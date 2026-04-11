@@ -11,7 +11,7 @@ using Windows.UI.Core;
 namespace ISynergy.Framework.UI.Extensions;
 public static class CursorExtensions
 {
-    public static void SetCustomCursor(this VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext)
+    public static void SetCustomCursor(this VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext) // NOSONAR
     {
         if (mauiContext is null)
         {

@@ -91,7 +91,7 @@ public static class ViewModelExtensions
     public static string GetViewModelFullName(this Type type)
     {
         if (type.FullName is null)
-            throw new NullReferenceException($"{type}: FullName is null");
+            throw new InvalidOperationException($"{type}: FullName is null");
 
         var result = type.FullName;
 
