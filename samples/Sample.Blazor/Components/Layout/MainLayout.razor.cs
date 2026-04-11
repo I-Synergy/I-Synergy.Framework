@@ -74,15 +74,8 @@ public partial class MainLayout
 
             if (dialogResult is not null)
             {
-                var result = await dialogResult.Result;
-
-                //if (result.Cancelled)
-                //    return MessageBoxResult.Cancel;
-
-                //return MessageBoxResult.OK;
+                _ = await dialogResult.Result;
             }
-
-            //return MessageBoxResult.None;
         });
 
         _commonServices.MessengerService.Register<ShowWarningMessage>(this, async m =>
@@ -91,15 +84,8 @@ public partial class MainLayout
 
             if (dialogResult is not null)
             {
-                var result = await dialogResult.Result;
-
-                //if (result.Cancelled)
-                //    return MessageBoxResult.Cancel;
-
-                //return MessageBoxResult.OK;
+                _ = await dialogResult.Result;
             }
-
-            //return MessageBoxResult.None;
         });
 
         _commonServices.MessengerService.Register<ShowErrorMessage>(this, async m =>
@@ -108,15 +94,8 @@ public partial class MainLayout
 
             if (dialogResult is not null)
             {
-                var result = await dialogResult.Result;
-
-                //if (result.Cancelled)
-                //    return MessageBoxResult.Cancel;
-
-                //return MessageBoxResult.OK;
+                _ = await dialogResult.Result;
             }
-
-            //return MessageBoxResult.None;
         });
 
         _navigationManager.LocationChanged += NavigationManager_LocationChanged;
@@ -184,7 +163,7 @@ public partial class MainLayout
         if (!e.IsNavigationIntercepted && new Uri(_prevUri!).AbsolutePath != new Uri(e.Location).AbsolutePath)
         {
             _prevUri = e.Location;
-            if (_mobile && _menuChecked == true)
+            if (_mobile && _menuChecked)
             {
                 _menuChecked = false;
                 StateHasChanged();

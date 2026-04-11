@@ -157,7 +157,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void SetClock()
     {
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>() is Context context)
+        if (_commonServices.ScopedContextService.GetRequiredService<IContext>() is not null)
             base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
     }
 
@@ -239,6 +239,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _clockTimer.Stop();
                 _clockTimer.Tick -= ClockTimerCallBack;
             }
+
+
 
             DisplayCommand?.Dispose();
             InfoCommand?.Dispose();

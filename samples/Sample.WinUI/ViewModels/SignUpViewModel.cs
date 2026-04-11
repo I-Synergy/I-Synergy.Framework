@@ -136,7 +136,7 @@ public class SignUpViewModel : ViewModel
     public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand SelectModulesCommand { get; private set; }
 
-    public SignUpViewModel(
+    public SignUpViewModel( // NOSONAR - high complexity is inherent in registration validation setup
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
@@ -289,7 +289,7 @@ public class SignUpViewModel : ViewModel
                 PasswordCheck.Equals(Password) &&
                 Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             {
-                var registrationData = new RegistrationData()
+                _ = new RegistrationData()
                 {
                     ApplicationId = 1,
                     LicenseName = Name,

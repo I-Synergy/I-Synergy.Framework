@@ -71,7 +71,6 @@ public partial class App : Application
             if (_commonServices?.BusyService != null)
             {
                 _commonServices.BusyService.UpdateMessage("Applying migrations");
-                //await _migrationService.ApplyMigrationAsync<_001>();
                 await Task.Delay(2000);
                 _commonServices.BusyService.UpdateMessage("Done applying migrations");
                 await Task.Delay(2000);
@@ -116,15 +115,10 @@ public partial class App : Application
             // Wait for the loading view to complete if it's a video (for Image and None types, this returns immediately)
             await WaitForLoadingViewAsync();
 
-            bool navigateToAuthentication = true;
-
             _logger.LogInformation("Application loaded event: checking for auto-login");
 
-            if (navigateToAuthentication)
-            {
-                _logger.LogInformation("Navigate to SignIn page");
-                await _navigationService.NavigateModalAsync<SignInViewModel>();
-            }
+            _logger.LogInformation("Navigate to SignIn page");
+            await _navigationService.NavigateModalAsync<SignInViewModel>();
         }
         catch (Exception ex)
         {

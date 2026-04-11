@@ -36,7 +36,7 @@ internal class SynchronizationService : ISynchronizationService
 
     public ISynchronizationSettings? SynchronizationOptions => _synchronizationSettings;
 
-    public SynchronizationService(
+    public SynchronizationService( // NOSONAR - high complexity is inherent in synchronization setup
         IContext context,
         IMessengerService messengerService,
         ISettingsService settingsService,
@@ -95,7 +95,7 @@ internal class SynchronizationService : ISynchronizationService
 
             var handler = new HttpClientHandler();
 #if DEBUG
-            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2")
+            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2") // NOSONAR - Android emulator localhost alias
             {
                 handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
                 {
@@ -123,14 +123,13 @@ internal class SynchronizationService : ISynchronizationService
             // The Android emulator uses 10.0.2.2 as an alias for the host machine's localhost.
             // IIS Express only accepts requests with Host header set to "localhost".
             // We override the Host header to match IIS Express requirements when running on Android emulator.
-            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2")
+            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2") // NOSONAR - Android emulator localhost alias
                 httpClient.DefaultRequestHeaders.Host = $"localhost:{synchronizationEndpoint.Port}";
 
             httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
 
             var webRemoteOrchestrator = new WebRemoteOrchestrator(synchronizationEndpoint.AbsoluteUri, client: httpClient, maxDownladingDegreeOfParallelism: 1)
             {
-                //Converter = new SqliteConverter()
                 SerializerFactory = new MessagePackSerializerFactory()
             };
 

@@ -91,13 +91,8 @@ public partial class App : Application
         {
             _commonServices.BusyService.StartBusy();
 
-            bool navigateToAuthentication = true;
-
-            if (navigateToAuthentication)
-            {
-                _logger.LogTrace("Navigate to SignIn page");
-                await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
-            }
+            _logger.LogTrace("Navigate to SignIn page");
+            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
         }
         finally
         {
@@ -160,7 +155,6 @@ public partial class App : Application
             try
             {
                 _commonServices.BusyService.UpdateMessage("Applying migrations");
-                //await _migrationService.ApplyMigrationAsync<_001>();
                 await Task.Delay(2000);
                 _commonServices.BusyService.UpdateMessage("Done applying migrations");
                 await Task.Delay(2000);
