@@ -1264,15 +1264,13 @@ public static partial class Matrix
     /// 
     public static float[,,] ToSingle(this double[,,] value, float[,,] result)
     {
-        unsafe
-        {
-            fixed (double* src = value)
-            fixed (float* dst = result)
-            {
-                for (int i = 0; i < value.Length; i++)
-                    dst[i] = (Single)src[i];
-            }
-        }
+        int d0 = value.GetLength(0);
+        int d1 = value.GetLength(1);
+        int d2 = value.GetLength(2);
+        for (int i = 0; i < d0; i++)
+            for (int j = 0; j < d1; j++)
+                for (int k = 0; k < d2; k++)
+                    result[i, j, k] = (Single)value[i, j, k];
 
         return result;
     }
@@ -1292,15 +1290,11 @@ public static partial class Matrix
     /// 
     public static float[,] ToSingle(this double[,] value, float[,] result)
     {
-        unsafe
-        {
-            fixed (double* src = value)
-            fixed (float* dst = result)
-            {
-                for (int i = 0; i < value.Length; i++)
-                    dst[i] = (Single)src[i];
-            }
-        }
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Single)value[i, j];
 
         return result;
     }
@@ -1329,15 +1323,11 @@ public static partial class Matrix
     /// 
     public static short[,] ToInt16(this double[,] value, short[,] result)
     {
-        unsafe
-        {
-            fixed (double* src = value)
-            fixed (short* dst = result)
-            {
-                for (int i = 0; i < value.Length; i++)
-                    dst[i] = (Int16)src[i];
-            }
-        }
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Int16)value[i, j];
 
         return result;
     }
@@ -1348,15 +1338,11 @@ public static partial class Matrix
     /// 
     public static int[,] ToInt32(this double[,] value, int[,] result)
     {
-        unsafe
-        {
-            fixed (double* src = value)
-            fixed (int* dst = result)
-            {
-                for (int i = 0; i < value.Length; i++)
-                    dst[i] = (Int32)src[i];
-            }
-        }
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Int32)value[i, j];
 
         return result;
     }
