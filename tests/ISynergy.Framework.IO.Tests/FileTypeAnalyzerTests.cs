@@ -242,7 +242,7 @@ public partial class FileTypeAnalyzerTests
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>System.String.</returns>
-    private string GetFileByType(string type) =>
+    private static string GetFileByType(string type) =>
         Path.Combine(GetTestFileDirectory(), $"{type}.{type}");
 
 
@@ -252,7 +252,7 @@ public partial class FileTypeAnalyzerTests
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>IEnumerable&lt;System.String&gt;.</returns>
-    private IEnumerable<string> GetFilesByExtension(string type) =>
+    private static IEnumerable<string> GetFilesByExtension(string type) =>
         Directory.GetFiles(GetTestFileDirectory(), $"*.{type}")
             .Where(path => path.EndsWith(type, StringComparison.OrdinalIgnoreCase));
 
@@ -260,6 +260,6 @@ public partial class FileTypeAnalyzerTests
     /// Gets the test file directory.
     /// </summary>
     /// <returns>System.String.</returns>
-    private string GetTestFileDirectory() =>
+    private static string GetTestFileDirectory() =>
         Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFiles");
 }

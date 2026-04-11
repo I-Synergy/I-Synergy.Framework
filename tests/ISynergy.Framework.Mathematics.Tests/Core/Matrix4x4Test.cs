@@ -334,7 +334,7 @@ public class Matrix4x4Test
 
         Matrix4x4 result = a1 + a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
     [TestMethod]
@@ -364,7 +364,7 @@ public class Matrix4x4Test
 
         Matrix4x4 result = a1 - a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
     [TestMethod]
@@ -394,10 +394,10 @@ public class Matrix4x4Test
 
         Matrix4x4 result = a1 * a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
-    private void CompareMatrixWithArray(Matrix4x4 matrix, float[] array)
+    private static void CompareMatrixWithArray(Matrix4x4 matrix, float[] array)
     {
         float[] matrixArray = matrix.ToArray();
 
@@ -407,7 +407,7 @@ public class Matrix4x4Test
         }
     }
 
-    private bool ApproximateEquals(Matrix4x4 matrix1, Matrix4x4 matrix2)
+    private static bool ApproximateEquals(Matrix4x4 matrix1, Matrix4x4 matrix2)
     {
         // TODO: better algorithm should be put into the framework actually
         return

@@ -32,14 +32,14 @@ public class AutomationTests
     private static readonly bool IsRunningInCI = Environment.GetEnvironmentVariable("CI") is not null;
     private static readonly double TimingTolerance = 0.2; // 20% tolerance
 
-    private bool IsWithinTolerance(TimeSpan expected, TimeSpan actual)
+    private static bool IsWithinTolerance(TimeSpan expected, TimeSpan actual)
     {
         var lowerBound = expected.TotalMilliseconds * (1 - TimingTolerance);
         var upperBound = expected.TotalMilliseconds * (1 + TimingTolerance);
         return actual.TotalMilliseconds >= lowerBound && actual.TotalMilliseconds <= upperBound;
     }
 
-    private TimeSpan GetDelay(int seconds) =>
+    private static TimeSpan GetDelay(int seconds) =>
         IsRunningInCI ? TimeSpan.FromSeconds(seconds / 2.0) : TimeSpan.FromSeconds(seconds);
 
     public AutomationTests()

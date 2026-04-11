@@ -76,7 +76,6 @@ public class CholeskyDecompositionTest
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
-        //Assert.AreEqual(true, chol.Symmetric);
     }
 
     [TestMethod]

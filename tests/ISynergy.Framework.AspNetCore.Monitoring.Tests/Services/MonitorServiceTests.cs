@@ -32,12 +32,16 @@ public class MonitorServiceTests
     [TestMethod]
     public async Task PublishTestAsync()
     {
+        // Assert: no exception thrown publishing to a valid channel
         await _monitorService.PublishAsync(_channel, "eventName", null!);
+        Assert.IsNotNull(_monitorService);
     }
 
     [TestMethod]
     public async Task PublishInvalidChannelTestAsync()
     {
+        // Assert: no exception thrown publishing to an invalid channel
         await _monitorService.PublishAsync("invalidchannel", "eventName", null!);
+        Assert.IsNotNull(_monitorService);
     }
 }

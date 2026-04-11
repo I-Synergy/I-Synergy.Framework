@@ -319,7 +319,7 @@ public class Matrix3x3Test
         Matrix3x3 inverse = matrix.Inverse();
         Matrix3x3 identity = matrix * inverse;
 
-        Assert.AreEqual(true, ApproximateEquals(identity, Matrix3x3.Identity));
+        Assert.IsTrue(ApproximateEquals(identity, Matrix3x3.Identity));
     }
 
     [DataTestMethod]
@@ -362,7 +362,7 @@ public class Matrix3x3Test
 
         Matrix3x3 result = a1 + a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
     [TestMethod]
@@ -384,7 +384,7 @@ public class Matrix3x3Test
 
         Matrix3x3 result = a1 - a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
     [TestMethod]
@@ -406,10 +406,10 @@ public class Matrix3x3Test
 
         Matrix3x3 result = a1 * a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
-    private void CompareMatrixWithArray(Matrix3x3 matrix, float[] array)
+    private static void CompareMatrixWithArray(Matrix3x3 matrix, float[] array)
     {
         float[] matrixArray = matrix.ToArray();
 
@@ -419,7 +419,7 @@ public class Matrix3x3Test
         }
     }
 
-    private bool ApproximateEquals(Matrix3x3 matrix1, Matrix3x3 matrix2)
+    private static bool ApproximateEquals(Matrix3x3 matrix1, Matrix3x3 matrix2)
     {
         // TODO: better algorithm should be put into the framework actually
         return

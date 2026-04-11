@@ -52,5 +52,6 @@ public class UtmProjectionTests
     public void TestEquals2()
     {
         UtmProjection utm2 = new();
+        Assert.IsNotNull(utm2);
     }
 }

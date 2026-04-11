@@ -79,10 +79,10 @@ public partial class MatrixTest
         bool actual;
 
         actual = Matrix.IsEqual(matrix, 1.0);
-        Assert.AreEqual(true, actual);
+        Assert.IsTrue(actual);
 
         actual = Matrix.IsEqual(matrix, 0.0);
-        Assert.AreEqual(false, actual);
+        Assert.IsFalse(actual);
     }
 
     [TestMethod]

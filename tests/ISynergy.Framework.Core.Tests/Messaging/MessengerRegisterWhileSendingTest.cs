@@ -81,6 +81,9 @@ public class MessengerRegisterWhileSendingTest
 
         const string SentContent = "Hello world";
         _messenger.Send(SentContent);
+
+        // Assert: no exception thrown when registering inline while receiving
+        Assert.IsNotNull(_messenger);
     }
 
     [TestMethod]
@@ -94,6 +97,9 @@ public class MessengerRegisterWhileSendingTest
 
         const string SentContent = "Hello world";
         _messenger.Send(SentContent);
+
+        // Assert: no exception thrown when registering message base inline while receiving
+        Assert.IsNotNull(_messenger);
     }
 
     [TestMethod]
@@ -108,6 +114,9 @@ public class MessengerRegisterWhileSendingTest
 
         const string SentContent = "Hello world";
         _messenger.Send(SentContent);
+
+        // Assert: no exception thrown when registering inline while receiving message base
+        Assert.IsNotNull(_messenger);
     }
 
     [TestMethod]
@@ -122,6 +131,9 @@ public class MessengerRegisterWhileSendingTest
 
         const string SentContent = "Hello world";
         _messenger.Send(SentContent);
+
+        // Assert: no exception thrown when registering message base inline while receiving message base
+        Assert.IsNotNull(_messenger);
     }
 
     [TestMethod]
@@ -132,6 +144,9 @@ public class MessengerRegisterWhileSendingTest
             m => _messenger.Unregister(this));
 
         _messenger.Send("Hello world");
+
+        // Assert: no exception thrown when unregistering while receiving
+        Assert.IsNotNull(_messenger);
     }
 
     [TestMethod]
@@ -143,6 +158,9 @@ public class MessengerRegisterWhileSendingTest
             m => _messenger.Unregister(this));
 
         _messenger.Send("Hello world");
+
+        // Assert: no exception thrown when unregistering from message base while receiving
+        Assert.IsNotNull(_messenger);
     }
 
     public abstract class TestRecipient

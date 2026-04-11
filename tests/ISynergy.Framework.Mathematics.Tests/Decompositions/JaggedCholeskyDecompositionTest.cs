@@ -76,7 +76,6 @@ public class JaggedCholeskyDecompositionTest
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
-        //Assert.AreEqual(true, chol.Symmetric);
     }
 
     [TestMethod]
@@ -287,7 +286,6 @@ public class JaggedCholeskyDecompositionTest
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
         Assert.IsFalse(chol.IsPositiveDefinite);
-        //Assert.AreEqual(true, chol.Symmetric);
     }
 
     [TestMethod]
@@ -316,7 +314,6 @@ public class JaggedCholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(L, expected, 1e-4));
         Assert.AreEqual(4, chol.Determinant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
-        //Assert.AreEqual(true, chol.Symmetric);
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value.GetSymmetric(type: MatrixType.LowerTriangular), 1e-4));
 
 
@@ -336,7 +333,6 @@ public class JaggedCholeskyDecompositionTest
 
         Assert.AreEqual(4, chol.Determinant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
-        //Assert.AreEqual(true, chol.Symmetric);
     }
 
 
