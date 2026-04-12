@@ -33,7 +33,7 @@ internal class LabelPrinterService : ILabelPrinterService
     {
         _logger = logger;
 
-        DymoSDK.App.Init();
+        DymoSDK.App.Init(); // NOSONAR
 
         _label = DymoLabel.LabelSharedInstance;
         _twinTurboRolls = ["Auto", "Left", "Right"];

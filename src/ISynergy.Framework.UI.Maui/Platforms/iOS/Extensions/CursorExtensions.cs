@@ -25,12 +25,11 @@ public static class CursorExtensions
     class PointerInteractionDelegate : UIPointerInteractionDelegate
     {
         private readonly VisualElement _visualElement;
-        private readonly CursorIcons _cursor;
 
-        public PointerInteractionDelegate(VisualElement visualElement, CursorIcons cursor)
+        public PointerInteractionDelegate(VisualElement visualElement, CursorIcons cursor) // NOSONAR
         {
             _visualElement = visualElement;
-            _cursor = cursor;
+            _ = cursor;
         }
 
         public override UIPointerStyle GetStyleForRegion(UIPointerInteraction interaction, UIPointerRegion region)

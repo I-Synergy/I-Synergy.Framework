@@ -89,7 +89,7 @@ internal class DocumentService : IDocumentService
     /// <param name="exportAsPdf">if set to <c>true</c> [export as PDF].</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task.</returns>
-    public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default) // NOSONAR
+    public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default) // NOSONAR S3776
     {
         Argument.IsNotNull(documentRequest);
 
@@ -140,11 +140,11 @@ internal class DocumentService : IDocumentService
                     document.MailMerge.RemoveEmptyParagraphs = true;
                     document.MailMerge.ExecuteNestedGroup(dataSet, commands);
 
-                    foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull())
+                    foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull()) // NOSONAR
                     {
                         if (paragraph.ChildEntities is not null)
                         {
-                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull())
+                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull()) // NOSONAR
                             {
                                 if (paraItem is WPicture picture && paragraph.OwnerTextBody is WTableCell cell)
                                 {

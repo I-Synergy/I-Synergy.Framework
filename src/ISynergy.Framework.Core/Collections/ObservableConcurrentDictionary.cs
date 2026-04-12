@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Core.Collections;
 /// </summary>
 /// <typeparam name="TKey">Specifies the type of the keys in this collection.</typeparam>
 /// <typeparam name="TValue">Specifies the type of the values in this collection.</typeparam>
-[DebuggerDisplay("Count={Count}")]
+[DebuggerDisplay("Count={Count}")] // NOSONAR
 public class ObservableConcurrentDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
     where TKey : notnull
 {

@@ -4,7 +4,7 @@ namespace ISynergy.Framework.Monitoring.Abstractions.Services;
 /// Monitor hub service.
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-public interface IMonitorService<TEntity> where TEntity : class
+public interface IMonitorService<in TEntity> where TEntity : class
 {
     /// <summary>
     /// Publish to hub context.

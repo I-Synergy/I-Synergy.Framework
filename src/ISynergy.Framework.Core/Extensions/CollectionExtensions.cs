@@ -199,7 +199,7 @@ public static class CollectionExtensions
     /// Removes the first entry from the list. Does nothing if the list is empty.
     /// </summary>
     /// <param name="list">The list.</param>
-    public static void RemoveFirst(this IList list)
+    public static void RemoveFirst(this IList list) // NOSONAR
     {
         Argument.IsNotNull(list);
 

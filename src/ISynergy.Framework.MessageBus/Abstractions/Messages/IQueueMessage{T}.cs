@@ -7,7 +7,7 @@ namespace ISynergy.Framework.MessageBus.Abstractions.Messages;
 /// Queue Message.
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-public interface IQueueMessage<TEntity> : IBaseMessage
+public interface IQueueMessage<out TEntity> : IBaseMessage
 {
     /// <summary>
     /// Gets the data.

@@ -51,7 +51,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TEntity"/>, obtained from a
     /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
     /// </param>
-    public SubscriberServiceBus(
+    protected SubscriberServiceBus(
         IOptions<TOption> options,
         ILogger<SubscriberServiceBus<TEntity, TOption>> logger,
         JsonTypeInfo<TEntity> jsonTypeInfo)

@@ -54,13 +54,12 @@ public static class CursorExtensions
     class PointerUIHoverGestureRecognizer : UIHoverGestureRecognizer
     {
         private readonly VisualElement _visualElement;
-        private readonly CursorIcons _cursor;
 
-        public PointerUIHoverGestureRecognizer(VisualElement visualElement, CursorIcons cursor, Action<UIHoverGestureRecognizer> action)
+        public PointerUIHoverGestureRecognizer(VisualElement visualElement, CursorIcons cursor, Action<UIHoverGestureRecognizer> action) // NOSONAR
             : base(action)
         {
             _visualElement = visualElement;
-            _cursor = cursor;
+            _ = cursor;
         }
     }
 }

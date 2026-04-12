@@ -38,10 +38,10 @@ public class DefaultMessagePackSerializer : ISerializer
 {
     private readonly MessagePackSerializerOptions options = MessagePackSerializerOptions.Standard.WithResolver(ContractlessStandardResolver.Instance);
 
-    public async Task<T> DeserializeAsync<T>(Stream ms) =>
+    public async Task<T> DeserializeAsync<T>(Stream ms) => // NOSONAR
         (T)await this.DeserializeAsync(ms, typeof(T)).ConfigureAwait(false);
 
-    public Task<byte[]> SerializeAsync<T>(T obj) =>
+    public Task<byte[]> SerializeAsync<T>(T obj) => // NOSONAR
         this.SerializeAsync(obj);
 
     public async Task<object> DeserializeAsync(Stream ms, Type type)

@@ -21,7 +21,7 @@ public class ResourceNameToGeometryConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (parameter is not null && parameter is string)
+        if (parameter is string)
         {
             return (Geometry)XamlReader.Load($"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>{Application.Current.Resources[parameter]}</Geometry>");
         }
@@ -61,7 +61,7 @@ public class ResourceNameToStringConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object? Convert(object value, Type targetType, object parameter, string language)
     {
-        if (parameter is not null && parameter is string)
+        if (parameter is string)
         {
             return Application.Current.Resources[parameter] as string;
         }

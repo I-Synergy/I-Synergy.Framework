@@ -6,7 +6,7 @@ namespace ISynergy.Framework.MessageBus.Abstractions.Messages;
 /// Interface IHubMessage
 /// </summary>
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-public interface IHubMessage<TEntity> : IBaseMessage
+public interface IHubMessage<out TEntity> : IBaseMessage
 {
     /// <summary>
     /// Gets the channel.
