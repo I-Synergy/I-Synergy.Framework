@@ -43,7 +43,7 @@ public class EuclidianCoordinateTests
     [TestMethod]
     public void TestConstructor3()
     {
-        Assert.Throws<IndexOutOfRangeException>(() => new EuclidianCoordinate(projection, new double[] { -3, -4, -5 }));
+        Assert.Throws<ArgumentException>(() => new EuclidianCoordinate(projection, new double[] { -3, -4, -5 }));
     }
 
     /// <summary>
