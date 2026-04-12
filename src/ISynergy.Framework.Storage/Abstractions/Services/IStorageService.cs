@@ -1,3 +1,5 @@
+#pragma warning disable S107 // 8 parameters are required by the storage API contract; cannot be reduced without breaking changes
+
 namespace ISynergy.Framework.Storage.Abstractions.Services;
 
 /// <summary>
